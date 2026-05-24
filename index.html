@@ -1339,7 +1339,9 @@ function restartOpening() {
   chess=new Chess();
   S.moveIndex=0;S.selected=null;S.validTargets=[];
   S.lastFrom=null;S.lastTo=null;S.animating=false;
+  S.correct=0;S.wrong=0;
   renderBoard();renderMoveList();updateProgress();
+  updateScores();
   setStatus((chess.turn()==='w'?t('white'):t('black'))+t('statusStartMsg'));
 }
 
