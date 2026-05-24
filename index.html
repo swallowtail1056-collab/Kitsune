@@ -1616,21 +1616,7 @@ function loadHistory() {
   } catch(e) { return []; }
 }
 
-function saveResult(openingName, correct, wrong, total) {
-  try {
-    const history = loadHistory();
-    history.unshift({
-      name: openingName,
-      correct, wrong, total,
-      pct: Math.round(correct/total*100),
-      date: new Date().toLocaleDateString(LANG==='ja'?'ja-JP':'en-US')
-    });
-    // 最大20件保存
-    if (history.length > 20) history.pop();
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(history));
-    renderHistory();
-  } catch(e) {}
-}
+
 
 function saveResult(openingName, correct, wrong, total) {
   try {
