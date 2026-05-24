@@ -1058,15 +1058,15 @@ function answerQuiz(chosen,correct) {
     else if(b.textContent===chosen&&chosen!==correct) b.classList.add('wrong');
   });
   const L=I18N[LANG];
-  if(chosen===correct){
+ if(chosen===correct){
     quizScore++;
-    result.textContent='✓ '+(LANG==='ja'?'正解！🎉':'Correct! 🎉');
+    result.textContent=LANG==='ja'?'✓ 正解！🎉':'✓ Correct! 🎉';
     result.className='quiz-result good';
     const cm=L.quizCorrectMsgs;
     quizFoxSay(cm[Math.floor(Math.random()*cm.length)],true);
     playCorrect();
   } else {
-    result.textContent=(LANG==='ja'?'✗ 不正解。正解は「':'✗ Wrong. Answer: ')+correct+(LANG==='ja'?'」':'');
+    result.textContent=LANG==='ja'?('✗ 不正解。正解は「'+correct+'」'):('✗ Wrong. Answer: '+correct);
     result.className='quiz-result bad';
     const wm=L.quizWrongMsgs;
     quizFoxSay(wm[Math.floor(Math.random()*wm.length)]);
