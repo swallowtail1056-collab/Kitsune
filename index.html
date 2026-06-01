@@ -561,19 +561,17 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
 <script>
 // 583行目：基本の汎用ソース（ここを新しいジーンくんにします）
-const FOX_SRC = "jene.jpg";
+const FOX_SRC         = "jene_normal.png";  // 予備用の基本画像
+const FOX_WELCOME_SRC = "jene_welcome.png"; // ①トップ画面用（ニッコリ・引き）
+const FOX_HAPPY_SRC   = "jene_happy.png";   // ③正解・テスト合格時用（大喜び・引き）
+const FOX_NORMAL_SRC  = "jene_normal.png";  // ②練習中・通常時用（口閉じ・引き）
+const FOX_WINK_SRC    = "jene_wink.png";    // ④テスト不合格時（ウインク・顔アップ）
+const FOX_QUIZ_SRC    = "jene_quiz.png";    // ⑤クイズ出題中用（口閉じ・顔アップ）
 
-// 584行目：トップページ（ウェルカム画面）用の表情
-// もしここを元のBase64のままにしたいなら、長いコード（data:image/png;base64...）のまま残す！
-// もし、トップページも新しいタキシードのジーンくんにしたいなら、ここを "jene.jpg"; にする
-const FOX_WELCOME_SRC = "data:image/png;base64,...(元の長いコード)..."; 
-
-// 585行目：正解したときなどの嬉しい表情（元の長いコードのままキープ！）
-const FOX_HAPPY_SRC = "data:image/png;base64,...(元の長いコード)...";
-
-// 586行目：練習中の通常の表情（元の長いコードのままキープ！）
-const FOX_NORMAL_SRC = "data:image/png;base64,...(元の長いコード)...";// ============================================================
+// ============================================================================
 // SOUND ENGINE (Web Audio API)
+// ============================================================================
+const AudioCtx = window.AudioContext || window.webkitAudioContext;// SOUND ENGINE (Web Audio API)
 // ============================================================
 const AudioCtx = window.AudioContext || window.webkitAudioContext;
 let audioCtx = null;
@@ -1050,6 +1048,7 @@ function showQuizQuestion() {
   });
 }
 
+
 function answerQuiz(chosen,correct) {
   if(quizAnswered) return;
   quizAnswered=true;
@@ -1060,42 +1059,68 @@ function answerQuiz(chosen,correct) {
     else if(b.textContent===chosen&&chosen!==correct) b.classList.add('wrong');
   });
   const L=I18N[LANG];
- if(chosen===correct){
+ if (chosen === correct) {
     quizScore++;
-    result.textContent=LANG==='ja'?'✓ 正解！🎉':'✓ Correct! 🎉';
-    result.className='quiz-result good';
-    const cm=L.quizCorrectMsgs;
-    quizFoxSay(cm[Math.floor(Math.random()*cm.length)],true);
+    result.textContent = LANG === 'ja' ? '✓ 正解！ 🎉' : '✓ Correct! 🎉';
+    result.className = 'quiz-result good';
+    
+    // 正解したときは「大喜び（引きの絵）」にする
+    document.getElementById('foxImg').src = FOX_HAPPY_SRC;
+    
+    const cm = L.quizCorrectMsgs;
+    quizFoxSay(cm[Math.floor(Math.random() * cm.length)], true);
     playCorrect();
-  } else {
-    result.textContent=LANG==='ja'?('✗ 不正解。正解は「'+correct+'」'):('✗ Wrong. Answer: '+correct);
-    result.className='quiz-result bad';
-    const wm=L.quizWrongMsgs;
-    quizFoxSay(wm[Math.floor(Math.random()*wm.length)]);
+} else {
+    result.textContent = LANG === 'ja' ? ('✗ 不正解。正解は「' + correct + '」') : ('✗ Wrong. Answer: ' + correct);
+    result.className = 'quiz-result bad';
+    
+    const wm = L.quizWrongMsgs;
+    quizFoxSay(wm[Math.floor(Math.random() * wm.length)]);
     playWrong();
-  }
-  setTimeout(()=>{quizIndex++;showQuizQuestion();},1800);
 }
+
+setTimeout(() => {
+    quizIndex++;
+    
+    // 次の問題に進むとき、画像を「クイズ用（口閉じ・顔アップ）」に戻す
+    document.getElementById('foxImg').src = FOX_QUIZ_SRC;
+    
+    showQuizQuestion();
+}, 1800);
 
 function showQuizFinal() {
-  document.getElementById('quizOptions').innerHTML='';
-  document.getElementById('quizQuestion').textContent='';
-  document.getElementById('quizResult').textContent='';
-  document.getElementById('quizProgress').textContent='';
-  const pct=Math.round(quizScore/quizQuestions.length*100);
-  const finalBox=document.getElementById('quizFinalBox');
-  const scoreFinal=document.getElementById('quizScoreFinal');
-  finalBox.style.display='block';
-  const L=I18N[LANG];
-  let grade,foxMsg;
-  if(pct===100)    {grade=L.quizGrade100;foxMsg=L.quizFox100;startConfetti();launchKusudama();playFanfare();}
-  else if(pct>=80) {grade=L.quizGrade80; foxMsg=L.quizFox80; startConfetti();playFanfare();}
-  else if(pct>=60) {grade=L.quizGrade60; foxMsg=L.quizFox60;}
-  else             {grade=L.quizGrade0;  foxMsg=L.quizFox0;}
-  scoreFinal.innerHTML=grade+'<br><span style="font-size:1.5rem;">'+quizScore+' '+L.quizOf+' '+quizQuestions.length+' '+L.quizCorrectOf+' ('+pct+'%)</span>';
-  quizFoxSay(foxMsg,pct>=80);
+    document.getElementById('quizOptions').innerHTML = '';
+    document.getElementById('quizQuestion').textContent = '';
+    document.getElementById('quizResult').textContent = '';
+    document.getElementById('quizProgress').textContent = '';
+    const pct = Math.round(quizScore/quizQuestions.length*100);
+    const finalBox = document.getElementById('quizFinalBox');
+    const scoreFinal = document.getElementById('quizScoreFinal');
+    finalBox.style.display = 'block';
+    const L = I18N[LANG];
+    let grade, foxMsg;
+    
+    if (pct === 100) {
+        grade = L.quizGrade100; foxMsg = L.quizFox100; startConfetti(); launchKusudama();
+        // 合格時は引きの絵（通常）に戻す
+        document.getElementById('foxImg').src = FOX_NORMAL_SRC;
+    } else if (pct >= 80) {
+        grade = L.quizGrade80; foxMsg = L.quizFox80; startConfetti(); playFanfare();
+        // 合格時は引きの絵（通常）に戻す
+        document.getElementById('foxImg').src = FOX_NORMAL_SRC;
+    } else if (pct >= 60) {
+        grade = L.quizGrade60; foxMsg = L.quizFox60;
+        // 合格時は引きの絵（通常）に戻す
+        document.getElementById('foxImg').src = FOX_NORMAL_SRC;
+    } else {
+        grade = L.quizGrade0; foxMsg = L.quizFox0;
+        // 不合格（60点未満）のときはウインク顔にする！
+        document.getElementById('foxImg').src = FOX_WINK_SRC;
+    }
+    
+    scoreFinal.innerHTML = grade + '<br><span style="font-size:1.5rem;">' + quizScore + ' ' + L.quizOf + ' ' + quizQuestions.length + '</span>';
+    quizFoxSay(foxMsg, pct >= 80);
 }
-
 function resetQuiz() {
   currentQuizOpening=null;
   document.getElementById('quizArea').style.display='none';
