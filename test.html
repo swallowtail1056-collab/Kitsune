@@ -1513,15 +1513,41 @@ function clearAuto() {
 function flipBoard(){S.flipped=!S.flipped;renderBoard();}
 
 // ── UI HELPERS ──
+let activeFilters = {level:'all', style:'all', color:'all'};
+
+function onFilterClick(btn) {
+  const filter = btn.dataset.filter;
+  const value  = btn.dataset.value;
+  activeFilters[filter] = value;
+  document.querySelectorAll(`.filter-btn[data-filter="${filter}"]`).forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  buildOpeningTabs();
+  buildQuizOpeningTabs();
+}
+
+function matchesFilter(op) {
+  const f = activeFilters;
+  if (f.level !== 'all' && op.level !== f.level) return false;
+  if (f.style !== 'all' && op.style !== f.style) return false;
+  if (f.color !== 'all' && op.color !== f.color && op.color !== 'both') return false;
+  return true;
+}
+
 function buildOpeningTabs() {
-  const c=document.getElementById('openingTabs');
-  if(!c) return;
-  c.innerHTML='';
-  OPENINGS.forEach(op=>{
-    const b=document.createElement('button');
-    b.className='tab-btn'+(S.opening&&S.opening.id===op.id?' active':'');
-    b.textContent=opName(op);
-    b.onclick=()=>selectOpening(op.id);
+  const c = document.getElementById('openingTabs');
+  if (!c) return;
+  c.innerHTML = '';
+  const filtered = OPENINGS.filter(matchesFilter);
+  if (filtered.length === 0) {
+    c.innerHTML = '<div style="font-size:0.85rem;color:var(--text-muted);padding:6px;">' +
+      (LANG==='ja' ? '該当するオープニングがありません' : 'No openings found') + '</div>';
+    return;
+  }
+  filtered.forEach(op => {
+    const b = document.createElement('button');
+    b.className = 'tab-btn' + (S.opening && S.opening.id===op.id ? ' active' : '');
+    b.textContent = opName(op);
+    b.onclick = () => selectOpening(op.id);
     c.appendChild(b);
   });
 }
