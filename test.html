@@ -591,510 +591,101 @@ function playCorrect() {
       osc.start(t + i * 0.06); osc.stop(t + i * 0.06 + 0.3);
     });
   } catch(e) {}
-}
 
-function playWrong() {
-  try {
-    const ctx = getAudio();
-    const t = ctx.currentTime;
-    const osc = ctx.createOscillator();
-    const gain = ctx.createGain();
-    osc.connect(gain); gain.connect(ctx.destination);
-    osc.type = 'sine';
-    osc.frequency.setValueAtTime(220, t);
-    osc.frequency.exponentialRampToValueAtTime(110, t + 0.15);
-    gain.gain.setValueAtTime(0.4, t);
-    gain.gain.exponentialRampToValueAtTime(0.001, t + 0.2);
-    osc.start(t); osc.stop(t + 0.2);
-  } catch(e) {}
-}
-
-function playFanfare() {
-  try {
-    const ctx = getAudio();
-    const now = ctx.currentTime;
-    function makeReverb(dur) {
-      const sr = ctx.sampleRate, len = sr*dur;
-      const buf = ctx.createBuffer(2,len,sr);
-      for(let c=0;c<2;c++){const d=buf.getChannelData(c);for(let i=0;i<len;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/len,2.5);}
-      const conv = ctx.createConvolver(); conv.buffer=buf; return conv;
+// カウントダウン表示
+  let count = 3;
+  const cd = document.getElementById('wlcCountdown');
+  function updateCountdown() {
+    if (!cd) return;
+    cd.textContent = (LANG === 'ja')
+      ? `${count}秒後に自動スタート... タップでスキップ`
+      : `Starting in ${count}s... Tap to skip`;
+    if (count > 0) {
+      count--;
+      _welcomeCountdownTimer = setTimeout(updateCountdown, 1000);
     }
-    const reverb = makeReverb(3.0);
-    reverb.connect(ctx.destination);
-    function bell(freq,start,vol) {
-      [[1,1.0],[2.756,0.45],[5.404,0.2],[8.933,0.1]].forEach(([m,a])=>{
-        const osc=ctx.createOscillator(), g=ctx.createGain();
-        osc.connect(g); g.connect(ctx.destination); g.connect(reverb);
-        osc.type='sine'; osc.frequency.setValueAtTime(freq*m,start);
-        g.gain.setValueAtTime(0,start);
-        g.gain.linearRampToValueAtTime(vol*a,start+0.006);
-        g.gain.exponentialRampToValueAtTime(0.001,start+3.5);
-        osc.start(start); osc.stop(start+4.5);
-      });
-    }
-    [[523.25,0.0,0.28],[659.25,0.35,0.24],[783.99,0.65,0.24],
-     [1046.5,1.0,0.32],[783.99,1.4,0.20],[880.0,1.7,0.22],
-     [1046.5,2.0,0.30],[1318.5,2.5,0.28],[1046.5,3.0,0.22]
-    ].forEach(([f,dt,v])=>bell(f,now+dt,v));
-    [523.25,659.25,783.99,1046.5].forEach(f=>{
-      const osc=ctx.createOscillator(), g=ctx.createGain();
-      osc.connect(g); g.connect(reverb);
-      osc.type='sine'; osc.frequency.setValueAtTime(f,now+3.2);
-      g.gain.setValueAtTime(0.22,now+3.2);
-      g.gain.exponentialRampToValueAtTime(0.001,now+6.0);
-      osc.start(now+3.2); osc.stop(now+6.5);
-    });
-  } catch(e) {}
-}
-
-// 状態管理変数
-let game = null;
-let currentOpening = null;
-let currentMoveIdx = 0;
-let score = { correct: 0, wrong: 0, completed: 0 };
-let selectedCellId = null;
-let isFlipped = false;
-let autoPlayInterval = null;
-let lang = 'ja';
-let soundOn = true;
-
-// クイズ用状態
-let currentQuizOpening = null;
-let quizQuestionIdx = 0;
-let quizScore = 0;
-let quizTotalQuestions = 5;
-let currentQuizAnswer = "";
-
-// 駒マッピング定義
-const PIECE_THEME = {
-  'wP': 'https://upload.wikimedia.org/wikipedia/commons/4/45/Chess_plt45.svg',
-  'wN': 'https://upload.wikimedia.org/wikipedia/commons/7/70/Chess_nlt45.svg',
-  'wB': 'https://upload.wikimedia.org/wikipedia/commons/b/b1/Chess_blt45.svg',
-  'wR': 'https://upload.wikimedia.org/wikipedia/commons/7/72/Chess_rlt45.svg',
-  'wQ': 'https://upload.wikimedia.org/wikipedia/commons/1/15/Chess_qlt45.svg',
-  'wK': 'https://upload.wikimedia.org/wikipedia/commons/4/42/Chess_klt45.svg',
-  'bP': 'https://upload.wikimedia.org/wikipedia/commons/c/c7/Chess_pdt45.svg',
-  'bN': 'https://upload.wikimedia.org/wikipedia/commons/e/ef/Chess_ndt45.svg',
-  'bB': 'https://upload.wikimedia.org/wikipedia/commons/9/98/Chess_bdt45.svg',
-  'bR': 'https://upload.wikimedia.org/wikipedia/commons/f/ff/Chess_rdt45.svg',
-  'bQ': 'https://upload.wikimedia.org/wikipedia/commons/4/47/Chess_qdt45.svg',
-  'bK': 'https://upload.wikimedia.org/wikipedia/commons/f/f0/Chess_kdt45.svg'
-};
-
-// ══ 全体の初期化とページ制御関数 ══
-function startApp() {
-  try { getAudio(); } catch(e){}
-  const welcomePage = document.getElementById("page-welcome");
-  if (welcomePage) welcomePage.classList.remove("active");
-  
-  const mainNav = document.getElementById("mainNav");
-  if (mainNav) mainNav.style.display = "block";
-  
-  showPage('game', document.getElementById("navGame"));
-  if(!currentOpening) selectOpening(OPENINGS[0].id);
-}
-
-function showPage(pId, btn) {
-  stopAutoPlay();
-  Array.from(document.querySelectorAll('.page')).forEach(p => p.classList.remove('active'));
-  Array.from(document.querySelectorAll('.nav-btn')).forEach(b => b.classList.remove('active-page'));
-  
-  const targetPage = document.getElementById(`page-${pId}`);
-  if(targetPage) targetPage.classList.add('active');
-  if(btn) btn.classList.add('active-page');
-  
-  if(pId === 'quiz') {
-    resetQuiz();
   }
+  updateCountdown();
+
+  // 3秒後に自動で練習ページへ
+  _welcomeAutoTimer = setTimeout(() => {
+    _welcomeAutoTimer = null;
+    startApp();
+  }, 3000);
+}
+
+function setWelcomeLang(lang, btn) {
+  LANG = lang;
+  // ボタン状態
+  document.querySelectorAll('.wlc-lang-btn').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  // テキスト切替
+  const isEn = lang === 'en';
+  const bubble = document.getElementById('wlcBubble');
+  if (bubble) bubble.innerHTML = isEn
+    ? "Hi! I'm your chess coach! 🦊<br>Let's master openings together!"
+    : "こんにちは！ジーン（Jene）だよ！🦊<br>一緒にオープニングを覚えよう！";
+  const tag = document.getElementById('wlcTag');
+  if (tag) tag.textContent = 'KitsuneChess — Chess Opening Trainer';
+  const btn1 = document.getElementById('wlcStartBtn');
+  if (btn1) btn1.textContent = isEn ? "Let's Start! →" : "はじめる！ →";
+  const f1 = document.getElementById('wf1');
+  const f2 = document.getElementById('wf2');
+  const f3 = document.getElementById('wf3');
+  const f4 = document.getElementById('wf4');
+  if (f1) f1.textContent = isEn ? '25 openings to practice'    : '25種類のオープニング練習';
+  if (f2) f2.textContent = isEn ? 'Quiz to test your knowledge' : '理解度テスト付き';
+  if (f3) f3.textContent = isEn ? 'Sound & animations included' : 'サウンド＆アニメーション';
+  if (f4) f4.textContent = isEn ? 'Japanese & English support'  : '日本語・英語対応';
 }
 
 function goHome() {
-  stopAutoPlay();
-  const mainNav = document.getElementById("mainNav");
-  if (mainNav) mainNav.style.display = "none";
-  Array.from(document.querySelectorAll('.page')).forEach(p => p.classList.remove('active'));
-  const welcomePage = document.getElementById("page-welcome");
-  if (welcomePage) welcomePage.classList.add('active');
-}
-
-function setWelcomeLang(l, btn) {
-  lang = l;
-  const row = btn.parentNode;
-  Array.from(row.children).forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  
-  const wlcTag = document.getElementById("wlcTag");
-  const wlcBubble = document.getElementById("wlcBubble");
-  const wlcCountdown = document.getElementById("wlcCountdown");
-  
-  if (l === 'ja') {
-    wlcTag.textContent = "KitsuneChess — チェス・オープニング練習帳";
-    wlcBubble.innerHTML = "こんにちは！チェスコーチのジーンだよ！🦊<br>一緒に定跡（オープニング）を極めよう！";
-    wlcCountdown.textContent = "画面のどこかをタップして開始";
-    document.getElementById("btnLang").textContent = "JA";
-  } else {
-    wlcTag.textContent = "KitsuneChess — Chess Opening Trainer";
-    wlcBubble.innerHTML = "Hi! I'm Jene, your chess coach! 🦊<br>Let's master openings together!";
-    wlcCountdown.textContent = "Tap anywhere to start";
-    document.getElementById("btnLang").textContent = "EN";
+  // ウェルカム画面に戻る
+  const wp = document.getElementById('page-welcome');
+  const nav = document.getElementById('mainNav');
+  if (wp) {
+    wp.style.display = 'flex';
+    wp.style.opacity = '0';
+    wp.classList.add('active');
+    setTimeout(() => { wp.style.transition='opacity 0.4s'; wp.style.opacity='1'; }, 10);
+    if (nav) nav.style.display = 'none';
+    // カウントダウン再開
+    initWelcome();
   }
-  buildTabs();
-  buildQuizTabs();
-  updateStaticTexts();
 }
-
-function toggleSound(btn) {
-  soundOn = !soundOn;
-  btn.textContent = soundOn ? "🔊" : "🔇";
-}
-
-function toggleLang(btn) {
-  lang = (lang === 'ja') ? 'en' : 'ja';
-  btn.textContent = (lang === 'ja') ? 'JA' : 'EN';
-  buildTabs();
-  buildQuizTabs();
-  updateStaticTexts();
-  if(currentOpening) selectOpening(currentOpening.id);
-}
-
-function updateStaticTexts() {
-  const isJa = (lang === 'ja');
-  document.getElementById("navGame").textContent = isJa ? "練習" : "Practice";
-  document.getElementById("navQuiz").textContent = isJa ? "クイズ" : "Quiz";
-  document.getElementById("navDisclaimer").textContent = isJa ? "免責事項" : "Disclaimer";
-  document.getElementById("historyLabel").textContent = isJa ? "▸ 学習履歴" : "▸ History";
-  document.getElementById("btnClearHistory").textContent = isJa ? "🗑 履歴を消去" : "🗑 Clear";
-  document.getElementById("btnRestart").textContent = isJa ? "↺ リスタート" : "↺ Restart";
-  document.getElementById("btnHint").textContent = isJa ? "💡 ヒント" : "💡 Hint";
-  document.getElementById("btnFlip").textContent = isJa ? "⇅ 反転" : "⇅ Flip";
-}
-
-function buildTabs() {
-  const container = document.getElementById("openingTabs");
-  if(!container) return;
-  container.innerHTML = "";
-  OPENINGS.forEach(op => {
-    const btn = document.createElement("button");
-    btn.className = "tab-btn";
-    btn.id = `tab-${op.id}`;
-    btn.textContent = (lang === 'ja') ? op.nameJa : op.name;
-    btn.onclick = () => selectOpening(op.id);
-    container.appendChild(btn);
-  });
-}
-
-function selectOpening(id) {
-  stopAutoPlay();
-  currentOpening = OPENINGS.find(o => o.id === id);
-  const tabsContainer = document.getElementById("openingTabs");
-  if(tabsContainer) {
-    Array.from(tabsContainer.children).forEach(b => b.classList.remove('active'));
-  }
-  const activeTab = document.getElementById(`tab-${id}`);
-  if(activeTab) activeTab.classList.add('active');
-  
-  document.getElementById("infoText").textContent = (lang === 'ja') ? currentOpening.desc : currentOpening.descEn;
-  isFlipped = (currentOpening.side === 'black');
-  
-  restartOpening();
-}
-
-function restartOpening() {
-  stopAutoPlay();
-  game = new Chess();
-  currentMoveIdx = 0;
-  selectedCellId = null;
-  
-  updateMascot(FOX_NORMAL_SRC, (lang === 'ja') ? "がんばろう！準備はいい？🦊" : "Let's practice! Ready? 🦊");
-  
-  renderBoard();
-  renderMoveList();
-  updateProgress();
-  
-  const sideText = currentOpening.side === 'white' ? (lang === 'ja' ? '白' : 'White') : (lang === 'ja' ? '黒' : 'Black');
-  updateStatus(
-    (lang === 'ja') ? `${sideText}番の手を動かしてください` : `Make moves for ${sideText}.`,
-    ""
-  );
-  
-  if (currentOpening.side === 'black' && currentMoveIdx === 0) {
-    setTimeout(makeComputerMove, 500);
+function startApp() {
+  // タイマーキャンセル（多重起動防止）
+  if (_welcomeAutoTimer) { clearTimeout(_welcomeAutoTimer); _welcomeAutoTimer = null; }
+  if (_welcomeCountdownTimer) { clearTimeout(_welcomeCountdownTimer); _welcomeCountdownTimer = null; }
+  // ウェルカム非表示・メイン表示
+  const wp = document.getElementById('page-welcome');
+  if (wp) {
+    wp.style.transition = 'opacity 0.4s';
+    wp.style.opacity = '0';
+    setTimeout(() => {
+      wp.classList.remove('active');
+      wp.style.display = 'none';
+      wp.style.minHeight = '0';
+      const nav = document.getElementById('mainNav');
+      if (nav) nav.style.display = '';
+      showPage('game', document.querySelector('.nav-btn'));
+      applyLang();
+    }, 400);
   }
 }
 
-function renderBoard() {
-  const boardHtml = document.getElementById("chessboard");
-  if(!boardHtml) return;
-  boardHtml.innerHTML = "";
-  
-  const ranks = ['8','7','6','5','4','3','2','1'];
-  const files = ['a','b','c','d','e','f','g','h'];
-  
-  if(isFlipped) {
-    ranks.reverse();
-    files.reverse();
-  }
-  
-  let lastMove = null;
-  const history = game.history({verbose: true});
-  if(history.length > 0) lastMove = history[history.length - 1];
-  
-  for (let r = 0; r < 8; r++) {
-    for (let f = 0; f < 8; f++) {
-      const cellId = files[f] + ranks[r];
-      const cell = document.createElement("div");
-      cell.className = `cell ${(r + f) % 2 === 0 ? 'light' : 'dark'}`;
-      cell.dataset.id = cellId;
-      
-      if(lastMove) {
-        if(lastMove.from === cellId) cell.classList.add('last-from');
-        if(lastMove.to === cellId) cell.classList.add('last-to');
-      }
-      if(selectedCellId === cellId) cell.classList.add('selected');
-      
-      const piece = game.get(cellId);
-      if (piece) {
-        const img = document.createElement("img");
-        img.className = "piece";
-        img.src = PIECE_THEME[piece.color + piece.type.toUpperCase()];
-        cell.appendChild(img);
-      }
-      
-      if(f === 0) {
-        const lbl = document.createElement("span");
-        lbl.className = "cell-label rank-label";
-        lbl.textContent = ranks[r];
-        cell.appendChild(lbl);
-      }
-      if(r === 7) {
-        const lbl = document.createElement("span");
-        lbl.className = "cell-label file-label";
-        lbl.textContent = files[f];
-        cell.appendChild(lbl);
-      }
-      
-      cell.onclick = () => handleCellClick(cellId);
-      boardHtml.appendChild(cell);
-    }
-  }
-}
+window.startApp = startApp;
 
-function handleCellClick(cellId) {
-  if (isCurrentTurnComputer()) return;
-  
-  const piece = game.get(cellId);
-  if (selectedCellId === null) {
-    if (piece && piece.color === game.turn()) {
-      selectedCellId = cellId;
-      renderBoard();
-      highlightValidMoves(cellId);
-    }
-  } else {
-    if (selectedCellId === cellId) {
-      selectedCellId = null;
-      renderBoard();
-    } else if (piece && piece.color === game.turn()) {
-      selectedCellId = cellId;
-      renderBoard();
-      highlightValidMoves(cellId);
-    } else {
-      attemptMove(selectedCellId, cellId);
-    }
-  }
-}
+// ── INIT ──
+buildOpeningTabs();
+buildQuizOpeningTabs();
+renderBoard();
+updateScores();
+initFox();
+initWelcome();
+renderHistory();
+// applyLang called after startApp
 
-function highlightValidMoves(fromCell) {
-  const moves = game.moves({square: fromCell, verbose: true});
-  moves.forEach(m => {
-    const cell = document.querySelector(`.cell[data-id="${m.to}"]`);
-    if(cell) {
-      if(m.captured) cell.classList.add('valid-capture');
-      else cell.classList.add('valid-move');
-    }
-  });
-}
-
-function isCurrentTurnComputer() {
-  const expectedColor = currentOpening.side === 'white' ? 'w' : 'b';
-  return game.turn() !== expectedColor;
-}
-
-function attemptMove(from, to) {
-  const legalMoves = game.moves({square: from, verbose: true});
-  const move = legalMoves.find(m => m.to === to);
-  
-  if (!move) {
-    selectedCellId = null;
-    renderBoard();
-    return;
-  }
-  
-  const expectedSan = currentOpening.moves[currentMoveIdx];
-  const testGame = new Chess(game.fen());
-  const appliedMove = testGame.move({from: from, to: to, promotion: 'q'});
-  
-  if (appliedMove && (appliedMove.san === expectedSan || appliedMove.lan === expectedSan)) {
-    game.move({from: from, to: to, promotion: 'q'});
-    currentMoveIdx++;
-    selectedCellId = null;
-    if(soundOn) playCorrect();
-    score.correct++;
-    document.getElementById("scoreCorrect").textContent = score.correct;
-    
-    updateMascot(FOX_HAPPY_SRC, (lang === 'ja') ? "正解！素晴らしい手だね！✨" : "Correct! Excellent move! ✨");
-    renderBoard();
-    renderMoveList();
-    updateProgress();
-    
-    if (currentMoveIdx >= currentOpening.moves.length) {
-      handleOpeningComplete();
-    } else {
-      updateStatus((lang === 'ja') ? "正解！相手の番です..." : "Correct! Computer is thinking...", "good");
-      setTimeout(makeComputerMove, 700);
-    }
-  } else {
-    selectedCellId = null;
-    if(soundOn) playWrong();
-    score.wrong++;
-    document.getElementById("scoreWrong").textContent = score.wrong;
-    
-    updateMascot(FOX_WINK_SRC, (lang === 'ja') ? "あれれ、定跡の手とは違うみたい。" : "Oops, that's not the opening move.");
-    
-    const badCell = document.querySelector(`.cell[data-id="${to}"]`);
-    if(badCell) {
-      badCell.classList.add('wrong-flash');
-      setTimeout(() => badCell.classList.remove('wrong-flash'), 400);
-    }
-    
-    updateStatus((lang === 'ja') ? "定跡と異なります。もう一度！" : "Different from theory. Try again!", "bad");
-    renderBoard();
-  }
-}
-
-function makeComputerMove() {
-  if (currentMoveIdx >= currentOpening.moves.length) return;
-  const expectedSan = currentOpening.moves[currentMoveIdx];
-  game.move(expectedSan);
-  currentMoveIdx++;
-  
-  if(soundOn) playCorrect();
-  renderBoard();
-  renderMoveList();
-  updateProgress();
-  
-  if (currentMoveIdx >= currentOpening.moves.length) {
-    handleOpeningComplete();
-  } else {
-    updateStatus((lang === 'ja') ? "あなたの番です！" : "Your turn!", "");
-    updateMascot(FOX_NORMAL_SRC, (lang === 'ja') ? "次は何を指すかな？" : "What's next? 🤔");
-  }
-}
-
-function handleOpeningComplete() {
-  stopAutoPlay();
-  score.completed++;
-  document.getElementById("scoreCompleted").textContent = score.completed;
-  if(soundOn) playFanfare();
-  
-  saveHistory(currentOpening.id);
-  
-  const msg = (lang === 'ja') ? 
-    `「${currentOpening.nameJa}」の手順をすべてマスターしました！` : 
-    `You fully completed the "${currentOpening.name}" sequence!`;
-  
-  document.getElementById("overlayMsg").textContent = msg;
-  document.getElementById("overlay").classList.add("show");
-  
-  document.getElementById("confettiCanvas").classList.add("show");
-  document.getElementById("kusudamaWrap").classList.add("show");
-  initConfetti();
-  
-  updateStatus((lang === 'ja') ? "お見事！完了です！" : "Fantastic! Completed!", "good");
-  updateMascot(FOX_HAPPY_SRC, (lang === 'ja') ? "すごい！完璧だよ！天才！🎉" : "Amazing! Perfectly done! 🎉");
-}
-
-function closeOverlay() {
-  document.getElementById("overlay").classList.remove("show");
-  document.getElementById("confettiCanvas").classList.remove("show");
-  document.getElementById("kusudamaWrap").classList.remove("show");
-}
-
-function showHint() {
-  if (currentMoveIdx >= currentOpening.moves.length) return;
-  const expectedSan = currentOpening.moves[currentMoveIdx];
-  
-  const testGame = new Chess(game.fen());
-  const m = testGame.move(expectedSan);
-  if(m) {
-    const hintMsg = (lang === 'ja') ? `ヒント: ${m.from} の駒を ${m.to} へ` : `Hint: Move from ${m.from} to ${m.to}`;
-    updateStatus(hintMsg, "");
-    updateMascot(FOX_QUIZ_SRC, hintMsg);
-    
-    const cell = document.querySelector(`.cell[data-id="${m.from}"]`);
-    if(cell) {
-      cell.classList.add('selected');
-      setTimeout(() => cell.classList.remove('selected'), 1500);
-    }
-  }
-}
-
-function flipBoard() {
-  isFlipped = !isFlipped;
-  renderBoard();
-}
-
-function toggleAutoPlay(btn) {
-  if (autoPlayInterval) {
-    stopAutoPlay();
-  } else {
-    btn.textContent = "⏹ ストップ";
-    btn.style.background = "#7a0000";
-    btn.style.color = "#fff";
-    autoPlayInterval = setInterval(() => {
-      if (currentMoveIdx < currentOpening.moves.length) {
-        if (isCurrentTurnComputer()) {
-          makeComputerMove();
-        } else {
-          const expectedSan = currentOpening.moves[currentMoveIdx];
-          game.move(expectedSan);
-          currentMoveIdx++;
-          if(soundOn) playCorrect();
-          renderBoard();
-          renderMoveList();
-          updateProgress();
-          if (currentMoveIdx >= currentOpening.moves.length) {
-            handleOpeningComplete();
-          }
-        }
-      } else {
-        stopAutoPlay();
-      }
-    }, 1200);
-  }
-}
-
-function stopAutoPlay() {
-  if (autoPlayInterval) {
-    clearInterval(autoPlayInterval);
-    autoPlayInterval = null;
-  }
-  const btn = document.getElementById("btnAuto");
-  if(btn) {
-    btn.textContent = (lang === 'ja') ? "⏵ オートプレイ" : "⏵ Auto Play";
-    btn.style.background = "";
-    btn.style.color = "";
-  }
-}
-
-function renderMoveList() {
-  const container = document.getElementById("moveList");
-  if(!container) return;
-  container.innerHTML = "";
-  
-  for (let i = 0; i < currentOpening.moves.length; i++) {
-    const chip = document.createElement("span");
-    chip.className = "move-chip";
-    
-    let moveNum = Math.floor(i / 2) + 1;
-    let prefix = (i % 2 === 0) ? `${moveNum}. ` : `... `;
-    chip.textContent = prefix + currentOpening.moves
+</script>
+</body>
+</html>
