@@ -65,7 +65,12 @@ nav h1{font-family:'Crimson Pro',serif;font-size:clamp(0.9rem,3vw,1.4rem);font-w
 .box-card h3{font-family:'Cinzel',serif;font-size:0.7rem;font-weight:700;color:var(--brown);letter-spacing:2px;text-transform:uppercase;margin-bottom:6px;}
 
 /* Opening tabs */
-.opening-tabs{display:flex;gap:5px;flex-wrap:wrap;}
+.opening-tabs{display:flex;gap:5px;flex-wrap:wrap;}.filter-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:6px;}
+.filter-btn{padding:4px 10px;border-radius:20px;border:1px solid rgba(90,58,24,0.25);background:rgba(90,58,24,0.06);font-family:'Crimson Pro',serif;font-size:0.8rem;font-weight:700;color:var(--text-sub);cursor:pointer;transition:all 0.2s;}
+.filter-btn:hover{border-color:var(--brown);color:var(--brown);}
+.filter-btn.active{background:var(--brown);color:#f5edd6;border-color:var(--brown);}
+.filter-section{margin-bottom:4px;}
+.filter-label{font-size:0.68rem;font-weight:700;color:var(--text-muted);letter-spacing:1px;margin-bottom:3px;}
 .tab-btn{
   background:rgba(90,58,24,0.06);border:1px solid rgba(90,58,24,0.25);
   color:var(--text-sub);padding:5px 10px;border-radius:4px;
@@ -365,7 +370,35 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <div id="page-game" class="page">
 <div class="app">
   <div class="box-card">
-    <h3>▸ オープニングを選択</h3>
+    <h3 id="filterTitle">▸ オープニングを選択</h3>
+    <div class="filter-section">
+      <div class="filter-label" id="filterLevelLabel">レベル / Level</div>
+      <div class="filter-row" id="filterLevel">
+        <button class="filter-btn active" data-filter="level" data-value="all">全て / All</button>
+        <button class="filter-btn" data-filter="level" data-value="beginner">初級 Beginner</button>
+        <button class="filter-btn" data-filter="level" data-value="intermediate">中級 Intermediate</button>
+        <button class="filter-btn" data-filter="level" data-value="advanced">上級 Advanced</button>
+      </div>
+    </div>
+    <div class="filter-section">
+      <div class="filter-label" id="filterStyleLabel">スタイル / Style</div>
+      <div class="filter-row" id="filterStyle">
+        <button class="filter-btn active" data-filter="style" data-value="all">全て / All</button>
+        <button class="filter-btn" data-filter="style" data-value="attack">⚔ 攻撃 Attack</button>
+        <button class="filter-btn" data-filter="style" data-value="solid">🛡 安定 Solid</button>
+        <button class="filter-btn" data-filter="style" data-value="balanced">⚖ バランス Balanced</button>
+        <button class="filter-btn" data-filter="style" data-value="complex">🔥 複雑 Complex</button>
+      </div>
+    </div>
+    <div class="filter-section">
+      <div class="filter-label" id="filterColorLabel">手番 / Color</div>
+      <div class="filter-row" id="filterColor">
+        <button class="filter-btn active" data-filter="color" data-value="all">全て / All</button>
+        <button class="filter-btn" data-filter="color" data-value="white">白番 White</button>
+        <button class="filter-btn" data-filter="color" data-value="black">黒番 Black</button>
+        <button class="filter-btn" data-filter="color" data-value="both">両方 Both</button>
+      </div>
+    </div>
     <div class="opening-tabs" id="openingTabs"></div>
   </div>
   <div class="box-card">
