@@ -1089,6 +1089,8 @@ function showQuizFinal() {
   else if(pct>=60) {grade=L.quizGrade60; foxMsg=L.quizFox60;}
   else             {grade=L.quizGrade0;  foxMsg=L.quizFox0;}
   scoreFinal.innerHTML=grade+'<br><span style="font-size:1.5rem;">'+quizScore+' '+L.quizOf+' '+quizQuestions.length+' '+L.quizCorrectOf+' ('+pct+'%)</span>';
+　const quizFox = document.getElementById('quizFoxImg');
+if (quizFox) quizFox.src = pct >= 80 ? FOX_HAPPY_SRC : FOX_WINK_SRC; 
   quizFoxSay(foxMsg,pct>=80);
 }
 
