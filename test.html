@@ -1854,7 +1854,10 @@ function startApp() {
 window.startApp = startApp;
 
 // ── INIT ──
-buildOpeningTabs();
+document.querySelectorAll('.filter-btn').forEach(btn => {
+  btn.addEventListener('click', () => onFilterClick(btn));
+});
+  buildOpeningTabs();
 buildQuizOpeningTabs();
 renderBoard();
 updateScores();
