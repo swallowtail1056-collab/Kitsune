@@ -1225,6 +1225,17 @@ function applyLang() {
   const overlayBtns=document.querySelectorAll('.overlay-box .btn');
   if(overlayBtns[0]) overlayBtns[0].textContent=L.btnAgain;
   if(overlayBtns[1]) overlayBtns[1].textContent=L.btnClose;
+ // フィルターラベル
+  const fll = document.getElementById('filterLevelLabel');
+  if(fll) fll.textContent = LANG==='ja' ? 'レベル' : 'Level';
+  const fsl = document.getElementById('filterStyleLabel');
+  if(fsl) fsl.textContent = LANG==='ja' ? 'スタイル' : 'Style';
+  const fcl = document.getElementById('filterColorLabel');
+  if(fcl) fcl.textContent = LANG==='ja' ? '手番' : 'Color';
+  // フィルターボタン
+  document.querySelectorAll('.filter-btn[data-ja][data-en]').forEach(btn => {
+    btn.textContent = LANG==='ja' ? btn.dataset.ja : btn.dataset.en;
+  }); 
   buildOpeningTabs();
   buildQuizOpeningTabs();
   renderHistory();
