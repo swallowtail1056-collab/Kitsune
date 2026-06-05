@@ -467,6 +467,34 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   </div>
   <div class="box-card">
     <h3>▸ オープニングを選択</h3>
+    <div class="filter-section">
+      <div class="filter-label" id="quizFilterLevelLabel">Level</div>
+      <div class="filter-row" id="quizFilterLevel">
+        <button class="filter-btn active" data-filter="quizLevel" data-value="all" data-ja="全て" data-en="All">All</button>
+        <button class="filter-btn" data-filter="quizLevel" data-value="beginner" data-ja="初級" data-en="Beginner">Beginner</button>
+        <button class="filter-btn" data-filter="quizLevel" data-value="intermediate" data-ja="中級" data-en="Intermediate">Intermediate</button>
+        <button class="filter-btn" data-filter="quizLevel" data-value="advanced" data-ja="上級" data-en="Advanced">Advanced</button>
+      </div>
+    </div>
+    <div class="filter-section">
+      <div class="filter-label" id="quizFilterStyleLabel">Style</div>
+      <div class="filter-row" id="quizFilterStyle">
+        <button class="filter-btn active" data-filter="quizStyle" data-value="all" data-ja="全て" data-en="All">All</button>
+        <button class="filter-btn" data-filter="quizStyle" data-value="attack" data-ja="⚔ 攻撃" data-en="⚔ Attack">⚔ Attack</button>
+        <button class="filter-btn" data-filter="quizStyle" data-value="solid" data-ja="🛡 安定" data-en="🛡 Solid">🛡 Solid</button>
+        <button class="filter-btn" data-filter="quizStyle" data-value="balanced" data-ja="⚖ バランス" data-en="⚖ Balanced">⚖ Balanced</button>
+        <button class="filter-btn" data-filter="quizStyle" data-value="complex" data-ja="🔥 複雑" data-en="🔥 Complex">🔥 Complex</button>
+      </div>
+    </div>
+    <div class="filter-section">
+      <div class="filter-label" id="quizFilterColorLabel">Color</div>
+      <div class="filter-row" id="quizFilterColor">
+        <button class="filter-btn active" data-filter="quizColor" data-value="all" data-ja="全て" data-en="All">All</button>
+        <button class="filter-btn" data-filter="quizColor" data-value="white" data-ja="白番" data-en="White">White</button>
+        <button class="filter-btn" data-filter="quizColor" data-value="black" data-ja="黒番" data-en="Black">Black</button>
+        <button class="filter-btn" data-filter="quizColor" data-value="both" data-ja="両方" data-en="Both">Both</button>
+      </div>
+    </div>
     <div class="opening-tabs" id="quizOpeningTabs"></div>
   </div>
   <div class="quiz-area" id="quizArea" style="display:none;">
@@ -1027,7 +1055,13 @@ function buildQuizOpeningTabs() {
   const c = document.getElementById('quizOpeningTabs');
   if (!c) return;
   c.innerHTML = '';
-  OPENINGS.forEach(op => {
+ const filtered = OPENINGS.filter(matchesQuizFilter);
+  if (filtered.length === 0) {
+    c.innerHTML = '<div style="font-size:0.85rem;color:var(--text-muted);padding:6px;">' +
+      (LANG==='ja' ? '該当するオープニングがありません' : 'No openings found') + '</div>';
+    return;
+  }
+  filtered.forEach(op => {
     const b = document.createElement('button');
     b.className = 'tab-btn' + (currentQuizOpening && currentQuizOpening.id===op.id?' active':'');
     b.textContent = opName(op);
@@ -1232,6 +1266,17 @@ function applyLang() {
   if(fsl) fsl.textContent = LANG==='ja' ? 'スタイル' : 'Style';
   const fcl = document.getElementById('filterColorLabel');
   if(fcl) fcl.textContent = LANG==='ja' ? '手番' : 'Color';
+  // クイズフィルターラベル
+  const qfll = document.getElementById('quizFilterLevelLabel');
+  if(qfll) qfll.textContent = LANG==='ja' ? 'レベル' : 'Level';
+  const qfsl = document.getElementById('quizFilterStyleLabel');
+  if(qfsl) qfsl.textContent = LANG==='ja' ? 'スタイル' : 'Style';
+  const qfcl = document.getElementById('quizFilterColorLabel');
+  if(qfcl) qfcl.textContent = LANG==='ja' ? '手番' : 'Color';
+  // クイズフィルターボタン
+  document.querySelectorAll('.filter-btn[data-filter^="quiz"][data-ja][data-en]').forEach(btn => {
+    btn.textContent = LANG==='ja' ? btn.dataset.ja : btn.dataset.en;
+  });
   // フィルターボタン
   document.querySelectorAll('.filter-btn[data-ja][data-en]').forEach(btn => {
     btn.textContent = LANG==='ja' ? btn.dataset.ja : btn.dataset.en;
@@ -1545,7 +1590,24 @@ function matchesFilter(op) {
   if (f.color !== 'all' && op.color !== f.color && op.color !== 'both') return false;
   return true;
 }
+let activeQuizFilters = {quizLevel:'all', quizStyle:'all', quizColor:'all'};
 
+function onQuizFilterClick(btn) {
+  const filter = btn.dataset.filter;
+  const value  = btn.dataset.value;
+  activeQuizFilters[filter] = value;
+  document.querySelectorAll(`.filter-btn[data-filter="${filter}"]`).forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  buildQuizOpeningTabs();
+}
+
+function matchesQuizFilter(op) {
+  const f = activeQuizFilters;
+  if (f.quizLevel !== 'all' && op.level !== f.quizLevel) return false;
+  if (f.quizStyle !== 'all' && op.style !== f.quizStyle) return false;
+  if (f.quizColor !== 'all' && op.color !== f.quizColor && op.color !== 'both') return false;
+  return true;
+}
 function buildOpeningTabs() {
   const c = document.getElementById('openingTabs');
   if (!c) return;
@@ -1869,6 +1931,9 @@ window.startApp = startApp;
 // ── INIT ──
 document.querySelectorAll('.filter-btn').forEach(btn => {
   btn.addEventListener('click', () => onFilterClick(btn));
+});
+  document.querySelectorAll('.filter-btn[data-filter^="quiz"]').forEach(btn => {
+  btn.addEventListener('click', () => onQuizFilterClick(btn));
 });
   buildOpeningTabs();
 buildQuizOpeningTabs();
