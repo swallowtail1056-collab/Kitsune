@@ -1921,6 +1921,9 @@ window.startApp = startApp;
 document.querySelectorAll('.filter-btn').forEach(btn => {
   btn.addEventListener('click', () => onFilterClick(btn));
 });
+  document.querySelectorAll('.filter-btn[data-filter^="quiz"]').forEach(btn => {
+  btn.addEventListener('click', () => onQuizFilterClick(btn));
+});
   buildOpeningTabs();
 buildQuizOpeningTabs();
 renderBoard();
