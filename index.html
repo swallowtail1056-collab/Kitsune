@@ -770,7 +770,31 @@ const OPENING_NAMES_EN = {
   'オープンシシリアン':'Open Sicilian',
   'カタラン':'Catalan Opening','ダッチ・ディフェンス':'Dutch Defense',
   'アレヒン・ディフェンス':"Alekhine's Defense",'スカンジナビアン':'Scandinavian Defense',
-  'キングズ・ギャンビット':"King's Gambit",'フォー・ナイツ':'Four Knights Game',
+  'キングズ・ギャンビット':"King's Gambit",'フォー・ナイツ':'Four Knights Game','クイーンズ・ギャンビット受諾':"Queen's Gambit Accepted",
+  'キングズ・インディアン・アタック':"King's Indian Attack",
+  'イングリッシュ・オープニング':'English Opening',
+  'レティ・オープニング':'Réti Opening',
+  'グリュンフェルト・ディフェンス':'Grünfeld Defense',
+  'クイーンズ・インディアン':"Queen's Indian Defense",
+  'ボゴ・インディアン':'Bogo-Indian Defense',
+  'ベノニ・ディフェンス':'Benoni Defense',
+  'ベンコ・ギャンビット':'Benko Gambit',
+  'ブダペスト・ギャンビット':'Budapest Gambit',
+  'トーレ・アタック':'Torre Attack',
+  'コル・システム':'Colle System',
+  'トロンポウスキー・アタック':'Trompowsky Attack',
+  'ポンツィアーニ・オープニング':'Ponziani Opening',
+  'ハロウィン・ギャンビット':'Halloween Gambit',
+  'キングズ・フィアンケット':"King's Fianchetto",
+  'スミス＝モラ・ギャンビット':'Smith-Morra Gambit',
+  'クローズド・シシリアン':'Closed Sicilian',
+  'モダン・ディフェンス':'Modern Defense',
+  'ニムゾヴィッチ・ディフェンス':'Nimzowitsch Defense',
+  'オーウェン・ディフェンス':"Owen's Defense",
+  'ポーリッシュ・オープニング':'Polish Opening',
+  'バード・オープニング':"Bird's Opening",
+  'キングズ・ギャンビット拒否':"King's Gambit Declined",
+  'スリー・ナイツ・ゲーム':'Three Knights Game',
 };
 
 const I18N = {
@@ -976,7 +1000,133 @@ const OPENINGS = [
   { id:'open-sicilian', name:'オープンシシリアン', level:'intermediate', style:'attack', color:'both',
     desc:{ja:'白がd4でシシリアンを開放形に導く最もスタンダードな変化。双方が積極的に戦う複雑な中盤戦が生まれる。チェス理論の宝庫でもあり無数の変化が研究されている。現代チェスで最も指されるオープニングのひとつ。',
           en:'White opens the Sicilian with d4, leading to the most standard variation. Both sides play actively in highly complex middlegames. A treasure trove of chess theory with countless studied variations. One of the most played openings in modern chess.'},
-    moves:['e4','c5','Nf3','d6','d4','cxd4','Nxd4','Nf6','Nc3','e6'] },];
+    moves:['e4','c5','Nf3','d6','d4','cxd4','Nxd4','Nf6','Nc3','e6'] },
+
+  { id:'queens-gambit-accepted', name:'クイーンズ・ギャンビット受諾', level:'intermediate', style:'balanced', color:'black',
+    desc:{ja:'クイーンズギャンビットでc4のポーンを取る積極的な選択。黒は一時的にポーンを手放すが素早い展開と反撃の機会を得る。均衡した局面から積極的に戦いたい黒のプレイヤーに人気。',
+          en:'Black takes the pawn on c4! You give it back later, but you get fast piece development. It leads to open and exciting games. A great choice if you like to play actively with Black! 🦊'},
+    moves:['d4','d5','c4','dxc4','Nf3','Nf6','e3','e6','Bxc4'] },
+
+  { id:'kings-indian-attack', name:'キングズ・インディアン・アタック', level:'beginner', style:'balanced', color:'white',
+    desc:{ja:'白がNf3-g3-Bg2-O-Oの形を組むフレキシブルなシステム。相手の戦略に関わらず同じ陣形を組める。フィッシャーが愛用したことで有名な実用的なシステム。初心者にも扱いやすい。',
+          en:'White builds a cozy setup with Nf3, g3, Bg2, and O-O. You can use this against almost anything Black plays! Bobby Fischer loved this opening. Easy to learn and really fun to play! 🦊'},
+    moves:['Nf3','d5','g3','Nf6','Bg2','e6','O-O','Be7','d3'] },
+
+  { id:'english', name:'イングリッシュ・オープニング', level:'intermediate', style:'balanced', color:'white',
+    desc:{ja:'1.c4でクイーンサイドの空間を争うフレキシブルなオープニング。直接的な中央衝突を避けながら複雑な戦いを生み出す。様々な陣形に組み替えられる柔軟性が魅力。現代トップ棋士に広く採用されている。',
+          en:'White plays 1.c4 to fight for space on the queenside. You can turn it into many different types of games! It is very flexible and tricky. Top players love it because it keeps opponents guessing! 🦊'},
+    moves:['c4','e5','Nc3','Nf6','Nf3','Nc6','g3','Bb4','Bg2'] },
+
+  { id:'reti', name:'レティ・オープニング', level:'intermediate', style:'balanced', color:'white',
+    desc:{ja:'1.Nf3でd5ポーンに圧力をかけるハイパーモダンなオープニング。直接的な中央占領を避け後からの反撃を狙う。リヒャルト・レティが考案した革命的な戦法。柔軟性が高く様々な形に発展する。',
+          en:'White plays 1.Nf3 and lets Black take the center, then attacks it later! This sneaky strategy was invented by Richard Réti. It leads to clever positional battles. A great opening for strategic thinkers! 🦊'},
+    moves:['Nf3','d5','c4','e6','g3','Nf6','Bg2','Be7','O-O'] },
+
+  { id:'grunfeld', name:'グリュンフェルト・ディフェンス', level:'advanced', style:'attack', color:'black',
+    desc:{ja:'白の強力な中央ポーンをd5のナイトで攻撃するダイナミックな守り。中央を一時的に明け渡し後から猛烈に反撃する。フィッシャーとカスパロフが好んだ鋭い戦法。高い研究が必要な現代的守り。',
+          en:'Black lets White build a big center with pawns, then attacks it super hard! This bold strategy was loved by Fischer and Kasparov. It creates very sharp and exciting battles. One of the most dynamic openings in chess! 🦊'},
+    moves:['d4','Nf6','c4','g6','Nc3','d5','cxd5','Nxd5','e4'] },
+
+  { id:'queens-indian', name:'クイーンズ・インディアン', level:'intermediate', style:'solid', color:'black',
+    desc:{ja:'Nf6-b6-Bb7のフィアンケットでd4に対抗する堅実なシステム。長対角線ビショップが強力な戦力になる。均衡した局面を保ちながら戦略的に戦う。アナトリー・カルポフが愛用した信頼性の高い守り。',
+          en:'Black plays b6 and Bb7, putting the bishop on the long diagonal to fight White\'s center. The bishop becomes really powerful! It leads to solid and strategic games. A trusted system used by world champions! 🦊'},
+    moves:['d4','Nf6','c4','e6','Nf3','b6','g3','Bb7','Bg2'] },
+
+  { id:'bogo-indian', name:'ボゴ・インディアン', level:'intermediate', style:'solid', color:'black',
+    desc:{ja:'Nf6-e6-Bb4でナイトをピンするニムゾ風の守り。白のc3がない場合に選択される実用的なシステム。均衡した安定した局面になりやすく戦略的な理解を深められる。実戦で使いやすい信頼性の高い選択肢。',
+          en:'Black pins the knight with Bb4, similar to the Nimzo-Indian. It is a practical and solid choice when White does not play Nc3. Leads to balanced and stable positions. A reliable option for players who like calm strategic games! 🦊'},
+    moves:['d4','Nf6','c4','e6','Nf3','Bb4+','Bd2','Bxd2+','Qxd2'] },
+
+  { id:'benoni', name:'ベノニ・ディフェンス', level:'advanced', style:'attack', color:'black',
+    desc:{ja:'c5でd4に反抗し非対称な局面を作り出すダイナミックな守り。黒はキングサイドでの攻撃を目指し白はクイーンサイドで優位を狙う。激しい戦いが生まれやすい上級者向けの戦法。フィッシャーも愛用した。',
+          en:'Black plays c5 to create an unbalanced battle! Black attacks on the kingside while White pushes on the queenside. It leads to very exciting and sharp games. Fischer loved this opening because it always fights for a win! 🦊'},
+    moves:['d4','Nf6','c4','c5','d5','e6','Nc3','exd5','cxd5'] },
+
+  { id:'benko-gambit', name:'ベンコ・ギャンビット', level:'advanced', style:'attack', color:'black',
+    desc:{ja:'b5でポーンを犠牲にしてクイーンサイドのファイルを開放する積極的なギャンビット。長期的な圧力と活発なピース配置を得る。ポーンの犠牲が長く続く珍しいギャンビット。創造的な戦いを好む棋士に人気。',
+          en:'Black sacrifices a pawn with b5 to open queenside files and attack! You give up the pawn for a long time, but your pieces become super active. A creative and aggressive gambit loved by players who like pressure! 🦊'},
+    moves:['d4','Nf6','c4','c5','d5','b5','cxb5','a6','bxa6'] },
+
+  { id:'budapest-gambit', name:'ブダペスト・ギャンビット', level:'intermediate', style:'attack', color:'black',
+    desc:{ja:'2...e5でポーンを犠牲にして素早い反撃を狙う奇襲的なギャンビット。理論から外れた局面で相手を混乱させる効果がある。アマチュアレベルで非常に効果的な意表を突く戦法。積極的な黒のプレイヤーに人気。',
+          en:'Black sacrifices a pawn with 2...e5 for a surprise attack! It takes White out of normal theory and can cause big confusion. Very effective at club level. A fun and tricky gambit for players who love surprises! 🦊'},
+    moves:['d4','Nf6','c4','e5','dxe5','Ng4','Nf3','Bc5','e3'] },
+
+  { id:'torre-attack', name:'トーレ・アタック', level:'beginner', style:'solid', color:'white',
+    desc:{ja:'Nf3-Bg5のシステムでd4に対する反撃を防ぐ実用的なシステム。ロンドンシステムに似た安定した陣形を組める。深い理論知識がなくても扱いやすく実戦的。白のシステム系オープニングの入門として最適。',
+          en:'White plays Nf3 and Bg5 to build a solid setup. Similar to the London System but with the bishop on g5. Easy to learn and very practical. A great first system opening for White to study! 🦊'},
+    moves:['d4','Nf6','Nf3','e6','Bg5','d5','e3','Be7','Bd3'] },
+
+  { id:'colle-system', name:'コル・システム', level:'beginner', style:'solid', color:'white',
+    desc:{ja:'d4-Nf3-e3-Bd3の安定した陣形が基本。堅固な構造から中盤にe4と突いて攻勢に転じる。深い理論知識が不要で初心者に扱いやすい。確実な中盤攻撃を目指す実用的なシステム。',
+          en:'White builds a safe setup with d4, Nf3, e3, and Bd3, then launches an attack with e4 in the middlegame. Very easy to learn and no deep theory needed. A perfect opening system for beginners who want a clear plan! 🦊'},
+    moves:['d4','d5','Nf3','Nf6','e3','e6','Bd3','c5','c3'] },
+
+  { id:'trompowsky', name:'トロンポウスキー・アタック', level:'intermediate', style:'attack', color:'white',
+    desc:{ja:'2.Bg5でナイトに圧力をかける奇襲的なオープニング。通常の理論を外れた複雑な局面を生み出す。相手の準備を崩す効果が高く現代のトップ棋士も採用する。意表を突く攻撃的な白の選択肢。',
+          en:'White plays 2.Bg5 to attack the knight right away! It creates unusual positions outside normal theory. Great for surprising your opponent. Even top players use this tricky opening today! 🦊'},
+    moves:['d4','Nf6','Bg5','Ne4','Bf4','c5','f3','Qa5+','c3'] },
+
+  { id:'ponziani', name:'ポンツィアーニ・オープニング', level:'beginner', style:'attack', color:'white',
+    desc:{ja:'3.c3でd4の準備をする古典的なオープニング。あまり研究されていないため相手の準備を崩しやすい。シンプルな展開原則に従った実用的な戦法。アマチュアレベルで意外な効果を発揮する。',
+          en:'White plays 3.c3 to prepare d4 and build a strong center. Not very well known, so it often surprises opponents! A simple and practical opening that follows good development rules. Fun to try at club level! 🦊'},
+    moves:['e4','e5','Nf3','Nc6','c3','Nf6','d4','Nxe4','d5'] },
+
+  { id:'halloween-gambit', name:'ハロウィン・ギャンビット', level:'intermediate', style:'attack', color:'white',
+    desc:{ja:'フォーナイツからNxe5とナイトを犠牲にする超攻撃的なギャンビット。素材を犠牲に圧倒的なポーン中央を作り出す。正確に対応されると不利になるが激しい攻撃力がある。アマチュアへの奇襲として効果的。',
+          en:'White sacrifices a whole knight with Nxe5 for a huge pawn center! Super aggressive and very surprising. If Black does not know how to defend, White gets a crushing attack. A spooky and fun gambit for thrill seekers! 🦊🎃'},
+    moves:['e4','e5','Nf3','Nc6','Nc3','Nf6','Nxe5','Nxe5','d4'] },
+
+  { id:'kings-fianchetto', name:'キングズ・フィアンケット', level:'beginner', style:'balanced', color:'white',
+    desc:{ja:'g3-Bg2でキングサイドにビショップを展開する柔軟なシステム。長対角線ビショップが強力な武器となる。様々なオープニングに組み込める汎用性の高い陣形。初心者がフィアンケットを学ぶのに最適。',
+          en:'White puts the bishop on g2 with g3 and Bg2, aiming along the long diagonal. This bishop becomes very powerful! You can use this setup against many different openings. A great way to learn fianchetto positions! 🦊'},
+    moves:['g3','d5','Bg2','e5','d3','Nf6','Nd2','Bc5','e4'] },
+
+  { id:'smithmorra', name:'スミス＝モラ・ギャンビット', level:'intermediate', style:'attack', color:'white',
+    desc:{ja:'シシリアンに対してd4-c3のギャンビットで素早い展開と攻撃を目指す。ポーンと引き換えに活発なピース展開と攻撃的主導権を得る。アマチュアを驚かせる効果が高い。白が積極的に戦いたい場合の選択肢。',
+          en:'White sacrifices a pawn against the Sicilian for super fast development and attack! Great for surprising Sicilian players who expect normal theory. You get very active pieces for the pawn. A fun and aggressive weapon! 🦊'},
+    moves:['e4','c5','d4','cxd4','c3','dxc3','Nxc3','Nc6','Nf3'] },
+
+  { id:'closed-sicilian', name:'クローズド・シシリアン', level:'beginner', style:'balanced', color:'white',
+    desc:{ja:'シシリアンに対してNc3-g3-Bg2の形を組む穏やかなシステム。複雑なオープンシシリアン理論を避けながら安定した陣形を築く。徐々に攻勢を強めるスタイルで初心者にも扱いやすい。',
+          en:'White builds a solid setup with Nc3, g3, and Bg2 against the Sicilian. You avoid all the complicated Sicilian theory! Build your position safely and then attack. A great option for players who want to play against the Sicilian without tons of memorization! 🦊'},
+    moves:['e4','c5','Nc3','Nc6','g3','g6','Bg2','Bg7','d3'] },
+
+  { id:'modern-defense', name:'モダン・ディフェンス', level:'intermediate', style:'balanced', color:'black',
+    desc:{ja:'1...g6でビショップをフィアンケットし白の中央を後から崩すハイパーモダンな守り。ピルツに似るが更に柔軟性が高い。相手に中央を明け渡し後から反撃するスタイル。創造的な戦いを好む棋士に人気。',
+          en:'Black plays g6 and Bg7, letting White take the center and then attacks it later! Very flexible and hard to prepare against. Similar to the Pirc but even more unpredictable. Great for creative players who like surprises! 🦊'},
+    moves:['e4','g6','d4','Bg7','Nc3','d6','Nf3','Nd7','Bc4'] },
+
+  { id:'nimzowitsch-defense', name:'ニムゾヴィッチ・ディフェンス', level:'intermediate', style:'attack', color:'black',
+    desc:{ja:'1...Nc6でe5のポーンを守らず独特の展開を目指す奇抜な守り。主流から外れているため相手の準備を崩す効果がある。アーロン・ニムゾヴィッチが考案した独創的な戦法。意表を突く効果が高い。',
+          en:'Black plays 1...Nc6, an unusual and tricky response to 1.e4! It goes outside normal theory and confuses many opponents. Invented by the creative genius Aaron Nimzowitsch. A fun surprise weapon for adventurous players! 🦊'},
+    moves:['e4','Nc6','d4','d5','Nc3','dxe4','d5','Ne5','Qd4'] },
+
+  { id:'owen-defense', name:'オーウェン・ディフェンス', level:'beginner', style:'balanced', color:'black',
+    desc:{ja:'1...b6でビショップをフィアンケットする珍しい守り。白の中央支配を間接的に牽制する。主流から外れた選択肢でアマチュアを驚かせる効果がある。シンプルな展開から複雑な局面に発展することも。',
+          en:'Black plays 1...b6 and puts the bishop on b7, fighting White\'s center from the side! An unusual and surprising choice. Not many players know how to handle it. A fun and sneaky opening for Black! 🦊'},
+    moves:['e4','b6','d4','Bb7','Bd3','Nf6','Nf3','e6','O-O'] },
+
+  { id:'polish-opening', name:'ポーリッシュ・オープニング', level:'beginner', style:'attack', color:'white',
+    desc:{ja:'1.b4でクイーンサイドに積極的に空間を争うオランウータン・オープニングとも呼ばれる奇抜な戦法。相手の準備を崩しやすく意表を突く。アマチュアレベルで非常に効果的な奇襲。独特な局面への入口。',
+          en:'White plays 1.b4, the Orangutan Opening! Super surprising and unusual. It grabs queenside space right away and confuses opponents who only know normal openings. A wild and fun choice for players who love surprises! 🦊🦧'},
+    moves:['b4','e5','Bb2','Bxb4','Bxe5','Nf6','Nf3','O-O','e3'] },
+
+  { id:'bird-opening', name:'バード・オープニング', level:'beginner', style:'attack', color:'white',
+    desc:{ja:'1.f4でキングサイドに積極的に攻撃を目指すオープニング。ダッチ・ディフェンスと逆の立場になる。フロムズ・ギャンビットへの注意が必要。独特な局面を好むプレイヤーに人気の個性的な選択肢。',
+          en:'White plays 1.f4 to control the e5 square and plan a kingside attack! It is like playing the Dutch Defense but with White. Leads to unusual and original positions. A fun opening for players who want something different! 🦊'},
+    moves:['f4','d5','Nf3','Nf6','e3','g6','Be2','Bg7','O-O'] },
+
+  { id:'kings-gambit-declined', name:'キングズ・ギャンビット拒否', level:'intermediate', style:'solid', color:'black',
+    desc:{ja:'キングズ・ギャンビットに対しf4のポーンを取らず守備的に対応する変化。安定した局面を保ちながら白の攻撃を受け流す。ギャンビットを受け入れたくない場合の実用的な選択肢。均衡した局面になりやすい。',
+          en:'Black declines the King\'s Gambit pawn and plays solidly instead! You avoid the sharp gambit complications and keep a safe position. A practical choice for players who prefer calm games over wild attacks. Smart and solid! 🦊'},
+    moves:['e4','e5','f4','Bc5','Nf3','d6','Bc4','Nf6','d3'] },
+
+  { id:'three-knights', name:'スリー・ナイツ・ゲーム', level:'beginner', style:'balanced', color:'both',
+    desc:{ja:'フォーナイツの前段階として3枚のナイトが展開される形。均衡した局面からフォーナイツやスパニッシュ変化に発展する。シンプルで理解しやすいオープニング原則を学べる。初心者の実戦練習に最適な変化。',
+          en:'Three knights come out quickly in this opening! It can lead to the Four Knights Game or other fun variations. Very good for learning how to develop pieces properly. A simple and instructive opening for beginners! 🦊'},
+    moves:['e4','e5','Nf3','Nc6','Nc3','Bc5','Bc4','Nf6','d3'] },
+];
 
 // ============================================================
 // FOX MASCOT
