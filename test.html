@@ -1573,7 +1573,24 @@ function matchesFilter(op) {
   if (f.color !== 'all' && op.color !== f.color && op.color !== 'both') return false;
   return true;
 }
+let activeQuizFilters = {quizLevel:'all', quizStyle:'all', quizColor:'all'};
 
+function onQuizFilterClick(btn) {
+  const filter = btn.dataset.filter;
+  const value  = btn.dataset.value;
+  activeQuizFilters[filter] = value;
+  document.querySelectorAll(`.filter-btn[data-filter="${filter}"]`).forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  buildQuizOpeningTabs();
+}
+
+function matchesQuizFilter(op) {
+  const f = activeQuizFilters;
+  if (f.quizLevel !== 'all' && op.level !== f.quizLevel) return false;
+  if (f.quizStyle !== 'all' && op.style !== f.quizStyle) return false;
+  if (f.quizColor !== 'all' && op.color !== f.quizColor && op.color !== 'both') return false;
+  return true;
+}
 function buildOpeningTabs() {
   const c = document.getElementById('openingTabs');
   if (!c) return;
