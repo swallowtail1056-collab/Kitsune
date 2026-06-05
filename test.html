@@ -1266,6 +1266,17 @@ function applyLang() {
   if(fsl) fsl.textContent = LANG==='ja' ? 'スタイル' : 'Style';
   const fcl = document.getElementById('filterColorLabel');
   if(fcl) fcl.textContent = LANG==='ja' ? '手番' : 'Color';
+  // クイズフィルターラベル
+  const qfll = document.getElementById('quizFilterLevelLabel');
+  if(qfll) qfll.textContent = LANG==='ja' ? 'レベル' : 'Level';
+  const qfsl = document.getElementById('quizFilterStyleLabel');
+  if(qfsl) qfsl.textContent = LANG==='ja' ? 'スタイル' : 'Style';
+  const qfcl = document.getElementById('quizFilterColorLabel');
+  if(qfcl) qfcl.textContent = LANG==='ja' ? '手番' : 'Color';
+  // クイズフィルターボタン
+  document.querySelectorAll('.filter-btn[data-filter^="quiz"][data-ja][data-en]').forEach(btn => {
+    btn.textContent = LANG==='ja' ? btn.dataset.ja : btn.dataset.en;
+  });
   // フィルターボタン
   document.querySelectorAll('.filter-btn[data-ja][data-en]').forEach(btn => {
     btn.textContent = LANG==='ja' ? btn.dataset.ja : btn.dataset.en;
