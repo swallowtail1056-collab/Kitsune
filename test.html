@@ -1055,7 +1055,13 @@ function buildQuizOpeningTabs() {
   const c = document.getElementById('quizOpeningTabs');
   if (!c) return;
   c.innerHTML = '';
-  OPENINGS.forEach(op => {
+ const filtered = OPENINGS.filter(matchesQuizFilter);
+  if (filtered.length === 0) {
+    c.innerHTML = '<div style="font-size:0.85rem;color:var(--text-muted);padding:6px;">' +
+      (LANG==='ja' ? '該当するオープニングがありません' : 'No openings found') + '</div>';
+    return;
+  }
+  filtered.forEach(op => {
     const b = document.createElement('button');
     b.className = 'tab-btn' + (currentQuizOpening && currentQuizOpening.id===op.id?' active':'');
     b.textContent = opName(op);
