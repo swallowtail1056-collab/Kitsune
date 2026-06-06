@@ -2072,32 +2072,7 @@ function clearHistory() {
 // ============================================================
 // ③ OPENING DESCRIPTIONS — 充実した解説
 // ============================================================
-const OPENING_TIPS = {
-  'ruylopez':    { ja:'💡 白はBa4→O-Oと続け、キャスリング後にルーク+ポーンで攻撃。a6のポーンがビショップを追い払うのが定番の応手。',
-                   en:"💡 White continues Ba4→O-O. After castling, build pressure. Black's a6 is the standard response to chase the bishop." },
-  'italian':     { ja:'💡 3.Bc4はf7を狙う。黒はBc5で対抗し、c3-d4でポーン構造を争う。現代的で均衡した戦い。',
-                   en:"💡 3.Bc4 targets f7. Black responds Bc5. The c3-d4 battle for the center defines the modern Italian." },
-  'scotch':      { ja:'💡 3.d4でe5を直接攻撃。exd4→Nxd4後、黒がNf6と応じればNxc6で主導権を握れる。',
-                   en:"💡 3.d4 attacks e5 directly. After exd4-Nxd4, if Black plays Nf6, White gains initiative with Nxc6." },
-  'sicilian':    { ja:'💡 c5は白のd4を防ぎつつ非対称を作る。d6-Nf6-Nc3と進むオープンシシリアンは最も複雑な変化。',
-                   en:"💡 c5 prevents d4 while creating asymmetry. The Open Sicilian leads to the richest and most complex positions." },
-  'dragon':      { ja:'💡 g6-Bg7のフィアンケットが特徴。白はYugoslav Attack（O-O-O）で攻める。激しいカウンターゲーム。',
-                   en:"💡 The g6-Bg7 fianchetto is key. White often plays the Yugoslav Attack with O-O-O for a sharp double-edged game." },
-  'najdorf':     { ja:'💡 5...a6でb5やBb5を防ぐ。カスパロフとフィッシャーが愛用した最も深いオープニング。',
-                   en:"💡 5...a6 prevents b5 and Bb5. Favored by Kasparov and Fischer—the deepest and most studied opening." },
-  'french':      { ja:'💡 e6でポーンチェーンを作りd5を準備。白はc4またはe5でスペース優位を活かす。持久戦向き。',
-                   en:"💡 e6 builds a pawn chain and prepares d5. White gains space. The French leads to strategic, long battles." },
-  'caro-kann':   { ja:'💡 c6でd5を支える堅牢な守り。黒マスビショップを保持できるのが最大の利点。エンドゲームで強い。',
-                   en:"💡 c6 supports d5 while keeping the light-squared bishop free. Solid and strong in endgames." },
-  'queens':      { ja:'💡 c4のギャンビットを受け入れると白がd4-e4中央を占有。e6で断り、後でd5を維持するのが定跡。',
-                   en:"💡 Accepting the gambit lets White dominate the center. Declining with e6 and maintaining d5 is the classical approach." },
-  'kings-indian': { ja:'💡 白の中央を許してからe5やc5で反撃。Bg7のビショップが長期的に強力な武器になる。',
-                    en:"💡 Allow Whites center then counter with e5 or c5. The Bg7 bishop becomes a powerful long-term weapon." },
-  'london':      { ja:'💡 Bf4-e3-Bd3の三角形が基本陣形。相手の戦略に関わらず同じ形を作れる信頼性の高いシステム。',
-                   en:"💡 The Bf4-e3-Bd3 triangle is the core setup. Reliable against almost anything Black plays." },
-  'nimzo':       { ja:'💡 Bb4でc3ナイトをピンして白のd4支配を防ぐ。捕獲されてもダブルポーンを残せる戦略的なオープニング。',
-                   en:"💡 Bb4 pins the knight to prevent Whites d4 dominance. Giving up the bishop doubles Whites pawns strategically." },
-};
+
 
 function getOpeningTip(openingId) {
   const tip = OPENING_TIPS[openingId];
