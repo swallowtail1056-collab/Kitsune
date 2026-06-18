@@ -1,37 +1,98 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-    <meta charset="UTF-8">
-    <title>知るともっと面白い！チェスのロマン溢れる歴史 - kitsune chess</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>チェスの歴史 - KitsuneChess</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Crimson+Pro:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f5edd6;
+    --brown-dark: #4a2a0e;
+    --brown: #7c4a1e;
+    --text: #221f1a;
+    --border: rgba(184, 134, 11, 0.3);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Crimson Pro', serif;
+    font-weight: 600;
+    line-height: 1.8;
+    padding: 40px 20px;
+  }
+  .container {
+    max-width: 720px;
+    margin: 0 auto;
+    background: rgba(255, 255, 255, 0.4);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 40px 30px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+  }
+  h1 {
+    font-family: 'Cinzel', serif;
+    font-size: 2rem;
+    color: var(--brown-dark);
+    text-align: center;
+    margin-bottom: 30px;
+    border-bottom: 2px solid var(--border);
+    padding-bottom: 15px;
+  }
+  h2 {
+    font-family: 'Cinzel', serif;
+    font-size: 1.3rem;
+    color: var(--brown);
+    margin: 35px 0 15px;
+    border-left: 3px solid var(--brown);
+    padding-left: 12px;
+  }
+  p {
+    font-size: 1.1rem;
+    margin-bottom: 20px;
+    text-align: justify;
+  }
+  .btn-close {
+    display: block;
+    width: 160px;
+    margin: 40px auto 0;
+    padding: 12px;
+    background: var(--brown);
+    color: #f5edd6;
+    border: none;
+    border-radius: 6px;
+    font-family: 'Cinzel', serif;
+    font-size: 0.9rem;
+    font-weight: 700;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .btn-close:hover {
+    background: var(--brown-dark);
+  }
+</style>
 </head>
 <body>
-    <header>
-        <h1>キツネと学ぶチェス講座</h1>
-        <nav>
-            <a href="index.html">ゲームに戻る</a> | 
-            <a href="about.html">サイトへの想い</a> | 
-            <a href="rules.html">「チェス脳」の鍛え方</a> | 
-            <a href="tactics.html">f7の狙い方</a> | 
-            <a href="policy.html">免責事項</a>
-        </nav>
-    </header>
-    <hr>
 
-    <main>
-        <h2>知るともっと面白い！チェスのロマン溢れる歴史</h2>
-        <p>私たちが今、スマホやパソコンの画面上で何気なく動かしているチェスの駒たち。実は、この64マスの白黒の盤面には、およそ1500年以上にわたる人類の知恵とロマンの歴史がギュッと凝縮されています。チェスのルーツや、駒たちがたどってきた驚きの進化の旅を知ることで、普段の対局がさらに味わい深いものになりますよ。</p>
+<div class="container">
+  <h1>The Chronicle of Chess</h1>
+  
+  <p>チェスは、数あるボードゲームの中でも最も古い歴史を持つものの一つです。その起源をたどると、壮大な文化の旅が見えてきます。</p>
 
-        <h3>1. チェスの原点：古代インドの戦争ゲーム「チャトランガ」</h3>
-        <p>チェスの起源には諸説ありますが、最も有力とされているのが、6世紀頃の古代インドで遊ばれていた「チャトランガ（Chaturanga）」というボードゲームです。これはサンスクリット語で「4つの部隊」を意味し、当時のインド王国の軍隊（歩兵、騎馬兵、象兵、戦車兵）の戦いを模したものでした。<br>
-        このチャトランガがシルクロードを渡ってペルシャ（現在のイラン周辺）に伝わり、そこで「シャトランジ」という名前に形を変え、さらにルールが洗練されていきました。私たちがチェックメイトしたときに言う「メイト」という言葉も、ペルシャ語で王が退路を断たれたことを意味する「シャー・マート（王は死んだ）」が語源だと言われています。</p>
+  <h2>1. 古代インドの起源「チャトランガ」</h2>
+  <p>チェスの原型は、6世紀頃の古代インドで遊ばれていた「チャトランガ」というゲームだと言われています。これは古代インドの軍隊（歩兵、騎兵、戦車、象）を模したもので、これが東西へと伝播していきました。</p>
 
-        <h3>2. ヨーロッパへの伝播と「クイーン」の劇的な大進化</h3>
-        <p>11世紀から12世紀頃になると、ゲームはキリスト教世界であるヨーロッパへと伝わります。ここで、ヨーロッパの宮廷文化や社会構造に合わせて、駒の役割や名前がガラリと変化しました。インドの象は「ビショップ（聖職者）」に、戦車は「ルーク（城塞）」へと姿を変えたのです。<br>
-        そして、15世紀の終わり頃、チェスの歴史の中で最も劇的な「ルール改正」が行われます。それまで、王の隣にいる「アドバイザー（参謀）」という地味で弱い駒だったものが、当時ヨーロッパを統治していた強力な女王たちの権力を反映するかのように、盤上で最も自由で最強の駒「クイーン」へと生まれ変わったのです。同時に、ビショップの移動範囲も無限に広がり、ゲームのスピード感が一気に増して、現在のモダン・チェスの形が完成しました。</p>
+  <h2>2. シルクロードを渡りヨーロッパへ</h2>
+  <p>東へ伝わったものは将棋やシャンチー（中国将棋）になり、西へ伝わったものはペルシアを経由してイスラム世界、そして10世紀頃にヨーロッパへと渡りました。ペルシア語で王を意味する「シャー」が、現在の「チェックメイト」の語源になっています。</p>
 
-        <h3>3. 貴族の嗜みから、世界的な「知のスポーツ」へ</h3>
-        <p>かつては王侯貴族の高度な教養や「軍事戦術の訓練」として愛されたチェスは、19世紀に入るとカフェ文化の発展とともに一般市民の間にも爆発的に広がっていきました。初の国際トーナメントが開催され、先人たちが何年もかけて「定跡（オープニング）」を研究・確立し、知性を競い合う現代の「マインドスポーツ」としての地位を確立したのです。<br>
-        現在では、世界で数億人もの人々がプレイする、人類史上最も普及したゲームの一つとなりました。1500年前の王様たちと同じように、知恵の限りを尽くして次の一手を構築する楽しさを、ぜひ当サイト「kitsune chess」で存分に味わってみてください。</p>
-    </main>
+  <h2>3. 現代のルールへの進化</h2>
+  <p>15世紀末のヨーロッパで、クイーンやビショップの動きが劇的に強化され、現在のスピーディーでエキサイティングなチェスへと進化を遂げました。これにより、単なるゲームから、深い戦略と美学を持つ「知の芸術」へと昇華したのです。</p>
+
+  <a href="#" class="btn-close" onclick="window.close(); return false;">CLOSE</a>
+</div>
+
 </body>
 </html>
