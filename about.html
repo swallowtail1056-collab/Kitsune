@@ -1,33 +1,99 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-    <meta charset="UTF-8">
-    <title>kitsune chess（キツネチェス）に込めた想い</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>サイトへの想い - KitsuneChess</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Crimson+Pro:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f5edd6;
+    --brown-dark: #4a2a0e;
+    --brown: #7c4a1e;
+    --text: #221f1a;
+    --card-bg: rgba(90, 58, 24, 0.05);
+    --border: rgba(184, 134, 11, 0.3);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Crimson Pro', serif;
+    font-weight: 600;
+    line-height: 1.8;
+    padding: 40px 20px;
+  }
+  .container {
+    max-width: 720px;
+    margin: 0 auto;
+    background: rgba(255, 255, 255, 0.4);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 40px 30px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+  }
+  h1 {
+    font-family: 'Cinzel', serif;
+    font-size: 2rem;
+    color: var(--brown-dark);
+    text-align: center;
+    margin-bottom: 30px;
+    border-bottom: 2px solid var(--border);
+    padding-bottom: 15px;
+  }
+  p {
+    font-size: 1.1rem;
+    margin-bottom: 24px;
+    text-align: justify;
+  }
+  .highlight-box {
+    background: var(--card-bg);
+    border-left: 4px solid var(--brown);
+    padding: 20px;
+    border-radius: 0 8px 8px 0;
+    margin: 30px 0;
+  }
+  .btn-close {
+    display: block;
+    width: 160px;
+    margin: 40px auto 0;
+    padding: 12px;
+    background: var(--brown);
+    color: #f5edd6;
+    border: none;
+    border-radius: 6px;
+    font-family: 'Cinzel', serif;
+    font-size: 0.9rem;
+    font-weight: 700;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .btn-close:hover {
+    background: var(--brown-dark);
+  }
+</style>
 </head>
 <body>
-    <header>
-        <h1>キツネと学ぶチェス講座</h1>
-        <nav>
-            <a href="index.html">ゲームに戻る</a> | 
-            <a href="history.html">チェスの歴史</a> | 
-            <a href="rules.html">「チェス脳」の鍛え方</a> | 
-            <a href="tactics.html">f7の狙い方</a> | 
-            <a href="policy.html">免責事項</a>
-        </nav>
-    </header>
-    <hr>
 
-    <main>
-        <h2>ようこそ！kitsune chess（キツネチェス）へ</h2>
-        <p>当サイト「kitsune chess」にお越しいただき、ありがとうございます。このサイトは、ウェブ上で誰でも手軽にチェスの対局を楽しめるように、個人で開発したチェスゲーム・アプリです。高度な思考エンジンを搭載し、スムーズな操作感でチェスの奥深い世界を体験していただけるよう、コードの1行1行にこだわりを込めて制作しました。</p>
+<div class="container">
+  <h1>Our Vision</h1>
+  
+  <p>「KitsuneChess」へお越しいただきありがとうございます。本サイトは、チェスの美しさと奥深さをより多くの人に知ってもらい、特に難解に感じられがちな「オープニング（序盤の定跡）」を誰もが楽しく直感的に学べるようにという想いから誕生しました。</p>
 
-        <h3>親しみやすい「キツネのキャラクター」に込めた願い</h3>
-        <p>チェスと聞くと、多くの人が「なんだか難しそう」「頭の良い人だけのゲームじゃないの？」という、少し堅苦しいイメージを抱きがちです。しかし、チェスは本来、年齢や国境、言語の壁をすべて飛び越えて、誰もが対等に知恵を競い合える世界最高峰の素晴らしいゲームです。</p>
-        <p>特に、これからの未来を担う子どもたちや、今まで一度もチェス盤に触れたことがないという未経験の方々、さらには「ルールは知っているけれど、難しくてやめてしまった」という初心者の方々に、もっと気軽に、もっと親しみを持ってチェスの世界に飛び込んできてほしい――。そんな強い想いから、このサイトの案内役として、愛らしくてどこか知的な「キツネのキャラクター」を考案しました。</p>
-        <p>キツネは古来より、賢さと機転の象徴として描かれることが多い動物です。盤上のポーンやナイトたちがキツネの可愛いデザインになることで、一歩引いてしまいがちな難しい戦術の勉強も、まるで絵本を読み進めるようにワクワクしながら楽しんでいただけるはずです。</p>
+  <p>チェスは数百年の歴史を持つ素晴らしい知のスポーツですが、ルールを覚えた後に「次にどう指せばいいのか分からない」という壁にぶつかる方が少なくありません。そんな時に、ナビゲーターである狐のジェネと一緒に、盤面に触れながら自然と手が覚えるような温かい学習環境を作りたいと考えました。</p>
 
-        <h3>当サイトが目指すビジョン</h3>
-        <p>kitsune chessが目指すのは、単にコンピューターと戦うだけの無機質なゲーム画面ではありません。ここをきっかけにチェスに興味を持ち、オンラインやリアルなチェス盤で「最初の一手」を指せるようになる人が一人でも増えること、そして、知恵を絞って勝利したときのあの独特な高揚感を、たくさんの人に味わってもらうための「架け橋」となることです。ぜひ、キツネたちと一緒に、あなたのペースでじっくりと盤上の冒険を楽しんでいってください！</p>
-    </main>
+  <div class="highlight-box">
+    <p style="margin-bottom: 0; font-weight: 700; color: var(--brown-dark);">
+      チェスの上達は一歩一歩の積み重ねです。このツールが、あなたのチェスライフをより豊かにする小さなきっかけになれば幸いです。
+    </p>
+  </div>
+
+  <p>完全無料でどなたでも気軽に学べる場として、今後もより使いやすく、チェス脳を刺激するコンテンツを提供し続けてまいります。どうぞ心ゆくまで練習とクイズをお楽しみください！</p>
+
+  <a href="#" class="btn-close" onclick="window.close(); return false;">CLOSE</a>
+</div>
+
 </body>
 </html>
