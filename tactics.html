@@ -1,33 +1,107 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-    <meta charset="UTF-8">
-    <title>勝率がグッと上がる「f7」の狙い方 - kitsune chess</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>f7の狙い方 - KitsuneChess</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Crimson+Pro:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f5edd6;
+    --brown-dark: #4a2a0e;
+    --brown: #7c4a1e;
+    --text: #221f1a;
+    --border: rgba(184, 134, 11, 0.3);
+    --card-bg: rgba(90, 58, 24, 0.07);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Crimson Pro', serif;
+    font-weight: 600;
+    line-height: 1.8;
+    padding: 40px 20px;
+  }
+  .container {
+    max-width: 720px;
+    margin: 0 auto;
+    background: rgba(255, 255, 255, 0.4);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 40px 30px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+  }
+  h1 {
+    font-family: 'Cinzel', serif;
+    font-size: 2rem;
+    color: var(--brown-dark);
+    text-align: center;
+    margin-bottom: 30px;
+    border-bottom: 2px solid var(--border);
+    padding-bottom: 15px;
+  }
+  h2 {
+    font-family: 'Cinzel', serif;
+    font-size: 1.3rem;
+    color: var(--brown);
+    margin: 35px 0 15px;
+    border-left: 3px solid var(--brown);
+    padding-left: 12px;
+  }
+  p {
+    font-size: 1.1rem;
+    margin-bottom: 20px;
+    text-align: justify;
+  }
+  .coordinate {
+    font-family: 'Cinzel', serif;
+    background: var(--card-bg);
+    padding: 2px 6px;
+    border-radius: 4px;
+    color: var(--brown-dark);
+    font-weight: 700;
+  }
+  .btn-close {
+    display: block;
+    width: 160px;
+    margin: 40px auto 0;
+    padding: 12px;
+    background: var(--brown);
+    color: #f5edd6;
+    border: none;
+    border-radius: 6px;
+    font-family: 'Cinzel', serif;
+    font-size: 0.9rem;
+    font-weight: 700;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .btn-close:hover {
+    background: var(--brown-dark);
+  }
+</style>
 </head>
 <body>
-    <header>
-        <h1>キツネと学ぶチェス講座</h1>
-        <nav>
-            <a href="index.html">ゲームに戻る</a> | 
-            <a href="about.html">サイトへの想い</a> | 
-            <a href="history.html">チェスの歴史</a> | 
-            <a href="rules.html">「チェス脳」の鍛え方</a> | 
-            <a href="policy.html">免責事項</a>
-        </nav>
-    </header>
-    <hr>
 
-    <main>
-        <h2>秘伝のコツ：勝率がグッと上がる「f7」の狙い方</h2>
-        <p>ルールを覚えて、基本的な心構えも身についた。そんなあなたが実戦で一歩リードするための、非常に強力で具体的な戦術ターゲットをお教えします。本当はあまりライバルたちには教えたくない、秘密のコツなのですが、これを知っているだけで、序盤の勝率や優位の立ちやすさがガラリと変わります。その狙うべき大本命のターゲットとは、黒番の陣地にあるf7のマス、白番の陣地ならf2のマスです。最初はこれだけでも大分違いますよ。</p>
+<div class="container">
+  <h1>Tactics: Targeting f7</h1>
+  
+  <p>チェスの序盤戦において、最もエキサイティングで破壊力のある戦術の一つが、黒陣の弱点である <span class="coordinate">f7</span>（白番から見て <span class="coordinate">f2</span>）のマスを巡る攻防です。</p>
 
-        <h3>なぜf7のポーンが盤上最大の弱点なのか？</h3>
-        <p>ゲームが始まったばかりの初期配置の盤面を、じっくりと観察してみてください。最前列に並んでいるポーンたちは、それぞれ後ろに控える強力な駒たちに守られています。例えば、d7やe7のポーンは、クイーンやビショップ、キングなど、複数の駒の守りの目が光っていますよね。<br>
-        しかし、不思議なことにf7にあるポーンだけは、唯一キングのただ一人しか守っていないのです。キングはゲーム内で最も大切な駒ですが、攻撃力や守備の小回りは決して高くありません。つまり、f7のマスは、初期配置の段階から最も守りが薄く、最もデリケートな、むき出しの弱点として存在しているのです。ここを効率よく攻め立てることが、序盤戦を有利に進める最大の鍵になります。</p>
+  <h2>なぜ f7 は弱いのか？</h2>
+  <p>ゲーム開始時、すべてのポーンは何かしらの駒によって守られていますが、<span class="coordinate">f7</span> のポーンだけは**「キングしか守っていない」**という致命的な特徴があります。そのため、ここを複数の駒で集中攻撃されると、陣形が瞬く間に崩壊してしまうのです。</p>
 
-        <h3>実戦でf7を狙うための、基本の攻撃アイデア</h3>
-        <p>では、具体的にどのようにf7の弱点を攻めれば良いのでしょうか。最初の一歩としておすすめなのが、序盤の早い段階で、自分のビショップをc4のマスへと配置し、斜めのラインを使って遠くから相手のf7のポーンをじっと睨みつける形を作ることです。まずはf7を狙う、最初はこれだけでも大分違います。<br>
-        さらに、ここに自分のナイトやクイーンを連携させて、f7のマスに対して同時に2つ以上の攻撃の目を向けさせます。もし相手がチェスの基本をまだ知らず、このf7に迫る危険に気づかずにのんびり別の手を指していると、わずか4手でチェックメイトが成立する有名な学者メイトが決まってしまうこともあります。さすがに相手が対策を知っていてメイトまでは決まらなくても、f7をビショップで睨み、圧力をかけ続けるだけで、相手は防御に追われて自分のやりたい戦略を立てられなくなります。最初のうちは、このf7を意識して攻めの形を作るというだけでも、驚くほど有利にゲームを展開できるようになります。</p>
-    </main>
+  <h2>代表的な狙い方：イタリアン・ゲーム</h2>
+  <p>白が初手から <span class="coordinate">1.e4 e5 2.Nf3 Nc6 3.Bc4</span> と進めるイタリアン・ゲームでは、ビショップがダイレクトに相手の <span class="coordinate">f7</span> を睨みつけます。ここからナイトをさらに <span class="coordinate">g5</span> に跳ねて攻撃を仕掛ける「フライド・リバー・アタック」などは、初心者から有段者まで非常に有名な強力戦術です。</p>
+
+  <h2>守る側の注意点</h2>
+  <p>黒番を持つときは、相手のビショップとナイトが連携して <span class="coordinate">f7</span> に襲いかかってきていないかを常に警戒する必要があります。早めにキャスリングを済ませてルークを防御に参加させるか、<span class="coordinate">d5</span> などで相手ビショップの射線を遮ることが大切な防御技術となります。</p>
+
+  <a href="#" class="btn-close" onclick="window.close(); return false;">CLOSE</a>
+</div>
+
 </body>
 </html>
