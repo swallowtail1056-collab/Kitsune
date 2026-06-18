@@ -6,102 +6,88 @@
 <title>f7の狙い方 - KitsuneChess</title>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Crimson+Pro:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --bg: #f5edd6;
-    --brown-dark: #4a2a0e;
-    --brown: #7c4a1e;
-    --text: #221f1a;
-    --border: rgba(184, 134, 11, 0.3);
-    --card-bg: rgba(90, 58, 24, 0.07);
-  }
+  :root { --bg: #f5edd6; --brown: #7c4a1e; --brown-dark: #4a2a0e; --text: #111; }
   * { margin: 0; padding: 0; box-sizing: border-box; }
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'Crimson Pro', serif;
-    font-weight: 600;
-    line-height: 1.8;
-    padding: 40px 20px;
-  }
-  .container {
-    max-width: 720px;
-    margin: 0 auto;
-    background: rgba(255, 255, 255, 0.4);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 40px 30px;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.05);
-  }
-  h1 {
-    font-family: 'Cinzel', serif;
-    font-size: 2rem;
-    color: var(--brown-dark);
-    text-align: center;
-    margin-bottom: 30px;
-    border-bottom: 2px solid var(--border);
-    padding-bottom: 15px;
-  }
-  h2 {
-    font-family: 'Cinzel', serif;
-    font-size: 1.3rem;
-    color: var(--brown);
-    margin: 35px 0 15px;
-    border-left: 3px solid var(--brown);
-    padding-left: 12px;
-  }
-  p {
-    font-size: 1.1rem;
-    margin-bottom: 20px;
-    text-align: justify;
-  }
-  .coordinate {
-    font-family: 'Cinzel', serif;
-    background: var(--card-bg);
-    padding: 2px 6px;
-    border-radius: 4px;
-    color: var(--brown-dark);
-    font-weight: 700;
-  }
-  .btn-close {
-    display: block;
-    width: 160px;
-    margin: 40px auto 0;
-    padding: 12px;
-    background: var(--brown);
-    color: #f5edd6;
-    border: none;
-    border-radius: 6px;
-    font-family: 'Cinzel', serif;
-    font-size: 0.9rem;
-    font-weight: 700;
-    text-align: center;
-    text-decoration: none;
-    cursor: pointer;
-    transition: background 0.2s;
-  }
-  .btn-close:hover {
-    background: var(--brown-dark);
-  }
+  body { background: var(--bg); color: var(--text); font-family: 'Crimson Pro', serif; font-weight: 600; line-height: 1.8; padding: 40px 20px; }
+  .container { max-width: 720px; margin: 0 auto; background: rgba(90, 58, 24, 0.04); border: 1px solid rgba(184, 134, 11, 0.25); border-radius: 12px; padding: 35px; }
+  .lang-switch { text-align: right; margin-bottom: 20px; }
+  .lang-btn { background: #f7ebd3; border: 1px solid #c4b193; color: var(--brown-dark); padding: 5px 12px; border-radius: 4px; cursor: pointer; font-weight: 700; font-size: 0.85rem; }
+  h1 { font-family: 'Cinzel', serif; color: var(--brown-dark); font-size: 1.8rem; text-align: center; margin-bottom: 24px; border-bottom: 2px solid rgba(184, 134, 11, 0.3); padding-bottom: 12px; }
+  h2 { font-family: 'Cinzel', serif; color: var(--brown); font-size: 1.3rem; margin: 28px 0 12px; border-left: 4px solid var(--brown); padding-left: 10px; }
+  p { font-size: 1.05rem; margin-bottom: 18px; text-align: justify; text-indent: 1em; }
+  .highlight-box { background: rgba(124, 74, 30, 0.08); border-left: 4px solid var(--brown); padding: 15px; margin: 20px 0; border-radius: 0 8px 8px 0; font-weight: 700; text-indent: 0; }
+  .vision-box { background: #fff8e8; border: 2px solid var(--brown); border-radius: 16px; padding: 22px; margin-top: 30px; box-shadow: 2px 3px 8px rgba(0,0,0,0.05); }
+  .vision-title { font-family: 'Cinzel', serif; font-size: 1.1rem; color: var(--brown-dark); font-weight: 700; margin-bottom: 12px; text-align: center; letter-spacing: 1px; }
+  .footer { text-align: center; margin-top: 40px; font-size: 0.9rem; }
+  .footer a { color: var(--brown); text-decoration: none; font-weight: 700; border: 1px solid var(--brown); padding: 6px 16px; border-radius: 6px; }
+  .lang-en { display: none; }
 </style>
 </head>
 <body>
-
 <div class="container">
-  <h1>Tactics: Targeting f7</h1>
-  
-  <p>チェスの序盤戦において、最もエキサイティングで破壊力のある戦術の一つが、黒陣の弱点である <span class="coordinate">f7</span>（白番から見て <span class="coordinate">f2</span>）のマスを巡る攻防です。</p>
+  <div class="lang-switch">
+    <button class="lang-btn" onclick="toggleLanguage()">EN / JA</button>
+  </div>
 
-  <h2>なぜ f7 は弱いのか？</h2>
-  <p>ゲーム開始時、すべてのポーンは何かしらの駒によって守られていますが、<span class="coordinate">f7</span> のポーンだけは**「キングしか守っていない」**という致命的な特徴があります。そのため、ここを複数の駒で集中攻撃されると、陣形が瞬く間に崩壊してしまうのです。</p>
+  <!-- 日本語コンテンツ -->
+  <div class="lang-ja">
+    <h1>🎯 f7の狙い方（アタックの基本）</h1>
+    <p>チェスの実戦、特にゲームが始まって間もない序盤戦（オープニング）において、わずか数手で勝負の天秤を劇的に傾け、相手を壊滅状態に追い込むための有名な「絶対の急所」が存在します。それこそが、黒陣の「f7」のマス（黒側から見た白陣の急所は「f2」）です。なぜこのわずか1マスのポーンがこれほどまでに過激に狙われるのか、その構造的な理由と、実戦で大活躍する具体的な応用戦術、そしてその正しい防ぎ方について深く解説します。</p>
+    
+    <h2>なぜ「f7」は盤上最大の脆い弱点なのか？</h2>
+    <p>チェスの初期配置を眺めてみると、陣形を形成するほとんどのポーンは、背後にいる何らかの強力な駒によって最初から二重三重にバックアップされていることが分かります。例えば、dポーンはクイーンやビショップ、キングが守っており、eポーンもクイーンやキングなどの射線が通っています。しかし、f7（白陣のf2）のポーンだけは、なんと「キング1枚」だけしか守っている駒が存在しません。キングは盤上で最も価値が高く、絶対に捕まってはならない存在です。つまり、このf7マスに強力な圧力をかけられると、黒はキング自らが前線へ身をさらしてポーンを死守するか、陣形を大きく崩して逃げ道を確保しなければならなくなります。これこそが、f7が「盤上最大の弱点」と呼ばれる所以です。</p>
+    
+    <h2>世界で最も有名なハメ手「スカラーズメイト」と「Ng5」の脅威</h2>
+    <p>この弱点を突く最も極端で有名な例が、初心者が必ず一度は引っかかる「スカラーズメイト（学者メイト）」です。白は初手からビショップをc4の一番良い斜線へ展開し、さらにクイーンをh5（またはf3）へと跳ねさせ、わずか4手目でこの2枚の駒で同時にf7のポーンへ一斉射撃を浴びせます。黒がこれに気づかず無防備な手を指すと、一瞬にしてチェックメイトが成立し、ゲームが終了してしまいます。また、もう少し高度な定跡（イタリアンゲームなど）から派生する「ナイト・アタック（Ng5）」も強烈です。c4のビショップの射線に加え、ナイトをg5へとジャンプさせることで、2枚の駒でf7を集中攻撃し、ルークとクイーンを同時に狙う「フォーク（両取り）」の致命的なコンボを仕掛けます。これを受ける黒側は、d5とポーンを中央に突き出してビショップの射線を力強く遮断するなど、正確なディフェンスの知識が絶対に不可欠になります。</p>
+    
+    <div class="highlight-box">
+      💡 実戦での強力なアドバイス：<br>
+      対局相手のビショップがc4のマスへと躍り出てきたら、それはあなたの首元（f7）を狙う鋭いブレードが抜かれたサインです！決して焦らず、早期のキャスリングを完了させてキングを安全な右端へ避難させるとともに、ルークをf8に回してf7の守りを鉄壁に補強しましょう。急所を知るものは、攻めだけでなく守りにおいても無敵になります。
+    </div>
 
-  <h2>代表的な狙い方：イタリアン・ゲーム</h2>
-  <p>白が初手から <span class="coordinate">1.e4 e5 2.Nf3 Nc6 3.Bc4</span> と進めるイタリアン・ゲームでは、ビショップがダイレクトに相手の <span class="coordinate">f7</span> を睨みつけます。ここからナイトをさらに <span class="coordinate">g5</span> に跳ねて攻撃を仕掛ける「フライド・リバー・アタック」などは、初心者から有段者まで非常に有名な強力戦術です。</p>
+    <div class="vision-box">
+      <div class="vision-title">OUR VISION</div>
+      <p>f7へのアタックとディフェンスの攻防は、チェスが持つ「ダイナミズム」と「戦術の美しさ」を最短で学ぶための最高の教科書です。攻撃を組み立てるスリルと、それを正確な知識で鮮やかにいなす防御の快感をひとたび体感すれば、チェスの楽しさは何倍にも膨れ上がります。KitsuneChessのビジョンは、こうした実戦に直結するエキサイティングな本格的戦術を、誰もがパズルを解き明かすように、楽しく、そして圧倒的に効率よく習得できる最高のトレーニング環境を提供し続けることです。定跡の急所をマスターし、次の対局で華麗な勝利を掴み取りましょう。</p>
+    </div>
+    <div class="footer"><a href="javascript:window.close();">❌ ページを閉じる</a></div>
+  </div>
 
-  <h2>守る側の注意点</h2>
-  <p>黒番を持つときは、相手のビショップとナイトが連携して <span class="coordinate">f7</span> に襲いかかってきていないかを常に警戒する必要があります。早めにキャスリングを済ませてルークを防御に参加させるか、<span class="coordinate">d5</span> などで相手ビショップの射線を遮ることが大切な防御技術となります。</p>
+  <!-- 英語コンテンツ -->
+  <div class="lang-en">
+    <h1>🎯 Attacking the f7 Square (The Basics)</h1>
+    <p>In practical chess, particularly during the critical opening phase, there exists a legendary tactical weak point capable of tilting the evaluation bar drastically in just a few moves. That position is the infamous "f7" square in Black's camp (and conversely, the "f2" square in White's territory). Let's conduct a deep analysis of why this single pawn is so aggressively targeted, explore its real-world tactical applications, and look at the proper defensive measures required to defuse the threat.</p>
+    
+    <h2>Why is the "f7" Square the Absolute Weakest Link on the Board?</h2>
+    <p>If you carefully examine the initial chess setup, you will notice that almost every single pawn forming the front lines is securely backed up by one or more powerful major pieces from behind. For instance, the d-pawn is guarded by the Queen, the Bishop, and the King, while the e-pawn sits safely within the defensive sightlines of the Queen and King. However, the f7 pawn (and White's f2 pawn) is uniquely vulnerable because it is protected "exclusively by the King." The King is the most valuable asset on the board and must be shielded from danger at all costs. Consequently, when heavy coordinated pressure is applied to this precise square, Black is forced to either expose the King directly to protect the pawn or deform their entire pawn structure to secure an escape route. This structural vulnerability is precisely why f7 is universally dubbed the weakest link on the board.</p>
+    
+    <h2>The Notorious "Scholar's Mate" and the Threat of the Knight Jump</h2>
+    <p>The most extreme and famous manifestation of exploiting this flaw is "Scholar's Mate"—a tactical trap that almost every beginner falls victim to at least once. White rapidly deploys the light-squared bishop to the optimal c4 diagonal and thrusts the queen out to h5 (or f3). By the fourth move, both pieces launch a combined assault on the f7 pawn. If Black remains oblivious and plays a passive move, checkmate is delivered instantly, ending the game on the spot. Another highly dangerous variation seen in intermediate lines like the Italian Game is the "Fried Liver Attack" or aggressive Knight attacks involving Ng5. By leaping the knight to g5 to join forces with the c4 bishop, White creates a devastating double-attack on f7, threatening a lethal fork against Black's queen and rook. Defending against this requires precise, theoretical knowledge, such as striking back in the center with d5 to completely shut down the bishop's dangerous sightline.</p>
+    
+    <div class="highlight-box">
+      💡 Vital Tactical Advice:<br>
+      The moment your opponent's bishop arrives on the c4 square, consider it a sharp blade pulled from its sheath, pointing directly at your throat (f7)! Do not panic. Prioritize king safety by executing a timely castling maneuver to tuck your King away into the safe corner, which automatically brings your rook to f8, reinforcing the weak point with iron-clad protection. Mastering your vulnerabilities makes you truly invincible.
+    </div>
 
-  <a href="#" class="btn-close" onclick="window.close(); return false;">CLOSE</a>
+    <div class="vision-box">
+      <div class="vision-title">OUR VISION</div>
+      <p>The tactical siege and defense of the f7 square serve as the ultimate gateway to understanding the profound dynamism and sheer elegance of chess strategy. Experiencing the raw thrill of constructing an assault, alongside the deep satisfaction of neutralizing it with precise defensive knowledge, elevates your appreciation of chess to a whole new level. Our vision at KitsuneChess is to cultivate a premier training space where these essential, practical tactics can be mastered efficiently and enjoyably, as if solving an engaging puzzle. Master the vital pressure points of opening theory, and seize a brilliant victory in your next encounter.</p>
+    </div>
+    <div class="footer"><a href="javascript:window.close();">❌ Close Page</a></div>
+  </div>
 </div>
 
+<script>
+  function toggleLanguage() {
+    const jaElems = document.querySelectorAll('.lang-ja');
+    const enElems = document.querySelectorAll('.lang-en');
+    if (jaElems[0].style.display === 'none') {
+      jaElems.forEach(el => el.style.display = 'block');
+      enElems.forEach(el => el.style.display = 'none');
+    } else {
+      jaElems.forEach(el => el.style.display = 'none');
+      enElems.forEach(el => el.style.display = 'block');
+    }
+  }
+</script>
 </body>
 </html>
