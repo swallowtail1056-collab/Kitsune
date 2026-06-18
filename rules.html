@@ -1,37 +1,107 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-    <meta charset="UTF-8">
-    <title>初心者向け「チェス脳」の鍛え方 - kitsune chess</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>チェス脳の鍛え方 - KitsuneChess</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Crimson+Pro:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f5edd6;
+    --brown-dark: #4a2a0e;
+    --brown: #7c4a1e;
+    --text: #221f1a;
+    --border: rgba(184, 134, 11, 0.3);
+    --card-bg: rgba(90, 58, 24, 0.05);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Crimson Pro', serif;
+    font-weight: 600;
+    line-height: 1.8;
+    padding: 40px 20px;
+  }
+  .container {
+    max-width: 720px;
+    margin: 0 auto;
+    background: rgba(255, 255, 255, 0.4);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 40px 30px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+  }
+  h1 {
+    font-family: 'Cinzel', serif;
+    font-size: 2rem;
+    color: var(--brown-dark);
+    text-align: center;
+    margin-bottom: 30px;
+    border-bottom: 2px solid var(--border);
+    padding-bottom: 15px;
+  }
+  h2 {
+    font-family: 'Cinzel', serif;
+    font-size: 1.3rem;
+    color: var(--brown);
+    margin: 35px 0 15px;
+    border-left: 3px solid var(--brown);
+    padding-left: 12px;
+  }
+  p {
+    font-size: 1.1rem;
+    margin-bottom: 20px;
+    text-align: justify;
+  }
+  ol {
+    margin: 20px 0;
+    padding-left: 24px;
+  }
+  li {
+    font-size: 1.05rem;
+    margin-bottom: 15px;
+  }
+  .btn-close {
+    display: block;
+    width: 160px;
+    margin: 40px auto 0;
+    padding: 12px;
+    background: var(--brown);
+    color: #f5edd6;
+    border: none;
+    border-radius: 6px;
+    font-family: 'Cinzel', serif;
+    font-size: 0.9rem;
+    font-weight: 700;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .btn-close:hover {
+    background: var(--brown-dark);
+  }
+</style>
 </head>
 <body>
-    <header>
-        <h1>キツネと学ぶチェス講座</h1>
-        <nav>
-            <a href="index.html">ゲームに戻る</a> | 
-            <a href="about.html">サイトへの想い</a> | 
-            <a href="history.html">チェスの歴史</a> | 
-            <a href="tactics.html">f7の狙い方</a> | 
-            <a href="policy.html">免責事項</a>
-        </nav>
-    </header>
-    <hr>
 
-    <main>
-        <h2>初心者向け：絶対に強くなる「チェス脳」の鍛え方</h2>
-        <p>チェスを始めたばかりの頃は、覚えることがたくさんあって何から考えればいいのと言いたくなりますよね。駒の動かし方を覚えた次のステップとして、多くの人は何手先まで読めばいいんだろうと難しく考えてしまいがちです。しかし、実はそれ以上に強くなるために必要な、最も大切な心のアンテナがあります。今回は、私が日々盤面に向かう中で、常に頭の片隅に置いている、チェスが劇的に楽しく、そして負けにくくなるための基本の心構えを詳しく伝授します。</p>
+<div class="container">
+  <h1>Mental Training</h1>
+  
+  <p>チェスをプレイすることは、論理的思考力や集中力、パターン認識能力を高める最高の脳トレになります。効果的に「チェス脳」を鍛えるための3つのステップをご紹介します。</p>
 
-        <h3>1. 大前提：まずはただタダでコマを取られないこと</h3>
-        <p>チェスというゲームにおいて、最ももったいなく、勝敗に直結してしまうのが、うっかり相手の攻撃に気づかず、自分の大切な駒をタダで差し上げてしまうことです。攻めることに夢中になっているときや、自分の攻撃ルートを考えてワクワクしているときほど、足元がおろそかになりがちです。<br>
-        どんなに素晴らしい攻撃を計画していても、その途中で自分のナイトやビショップをタダで取られてしまっては、一気に形勢が不利になってしまいます。まずは次の一手を指す前に、一呼吸置いて、今、自分の駒の中に、相手から狙われていて守りが足りていない駒はないか、を毎ターン必ず確認する癖をつけましょう。たったこれだけの意識で、初心者同士の対局ではうっかりミスが激減し、一気に粘り強く負けないプレイヤーになることができます。</p>
+  <h2>1. 定跡（オープニング）のロジックを理解する</h2>
+  <p>ただ闇雲に手順を暗記するのではなく、「なぜこのタイミングでナイトを跳ねるのか」「なぜ中央を支配しなければならないのか」という各手の**意図**を深く考えることで、思考の引き出しが増えていきます。</p>
 
-        <h3>2. 最優先事項：キングを守ること</h3>
-        <p>チェスの勝敗を決める唯一のルール、それは相手のキングを詰めることです。つまり、どれだけ多くの駒を引っくり返して優勢に見えても、自分のキングが先に倒されてしまってはすべてが水の泡になります。だからこそ、あらゆる局面において優先順位の第一位は、何が何でもキングを守ること。これが鉄則です。<br>
-        理想を言えば、とにかくありとあらゆる手を考えてから、納得の一手を指すのがベストです。しかし、実際の対局では時間制限もあり、すべての変化を読み切ることは簡単ではありません。私自身、あまりできていませんが、頭がごちゃごちゃになって迷ってしまったときこそ、この優先順位に立ち返るようにしています。この一手は私のキングを安全にしているか、相手の狙いは私のキングに届いていないかと問いかけるのです。キングの安全という絶対的な土台があって初めて、大胆で楽しい攻撃の戦略が生きてきます。</p>
+  <h2>2. 3手先を視覚化する「空間認識」</h2>
+  <p>頭の中で未来の盤面をイメージする練習をしましょう。最初は1手先、慣れてきたら2手先、3手先と、駒を動かした後の盤面の「景色」を脳内で固定できるようになると、読みの精度が劇的に向上します。</p>
 
-        <h3>3. 思考の訓練：なぜ相手がそのコマを動かしたか考える</h3>
-        <p>これがチェス脳を鍛え、初心者からステップアップする上で、最も重要と言っても過言ではないポイントです。チェスは常に、相手と交互に一手ずつ指し進めるゲームです。つまり、相手が動かしたその一手には、偶然や意味のないものは一つもなく、必ず何らかの目的や狙いが隠されています。<br>
-        相手が駒を動かしたとき、ただそこに動いたんだなと眺めるのをやめてみましょう。なぜ、わざわざあのマスにナイトを跳ねたのだろう、私のキングを間接的に狙う意図があるのかなと、相手の意図を深く推理してみるのです。一手先を読むことも大切ですが、なぜ相手がそのコマを動かしたか考えることが大事で、私はこれを常に頭の片隅に置いています。相手の紡ぐストーリーを読み解くことができるようになれば、ただの駒のぶつかり合いだった盤面が、まるで極上のミステリー小説のように何倍も面白く、奥深く見えてきますよ。</p>
-    </main>
+  <h2>3. ミスを振り返る習慣</h2>
+  <p>クイズや実戦で間違えたときこそ、チェス脳が一番成長するチャンスです。「何を見落としていたのか」を本アプリの練習モードなどで繰り返し検証することで、脳が正しいパターンを記憶していきます。</p>
+
+  <a href="#" class="btn-close" onclick="window.close(); return false;">CLOSE</a>
+</div>
+
 </body>
 </html>
