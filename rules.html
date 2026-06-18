@@ -10,62 +10,91 @@
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body { background: var(--bg); color: var(--text); font-family: 'Crimson Pro', serif; font-weight: 600; line-height: 1.8; padding: 40px 20px; }
   .container { max-width: 720px; margin: 0 auto; background: rgba(90, 58, 24, 0.04); border: 1px solid rgba(184, 134, 11, 0.25); border-radius: 12px; padding: 35px; }
-  .lang-switch { text-align: right; margin-bottom: 20px; }
-  .lang-btn { background: #f7ebd3; border: 1px solid #c4b193; color: var(--brown-dark); padding: 5px 12px; border-radius: 4px; cursor: pointer; font-weight: 700; font-size: 0.85rem; }
+  
+  .lang-switch { text-align: right; margin-bottom: 25px; }
+  .lang-btn { background: #f7ebd3; border: 1px solid #c4b193; color: var(--brown-dark); padding: 6px 14px; border-radius: 4px; cursor: pointer; font-weight: 700; font-size: 0.85rem; transition: all 0.2s; }
+  .lang-btn:hover { background: var(--brown); color: #fff; }
+
   h1 { font-family: 'Cinzel', serif; color: var(--brown-dark); font-size: 1.8rem; text-align: center; margin-bottom: 24px; border-bottom: 2px solid rgba(184, 134, 11, 0.3); padding-bottom: 12px; }
-  h2 { font-family: 'Cinzel', serif; color: var(--brown); font-size: 1.3rem; margin: 28px 0 12px; border-left: 4px solid var(--brown); padding-left: 10px; }
-  p { font-size: 1.05rem; margin-bottom: 18px; text-align: justify; text-indent: 1em; }
-  .vision-box { background: #fff8e8; border: 2px solid var(--brown); border-radius: 16px; padding: 22px; margin-top: 30px; box-shadow: 2px 3px 8px rgba(0,0,0,0.05); }
-  .vision-title { font-family: 'Cinzel', serif; font-size: 1.1rem; color: var(--brown-dark); font-weight: 700; margin-bottom: 12px; text-align: center; letter-spacing: 1px; }
-  .footer { text-align: center; margin-top: 40px; font-size: 0.9rem; }
-  .footer a { color: var(--brown); text-decoration: none; font-weight: 700; border: 1px solid var(--brown); padding: 6px 16px; border-radius: 6px; }
+  h2 { font-family: 'Cinzel', serif; color: var(--brown); font-size: 1.3rem; margin: 35px 0 15px; border-left: 4px solid var(--brown); padding-left: 10px; }
+  p { font-size: 1.05rem; margin-bottom: 20px; text-align: justify; text-indent: 1em; }
+  
+  .vision-box { background: #fff8e8; border: 2px solid var(--brown); border-radius: 16px; padding: 25px; margin-top: 35px; box-shadow: 2px 3px 8px rgba(0,0,0,0.05); }
+  .vision-title { font-family: 'Cinzel', serif; font-size: 1.1rem; color: var(--brown-dark); font-weight: 700; margin-bottom: 15px; text-align: center; letter-spacing: 1px; }
+  
+  .footer { text-align: center; margin-top: 45px; font-size: 0.9rem; }
+  .footer a { color: var(--brown); text-decoration: none; font-weight: 700; border: 1px solid var(--brown); padding: 8px 18px; border-radius: 6px; transition: all 0.2s; }
+  .footer a:hover { background: var(--brown); color: #fff; }
+
   .lang-en { display: none; }
+  .en-mode .lang-ja { display: none; }
+  .en-mode .lang-en { display: block; }
+  .en-mode button.lang-en { display: inline-block; }
 </style>
 </head>
 <body>
 <div class="container">
   <div class="lang-switch">
-    <button class="lang-btn" onclick="toggleLanguage()">EN / JA</button>
+    <button class="lang-btn lang-ja" onclick="toggleLanguage()">English (英語へ)</button>
+    <button class="lang-btn lang-en" onclick="toggleLanguage()">日本語 (To Japanese)</button>
   </div>
 
-  <!-- 日本語コンテンツ -->
+  <!-- ================= 日本語パート ================= -->
   <div class="lang-ja">
     <h1>💡 チェス脳の鍛え方</h1>
-    <p>チェスを本格的にプレイすることは、人間の脳全体のネットワークを極限まで活性化させる、最高峰のメンタルトレーニング（脳トレ）であると現代の脳科学でも広く認められています。初心者から達人に至るまでの上達のプロセスにおいて、私たちの脳内に自然と構築されていく「チェス脳（Chess Brain）」の驚くべきメカニズムと、それを最も効率的に引き出すための3つのコア・アプローチについて詳しく解説します。</p>
+    <p>チェスを本格的にプレイすることは、人間の脳全体のネットワークを極限まで活性化させる、最高峰のメンタルトレーニングであると現代の脳科学でも広く認められています。</p>
+    <p>初心者から達人に至るまでの上達のプロセスにおいて、私たちの脳内に自然と構築されていく「チェス脳（Chess Brain）」の驚くべきメカニズムと、それを最も効率的に引き出すための3つのコア・アプローチについて詳しく解説します。</p>
     
     <h2>1. 脳内に多次元盤面を構築する「空間認知力」と「先読み力」</h2>
-    <p>チェスの実力が向上するにつれて、プレイヤーは実際の目の前にある物理的な駒を動かす前に、頭の中に精密な「バーチャルなチェス盤」を構築できるようになります。強いプレイヤーはこの脳内盤面の上で、「自分がここにナイトを跳ねたら、相手はビショップで受けるか、それともポーンを突いて反撃してくるか？」という複雑な未来の論理分岐を何手も先までシミュレーションしています。この思考を繰り返すことで、視覚的な空間認知能力が劇的に鍛えられるだけでなく、日常生活やビジネス、学業のあらゆる場面においても役立つ、客観的かつ長期的な「先読みの論理的思考力（ロジカルシンキング）」が自然と身につくようになります。</p>
+    <p>チェスの実力が向上するにつれて、プレイヤーは実際の目の前にある物理的な駒を動かす前に、頭の中に精密な「バーチャルなチェス盤」を構築できるようになります。</p>
+    <p>強いプレイヤーはこの脳内盤面の上で、「自分がここにナイトを跳ねたら、相手はビショップで受けるか、それともポーンを突いて反撃してくるか？」という複雑な未来の論理分岐を何手も先までシミュレーションしています。</p>
+    <p>この思考を繰り返すことで、視覚的な空間認知能力が劇的に鍛えられるだけでなく、日常生活やビジネス、学業のあらゆる場面においても役立つ、客観的かつ長期的な「先読みの論理的思考力（ロジカルシンキング）」が自然と身につくようになります。</p>
     
     <h2>2. 膨大な局面から一瞬で急所を見抜く「パターン認識」</h2>
-    <p>チェスの盤上に現れる局面の総数は、宇宙に存在する原子の数よりも多いと言われています。しかし、熟練したプレイヤーは盤面を一目見ただけで、わずか数秒のうちに「最善手」の候補を瞬時に絞り込むことができます。これは、脳の長期記憶領域に、過去の膨大な対局データやオープニングの「美しい形」「危険な兆候」が一種の視覚的パターンとして焼き付いているからです。このパターン認識能力を最も効率よく脳へインプットするアプローチこそが、厳選されたオープニング（定跡）を繰り返し「体で覚える」インタラクティブなトレーニングです。基本の型が脳に定着することで、実戦での無駄な迷いが消え、直感の精度が爆発的に向上します。</p>
+    <p>チェスの盤上に現れる局面の総数は、宇宙に存在する原子の数よりも多いと言われています。しかし、熟練したプレイヤーは盤面を一目見ただけで、わずか数秒のうちに「最善手」の候補を瞬時に絞り込むことができます。</p>
+    <p>これは、脳の長期記憶領域に、過去の膨大な対局データやオープニングの「美しい形」「危険な兆候」が一種の視覚的パターンとして焼き付いているからです。</p>
+    <p>このパターン認識能力を最も効率よく脳へインプットするアプローチこそが、厳選されたオープニング（定跡）を繰り返し「体で覚える」インタラクティブなトレーニングです。基本の型が脳に定着することで、実戦での無駄な迷いが消え、直感の精度が爆発的に向上します。</p>
     
     <h2>3. 運要素ゼロの世界で培われる「決断力」と「大局観」</h2>
-    <p>チェスというゲームには、サイコロの出目やカードの引きのような「運」の要素が1%も存在しません。盤上で起こるすべての結果、そして勝利も敗北も、すべては自分が下した「決断」の積み重ねによって生じます。実戦の中で形勢が急激に悪化し、強いプレッシャーに晒されたときに、感情的にパニックに陥ることなく、今残されているリソースを客観的に分析し直して最善の防御策をひねり出す訓練は、現代社会を生き抜く上での強固なストレス耐性と、冷静なメンタルコントロール力を養います。目先の損得に惑わされず、全体のバランスを俯瞰して最適な未来を選択する「大局観」こそが、チェス脳の目指す究極の到達点です。</p>
+    <p>チェスというゲームには、サイコロの出目やカードの引きのような「運」の要素が1%も存在しません。盤上で起こるすべての結果、あるいは勝利も敗北も、すべては自分が下した「決断」の積み重ねによってのみ生じます。</p>
+    <p>実戦の中で形勢が急激に悪化し、強いプレッシャーに晒されたときに、感情的にパニックに陥ることなく、今残されているリソースを客観的に分析し直して最善の防御策をひねり出す訓練は、現代社会を生き抜く上での強固なストレス耐性と、冷静なメンタルコントロール力を養います。</p>
+    <p>目先の損得に惑わされず、全体のバランスを俯瞰して最適な未来を選択する「大局観」こそが、チェス脳の目指す究極の到達点です。</p>
 
     <div class="vision-box">
       <div class="vision-title">OUR VISION</div>
-      <p>チェス脳を効率よく鍛え上げる最大のコツは、ただ一つの正解を暗記シートのように丸暗記することではなく、「なぜその手が素晴らしいのか」という本質的な理由を論理的に深く理解し、納得することです。KitsuneChessのビジョンは、すべてのユーザーの中に眠っている論理的かつクリエイティブな閃きの可能性を引き出すことです。私たちは、退屈な暗記作業をエキサイティングな知の探求へと昇華させ、プレイヤーが一歩一歩確実にステップアップしていく知的成長の喜びを、革新的なシステムと美しいデザインを通じて全力でサポートし続けます。</p>
+      <p>チェス脳を効率よく鍛え上げる最大のコツは、ただ一つの正解を暗記シートのように丸暗記することではありません。「なぜその手が素晴らしいのか」という本質的な理由を論理的に深く理解し、納得することです。</p>
+      <p>KitsuneChessのビジョンは、すべてのユーザーの中に眠っている論理的かつクリエイティブな閃きの可能性を引き出すことです。</p>
+      <p>私たちは、退屈な暗記作業をエキサイティングな知の探求へと昇華させ、プレイヤーが一歩一歩確実にステップアップしていく知的成長の喜びを、革新的なシステムと美しいデザインを通じて全力でサポートし続けます。</p>
     </div>
     <div class="footer"><a href="javascript:window.close();">❌ ページを閉じる</a></div>
   </div>
 
-  <!-- 英語コンテンツ -->
+  <!-- ================= 英語パート ================= -->
   <div class="lang-en">
     <h1>💡 How to Train Your Chess Brain</h1>
-    <p>Playing chess seriously is widely recognized by modern cognitive science as one of the premier forms of mental exercise, activating deep neural networks across the entire brain. As you progress from a beginner to a seasoned player, your mind constructs a specialized "Chess Brain." Let's delve into the fascinating neurological mechanics behind this cognitive development and examine the three core approaches to training it efficiently.</p>
+    <p>Playing chess seriously is widely recognized by modern cognitive science as one of the premier forms of mental exercise, activating deep neural networks across the entire brain.</p>
+    <p>As you progress from a beginner to a seasoned player, your mind constructs a specialized "Chess Brain." Let's delve into the fascinating neurological mechanics behind this cognitive development and examine the three core approaches to training it efficiently.</p>
     
     <h2>1. Constructing a Virtual Board: "Spatial Awareness" and "Foresight"</h2>
-    <p>As your chess skills improve, you gain the ability to construct a highly precise, interactive "virtual chessboard" entirely within your mind before moving a physical piece. Strong players utilize this mental matrix to simulate complex branches of logic multiple moves ahead, asking themselves: "If I leap my knight here, will my opponent parry with a bishop or counterattack by pushing a pawn?" Navigating these dense trees of calculation dramatically enhances your spatial awareness. Furthermore, it naturally builds a highly objective habit of forward-thinking and advanced logical planning that proves invaluable in business, academics, and daily problem-solving.</p>
+    <p>As your chess skills improve, you gain the ability to construct a highly precise, interactive "virtual chessboard" entirely within your mind before moving a physical piece.</p>
+    <p>Strong players utilize this mental matrix to simulate complex branches of logic multiple moves ahead, asking themselves: "If I leap my knight here, will my opponent parry with a bishop or counterattack by pushing a pawn?"</p>
+    <p>Navigating these dense trees of calculation dramatically enhances your spatial awareness. Furthermore, it naturally builds a highly objective habit of forward-thinking and advanced logical planning that proves invaluable in business, academics, and daily problem-solving.</p>
     
     <h2>2. Spotting Cracks Instantly: The Power of "Pattern Recognition"</h2>
-    <p>The total number of possible positions on a chessboard is famously said to exceed the number of atoms in the observable universe. Yet, an experienced master can glance at a complex board and pinpoint the absolute best candidate moves within seconds. This incredible feat is powered by "pattern recognition," where the brain's long-term memory stores thousands of structural archetypes, "harmonious shapes," and "tactical danger signs" as visual chunks. The most efficient way to flash-fry these intellectual patterns into your brain is to master openings interactively. Once these fundamental structures become second nature, unnecessary hesitation vanishes, and your intuitive precision skyrockets.</p>
+    <p>The total number of possible positions on a chessboard is famously said to exceed the number of atoms in the observable universe. Yet, an experienced master can glance at a complex board and pinpoint the absolute best candidate moves within seconds.</p>
+    <p>This incredible feat is powered by "pattern recognition," where the brain's long-term memory stores thousands of structural archetypes, "harmonious shapes," and "tactical danger signs" as visual chunks.</p>
+    <p>The most efficient way to flash-fry these intellectual patterns into your brain is to master openings interactively. Once these fundamental structures become second nature, unnecessary hesitation vanishes, and your intuitive precision skyrockets.</p>
     
     <h2>3. Thriving in a Luck-Free World: "Decisiveness" and "Objectivity"</h2>
-    <p>Chess contains absolutely zero elements of luck—there are no dice to roll, no random cards to draw. Every single consequence on the board, whether it leads to a brilliant victory or a crushing defeat, is the direct result of your own conscious choices. Learning to maintain absolute composure when your position falls into deep distress under immense pressure, and carefully calculating the optimal defense using your remaining assets, builds powerful stress tolerance and emotional regulation. Overcoming immediate emotional biases to evaluate the board holistically—cultivating a profound "strategic oversight"—is the ultimate pinnacle of the Chess Brain.</p>
+    <p>Chess contains absolutely zero elements of luck—there are no dice to roll, no random cards to draw. Every single consequence on the board, whether it leads to a brilliant victory or a crushing defeat, is the direct result of your own conscious choices.</p>
+    <p>Learning to maintain absolute composure when your position falls into deep distress under immense pressure, and carefully calculating the optimal defense using your remaining assets, builds powerful stress tolerance and emotional regulation.</p>
+    <p>Overcoming immediate emotional biases to evaluate the board holistically—cultivating a profound "strategic oversight"—is the ultimate pinnacle of the Chess Brain.</p>
 
     <div class="vision-box">
       <div class="vision-title">OUR VISION</div>
-      <p>The golden secret to efficiently training your chess brain is not treating opening theory as a test of blind memorization, but deeply grasping and logically appreciating the underlying "why" behind every move. Our vision at KitsuneChess is to awaken and unlock the creative, logical potential dormant within every player. We are dedicated to turning tedious study into an exciting journey of discovery, leveraging an innovative training system and elegant aesthetics to fully support your intellectual growth every single step of the way.</p>
+      <p>The golden secret to efficiently training your chess brain is not treating opening theory as a test of blind memorization, but deeply grasping and logically appreciating the underlying "why" behind every move.</p>
+      <p>Our vision at KitsuneChess is to awaken and unlock the creative, logical potential dormant within every player.</p>
+      <p>We are dedicated to turning tedious study into an exciting journey of discovery, leveraging an innovative training system and elegant aesthetics to fully support your intellectual growth every single step of the way.</p>
     </div>
     <div class="footer"><a href="javascript:window.close();">❌ Close Page</a></div>
   </div>
@@ -73,15 +102,7 @@
 
 <script>
   function toggleLanguage() {
-    const jaElems = document.querySelectorAll('.lang-ja');
-    const enElems = document.querySelectorAll('.lang-en');
-    if (jaElems[0].style.display === 'none') {
-      jaElems.forEach(el => el.style.display = 'block');
-      enElems.forEach(el => el.style.display = 'none');
-    } else {
-      jaElems.forEach(el => el.style.display = 'none');
-      enElems.forEach(el => el.style.display = 'block');
-    }
+    document.body.classList.toggle('en-mode');
   }
 </script>
 </body>
