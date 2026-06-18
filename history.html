@@ -6,93 +6,83 @@
 <title>チェスの歴史 - KitsuneChess</title>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Crimson+Pro:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --bg: #f5edd6;
-    --brown-dark: #4a2a0e;
-    --brown: #7c4a1e;
-    --text: #221f1a;
-    --border: rgba(184, 134, 11, 0.3);
-  }
+  :root { --bg: #f5edd6; --brown: #7c4a1e; --brown-dark: #4a2a0e; --text: #111; }
   * { margin: 0; padding: 0; box-sizing: border-box; }
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'Crimson Pro', serif;
-    font-weight: 600;
-    line-height: 1.8;
-    padding: 40px 20px;
-  }
-  .container {
-    max-width: 720px;
-    margin: 0 auto;
-    background: rgba(255, 255, 255, 0.4);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 40px 30px;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.05);
-  }
-  h1 {
-    font-family: 'Cinzel', serif;
-    font-size: 2rem;
-    color: var(--brown-dark);
-    text-align: center;
-    margin-bottom: 30px;
-    border-bottom: 2px solid var(--border);
-    padding-bottom: 15px;
-  }
-  h2 {
-    font-family: 'Cinzel', serif;
-    font-size: 1.3rem;
-    color: var(--brown);
-    margin: 35px 0 15px;
-    border-left: 3px solid var(--brown);
-    padding-left: 12px;
-  }
-  p {
-    font-size: 1.1rem;
-    margin-bottom: 20px;
-    text-align: justify;
-  }
-  .btn-close {
-    display: block;
-    width: 160px;
-    margin: 40px auto 0;
-    padding: 12px;
-    background: var(--brown);
-    color: #f5edd6;
-    border: none;
-    border-radius: 6px;
-    font-family: 'Cinzel', serif;
-    font-size: 0.9rem;
-    font-weight: 700;
-    text-align: center;
-    text-decoration: none;
-    cursor: pointer;
-    transition: background 0.2s;
-  }
-  .btn-close:hover {
-    background: var(--brown-dark);
-  }
+  body { background: var(--bg); color: var(--text); font-family: 'Crimson Pro', serif; font-weight: 600; line-height: 1.8; padding: 40px 20px; }
+  .container { max-width: 720px; margin: 0 auto; background: rgba(90, 58, 24, 0.04); border: 1px solid rgba(184, 134, 11, 0.25); border-radius: 12px; padding: 35px; }
+  .lang-switch { text-align: right; margin-bottom: 20px; }
+  .lang-btn { background: #f7ebd3; border: 1px solid #c4b193; color: var(--brown-dark); padding: 5px 12px; border-radius: 4px; cursor: pointer; font-weight: 700; font-size: 0.85rem; }
+  h1 { font-family: 'Cinzel', serif; color: var(--brown-dark); font-size: 1.8rem; text-align: center; margin-bottom: 24px; border-bottom: 2px solid rgba(184, 134, 11, 0.3); padding-bottom: 12px; }
+  h2 { font-family: 'Cinzel', serif; color: var(--brown); font-size: 1.3rem; margin: 28px 0 12px; border-left: 4px solid var(--brown); padding-left: 10px; }
+  p { font-size: 1.05rem; margin-bottom: 18px; text-align: justify; text-indent: 1em; }
+  .vision-box { background: #fff8e8; border: 2px solid var(--brown); border-radius: 16px; padding: 22px; margin-top: 30px; box-shadow: 2px 3px 8px rgba(0,0,0,0.05); }
+  .vision-title { font-family: 'Cinzel', serif; font-size: 1.1rem; color: var(--brown-dark); font-weight: 700; margin-bottom: 12px; text-align: center; letter-spacing: 1px; }
+  .footer { text-align: center; margin-top: 40px; font-size: 0.9rem; }
+  .footer a { color: var(--brown); text-decoration: none; font-weight: 700; border: 1px solid var(--brown); padding: 6px 16px; border-radius: 6px; }
+  .lang-en { display: none; }
 </style>
 </head>
 <body>
-
 <div class="container">
-  <h1>The Chronicle of Chess</h1>
-  
-  <p>チェスは、数あるボードゲームの中でも最も古い歴史を持つものの一つです。その起源をたどると、壮大な文化の旅が見えてきます。</p>
+  <div class="lang-switch">
+    <button class="lang-btn" onclick="toggleLanguage()">EN / JA</button>
+  </div>
 
-  <h2>1. 古代インドの起源「チャトランガ」</h2>
-  <p>チェスの原型は、6世紀頃の古代インドで遊ばれていた「チャトランガ」というゲームだと言われています。これは古代インドの軍隊（歩兵、騎兵、戦車、象）を模したもので、これが東西へと伝播していきました。</p>
+  <!-- 日本語コンテンツ -->
+  <div class="lang-ja">
+    <h1>📜 チェスの歴史</h1>
+    <p>チェスは、1500年以上の壮大な歴史を持つ、世界で最も古く、かつ最も洗練されたボードゲームの一つです。それは単なる暇つぶしの娯楽の枠を完全に超え、ある時代には国家の命運を占う戦争のシミュレーションとして、またある時代には高度な数学的パズル、そして時には人間の知性を表現する「芸術」として、人類の文明の発展とともに劇的な進化を遂げてきました。</p>
+    
+    <h2>1. 古代インドの源流「チャトランガ」</h2>
+    <p>チェスの最古の先祖を辿ると、6世紀頃の古代インドの北西部で広く遊ばれていた「チャトランガ（Chaturanga）」という盤上ゲームに行き着きます。サンスクリット語で「4つの手足」を意味するこのゲームは、当時のインドの軍隊を構成していた4つの兵科、すなわちラージャ（王）、歩兵、騎兵、象兵、戦車兵を模した駒を8×8のマスの間で動かすものでした。このチャトランガがシルクロードを渡る交易商人たちによって世界中へと伝播していきました。東へ向かったものは中国のシャンチー（象棋）や日本の将棋へと枝分かれし、西へ向かったものが中東のペルシアで「シャトランジ」として洗練され、やがて現在のチェスの直接の原型となったのです。</p>
+    
+    <h2>2. 中世ヨーロッパでの大変革とクイーンの覚醒</h2>
+    <p>10世紀から11世紀頃、十字軍の遠征やイスラム世界との交流を通じて、ゲームはヨーロッパへと伝わりました。当時、チェスは騎士たちが身につけるべき「騎士の七芸」の一つとして、貴族階級の教養に深く組み込まれていきます。そして15世紀後半、主にスペインやイタリアにおいて、ゲームのスピード感を劇的に高める「ルールの大革命」が起こりました。それまで斜めに1マスしか動けなかった「マントリ（顧問）」という最も弱い駒が、当時の絶対王政における強力な女王の権力を反映し、縦横斜めに無限に動ける盤上最強の駒「クイーン」へと生まれ変わったのです。同時にビショップの可動域も拡大され、それまでのスローペースな展開から、一瞬で勝負が決まる現代的なエキサイティングなチェスへと変貌を遂げました。</p>
+    
+    <h2>3. 近代トーナメントの興隆とAI時代への突入</h2>
+    <p>19世紀に入ると、チェスはルールが完全に統一され、国境を超えた近代スポーツとしての道を歩み始めます。1851年のロンドン国際大会を皮切りに世界各地でトーナメントが開催され、1886年にはヴィルヘルム・シュタイニッツによって初代公式世界チャンピオンの座が確立されました。この時代、チェスは直感によるロマン主義から、理論と科学による合理主義へと移行します。そして20世紀末、IBMのスーパーコンピュータ「ディープ・ブルー」が当時の世界王者ガルリ・カスパロフを破ったことで、チェスは人工知能（AI）研究の最前線となりました。現代では、AIが弾き出す圧倒的なデータによって定跡が極限までアップデートされ、インターネットを通じて何千万人もの人々がリアルタイムで知性を競い合うグローバルなスポーツとなっています。</p>
 
-  <h2>2. シルクロードを渡りヨーロッパへ</h2>
-  <p>東へ伝わったものは将棋やシャンチー（中国将棋）になり、西へ伝わったものはペルシアを経由してイスラム世界、そして10世紀頃にヨーロッパへと渡りました。ペルシア語で王を意味する「シャー」が、現在の「チェックメイト」の語源になっています。</p>
+    <div class="vision-box">
+      <div class="vision-title">OUR VISION</div>
+      <p>何百年もの間、数え切れないほどの天才プレイヤーたちが、その生涯を捧げて研究し、洗練させてきた戦術の結晶、それこそが「オープニング（定跡）」に他なりません。私たちが今、盤上で指しているその1手には、1500年分の人類の知恵のドラマが凝縮されているのです。歴史の重みを知ることで、ただのゲームだったチェスが、より深く美しいものへと変わります。KitsuneChessのビジョンは、この素晴らしい伝統ある知的遺産の魅力を、現代の洗練された美しいデジタルインターフェースを通じて、世界中の次世代のプレイヤーたちへと正しく継承していくことです。歴史のバトンを受け継ぎ、あなたもこの偉大な歴史の一部となりましょう。</p>
+    </div>
+    <div class="footer"><a href="javascript:window.close();">❌ ページを閉じる</a></div>
+  </div>
 
-  <h2>3. 現代のルールへの進化</h2>
-  <p>15世紀末のヨーロッパで、クイーンやビショップの動きが劇的に強化され、現在のスピーディーでエキサイティングなチェスへと進化を遂げました。これにより、単なるゲームから、深い戦略と美学を持つ「知の芸術」へと昇華したのです。</p>
+  <!-- 英語コンテンツ -->
+  <div class="lang-en">
+    <h1>📜 History of Chess</h1>
+    <p>Chess is one of the oldest and most sophisticated board games in existence, with an epic history spanning over 1,500 years. Transcending the boundaries of mere casual entertainment, it has dramatically evolved alongside human civilization—serving as a war simulation deciding the fates of empires, a rigorous mathematical puzzle, and a profound art form expressing human intellect.</p>
+    
+    <h2>1. The Ancient Indian Origin: "Chaturanga"</h2>
+    <p>To trace the earliest roots of chess, one must travel back to around the 6th century AD to the northwestern region of ancient India, where a board game named "Chaturanga" was widely played. Meaning "four limbs" in Sanskrit, this game represented the four branches of the ancient Indian military: infantry, cavalry, elephants, and chariots, all led by a Raja (King) across an 8x8 grid. Traveling merchants spread Chaturanga along the Silk Road across the globe. The branch that traveled east branched into Chinese Xiangqi and Japanese Shogi, while the branch traveling west entered the Persian Empire as "Shatranj," which directly paved the way for modern chess.</p>
+    
+    <h2>2. The European Transformation and Awakening of the Queen</h2>
+    <p>Around the 10th and 11th centuries, through the Crusades and cultural exchanges with the Islamic world, the game arrived in Western Europe. Chess quickly became embedded in aristocratic culture as one of the "Seven Knightly Virtues" that noblemen were expected to master. In the late 15th century, a dramatic rule revolution occurred in Spain and Italy that radically sped up the game. The "Mantri" (counselor), previously the weakest piece on the board capable of moving only a single square diagonally, was reborn as the "Queen"—the most powerful piece on the board, reflecting the immense power of contemporary reigning absolute queens. With the Bishop's range also extended to infinity, chess transformed from a slow, methodical pastime into a fast-paced, aggressive, and deeply exciting tactical battlefield.</p>
+    
+    <h2>3. The Rise of Modern Tournaments and the AI Era</h2>
+    <p>By the 19th century, chess rules were fully standardized, and the game began its journey as a global modern sport. Following the historic London 1851 International Tournament, competitive events flourished worldwide, leading to Wilhelm Steinitz becoming the first official World Chess Champion in 1886. Chess transitioned from intuitive Romanticism to scientific Rationalism. In 1997, IBM's supercomputer Deep Blue defeated World Champion Garry Kasparov, placing chess at the absolute forefront of Artificial Intelligence research. Today, chess openings are refined to unprecedented depths by advanced neural networks, allowing tens of millions of players to connect and clash intellectually in real-time across the internet.</p>
 
-  <a href="#" class="btn-close" onclick="window.close(); return false;">CLOSE</a>
+    <div class="vision-box">
+      <div class="vision-title">OUR VISION</div>
+      <p>The "Chess Opening" is nothing less than the crystallization of strategies researched, tested, and refined by brilliant minds over centuries. Every single move we make on the digital board today encapsulates 1,500 years of human wisdom and historical drama. Understanding this rich heritage transforms chess from a mere game into a profound, beautiful experience. Our vision at KitsuneChess is to preserve and pass down the charm of this timeless intellectual legacy to the next generation of global players through an elegant, accessible digital interface. Take up the historical mantle, and become a part of this grand legacy yourself.</p>
+    </div>
+    <div class="footer"><a href="javascript:window.close();">❌ Close Page</a></div>
+  </div>
 </div>
 
+<script>
+  function toggleLanguage() {
+    const jaElems = document.querySelectorAll('.lang-ja');
+    const enElems = document.querySelectorAll('.lang-en');
+    if (jaElems[0].style.display === 'none') {
+      jaElems.forEach(el => el.style.display = 'block');
+      enElems.forEach(el => el.style.display = 'none');
+    } else {
+      jaElems.forEach(el => el.style.display = 'none');
+      enElems.forEach(el => el.style.display = 'block');
+    }
+  }
+</script>
 </body>
 </html>
