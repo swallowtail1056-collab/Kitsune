@@ -2409,6 +2409,36 @@ const JENE_COMMENTS = {
     ja: (correct, reason) => `💡 あ、そこは違うよ！正しくは「${correct}」なんだ。${reason}`,
     en: (correct, reason) => `💡 Not quite! The correct move is ${correct}. ${reason}`
   },
+  // オープニング手順の間違い理由
+const OPENING_WRONG_REASONS = {
+  'ruylopez': {
+    ja: ['e4でセンターを占領！', 'e5でカウンター！', 'Nf3でナイトを展開して攻める！', 'Nc6でナイトを守る！', 'Bb5！これがルイ・ロペスの決め手。ナイトをピンしてe5への圧力をかけるよ！', 'a6でビショップを牽制！', 'Ba4でピンを維持！', 'Nf6で展開！', 'O-Oでキャスリング！'],
+    en: ['e4 to control the center!', 'e5 to counter!', 'Nf3 to develop the knight!', 'Nc6 to defend!', 'Bb5! This is the Ruy Lopez signature. Pin the knight and pressure e5!', 'a6 to challenge the bishop!', 'Ba4 to maintain the pin!', 'Nf6 to develop!', 'O-O to castle!']
+  },
+  'italian': {
+    ja: ['e4でセンターへ！', 'e5でカウンター！', 'Nf3でナイト展開！', 'Nc6でナイトを守る！', 'Bc4！イタリアンの特徴。f7を狙うビショップだよ！', 'Bc5でビショップを向かい合わせ！', 'c3でd4の準備！', 'Nf6で展開！', 'd4で中央突破！'],
+    en: ['e4 to the center!', 'e5 counter!', 'Nf3 develop!', 'Nc6 defend!', 'Bc4! The Italian signature, targeting f7!', 'Bc5 mirror bishop!', 'c3 to prepare d4!', 'Nf6 develop!', 'd4 to open the center!']
+  }
+};
+
+// ===== 状態 =====
+let BOT = {
+  board: null,
+  playerColor: 'white',
+  skillLevel: 2,
+  opening: null,
+  openingMoves: [],
+  currentMoveIndex: 0,
+  inOpeningPhase: true,
+  selected: null,
+  validMoves: [],
+  turn: 'white',
+  lastMove: null,
+  stockfish: null,
+  gameOver: false,
+  history: [],
+  flipped: false
+};
 </script>
   <div id="botBattleScreen">
 
