@@ -2438,6 +2438,49 @@ let BOT = {
   gameOver: false,
   history: [],
   flipped: false
+  // ===== Stockfish初期化 =====
+function initStockfish() {
+  if (BOT.stockfish) return;
+  try {
+    BOT.stockfish = new Worker('stockfish-18-lite-single.js');
+    BOT.stockfish.postMessage('uci');
+    BOT.stockfish.postMessage('isready');
+    BOT.stockfish.onmessage = function(e) {
+      const msg = e.data;
+      if (msg.startsWith('bestmove')) {
+        const parts = msg.split(' ');
+        if (parts[1] && parts[1] !== '(none)') {
+          applyStockfishMove(parts[1]);
+        }
+      }
+    };
+  } catch(err) {
+    console.error('Stockfish init error:', err);
+  }
+}
+
+// ===== ボット対局画面を開く =====
+function openBotBattle(opening) {
+  BOT.opening = opening;
+  document.getElementById('botOpeningName').textContent =
+    LANG === 'ja' ? opening.name : (OPENING_NAMES_EN[opening.name] || opening.name);
+  document.getElementById('botSetup').style.display = 'block';
+  document.getElementById('botGame').classList.remove('active');
+  document.getElementById('botBattleScreen').classList.add('active');
+  updateBotLang();
+  initStockfish();
+}
+
+function closeBotBattle() {
+  document.getElementById('botBattleScreen').classList.remove('active');
+  if (BOT.stockfish) {
+    BOT.stockfish.postMessage('stop');
+  }
+}
+
+function selectBotColor(color) {
+  BOT.playerColor = color;
+  document.querySelectorAll('.bot-color-bt
 };
 </script>
   <div id="botBattleScreen">
