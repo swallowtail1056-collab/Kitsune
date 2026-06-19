@@ -1795,6 +1795,8 @@ function applyLang() {
   if(chips[2]) chips[2].textContent=L.scoreCompleted;
   const it=document.getElementById('infoText');
   if(it) it.textContent=S.opening?(typeof S.opening.desc==='object'?(S.opening.desc[LANG]||S.opening.desc.ja):S.opening.desc):L.infoDefault;
+  const bbBtn=document.getElementById('botBattleEntryBtn');
+  if(bbBtn) bbBtn.style.display = S.opening ? 'inline-block' : 'none';
   const sm=document.getElementById('statusMsg');
   if(sm&&!S.opening) sm.textContent=L.statusDefault;
   // オートプレイ完了・練習中のステータスも更新
