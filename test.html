@@ -2670,6 +2670,108 @@ const JENE_COMMENTS = {
     ja: '🦊 オープニング完了！ここからは自由に指してね。全力で来るよ！',
     en: '🦊 Opening complete! From here, play freely — I\'ll give it my all!'
   },
+    thinking: {
+    ja: '🤔 うーん、考えてるよ…',
+    en: '🤔 Hmm, let me think...'
+  },
+  check: {
+    ja: '⚠️ チェック！キングを逃がして！',
+    en: '⚠️ Check! Protect your king!'
+  },
+  checkmate: {
+    ja: '🏆 チェックメイト！すごい！また挑戦してね！',
+    en: '🏆 Checkmate! Well played! Challenge me again!'
+  },
+  checkmateByBot: {
+    ja: '😅 チェックメイト…もう一度練習してみよう！',
+    en: '😅 Checkmate! Let\'s practice some more!'
+  },
+  stalemate: {
+    ja: '🤝 ステールメイト！引き分けだよ！',
+    en: '🤝 Stalemate! It\'s a draw!'
+  }
+};
+
+const OPENING_WRONG_REASONS = {
+  'ruylopez': {
+    ja: ['e4でセンターを占領！', 'e5でカウンター！', 'Nf3でナイトを展開して攻める！', 'Nc6でナイトを守る！', 'Bb5！これがルイ・ロペスの決め手。ナイトをピンしてe5への圧力をかけるよ！', 'a6でビショップを牽制！', 'Ba4でピンを維持！', 'Nf6で展開！', 'O-Oでキャスリング！'],
+    en: ['e4 to control the center!', 'e5 to counter!', 'Nf3 to develop the knight!', 'Nc6 to defend!', 'Bb5! This is the Ruy Lopez signature. Pin the knight and pressure e5!', 'a6 to challenge the bishop!', 'Ba4 to maintain the pin!', 'Nf6 to develop!', 'O-O to castle!']
+  },
+  'italian': {
+    ja: ['e4でセンターへ！', 'e5でカウンター！', 'Nf3でナイト展開！', 'Nc6でナイトを守る！', 'Bc4！イタリアンの特徴。f7を狙うビショップだよ！', 'Bc5でビショップを向かい合わせ！', 'c3でd4の準備！', 'Nf6で展開！', 'd4で中央突破！'],
+    en: ['e4 to the center!', 'e5 counter!', 'Nf3 develop!', 'Nc6 defend!', 'Bc4! The Italian signature, targeting f7!', 'Bc5 mirror bishop!', 'c3 to prepare d4!', 'Nf6 develop!', 'd4 to open the center!']
+  }
+};
+
+let BOT = {
+  board: null,
+  playerColor: 'white',
+  skillLevel: 2,
+  opening: null,
+  openingMoves: [],
+  currentMoveIndex: 0,
+  inOpeningPhase: true,
+  selected: null,
+  validMoves: [],
+  turn: 'white',
+  lastMove: null,
+  stockfish: null,
+  gameOver: false,
+  history: [],
+  flipped: false
+};
+
+function initStockfish() {
+  if (BOT.stockfish) return;
+  try {
+    BOT.stockfish = new Worker('stockfish-18-lite-single.js');
+    BOT.stockfish.postMessage('uci');
+    BOT.stockfish.postMessage('isready');
+    BOT.stockfish.onmessage = function(e) {
+      const msg = e.data;
+      if (msg.startsWith('bestmove')) {
+        const parts = msg.split(' ');
+        if (parts[1] && parts[1] !== '(none)') {
+          applyStockfishMove(parts[1]);
+        }
+      }
+    };
+  } catch(err) {
+    console.error('Stockfish init error:', err);
+  }
+}
+
+function openBotBattle(opening) {
+  BOT.opening = opening;
+  document.getElementById('botOpeningName').textContent =
+    LANG === 'ja' ? opening.name : (OPENING_NAMES_EN[opening.name] || opening.name);
+  document.getElementById('botSetup').style.display = 'block';
+  document.getElementById('botGame').classList.remove('active');
+  document.getElementById('botBattleScreen').classList.add('active');
+  updateBotLang();
+  initStockfish();
+}
+
+function closeBotBattle() {
+  document.getElementById('botBattleScreen').classList.remove('active');
+  if (BOT.stockfish) {
+    BOT.stockfish.postMessage('stop');
+  }
+}
+
+function selectBotColor(color) {
+  BOT.playerColor = color;
+  document.querySelectorAll('.bot-color-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.color === color);
+  });
+}
+
+function selectBotLevel(level) {
+  BOT.skillLevel = level;
+  document.querySelectorAll('.bot-level-btn').forEach(b => {
+    b.classList.toggle('active', parseInt(b.dataset.level) === level);
+  });
+}
 function startBotGame() {
   BOT.board = botInitBoard();
   BOT.turn = 'white';
