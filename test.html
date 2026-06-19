@@ -2371,5 +2371,62 @@ renderHistory();
 // applyLang called after startApp
 
 </script>
+  <div id="botBattleScreen">
+
+  <!-- ヘッダー -->
+  <div class="bot-header">
+    <span class="bot-title" id="botTitleLabel">🦊 ジーンと対局 / Play vs Jene</span>
+    <button class="bot-close-btn" onclick="closeBotBattle()">✕ 閉じる</button>
+  </div>
+
+  <!-- セットアップ画面 -->
+  <div class="bot-setup" id="botSetup">
+    <div class="bot-setup-card">
+      <h3 id="botColorLabel">♟ 色を選んでください / Choose your color</h3>
+      <div class="bot-color-btns">
+        <button class="bot-color-btn active" data-color="white" onclick="selectBotColor('white')">⬜ 白 / White</button>
+        <button class="bot-color-btn" data-color="black" onclick="selectBotColor('black')">⬛ 黒 / Black</button>
+      </div>
+    </div>
+    <div class="bot-setup-card">
+      <h3 id="botLevelLabel">🎯 難易度 / Difficulty</h3>
+      <div class="bot-level-btns">
+        <button class="bot-level-btn active" data-level="2" onclick="selectBotLevel(2)">🐣 入門</button>
+        <button class="bot-level-btn" data-level="5" onclick="selectBotLevel(5)">⭐ 初級</button>
+        <button class="bot-level-btn" data-level="10" onclick="selectBotLevel(10)">⭐⭐ 中級</button>
+        <button class="bot-level-btn" data-level="15" onclick="selectBotLevel(15)">⭐⭐⭐ 上級</button>
+        <button class="bot-level-btn" data-level="20" onclick="selectBotLevel(20)">👑 最強</button>
+      </div>
+    </div>
+    <div class="bot-setup-card">
+      <h3 id="botOpeningInfoLabel">📖 オープニング / Opening</h3>
+      <p id="botOpeningName" style="color:#f0ddb0;font-size:1rem;margin:0;"></p>
+    </div>
+    <button class="bot-start-btn" onclick="startBotGame()">🦊 対局開始！/ Start Game!</button>
+  </div>
+
+  <!-- ゲーム画面 -->
+  <div class="bot-game" id="botGame">
+
+    <!-- ジーンコメント -->
+    <div class="bot-jene-area">
+      <img id="botJeneImg" class="bot-jene-img" src="" alt="Jene">
+      <div class="bot-jene-comment" id="botJeneComment"></div>
+    </div>
+
+    <!-- ステータスバー -->
+    <div class="bot-status-bar">
+      <span class="bot-turn-label" id="botTurnLabel"></span>
+      <span class="bot-phase-label" id="botPhaseLabel"></span>
+    </div>
+
+    <!-- 盤面 -->
+    <div class="bot-board-wrap">
+      <div id="botBoard"></div>
+    </div>
+
+    <!-- ファイル座標 -->
+    <div class="bot-coords">
+      <div class="bot-coord">a</div><div
 </body>
 </html>
