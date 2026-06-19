@@ -2370,6 +2370,45 @@ initWelcome();
 renderHistory();
 // applyLang called after startApp
 
+  // ============================================================
+// BOT BATTLE JavaScript
+// ============================================================
+
+// ===== 駒のユニコード =====
+const BOT_PIECES = {
+  wK:'♔', wQ:'♕', wR:'♖', wB:'♗', wN:'♘', wP:'♙',
+  bK:'♚', bQ:'♛', bR:'♜', bB:'♝', bN:'♞', bP:'♟'
+};
+
+// ===== 初期盤面 =====
+function botInitBoard() {
+  return [
+    ['bR','bN','bB','bQ','bK','bB','bN','bR'],
+    ['bP','bP','bP','bP','bP','bP','bP','bP'],
+    [null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null],
+    ['wP','wP','wP','wP','wP','wP','wP','wP'],
+    ['wR','wN','wB','wQ','wK','wB','wN','wR']
+  ];
+}
+
+// ===== ジーンコメント =====
+const JENE_COMMENTS = {
+  welcome: {
+    ja: '💡 よし、対局開始だよ！オープニングの手順通りに指してみてね！',
+    en: '💡 Let\'s go! Follow the opening moves and show me what you\'ve learned!'
+  },
+  correct: [
+    { ja: '✨ そうそう！完璧だよ！その調子！', en: '✨ Perfect! That\'s exactly right! Keep it up!' },
+    { ja: '🎉 素晴らしい！ちゃんと覚えてたね！', en: '🎉 Excellent! You remembered it perfectly!' },
+    { ja: '👏 いい手だよ！理解できてるね！', en: '👏 Great move! You really understand this opening!' }
+  ],
+  wrong: {
+    ja: (correct, reason) => `💡 あ、そこは違うよ！正しくは「${correct}」なんだ。${reason}`,
+    en: (correct, reason) => `💡 Not quite! The correct move is ${correct}. ${reason}`
+  },
 </script>
   <div id="botBattleScreen">
 
