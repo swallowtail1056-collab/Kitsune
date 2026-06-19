@@ -2480,7 +2480,17 @@ function closeBotBattle() {
 
 function selectBotColor(color) {
   BOT.playerColor = color;
-  document.querySelectorAll('.bot-color-bt
+ document.querySelectorAll('.bot-color-btn').forEach(b => {
+      b.classList.toggle('active', b.dataset.color === color);
+    });
+  }
+
+  function selectBotLevel(level) {
+    BOT.skillLevel = level;
+    document.querySelectorAll('.bot-level-btn').forEach(b => {
+      b.classList.toggle('active', parseInt(b.dataset.level) === level);
+    });
+  }
 };
 </script>
   <div id="botBattleScreen">
