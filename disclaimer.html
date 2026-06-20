@@ -8,44 +8,53 @@
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Crimson+Pro:wght@400;600;700&display=swap" rel="stylesheet">
 
     <style>
-        body {
-            /* 🎵 英語・数字の部分にアプリと100%同じフォントを適用します */
-            font-family: 'Crimson Pro', 'Cinzel', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+      body {
+            /* 🎵 英字はCinzel・Crimson Pro、日本語は美しい明朝体（游明朝など）で完全一致 */
+            font-family: 'Crimson Pro', 'Cinzel', "Times New Roman", "Yu Mincho", "游明朝", "MS Mincho", serif;
             line-height: 1.8;
             color: #3c2f2f;
-            background-color: #f5eedc;
+            background-color: #f5edd6; /* indexの--bgと同じ色味 */
             max-width: 900px;
             margin: 0 auto;
             padding: 40px 20px;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
         }
+
         .container {
             background-color: #fcf9f2; /* コンテンツエリアの背景 */
             padding: 40px;
             border-radius: 12px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            box-shadow: 0 4px 6px rgba(0,0,0,0,05);
         }
+
         h1 {
             font-size: 24px;
             color: #8b5a2b;
             border-bottom: 2px solid #d4bda7;
             padding-bottom: 15px;
             margin-top: 0;
+            font-family: 'Cinzel', serif; /* ロゴと同じ、英字がシュッとハネるフォント */
+            letter-spacing: 0.5px;
         }
+
         h2 {
             font-size: 18px;
             color: #8b5a2b;
             margin-top: 30px;
             margin-bottom: 10px;
+            font-family: 'Crimson Pro', serif;
         }
+
         p, li {
             font-size: 15px;
         }
+
         ul {
             padding-left: 20px;
             margin-top: 5px;
         }
+
         li {
             margin-bottom: 8px;
         }
