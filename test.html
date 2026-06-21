@@ -2309,4 +2309,26 @@ document.getElementById('btnLang')?.addEventListener('click', () => {
             const enText = el.getAttribute('data-en');
             if (isEn && enText) {
                 el.textContent = enText
-</html>
+<script>
+// 🦊 ENボタン（#btnLang）がクリックされたのを感知して、4つのメニューの文字を強制的に切り替える
+document.getElementById('btnLang')?.addEventListener('click', () => {
+    // ボタンの処理が終わるのをほんの少しだけ（0.05秒）待ってから実行する
+    setTimeout(() => {
+        // 現在の画面が英語モード（bodyにenクラスがある、またはhtmlがen）になっているか判定
+        const isEn = document.body.classList.contains('en') || document.documentElement.lang === 'en';
+        
+        // 4つのリンク（a.lang-text）をすべて見つけて文字を書き換える
+        document.querySelectorAll('a.lang-text').forEach(el => {
+            const jaText = el.getAttribute('data-ja');
+            const enText = el.getAttribute('data-en');
+            
+            if (isEn && enText) {
+                el.textContent = enText; // 英語モードなら英語にする
+            } else if (jaText) {
+                el.textContent = jaText; // 日本語モードなら日本語にする
+            }
+        });
+    }, 50);
+});
+</script>
+                  </html>
