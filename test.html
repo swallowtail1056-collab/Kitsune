@@ -1421,8 +1421,24 @@ function setLang(lang,btn) {
   document.querySelectorAll('.lang-toggle').forEach(b=>b.classList.remove('active'));
   if(btn) btn.classList.add('active');
 }
+function applyLang() {
+  const L = I18N[LANG];
+  
+  // 🦊 ⬇️ ここから「4行」を追加してください！ ⬇️
+  document.querySelectorAll('.chess-articles-menu a.lang-text').forEach(el => {
+    el.textContent = el.getAttribute(LANG === 'en' ? 'data-en' : 'data-ja');
+  });
+  // 🦊 ⬆️ ここまでを追加 ⬆️
 
-function toggleLang(btn) {
+  const navBtns = document.querySelectorAll('.nav-btn:not(#btnLang)');
+  if(navBtns[0]) navBtns[0].textContent = L.navPlay;
+  if(navBtns[1]) navBtns[1].textContent = L.navQuiz;
+  if(navBtns[2]) navBtns[2].textContent = L.navDisclaimer;
+  
+  const cards = document.querySelectorAll('#page-game .box-card h3');
+  if(cards[0]) cards[0].textContent = '▸ ' + L.selectOpening; // 1425行目
+
+  function toggleLang(btn) {
   LANG=LANG==='ja'?'en':'ja';
   const langBtn=document.getElementById('btnLang');
   if(langBtn) langBtn.textContent=LANG==='ja'?'EN':'JP';
