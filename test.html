@@ -2297,4 +2297,16 @@ renderHistory();
     <a href="disclaimer-en.html" style="color: #8b5a2b; text-decoration: none; font-size: 14px; font-weight: bold;">Disclaimer (ENG)</a>
 </footer>
 </body>
+  <script>
+// 🦊 ENボタン（#btnLang）がクリックされたのを感知して、aタグの文字を強制的に切り替えるスクリプト
+document.getElementById('btnLang')?.addEventListener('click', () => {
+    // 0.1秒だけ待って、今の言語が「en」か「ja」かを正確に判定する
+    setTimeout(() => {
+        const isEn = document.body.classList.contains('en') || document.documentElement.lang === 'en';
+        
+        document.querySelectorAll('a.lang-text').forEach(el => {
+            const jaText = el.getAttribute('data-ja');
+            const enText = el.getAttribute('data-en');
+            if (isEn && enText) {
+                el.textContent = enText
 </html>
