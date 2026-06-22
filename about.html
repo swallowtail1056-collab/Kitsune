@@ -32,6 +32,38 @@
   .en-mode .lang-ja { display: none; }
   .en-mode .lang-en { display: block; }
   .en-mode button.lang-en { display: inline-block; }
+/* 1. 新設4ページの枠なし化と余白最適化 */
+.article-container, .chess-article {
+    border: none !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    padding: 0 10px !important;
+    margin-bottom: 40px !important;
+}
+.chess-article h3, .article-title {
+    border-bottom: 1px solid #e0e0e0;
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+    color: #2c3e50;
+}
+.chess-article p, .article-text {
+    text-align: left !important;
+    word-break: break-word;
+    line-height: 1.7;
+    color: #333333; /* 文字を読みやすい濃さに */
+}
+
+/* 2. スマホ表示用の調整 */
+@media screen and (max-width: 768px) {
+    .chess-article {
+        border: none !important;
+        padding: 0 5px !important;
+        margin-bottom: 35px !important;
+    }
+    .chess-article p {
+        text-align: left !important;
+    }
+}
 </style>
 </head>
 <body>
