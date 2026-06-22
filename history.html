@@ -10,31 +10,38 @@
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body { background: var(--bg); color: var(--text); font-family: 'Crimson Pro', serif; font-weight: 600; line-height: 1.8; padding: 40px 20px; }
 
-/* 💡 ボックス全体の枠線を綺麗に復活させる命令 */
-.container { 
+  /* 💡 全体を囲むメイン容器の設定 */
+  .container { 
     max-width: 720px; 
     margin: 0 auto; 
-    background: rgba(90, 58, 24, 0.04) !important;       /* 👈 消えていた薄茶色の背景を復活！ */
-    border: 1px solid rgba(184, 134, 11, 0.25) !important; /* 👈 消えていた薄茶色の枠線を復活！ */
-    border-radius: 12px !important;                       /* 👈 角丸も復活 */
-    padding: 30px 20px;                                   /* 👈 スマホでも窮屈にならない余白 */
-}
+    background: transparent; 
+    border: none;
+    padding: 0 10px;
+  }
 
-/* 💡 英語の単語の間が広がりすぎるバグだけをピンポイントで直す */
-p, div, span, h1, h2, h3 { 
+  /* 💡 英語の単語の間が広がりすぎるバグだけをピンポイントで直す */
+  p, div, span, h1, h2, h3 { 
     text-align: left !important; 
     word-break: break-word !important;
-}
+  }
+
   .lang-switch { text-align: right; margin-bottom: 25px; }
   .lang-btn { background: #f7ebd3; border: 1px solid #c4b193; color: var(--brown-dark); padding: 6px 14px; border-radius: 4px; cursor: pointer; font-weight: 700; font-size: 0.85rem; transition: all 0.2s; }
   .lang-btn:hover { background: var(--brown); color: #fff; }
 
   h1 { font-family: 'Cinzel', serif; color: var(--brown-dark); font-size: 1.8rem; text-align: center; margin-bottom: 24px; border-bottom: 2px solid rgba(184, 134, 11, 0.3); padding-bottom: 12px; }
   h2 { font-family: 'Cinzel', serif; color: var(--brown); font-size: 1.3rem; margin: 35px 0 15px; border-left: 4px solid var(--brown); padding-left: 10px; }
-  p { font-size: 1.05rem; margin-bottom: 20px; text-align: justify; text-indent: 1em; }
+  p { font-size: 1.05rem; margin-bottom: 20px; text-indent: 1em; color: #2b2b2b !important; }
   
-  .vision-box { background: #fff8e8; border: 2px solid var(--brown); border-radius: 16px; padding: 25px; margin-top: 35px; box-shadow: 2px 3px 8px rgba(0,0,0,0.05); }
-  .vision-title { font-family: 'Cinzel', serif; font-size: 1.1rem; color: var(--brown-dark); font-weight: 700; margin-bottom: 15px; text-align: center; letter-spacing: 1px; }
+  /* 🦊 OUR VISIONだけは、他ページと統一して美しい薄茶色の枠と背景を残す */
+  .vision-box { 
+    background: rgba(90, 58, 24, 0.04) !important; 
+    border: 1px solid rgba(184, 134, 11, 0.25) !important; 
+    border-radius: 12px !important; 
+    padding: 30px 20px !important; 
+    margin-top: 35px; 
+  }
+  .vision-title { font-family: 'Cinzel', serif; font-size: 1.2rem; color: var(--brown-dark); font-weight: 700; margin-bottom: 15px; text-align: center; letter-spacing: 1px; border-bottom: none !important; }
   
   .footer { text-align: center; margin-top: 45px; font-size: 0.9rem; }
   .footer a { color: var(--brown); text-decoration: none; font-weight: 700; border: 1px solid var(--brown); padding: 8px 18px; border-radius: 6px; transition: all 0.2s; }
@@ -44,74 +51,6 @@ p, div, span, h1, h2, h3 {
   .en-mode .lang-ja { display: none; }
   .en-mode .lang-en { display: block; }
   .en-mode button.lang-en { display: inline-block; }
-/* 1. 新設4ページの枠なし化と余白最適化 */
-.article-container, .chess-article {
-    border: none !important;
-    background: transparent !important;
-    box-shadow: none !important;
-    padding: 0 10px !important;
-    margin-bottom: 40px !important;
-}
-.chess-article h3, .article-title {
-    border-bottom: 1px solid #e0e0e0;
-    padding-bottom: 10px;
-    margin-bottom: 15px;
-    color: #2c3e50;
-}
-.chess-article p, .article-text {
-    text-align: left !important;
-    word-break: break-word;
-    line-height: 1.7;
-    color: #333333; /* 文字を読みやすい濃さに */
-}
-
-/* 2. スマホ表示用の調整 */
-@media screen and (max-width: 768px) {
-    .chess-article {
-        border: none !important;
-        padding: 0 5px !important;
-        margin-bottom: 35px !important;
-    }
-    .chess-article p {
-        text-align: left !important;
-    }
-}
-/* 🦊 KitsuneChess 新設ページ枠なし・スッキリ化コード */
-
-/* 1. 枠と背景を消して、余白を広げる */
-.vision-box {
-    border: none !important;         /* 枠線を完全に消す */
-    background: transparent !important; /* 背景の白いボックスを透明にする */
-    box-shadow: none !important;     /* 影がついている場合は消す */
-    padding: 0 10px !important;      /* 左右の窮屈感をなくす */
-    margin-bottom: 40px !important;  /* コラムごとの間隔を空けて見やすくする */
-}
-
-/* 2. タイトルのデザイン（枠の代わりに下線で上品に区切る） */
-.vision-title {
-    border-bottom: 1px solid #e0e0e0 !important; /* 薄い下線を入れる */
-    padding-bottom: 10px !important;
-    margin-bottom: 20px !important;
-    font-size: 1.4rem !important;
-    color: #2c3e50 !important;
-    font-weight: bold;
-}
-
-/* 3. 本文テキストの調整（左寄せにして英語の隙間広がりを防止・色を濃く） */
-.vision-box p, .vision-box div {
-    text-align: left !important;     /* 英語の変な空白を直す（左寄せ） */
-    word-break: break-word !important; /* 英単語のはみ出し防止 */
-    line-height: 1.7 !important;     /* 行間を広げてスッキリさせる */
-    color: #2b2b2b !important;       /* 文字の色をしっかり読める濃さにする */
-}
-
-/* 4. スマホ用のレスポンシブ微調整 */
-@media screen and (max-width: 768px) {
-    .vision-box {
-        padding: 0 5px !important;
-        margin-bottom: 35px !important;
-    }
-}
 </style>
 </head>
 <body>
@@ -121,11 +60,10 @@ p, div, span, h1, h2, h3 {
     <button class="lang-btn lang-en" onclick="toggleLanguage()">日本語 (To Japanese)</button>
   </div>
 
-  <!-- ================= 日本語パート ================= -->
   <div class="lang-ja">
     <h1>📜 チェスの歴史</h1>
     <p>チェスは、1500年以上の壮大な歴史を持つ、世界で最も古く、かつ最も洗練されたボードゲームの一つです。</p>
-    <p>それは単なる暇つぶしの娯楽の枠を完全に超え、ある時代には国家の命運を占う戦争のシミュレーションとして、またある時代には高度な数学的パズル、そして時には人間の知性を表現する「芸術」として、人類の文明の発展とともに劇的な進化を遂げてきました。</p>
+    <p>それは単なる暇つぶしの娯楽の枠を完全に超え、ある時代には国家の命運を占う戦争のシミュレーションとして、またある時代には高度な数学的パズル、そこで時には人間の知性を表現する「芸術」として、人類の文明の発展とともに劇的な進化を遂げてきました。</p>
     
     <h2>1. 古代インドの源流「チャトランガ」</h2>
     <p>チェスの最古の先祖を辿ると、6世紀頃の古代インドの北西部で広く遊ばれていた「チャトランガ（Chaturanga）」という盤上ゲームに行き着きます。</p>
@@ -152,7 +90,6 @@ p, div, span, h1, h2, h3 {
     <div class="footer"><a href="javascript:window.close();">❌ ページを閉じる</a></div>
   </div>
 
-  <!-- ================= 英語パート ================= -->
   <div class="lang-en">
     <h1>📜 History of Chess</h1>
     <p>Chess is one of the oldest and most sophisticated board games in existence, with an epic history spanning over 1,500 years.</p>
@@ -184,7 +121,7 @@ p, div, span, h1, h2, h3 {
   </div>
 </div>
 
-<script {
+<script>
   function toggleLanguage() {
     document.body.classList.toggle('en-mode');
   }
