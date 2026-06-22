@@ -19,7 +19,22 @@
     border-radius: 0; 
     padding: 20px 10px;                 /* 💡 左右の padding を狭めてスマホでの窮屈感をゼロに */
 }
+17:  .lang-btn:hover { background: var(--brown); color: #fff; }
+18:
+19:  /* 💡 先ほど書き換えた .container がこのあたりにあります */
+20:  .container { ... }
+21:
+22:  /* 👈 ここ（22行目あたり）に新しく貼り付けます！ */
+23:  .lang-en, [class*="lang-en"], .lang-switch + div, p {
+24:      text-align: left !important;
+25:      word-break: break-word !important;
+26:  }
+27:
+28:  </style> ```
 
+このように、`</style>` よりも内側（上）に収まっていれば、22行目への貼り付けで問題ありません。
+
+貼り付けて保存したあと、英語版の単語のスペースが綺麗に詰まるか、ぜひ確認してみてください！
 /* 👇 英語切り替え時、単語の間のスペースが広がりすぎるのを防ぐお守り */
 .lang-en, .lang-ja {
     text-align: left !important;        /* 💡 左寄せにして英語の不自然な隙間を解消 */
