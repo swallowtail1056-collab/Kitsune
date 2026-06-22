@@ -9,8 +9,22 @@
   :root { --bg: #f5edd6; --brown: #7c4a1e; --brown-dark: #4a2a0e; --text: #111; }
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body { background: var(--bg); color: var(--text); font-family: 'Crimson Pro', serif; font-weight: 600; line-height: 1.8; padding: 40px 20px; }
-  .container { max-width: 720px; margin: 0 auto; background: rgba(90, 58, 24, 0.04); border: 1px solid rgba(184, 134, 11, 0.25); border-radius: 12px; padding: 35px; }
-  
+
+/* 👇 12行目の .container をこちらに書き換えます（枠なし・窮屈さ解消） */
+.container { 
+    max-width: 720px; 
+    margin: 0 auto; 
+    background: transparent !important; /* 💡 ボックスの背景色を透明にしてスッキリ */
+    border: none !important;            /* 💡 枠線を完全に消し去る */
+    border-radius: 0; 
+    padding: 20px 10px;                 /* 💡 左右の padding を狭めてスマホでの窮屈感をゼロに */
+}
+
+/* 👇 英語切り替え時、単語の間のスペースが広がりすぎるのを防ぐお守り */
+.lang-en, .lang-ja {
+    text-align: left !important;        /* 💡 左寄せにして英語の不自然な隙間を解消 */
+    word-break: break-word !important;   /* 💡 長い単語のはみ出しを防止 */
+}
   .lang-switch { text-align: right; margin-bottom: 25px; }
   .lang-btn { background: #f7ebd3; border: 1px solid #c4b193; color: var(--brown-dark); padding: 6px 14px; border-radius: 4px; cursor: pointer; font-weight: 700; font-size: 0.85rem; transition: all 0.2s; }
   .lang-btn:hover { background: var(--brown); color: #fff; }
