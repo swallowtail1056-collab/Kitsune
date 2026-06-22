@@ -62,6 +62,42 @@
         text-align: left !important;
     }
 }
+/* 🦊 KitsuneChess 新設ページ枠なし・スッキリ化コード */
+
+/* 1. 枠と背景を消して、余白を広げる */
+.vision-box {
+    border: none !important;         /* 枠線を完全に消す */
+    background: transparent !important; /* 背景の白いボックスを透明にする */
+    box-shadow: none !important;     /* 影がついている場合は消す */
+    padding: 0 10px !important;      /* 左右の窮屈感をなくす */
+    margin-bottom: 40px !important;  /* コラムごとの間隔を空けて見やすくする */
+}
+
+/* 2. タイトルのデザイン（枠の代わりに下線で上品に区切る） */
+.vision-title {
+    border-bottom: 1px solid #e0e0e0 !important; /* 薄い下線を入れる */
+    padding-bottom: 10px !important;
+    margin-bottom: 20px !important;
+    font-size: 1.4rem !important;
+    color: #2c3e50 !important;
+    font-weight: bold;
+}
+
+/* 3. 本文テキストの調整（左寄せにして英語の隙間広がりを防止・色を濃く） */
+.vision-box p, .vision-box div {
+    text-align: left !important;     /* 英語の変な空白を直す（左寄せ） */
+    word-break: break-word !important; /* 英単語のはみ出し防止 */
+    line-height: 1.7 !important;     /* 行間を広げてスッキリさせる */
+    color: #2b2b2b !important;       /* 文字の色をしっかり読める濃さにする */
+}
+
+/* 4. スマホ用のレスポンシブ微調整 */
+@media screen and (max-width: 768px) {
+    .vision-box {
+        padding: 0 5px !important;
+        margin-bottom: 35px !important;
+    }
+}
 </style>
 </head>
 <body>
