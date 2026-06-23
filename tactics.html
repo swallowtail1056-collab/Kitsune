@@ -31,6 +31,7 @@
   .en-mode .lang-ja { display: none; }
   .en-mode .lang-en { display: block; }
   .en-mode button.lang-en { display: inline-block; }
+
 /* 1. 新設4ページの枠なし化と余白最適化 */
 .article-container, .chess-article {
     border: none !important;
@@ -49,7 +50,7 @@
     text-align: left !important;
     word-break: break-word;
     line-height: 1.7;
-    color: #333333; /* 文字を読みやすい濃さに */
+    color: #333333; 
 }
 
 /* 2. スマホ表示用の調整 */
@@ -70,31 +71,31 @@ p, div, span, h1, h2, h3 {
 }
 /* 💡 チェス脳・f7ページの「大枠」を完全に消し去る命令 */
 .article-container, .chess-article {
-    border: none !important;            /* 👈 外側の枠線を消す */
-    background: transparent !important; /* 👈 背景のボックスを透明にする */
-    box-shadow: none !important;        /* 👈 影を消す */
-    padding: 0 10px !important;         /* 👈 左右の余白をスッキリさせる */
+    border: none !important;            
+    background: transparent !important; 
+    box-shadow: none !important;        
+    padding: 0 10px !important;         
 }
 
 /* 💡 本文の文字を読みやすい濃い色にして、英語の隙間広がりも防ぐ */
 .chess-article p, .article-text, p, div {
     text-align: left !important; 
     word-break: break-word !important;
-    color: #2b2b2b !important;          /* 👈 文字を読みやすい濃さに */
+    color: #2b2b2b !important;          
 }
 /* 💡 ルール・タクティクス共通：残っている大枠を完全に消し去る命令 */
 .container, .article-container, .chess-article {
-    border: none !important;            /* 👈 外側の枠線を完全に消す */
-    background: transparent !important; /* 👈 背景のボックスを透明にする */
-    box-shadow: none !important;        /* 👈 影を消す */
-    padding: 0 10px !important;         /* 👈 左右の窮屈感をなくす */
+    border: none !important;            
+    background: transparent !important; 
+    box-shadow: none !important;        
+    padding: 0 10px !important;         
 }
 
 /* 💡 本文の文字を読みやすい濃い色にして、左寄せにする */
 p, div, span, li, h1, h2, h3 {
     text-align: left !important; 
     word-break: break-word !important;
-    color: #2b2b2b !important;          /* 👈 文字を読みやすい濃さに */
+    color: #2b2b2b !important;          
 }
 </style>
 </head>
@@ -109,7 +110,7 @@ p, div, span, li, h1, h2, h3 {
   <div class="lang-ja">
     <h1>🎯 f7の狙い方（アタックの基本）</h1>
     <p>チェスの実戦、特にゲームが始まって間もない序盤戦（オープニング）において、わずか数手で勝負の天秤を劇的に傾け、相手を壊滅状態に追い込むための有名な「絶対の急所」が存在します。</p>
-    <p>それこそが、黒陣の「f7」のマス（黒側から見た白陣の急所は「f2」）です。なぜこのわずか1マスのポーンがこれほどまでに過激に狙われるのか、その構造的な理由と、実戦で大活躍する具体的な応用戦術、そしてその正しい防ぎ方について深く解説します。</p>
+    <p>それこそが、黒陣の「f7」のマス（黒側から見た白陣の急所は「f2」）です。なぜこのわずか1マスのポーンがこれほどまでに過激に狙われるのか、その構造的な理由と、実戦で大活躍する具体的な応用戦術、転ばぬ先の正しい防ぎ方について深く解説します。</p>
     
     <h2>なぜ「f7」は盤上最大の脆い弱点なのか？</h2>
     <p>チェスの初期配置を眺めてみると、陣形を形成するほとんどのポーンは、背後にいる何らかの強力な駒によって最初から二重三重にバックアップされていることが分かります。</p>
@@ -124,11 +125,12 @@ p, div, span, li, h1, h2, h3 {
     
     <div class="highlight-box">
       💡 実戦での強力なアドバイス：<br>
-      対局相手のビショップがc4のマスへと躍り出てきたら、それはあなたの首元（f7）を狙う鋭いブレードが抜かれたサインです！決して焦らず、早期のキャスリングを完了させてキングを安全な右端へ避難させるとともに、ルークをf8に回してf7の守りを鉄壁に補強しましょう。急所を知るものは、攻めだけでなく守りにおいても無敵になります。
+      <!-- 👇 「あなたの首元」から、特定の個人を指さない客観的な表現に変更しました -->
+      対局相手のビショップがc4のマスへと躍り出てきたら、それは黒陣の首元（f7）を狙う鋭いブレードが抜かれたサインです！決して焦らず、早期のキャスリングを完了させてキングを安全な右端へ避難させるとともに、ルークをf8に回してf7の守りを鉄壁に補強することが推奨されます。急所を知るものは、攻めだけでなく守りにおいても無敵になります。
     </div>
 
     <div class="vision-box">
-      <div class="vision-title">OUR VISION</div>
+      <div class="vision-title">VISION</div> <!-- 👈 OURを消してシンプルに -->
       <p>f7へのアタックとディフェンスの攻防は、チェスが持つ「ダイナミズム」と「戦術の美しさ」を最短で学ぶための最高の教科書です。</p>
       <p>攻撃を組み立てるスリルと、それを正確な知識で鮮やかにいなす防御の快感をひとたび体感すれば、チェスの楽しさは何倍にも膨れ上がります。</p>
       <p>KitsuneChessのビジョンは、こうした実戦に直結するエキサイティングな本格的戦術を、誰もがパズルを解き明かすように、楽しく、そして圧倒的に効率よく習得できる最高のトレーニング環境を提供し続けることです。定跡の急所をマスターし、次の対局で華麗な勝利を掴み取りましょう。</p>
@@ -155,14 +157,16 @@ p, div, span, li, h1, h2, h3 {
     
     <div class="highlight-box">
       💡 Vital Tactical Advice:<br>
-      The moment your opponent's bishop arrives on the c4 square, consider it a sharp blade pulled from its sheath, pointing directly at your throat (f7)! Do not panic. Prioritize king safety by executing a timely castling maneuver to tuck your King away into the safe corner, which automatically brings your rook to f8, reinforcing the weak point with iron-clad protection. Mastering your vulnerabilities makes you truly invincible.
+      <!-- 👇 your throat を the defensive perimeter に修正し、より専門的で客観的な響きにしました -->
+      The moment the opponent's bishop arrives on the c4 square, consider it a sharp blade pulled from its sheath, pointing directly at the defensive perimeter (f7)! Do not panic. Prioritize king safety by executing a timely castling maneuver to tuck the King away into the safe corner, which automatically brings the rook to f8, reinforcing the weak point with iron-clad protection. Mastering vulnerabilities makes a player truly invincible.
     </div>
 
     <div class="vision-box">
-      <div class="vision-title">OUR VISION</div>
+      <div class="vision-title">VISION</div> <!-- 👈 OURを消してシンプルに -->
       <p>The tactical siege and defense of the f7 square serve as the ultimate gateway to understanding the profound dynamism and sheer elegance of chess strategy.</p>
-      <p>Experiencing the raw thrill of constructing an assault, alongside the deep satisfaction of neutralizing it with precise defensive knowledge, elevates your appreciation of chess to a whole new level.</p>
-      <p>Our vision at KitsuneChess is to cultivate a premier training space where these essential, practical tactics can be mastered efficiently and enjoyably, as if solving an engaging puzzle. Master the vital pressure points of opening theory, and seize a brilliant victory in your next encounter.</p>
+      <p>Experiencing the raw thrill of constructing an assault, alongside the deep satisfaction of neutralizing it with precise defensive knowledge, elevates the appreciation of chess to a whole new level.</p>
+      <!-- 👇 Our vision at を The vision of に修正し、一人称を完全に排除しました -->
+      <p>The vision of KitsuneChess is to cultivate a premier training space where these essential, practical tactics can be mastered efficiently and enjoyably, as if solving an engaging puzzle. Master the vital pressure points of opening theory, and seize a brilliant victory in your next encounter.</p>
     </div>
     <div class="footer"><a href="javascript:window.close();">❌ Close Page</a></div>
   </div>
