@@ -508,7 +508,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <button class="filter-btn" data-filter="quizColor" data-value="both" data-ja="両方" data-en="Both">Both</button>
       </div>
     </div>
-    <div class="opening-tabs" id="quizOpeningTabs"></div>
+   <div class="opening-select-wrapper" style="width: 100%; margin: 4px 0 12px 0; text-align: left;">
+      <select id="quizOpeningDropdown" onchange="if(this.value) { startQuiz(this.value); }" style="width: 100%; padding: 11px 15px; font-family: 'Crimson Pro', serif; font-size: 1.05rem; font-weight: 700; border-radius: 8px; border: 1px solid rgba(184, 134, 11, 0.3); background: #f7ebd3; color: var(--brown-dark); cursor: pointer; box-shadow: 0 2px 6px rgba(0,0,0,0.04); transition: all 0.2s;">
+        </select>
+    </div>
+    <div id="quizOpeningTabs" style="display: none !important;"></div>
   </div>
   <div class="quiz-area" id="quizArea" style="display:none;">
     <div class="box-card">
