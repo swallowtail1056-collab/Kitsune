@@ -196,7 +196,7 @@ nav h1{font-family:'Crimson Pro',serif;font-size:clamp(0.9rem,3vw,1.4rem);font-w
 .fox-bubble{
   background:#fff8e8;border:2px solid var(--brown);border-radius:16px 16px 16px 4px;
   padding:10px 14px;font-size:1rem;font-weight:700;color:var(--brown-dark);
-  max-width:360px;line-height:1.5;text-align:left; position:relative;box-shadow:2px 3px 8px rgba(0,0,0,0.1);const quizFox = document.getElementById('quizFoxImg');
+  max-width:360px;line-height:1.5;text-align:lef；tposition:relative;box-shadow:2px 3px 8px rgba(0,0,0,0.1);const quizFox = document.getElementById('quizFoxImg');
 if (quizFox) quizFox.src = pct >= 80 ? FOX_HAPPY_SRC : FOX_WINK_SRC;
 }
 .fox-bubble.celebrate{border-color:#c9a82e;background:#fffbe0;animation:foxPop 0.5s cubic-bezier(0.34,1.56,0.64,1);}
@@ -407,14 +407,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       </div>
     </div>
     </div>
-    <!-- 💡 練習ページ用：絞り込み連動型スマートプルダウン -->
-    <div class="opening-select-wrapper" style="width: 100%; margin: 4px 0 12px 0; text-align: left;">
-      <select id="openingDropdown" onchange="if(this.value) { selectOpening(this.value); }" style="width: 100%; padding: 11px 15px; font-family: 'Crimson Pro', serif; font-size: 1.05rem; font-weight: 700; border-radius: 8px; border: 1px solid rgba(184, 134, 11, 0.3); background: #f7ebd3; color: var(--brown-dark); cursor: pointer; box-shadow: 0 2px 6px rgba(0,0,0,0.04); transition: all 0.2s;">
-        <!-- JavaScriptから自動的に選択肢が追加されます -->
-      </select>
-    </div>
-    <!-- 元のプログラムのエラーを防ぐための隠しダミー -->
-    <div id="openingTabs" style="display: none !important;"></div>
+    <div class="opening-tabs" id="openingTabs"></div>
   </div>
   <div class="box-card">
     <h3>▸ 説明</h3>
@@ -508,17 +501,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <button class="filter-btn" data-filter="quizColor" data-value="both" data-ja="両方" data-en="Both">Both</button>
       </div>
     </div>
-<div class="opening-select-wrapper" style="width: 100%; margin: 4px 0 12px 0; text-align: left;">
-      <select id="quizOpeningDropdown" onchange="if(this.value) { startQuiz(this.value); }" style="width: 100%; padding: 11px 15px; font-family: 'Crimson Pro', serif; font-size: 1.05rem; font-weight: 700; border-radius: 8px; border: 1px solid rgba(184, 134, 11, 0.3); background: #f7ebd3; color: var(--brown-dark); cursor: pointer; box-shadow: 0 2px 6px rgba(0,0,0,0.04); transition: all 0.2s;">
-        </select>
-    </div>
-    <div id="quizOpeningTabs" style="display: none !important;"></div>
-
-<div class="quiz-area" id="quizArea" style="display:block;">
-<div class="box-card">
-    <h3>▸ 説明</h3>
-
-    <div class="quiz-area" id="quizArea" style="display:none;">
+    <div class="opening-tabs" id="quizOpeningTabs"></div>
+  </div>
+  <div class="quiz-area" id="quizArea" style="display:none;">
     <div class="box-card">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
         <h3 style="margin:0;">▸ 問題</h3>
@@ -1285,38 +1270,21 @@ const QUIZ_QUESTIONS_TEMPLATE = [
 ];
 
 function buildQuizOpeningTabs() {
-  const dropdown = document.getElementById('quizOpeningDropdown');
-  if (!dropdown) return;
-
-  dropdown.innerHTML = '';
-
-  // クイズ用のオープニングフィルター
-  const filtered = OPENINGS.filter(matchesQuizFilter);
-
-  // 初心者が迷わないための案内テキスト
-  const placeholder = document.createElement('option');
-  placeholder.value = '';
-  placeholder.textContent = (LANG === 'ja') 
-    ? '▼ テストを行うオープニングを選択 🦊' 
-    : '▼ Select an opening to start quiz 🦊';
-  dropdown.appendChild(placeholder);
-
+  const c = document.getElementById('quizOpeningTabs');
+  if (!c) return;
+  c.innerHTML = '';
+ const filtered = OPENINGS.filter(matchesQuizFilter);
   if (filtered.length === 0) {
-    placeholder.textContent = (LANG === 'ja') ? '該当するオープニングがありません' : 'No openings found';
+    c.innerHTML = '<div style="font-size:0.85rem;color:var(--text-muted);padding:6px;">' +
+      (LANG==='ja' ? '該当するオープニングがありません' : 'No openings found') + '</div>';
     return;
   }
-
   filtered.forEach(op => {
-    const option = document.createElement('option');
-    option.value = op.id;
-    option.textContent = opName(op);
-    
-    // 現在選択されているクイズ用オープニングがあれば選択状態にする
-    if (typeof currentQuizOpening !== 'undefined' && currentQuizOpening === op.id) {
-      option.selected = true;
-    }
-    
-    dropdown.appendChild(option);
+    const b = document.createElement('button');
+    b.className = 'tab-btn' + (currentQuizOpening && currentQuizOpening.id===op.id?' active':'');
+    b.textContent = opName(op);
+    b.onclick = () => startQuiz(op);
+    c.appendChild(b);
   });
 }
 
@@ -1865,44 +1833,23 @@ function matchesQuizFilter(op) {
   return true;
 }
 function buildOpeningTabs() {
-  const dropdown = document.getElementById('openingDropdown');
-  const c = document.getElementById('openingTabs'); // 予期せぬエラー防止用
-  if (!dropdown) return;
-
-  // プルダウンを一度空っぽにする
-  dropdown.innerHTML = '';
-
+  const c = document.getElementById('openingTabs');
+  if (!c) return;
+  c.innerHTML = '';
   const filtered = OPENINGS.filter(matchesFilter);
-
-  // 初心者が迷わないための案内テキスト
-  const placeholder = document.createElement('option');
-  placeholder.value = '';
-  placeholder.textContent = (LANG === 'ja') 
-    ? '▼ 練習するオープニングを選択してください 🦊' 
-    : '▼ Select an opening to practice 🦊';
-  dropdown.appendChild(placeholder);
-
   if (filtered.length === 0) {
-    // 該当がない場合、案内テキストを「見つかりません」に書き換える
-    placeholder.textContent = (LANG === 'ja') ? '該当するオープニングがありません' : 'No openings found';
+    c.innerHTML = '<div style="font-size:0.85rem;color:var(--text-muted);padding:6px;">' +
+      (LANG==='ja' ? '該当するオープニングがありません' : 'No openings found') + '</div>';
     return;
   }
-
-  // 絞り込まれたオープニングをプルダウンの選択肢(<option>)として流し込む
   filtered.forEach(op => {
-    const option = document.createElement('option');
-    option.value = op.id;
-    option.textContent = opName(op);
-    
-    // 現在選択されているオープニングがあれば、それをプルダウンで選択状態にする
-    if (S.opening && S.opening.id === op.id) {
-      option.selected = true;
-    }
-    
-    dropdown.appendChild(option);
+    const b = document.createElement('button');
+    b.className = 'tab-btn' + (S.opening && S.opening.id===op.id ? ' active' : '');
+    b.textContent = opName(op);
+    b.onclick = () => selectOpening(op.id);
+    c.appendChild(b);
   });
 }
-
 
 function renderMoveList() {
   const c=document.getElementById('moveList');
