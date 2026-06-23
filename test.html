@@ -1277,21 +1277,38 @@ const QUIZ_QUESTIONS_TEMPLATE = [
 ];
 
 function buildQuizOpeningTabs() {
-  const c = document.getElementById('quizOpeningTabs');
-  if (!c) return;
-  c.innerHTML = '';
- const filtered = OPENINGS.filter(matchesQuizFilter);
+  const dropdown = document.getElementById('quizOpeningDropdown');
+  if (!dropdown) return;
+
+  dropdown.innerHTML = '';
+
+  // クイズ用のオープニングフィルター
+  const filtered = OPENINGS.filter(matchesQuizFilter);
+
+  // 初心者が迷わないための案内テキスト
+  const placeholder = document.createElement('option');
+  placeholder.value = '';
+  placeholder.textContent = (LANG === 'ja') 
+    ? '▼ テストを行うオープニングを選択 🦊' 
+    : '▼ Select an opening to start quiz 🦊';
+  dropdown.appendChild(placeholder);
+
   if (filtered.length === 0) {
-    c.innerHTML = '<div style="font-size:0.85rem;color:var(--text-muted);padding:6px;">' +
-      (LANG==='ja' ? '該当するオープニングがありません' : 'No openings found') + '</div>';
+    placeholder.textContent = (LANG === 'ja') ? '該当するオープニングがありません' : 'No openings found';
     return;
   }
+
   filtered.forEach(op => {
-    const b = document.createElement('button');
-    b.className = 'tab-btn' + (currentQuizOpening && currentQuizOpening.id===op.id?' active':'');
-    b.textContent = opName(op);
-    b.onclick = () => startQuiz(op);
-    c.appendChild(b);
+    const option = document.createElement('option');
+    option.value = op.id;
+    option.textContent = opName(op);
+    
+    // 現在選択されているクイズ用オープニングがあれば選択状態にする
+    if (typeof currentQuizOpening !== 'undefined' && currentQuizOpening === op.id) {
+      option.selected = true;
+    }
+    
+    dropdown.appendChild(option);
   });
 }
 
