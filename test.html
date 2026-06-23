@@ -1840,22 +1840,43 @@ function matchesQuizFilter(op) {
   return true;
 }
 function buildOpeningTabs() {
-  const c = document.getElementById('openingTabs');
-  if (!c) return;
-  c.innerHTML = '';
+  const dropdown = document.getElementById('openingDropdown');
+  const c = document.getElementById('openingTabs'); // 予期せぬエラー防止用
+  if (!dropdown) return;
+
+  // プルダウンを一度空っぽにする
+  dropdown.innerHTML = '';
+
   const filtered = OPENINGS.filter(matchesFilter);
+
+  // 初心者が迷わないための案内テキスト
+  const placeholder = document.createElement('option');
+  placeholder.value = '';
+  placeholder.textContent = (LANG === 'ja') 
+    ? '▼ 練習するオープニングを選択してください 🦊' 
+    : '▼ Select an opening to practice 🦊';
+  dropdown.appendChild(placeholder);
+
   if (filtered.length === 0) {
-    c.innerHTML = '<div style="font-size:0.85rem;color:var(--text-muted);padding:6px;">' +
-      (LANG==='ja' ? '該当するオープニングがありません' : 'No openings found') + '</div>';
+    // 該当がない場合、案内テキストを「見つかりません」に書き換える
+    placeholder.textContent = (LANG === 'ja') ? '該当するオープニングがありません' : 'No openings found';
     return;
   }
+
+  // 絞り込まれたオープニングをプルダウンの選択肢(<option>)として流し込む
   filtered.forEach(op => {
-    const b = document.createElement('button');
-    b.className = 'tab-btn' + (S.opening && S.opening.id===op.id ? ' active' : '');
-    b.textContent = opName(op);
-    b.onclick = () => selectOpening(op.id);
-    c.appendChild(b);
+    const option = document.createElement('option');
+    option.value = op.id;
+    option.textContent = opName(op);
+    
+    // 現在選択されているオープニングがあれば、それをプルダウンで選択状態にする
+    if (S.opening && S.opening.id === op.id) {
+      option.selected = true;
+    }
+    
+    dropdown.appendChild(option);
   });
+}
 }
 
 function renderMoveList() {
