@@ -407,7 +407,14 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       </div>
     </div>
     </div>
-    <div class="opening-tabs" id="openingTabs"></div>
+    <!-- 💡 練習ページ用：絞り込み連動型スマートプルダウン -->
+    <div class="opening-select-wrapper" style="width: 100%; margin: 4px 0 12px 0; text-align: left;">
+      <select id="openingDropdown" onchange="if(this.value) { selectOpening(this.value); }" style="width: 100%; padding: 11px 15px; font-family: 'Crimson Pro', serif; font-size: 1.05rem; font-weight: 700; border-radius: 8px; border: 1px solid rgba(184, 134, 11, 0.3); background: #f7ebd3; color: var(--brown-dark); cursor: pointer; box-shadow: 0 2px 6px rgba(0,0,0,0.04); transition: all 0.2s;">
+        <!-- JavaScriptから自動的に選択肢が追加されます -->
+      </select>
+    </div>
+    <!-- 元のプログラムのエラーを防ぐための隠しダミー -->
+    <div id="openingTabs" style="display: none !important;"></div>
   </div>
   <div class="box-card">
     <h3>▸ 説明</h3>
