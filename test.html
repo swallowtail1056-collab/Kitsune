@@ -513,16 +513,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         </select>
     </div>
     <div id="quizOpeningTabs" style="display: none !important;"></div>
-  const dropdown = document.getElementById('openingDropdown');
-  if (!dropdown) return;
 
-  dropdown.innerHTML = '';
-
-  const filtered = OPENINGS.filter(matchesFilter);
-
-  // 1. 案内テキストを追加
-  const placeholder = document.createElement('option');
-  placeholder.value = '';
+    <div class="quiz-area" id="quizArea" style="display:none;">
   placeholder.textContent = (LANG === 'ja') 
     ? '▼ 練習するオープニングを選択してください 🦊' 
     : '▼ Select an opening to practice 🦊';
