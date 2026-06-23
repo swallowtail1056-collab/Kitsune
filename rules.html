@@ -30,6 +30,7 @@
   .en-mode .lang-ja { display: none; }
   .en-mode .lang-en { display: block; }
   .en-mode button.lang-en { display: inline-block; }
+
 /* 1. 新設4ページの枠なし化と余白最適化 */
 .article-container, .chess-article {
     border: none !important;
@@ -48,7 +49,7 @@
     text-align: left !important;
     word-break: break-word;
     line-height: 1.7;
-    color: #333333; /* 文字を読みやすい濃さに */
+    color: #333333;
 }
 
 /* 2. スマホ表示用の調整 */
@@ -69,31 +70,31 @@ p, div, span, h1, h2, h3 {
 }
 /* 💡 チェス脳・f7ページの「大枠」を完全に消し去る命令 */
 .article-container, .chess-article {
-    border: none !important;            /* 👈 外側の枠線を消す */
-    background: transparent !important; /* 👈 背景のボックスを透明にする */
-    box-shadow: none !important;        /* 👈 影を消す */
-    padding: 0 10px !important;         /* 👈 左右の余白をスッキリさせる */
+    border: none !important;            
+    background: transparent !important; 
+    box-shadow: none !important;        
+    padding: 0 10px !important;         
 }
 
 /* 💡 本文の文字を読みやすい濃い色にして、英語の隙間広がりも防ぐ */
 .chess-article p, .article-text, p, div {
     text-align: left !important; 
     word-break: break-word !important;
-    color: #2b2b2b !important;          /* 👈 文字を読みやすい濃さに */
+    color: #2b2b2b !important;          
 }
 /* 💡 ルール・タクティクス共通：残っている大枠を完全に消し去る命令 */
 .container, .article-container, .chess-article {
-    border: none !important;            /* 👈 外側の枠線を完全に消す */
-    background: transparent !important; /* 👈 背景のボックスを透明にする */
-    box-shadow: none !important;        /* 👈 影を消す */
-    padding: 0 10px !important;         /* 👈 左右の窮屈感をなくす */
+    border: none !important;            
+    background: transparent !important; 
+    box-shadow: none !important;        
+    padding: 0 10px !important;         
 }
 
 /* 💡 本文の文字を読みやすい濃い色にして、左寄せにする */
 p, div, span, li, h1, h2, h3 {
     text-align: left !important; 
     word-break: break-word !important;
-    color: #2b2b2b !important;          /* 👈 文字を読みやすい濃さに */
+    color: #2b2b2b !important;          
 }
 </style>
 </head>
@@ -107,8 +108,9 @@ p, div, span, li, h1, h2, h3 {
   <!-- ================= 日本語パート ================= -->
   <div class="lang-ja">
     <h1>💡 チェス脳の鍛え方</h1>
-    <p>チェスを本格的にプレイすることは、人間の脳全体のネットワークを極限まで活性化させる、最高峰のメンタルトレーニングであると現代の脳科学でも広く認められています。</p>
-    <p>初心者から達人に至るまでの上達のプロセスにおいて、私たちの脳内に自然と構築されていく「チェス脳（Chess Brain）」の驚くべきメカニズムと、それを最も効率的に引き出すための3つのコア・アプローチについて詳しく解説します。</p>
+    <p>チェスを本格的にプレイすることは、人間の脳全体のネットワークを極限まで活性化させる、最高峰のメンタルトレーニングであると現代の脳科学でも広く認めされています。</p>
+    <!-- 👇 「私たちの脳内」を「脳内」に修正しました -->
+    <p>初心者から達人に至るまでの上達のプロセスにおいて、脳内に自然と構築されていく「チェス脳（Chess Brain）」の驚くべきメカニズムと、それを最も効率的に引き出すための3つのコア・アプローチについて詳しく解説します。</p>
     
     <h2>1. 脳内に多次元盤面を構築する「空間認知力」と「先読み力」</h2>
     <p>チェスの実力が向上するにつれて、プレイヤーは実際の目の前にある物理的な駒を動かす前に、頭の中に精密な「バーチャルなチェス盤」を構築できるようになります。</p>
@@ -126,10 +128,11 @@ p, div, span, li, h1, h2, h3 {
     <p>目先の損得に惑わされず、全体のバランスを俯瞰して最適な未来を選択する「大局観」こそが、チェス脳の目指す究極の到達点です。</p>
 
     <div class="vision-box">
-      <div class="vision-title">OUR VISION</div>
+      <div class="vision-title">VISION</div> <!-- 👈 OURを消してシンプルに -->
       <p>チェス脳を効率よく鍛え上げる最大のコツは、ただ一つの正解を暗記シートのように丸暗記することではありません。「なぜその手が素晴らしいのか」という本質的な理由を論理的に深く理解し、納得することです。</p>
       <p>KitsuneChessのビジョンは、すべてのユーザーの中に眠っている論理的かつクリエイティブな閃きの可能性を引き出すことです。</p>
-      <p>私たちは、退屈な暗記作業をエキサイティングな知の探求へと昇華させ、プレイヤーが一歩一歩確実にステップアップしていく知的成長の喜びを、革新的なシステムと美しいデザインを通じて全力でサポートし続けます。</p>
+      <!-- 👇 「私たちは」を排除し、「KitsuneChessは〜全力でサポートします」に統一しました -->
+      <p>KitsuneChessは、退屈な暗記作業をエキサイティングな知の探求へと昇華させ、プレイヤーが一歩一歩確実にステップアップしていく知的成長の喜びを、革新的なシステムと美しいデザインを通じて全力でサポートし続けます。</p>
     </div>
     <div class="footer"><a href="javascript:window.close();">❌ ページを閉じる</a></div>
   </div>
@@ -138,28 +141,31 @@ p, div, span, li, h1, h2, h3 {
   <div class="lang-en">
     <h1>💡 How to Train Your Chess Brain</h1>
     <p>Playing chess seriously is widely recognized by modern cognitive science as one of the premier forms of mental exercise, activating deep neural networks across the entire brain.</p>
-    <p>As you progress from a beginner to a seasoned player, your mind constructs a specialized "Chess Brain." Let's delve into the fascinating neurological mechanics behind this cognitive development and examine the three core approaches to training it efficiently.</p>
+    <!-- 👇 your mind を the mind に変更して一人称・二人称の依存度を調整 -->
+    <p>As progression is made from a beginner to a seasoned player, the mind constructs a specialized "Chess Brain." Let's delve into the fascinating neurological mechanics behind this cognitive development and examine the three core approaches to training it efficiently.</p>
     
     <h2>1. Constructing a Virtual Board: "Spatial Awareness" and "Foresight"</h2>
-    <p>As your chess skills improve, you gain the ability to construct a highly precise, interactive "virtual chessboard" entirely within your mind before moving a physical piece.</p>
+    <p>As chess skills improve, the ability to construct a highly precise, interactive "virtual chessboard" entirely within the mind before moving a physical piece is gained.</p>
     <p>Strong players utilize this mental matrix to simulate complex branches of logic multiple moves ahead, asking themselves: "If I leap my knight here, will my opponent parry with a bishop or counterattack by pushing a pawn?"</p>
-    <p>Navigating these dense trees of calculation dramatically enhances your spatial awareness. Furthermore, it naturally builds a highly objective habit of forward-thinking and advanced logical planning that proves invaluable in business, academics, and daily problem-solving.</p>
+    <p>Navigating these dense trees of calculation dramatically enhances spatial awareness. Furthermore, it naturally builds a highly objective habit of forward-thinking and advanced logical planning that proves invaluable in business, academics, and daily problem-solving.</p>
     
     <h2>2. Spotting Cracks Instantly: The Power of "Pattern Recognition"</h2>
     <p>The total number of possible positions on a chessboard is famously said to exceed the number of atoms in the observable universe. Yet, an experienced master can glance at a complex board and pinpoint the absolute best candidate moves within seconds.</p>
     <p>This incredible feat is powered by "pattern recognition," where the brain's long-term memory stores thousands of structural archetypes, "harmonious shapes," and "tactical danger signs" as visual chunks.</p>
-    <p>The most efficient way to flash-fry these intellectual patterns into your brain is to master openings interactively. Once these fundamental structures become second nature, unnecessary hesitation vanishes, and your intuitive precision skyrockets.</p>
+    <p>The most efficient way to flash-fry these intellectual patterns into the brain is to master openings interactively. Once these fundamental structures become second nature, unnecessary hesitation vanishes, and intuitive precision skyrockets.</p>
     
     <h2>3. Thriving in a Luck-Free World: "Decisiveness" and "Objectivity"</h2>
-    <p>Chess contains absolutely zero elements of luck—there are no dice to roll, no random cards to draw. Every single consequence on the board, whether it leads to a brilliant victory or a crushing defeat, is the direct result of your own conscious choices.</p>
-    <p>Learning to maintain absolute composure when your position falls into deep distress under immense pressure, and carefully calculating the optimal defense using your remaining assets, builds powerful stress tolerance and emotional regulation.</p>
+    <p>Chess contains absolutely zero elements of luck—there are no dice to roll, no random cards to draw. Every single consequence on the board, whether it leads to a brilliant victory or a crushing defeat, is the direct result of conscious choices.</p>
+    <p>Learning to maintain absolute composure when a position falls into deep distress under immense pressure, and carefully calculating the optimal defense using remaining assets, builds powerful stress tolerance and emotional regulation.</p>
     <p>Overcoming immediate emotional biases to evaluate the board holistically—cultivating a profound "strategic oversight"—is the ultimate pinnacle of the Chess Brain.</p>
 
     <div class="vision-box">
-      <div class="vision-title">OUR VISION</div>
+      <div class="vision-title">VISION</div> <!-- 👈 OURを消してシンプルに -->
       <p>The golden secret to efficiently training your chess brain is not treating opening theory as a test of blind memorization, but deeply grasping and logically appreciating the underlying "why" behind every move.</p>
-      <p>Our vision at KitsuneChess is to awaken and unlock the creative, logical potential dormant within every player.</p>
-      <p>We are dedicated to turning tedious study into an exciting journey of discovery, leveraging an innovative training system and elegant aesthetics to fully support your intellectual growth every single step of the way.</p>
+      <!-- 👇 Our vision at を The vision of に修正し、KitsuneChessが主語となるようにしました -->
+      <p>The vision of KitsuneChess is to awaken and unlock the creative, logical potential dormant within every player.</p>
+      <!-- 👇 We are dedicated を KitsuneChess is dedicated に変更しました -->
+      <p>KitsuneChess is dedicated to turning tedious study into an exciting journey of discovery, leveraging an innovative training system and elegant aesthetics to fully support intellectual growth every single step of the way.</p>
     </div>
     <div class="footer"><a href="javascript:window.close();">❌ Close Page</a></div>
   </div>
