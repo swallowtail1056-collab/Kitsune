@@ -508,11 +508,89 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <button class="filter-btn" data-filter="quizColor" data-value="both" data-ja="両方" data-en="Both">Both</button>
       </div>
     </div>
-   <div class="opening-select-wrapper" style="width: 100%; margin: 4px 0 12px 0; text-align: left;">
-      <select id="quizOpeningDropdown" onchange="if(this.value) { startQuiz(this.value); }" style="width: 100%; padding: 11px 15px; font-family: 'Crimson Pro', serif; font-size: 1.05rem; font-weight: 700; border-radius: 8px; border: 1px solid rgba(184, 134, 11, 0.3); background: #f7ebd3; color: var(--brown-dark); cursor: pointer; box-shadow: 0 2px 6px rgba(0,0,0,0.04); transition: all 0.2s;">
-        </select>
-    </div>
-    <div id="quizOpeningTabs" style="display: none !important;"></div>
+ function buildOpeningTabs() {
+  const dropdown = document.getElementById('openingDropdown');
+  if (!dropdown) return;
+
+  dropdown.innerHTML = '';
+
+  const filtered = OPENINGS.filter(matchesFilter);
+
+  // 1. 案内テキストを追加
+  const placeholder = document.createElement('option');
+  placeholder.value = '';
+  placeholder.textContent = (LANG === 'ja') 
+    ? '▼ 練習するオープニングを選択してください 🦊' 
+    : '▼ Select an opening to practice 🦊';
+  dropdown.appendChild(placeholder);
+
+  if (filtered.length === 0) {
+    placeholder.textContent = (LANG === 'ja') ? '該当するオープニングがありません' : 'No openings found';
+    return;
+  }
+
+  // 2. 選択肢を生成
+  filtered.forEach(op => {
+    const option = document.createElement('option');
+    option.value = op.id;
+    option.textContent = opName(op);
+    
+    if (S.opening && S.opening.id === op.id) {
+      option.selected = true;
+    }
+    dropdown.appendChild(option);
+  });
+
+  // 🌟【重要】絞り込まれたリストがある場合、現在選ばれていなければ、自動的に1番目のオープニングを即時読み込む
+  if (filtered.length > 0) {
+    if (!S.opening || !filtered.some(op => op.id === S.opening.id)) {
+      // プルダウンの表示を1番目のオープニングに合わせる
+      dropdown.value = filtered[0].id;
+      // 盤面と解説を読み込む関数を強制実行
+      selectOpening(filtered[0].id);
+    }
+  }
+}
+
+function buildQuizOpeningTabs() {
+  const dropdown = document.getElementById('quizOpeningDropdown');
+  if (!dropdown) return;
+
+  dropdown.innerHTML = '';
+
+  const filtered = OPENINGS.filter(matchesQuizFilter);
+
+  const placeholder = document.createElement('option');
+  placeholder.value = '';
+  placeholder.textContent = (LANG === 'ja') 
+    ? '▼ テストを行うオープニングを選択 🦊' 
+    : '▼ Select an opening to start quiz 🦊';
+  dropdown.appendChild(placeholder);
+
+  if (filtered.length === 0) {
+    placeholder.textContent = (LANG === 'ja') ? '該当するオープニングがありません' : 'No openings found';
+    return;
+  }
+
+  filtered.forEach(op => {
+    const option = document.createElement('option');
+    option.value = op.id;
+    option.textContent = opName(op);
+    
+    if (typeof currentQuizOpening !== 'undefined' && currentQuizOpening === op.id) {
+      option.selected = true;
+    }
+    dropdown.appendChild(option);
+  });
+
+  // 🌟【重要】クイズ側も同様に、自動的に1番目のオープニングをセットしてスタンバイさせる
+  if (filtered.length > 0) {
+    if (typeof currentQuizOpening === 'undefined' || !currentQuizOpening || !filtered.some(op => op.id === currentQuizOpening)) {
+      dropdown.value = filtered[0].id;
+      startQuiz(filtered[0].id);
+    }
+  }
+}
   </div>
   <div class="quiz-area" id="quizArea" style="display:none;">
     <div class="box-card">
