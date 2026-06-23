@@ -81,6 +81,20 @@ p, div, span, h1, h2, h3 {
     word-break: break-word !important;
     color: #2b2b2b !important;          /* 👈 文字を読みやすい濃さに */
 }
+/* 💡 ルール・タクティクス共通：残っている大枠を完全に消し去る命令 */
+.container, .article-container, .chess-article {
+    border: none !important;            /* 👈 外側の枠線を完全に消す */
+    background: transparent !important; /* 👈 背景のボックスを透明にする */
+    box-shadow: none !important;        /* 👈 影を消す */
+    padding: 0 10px !important;         /* 👈 左右の窮屈感をなくす */
+}
+
+/* 💡 本文の文字を読みやすい濃い色にして、左寄せにする */
+p, div, span, li, h1, h2, h3 {
+    text-align: left !important; 
+    word-break: break-word !important;
+    color: #2b2b2b !important;          /* 👈 文字を読みやすい濃さに */
+}
 </style>
 </head>
 <body>
