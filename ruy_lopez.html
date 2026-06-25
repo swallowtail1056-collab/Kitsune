@@ -220,29 +220,26 @@ document.addEventListener("DOMContentLoaded", function() {
     }
   });
 });
- // 1. チェス盤を入れるエリア（[ Chessboard Area ]）を安全に置き換える
-  let boardContainer = document.querySelector('.chessboard') || document.getElementById('board');
-  
- if (!boardContainer) {
-    const divs = document.getElementsByTagName('div');
-    for (let div of divs) {
-      // ★ここを「Chessboardという文字が含まれていたら何でもOK」に変えます
-      if (div.textContent.toLowerCase().includes('chessboard')) {
-        boardContainer = div;
-        break;
-      }
-    }
-  }
-
+// 1. board-container を見つけて、その中に安全にチェス盤を差し込む
+  const boardContainer = document.querySelector('.board-container');
   if (boardContainer) {
-    // 他の要素を壊さないよう、ここだけをチェス盤用の箱（ID: my-chess-board）に置き換える
-    boardContainer.innerHTML = '<div id="my-chess-board" style="width: 100%; min-height: 400px;"></div>';
-    
-    if (typeof Chessboard !== 'undefined') {
-      Chessboard('my-chess-board', {
-        position: 'start',
-        pieceTheme: 'img/chesspieces/wikipedia/{piece}.png'
-      });
+    // 既存のspanタグ（言語切り替え用）を絶対に消さないために、
+    // すでにある中身はそのままにして、チェス盤専用の箱を新しく「追加」します
+    if (!document.getElementById('my-chess-board')) {
+      const chessDiv = document.createElement('div');
+      chessDiv.id = 'my-chess-board';
+      chessDiv.style.width = '100%';
+      chessDiv.style.minHeight = '400px';
+      chessDiv.style.marginTop = '10px';
+      boardContainer.appendChild(chessDiv);
+
+      // チェス盤システムを初期化
+      if (typeof Chessboard !== 'undefined') {
+        Chessboard('my-chess-board', {
+          position: 'start',
+          pieceTheme: 'img/chesspieces/wikipedia/{piece}.png'
+        });
+      }
     }
   }
 </script>
