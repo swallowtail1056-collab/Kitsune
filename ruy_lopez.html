@@ -326,6 +326,124 @@ document.addEventListener("DOMContentLoaded", function() {
   bindButtonSafely('btnPrev', 'click', typeof prevAction !== 'undefined' ? prevAction : null);
   bindButtonSafely('btnPrevEn', 'click', typeof prevAction !== 'undefined' ? prevAction : null);
 
+</script></script></script></div></div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  
+  // 1. 解説文（言語切り替え）の強制実行
+  if (typeof updateLanguageDisplay === 'function') {
+    updateLanguageDisplay('ja');
+  }
+
+  // 2. 完全版チェス盤（サイズ調整・座標つき・白駒くっきり仕様）の描画
+  const boardContainer = document.querySelector('.board-container');
+  if (boardContainer) {
+    // 古い壊れた表示が残っていたら綺麗にクリアする
+    boardContainer.innerHTML = '<span class="board-text" style="display:none;">[ Chessboard Area ]</span>';
+    
+    const easyBoard = document.createElement('div');
+    easyBoard.id = 'my-easy-board';
+    easyBoard.style.width = '100%';
+    easyBoard.style.maxWidth = '460px'; // 画面中央に美しく収まるサイズ
+    easyBoard.style.margin = '20px auto';
+    easyBoard.style.aspectRatio = '1/1';
+    easyBoard.style.display = 'grid';
+    easyBoard.style.gridTemplateColumns = 'repeat(8, 1fr)';
+    easyBoard.style.border = '4px solid #3d2f1d';
+    easyBoard.style.boxSizing = 'border-box';
+    boardContainer.appendChild(easyBoard);
+
+    // 初期配置データ
+    const initialPosition = [
+      ['r','n','b','q','k','b','n','r'],
+      ['p','p','p','p','p','p','p','p'],
+      ['','','','','','','',''],
+      ['','','','','','','',''],
+      ['','','','','','','',''],
+      ['','','','','','','',''],
+      ['P','P','P','P','P','P','P','P'],
+      ['R','N','B','Q','K','B','N','R']
+    ];
+
+    // 文字（Unicode）で最高に綺麗な駒を表現
+    const pieceSymbols = {
+      'K': '♔', 'Q': '♕', 'R': '♖', 'B': '♗', 'N': '♘', 'P': '♙',
+      'k': '♚', 'q': '♛', 'r': '♜', 'b': '♝', 'n': '♞', 'p': '♟'
+    };
+
+    const files = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
+    const ranks = ['8', '7', '6', '5', '4', '3', '2', '1'];
+
+    for (let r = 0; r < 8; r++) {
+      for (let c = 0; c < 8; c++) {
+        const square = document.createElement('div');
+        const isLight = (r + c) % 2 === 0;
+        square.style.backgroundColor = isLight ? '#f0d9b5' : '#b58863';
+        square.style.display = 'flex';
+        square.style.justifyContent = 'center';
+        square.style.alignItems = 'center';
+        square.style.fontSize = 'min(9vw, 44px)'; // 升目にジャストフィットするサイズ
+        square.style.userSelect = 'none';
+        square.style.position = 'relative';
+        square.style.width = '100%';
+        square.style.height = '100%';
+        square.style.boxSizing = 'border-box';
+
+        // --- 座標（1-8, a-h）の追加 ---
+        if (c === 0) {
+          const rankLabel = document.createElement('span');
+          rankLabel.textContent = ranks[r];
+          rankLabel.style.position = 'absolute';
+          rankLabel.style.top = '2px';
+          rankLabel.style.left = '4px';
+          rankLabel.style.fontSize = '11px';
+          rankLabel.style.fontWeight = 'bold';
+          rankLabel.style.color = isLight ? '#b58863' : '#f0d9b5';
+          square.appendChild(rankLabel);
+        }
+        if (r === 7) {
+          const fileLabel = document.createElement('span');
+          fileLabel.textContent = files[c];
+          fileLabel.style.position = 'absolute';
+          fileLabel.style.bottom = '2px';
+          fileLabel.style.right = '4px';
+          fileLabel.style.fontSize = '11px';
+          fileLabel.style.fontWeight = 'bold';
+          fileLabel.style.color = isLight ? '#b58863' : '#f0d9b5';
+          square.appendChild(fileLabel);
+        }
+
+        // --- 駒の配置と白駒の立体化デザイン ---
+        const piece = initialPosition[r][c];
+        if (piece) {
+          const pieceSpan = document.createElement('span');
+          pieceSpan.textContent = pieceSymbols[piece];
+          if (piece === piece.toLowerCase()) {
+            pieceSpan.style.color = '#1a1a1a'; // 黒駒
+          } else {
+            pieceSpan.style.color = '#ffffff'; // 白駒は完全な白に
+            // 二重のシャドウで輪郭線を太くくっきりさせて視認性を最強に
+            pieceSpan.style.filter = 'drop-shadow(0px 0px 1px #000) drop-shadow(0px 0px 1.5px #000)';
+            pieceSpan.style.textShadow = '-1.5px -1.5px 0 #000, 1.5px -1.5px 0 #000, -1.5px 1.5px 0 #000, 1.5px 1.5px 0 #000';
+          }
+          square.appendChild(pieceSpan);
+        }
+        easyBoard.appendChild(square);
+      }
+    }
+  }
+
+  // 3. 次へ・前へボタンの安全連動
+  const bindButtonSafely = (id, event, callback) => {
+    const element = document.getElementById(id);
+    if (element && callback) element.addEventListener(event, callback);
+  };
+  bindButtonSafely('btnNext', 'click', typeof nextAction !== 'undefined' ? nextAction : null);
+  bindButtonSafely('btnNextEn', 'click', typeof nextAction !== 'undefined' ? nextAction : null);
+  bindButtonSafely('btnPrev', 'click', typeof prevAction !== 'undefined' ? prevAction : null);
+  bindButtonSafely('btnPrevEn', 'click', typeof prevAction !== 'undefined' ? prevAction : null);
+});
 </script>
 
 </body>
