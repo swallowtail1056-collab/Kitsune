@@ -211,36 +211,39 @@ let currentLang = 'ja';
 
 function updateLanguageDisplay(lang) {
   currentLang = lang;
+  // 選択された言語をブラウザに記憶させる
+  localStorage.setItem('selectedLang', lang);
   
   if (lang === 'en') {
-    // 英語を表示、日本語を非表示
     document.querySelectorAll('.lang-element-en').forEach(el => el.style.display = 'block');
     document.querySelectorAll('.lang-element-ja').forEach(el => el.style.display = 'none');
-    // ボタンの文字を「日本語」に変更
     document.getElementById('langToggle').textContent = '日本語';
   } else {
-    // 日本語を表示、英語を非表示
     document.querySelectorAll('.lang-element-ja').forEach(el => el.style.display = 'block');
     document.querySelectorAll('.lang-element-en').forEach(el => el.style.display = 'none');
-    // ボタンの文字を「English」に変更
     document.getElementById('langToggle').textContent = 'English';
   }
 }
 
 document.addEventListener("DOMContentLoaded", function() {
-  // 1. URLのパラメーターやハッシュ、ブラウザ言語から初期言語を判定
-  const urlParams = new URLSearchParams(window.location.search);
-  let lang = urlParams.get('lang') || window.location.hash.replace('#', '');
+  // 1. まずブラウザが覚えている言語（記憶）があるか確認する
+  let lang = localStorage.getItem('selectedLang');
+  
+  // 2. 記憶がなければ、URLのパラメーターやブラウザの基本言語から判定する
+  if (!lang) {
+    const urlParams = new URLSearchParams(window.location.search);
+    lang = urlParams.get('lang') || window.location.hash.replace('#', '');
+  }
   
   if (!lang) {
     const userLang = navigator.language || navigator.userLanguage;
     lang = userLang.startsWith('ja') ? 'ja' : 'en';
   }
 
-  // 初期の表示を設定
+  // 判定された言語で表示
   updateLanguageDisplay(lang);
 
-  // 2. 切り替えボタンが押された時の処理
+  // 3. 切り替えボタンが押された時の処理
   document.getElementById('langToggle').addEventListener('click', function() {
     if (currentLang === 'ja') {
       updateLanguageDisplay('en');
