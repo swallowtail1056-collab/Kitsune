@@ -2232,6 +2232,8 @@ function initWelcome() {
 
 function setWelcomeLang(lang, btn) {
   LANG = lang;
+  localStorage.setItem('selectedLang', lang);
+  
   // ボタン状態
   document.querySelectorAll('.wlc-lang-btn').forEach(b => b.classList.remove('active'));
   if (btn) btn.classList.add('active');
