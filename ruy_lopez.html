@@ -220,38 +220,31 @@ document.addEventListener("DOMContentLoaded", function() {
     }
   });
 });
-  // --- ここからチェス盤と練習機能の安全な合体コード ---
+ // 1. チェス盤を入れるエリア（[ Chessboard Area ]）を本物のチェス盤に置き換える
+  // ★ここを以下のように書き換えます
+  let boardContainer = document.querySelector('.chessboard') || document.getElementById('board');
   
-  // 1. チェス盤を入れるエリア（[ Chessboard Area ]）を本物のチェス盤に置き換える
-  const boardContainer = document.querySelector('.chessboard') || document.getElementById('board');
+  // もし見つからなければ、「[ Chessboard Area ]」という文字が書かれている場所を直接探す
+  if (!boardContainer) {
+    const divs = document.getElementsByTagName('div');
+    for (let div of divs) {
+      if (div.textContent.includes('Chessboard Area')) {
+        boardContainer = div;
+        break;
+      }
+    }
+  }
+
   if (boardContainer) {
-    // 中身をチェス盤用の要素に書き換える
     boardContainer.innerHTML = '<div id="my-chess-board" style="width: 100%;"></div>';
     
-    // システムが直接理解できる指定でチェス盤を初期化
     if (typeof Chessboard !== 'undefined') {
       Chessboard('my-chess-board', {
-        position: 'start', // すべての駒が並んだ初期配置
+        position: 'start',
         pieceTheme: 'img/chesspieces/wikipedia/{piece}.png'
       });
     }
   }
-
-  // 2. ボタンが存在しないことによる空振りエラーを絶対に防ぐ安全な登録関数
-  const bindButtonSafely = (id, event, callback) => {
-    const element = document.getElementById(id);
-    if (element) {
-      element.addEventListener(event, callback);
-    }
-  };
-
-  // 3. 各ボタンの動きを安全に紐付け（ボタンが片方しかなくてもエラーになりません）
-  bindButtonSafely('btnNext', 'click', typeof nextAction !== 'undefined' ? nextAction : null);
-  bindButtonSafely('btnNextEn', 'click', typeof nextAction !== 'undefined' ? nextAction : null);
-  bindButtonSafely('btnPrev', 'click', typeof prevAction !== 'undefined' ? prevAction : null);
-  bindButtonSafely('btnPrevEn', 'click', typeof prevAction !== 'undefined' ? prevAction : null);
-
-  // --- ここまで ---
 </script>
 
 </body>
