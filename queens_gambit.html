@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>クイーンズ・ギャンビット (Queen's Gambit) - KitsuneChess</title>
+<link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f5edd6; 
+  --brown: #7c4a1e; 
+  --brown-dark: #4a2a0e; 
+  --brown-light: #a3692d;
+  --text: #111; 
+  --text-sub: #222;
+  --nav-bg: rgba(90, 58, 24, 0.1);
+  --border-color: rgba(184, 134, 11, 0.3);
+  --card-bg: rgba(255, 255, 255, 0.5);
+  --card-border: rgba(90, 58, 24, 0.15);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Crimson Pro', serif;
+  font-weight: 600;
+  min-height: 100vh;
+}
+
+/* ── NAV ── */
+nav {
+  width: 100%;
+  background: var(--nav-bg);
+  border-bottom: 2px solid var(--border-color);
+}
+
+.nav-inner {
+  max-width: 960px;
+  margin: 0 auto;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 16px;
+}
+
+.back-link {
+  color: var(--brown);
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+.back-link:hover {
+  color: var(--brown-dark);
+}
+
+/* 日英切り替えトグルボタン */
+.lang-switch-btn {
+  background: rgba(90, 58, 24, 0.08);
+  border: 1px solid rgba(90, 58, 24, 0.25);
+  color: var(--text-sub);
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-family: 'Crimson Pro', serif;
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.lang-switch-btn:hover {
+  border-color: var(--brown);
+  color: var(--brown);
+  background: rgba(90, 58, 24, 0.15);
+}
+
+/* ── CONTENT AREA ── */
+.app-container {
+  max-width: 600px;
+  margin: 0 auto;
+  width: 100%;
+  padding: 24px 16px;
+}
+
+.opening-title {
+  font-size: 1.6rem;
+  color: var(--brown-dark);
+  margin-bottom: 16px;
+  text-align: center;
+}
+
+/* ── CHESSBOARD AREA (ダミー枠) ── */
+.board-container {
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto 24px auto;
+  aspect-ratio: 1 / 1;
+  background: #b8860b; 
+  border: 4px solid var(--brown-dark);
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 1.1rem;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+/* ── COMMENTARY BOX ── */
+.commentary-box {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 8px;
+  padding: 20px;
+  line-height: 1.6;
+  font-size: 1.05rem;
+  color: var(--text-sub);
+  box-shadow: 0 2px 8px rgba(74, 42, 14, 0.03);
+  min-height: 120px;
+}
+
+/* ── 多言語切り替え用表示制御 ── */
+.lang-element-ja, .lang-element-en {
+  display: none;
+}
+
+/* ── FOOTER ── */
+footer {
+  text-align: center;
+  font-size: 0.85rem;
+  color: var(--brown-light);
+  margin-top: 40px;
+  padding-bottom: 20px;
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <!-- 一覧ページに戻るリンク -->
+    <a href="openings_list.html" class="back-link lang-element-ja">← 一覧へ戻る</a>
+    <a href="openings_list.html" class="back-link lang-element-en">← Back to List</a>
+    
+    <button id="langToggle" class="lang-switch-btn">English</button>
+  </div>
+</nav>
+
+<div class="app-container">
+
+  <!-- タイトル -->
+  <h1 class="opening-title lang-element-ja">クイーンズ・ギャンビット</h1>
+  <h1 class="opening-title lang-element-en">Queen's Gambit</h1>
+  
+  <!-- チェス盤エリア -->
+  <div class="board-container">
+    <span class="lang-element-ja">[ ここにチェス盤が表示されます ]</span>
+    <span class="lang-element-en">[ Chessboard Area ]</span>
+  </div>
+
+  <!-- 解説テキストボックス -->
+  <div class="commentary-box">
+    <p id="commentaryText"></p>
+  </div>
+
+  <footer>
+    © KitsuneChess
+  </footer>
+</div>
+
+<script>
+// クイーンズ・ギャンビットの解説テキストデータ
+const queensGambitIntro = {
+  ja: '💡 クイーンズ・ギャンビットは、白が中央の支配を有利に進めるための最も強力で人気のある定跡のひとつだよ！白はあえてc4のポーンをタダで差し出す（ギャンビットする）ことで、黒がそれを取ったら中央の支配権を完全に握り、後からそのポーンを安全に取り返せるんだ。もし黒がポーンを取らなければ（ディクラインド）、白は中央に強い圧力をかけ続けたまま戦いを有利に進めることができるよ。ドラマのタイトルにもなるほど有名で、初心者からグランドマスターまで、チェスをやるなら絶対に知っておきたい超王道のオープニングだよ！',
+  en: '💡 The Queen\'s Gambit is one of the most powerful and popular chess openings for White to fight for early central control! White offers a temporary pawn sacrifice with c4. If Black takes it (Accepted), White can easily regain the pawn later while dominating the center. If Black declines (Declined), White maintains great spatial pressure. Famous enough to inspire a hit drama series, it\'s an absolute must-know strategy for everyone from beginners to Grandmasters!'
+};
+
+let currentLang = 'ja';
+
+function updateLanguageDisplay(lang) {
+  currentLang = lang;
+  
+  // 解説文を自動差し替え
+  document.getElementById('commentaryText').textContent = queensGambitIntro[lang];
+  
+  if (lang === 'en') {
+    document.querySelectorAll('.lang-element-en').forEach(el => el.style.display = 'block');
+    document.querySelectorAll('.lang-element-ja').forEach(el => el.style.display = 'none');
+    document.getElementById('langToggle').textContent = '日本語';
+  } else {
+    document.querySelectorAll('.lang-element-ja').forEach(el => el.style.display = 'block');
+    document.querySelectorAll('.lang-element-en').forEach(el => el.style.display = 'none');
+    document.getElementById('langToggle').textContent = 'English';
+  }
+}
+
+document.addEventListener("DOMContentLoaded", function() {
+  // URLの?lang=en などを読み取って、最初からその言語で表示します
+  const urlParams = new URLSearchParams(window.location.search);
+  let lang = urlParams.get('lang') || window.location.hash.replace('#', '');
+  
+  if (!lang) {
+    const userLang = navigator.language || navigator.userLanguage;
+    lang = userLang.startsWith('ja') ? 'ja' : 'en';
+  }
+
+  updateLanguageDisplay(lang);
+
+  // ボタンを押した時もその場でパッと切り替わります
+  document.getElementById('langToggle').addEventListener('click', function() {
+    if (currentLang === 'ja') {
+      updateLanguageDisplay('en');
+    } else {
+      updateLanguageDisplay('ja');
+    }
+  });
+});
+</script>
+
+</body>
+</html>
