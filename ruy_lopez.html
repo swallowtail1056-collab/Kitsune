@@ -258,7 +258,7 @@ document.addEventListener("DOMContentLoaded", function() {
   // ── 1. チェス盤の初期化 ──
   const config = {
     pieceTheme: 'https://chessboardjs.com/img/chesspieces/wikipedia/{piece}.svg',
-    position: 'start',
+    position: ruyLopezSteps[0].position,
     draggable: false // 自動で動かすので、ユーザーの手動ドラッグは一旦オフに
   };
   board = Chessboard('myBoard', config);
