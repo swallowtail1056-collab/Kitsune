@@ -227,7 +227,7 @@ document.addEventListener("DOMContentLoaded", function() {
       const easyBoard = document.createElement('div');
       easyBoard.id = 'my-easy-board';
       easyBoard.style.width = '100%';
-      easyBoard.style.maxWidth = '480px';
+      easyBoard.style.maxWidth = '480px'; // ちょうどいいサイズ感に調整
       easyBoard.style.margin = '20px auto';
       easyBoard.style.aspectRatio = '1/1';
       easyBoard.style.display = 'grid';
@@ -265,7 +265,7 @@ document.addEventListener("DOMContentLoaded", function() {
           square.style.display = 'flex';
           square.style.justifyContent = 'center';
           square.style.alignItems = 'center';
-          square.style.fontSize = 'min(9vw, 46px)';
+          square.style.fontSize = 'min(9vw, 46px)'; // 駒のサイズ
           square.style.userSelect = 'none';
           square.style.position = 'relative';
           square.style.width = '100%';
@@ -325,8 +325,6 @@ document.addEventListener("DOMContentLoaded", function() {
   bindButtonSafely('btnNextEn', 'click', typeof nextAction !== 'undefined' ? nextAction : null);
   bindButtonSafely('btnPrev', 'click', typeof prevAction !== 'undefined' ? prevAction : null);
   bindButtonSafely('btnPrevEn', 'click', typeof prevAction !== 'undefined' ? prevAction : null);
-
-}); // ← 222行目の「 } 」を受けて、元のスクリプト全体を美しく閉じるカッコ
 
 </script>
 
