@@ -291,19 +291,36 @@ document.addEventListener("DOMContentLoaded", function() {
       updateAll();
     }
   };
-  document.getElementById('btnNext').addEventListener('click', nextAction);
-  document.getElementById('btnNextEn').addEventListener('click', nextAction);
-
-  // 「前の手へ」ボタン（日本語版・英語版どちらも同じ動き）
-  const prevAction = function() {
-    if (currentStep > 0) {
-      currentStep--;
-      updateAll();
+  // エラーを回避し、チェス盤を確実に初期化する修正コード
+const initChessboard = () => {
+  // 1. チェス盤の表示エリアを強制的に確保
+  const boardArea = document.querySelector('.chessboard, #board, [class*="board"]');
+  if (boardArea) {
+    boardArea.innerHTML = '<div id="main-board" style="width: 100%;"></div>';
+    
+    // 2. システムに直接「初期配置（start）」でチェス盤を作らせる
+    if (typeof Chessboard !== 'undefined') {
+      Chessboard('main-board', {
+        position: 'start',
+        pieceTheme: 'img/chesspieces/wikipedia/{piece}.png'
+      });
     }
+  }
+
+  // 3. 存在しないボタンによるエラー（addEventListenerの空振り）を完全に防ぐ
+  const safeAddListener = (id, event, callback) => {
+    const el = document.getElementById(id);
+    if (el) el.addEventListener(event, callback);
   };
-  document.getElementById('btnPrev').addEventListener('click', prevAction);
-  document.getElementById('btnPrevEn').addEventListener('click', prevAction);
-});
+
+  safeAddListener('btnNext', 'click', nextAction);
+  safeAddListener('btnNextEn', 'click', nextAction);
+  safeAddListener('btnPrev', 'click', prevAction);
+  safeAddListener('btnPrevEn', 'click', prevAction);
+};
+
+// 画面の読み込みが完了したら実行
+initChessboard();
 </script>
 
 </body>
