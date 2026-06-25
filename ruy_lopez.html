@@ -220,7 +220,7 @@ document.addEventListener("DOMContentLoaded", function() {
     } else {
       updateLanguageDisplay('ja');
     }
-  // --- 外部ファイル不要！完全自立型のチェス盤システム ---
+  // 1. board-containerを見つけて、その中に安全にチェス盤を差し込む
   const boardContainer = document.querySelector('.board-container');
   if (boardContainer) {
     if (!document.getElementById('my-easy-board')) {
@@ -235,6 +235,7 @@ document.addEventListener("DOMContentLoaded", function() {
       easyBoard.style.border = '4px solid #3d2f1d';
       boardContainer.appendChild(easyBoard);
 
+      // 初期配置のデータ
       const initialPosition = [
         ['r','n','b','q','k','b','n','r'],
         ['p','p','p','p','p','p','p','p'],
@@ -246,6 +247,7 @@ document.addEventListener("DOMContentLoaded", function() {
         ['R','N','B','Q','K','B','N','R']
       ];
 
+      // 文字（Unicode）で駒を表示
       const pieceSymbols = {
         'K': '♔', 'Q': '♕', 'R': '♖', 'B': '♗', 'N': '♘', 'P': '♙',
         'k': '♚', 'q': '♛', 'r': '♜', 'b': '♝', 'n': '♞', 'p': '♟'
@@ -285,7 +287,8 @@ document.addEventListener("DOMContentLoaded", function() {
   bindButtonSafely('btnPrev', 'click', typeof prevAction !== 'undefined' ? prevAction : null);
   bindButtonSafely('btnPrevEn', 'click', typeof prevAction !== 'undefined' ? prevAction : null);
 
-}); // ← もともとあった185行目の「document.addEventListener('DOMContentLoaded'」を閉じるカッコです
+}); // ← 222行目の「 } 」をここで「 }); 」として正しく閉じ直します
+
 </script>
 
 </body>
