@@ -220,15 +220,15 @@ document.addEventListener("DOMContentLoaded", function() {
     }
   });
 });
- // 1. チェス盤を入れるエリア（[ Chessboard Area ]）を本物のチェス盤に置き換える
-  // ★ここを以下のように書き換えます
+ // 1. チェス盤を入れるエリア（[ Chessboard Area ]）を安全に置き換える
   let boardContainer = document.querySelector('.chessboard') || document.getElementById('board');
   
-  // もし見つからなければ、「[ Chessboard Area ]」という文字が書かれている場所を直接探す
   if (!boardContainer) {
     const divs = document.getElementsByTagName('div');
     for (let div of divs) {
-      if (div.textContent.includes('Chessboard Area')) {
+      // 巻き込み事故を防ぐため、中身がほぼ「[ Chessboard Area ]」だけのDivを厳密に探す
+      const txt = div.textContent.trim();
+      if (txt === '[ Chessboard Area ]' || txt === 'Chessboard Area') {
         boardContainer = div;
         break;
       }
@@ -236,7 +236,8 @@ document.addEventListener("DOMContentLoaded", function() {
   }
 
   if (boardContainer) {
-    boardContainer.innerHTML = '<div id="my-chess-board" style="width: 100%;"></div>';
+    // 他の要素を壊さないよう、ここだけをチェス盤用の箱（ID: my-chess-board）に置き換える
+    boardContainer.innerHTML = '<div id="my-chess-board" style="width: 100%; min-height: 400px;"></div>';
     
     if (typeof Chessboard !== 'undefined') {
       Chessboard('my-chess-board', {
