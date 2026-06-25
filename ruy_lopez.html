@@ -178,19 +178,70 @@ footer {
 </div>
 
 <script>
-// Notionのデータをここに格納しています
-const ruyLopezIntro = {
-  ja: '💡 ルイ・ロペスは16世紀のスペインの司祭、ルイ・ロペス・デ・セグラが考案した、チェス史上最も歴史あるオープニングのひとつだよ！白がビショップをb5に動かしてc6のナイトをピンするんだ。この手の本当の狙いは、黒のe5ポーンに間接的にプレッシャーをかけ続けること。黒がa6と突いてきたら白はBa4と引いてピンを維持するんだ。その後はO-O、Re1、c3、d4という形が白の基本プランで、中央を少しずつ強化していくよ。カスパロフやフィッシャー、カールセンといった世界チャンピオンたちが長年愛用してきた信頼性バツグンの選択肢だよ！',
-  en: '💡 The Ruy Lopez was invented by a Spanish priest named Ruy López de Segura in the 16th century, making it one of the oldest openings in chess history! White moves the bishop to b5 to pin Black\'s knight on c6. The real idea is to put indirect pressure on Black\'s e5 pawn. After Black plays a6, White usually retreats the bishop to a4 to keep the pin going. White\'s basic plan involves O-O, Re1, c3, and d4 to gradually strengthen the center. World champions like Kasparov, Fischer, and Carlsen have all trusted this opening. If you want to learn how to make a long-term plan in chess, this is the perfect opening to study!'
-};
-
 let currentLang = 'ja';
+let currentStep = 0; // いま何手目の解説を見ているか
 
+// ── ルイ・ロペスの各ステップのデータ（盤面の形、ジーンの表情、解説文） ──
+const ruyLopezSteps = [
+  {
+    // 初期配置
+    fen: 'start',
+    avatar: 'jeen_normal.png', // 普通の表情
+    ja: '💡 これから「ルイ・ロペス」の定跡を一緒に学んでいこう！チェスで最も歴史があって、基本が詰まった超王道のオープニングだよ。',
+    en: '💡 Let\'s learn the "Ruy Lopez" opening together! It\'s one of the most historic and fundamental openings in chess.'
+  },
+  {
+    // 1. e4 e5
+    fen: 'rnbqkbnr/pppp1ppp/8/4p3/4P3/8/PPPP1PPP/RNBQKBNR w KQkq e6 0 2',
+    avatar: 'jeen_smile.png', // 笑顔
+    ja: 'まずは白が中央にポーンを突き（e4）、黒も同じように中央を押し返してきた（e5）形だね。お互いに中央の陣地を取り合う、すべての基本になる動きだよ！',
+    en: 'First, White pushes the central pawn to e4, and Black responds with e5. This is the foundation of open games, fighting for central space!'
+  },
+  {
+    // 2. Nf3 Nc6
+    fen: 'r1bqkbnr/pppp1ppp/2n5/4p3/4P3/5N2/PPPP1PPP/RNBQKB1R w KQkq - 2 3',
+    avatar: 'jeen_normal.png', // 普通の表情
+    ja: '白はナイトを展開して黒のe5のポーンを攻撃（Nf3）！対する黒も、ナイトを出して自分のポーンをしっかり守った（Nc6）場面だよ。流れるような綺麗な展開だね。',
+    en: 'White develops the knight to Nf3, attacking Black\'s e5 pawn. Black defends it perfectly by bringing out their own knight to Nc6. A beautiful, natural flow.'
+  },
+  {
+    // 3. Bb5 (ルイ・ロペス完成！)
+    fen: 'r1bqkbnr/pppp1ppp/2n5/1B2p3/4P3/5N2/PPPP1PPP/RNBQK2R b KQkq - 3 3',
+    avatar: 'jeen_wink.png', // ウインク！
+    ja: 'そしてここ！白がビショップをb5に大きく踏み出させた、これが「ルイ・ロペス」の完成形だよ！黒の守りの要であるナイトを間接的にピンして、プレッシャーをかける強力な一手なんだ！',
+    en: 'And here it is! White steps the bishop out to Bb5, completing the "Ruy Lopez"! This powerful move puts indirect pressure and pins the knight, which is Black\'s key defender!'
+  }
+];
+
+// チェス盤のインスタンス
+let board = null;
+
+// 画面の表示（テキスト・画像・チェス盤）を一度に更新する関数
+function updateAll() {
+  const stepData = ruyLopezSteps[currentStep];
+
+  // 1. チェス盤の形を更新
+  if (board) {
+    board.position(stepData.fen);
+  }
+
+  // 2. ジーンの表情（画像）を更新
+  const avatarImg = document.getElementById('jeenAvatar');
+  if (avatarImg) {
+    avatarImg.src = stepData.avatar;
+  }
+
+  // 3. 解説テキストを更新（現在の言語に合わせて抽出）
+  const textContainer = document.getElementById('commentaryText');
+  if (textContainer) {
+    textContainer.textContent = stepData[currentLang];
+  }
+}
+
+// 言語表示の切り替え
 function updateLanguageDisplay(lang) {
   currentLang = lang;
-  
-  // 解説文を自動差し替え
-  document.getElementById('commentaryText').textContent = ruyLopezIntro[lang];
+  localStorage.setItem('selectedLang', lang);
   
   if (lang === 'en') {
     document.querySelectorAll('.lang-element-en').forEach(el => el.style.display = 'block');
@@ -201,28 +252,57 @@ function updateLanguageDisplay(lang) {
     document.querySelectorAll('.lang-element-en').forEach(el => el.style.display = 'none');
     document.getElementById('langToggle').textContent = 'English';
   }
+
+  // 言語が切り替わったらテキストも再描画
+  updateAll();
 }
 
 document.addEventListener("DOMContentLoaded", function() {
-  // URLの?lang=en などを読み取って、最初からその言語で表示します
-  const urlParams = new URLSearchParams(window.location.search);
-  let lang = urlParams.get('lang') || window.location.hash.replace('#', '');
-  
+  // ── 1. チェス盤の初期化 ──
+  const config = {
+    position: 'start',
+    draggable: false // 自動で動かすので、ユーザーの手動ドラッグは一旦オフに
+  };
+  board = Chessboard('myBoard', config);
+
+  // ── 2. 言語の記憶を読み込み ──
+  let lang = localStorage.getItem('selectedLang');
+  if (!lang) {
+    const urlParams = new URLSearchParams(window.location.search);
+    lang = urlParams.get('lang') || window.location.hash.replace('#', '');
+  }
   if (!lang) {
     const userLang = navigator.language || navigator.userLanguage;
     lang = userLang.startsWith('ja') ? 'ja' : 'en';
   }
-
   updateLanguageDisplay(lang);
 
-  // ボタンを押した時もその場でパッと切り替わります
+  // ── 3. 各種ボタンのクリックイベント設定 ──
+  
+  // 言語切り替えボタン
   document.getElementById('langToggle').addEventListener('click', function() {
-    if (currentLang === 'ja') {
-      updateLanguageDisplay('en');
-    } else {
-      updateLanguageDisplay('ja');
-    }
+    updateLanguageDisplay(currentLang === 'ja' ? 'en' : 'ja');
   });
+
+  // 「次の手へ」ボタン（日本語版・英語版どちらも同じ動き）
+  const nextAction = function() {
+    if (currentStep < ruyLopezSteps.length - 1) {
+      currentStep++;
+      updateAll();
+    }
+  };
+  document.getElementById('btnNext').addEventListener('click', nextAction);
+  document.getElementById('btnNextEn').addEventListener('click', nextAction);
+
+  // 「前の手へ」ボタン（日本語版・英語版どちらも同じ動き）
+  const prevAction = function() {
+    if (currentStep > 0) {
+      currentStep--;
+      updateAll();
+    }
+  };
+  document.getElementById('btnPrev').addEventListener('click', prevAction);
+  document.getElementById('btnPrevEn').addEventListener('click', prevAction);
 });
 </script>
 
