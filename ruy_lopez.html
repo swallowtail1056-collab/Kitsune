@@ -263,6 +263,7 @@ document.addEventListener("DOMContentLoaded", function() {
   };
   board = Chessboard('myBoard', config);
 
+  updateAll();
   // ── 2. 言語の記憶を読み込み ──
   let lang = localStorage.getItem('selectedLang');
   if (!lang) {
