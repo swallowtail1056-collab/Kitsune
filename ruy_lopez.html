@@ -223,12 +223,11 @@ document.addEventListener("DOMContentLoaded", function() {
  // 1. チェス盤を入れるエリア（[ Chessboard Area ]）を安全に置き換える
   let boardContainer = document.querySelector('.chessboard') || document.getElementById('board');
   
-  if (!boardContainer) {
+ if (!boardContainer) {
     const divs = document.getElementsByTagName('div');
     for (let div of divs) {
-      // 巻き込み事故を防ぐため、中身がほぼ「[ Chessboard Area ]」だけのDivを厳密に探す
-      const txt = div.textContent.trim();
-      if (txt === '[ Chessboard Area ]' || txt === 'Chessboard Area') {
+      // ★ここを「Chessboardという文字が含まれていたら何でもOK」に変えます
+      if (div.textContent.toLowerCase().includes('chessboard')) {
         boardContainer = div;
         break;
       }
