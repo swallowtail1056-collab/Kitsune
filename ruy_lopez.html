@@ -288,18 +288,33 @@ document.addEventListener("DOMContentLoaded", function() {
       updateAll();
     }
   };
-  document.getElementById('btnNext').addEventListener('click', nextAction);
-  document.getElementById('btnNextEn').addEventListener('click', nextAction);
+// --- ここから差し替え ---
 
-  // 「前の手へ」ボタン（日本語版・英語版どちらも同じ動き）
-  const prevAction = function() {
-    if (currentStep > 0) {
-      currentStep--;
-      updateAll();
-    }
-  };
-  document.getElementById('btnPrev').addEventListener('click', prevAction);
-  document.getElementById('btnPrevEn').addEventListener('click', prevAction);
+// 1. 日本語版の「次へ」ボタン
+const btnNext = document.getElementById('btnNext');
+if (btnNext) btnNext.addEventListener('click', nextAction);
+
+// 2. 英語版の「次へ」ボタン
+const btnNextEn = document.getElementById('btnNextEn');
+if (btnNextEn) btnNextEn.addEventListener('click', nextAction);
+
+// 3. 「前へ」ボタンを押したときの動きの定義
+const prevAction = function() {
+  if (currentStep > 0) {
+    currentStep--;
+    updateAll();
+  }
+};
+
+// 4. 日本語版の「前へ」ボタン
+const btnPrev = document.getElementById('btnPrev');
+if (btnPrev) btnPrev.addEventListener('click', prevAction);
+
+// 5. 英語版の「前へ」ボタン
+const btnPrevEn = document.getElementById('btnPrevEn');
+if (btnPrevEn) btnPrevEn.addEventListener('click', prevAction);
+
+// --- ここまで差し替え ---
 });
 </script>
 
