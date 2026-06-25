@@ -220,30 +220,78 @@ document.addEventListener("DOMContentLoaded", function() {
     } else {
       updateLanguageDisplay('ja');
     }
-  });
-});
-// 1. board-container を見つけて、その中に安全にチェス盤を差し込む
+  // --- 外部ファイル不要！完全自立型のチェス盤システム ---
   const boardContainer = document.querySelector('.board-container');
   if (boardContainer) {
-    // 既存のspanタグ（言語切り替え用）を絶対に消さないために、
-    // すでにある中身はそのままにして、チェス盤専用の箱を新しく「追加」します
-    if (!document.getElementById('my-chess-board')) {
-      const chessDiv = document.createElement('div');
-      chessDiv.id = 'my-chess-board';
-      chessDiv.style.width = '100%';
-      chessDiv.style.minHeight = '400px';
-      chessDiv.style.marginTop = '10px';
-      boardContainer.appendChild(chessDiv);
+    // 1. 既存の文字（span）を消さないよう、チェス盤エリアを新しく作成
+    if (!document.getElementById('my-easy-board')) {
+      const easyBoard = document.createElement('div');
+      easyBoard.id = 'my-easy-board';
+      easyBoard.style.width = '100%';
+      easyBoard.style.maxWidth = '400px';
+      easyBoard.style.margin = '20px auto';
+      easyBoard.style.aspectRatio = '1/1';
+      easyBoard.style.display = 'grid';
+      easyBoard.style.gridTemplateColumns = 'repeat(8, 1fr)';
+      easyBoard.style.border = '4px solid #3d2f1d';
+      boardContainer.appendChild(easyBoard);
 
-      // チェス盤システムを初期化
-      if (typeof Chessboard !== 'undefined') {
-        Chessboard('my-chess-board', {
-          position: 'start',
-          pieceTheme: 'img/chesspieces/wikipedia/{piece}.png'
-        });
+      // 2. 初期配置のデータ（白は大文字、黒は小文字）
+      const initialPosition = [
+        ['r','n','b','q','k','b','n','r'],
+        ['p','p','p','p','p','p','p','p'],
+        ['','','','','','','',''],
+        ['','','','','','','',''],
+        ['','','','','','','',''],
+        ['','','','','','','',''],
+        ['P','P','P','P','P','P','P','P'],
+        ['R','N','B','Q','K','B','N','R']
+      ];
+
+      // 3. 特殊な画像ファイルを使わず、文字（Unicode）で最高に綺麗な駒を表示
+      const pieceSymbols = {
+        'K': '♔', 'Q': '♕', 'R': '♖', 'B': '♗', 'N': '♘', 'P': '♙',
+        'k': '♚', 'q': '♛', 'r': '♜', 'b': '♝', 'n': '♞', 'p': '♟'
+      };
+
+      // 4. マス目と駒を完全に自前で組み立てる（CSSも画像も一切不要）
+      for (let r = 0; r < 8; r++) {
+        for (let c = 0; c < 8; c++) {
+          const square = document.createElement('div');
+          // マス目の色（茶系のおしゃれな配色）
+          square.style.backgroundColor = (r + c) % 2 === 0 ? '#f0d9b5' : '#b58863';
+          square.style.display = 'flex';
+          square.style.justifyContent = 'center';
+          square.style.alignItems = 'center';
+          square.style.fontSize = 'min(8vw, 40px)';
+          square.style.userSelect = 'none';
+
+          const piece = initialPosition[r][c];
+          if (piece) {
+            square.textContent = pieceSymbols[piece];
+            // 黒駒は見やすいように少し色を調整
+            square.style.color = piece === piece.toLowerCase() ? '#000000' : '#ffffff';
+            // 白駒の輪郭をくっきりさせる
+            if (piece === piece.toUpperCase()) {
+              square.style.textShadow = '0 0 2px #000, 0 0 2px #000';
+            }
+          }
+          easyBoard.appendChild(square);
+        }
       }
     }
   }
+
+  // ボタンの安全ガード（エラー防止）
+  const bindButtonSafely = (id, event, callback) => {
+    const element = document.getElementById(id);
+    if (element && callback) element.addEventListener(event, callback);
+  };
+  bindButtonSafely('btnNext', 'click', typeof nextAction !== 'undefined' ? nextAction : null);
+  bindButtonSafely('btnNextEn', 'click', typeof nextAction !== 'undefined' ? nextAction : null);
+  bindButtonSafely('btnPrev', 'click', typeof prevAction !== 'undefined' ? prevAction : null);
+  bindButtonSafely('btnPrevEn', 'click', typeof prevAction !== 'undefined' ? prevAction : null);
+  // --- ここまで ---
 </script>
 
 </body>
