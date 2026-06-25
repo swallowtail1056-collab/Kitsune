@@ -1,108 +1,255 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>定跡解説の一覧 - KitsuneChess</title>
-    <style>
-        body {
-            font-family: 'Helvetica Neue', Arial, sans-serif;
-            line-height: 1.8;
-            color: #333333;
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: #fdfdfd;
-        }
-        h1 {
-            color: #5a3a18;
-            border-bottom: 2px solid #5a3a18;
-            padding-bottom: 10px;
-            font-size: 24px;
-            text-align: center;
-        }
-        .container {
-            background: #ffffff;
-            padding: 30px;
-            border-radius: 5px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-        }
-        .list-section {
-            margin-top: 30px;
-        }
-        .list-section h2 {
-            font-size: 18px;
-            color: #5a3a18;
-            background: rgba(90,58,24,0.05);
-            padding: 8px 12px;
-            border-radius: 4px;
-            border-left: 4px solid #5a3a18;
-        }
-        ul {
-            list-style-type: none;
-            padding: 0;
-        }
-        li {
-            margin-bottom: 15px;
-        }
-        .link-group {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-        }
-        .opening-name {
-            font-weight: bold;
-            font-size: 1.05rem;
-            color: #333;
-            min-width: 250px;
-        }
-        .link-btn {
-            text-decoration: none;
-            color: #222;
-            background: rgba(90,58,24,0.06);
-            border: 1px solid rgba(90,58,24,0.25);
-            padding: 4px 12px;
-            border-radius: 6px;
-            font-size: 0.85rem;
-            font-weight: 700;
-            transition: all 0.2s;
-        }
-        .link-btn:hover {
-            background: rgba(90,58,24,0.15);
-        }
-        footer {
-            margin-top: 50px;
-            font-size: 12px;
-            color: #777777;
-            text-align: center;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>定跡解説の一覧 - KitsuneChess</title>
+<link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f5edd6; 
+  --brown: #7c4a1e; 
+  --brown-dark: #4a2a0e; 
+  --brown-light: #a3692d;
+  --text: #111; 
+  --text-sub: #222;
+  --nav-bg: rgba(90, 58, 24, 0.1);
+  --border-color: rgba(184, 134, 11, 0.3);
+  --card-bg: rgba(255, 255, 255, 0.5);
+  --card-border: rgba(90, 58, 24, 0.15);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Crimson Pro', serif;
+  font-weight: 600;
+  min-height: 100vh;
+}
+
+/* ── NAV ── */
+nav {
+  width: 100%;
+  background: var(--nav-bg);
+  border-bottom: 2px solid var(--border-color);
+}
+
+.nav-inner {
+  max-width: 960px;
+  margin: 0 auto;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 16px;
+}
+
+nav h1 {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--brown);
+  letter-spacing: 1px;
+}
+
+/* 日英切り替えトグルボタン */
+.lang-switch-btn {
+  background: rgba(90, 58, 24, 0.08);
+  border: 1px solid rgba(90, 58, 24, 0.25);
+  color: var(--text-sub);
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-family: 'Crimson Pro', serif;
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.lang-switch-btn:hover {
+  border-color: var(--brown);
+  color: var(--brown);
+  background: rgba(90, 58, 24, 0.15);
+}
+
+/* ── CONTENT AREA ── */
+.app-container {
+  max-width: 600px;
+  margin: 0 auto;
+  width: 100%;
+  padding: 24px 16px;
+}
+
+.section-title {
+  font-size: 1.3rem;
+  color: var(--brown-dark);
+  margin-top: 24px;
+  margin-bottom: 14px;
+  border-left: 4px solid var(--brown);
+  padding-left: 8px;
+}
+
+/* ── OPENING ITEM CARD ── */
+.opening-card {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 16px;
+  box-shadow: 0 2px 8px rgba(74, 42, 14, 0.03);
+}
+
+.opening-name {
+  font-size: 1.25rem;
+  color: var(--text-sub);
+  font-weight: 700;
+  margin-bottom: 16px;
+}
+
+/* ── BUTTONS ── */
+.btn-group {
+  display: flex;
+  gap: 8px;
+}
+
+.action-btn {
+  flex: 1;
+  display: block;
+  text-align: center;
+  text-decoration: none;
+  background: var(--brown);
+  border: 1px solid var(--brown-dark);
+  color: #fff;
+  padding: 10px 12px;
+  border-radius: 5px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.action-btn:hover {
+  background: var(--brown-dark);
+}
+
+/* ── 多言語切り替え用表示制御 ── */
+.lang-element-ja, .lang-element-en {
+  display: none;
+}
+
+/* ── FOOTER ── */
+footer {
+  text-align: center;
+  font-size: 0.85rem;
+  color: var(--brown-light);
+  margin-top: 40px;
+  padding-bottom: 20px;
+}
+</style>
 </head>
 <body>
-    <div class="container">
-        <h1>定跡解説の一覧 / Opening Guides</h1>
-        
-        <div class="list-section">
-            <h2>白のオープニング (White Openings)</h2>
-            <ul>
-                <li>
-                    <div class="link-group">
-                        <span class="opening-name">クイーンズ・ギャンビット (Queen's Gambit)</span>
-                        <a href="queens_gambit_ja.html" class="link-btn">日本語版</a>
-                        <a href="queens_gambit_en.html" class="link-btn">English</a>
-                    </div>
-                </li>
-                </ul>
-        </div>
 
-        <div class="list-section">
-            <h2>黒のオープニング (Black Openings)</h2>
-            <ul>
-                </ul>
-        </div>
+<nav>
+  <div class="nav-inner">
+    <h1>KitsuneChess</h1>
+    <!-- 右上の日英切り替えボタン（現在の言語に応じて文字が変わります） -->
+    <button id="langToggle" class="lang-switch-btn">English</button>
+  </div>
+</nav>
+
+<div class="app-container">
+
+  <!-- ヘッダータイトル -->
+  <h2 class="section-title lang-element-ja">白のオープニング</h2>
+  <h2 class="section-title lang-element-en">White Openings</h2>
+  
+  <!-- クイーンズ・ギャンビット -->
+  <div class="opening-card">
+    <div class="opening-name lang-element-ja">クイーンズ・ギャンビット</div>
+    <div class="opening-name lang-element-en">Queen's Gambit</div>
+    
+    <div class="btn-group">
+      <a href="queens_gambit_ja.html" class="action-btn lang-element-ja">解説を見る</a>
+      <a href="queens_gambit_en.html" class="action-btn lang-element-en">View Guide</a>
     </div>
-    <footer>
-        <p>© Chess Openings for Beginners</p>
-    </footer>
+  </div>
+
+  <!-- ルイ・ロペス -->
+  <div class="opening-card">
+    <div class="opening-name lang-element-ja">ルイ・ロペス</div>
+    <div class="opening-name lang-element-en">Ruy Lopez</div>
+    
+    <div class="btn-group">
+      <a href="ruy_lopez_ja.html" class="action-btn lang-element-ja">解説を見る</a>
+      <a href="ruy_lopez_en.html" class="action-btn lang-element-en">View Guide</a>
+    </div>
+  </div>
+
+  <!-- 黒のオープニング -->
+  <div class="section-title lang-element-ja">黒のオープニング</div>
+  <div class="section-title lang-element-en">Black Openings</div>
+  
+  <div class="lang-element-ja" style="color: var(--brown-light); padding: 12px 8px; font-size: 1.0rem; font-style: italic;">
+    Coming Soon...
+  </div>
+  <div class="lang-element-en" style="color: var(--brown-light); padding: 12px 8px; font-size: 1.0rem; font-style: italic;">
+    Coming Soon...
+  </div>
+
+  <footer>
+    © KitsuneChess
+  </footer>
+</div>
+
+<script>
+let currentLang = 'ja';
+
+function updateLanguageDisplay(lang) {
+  currentLang = lang;
+  
+  if (lang === 'en') {
+    // 英語を表示、日本語を非表示
+    document.querySelectorAll('.lang-element-en').forEach(el => el.style.display = 'block');
+    document.querySelectorAll('.lang-element-ja').forEach(el => el.style.display = 'none');
+    // ボタンの文字を「日本語」に変更
+    document.getElementById('langToggle').textContent = '日本語';
+  } else {
+    // 日本語を表示、英語を非表示
+    document.querySelectorAll('.lang-element-ja').forEach(el => el.style.display = 'block');
+    document.querySelectorAll('.lang-element-en').forEach(el => el.style.display = 'none');
+    // ボタンの文字を「English」に変更
+    document.getElementById('langToggle').textContent = 'English';
+  }
+}
+
+document.addEventListener("DOMContentLoaded", function() {
+  // 1. URLのパラメーターやハッシュ、ブラウザ言語から初期言語を判定
+  const urlParams = new URLSearchParams(window.location.search);
+  let lang = urlParams.get('lang') || window.location.hash.replace('#', '');
+  
+  if (!lang) {
+    const userLang = navigator.language || navigator.userLanguage;
+    lang = userLang.startsWith('ja') ? 'ja' : 'en';
+  }
+
+  // 初期の表示を設定
+  updateLanguageDisplay(lang);
+
+  // 2. 切り替えボタンが押された時の処理
+  document.getElementById('langToggle').addEventListener('click', function() {
+    if (currentLang === 'ja') {
+      updateLanguageDisplay('en');
+    } else {
+      updateLanguageDisplay('ja');
+    }
+  });
+});
+</script>
+
 </body>
 </html>
