@@ -1,213 +1,250 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/chessboard-js/1.0.0/chessboard-1.0.0.min.css">
-  
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ルイ・ロペス (Ruy Lopez) - KitsuneChess</title>
-<link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@400;600;700&display=swap" rel="stylesheet">
-<style>
-:root {
-  --bg: #f5edd6; 
-  --brown: #7c4a1e; 
-  --brown-dark: #4a2a0e; 
-  --brown-light: #a3692d;
-  --text: #111; 
-  --text-sub: #222;
-  --nav-bg: rgba(90, 58, 24, 0.1);
-  --border-color: rgba(184, 134, 11, 0.3);
-  --card-bg: rgba(255, 255, 255, 0.5);
-  --card-border: rgba(90, 58, 24, 0.15);
-  --board-light: #d4b87a;
-  --board-dark: #7a5230;
-}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ルイ・ロペス (Ruy Lopez) - KitsuneChess</title>
+  <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f5edd6; 
+      --brown: #7c4a1e; 
+      --brown-dark: #4a2a0e; 
+      --brown-light: #a3692d;
+      --text: #111; 
+      --text-sub: #222;
+      --nav-bg: rgba(90, 58, 24, 0.1);
+      --border-color: rgba(184, 134, 11, 0.3);
+      --card-bg: rgba(255, 255, 255, 0.5);
+      --card-border: rgba(90, 58, 24, 0.15);
+      --board-light: #d4b87a;
+      --board-dark: #7a5230;
+    }
 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-body {
-  background: var(--bg);
-  color: var(--text);
-  font-family: 'Crimson Pro', serif;
-  font-weight: 600;
-  min-height: 100vh;
-}
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Crimson Pro', serif;
+      font-weight: 600;
+      min-height: 100vh;
+    }
 
-/* ── NAV ── */
-nav {
-  width: 100%;
-  background: var(--nav-bg);
-  border-bottom: 2px solid var(--border-color);
-}
+    /* ── NAV ── */
+    nav {
+      width: 100%;
+      background: var(--nav-bg);
+      border-bottom: 2px solid var(--border-color);
+    }
 
-.nav-inner {
-  max-width: 960px;
-  margin: 0 auto;
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 8px 16px;
-}
+    .nav-inner {
+      max-width: 960px;
+      margin: 0 auto;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 16px;
+    }
 
-.back-link {
-  color: var(--brown);
-  text-decoration: none;
-  font-size: 0.9rem;
-  font-weight: 700;
-}
-.back-link:hover {
-  color: var(--brown-dark);
-}
+    .back-link {
+      color: var(--brown);
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 700;
+    }
+    .back-link:hover {
+      color: var(--brown-dark);
+    }
 
-/* 日英切り替えトグルボタン */
-.lang-switch-btn {
-  background: rgba(90, 58, 24, 0.08);
-  border: 1px solid rgba(90, 58, 24, 0.25);
-  color: var(--text-sub);
-  padding: 5px 10px;
-  border-radius: 5px;
-  font-family: 'Crimson Pro', serif;
-  font-size: 0.8rem;
-  font-weight: 700;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-.lang-switch-btn:hover {
-  border-color: var(--brown);
-  color: var(--brown);
-  background: rgba(90, 58, 24, 0.15);
-}
+    /* 日英切り替えトグルボタン */
+    .lang-switch-btn {
+      background: rgba(90, 58, 24, 0.08);
+      border: 1px solid rgba(90, 58, 24, 0.25);
+      color: var(--text-sub);
+      padding: 5px 10px;
+      border-radius: 5px;
+      font-family: 'Crimson Pro', serif;
+      font-size: 0.8rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .lang-switch-btn:hover {
+      border-color: var(--brown);
+      color: var(--brown);
+      background: rgba(90, 58, 24, 0.15);
+    }
 
-/* ── CONTENT AREA ── */
-.app-container {
-  max-width: 600px;
-  margin: 0 auto;
-  width: 100%;
-  padding: 24px 16px;
-}
+    /* ── CONTENT AREA ── */
+    .app-container {
+      max-width: 600px;
+      margin: 0 auto;
+      width: 100%;
+      padding: 24px 16px;
+    }
 
-.opening-title {
-  font-size: 1.6rem;
-  color: var(--brown-dark);
-  margin-bottom: 16px;
-  text-align: center;
-}
+    .opening-title {
+      font-size: 1.6rem;
+      color: var(--brown-dark);
+      margin-bottom: 16px;
+      text-align: center;
+    }
 
-/* ── CHESSBOARD AREA ── */
-.board-container {
-  width: 100%;
-  max-width: 400px;
-  margin: 0 auto 24px auto;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
+    .move-counter {
+      text-align: center;
+      font-size: 0.9rem;
+      color: var(--brown-light);
+      margin-bottom: 12px;
+    }
 
-#my-easy-board {
-  display: grid;
-  grid-template-columns: repeat(8, 1fr);
-  border: 3px solid var(--brown-dark);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-  width: 100%;
-  max-width: 400px;
-  aspect-ratio: 1 / 1;
-  box-sizing: border-box;
-}
+    /* ── CHESSBOARD AREA ── */
+    .board-container {
+      width: 100%;
+      max-width: 400px;
+      margin: 0 auto 24px auto;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
 
-.board-square {
-  aspect-ratio: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  overflow: hidden;
-  user-select: none;
-  font-size: clamp(2rem, 9vw, 3rem);
-}
+    #my-easy-board {
+      display: grid;
+      grid-template-columns: repeat(8, 1fr);
+      border: 3px solid var(--brown-dark);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      width: 100%;
+      max-width: 400px;
+      aspect-ratio: 1 / 1;
+      box-sizing: border-box;
+    }
 
-.board-square.light {
-  background: var(--board-light);
-}
+    .board-square {
+      aspect-ratio: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+      user-select: none;
+      font-size: 2.5rem;
+      font-weight: bold;
+    }
 
-.board-square.dark {
-  background: var(--board-dark);
-}
+    .board-square.light {
+      background: var(--board-light);
+    }
 
-.cell-label {
-  position: absolute;
-  font-family: 'Crimson Pro', serif;
-  font-weight: 800;
-  font-size: 0.75rem;
-  line-height: 1;
-  pointer-events: none;
-  z-index: 2;
-}
+    .board-square.dark {
+      background: var(--board-dark);
+    }
 
-.board-square.light .cell-label {
-  color: rgba(80, 40, 0, 0.85);
-}
+    .cell-label {
+      position: absolute;
+      font-family: 'Crimson Pro', serif;
+      font-weight: 800;
+      font-size: 0.65rem;
+      line-height: 1;
+      pointer-events: none;
+      z-index: 2;
+    }
 
-.board-square.dark .cell-label {
-  color: rgba(255, 240, 200, 0.95);
-}
+    .board-square.light .cell-label {
+      color: rgba(80, 40, 0, 0.85);
+    }
 
-.cell-label.rank-label {
-  bottom: 2px;
-  left: 3px;
-}
+    .board-square.dark .cell-label {
+      color: rgba(255, 240, 200, 0.95);
+    }
 
-.cell-label.file-label {
-  bottom: 2px;
-  right: 3px;
-}
+    .cell-label.rank-label {
+      bottom: 2px;
+      left: 3px;
+    }
 
-.piece {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  pointer-events: none;
-  user-select: none;
-}
+    .cell-label.file-label {
+      bottom: 2px;
+      right: 3px;
+    }
 
-/* ── COMMENTARY BOX ── */
-.commentary-box {
-  background: var(--card-bg);
-  border: 1px solid var(--card-border);
-  border-radius: 8px;
-  padding: 20px;
-  line-height: 1.6;
-  font-size: 1.05rem;
-  color: var(--text-sub);
-  box-shadow: 0 2px 8px rgba(74, 42, 14, 0.03);
-  min-height: 120px;
-}
+    .piece {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      pointer-events: none;
+      user-select: none;
+    }
 
-/* ── 多言語切り替え用表示制御 ── */
-.lang-element-ja, .lang-element-en {
-  display: none;
-}
+    /* ── COMMENTARY BOX ── */
+    .commentary-box {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      padding: 20px;
+      line-height: 1.6;
+      font-size: 1.05rem;
+      color: var(--text-sub);
+      box-shadow: 0 2px 8px rgba(74, 42, 14, 0.03);
+      min-height: 120px;
+    }
 
-/* ── FOOTER ── */
-footer {
-  text-align: center;
-  font-size: 0.85rem;
-  color: var(--brown-light);
-  margin-top: 40px;
-  padding-bottom: 20px;
-}
-</style>
+    /* ── CONTROLS ── */
+    .controls {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      margin-top: 24px;
+    }
+
+    .control-btn {
+      background: var(--brown);
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      font-family: 'Crimson Pro', serif;
+      font-size: 0.9rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .control-btn:hover:not(:disabled) {
+      background: var(--brown-dark);
+      transform: translateY(-2px);
+    }
+
+    .control-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    /* ── 多言語切り替え用表示制御 ── */
+    .lang-element-ja, .lang-element-en {
+      display: none;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      text-align: center;
+      font-size: 0.85rem;
+      color: var(--brown-light);
+      margin-top: 40px;
+      padding-bottom: 20px;
+    }
+  </style>
 </head>
 <body>
 
 <nav>
   <div class="nav-inner">
-    <!-- 一覧ページに戻るリンク -->
     <a href="openings_list.html" class="back-link lang-element-ja">← 一覧へ戻る</a>
     <a href="openings_list.html" class="back-link lang-element-en">← Back to List</a>
     
@@ -221,6 +258,13 @@ footer {
   <h1 class="opening-title lang-element-ja">ルイ・ロペス</h1>
   <h1 class="opening-title lang-element-en">Ruy Lopez</h1>
   
+  <!-- ムーブカウンター -->
+  <div class="move-counter">
+    <span class="lang-element-ja">手数: </span>
+    <span class="lang-element-en">Move: </span>
+    <span id="moveCount">1</span>
+  </div>
+  
   <!-- チェス盤エリア -->
   <div class="board-container">
     <div id="my-easy-board"></div>
@@ -231,55 +275,106 @@ footer {
     <p id="commentaryText"></p>
   </div>
 
+  <!-- コントロールボタン -->
+  <div class="controls">
+    <button id="prevBtn" class="control-btn lang-element-ja">← 前へ</button>
+    <button id="prevBtn-en" class="control-btn lang-element-en">← Previous</button>
+    <button id="nextBtn" class="control-btn lang-element-ja">次へ →</button>
+    <button id="nextBtn-en" class="control-btn lang-element-en">Next →</button>
+  </div>
+
   <footer>
     © KitsuneChess
   </footer>
 </div>
 
 <script>
-// SVG駒画像（index.htmlから取得）
-const PIECE_IMG = {
-  wK: "data:image/svg+xml;base64,PHN2ZyBjbGlwLXJ1bGU9ImV2ZW5vZGQiIGZpbGwtcnVsZT0iZXZlbm9kZCIgaGVpZ2h0PSI1MG1tIiBpbWFnZS1yZW5kZXJpbmc9Im9wdGltaXplUXVhbGl0eSIgc2hhcGUtcmVuZGVyaW5nPSJnZW9tZXRyaWNQcmVjaXNpb24iIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjUwbW0iIHZpZXdCb3g9IjAgMCA1MCAwMCI+PGRlZnM+PHN0eWxlPi5maWxsMHtmaWxsOiNmZjY7c3Ryb2tlOiMwMDA7c3Ryb2tlLXdpZHRoOi4zNzU7c3Ryb2tlLWxpbmVjYXA6YnV0dDtzdHJva2UtbGluZWpvaW46bWl0ZXI7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fTwvc3R5bGU+PC9kZWZzPjxwYXRoIGNsYXNzPSJmaWxsMCIgZD0iTTI1IDI3bDcgOUgtN2w3LTl6Ii8+PHBhdGggY2xhc3M9ImZpbGwwIiBkPSJNMTAgNjBsMTUgMTBWMzZIMTB2MjR6Ii8+PHBhdGggY2xhc3M9ImZpbGwwIiBkPSJNNDAgNjBWMzZIMjV2MzRsMTUtMTB6Ii8+PHBhdGggY2xhc3M9ImZpbGwwIiBkPSJNMjUgMzZsMTAgMjhIMTV2LTI4aDB6Ii8+PHBhdGggY2xhc3M9ImZpbGwwIiBkPSJNMjAgMTVsMjAgMTJIMHYtN2wyMC01eiIvPjwvc3ZnPg==",
-  wQ: "data:image/svg+xml;base64,PHN2ZyBjbGlwLXJ1bGU9ImV2ZW5vZGQiIGZpbGwtcnVsZT0iZXZlbm9kZCIgaGVpZ2h0PSI1MG1tIiBpbWFnZS1yZW5kZXJpbmc9Im9wdGltaXplUXVhbGl0eSIgc2hhcGUtcmVuZGVyaW5nPSJnZW9tZXRyaWNQcmVjaXNpb24iIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjUwbW0iIHZpZXdCb3g9IjAgMCA1MCAwMCI+PGRlZnM+PHN0eWxlPi5maWxsMHtmaWxsOiNmZjY7c3Ryb2tlOiMwMDA7c3Ryb2tlLXdpZHRoOi4zNzU7c3Ryb2tlLWxpbmVjYXA6YnV0dDtzdHJva2UtbGluZWpvaW46bWl0ZXI7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fS5maWxsY3t9Ll9zdHJva2Ute3N0cm9rZTojMDAwO3N0cm9rZS13aWR0aDouMzc1O31zdHlsZX48L3N0eWxlPjwvZGVmcz48Y2lyY2xlIGN4PSI4IiBjeT0iNyIgY2xhc3M9ImZpbGwwIiByPSIyLjUiLz48Y2lyY2xlIGN4PSI2MCIgY3k9IjciIGNsYXNzPSJmaWxsMCIgcj0iMi41Ii8+PHBhdGggY2xhc3M9ImZpbGwwIiBkPSJNMzAgMTJsNyA2SDIzbDctNnoiLz48Y2lyY2xlIGN4PSIzMCIgY3k9IjgiIGNsYXNzPSJmaWxsMCIgcj0iMiIvPjxwYXRoIGNsYXNzPSJmaWxsMCIgZD0iTTI1IDE4TDEwIDYwaDQwTDI1IDE4eiIvPjxwYXRoIGNsYXNzPSJmaWxsMCIgZD0iTTIwIDYwaDIwdjEwaC0yMHoiLz48L3N2Zz4=",
-  wR: "data:image/svg+xml;base64,PHN2ZyBjbGlwLXJ1bGU9ImV2ZW5vZGQiIGZpbGwtcnVsZT0iZXZlbm9kZCIgaGVpZ2h0PSI1MG1tIiBpbWFnZS1yZW5kZXJpbmc9Im9wdGltaXplUXVhbGl0eSIgc2hhcGUtcmVuZGVyaW5nPSJnZW9tZXRyaWNQcmVjaXNpb24iIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjUwbW0iIHZpZXdCb3g9IjAgMCA1MCAwMCI+PGRlZnM+PHN0eWxlPi5maWxsMHtmaWxsOiNmZjY7c3Ryb2tlOiMwMDA7c3Ryb2tlLXdpZHRoOi4zNzU7c3Ryb2tlLWxpbmVjYXA6YnV0dDtzdHJva2UtbGluZWpvaW46bWl0ZXI7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fTwvc3R5bGU+PC9kZWZzPjxwYXRoIGNsYXNzPSJmaWxsMCIgZD0iTTkgOGgzMlY4SDE5aTAgOGg1djMyaC0xMFY4aDV6Ii8+PHBhdGggY2xhc3M9ImZpbGwwIiBkPSJNOSA4bDEyIDhIMTdsLTEyLTh6Ii8+PHBhdGggY2xhc3M9ImZpbGwwIiBkPSJNNDEgOGwxMiA4SDQxVjh6Ii8+PHBhdGggY2xhc3M9ImZpbGwwIiBkPSJNMTAgNDBoMzB2MjBIMTB6Ii8+PC9zdmc+",
-  wB: "data:image/svg+xml;base64,PHN2ZyBjbGlwLXJ1bGU9ImV2ZW5vZGQiIGZpbGwtcnVsZT0iZXZlbm9kZCIgaGVpZ2h0PSI1MG1tIiBpbWFnZS1yZW5kZXJpbmc9Im9wdGltaXplUXVhbGl0eSIgc2hhcGUtcmVuZGVyaW5nPSJnZW9tZXRyaWNQcmVjaXNpb24iIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjUwbW0iIHZpZXdCb3g9IjAgMCA1MCAwMCI+PGRlZnM+PHN0eWxlPi5maWxsMHtmaWxsOiNmZjY7c3Ryb2tlOiMwMDA7c3Ryb2tlLXdpZHRoOi4zNzU7c3Ryb2tlLWxpbmVjYXA6YnV0dDtzdHJva2UtbGluZWpvaW46bWl0ZXI7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fTwvc3R5bGU+PC9kZWZzPjxwYXRoIGNsYXNzPSJmaWxsMCIgZD0iTTI1IDE5bDEwLTZIMTV6Ii8+PHBhdGggY2xhc3M9ImZpbGwwIiBkPSJNMjUgOWM0IDAgNiAzIDYgOHMtMiA2LTYgNmMtNSAwLTYtMy02LThzMi04IDYtOHoiLz48cGF0aCBjbGFzcz0iZmlsbDAiIGQ9Ik0xOCAzNGw3IDI2aDRsNy0yNkgtMTh6Ii8+PHBhdGggY2xhc3M9ImZpbGwwIiBkPSJNMjAgNjBsMTAgMTBIMTB6Ii8+PC9zdmc+",
-  wN: "data:image/svg+xml;base64,PHN2ZyBjbGlwLXJ1bGU9ImV2ZW5vZGQiIGZpbGwtcnVsZT0iZXZlbm9kZCIgaGVpZ2h0PSI1MG1tIiBpbWFnZS1yZW5kZXJpbmc9Im9wdGltaXplUXVhbGl0eSIgc2hhcGUtcmVuZGVyaW5nPSJnZW9tZXRyaWNQcmVjaXNpb24iIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjUwbW0iIHZpZXdCb3g9IjAgMCA1MCAwMCI+PGRlZnM+PHN0eWxlPi5maWxsMHtmaWxsOiNmZjY7c3Ryb2tlOiMwMDA7c3Ryb2tlLXdpZHRoOi4zNzU7c3Ryb2tlLWxpbmVjYXA6YnV0dDtzdHJva2UtbGluZWpvaW46bWl0ZXI7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fTwvc3R5bGU+PC9kZWZzPjxwYXRoIGNsYXNzPSJmaWxsMCIgZD0iTTM1IDE0bC01LTJsLTMgMWMwIDAgMCA4LTktOGMtMiAwLTItMi0zLTJzMiA3IDAgMTBsMiAxNGg2bDEgMjBoLTZsLTEgMjBoMTZsLTEtMjBoLTZsMi0xNGMtMiAzIDIgNiAwIDlzLTQgNi01IDZjMTIgNCA1LTUgNS04bC0zLTF6Ii8+PC9zdmc+",
-  wP: "data:image/svg+xml;base64,PHN2ZyBjbGlwLXJ1bGU9ImV2ZW5vZGQiIGZpbGwtcnVsZT0iZXZlbm9kZCIgaGVpZ2h0PSI1MG1tIiBpbWFnZS1yZW5kZXJpbmc9Im9wdGltaXplUXVhbGl0eSIgc2hhcGUtcmVuZGVyaW5nPSJnZW9tZXRyaWNQcmVjaXNpb24iIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjUwbW0iIHZpZXdCb3g9IjAgMCA1MCAwMCI+PGRlZnM+PHN0eWxlPi5maWxsMHtmaWxsOiNmZjY7c3Ryb2tlOiMwMDA7c3Ryb2tlLXdpZHRoOi4zNzU7c3Ryb2tlLWxpbmVjYXA6YnV0dDtzdHJva2UtbGluZWpvaW46bWl0ZXI7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fTwvc3R5bGU+PC9kZWZzPjxwYXRoIGNsYXNzPSJmaWxsMCIgZD0iTTI1IDZjMiAwIDQgMiA0IDNoMnYyaC0xMnYtMmgyYzAgLTEgMi0zIDQtM3pNMjAgOGM0IDAgNiA0IDYgOGwtNiAyNGgtMEw0MCAwaC0yMHptMCA2bDMgMTRoNmwzLTE0aDZWNjBIMTBWMjRoMTB6Ii8+PC9zdmc+",
-  bK: "data:image/svg+xml;base64,PHN2ZyBjbGlwLXJ1bGU9ImV2ZW5vZGQiIGZpbGwtcnVsZT0iZXZlbm9kZCIgaGVpZ2h0PSI1MG1tIiBpbWFnZS1yZW5kZXJpbmc9Im9wdGltaXplUXVhbGl0eSIgc2hhcGUtcmVuZGVyaW5nPSJnZW9tZXRyaWNQcmVjaXNpb24iIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjUwbW0iIHZpZXdCb3g9IjAgMCA1MCAwMCI+PGRlZnM+PHN0eWxlPi5maWxsMHtmaWxsOiMwMDA7c3Ryb2tlOiMwMDA7c3Ryb2tlLXdpZHRoOi4zNzU7c3Ryb2tlLWxpbmVjYXA6YnV0dDtzdHJva2UtbGluZWpvaW46bWl0ZXI7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fTwvc3R5bGU+PC9kZWZzPjxwYXRoIGNsYXNzPSJmaWxsMCIgZD0iTTI1IDI3bDcgOUgtN2w3LTl6Ii8+PHBhdGggY2xhc3M9ImZpbGwwIiBkPSJNMTAgNjBsMTUgMTBWMzZIMTB2MjR6Ii8+PHBhdGggY2xhc3M9ImZpbGwwIiBkPSJNNDAgNjBWMzZIMjV2MzRsMTUtMTB6Ii8+PHBhdGggY2xhc3M9ImZpbGwwIiBkPSJNMjUgMzZsMTAgMjhIMTV2LTI4aDB6Ii8+PHBhdGggY2xhc3M9ImZpbGwwIiBkPSJNMjAgMTVsMjAgMTJIMHYtN2wyMC01eiIvPjwvc3ZnPg==",
-  bQ: "data:image/svg+xml;base64,PHN2ZyBjbGlwLXJ1bGU9ImV2ZW5vZGQiIGZpbGwtcnVsZT0iZXZlbm9kZCIgaGVpZ2h0PSI1MG1tIiBpbWFnZS1yZW5kZXJpbmc9Im9wdGltaXplUXVhbGl0eSIgc2hhcGUtcmVuZGVyaW5nPSJnZW9tZXRyaWNQcmVjaXNpb24iIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjUwbW0iIHZpZXdCb3g9IjAgMCA1MCAwMCI+PGRlZnM+PHN0eWxlPi5maWxsMHtmaWxsOiMwMDA7c3Ryb2tlOiMwMDA7c3Ryb2tlLXdpZHRoOi4zNzU7c3Ryb2tlLWxpbmVjYXA6YnV0dDtzdHJva2UtbGluZWpvaW46bWl0ZXI7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fS5maWxsY3t9Ll9zdHJva2Ute3N0cm9rZTojMDAwO3N0cm9rZS13aWR0aDouMzc1O31zdHlsZX48L3N0eWxlPjwvZGVmcz48Y2lyY2xlIGN4PSI4IiBjeT0iNyIgY2xhc3M9ImZpbGwwIiByPSIyLjUiLz48Y2lyY2xlIGN4PSI2MCIgY3k9IjciIGNsYXNzPSJmaWxsMCIgcj0iMi41Ii8+PHBhdGggY2xhc3M9ImZpbGwwIiBkPSJNMzAgMTJsNyA2SDIzbDctNnoiLz48Y2lyY2xlIGN4PSIzMCIgY3k9IjgiIGNsYXNzPSJmaWxsMCIgcj0iMiIvPjxwYXRoIGNsYXNzPSJmaWxsMCIgZD0iTTI1IDE4TDEwIDYwaDQwTDI1IDE4eiIvPjxwYXRoIGNsYXNzPSJmaWxsMCIgZD0iTTIwIDYwaDIwdjEwaC0yMHoiLz48L3N2Zz4=",
-  bR: "data:image/svg+xml;base64,PHN2ZyBjbGlwLXJ1bGU9ImV2ZW5vZGQiIGZpbGwtcnVsZT0iZXZlbm9kZCIgaGVpZ2h0PSI1MG1tIiBpbWFnZS1yZW5kZXJpbmc9Im9wdGltaXplUXVhbGl0eSIgc2hhcGUtcmVuZGVyaW5nPSJnZW9tZXRyaWNQcmVjaXNpb24iIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjUwbW0iIHZpZXdCb3g9IjAgMCA1MCAwMCI+PGRlZnM+PHN0eWxlPi5maWxsMHtmaWxsOiMwMDA7c3Ryb2tlOiMwMDA7c3Ryb2tlLXdpZHRoOi4zNzU7c3Ryb2tlLWxpbmVjYXA6YnV0dDtzdHJva2UtbGluZWpvaW46bWl0ZXI7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fTwvc3R5bGU+PC9kZWZzPjxwYXRoIGNsYXNzPSJmaWxsMCIgZD0iTTkgOGgzMlY4SDE5aTAgOGg1djMyaC0xMFY4aDV6Ii8+PHBhdGggY2xhc3M9ImZpbGwwIiBkPSJNOSA4bDEyIDhIMTdsLTEyLTh6Ii8+PHBhdGggY2xhc3M9ImZpbGwwIiBkPSJNNDEgOGwxMiA4SDQxVjh6Ii8+PHBhdGggY2xhc3M9ImZpbGwwIiBkPSJNMTAgNDBoMzB2MjBIMTB6Ii8+PC9zdmc+",
-  bB: "data:image/svg+xml;base64,PHN2ZyBjbGlwLXJ1bGU9ImV2ZW5vZGQiIGZpbGwtcnVsZT0iZXZlbm9kZCIgaGVpZ2h0PSI1MG1tIiBpbWFnZS1yZW5kZXJpbmc9Im9wdGltaXplUXVhbGl0eSIgc2hhcGUtcmVuZGVyaW5nPSJnZW9tZXRyaWNQcmVjaXNpb24iIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjUwbW0iIHZpZXdCb3g9IjAgMCA1MCAwMCI+PGRlZnM+PHN0eWxlPi5maWxsMHtmaWxsOiMwMDA7c3Ryb2tlOiMwMDA7c3Ryb2tlLXdpZHRoOi4zNzU7c3Ryb2tlLWxpbmVjYXA6YnV0dDtzdHJva2UtbGluZWpvaW46bWl0ZXI7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fTwvc3R5bGU+PC9kZWZzPjxwYXRoIGNsYXNzPSJmaWxsMCIgZD0iTTI1IDE5bDEwLTZIMTV6Ii8+PHBhdGggY2xhc3M9ImZpbGwwIiBkPSJNMjUgOWM0IDAgNiAzIDYgOHMtMiA2LTYgNmMtNSAwLTYtMy02LThzMi04IDYtOHoiLz48cGF0aCBjbGFzcz0iZmlsbDAiIGQ9Ik0xOCAzNGw3IDI2aDRsNy0yNkgtMTh6Ii8+PHBhdGggY2xhc3M9ImZpbGwwIiBkPSJNMjAgNjBsMTAgMTBIMTB6Ii8+PC9zdmc+",
-  bN: "data:image/svg+xml;base64,PHN2ZyBjbGlwLXJ1bGU9ImV2ZW5vZGQiIGZpbGwtcnVsZT0iZXZlbm9kZCIgaGVpZ2h0PSI1MG1tIiBpbWFnZS1yZW5kZXJpbmc9Im9wdGltaXplUXVhbGl0eSIgc2hhcGUtcmVuZGVyaW5nPSJnZW9tZXRyaWNQcmVjaXNpb24iIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjUwbW0iIHZpZXdCb3g9IjAgMCA1MCAwMCI+PGRlZnM+PHN0eWxlPi5maWxsMHtmaWxsOiMwMDA7c3Ryb2tlOiMwMDA7c3Ryb2tlLXdpZHRoOi4zNzU7c3Ryb2tlLWxpbmVjYXA6YnV0dDtzdHJva2UtbGluZWpvaW46bWl0ZXI7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fTwvc3R5bGU+PC9kZWZzPjxwYXRoIGNsYXNzPSJmaWxsMCIgZD0iTTM1IDE0bC01LTJsLTMgMWMwIDAgMCA4LTktOGMtMiAwLTItMi0zLTJzMiA3IDAgMTBsMiAxNGg2bDEgMjBoLTZsLTEgMjBoMTZsLTEtMjBoLTZsMi0xNGMtMiAzIDIgNiAwIDlzLTQgNi01IDZjMTIgNCA1LTUgNS04bC0zLTF6Ii8+PC9zdmc+",
-  bP: "data:image/svg+xml;base64,PHN2ZyBjbGlwLXJ1bGU9ImV2ZW5vZGQiIGZpbGwtcnVsZT0iZXZlbm9kZCIgaGVpZ2h0PSI1MG1tIiBpbWFnZS1yZW5kZXJpbmc9Im9wdGltaXplUXVhbGl0eSIgc2hhcGUtcmVuZGVyaW5nPSJnZW9tZXRyaWNQcmVjaXNpb24iIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjUwbW0iIHZpZXdCb3g9IjAgMCA1MCAwMCI+PGRlZnM+PHN0eWxlPi5maWxsMHtmaWxsOiMwMDA7c3Ryb2tlOiMwMDA7c3Ryb2tlLXdpZHRoOi4zNzU7c3Ryb2tlLWxpbmVjYXA6YnV0dDtzdHJva2UtbGluZWpvaW46bWl0ZXI7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fTwvc3R5bGU+PC9kZWZzPjxwYXRoIGNsYXNzPSJmaWxsMCIgZD0iTTI1IDZjMiAwIDQgMiA0IDNoMnYyaC0xMnYtMmgyYzAgLTEgMi0zIDQtM3pNMjAgOGM0IDAgNiA0IDYgOGwtNiAyNGgtMEw0MCAwaC0yMHptMCA2bDMgMTRoNmwzLTE0aDZWNjBIMTBWMjRoMTB6Ii8+PC9zdmc+"
+// ユニコード駒表記
+const PIECES = {
+  'P': '♙', 'N': '♘', 'B': '♗', 'R': '♖', 'Q': '♕', 'K': '♔',
+  'p': '♟', 'n': '♞', 'b': '♝', 'r': '♜', 'q': '♛', 'k': '♚'
 };
 
-// Notionのデータ
-const ruyLopezIntro = {
-  ja: '💡 ルイ・ロペスは16世紀のスペインの司祭、ルイ・ロペス・デ・セグラが考案した、チェス史上最も歴史あるオープニングのひとつだよ！白がBb5でナイトをピンし、e5ポーンへ間接的に圧力をかけます。堅実で戦略的な局面が生まれます。',
-  en: '💡 The Ruy Lopez was invented by a Spanish priest named Ruy López de Segura in the 16th century, making it one of the oldest openings in chess history! White moves the bishop to b5 to pin Black\'s knight, indirectly pressuring e5. It leads to solid and strategic positions.'
-};
+// ルイ・ロペスの主要な変化手順
+const movesSequence = [
+  {
+    position: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1',
+    moves: '1.e4 e5',
+    ja: '白が1.e4で始まります。最も人気のあるオープニングです。黒は対称的に1...e5と応じます。',
+    en: 'White starts with 1.e4, the most popular opening. Black responds symmetrically with 1...e5.'
+  },
+  {
+    position: 'rnbqkbnr/pppppppp/8/4p3/4P3/8/PPPP1PPP/RNBQKBNR w KQkq e6 0 2',
+    moves: '2.Nf3 Nc6',
+    ja: '2.Nf3で白がナイトを開発します。黒は2...Nc6と対応します。',
+    en: 'White develops with 2.Nf3. Black responds with 2...Nc6.'
+  },
+  {
+    position: 'rnbqkbnr/pppppppp/2n5/4p3/4P3/5N2/PPPP1PPP/RNBQKB1R w KQkq - 1 3',
+    moves: '3.Bb5',
+    ja: 'ここで3.Bb5！白のビショップがナイトをピンします。これがルイ・ロペスの特徴です。',
+    en: 'Now 3.Bb5! White pins the knight. This is the characteristic move of Ruy Lopez.'
+  },
+  {
+    position: 'rnbqkbnr/pppppppp/2n5/1B2p3/4P3/5N2/PPPP1PPP/RNBQKB1R b KQkq - 2 3',
+    moves: '3...a6',
+    ja: '黒は3...a6と指して、ビショップを追い出そうとします。',
+    en: 'Black plays 3...a6 to attack the bishop.'
+  },
+  {
+    position: 'rnbqkbnr/1ppppppp/p1n5/1B2p3/4P3/5N2/PPPP1PPP/RNBQKB1R w KQkq - 0 4',
+    moves: '4.Ba4',
+    ja: '白は4.Ba4とビショップを下げ、黒の攻撃を避けます。白はナイトへのプレッシャーを保ちます。',
+    en: 'White retreats with 4.Ba4, avoiding the attack while maintaining pressure on the knight.'
+  }
+];
 
+let currentMoveIndex = 0;
 let currentLang = 'ja';
+
+// FEN表記を駒配置に変換
+function fenToBoard(fen) {
+  const boardPart = fen.split(' ')[0];
+  const board = [];
+  const ranks = boardPart.split('/');
+  
+  for (const rank of ranks) {
+    const row = [];
+    for (const char of rank) {
+      if (isNaN(char)) {
+        row.push(char);
+      } else {
+        for (let i = 0; i < parseInt(char); i++) {
+          row.push('');
+        }
+      }
+    }
+    board.push(row);
+  }
+  
+  return board;
+}
 
 function updateLanguageDisplay(lang) {
   currentLang = lang;
   
   // 解説文を自動差し替え
-  document.getElementById('commentaryText').textContent = ruyLopezIntro[lang];
+  const move = movesSequence[currentMoveIndex];
+  document.getElementById('commentaryText').textContent = move[lang];
   
   if (lang === 'en') {
-    document.querySelectorAll('.lang-element-en').forEach(el => el.style.display = 'block');
+    document.querySelectorAll('.lang-element-en').forEach(el => el.style.display = 'inline');
     document.querySelectorAll('.lang-element-ja').forEach(el => el.style.display = 'none');
     document.getElementById('langToggle').textContent = '日本語';
   } else {
-    document.querySelectorAll('.lang-element-ja').forEach(el => el.style.display = 'block');
+    document.querySelectorAll('.lang-element-ja').forEach(el => el.style.display = 'inline');
     document.querySelectorAll('.lang-element-en').forEach(el => el.style.display = 'none');
     document.getElementById('langToggle').textContent = 'English';
   }
 }
 
 document.addEventListener("DOMContentLoaded", function() {
-  // URLの?lang=en などを読み取って、最初からその言語で表示します
+  // 言語設定
   const urlParams = new URLSearchParams(window.location.search);
   let lang = urlParams.get('lang') || window.location.hash.replace('#', '');
   
@@ -290,7 +385,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
   updateLanguageDisplay(lang);
 
-  // ボタンを押した時もその場でパッと切り替わります
+  // 言語切り替えボタン
   document.getElementById('langToggle').addEventListener('click', function() {
     if (currentLang === 'ja') {
       updateLanguageDisplay('en');
@@ -299,25 +394,21 @@ document.addEventListener("DOMContentLoaded", function() {
     }
   });
 
-  // チェスボード描画
+  // ナビゲーションボタン
+  document.getElementById('prevBtn').addEventListener('click', previousMove);
+  document.getElementById('prevBtn-en').addEventListener('click', previousMove);
+  document.getElementById('nextBtn').addEventListener('click', nextMove);
+  document.getElementById('nextBtn-en').addEventListener('click', nextMove);
+
+  // 初期表示
   renderChessBoard();
+  updateButtons();
 });
 
 function renderChessBoard() {
+  const board = fenToBoard(movesSequence[currentMoveIndex].position);
   const boardContainer = document.getElementById('my-easy-board');
   boardContainer.innerHTML = '';
-
-  // 初期配置データ
-  const initialPosition = [
-    ['r','n','b','q','k','b','n','r'],
-    ['p','p','p','p','p','p','p','p'],
-    ['','','','','','','',''],
-    ['','','','','','','',''],
-    ['','','','','','','',''],
-    ['','','','','','','',''],
-    ['P','P','P','P','P','P','P','P'],
-    ['R','N','B','Q','K','B','N','R']
-  ];
 
   const files = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
   const ranks = ['8', '7', '6', '5', '4', '3', '2', '1'];
@@ -328,7 +419,7 @@ function renderChessBoard() {
       const isLight = (r + c) % 2 === 0;
       square.className = 'board-square ' + (isLight ? 'light' : 'dark');
       
-      // 座標は端のマスのみ表示
+      // 座標表示
       if (c === 0) {
         const rankLabel = document.createElement('span');
         rankLabel.textContent = ranks[r];
@@ -343,19 +434,45 @@ function renderChessBoard() {
       }
 
       // 駒を配置
-      const piece = initialPosition[r][c];
+      const piece = board[r][c];
       if (piece) {
-        const pieceKey = (piece === piece.toUpperCase() ? 'w' : 'b') + piece.toUpperCase();
-        const img = document.createElement('img');
-        img.src = PIECE_IMG[pieceKey];
-        img.className = 'piece';
-        img.alt = piece;
-        square.appendChild(img);
+        const pieceDiv = document.createElement('div');
+        pieceDiv.className = 'piece';
+        pieceDiv.textContent = PIECES[piece];
+        square.appendChild(pieceDiv);
       }
       
       boardContainer.appendChild(square);
     }
   }
+
+  // ムーブカウンター更新
+  document.getElementById('moveCount').textContent = movesSequence[currentMoveIndex].moves.split('.')[0];
+}
+
+function nextMove() {
+  if (currentMoveIndex < movesSequence.length - 1) {
+    currentMoveIndex++;
+    renderChessBoard();
+    updateLanguageDisplay(currentLang);
+    updateButtons();
+  }
+}
+
+function previousMove() {
+  if (currentMoveIndex > 0) {
+    currentMoveIndex--;
+    renderChessBoard();
+    updateLanguageDisplay(currentLang);
+    updateButtons();
+  }
+}
+
+function updateButtons() {
+  document.getElementById('prevBtn').disabled = currentMoveIndex === 0;
+  document.getElementById('prevBtn-en').disabled = currentMoveIndex === 0;
+  document.getElementById('nextBtn').disabled = currentMoveIndex === movesSequence.length - 1;
+  document.getElementById('nextBtn-en').disabled = currentMoveIndex === movesSequence.length - 1;
 }
 </script>
 
