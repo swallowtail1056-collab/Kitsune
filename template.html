@@ -262,24 +262,18 @@ footer {
 
 <script>
 
-  function normalizeSearchText(s) {
-  return s.toLowerCase().replace(/[\u30fb\u2019\u0027\-\s]/g, '');
-}
-
-function filterOpenings(query) {
-  const q = normalizeSearchText(query);
+  function filterOpenings(query) {
+  const q = query.trim().toLowerCase();
   document.querySelectorAll('.opening-card').forEach(function(card) {
     const names = card.querySelectorAll('.opening-name');
     let text = '';
-    names.forEach(function(n) { text += n.textContent + ' '; });
-    const normalized = normalizeSearchText(text);
-    if (q === '' || normalized.includes(q)) {
+    names.forEach(function(n) { text += n.textContent.toLowerCase() + ' '; });
+    if (q === '' || text.includes(q)) {
       card.classList.remove('search-hidden');
     } else {
       card.classList.add('search-hidden');
     }
   });
-}
 }let currentLang = 'ja';
 
 function updateLanguageDisplay(lang) {
