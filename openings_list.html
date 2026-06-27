@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -6,6 +7,30 @@
 <title>定跡解説の一覧 - KitsuneChess</title>
 <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
+  .search-box-wrap {
+  max-width: 600px;
+  margin: 0 auto 24px auto;
+  padding: 0 16px;
+}
+.search-box {
+  width: 100%;
+  padding: 10px 16px;
+  border: 1px solid rgba(90, 58, 24, 0.25);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.6);
+  font-family: 'Crimson Pro', serif;
+  font-size: 1rem;
+  color: #4a2a0e;
+  box-sizing: border-box;
+}
+.search-box:focus {
+  outline: none;
+  border-color: #7c4a1e;
+  background: #fff;
+}
+.opening-card.search-hidden {
+  display: none;
+}
 :root {
   --bg: #f5edd6; 
   --brown: #7c4a1e; 
@@ -165,6 +190,9 @@ footer {
 <div class="app-container">
 
   <!-- ヘッダータイトル -->
+  <div class="search-box-wrap">
+  <input type="text" id="openingSearch" class="search-box" placeholder="定跡名で検索 / Search by name" oninput="filterOpenings(this.value)">
+</div>
   <h2 class="section-title lang-element-ja">白のオープニング</h2>
   <h2 class="section-title lang-element-en">White Openings</h2>
   
@@ -191,15 +219,41 @@ footer {
   </div>
 
   <!-- 黒のオープニング -->
-  <div class="section-title lang-element-ja">黒のオープニング</div>
-  <div class="section-title lang-element-en">Black Openings</div>
-  
-  <div class="lang-element-ja" style="color: var(--brown-light); padding: 12px 8px; font-size: 1.0rem; font-style: italic;">
-    Coming Soon...
+  <h2 class="section-title lang-element-ja">黒のオープニング</h2>
+<h2 class="section-title lang-element-en">Black Openings</h2>
+
+<!-- シシリアン・ディフェンス -->
+<div class="opening-card">
+  <div class="opening-name lang-element-ja">シシリアン・ディフェンス</div>
+  <div class="opening-name lang-element-en">Sicilian Defense</div>
+
+  <div class="btn-group">
+    <a href="sicilian.html?lang=ja" class="action-btn lang-element-ja">解説を見る</a>
+    <a href="sicilian.html?lang=en" class="action-btn lang-element-en">View Guide</a>
   </div>
-  <div class="lang-element-en" style="color: var(--brown-light); padding: 12px 8px; font-size: 1.0rem; font-style: italic;">
-    Coming Soon...
+</div>
+
+<!-- フレンチ・ディフェンス -->
+<div class="opening-card">
+  <div class="opening-name lang-element-ja">フレンチ・ディフェンス</div>
+  <div class="opening-name lang-element-en">French Defense</div>
+
+  <div class="btn-group">
+    <a href="french.html?lang=ja" class="action-btn lang-element-ja">解説を見る</a>
+    <a href="french.html?lang=en" class="action-btn lang-element-en">View Guide</a>
   </div>
+</div>
+
+<!-- カロ・カン・ディフェンス -->
+<div class="opening-card">
+  <div class="opening-name lang-element-ja">カロ・カン・ディフェンス</div>
+  <div class="opening-name lang-element-en">Caro-Kann Defense</div>
+
+  <div class="btn-group">
+    <a href="caro_kann.html?lang=ja" class="action-btn lang-element-ja">解説を見る</a>
+    <a href="caro_kann.html?lang=en" class="action-btn lang-element-en">View Guide</a>
+  </div>
+</div>
 
   <footer>
     © KitsuneChess
@@ -207,7 +261,20 @@ footer {
 </div>
 
 <script>
-let currentLang = 'ja';
+
+  function filterOpenings(query) {
+  const q = query.trim().toLowerCase();
+  document.querySelectorAll('.opening-card').forEach(function(card) {
+    const names = card.querySelectorAll('.opening-name');
+    let text = '';
+    names.forEach(function(n) { text += n.textContent.toLowerCase() + ' '; });
+    if (q === '' || text.includes(q)) {
+      card.classList.remove('search-hidden');
+    } else {
+      card.classList.add('search-hidden');
+    }
+  });
+}let currentLang = 'ja';
 
 function updateLanguageDisplay(lang) {
   currentLang = lang;
