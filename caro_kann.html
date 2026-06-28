@@ -89,6 +89,17 @@ nav { width:100%; background:var(--nav-bg); border-bottom:2px solid var(--border
 .lang-element-ja, .lang-element-en { display:none; }
 
 footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-top:20px; padding-bottom:10px; }
+
+.opening-intro {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 8px;
+  padding: 16px 18px;
+  margin-bottom: 20px;
+  line-height: 1.75;
+  font-size: 1rem;
+  color: var(--text-sub);
+}
 </style>
 </head>
 <body>
@@ -104,6 +115,11 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
 <div class="app-container">
   <h1 class="opening-title lang-element-ja">カロ・カン・ディフェンス</h1>
   <h1 class="opening-title lang-element-en">Caro-Kann Defense</h1>
+
+  <div class="opening-intro">
+    <p class="lang-element-ja">💡 カロ・カンは1...c6と応じることでd5のマスをサポートする堅牢な守りだよ！フレンチ・ディフェンスと同じくd5への反撃を準備するけど、c6はe6と違ってキングサイドのビショップを閉じ込めないのが大きな利点なんだ。2.d4 d5 3.Nc3のあと黒はdxe4と取ってビショップをf5に展開できるよ。このビショップをキング・インディアン・セットアップの前に外に出せることがカロ・カンの最大の強みなんだ。アナトリー・カルポフが得意とした信頼性バツグンのシステムだよ！</p>
+    <p class="lang-element-en">💡 The Caro-Kann Defense starts with 1...c6, supporting the d5 square for a solid counterattack! Similar to the French Defense in aiming for d5, but c6 has one big advantage — it doesn't lock in the kingside bishop. After 2.d4 d5 3.Nc3, Black can take with dxe4 and develop the bishop actively to f5. Getting this bishop outside before closing the pawn structure is the Caro-Kann's greatest strength. Made famous by Anatoly Karpov, a highly reliable system loved by players who value solid, positional chess!</p>
+  </div>
 
   <div class="board-wrap">
     <div class="move-label" id="moveLabel"></div>

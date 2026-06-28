@@ -89,6 +89,17 @@ nav { width:100%; background:var(--nav-bg); border-bottom:2px solid var(--border
 .lang-element-ja, .lang-element-en { display:none; }
 
 footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-top:20px; padding-bottom:10px; }
+
+.opening-intro {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 8px;
+  padding: 16px 18px;
+  margin-bottom: 20px;
+  line-height: 1.75;
+  font-size: 1rem;
+  color: var(--text-sub);
+}
 </style>
 </head>
 <body>
@@ -104,6 +115,11 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
 <div class="app-container">
   <h1 class="opening-title lang-element-ja">ルイ・ロペス</h1>
   <h1 class="opening-title lang-element-en">Ruy Lopez</h1>
+
+  <div class="opening-intro">
+    <p class="lang-element-ja">💡 ルイ・ロペスは16世紀のスペインの司祭、ルイ・ロペス・デ・セグラが考案した、チェス史上最も歴史あるオープニングのひとつだよ！白がビショップをb5に動かしてc6のナイトをピンするんだ。この手の本当の狙いは、黒のe5ポーンに間接的にプレッシャーをかけ続けること。黒がa6と突いてきたら白はBa4と引いてピンを維持するんだ。その後はO-O、Re1、c3、d4という形が白の基本プランで、中央を少しずつ強化していくよ。カスパロフやフィッシャー、カールセンといった世界チャンピオンたちが長年愛用してきた信頼性バツグンの選択肢だよ！</p>
+    <p class="lang-element-en">💡 The Ruy Lopez was invented by a Spanish priest named Ruy López de Segura in the 16th century, making it one of the oldest openings in chess history! White moves the bishop to b5 to pin Black's knight on c6. The real idea is to put indirect pressure on Black's e5 pawn. After Black plays a6, White usually retreats the bishop to a4 to keep the pin going. White's basic plan involves O-O, Re1, c3, and d4 to gradually strengthen the center. World champions like Kasparov, Fischer, and Carlsen have all trusted this opening. If you want to learn how to make a long-term plan in chess, this is the perfect opening to study!</p>
+  </div>
 
   <div class="board-wrap">
     <div class="move-label" id="moveLabel"></div>

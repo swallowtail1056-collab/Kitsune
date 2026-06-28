@@ -89,6 +89,17 @@ nav { width:100%; background:var(--nav-bg); border-bottom:2px solid var(--border
 .lang-element-ja, .lang-element-en { display:none; }
 
 footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-top:20px; padding-bottom:10px; }
+
+.opening-intro {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 8px;
+  padding: 16px 18px;
+  margin-bottom: 20px;
+  line-height: 1.75;
+  font-size: 1rem;
+  color: var(--text-sub);
+}
 </style>
 </head>
 <body>
@@ -104,6 +115,11 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
 <div class="app-container">
   <h1 class="opening-title lang-element-ja">シシリアン・ディフェンス</h1>
   <h1 class="opening-title lang-element-en">Sicilian Defense</h1>
+
+  <div class="opening-intro">
+    <p class="lang-element-ja">💡 シシリアン・ディフェンスは1...c5と応じる黒の最も人気の高いオープニングだよ！1...e5と違ってc5は非対称な局面を作り出し、黒が白と違う形でポーンを配置するんだ。これによって白がd4を突いてもd4-e4という強力なポーンセンターを白に渡さず、黒がdファイルを使ったカウンターアタックを狙える。白は通常2.Nf3から3.d4とオープン・シシリアンを目指すか、2.Nc3のグランプリ・アタックなどのクローズド変化を選ぶよ。プロの対局の約25%に登場する現代チェスの王道だよ！</p>
+    <p class="lang-element-en">💡 The Sicilian Defense starts with 1...c5, the most popular response to 1.e4 in all of chess! Unlike 1...e5, c5 creates an asymmetrical position where Black places a pawn on a different file. Black doesn't give White the strong e4-d4 pawn center, instead getting the d-file for counterattacking chances. White usually aims for the Open Sicilian with 2.Nf3 and 3.d4, or chooses a closed system. The Sicilian gives Black active counterplay and real winning chances, appearing in about 25% of all professional games. The ultimate choice for players who want to fight for a win with Black!</p>
+  </div>
 
   <div class="board-wrap">
     <div class="move-label" id="moveLabel"></div>

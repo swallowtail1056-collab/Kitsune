@@ -89,6 +89,17 @@ nav { width:100%; background:var(--nav-bg); border-bottom:2px solid var(--border
 .lang-element-ja, .lang-element-en { display:none; }
 
 footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-top:20px; padding-bottom:10px; }
+
+.opening-intro {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 8px;
+  padding: 16px 18px;
+  margin-bottom: 20px;
+  line-height: 1.75;
+  font-size: 1rem;
+  color: var(--text-sub);
+}
 </style>
 </head>
 <body>
@@ -104,6 +115,11 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
 <div class="app-container">
   <h1 class="opening-title lang-element-ja">フレンチ・ディフェンス</h1>
   <h1 class="opening-title lang-element-en">French Defense</h1>
+
+  <div class="opening-intro">
+    <p class="lang-element-ja">💡 フレンチ・ディフェンスは1...e6と応じることで堅固なポーン構造を築き、d5からの中央反撃を準備するオープニングだよ！黒の基本構想はd5と突いて白のe4ポーンに挑戦すること。白は中央のスペース優位を活かしてキングサイドへ攻め、黒はcファイルを使ったクイーンサイドでの反撃を狙う。黒マスビショップがe6-d5-c4のポーンに閉じ込められることが多く「フレンチ・ビショップ」問題と呼ばれる。しかし正確にプレイすれば黒は非常に堅固な陣形を保てるんだ。長年プロの舞台で愛用されてきた戦略的に奥深いオープニングだよ！</p>
+    <p class="lang-element-en">💡 The French Defense starts with 1...e6, building a solid pawn structure and preparing to challenge the center with d5! Black's main idea is to push d5 and contest White's e4 pawn. White uses central space to attack on the kingside, while Black counterattacks on the queenside. One famous challenge is the "French Bishop" problem — the dark-squared bishop often gets locked behind Black's own pawns. However, with precise play, Black can maintain an extremely solid position. The French Defense rewards strategic understanding and patience!</p>
+  </div>
 
   <div class="board-wrap">
     <div class="move-label" id="moveLabel"></div>
