@@ -47,7 +47,7 @@ nav { width:100%; background:var(--nav-bg); border-bottom:2px solid var(--border
 .cell { position:relative; display:flex; align-items:center; justify-content:center; min-width:0; min-height:0; }
 .cell.light { background:#f0d9b5; }
 .cell.dark { background:#b58863; }
-.piece-img { width:100%; height:100%; object-fit:contain; pointer-events:none; display:block; }
+.piece-img { width:82%; height:82%; object-fit:contain; pointer-events:none; display:block; }
 
 /* Board labels inside cells */
 .cell-label {
@@ -89,6 +89,17 @@ nav { width:100%; background:var(--nav-bg); border-bottom:2px solid var(--border
 .lang-element-ja, .lang-element-en { display:none; }
 
 footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-top:20px; padding-bottom:10px; }
+
+.opening-intro {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 8px;
+  padding: 16px 18px;
+  margin-bottom: 20px;
+  line-height: 1.75;
+  font-size: 1rem;
+  color: var(--text-sub);
+}
 </style>
 </head>
 <body>
@@ -104,6 +115,11 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
 <div class="app-container">
   <h1 class="opening-title lang-element-ja">クイーンズ・ギャンビット</h1>
   <h1 class="opening-title lang-element-en">Queen's Gambit</h1>
+
+  <div class="opening-intro">
+    <p class="lang-element-ja">💡 クイーンズ・ギャンビットは1.d4 d5 2.c4とポーンを差し出す古典的なオープニングだよ！c4のポーンを取ればクイーンズ・ギャンビット・アクセプテッド、断ってe6やc6で守ればクイーンズ・ギャンビット・ディクラインドになるんだ。でも実はc4のポーンはすぐに取り戻せるので本当のギャンビットではなく、白は中央のポーン配置と展開の優位を狙っているんだよ。白の基本プランはNc3-Nf3-Bg5-e3-Bd3とピースを展開してから中央で押し合いをすること。19世紀から現代まで最高峰のチェスで指され続ける伝統的かつ深いオープニングだよ！</p>
+    <p class="lang-element-en">💡 The Queen's Gambit offers a pawn with 1.d4 d5 2.c4 — one of chess's most classic openings! If Black takes it becomes the Queen's Gambit Accepted, and if Black defends with e6 or c6 it becomes the Queen's Gambit Declined. But this isn't truly a gambit because White can almost always recapture quickly — the real goal is to gain a central advantage. White's basic plan involves developing with Nc3-Nf3-Bg5-e3-Bd3 before fighting for central control. Played at the highest levels from the 19th century right up to today!</p>
+  </div>
 
   <div class="board-wrap">
     <div class="move-label" id="moveLabel"></div>
@@ -126,9 +142,6 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
 </div>
 
 <script>
-// ============================================================
-// PIECE UNICODE
-// ============================================================
 const PIECE_IMG = {
   wK: "data:image/svg+xml;base64,PHN2ZyBjbGlwLXJ1bGU9ImV2ZW5vZGQiIGZpbGwtcnVsZT0iZXZlbm9kZCIgaGVpZ2h0PSI0MDAiIGltYWdlLXJlbmRlcmluZz0ib3B0aW1pemVRdWFsaXR5IiBzaGFwZS1yZW5kZXJpbmc9Imdlb21ldHJpY1ByZWNpc2lvbiIgdGV4dC1yZW5kZXJpbmc9Imdlb21ldHJpY1ByZWNpc2lvbiIgdmlld0JveD0iMCAwIDUwIDUwIiB3aWR0aD0iNDAwIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIj48bGluZWFyR3JhZGllbnQgaWQ9ImEiPjxzdG9wIG9mZnNldD0iMCIgc3RvcC1jb2xvcj0iI2ZmZmVmYyIvPjxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iI2UwZTBlMCIvPjwvbGluZWFyR3JhZGllbnQ+PGxpbmVhckdyYWRpZW50IGlkPSJiIiBncmFkaWVudFRyYW5zZm9ybT0ibWF0cml4KDEuMDI2NyAwIDAgMS4wMjcgNzMuMjgyIC0yOTguMikiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIiB4MT0iLTY2LjAyNyIgeDI9Ii0yOC4wMjIiIHhsaW5rOmhyZWY9IiNhIiB5MT0iMzE5LjE0IiB5Mj0iMzE5LjE0Ii8+PGxpbmVhckdyYWRpZW50IGlkPSJjIiBncmFkaWVudFRyYW5zZm9ybT0ibWF0cml4KDEuMDI2NyAwIDAgMS4wMjcgNzMuMjgyIC0yOTguMikiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIiB4MT0iLTUxLjExOSIgeDI9Ii00Mi45MyIgeGxpbms6aHJlZj0iI2EiIHkxPSIzMDYuODgiIHkyPSIzMDYuODgiLz48ZyBzdHJva2U9IiMwMDAiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgc3Ryb2tlLXdpZHRoPSIuNzk5OTgiPjxwYXRoIGQ9Im02LjY3MTggMTkuNjE1Yy0zLjQzNjQgNi44OTk4IDUuNzI1NSAxMS41IDUuNzI4MSAxMS41MDFsMS42ODk3IDQuMTY0MS0yLjMwMTcgNS43MjMzYy0uMDQ0NDYuNzE5NzUgNi45MDc1IDIuNTkxMSAxMy40NTQgMi41OTExczEzLjQ5OC0xLjg3MTQgMTMuNDU0LTIuNTkxMWwtMi4zMDI4LTUuNzIzMyAxLjIxMjEtNC4xNjQxczkuMTY0OS00LjYwMDcgNS43MjgxLTExLjUwMWMtMy40MzY4LTcuNDc2LTE0LjMyLTQuMDI1NC0xOC4zMzEgNC42MDA1LTMuNjAzMy02Ljk3OTItMTQuNTExLTEyLjQ5Ny0xOC4zMzEtNC42MDA1eiIgZmlsbD0idXJsKCNiKSIgZmlsbC1ydWxlPSJldmVub2RkIi8+PGcgZmlsbD0ibm9uZSI+PHBhdGggZD0ibTExLjc4OCA0MS4wMDhjNi43MjY3LTMuNjA1MyAyMC4xOC0zLjYwNTMgMjYuOTA3IDAiLz48cGF0aCBkPSJtMTQuMDg5IDM1LjI3N2M2Ljc1OTQtMi40MTU3IDE1LjYwOC0yLjQ0NjMgMjIuMzAzIDAiLz48cGF0aCBkPSJtMTIuNCAzMS4xMThjNi4zMDExLTMuNDUwMyAxOC45MDMtMy40NTAzIDI1LjIwNCAwIi8+PC9nPjxwYXRoIGQ9Im0yNS4wMDEgMTEuODgydi02LjQ3NTNtLTIuODY0MSAyLjMwMDNoNS43MjgybS0yLjg2NCAyMC44MjdzNS4xNTUzLTEwLjMyNSAzLjQzNy0xMy43NzZjMCAwLTEuMTQ1OC0yLjg3NTQtMy40MzctMi44NzU0LTIuMjkxMyAwLTMuNDM2OCAyLjg3NTQtMy40MzY4IDIuODc1NC0xLjcxODUgMy40NTA0IDMuNDM2OSAxMy43NzYgMy40MzY5IDEzLjc3NiIgZmlsbD0idXJsKCNjKSIgZmlsbC1ydWxlPSJldmVub2RkIi8+PC9nPjxwYXRoIGQ9Im0yNS4wMDEgMTEuODgyYy0uNjMxNDEgMC0xLjE3MjUuMjIyMy0xLjYyOTkuNTM4NjcgNS41NTU4LjU5MTQgMi45MTc5IDEyLjI2MyAxLjkyIDE1LjUxMSAxLjI2NjUtMS4wMzk0IDIuODAyNy03LjU4NDcgMy4xMjcxLTguNTE5Ni4wMjAyMy0uODA0MzcuMjg2OS00LjExODIuMDE5NjgtNC42NTQ3IDAgMC0xLjE0NTctMi44NzU0LTMuNDM3LTIuODc1NHptMTEuNzE4IDMuNjM3NWMtLjQ2OTk1LjAxMzg2LS45NDg0Ny4wNjg5MS0xLjQzMDQuMTU3NjIgNy40MTExIDIuNjUxOSA3LjYwMTggMTAuODE3LS4yODMwNCAxNC4zMjVsLTEuNzExNCA0LjM2MTEgMS45MDEzIDUuMjQ4MSAzLjQ5ODMgMS4zOTg0LTIuMzAyNy01LjcyMzggMS4yMTIzLTQuMTY0czkuMTY0OC00LjYwMDUgNS43MjgtMTEuNTAxYy0xLjM0NzQtMi45MzEtMy44Mzg5LTQuMTgyMS02LjYxMjQtNC4xMDAzem0tMjQuMjM0LjIyODJjLS40ODUxMS4wMDkyLS45NTg5My4wNjU5My0xLjQxODIuMTY5MzEgNS43OTMzIDEuMDEzNSAxMS43MjcgNy40MDM4IDEyLjM4OSA5LjAxMjEtLjI0MDA5LS45NDY1My0yLjI0NTQtNC42NTQtMi4zMDgtNS40ODcxLTEuMzI2My0xLjcyMjYtNi42OTU0LTQuMDI3My04LjY2MzMtMy42OTQ0eiIgZmlsbC1ydWxlPSJldmVub2RkIiBvcGFjaXR5PSIuMiIgc3Ryb2tlLXdpZHRoPSIuOTk5OTciLz48L3N2Zz4=",
   wQ: "data:image/svg+xml;base64,PHN2ZyBjbGlwLXJ1bGU9ImV2ZW5vZGQiIGZpbGwtcnVsZT0iZXZlbm9kZCIgaGVpZ2h0PSI0MDAiIGltYWdlLXJlbmRlcmluZz0ib3B0aW1pemVRdWFsaXR5IiBzaGFwZS1yZW5kZXJpbmc9Imdlb21ldHJpY1ByZWNpc2lvbiIgdGV4dC1yZW5kZXJpbmc9Imdlb21ldHJpY1ByZWNpc2lvbiIgdmlld0JveD0iMCAwIDUwIDUwIiB3aWR0aD0iNDAwIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIj48bGluZWFyR3JhZGllbnQgaWQ9ImEiIGdyYWRpZW50VHJhbnNmb3JtPSJtYXRyaXgoMS4wNTU1IDAgMCAxLjAxMjEgMjU1LjUxIC0yOTAuMjkpIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9Ii0yMzQuODUiIHgyPSItMjAxLjk1IiB5MT0iMzEzLjk4IiB5Mj0iMzEzLjk4Ij48c3RvcCBvZmZzZXQ9IjAiIHN0b3AtY29sb3I9IiNmZmZlZmMiLz48c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiNlMGUwZTAiLz48L2xpbmVhckdyYWRpZW50PjxnIHN0cm9rZT0iIzAwMCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBzdHJva2Utd2lkdGg9Ii43OTk5OSI+PHBhdGggZD0ibTIxLjQ4NSAyNy4wOTktNS41NDk5LTE3LjMzNC0uMzkwNjYgMTguMzgxLTguMTYzMy0xNS42ODUgMy4wMDYgMTguNzI0IDMuMTA5OSAzLjgyNTYtMi4zNzI2IDYuMDc3OGM2Ljc5MTUgMy40MjY0IDIwLjY4NSAzLjI5NTggMjcuNzQ3LjAwMmwtLjA5ODg5Ny0uMjA5NDQtMi4yNzM3LTUuODY4NCAzLjEwOTktMy44MjU2IDMuMDA1Ny0xOC43MjQtOC4xNjMgMTUuNjg1LS4zOTA2Ni0xOC4zODItNS41NTA0IDE3LjMzNC0zLjUxMjQtMTcuODY4eiIgZmlsbD0idXJsKCNhKSIvPjxnIGZpbGw9Im5vbmUiPjxwYXRoIGQ9Im0zOS40ODQgMzEuMTg0Yy0xLjcyMjMuMTkyODYtMS4yOTI1LTEuNTkyMi0xLjgxMTQtMi40NzU4IDAgMC0yLjUzODMgMS45MzAzLTMuODI0NSAxLjYxMzgtMS4yOTY2LS4zMTg5Ni0yLjM1NTctMi43NDY5LTIuMzU1Ny0yLjc0NjlzLTIuMDEyNiAyLjMyMDItMy4yMjAxIDIuMjEzMWMtMS40MDQxLS4xMjQ0OS0zLjMzNjQtMy4xMTM4LTMuMzM2NC0zLjExMzhzLTEuOTMyMyAyLjk4OTQtMy4zMzY0IDMuMTEzOGMtMS4yMDc1LjEwNzA2LTMuMjIwMS0yLjIxMzEtMy4yMjAxLTIuMjEzMXMtMS4wNTY0IDIuNDM5Mi0yLjM1NTcgMi43NDY5Yy0xLjIxNDEuMjg3NDQtMy41ODM2LTEuNjEzOC0zLjU4MzYtMS42MTM4LS4zOTE0NSAxLjU4NDctLjc2OTI5IDIuNjU5OS0yLjA1MjQgMi40NzU4Ii8+PHBhdGggZD0ibTExLjEzNCA0MS4wODZjNi45MzQxLTMuNDk4MyAyMC44MDMtMy40OTgzIDI3LjczNyAwIi8+PHBhdGggZD0ibTEzLjQ5NyAzNS4wMDljNi45Njc3LTIuMzQ0IDE2LjA5LTIuMzczNyAyMi45OSAwIi8+PC9nPjxlbGxpcHNlIGN4PSI3LjM4MDgiIGN5PSIxMi40NjIiIGZpbGw9IiNmNWY1ZjMiIHJ4PSIyLjQ3NDMiIHJ5PSIyLjI3ODciLz48L2c+PHBhdGggZD0ibTQyLjM3MiAxMi45MjJjLTEuMTM0MyA0LjcxNzEtMy43MzE5IDEzLjA0My01LjAxNSAxNy43MjNsLTMuNjUxIDMuNzIyOCAyLjIzMzIgNS41NTg3IDIuOTMxOCAxLjE1ODMtMi4zNzI1LTYuMDc3OSAzLjEwOTktMy44MjU3eiIgb3BhY2l0eT0iLjIiIHN0cm9rZS13aWR0aD0iLjk5OTk4Ii8+PGcgZmlsbD0iI2Y1ZjVmMyIgc3Ryb2tlPSIjMDAwIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIHN0cm9rZS13aWR0aD0iLjc5OTk5Ij48ZWxsaXBzZSBjeD0iMTUuOTM1IiBjeT0iOS43NTg1IiByeD0iMi40NzQzIiByeT0iMi4yNzg3Ii8+PGVsbGlwc2UgY3g9IjI0Ljk5NyIgY3k9IjguMTY2NiIgcng9IjIuNDc0MyIgcnk9IjIuMjc4NyIvPjxlbGxpcHNlIGN4PSIzNC4wNiIgY3k9IjkuNzY4NSIgcng9IjIuNDc0MyIgcnk9IjIuMjc4NyIvPjxlbGxpcHNlIGN4PSI0Mi42MTQiIGN5PSIxMi40NjIiIHJ4PSIyLjQ3NDMiIHJ5PSIyLjI3ODciLz48L2c+PC9zdmc+",
@@ -315,7 +328,7 @@ function adjustBottomPadding(){
 function renderStep(){
   const step = LESSON_STEPS[currentStep];
   renderBoard(boardSnapshots[currentStep]);
- document.getElementById('moveLabel').textContent = (step.moveLabel && step.moveLabel[currentLang]) || '';
+  document.getElementById('moveLabel').textContent = (step.moveLabel && step.moveLabel[currentLang]) || '';
   document.getElementById('commentaryText').textContent = step[currentLang];
   document.getElementById('foxAvatar').src = FOX_BY_MOOD[step.fox] || FOX_BY_MOOD.normal;
   document.getElementById('lessonProgress').textContent = currentStep + ' / ' + (LESSON_STEPS.length - 1);
