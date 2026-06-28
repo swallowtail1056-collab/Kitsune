@@ -135,7 +135,13 @@ nav h1 {
   font-weight: 700;
   margin-bottom: 16px;
 }
-
+.home-link {
+  color: inherit;
+  text-decoration: none;
+}
+.home-link:hover {
+  opacity: 0.75;
+}
 /* ── BUTTONS ── */
 .btn-group {
   display: flex;
@@ -181,7 +187,7 @@ footer {
 
 <nav>
   <div class="nav-inner">
-    <h1>KitsuneChess</h1>
+   <h1><a href="index.html" class="home-link">KitsuneChess</a></h1>
     <!-- 右上の日英切り替えボタン（現在の言語に応じて文字が変わります） -->
     <button id="langToggle" class="lang-switch-btn">English</button>
   </div>
