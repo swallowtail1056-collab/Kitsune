@@ -1643,7 +1643,7 @@ function selectOpening(id) {
   const it=document.getElementById('infoText');
   const desc = typeof S.opening.desc==='object'?(S.opening.desc[LANG]||S.opening.desc.ja):S.opening.desc;
   const tip = getOpeningTip(S.opening.id);
-  if(it) it.textContent = tip ? desc + ' ' + tip : desc;
+  if(it) it.textContent = tip || desc;
   buildOpeningTabs();
   foxOnStart(S.opening);
   // 説明・練習中 = 目開き口閉じ
@@ -2021,7 +2021,13 @@ function clearHistory() {
     renderHistory();
   } catch(e) {}
 }
-
+const OPENING_PAGE_FILES = {
+  'ruylopez': 'ruy_lopez.html',
+  'queens': 'queens_gambit.html',
+  'sicilian': 'sicilian.html',
+  'french': 'french.html',
+  'caro-kann': 'caro_kann.html'
+};
 // ============================================================
 // ③ OPENING DESCRIPTIONS — 充実した解説
 // ============================================================
@@ -2183,7 +2189,16 @@ const OPENING_TIPS = {
 function getOpeningTip(openingId) {
   const tip = OPENING_TIPS[openingId];
   if (!tip) return '';
-  return tip[LANG] || tip.ja;
+  const full = tip[LANG] || tip.ja;
+  if (OPENING_PAGE_FILES[openingId]) {
+    const teaserLen = 90;
+    const teaser = full.length > teaserLen ? full.slice(0, teaserLen).trim() + '…' : full;
+    const more = LANG === 'ja'
+      ? ' くわしい解説とレッスンは一覧ページの個別ページにもあるよ！'
+      : ' A full lesson page is also available from the openings list!';
+    return teaser + more;
+  }
+  return full;
 }
 
 
