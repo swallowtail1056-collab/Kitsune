@@ -1643,7 +1643,7 @@ function selectOpening(id) {
   const it=document.getElementById('infoText');
   const desc = typeof S.opening.desc==='object'?(S.opening.desc[LANG]||S.opening.desc.ja):S.opening.desc;
   const tip = getOpeningTip(S.opening.id);
-  if(it) it.textContent = tip ? desc + ' ' + tip : desc;
+  if(it) it.textContent = tip || desc;
   buildOpeningTabs();
   foxOnStart(S.opening);
   // 説明・練習中 = 目開き口閉じ
