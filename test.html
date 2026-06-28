@@ -1651,7 +1651,7 @@ function selectOpening(id) {
   if(fi) fi.src = FOX_NORMAL_SRC;
   restartOpening();
 }
-
+if(it) it.textContent = tip || desc;
 function restartOpening() {
   if(!S.opening) return;
   clearAuto();
@@ -2189,7 +2189,16 @@ const OPENING_TIPS = {
 function getOpeningTip(openingId) {
   const tip = OPENING_TIPS[openingId];
   if (!tip) return '';
-  return tip[LANG] || tip.ja;
+  const full = tip[LANG] || tip.ja;
+  if (OPENING_PAGE_FILES[openingId]) {
+    const teaserLen = 90;
+    const teaser = full.length > teaserLen ? full.slice(0, teaserLen).trim() + '…' : full;
+    const more = LANG === 'ja'
+      ? ' くわしい解説とレッスンは一覧ページの個別ページにもあるよ！'
+      : ' A full lesson page is also available from the openings list!';
+    return teaser + more;
+  }
+  return full;
 }
 
 
