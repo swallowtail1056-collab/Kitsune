@@ -203,7 +203,10 @@ footer {
 <div class="app-container">
 
   <!-- ヘッダータイトル -->
-  <div class="search-hint">最初の2文字だけ入れて検索してください / Try searching with just the first 2 characters</div>
+<div class="search-box-wrap">
+    <input type="text" id="openingSearch" class="search-box" placeholder="定跡名で検索 / Search by name" oninput="filterOpenings(this.value)">
+    <div class="search-hint">最初の2文字だけ入れて検索してください / Try searching with just the first 2 characters</div>
+  </div>
   <h2 class="section-title lang-element-ja">白のオープニング</h2>
   <h2 class="section-title lang-element-en">White Openings</h2>
   
