@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ベンコー・ギャンビット (Benko Gambit) - KitsuneChess</title>
+<title>イタリアン・ゲーム (Italian Game) - KitsuneChess</title>
 <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -113,12 +113,12 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
 </nav>
 
 <div class="app-container">
-  <h1 class="opening-title lang-element-ja">ベンコー・ギャンビット</h1>
-  <h1 class="opening-title lang-element-en">Benko Gambit</h1>
+  <h1 class="opening-title lang-element-ja">イタリアン・ゲーム</h1>
+  <h1 class="opening-title lang-element-en">Italian Game</h1>
 
   <div class="opening-intro">
-    <p class="lang-element-ja">💡 ベンコー・ギャンビットは5...b5と突いてポーンを犠牲にするギャンビットだよ！黒が6.cxb5 a6 7.bxa6 Bxa6とポーンを捨てることで、aファイルとbファイルを開通させて長期的なプレッシャーをかけるんだ。ポーン損でも黒は両ビショップの活性化とオープンファイルを使った持続的なイニシアチブを得られるよ。通常のギャンビットと違って即座の攻撃ではなく、長期的なポジション的補償を追求する独創的なコンセプトが面白い。クロコルク・ベンコーが1960年代に発展させたこの変化は今でも実戦で効果的だよ！</p>
-    <p class="lang-element-en">💡 The Benko Gambit sacrifices a pawn with 5...b5 to open the a and b files for long-term pressure! After 6.cxb5 a6 7.bxa6 Bxa6, Black gives up a pawn to activate both bishops and create permanent pressure along the open files. Even down a pawn, Black gains a lasting initiative with active pieces. Unlike typical gambits that seek immediate tactical attacks, the Benko Gambit pursues long-term positional compensation. Developed by Pal Benko in the 1960s, this gambit remains effective in modern chess!</p>
+    <p class="lang-element-ja">💡 イタリアン・ゲームは1.e4 e5 2.Nf3 Nc6 3.Bc4と展開するクラシカルなオープニングだよ！白がビショップをc4に置くことでf7への攻撃ラインを作り、中央のコントロールも狙うんだ。f7は黒にとってキング周りの弱点になりやすいポイントだよ。現代では白がc3-d4と突いて中央ポーンを前進させる形が主流で、均衡した複雑な中盤戦になりやすい。ジョコ・ピアノやエヴァンズ・ギャンビットなど多くの有名な変化に発展するオープニングでもあるんだ。初心者からプロのグランドマスターまで幅広く採用される、ぼくも大好きな一手だよ！</p>
+    <p class="lang-element-en">💡 The Italian Game starts with 1.e4 e5 2.Nf3 Nc6 3.Bc4 — a truly classical opening! White places the bishop on c4 to target the f7 square, one of the weakest points around Black's king. The modern approach involves pushing c3 and d4 to advance the central pawns, leading to rich and complex middlegame positions. This opening branches into many famous variations like the Giuoco Piano and the Evans Gambit. From beginners to grandmasters, everyone plays this one — and it's one of my personal favorites too!</p>
   </div>
 
   <div class="board-wrap">
@@ -185,61 +185,61 @@ const initialBoard = [
 // レッスンステップ（手・解説・ジーンの表情）
 // ============================================================
 const LESSON_STEPS = [
-  { move:null, moveLabel:{ja:"開始局面", en:"Starting Position"},
-    ja:"ベンコー・ギャンビットのレッスンを始めるよ！即座の攻撃ではなく、長期的なポジション的補償を追求する、独創的なギャンビットだよ。ジーンと一緒に、一手ずつ「なぜその手を指すのか」を学んでいこう。",
-    en:"Let's start the Benko Gambit lesson! Instead of an immediate attack, Black pursues long-term positional compensation — a wonderfully original concept. Jene will explain why each move is played, one step at a time.",
+  { move:null, moveLabel:{ja:'開始局面', en:'Starting Position'},
+    ja:'イタリアン・ゲームのレッスンを始めるよ！チェス史上もっとも古くから愛されているオープニングのひとつで、f7という黒の弱点を狙う積極的な一手だよ。ジーンと一緒に、一手ずつ「なぜその手を指すのか」を学んでいこう。',
+    en:"Let's start the Italian Game lesson! It's one of the oldest and most beloved openings in chess, aiming straight at Black's weak f7 square. Jene will explain why each move is played, one step at a time.",
     fox:'welcome' },
-  { move:{from:[6,3],to:[4,3]}, moveLabel:{ja:"1. d4", en:"1. d4"},
-    ja:"白はd4で中央を制圧するよ。",
-    en:"White plays 1.d4, claiming the center.",
+  { move:{from:[6,4],to:[4,4]}, moveLabel:{ja:'1. e4', en:'1. e4'},
+    ja:'白はe4で中央を制圧するよ。',
+    en:'White plays 1.e4, claiming the center.',
     fox:'normal' },
-  { move:{from:[0,6],to:[2,5]}, moveLabel:{ja:"1...Nf6", en:"1...Nf6"},
-    ja:"黒はナイトをf6へ展開するよ。",
-    en:"Black develops the knight to f6.",
+  { move:{from:[1,4],to:[3,4]}, moveLabel:{ja:'1...e5', en:'1...e5'},
+    ja:'黒も同じくe5で対抗。中央の取り合いはお互い様、というバランスを保つよ。',
+    en:'Black mirrors with 1...e5, keeping the fight for the center balanced.',
     fox:'normal' },
-  { move:{from:[6,2],to:[4,2]}, moveLabel:{ja:"2. c4", en:"2. c4"},
-    ja:"白はc4でさらに中央を広げるよ。",
-    en:"White expands the center with 2.c4.",
+  { move:{from:[7,6],to:[5,5]}, moveLabel:{ja:'2. Nf3', en:'2. Nf3'},
+    ja:'白はナイトをf3に展開。e5ポーンに狙いをつけながら、キングサイドの守りも整えていくよ。',
+    en:'White develops the knight to f3, eyeing the e5 pawn while preparing kingside safety.',
     fox:'normal' },
-  { move:{from:[1,2],to:[3,2]}, moveLabel:{ja:"2...c5", en:"2...c5"},
-    ja:"黒はc5で非対称な局面を目指すよ。",
-    en:"Black aims for an asymmetrical fight with 2...c5.",
+  { move:{from:[0,1],to:[2,2]}, moveLabel:{ja:'2...Nc6', en:'2...Nc6'},
+    ja:'黒もナイトをc6へ。e5ポーンをしっかり守る、自然な一手だよ。',
+    en:'Black develops the knight to c6, defending the e5 pawn.',
     fox:'normal' },
-  { move:{from:[7,6],to:[5,5]}, moveLabel:{ja:"3. Nf3", en:"3. Nf3"},
-    ja:"白はナイトをf3へ展開するよ。",
-    en:"White develops the knight to f3.",
-    fox:'normal' },
-  { move:{from:[1,1],to:[3,1]}, moveLabel:{ja:"3...b5（ベンコー！）", en:"3...b5 (Benko!)"},
-    ja:"ここが本題、ベンコー・ギャンビットの一手！黒はポーンを犠牲にして、aファイルとbファイルでの長期的な活動を狙うよ。",
-    en:"Here's the Benko Gambit move! Black sacrifices a pawn for lasting activity along the a and b files.",
+  { move:{from:[7,5],to:[4,2]}, moveLabel:{ja:'3. Bc4（イタリアン！）', en:'3. Bc4 (Italian!)'},
+    ja:'ここが本題、イタリアン・ゲームの一手！ビショップをc4に出して、黒のキング周りの弱点f7に狙いをつけるよ。これが「イタリアン」と呼ばれる所以なんだ。',
+    en:"Here's the Italian Game move! White develops the bishop to c4, taking aim at f7 \u2014 one of the weakest squares around Black's king. This is the defining idea of the Italian Game.",
     fox:'happy' },
-  { move:{from:[4,2],to:[3,1]}, moveLabel:{ja:"4. cxb5", en:"4. cxb5"},
-    ja:"白はポーンを受け取るよ。",
-    en:"White accepts the pawn.",
+  { move:{from:[0,5],to:[3,2]}, moveLabel:{ja:'3...Bc5', en:'3...Bc5'},
+    ja:'黒も同じくビショップをc5へ。鏡のような展開で、お互いがf7とf2という相手の弱点をにらみ合う均衡した局面が生まれるよ。',
+    en:'Black mirrors with 3...Bc5, creating a symmetrical standoff where both sides eye the f7 and f2 weaknesses.',
     fox:'quiz' },
-  { move:{from:[1,0],to:[2,0]}, moveLabel:{ja:"4...a6", en:"4...a6"},
-    ja:"黒はa6でさらにファイルを開けようとするよ。",
-    en:"Black plays 4...a6, continuing to open the files.",
+  { move:{from:[6,2],to:[5,2]}, moveLabel:{ja:'4. c3', en:'4. c3'},
+    ja:'白はc3で、次のd4突きを支える準備をするよ。',
+    en:'White plays 4.c3, preparing to support a future d4 push.',
+    fox:'normal' },
+  { move:{from:[0,6],to:[2,5]}, moveLabel:{ja:'4...Nf6', en:'4...Nf6'},
+    ja:'黒はナイトをf6へ展開。e4ポーンに反撃しながら、キングサイドの準備も進めるよ。',
+    en:'Black develops the knight to f6, counter-attacking e4 while preparing to castle.',
+    fox:'normal' },
+  { move:{from:[6,3],to:[5,3]}, moveLabel:{ja:'5. d3', en:'5. d3'},
+    ja:'白はd3で控えめに中央を支えるよ。激しい変化（エヴァンズ・ギャンビットなど）を避けて、じっくり駒を展開していく現代的なプランなんだ。',
+    en:'White plays the modest 5.d3, supporting the center while avoiding sharp lines like the Evans Gambit \u2014 a more patient, modern approach.',
     fox:'wink' },
-  { move:{from:[3,1],to:[2,0]}, moveLabel:{ja:"5. bxa6", en:"5. bxa6"},
-    ja:"白はbxa6とポーンを取るよ。",
-    en:"White captures with 5.bxa6.",
+  { move:{from:[1,3],to:[2,3]}, moveLabel:{ja:'5...d6', en:'5...d6'},
+    ja:'黒もd6で中央を支えるよ。',
+    en:'Black supports the center in turn with 5...d6.',
     fox:'normal' },
-  { move:{from:[0,2],to:[2,0]}, moveLabel:{ja:"5...Bxa6", en:"5...Bxa6"},
-    ja:"黒はビショップで取り返すよ。これでビショップが活発になり、aファイルとbファイルが開通したんだ。",
-    en:"Black recaptures with the bishop, activating it while opening the a and b files.",
+  { move:{from:[7,4],to:[7,6],castle:{from:[7,7],to:[7,5]}}, moveLabel:{ja:'6. O-O', en:'6. O-O'},
+    ja:'白はキャスリングでキングを安全な場所へ。序盤の最優先事項、「キングの安全」が片付いたよ。',
+    en:'White castles kingside, tucking the king away safely \u2014 opening priority number one, done.',
     fox:'happy' },
-  { move:{from:[7,1],to:[5,2]}, moveLabel:{ja:"6. Nc3", en:"6. Nc3"},
-    ja:"白はナイトをc3へ展開するよ。",
-    en:"White develops the knight to c3.",
+  { move:{from:[0,4],to:[0,6],castle:{from:[0,7],to:[0,5]}}, moveLabel:{ja:'6...O-O', en:'6...O-O'},
+    ja:'黒も同じくキャスリングして、両者ともキングの安全を確保したよ。',
+    en:'Black castles too, and both kings are now safely tucked away.',
     fox:'normal' },
-  { move:{from:[1,3],to:[2,3]}, moveLabel:{ja:"6...d6", en:"6...d6"},
-    ja:"黒はd6で柔軟に陣形を整えるよ。",
-    en:"Black plays 6...d6, completing the flexible structure.",
-    fox:'normal' },
-  { move:{from:[6,6],to:[5,6]}, moveLabel:{ja:"7. g3", en:"7. g3"},
-    ja:"白はg3でフィアンケットを準備するよ。これで本譜は一段落、続きはぜひ自分で指してみてね！",
-    en:"White prepares a fianchetto with 7.g3. That's the main line — try continuing the game yourself from here!",
+  { move:{from:[7,5],to:[7,4]}, moveLabel:{ja:'7. Re1', en:'7. Re1'},
+    ja:'白はルークをe1へ。e4ポーンを後ろから支えて、これで本譜は一段落。続きはぜひ自分で指してみてね！',
+    en:"White plays 7.Re1, supporting the e4 pawn from behind. That's the main line \u2014 try continuing the game yourself from here!",
     fox:'happy' }
 ];
 
