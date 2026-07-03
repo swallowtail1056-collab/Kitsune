@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>定跡の木 (Opening Tree) - KitsuneChess プロトタイプ</title>
+<link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f5edd6;
+  --brown: #7c4a1e;
+  --brown-dark: #4a2a0e;
+  --brown-light: #a3692d;
+  --text: #111;
+  --text-sub: #222;
+  --border-color: rgba(184, 134, 11, 0.3);
+  --gold: #c9952c;
+  --amber: #b9651f;
+  --rust: #8a2e1f;
+  --cream-leaf: #f3e6c4;
+  --dark-leaf: #3a2c22;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Crimson Pro', serif;
+  font-weight: 600;
+  min-height: 100vh;
+  padding: 24px 16px 60px;
+}
+.wrap { max-width: 720px; margin: 0 auto; }
+h1 {
+  text-align: center;
+  font-size: 1.5rem;
+  color: var(--brown-dark);
+  margin-bottom: 4px;
+}
+.subtitle {
+  text-align: center;
+  font-size: 0.9rem;
+  color: var(--brown-light);
+  margin-bottom: 6px;
+}
+.progress-line {
+  text-align: center;
+  font-size: 0.85rem;
+  color: var(--brown);
+  margin-bottom: 18px;
+  font-weight: 700;
+}
+.tree-frame {
+  background: linear-gradient(to bottom, #fffaf0 0%, var(--bg) 100%);
+  border: 2px solid var(--border-color);
+  border-radius: 12px;
+  padding: 12px;
+  box-shadow: 0 4px 16px rgba(74,42,14,0.08);
+  position: relative;
+}
+svg { display:block; width:100%; height:auto; overflow: visible; }
+
+.canopy-outline { fill: rgba(124,74,30,0.06); stroke: rgba(124,74,30,0.18); stroke-width:2; stroke-dasharray: 4 5; }
+.branch { fill:none; stroke:var(--brown-dark); stroke-linecap:round; }
+.root { fill:none; stroke:var(--brown-dark); stroke-linecap:round; }
+.ground { fill: rgba(124,74,30,0.12); }
+
+.leaf-link { cursor:pointer; }
+.leaf-link:focus-visible .leaf-shape { outline: 2px solid var(--gold); outline-offset: 2px; }
+.leaf-shape { transition: transform .15s ease; transform-origin: center; }
+.leaf-link:hover .leaf-shape, .leaf-link:focus-visible .leaf-shape { transform: scale(1.25); }
+
+.leaf-bud .bud-shape { fill: rgba(124,74,30,0.16); stroke: rgba(124,74,30,0.32); stroke-width:1; }
+.leaf-bud { cursor: default; }
+.leaf-bud:hover .bud-shape { fill: rgba(124,74,30,0.26); }
+
+.leaf-label {
+  font-family:'Crimson Pro',serif;
+  font-size: 9px;
+  font-weight: 800;
+  fill: var(--brown-dark);
+  text-anchor: middle;
+  pointer-events:none;
+  opacity:0;
+  transition: opacity .15s ease;
+}
+.leaf-link:hover .leaf-label, .leaf-link:focus-visible .leaf-label,
+.leaf-bud:hover .leaf-label { opacity:1; }
+
+.legend {
+  display:flex;
+  flex-wrap:wrap;
+  gap: 14px;
+  justify-content:center;
+  margin-top: 16px;
+  font-size: 0.82rem;
+  color: var(--text-sub);
+}
+.legend-group { display:flex; align-items:center; gap:6px; }
+.legend-title { font-weight:800; color:var(--brown-dark); margin-right:2px; }
+.swatch { width:13px; height:13px; border-radius:3px; display:inline-block; }
+.ring-swatch { width:13px; height:13px; border-radius:50%; display:inline-block; border:3px solid; background:transparent; }
+
+footer { text-align:center; font-size:0.78rem; color:var(--brown-light); margin-top:18px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>定跡の木 🦊</h1>
+  <div class="subtitle">The Opening Tree — バニヤンツリー案</div>
+  <div class="progress-line" id="progressLine"></div>
+
+  <div class="tree-frame">
+    <svg id="treeSvg" viewBox="0 0 800 430" xmlns="http://www.w3.org/2000/svg"></svg>
+  </div>
+
+  <div class="legend">
+    <div class="legend-group"><span class="legend-title">塗り(駒の色)</span></div>
+    <div class="legend-group"><span class="swatch" style="background:var(--cream-leaf);border:1px solid #c9b98a;"></span>白のオープニング</div>
+    <div class="legend-group"><span class="swatch" style="background:var(--dark-leaf);"></span>黒のオープニング</div>
+  </div>
+  <div class="legend">
+    <div class="legend-group"><span class="legend-title">枠線(難易度)</span></div>
+    <div class="legend-group"><span class="ring-swatch" style="border-color:var(--gold);"></span>初級</div>
+    <div class="legend-group"><span class="ring-swatch" style="border-color:var(--amber);"></span>中級</div>
+    <div class="legend-group"><span class="ring-swatch" style="border-color:var(--rust);"></span>上級</div>
+  </div>
+  <div class="legend">
+    <div class="legend-group"><span style="width:13px;height:13px;border-radius:50%;display:inline-block;background:rgba(124,74,30,0.16);border:1px solid rgba(124,74,30,0.32);"></span>これから作る定跡（つぼみ）</div>
+  </div>
+
+  <footer>点線は「完成形のカノピー（樹冠）」の目安。クリックできるのは完成済みの5つだけです。</footer>
+</div>
+
+<script>
+// ============================================================
+// サンプルデータ（実際は75〜100種類のOPENINGS配列から自動生成する想定）
+// ============================================================
+const LEAVES = [
+  // 完成済み（実際のページにリンク）
+  { name_ja:'フレンチ', name_en:'French Defense', href:'french.html', side:'black', level:'beginner', done:true, pos:[180,190] },
+  { name_ja:'ルイ・ロペス', name_en:'Ruy Lopez', href:'ruy_lopez.html', side:'white', level:'intermediate', done:true,  pos:[150,140] },
+  { name_ja:'クイーンズ・ギャンビット', name_en:"Queen's Gambit", href:'queens_gambit.html', side:'white', level:'intermediate', done:true, pos:[400,65] },
+  { name_ja:'シシリアン', name_en:'Sicilian Defense', href:'sicilian.html', side:'black', level:'advanced', done:true, pos:[560,130] },
+  { name_ja:'カロ・カン', name_en:'Caro-Kann Defense', href:'caro_kann.html', side:'black', level:'beginner', done:true, pos:[630,210] },
+  // まだ作っていない（つぼみ。クリック不可、今後の候補名）
+  { name_ja:'イタリアンゲーム', done:false, pos:[290,90] },
+  { name_ja:'キングズ・ギャンビット', done:false, pos:[430,70] },
+  { name_ja:'スコッチゲーム', done:false, pos:[610,170] },
+  { name_ja:'ウィーンゲーム', done:false, pos:[150,240] },
+  { name_ja:'?', done:false, pos:[650,235] },
+  { name_ja:'?', done:false, pos:[250,150] },
+  { name_ja:'?', done:false, pos:[350,160] },
+  { name_ja:'?', done:false, pos:[480,180] },
+  { name_ja:'?', done:false, pos:[520,100] },
+  { name_ja:'?', done:false, pos:[220,210] },
+];
+
+const LEVEL_COLOR = { beginner:'#c9952c', intermediate:'#b9651f', advanced:'#8a2e1f' };
+const SIDE_FILL = { white:'#f3e6c4', black:'#3a2c22' };
+
+// ============================================================
+// バニヤンツリー風の幹・気根・枝
+// ============================================================
+const CANOPY_OUTLINE =
+  "M90,235 C55,170 95,95 190,75 C235,28 340,15 420,32 C500,8 605,22 655,68 C745,90 770,160 730,215 C748,270 685,310 600,298 C525,328 420,318 345,300 C250,322 155,302 105,268 C55,260 60,250 90,235 Z";
+
+const ROOTS = [
+  "M400,420 L400,250",
+  "M400,300 C355,335 320,365 280,420",
+  "M400,300 C445,335 480,365 520,420",
+  "M380,335 C335,360 295,385 245,420",
+  "M420,335 C465,360 505,385 555,420"
+];
+
+const BRANCHES = [
+  "M400,250 C340,225 260,205 180,190",
+  "M400,250 C320,215 230,175 150,140",
+  "M400,250 C360,195 320,140 290,90",
+  "M400,250 C385,180 390,115 400,65",
+  "M400,250 C420,185 430,120 430,70",
+  "M400,250 C440,210 500,165 560,130",
+  "M400,250 C460,220 540,195 610,170",
+  "M400,250 C470,235 560,228 630,215",
+  "M400,250 C310,250 225,248 150,240",
+  "M400,250 C500,245 580,248 650,235"
+];
+
+function budCircle(cx, cy){
+  return `<circle class="bud-shape" cx="${cx}" cy="${cy}" r="8"></circle>`;
+}
+
+function render(){
+  const svg = document.getElementById('treeSvg');
+  let html = '';
+
+  // future canopy silhouette (the "imagine it finished" outline)
+  html += `<path class="canopy-outline" d="${CANOPY_OUTLINE}"></path>`;
+
+  // ground shadow
+  html += `<ellipse class="ground" cx="400" cy="418" rx="220" ry="11"></ellipse>`;
+
+  // aerial roots / multi-trunk base (banyan signature)
+  ROOTS.forEach((d,i) => {
+    const w = i === 0 ? 16 : 8;
+    html += `<path class="root" d="${d}" stroke-width="${w}"></path>`;
+  });
+
+  // branches fanning into the wide canopy
+  BRANCHES.forEach((d, i) => {
+    html += `<path class="branch" d="${d}" stroke-width="5"></path>`;
+  });
+
+  // leaves / buds
+  LEAVES.forEach(leaf => {
+    const [x,y] = leaf.pos;
+    if (leaf.done){
+      const fill = SIDE_FILL[leaf.side];
+      const ring = LEVEL_COLOR[leaf.level];
+      const label = leaf.name_ja;
+      html += `<a class="leaf-link" href="${leaf.href}" aria-label="${leaf.name_ja} (${leaf.name_en})">
+        <g transform="translate(${x},${y})">
+          <path class="leaf-shape" style="fill:${fill};stroke:${ring};stroke-width:2.8;"
+            d="M0,-17 C8,-12 12,-4 9,4 C13,1 17,3 16,8 C9,8 5,12 0,17 C-5,12 -9,8 -16,8 C-17,3 -13,1 -9,4 C-12,-4 -8,-12 0,-17 Z"></path>
+        </g>
+        <text class="leaf-label" x="${x}" y="${y+26}">${label}</text>
+      </a>`;
+    } else {
+      html += `<g class="leaf-bud">
+          ${budCircle(x,y)}
+          <text class="leaf-label" x="${x}" y="${y+20}">${leaf.name_ja === '?' ? '近日公開' : leaf.name_ja}</text>
+        </g>`;
+    }
+  });
+
+  svg.innerHTML = html;
+
+  const done = LEAVES.filter(l => l.done).length;
+  document.getElementById('progressLine').textContent =
+    `現在 ${done} / ${LEAVES.length}（実際は75〜100予定）のリーフが完成`;
+}
+
+render();
+</script>
+</body>
+</html>

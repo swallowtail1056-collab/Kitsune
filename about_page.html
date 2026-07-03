@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>サイトへの想い - KitsuneChess</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Crimson+Pro:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root { --bg: #f5edd6; --brown: #7c4a1e; --brown-dark: #4a2a0e; --text: #111; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+ body { background: var(--bg); color: var(--text); font-family: 'Crimson Pro', serif; font-weight: 600; line-height: 1.8; padding: 40px 20px; }
+
+/* 👇 12行目の .container をこちらに書き換えます（枠なし・窮屈さ解消） */
+.container { 
+    max-width: 720px; 
+    margin: 0 auto; 
+    background: transparent !important; /* 💡 ボックスの背景色を透明にしてスッキリ */
+    border: none !important;            /* 💡 枠線を完全に消し去る */
+    border-radius: 0; 
+    padding: 20px 10px;                 /* 💡 左右の padding を狭めてスマホでの窮屈感をゼロに */
+}
+/* 💡 英語版の単語の隙間が広がるのを完全に直すコード */
+.lang-en, [class*="lang-en"], .lang-switch + div, p {
+    text-align: left !important;        /* 👈 無理な両端揃えをやめて左寄せにする */
+    word-break: break-word !important;   /* 👈 長い英単語がはみ出るのを防ぐ */
+}
+/* 👇 英語切り替え時、単語の間のスペースが広がりすぎるのを防ぐお守り */
+.lang-en, .lang-ja {
+    text-align: left !important;        /* 💡 左寄せにして英語の不自然な隙間を解消 */
+    word-break: break-word !important;   /* 💡 長い単語のはみ出しを防止 */
+}
+  
+  /* 言語切り替えボタンの配置 */
+  .lang-switch { text-align: right; margin-bottom: 25px; }
+  .lang-btn { background: #f7ebd3; border: 1px solid #c4b193; color: var(--brown-dark); padding: 6px 14px; border-radius: 4px; cursor: pointer; font-weight: 700; font-size: 0.85rem; transition: all 0.2s; }
+  .lang-btn:hover { background: var(--brown); color: #fff; }
+
+  h1 { font-family: 'Cinzel', serif; color: var(--brown-dark); font-size: 1.8rem; text-align: center; margin-bottom: 24px; border-bottom: 2px solid rgba(184, 134, 11, 0.3); padding-bottom: 12px; }
+  h2 { font-family: 'Cinzel', serif; color: var(--brown); font-size: 1.3rem; margin: 35px 0 15px; border-left: 4px solid var(--brown); padding-left: 10px; }
+  p { font-size: 1.05rem; margin-bottom: 20px; text-align: justify; text-indent: 1em; }
+  
+  .vision-box { background: #fff8e8; border: 2px solid var(--brown); border-radius: 16px; padding: 25px; margin-top: 35px; box-shadow: 2px 3px 8px rgba(0,0,0,0.05); }
+  .vision-title { font-family: 'Cinzel', serif; font-size: 1.1rem; color: var(--brown-dark); font-weight: 700; margin-bottom: 15px; text-align: center; letter-spacing: 1px; }
+  
+  .footer { text-align: center; margin-top: 45px; font-size: 0.9rem; }
+  .footer a { color: var(--brown); text-decoration: none; font-weight: 700; border: 1px solid var(--brown); padding: 8px 18px; border-radius: 6px; transition: all 0.2s; }
+  .footer a:hover { background: var(--brown); color: #fff; }
+
+  /* 表示・非表示のスマートな制御 */
+  .lang-en { display: none; }
+  .en-mode .lang-ja { display: none; }
+  .en-mode .lang-en { display: block; }
+  .en-mode button.lang-en { display: inline-block; }
+/* 1. 新設4ページの枠なし化と余白最適化 */
+.article-container, .chess-article {
+    border: none !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    padding: 0 10px !important;
+    margin-bottom: 40px !important;
+}
+.chess-article h3, .article-title {
+    border-bottom: 1px solid #e0e0e0;
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+    color: #2c3e50;
+}
+.chess-article p, .article-text {
+    text-align: left !important;
+    word-break: break-word;
+    line-height: 1.7;
+    color: #333333; /* 文字を読みやすい濃さに */
+}
+
+/* 2. スマホ表示用の調整 */
+@media screen and (max-width: 768px) {
+    .chess-article {
+        border: none !important;
+        padding: 0 5px !important;
+        margin-bottom: 35px !important;
+    }
+    .chess-article p {
+        text-align: left !important;
+    }
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <!-- メニュー（言語ボタン）も連動して切り替え -->
+  <div class="lang-switch">
+    <button class="lang-btn lang-ja" onclick="toggleLanguage()">English (英語へ)</button>
+    <button class="lang-btn lang-en" onclick="toggleLanguage()">日本語 (To Japanese)</button>
+  </div>
+
+  <!-- ================= 日本語パート ================= -->
+ <div class="lang-ja">
+    <h1>🏠 サイトへの想い</h1>
+    <p>当サイト「KitsuneChess」へお越しいただき、心より感謝申し上げます。</p>
+    <p>KitsuneChessは、チェスという世界中で何世紀にもわたり愛され続けてきた素晴らしいマインドスポーツを、もっと身近に、そして深く楽しんでいただくための洗練されたモダンなデジタル空間として誕生したアプリケーションです。</p>
+    
+    <h2>チェスをもっと、あきらめないスポーツに</h2>
+    <p>チェスは、戦略、論理、数々の創造性が複雑に絡み合う究極の知的ゲームです。しかしその一方で、新しくチェスを始めようとする初心者や、さらなるステップアップを目指す初級者プレイヤーにとって、一つの大きな壁が存在します。</p>
+    <p>それこそが、序盤の定形戦術である「オープニング（定跡）」の膨大な暗記です。市販のチェス参考書を開けば、無数の変化図と難解な棋譜の羅列が続き、実際に盤面をどう動かせばいいのか直感的に理解できず、途中で挫折してしまう方が少なくありません。</p>
+    <p>教科書をただ眺めるだけの機械的な暗記は、せっかくのチェスの持つダイナミズムやワクワク感を半減させてしまいます。KitsuneChessは、そのような「座学中心の退屈な学習」のあり方を、テクノロジーの力で根本から変えることを目指しています。</p>
+    <p>本アプリは、ユーザーが実際にスマートフォンやマウスを用いて直感的に盤面を触り、インタラクティブに駒を動かしながら、ゲーム感覚で自然に定跡が頭へと定着するよう設計されています。</p>
+    <p>もし間違った手を指してしまっても、アプリが即座に反応して正しいルートへと優しく導いてくれるため、ストレスを感じることなく反復練習を行うことが可能です。KitsuneChessは、このツールが初心者にとっては進むべき暗闇を照らす灯台となり、中級者にとっては自身の戦術を極限まで研ぎ澄ますための現代のデジタル道場であることを強く願っています。</p>
+
+    <h2>正確性へのこだわり</h2>
+    <p>インタラクティブな学習体験を追求する一方で、KitsuneChessが何よりも大切にしているのは、その土台となる手順そのものの正確性です。せっかく身につけた知識が誤っていたなら、それは学びではなく混乱の種になってしまいます。</p>
+    <p>そのため、KitsuneChessに収録されている全75ページの定跡レッスンは、チェスのルールを厳密に検証するプログラム（python-chess）による手順チェックに加え、世界最高峰のチェスエンジンであるStockfishを用いた解析も行い、駒をただで失うような明らかな悪手やルール上あり得ない手が含まれていないかを確認しています。</p>
+    <p>もちろん、これは「明らかな誤りがないか」を確認するものであり、紹介している手順がそのオープニングにおける唯一絶対の正解であることまで保証するものではありません。それでも、安心して練習に打ち込んでいただけるだけの品質基準を保ち続けることを、KitsuneChessはお約束します。</p>
+
+    <h2>デジタル時代におけるマインドスポーツの価値</h2>
+    <p>現代社会は、スマートフォンやSNSの普及により、情報が極めてハイスピードで消費される時代となりました。だからこそ、一つの盤面に深く集中し、じっくりと論理の糸を紡ぎ出すチェスのような時間の価値が、これまで以上に高まっていると考えられます。</p>
+    <p>勝敗の責任がすべて自分自身の決断に委ねられるチェスは、自己の思考を客観的に見つめ直す最高の機会を与えてくれます。KitsuneChessは、単に勝つためのテクニックを提供するだけでなく、プレイヤーがチェスを通じて自らの思考力を広げ、知的探求そのものを楽しむためのプラットフォームであり続けます。</p>
+
+    <div class="vision-box">
+      <div class="vision-title">VISION</div> <!-- 👈 OURを消してシンプルに -->
+      <p>チェスを「一部の限られた天才たちだけの難しいゲーム」にしないこと。それが、KitsuneChessが最も大切に掲げている最重要のビジョンです。</p>
+      <p>ボードの上で何度も試行錯誤を繰り返し、自分自身の最適な1手を発見するプロセスそのものが、プレイヤーの知性を最高に輝かせます。年齢、性別、国境、そしてチェスの実力を問わず、あらゆる人々がチェスの深遠な世界へスムーズに飛び込めるよう、最高のデザインと洗練された操作性が追求されています。</p>
+      <p>KitsuneChessが、これからのチェスライフを豊かに、世界を美しく彩る最高の生涯のパートナーになれることを心より願っています。さあ、知性の冒険へ出発しましょう。</p>
+    </div>
+    <div class="footer"><a href="javascript:window.close();">❌ ページを閉じる</a></div>
+  </div>
+
+  <!-- ================= 英語パート ================= -->
+  <div class="lang-en">
+    <h1>🏠 About KitsuneChess</h1> <!-- 👈 About Us から変更 -->
+    <p>Thank you very much for visiting "KitsuneChess".</p>
+    <p>KitsuneChess was established as a sophisticated, modern digital space designed to make chess—a magnificent mind sport loved globally for centuries—more accessible, engaging, and deeply enjoyable for everyone around the world.</p>
+    
+    <h2>Making Chess a Sport of Endless Inspiration</h2>
+    <p>Chess is the ultimate intellectual game where strategy, logic, and creativity are intricately interwoven. However, for beginners taking their very first steps and intermediate players aiming to step up their game, a massive obstacle often stands in the way.</p>
+    <p>That obstacle is the daunting task of memorizing countless "openings" (established opening strategies). When opening traditional chess textbooks, one is faced with endless variation diagrams and complex chess notation. Without an intuitive way to understand how to move the pieces in real-time, many passionate players feel overwhelmed and give up early in their journey.</p>
+    <p>Rote memorization from a book strips away the true dynamism and excitement that chess inherently possesses. KitsuneChess aims to completely transform this tedious style of textbook learning through the power of interactive technology.</p>
+    <p>This application is meticulously engineered to let users touch the digital board intuitively via their screens or mice. By interacting directly with the pieces, opening theory can be absorbed naturally, as if playing an engaging game.</p>
+    <p>Even if a mistake is made, the application immediately guides the user back to the correct path, allowing for stress-free, efficient repetitive practice. This platform serves as a guiding lighthouse for beginners navigating the dark, and a modern digital dojo for intermediate players to sharpen their competitive edge to the absolute limit.</p>
+
+    <h2>Our Commitment to Accuracy</h2>
+    <p>While we pursue an interactive learning experience above all else, what matters most to KitsuneChess is the accuracy of the moves themselves. Knowledge built on a flawed foundation isn't learning — it's a seed of confusion.</p>
+    <p>For this reason, every one of the 75 opening lessons on KitsuneChess has been checked against the strict rules of chess using a rigorous validation library (python-chess), and further analyzed with Stockfish, one of the world's strongest chess engines, to catch any clear blunders — such as a move that simply hangs a piece — or any illegal moves.</p>
+    <p>Of course, this confirms the absence of obvious errors; it does not guarantee that every line shown is the single, absolute "correct" way to play that opening. Even so, we promise to maintain a quality standard you can trust as you practice.</p>
+
+    <h2>The Value of Mind Sports in the Digital Era</h2>
+    <p>In our modern society, driven by smartphones and social media, information is consumed at an incredibly rapid pace. In this fast-paced world, the time spent focusing deeply on a single chessboard, weaving complex threads of logic, is more valuable than ever before.</p>
+    <p>Chess, a game where the responsibility for victory or defeat rests entirely upon one's own choices, provides the perfect opportunity to objectively examine personal decision-making processes. KitsuneChess is not just about providing winning techniques; it aims to be a comprehensive platform where players can expand their cognitive skills and enjoy the pure thrill of intellectual exploration.</p>
+
+    <div class="vision-box">
+      <div class="vision-title">VISION</div> <!-- 👈 OURを消してシンプルに -->
+      <p>To ensure that chess is never viewed as an exclusive game reserved only for a handful of geniuses—this is the core, unshakeable vision behind KitsuneChess.</p>
+      <p>The endless process of trial and error on the board, and the eventual discovery of the very best move, is what truly makes a player's intellect shine. Regardless of age, gender, nationality, or skill level, KitsuneChess continuously pursues design excellence and refined usability so that everyone can leap smoothly into the profound depths of chess.</p>
+      <p>May KitsuneChess become the perfect lifelong partner to enrich, inspire, and beautifully color your chess journey. Let us embark on this great intellectual adventure.</p>
+    </div>
+    <div class="footer"><a href="javascript:window.close();">❌ Close Page</a></div>
+  </div>
+</div>
+
+
+<script>
+  function toggleLanguage() {
+    document.body.classList.toggle('en-mode');
+  }
+</script>
+</body>
+</html>
