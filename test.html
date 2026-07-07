@@ -66,13 +66,24 @@ nav h1{font-family:'Crimson Pro',serif;font-size:clamp(0.9rem,3vw,1.4rem);font-w
 .box-card{width:100%;background:rgba(90,58,24,0.07);border:1px solid rgba(184,134,11,0.25);border-radius:8px;padding:10px 13px;}
 .box-card h3{font-family:'Cinzel',serif;font-size:0.7rem;font-weight:700;color:var(--brown);letter-spacing:2px;text-transform:uppercase;margin-bottom:6px;}
 
-/* Opening tabs */
-.opening-tabs{display:flex;gap:5px;flex-wrap:wrap;}.filter-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:6px;}
-.filter-btn{padding:4px 10px;border-radius:20px;border:1px solid rgba(90,58,24,0.25);background:rgba(90,58,24,0.06);font-family:'Crimson Pro',serif;font-size:0.8rem;font-weight:700;color:var(--text-sub);cursor:pointer;transition:all 0.2s;}
-.filter-btn:hover{border-color:var(--brown);color:var(--brown);}
-.filter-btn.active{background:var(--brown);color:#f5edd6;border-color:var(--brown);}
-.filter-section{margin-bottom:4px;}
-.filter-label{font-size:0.68rem;font-weight:700;color:var(--text-muted);letter-spacing:1px;margin-bottom:3px;}
+/* Opening filters */
+.filter-area { display:flex; gap:12px; flex-wrap:wrap; margin-bottom:16px; align-items:center; }
+.filter-select {
+  padding: 6px 12px;
+  border: 1px solid rgba(90,58,24,0.25);
+  border-radius: 8px;
+  background: rgba(90,58,24,0.06);
+  font-family: 'Crimson Pro', serif;
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--brown-dark);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.filter-select:focus {
+  outline: none;
+  border-color: var(--brown);
+}
 .tab-btn{
   background:rgba(90,58,24,0.06);border:1px solid rgba(90,58,24,0.25);
   color:var(--text-sub);padding:5px 10px;border-radius:4px;
