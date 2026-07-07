@@ -1804,7 +1804,12 @@ function flipBoard(){S.flipped=!S.flipped;renderBoard();}
 
 // ── UI HELPERS ──
 let activeFilters = {level:'all', style:'all', color:'all'};
-
+function applyFilters() {
+  activeFilters.level = document.getElementById('filterLevel').value;
+  activeFilters.style = document.getElementById('filterStyle').value;
+  activeFilters.color = document.getElementById('filterColor').value;
+  buildOpeningTabs();
+}
 function onFilterClick(btn) {
   const filter = btn.dataset.filter;
   const value  = btn.dataset.value;
