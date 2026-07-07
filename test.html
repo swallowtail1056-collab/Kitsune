@@ -393,20 +393,20 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <div class="box-card">
     <h3 id="filterTitle">▸ <span class="lang-text" data-ja="オープニングを選択" data-en="SELECT OPENING">オープニングを選択</span></h3>
     <div class="filter-area">
-      <select class="filter-select" id="filterLevel" onchange="filterOpenings(this)">
+      <select class="filter-select" id="filterLevel" onchange="onchange="applyFilters()">
         <option value="all" data-ja="レベル：全て" data-en="Level: All">レベル：全て</option>
         <option value="beginner" data-ja="初級" data-en="Beginner">初級</option>
         <option value="intermediate" data-ja="中級" data-en="Intermediate">中級</option>
         <option value="advanced" data-ja="上級" data-en="Advanced">上級</option>
       </select>
-      <select class="filter-select" id="filterStyle" onchange="filterOpenings(this)">
+      <select class="filter-select" id="filterStyle" onchange="onchange="applyFilters()">
         <option value="all" data-ja="スタイル：全て" data-en="Style: All">スタイル：全て</option>
         <option value="attack" data-ja="⚔ 攻撃" data-en="⚔ Attack">⚔ 攻撃</option>
         <option value="solid" data-ja="○ 安定" data-en="○ Solid">○ 安定</option>
         <option value="balanced" data-ja="⚖ バランス" data-en="⚖ Balanced">⚖ バランス</option>
         <option value="complex" data-ja="🔥 複雑" data-en="🔥 Complex">🔥 複雑</option>
       </select>
-      <select class="filter-select" id="filterColor" onchange="filterOpenings(this)">
+      <select class="filter-select" id="filterColor" onchange="onchange="applyFilters()">
         <option value="all" data-ja="手番：全て" data-en="Color: All">手番：全て</option>
         <option value="white" data-ja="白番" data-en="White">白番</option>
         <option value="black" data-ja="黒番" data-en="Black">黒番</option>
