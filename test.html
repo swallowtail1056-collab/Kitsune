@@ -390,36 +390,30 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   </div>
 
   <div class="app">
-    <div class="box-card">
-    <h3 id="filterTitle">▸ オープニングを選択</h3>
-    <div class="filter-section">
-      <div class="filter-label" id="filterLevelLabel">Level</div>
-      <div class="filter-row" id="filterLevel">
-        <button class="filter-btn active" data-filter="level" data-value="all" data-ja="全て" data-en="All">All</button>
-        <button class="filter-btn" data-filter="level" data-value="beginner" data-ja="初級" data-en="Beginner">Beginner</button>
-        <button class="filter-btn" data-filter="level" data-value="intermediate" data-ja="中級" data-en="Intermediate">Intermediate</button>
-        <button class="filter-btn" data-filter="level" data-value="advanced" data-ja="上級" data-en="Advanced">Advanced</button>
-      </div>
+  <div class="box-card">
+    <h3 id="filterTitle">▸ <span class="lang-text" data-ja="オープニングを選択" data-en="SELECT OPENING">オープニングを選択</span></h3>
+    <div class="filter-area">
+      <select class="filter-select" id="filterLevel" onchange="applyFilters()">
+        <option value="all" data-ja="レベル：全て" data-en="Level: All">レベル：全て</option>
+        <option value="beginner" data-ja="初級" data-en="Beginner">初級</option>
+        <option value="intermediate" data-ja="中級" data-en="Intermediate">中級</option>
+        <option value="advanced" data-ja="上級" data-en="Advanced">上級</option>
+      </select>
+      <select class="filter-select" id="filterStyle" onchange="applyFilters()">
+        <option value="all" data-ja="スタイル：全て" data-en="Style: All">スタイル：全て</option>
+        <option value="attack" data-ja="⚔ 攻撃" data-en="⚔ Attack">⚔ 攻撃</option>
+        <option value="solid" data-ja="○ 安定" data-en="○ Solid">○ 安定</option>
+        <option value="balanced" data-ja="⚖ バランス" data-en="⚖ Balanced">⚖ バランス</option>
+        <option value="complex" data-ja="🔥 複雑" data-en="🔥 Complex">🔥 複雑</option>
+      </select>
+      <select class="filter-select" id="filterColor" onchange="applyFilters()">
+        <option value="all" data-ja="手番：全て" data-en="Color: All">手番：全て</option>
+        <option value="white" data-ja="白番" data-en="White">白番</option>
+        <option value="black" data-ja="黒番" data-en="Black">黒番</option>
+        <option value="both" data-ja="両方" data-en="Both">両方</option>
+      </select>
     </div>
-    <div class="filter-section">
-      <div class="filter-label" id="filterStyleLabel">Style</div>
-      <div class="filter-row" id="filterStyle">
-        <button class="filter-btn active" data-filter="style" data-value="all" data-ja="全て" data-en="All">All</button>
-        <button class="filter-btn" data-filter="style" data-value="attack" data-ja="⚔ 攻撃" data-en="⚔ Attack">⚔ Attack</button>
-        <button class="filter-btn" data-filter="style" data-value="solid" data-ja="🛡 安定" data-en="🛡 Solid">🛡 Solid</button>
-        <button class="filter-btn" data-filter="style" data-value="balanced" data-ja="⚖ バランス" data-en="⚖ Balanced">⚖ Balanced</button>
-        <button class="filter-btn" data-filter="style" data-value="complex" data-ja="🔥 複雑" data-en="🔥 Complex">🔥 Complex</button>
-      </div>
-    </div>
-    <div class="filter-section">
-      <div class="filter-label" id="filterColorLabel">Color</div>
-      <div class="filter-row" id="filterColor">
-        <button class="filter-btn active" data-filter="color" data-value="all" data-ja="全て" data-en="All">All</button>
-        <button class="filter-btn" data-filter="color" data-value="white" data-ja="白番" data-en="White">White</button>
-        <button class="filter-btn" data-filter="color" data-value="black" data-ja="黒番" data-en="Black">Black</button>
-        <button class="filter-btn" data-filter="color" data-value="both" data-ja="両方" data-en="Both">Both</button>
-      </div>
-    </div>
+  </div>
     </div>
     <div class="opening-tabs" id="openingTabs"></div>
   </div>
