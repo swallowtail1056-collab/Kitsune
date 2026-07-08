@@ -1444,9 +1444,9 @@ function toggleLang(btn) {
 function applyLang() {
   const L=I18N[LANG];
   const navBtns=document.querySelectorAll('.nav-btn:not(#btnLang)');
-  if(navBtns[0]) navBtns[0].textContent=L.navPlay;
-  if(navBtns[1]) navBtns[1].textContent=L.navQuiz;
-  if(navBtns[2]) navBtns[2].textContent=L.navDisclaimer;
+if(navBtns[0]) navBtns[0].textContent=L.navPlay;
+if(navBtns[1]) navBtns[1].textContent=L.navQuiz;
+if(navBtns[2]) navBtns[2].textContent=L.navPuzzle;
   const cards=document.querySelectorAll('#page-game .box-card h3');
   if(cards[0]) cards[0].textContent='▸ '+L.selectOpening;
   if(cards[1]) cards[1].textContent='▸ '+L.description;
