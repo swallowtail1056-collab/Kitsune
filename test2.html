@@ -1615,8 +1615,18 @@ document.querySelectorAll('#filterLevel option, #filterStyle option, #filterColo
   });
   }); 
   // パズルページの見出し(box-card h3)
-  const puzzleCards = document.querySelectorAll('#page-puzzle .box-card h3 .lang-text, #page-puzzle .lang-text');
-  puzzleCards.forEach(el => {
+ document.querySelectorAll('#page-puzzle .lang-text').forEach(el => {
+    const jaText = el.getAttribute('data-ja');
+    const enText = el.getAttribute('data-en');
+    if (jaText && enText) el.textContent = LANG === 'ja' ? jaText : enText;
+  });
+
+  // ↓ここに追加:パズルの状態メッセージも切り替え
+  if (typeof puzzleState !== 'undefined' && !puzzleState.awaitingNext) {
+    setPuzzleStatus(LANG === 'ja'
+      ? (puzzleChess.turn() === 'w' ? '白番です。正解の手を指してください。' : '黒番です。正解の手を指してください。')
+      : (puzzleChess.turn() === 'w' ? "White to move. Find the winning move." : "Black to move. Find the winning move."));
+  }
     const jaText = el.getAttribute('data-ja');
     const enText = el.getAttribute('data-en');
     if (jaText && enText) el.textContent = LANG === 'ja' ? jaText : enText;
