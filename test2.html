@@ -98,6 +98,35 @@ nav h1{font-family:'Crimson Pro',serif;font-size:clamp(0.9rem,3vw,1.4rem);font-w
 }
 .filter-btn:hover{border-color:var(--brown);color:var(--brown);}
 .filter-btn.active{background:var(--brown);color:#f5edd6;border-color:var(--brown);}
+  /* ── PUZZLE PAGE ── */
+#puzzleBoard{
+  display:grid;grid-template-columns:repeat(8,1fr);
+  border:3px solid var(--brown);
+  box-shadow:0 4px 20px rgba(0,0,0,0.3);
+  width:min(calc(100vw - 32px),400px);
+  height:min(calc(100vw - 32px),400px);
+  flex-shrink:0;position:relative;
+}
+@media(min-width:680px){
+  #puzzleBoard{width:min(48vw,400px);height:min(48vw,400px);}
+}
+.p-cell{aspect-ratio:1;display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative;overflow:hidden;-webkit-tap-highlight-color:transparent;}
+.p-cell.light{background:var(--board-light);}
+.p-cell.dark{background:var(--board-dark);}
+.p-cell.last-from{background:rgba(232,200,74,0.45)!important;}
+.p-cell.last-to{background:rgba(232,200,74,0.65)!important;}
+.p-cell.selected{box-shadow:inset 0 0 0 3px var(--yellow);}
+.p-cell.valid-move::after{content:'';width:30%;height:30%;background:rgba(255,210,0,0.85);border-radius:50%;position:absolute;pointer-events:none;}
+.p-cell.valid-capture::after{content:'';position:absolute;inset:0;border:4px solid rgba(255,210,0,0.9);pointer-events:none;}
+.p-cell.wrong-flash{animation:wrongFlash 0.4s ease;}
+.p-cell.superhard-flash{animation:superhardFlash 0.6s ease;}
+@keyframes superhardFlash{
+  0%,100%{filter:none;}
+  50%{filter:brightness(1.3) saturate(2) hue-rotate(30deg);box-shadow:0 0 20px 4px rgba(184,134,11,0.8);}
+}
+.cell-label-puzzle{position:absolute;font-family:'Crimson Pro',serif;font-weight:800;font-size:clamp(0.85rem,3vw,1.2rem);line-height:1;pointer-events:none;z-index:2;}
+.p-cell.light .cell-label-puzzle{color:rgba(80,40,0,0.85);}
+.p-cell.dark  .cell-label-puzzle{color:rgba(255,240,200,0.95);}
 /* Info */
 .info-text{font-size:1rem;font-weight:600;color:var(--text);line-height:1.5;text-align:left}
 
@@ -2485,7 +2514,251 @@ initFox();
 initWelcome();
 renderHistory();
 // applyLang called after startApp
+// ============================================================
+// PUZZLE STREAK MODE
+// ============================================================
+const PUZZLES = [{"fen": "2kr3r/Q1p3pp/2p2n2/3p4/3PqB2/P1Pb2P1/5P1P/5RK1 w - - 3 20", "moves": ["Qxc7#"], "order": 1, "superhard": false}, {"fen": "r2qr1k1/pp3ppp/2p1b1n1/3p3n/5B1P/2NP2Q1/PPP2PP1/R2B1RK1 w - - 1 15", "moves": ["Bxh5"], "order": 2, "superhard": false}, {"fen": "r1n3rk/1p6/2p1p1Qp/4q3/pBn5/P1N5/1P4PP/5R1K w - - 0 33", "moves": ["Qxh6#"], "order": 3, "superhard": false}, {"fen": "rn1qkbnr/p2b1ppp/1pp5/3QN3/8/8/PP1PPPBP/RNB1K2R w KQkq - 0 9", "moves": ["Qxf7#"], "order": 4, "superhard": false}, {"fen": "5r1k/ppp3q1/n5Bp/3P4/2P5/1P4Pb/PB5P/5RK1 w - - 0 28", "moves": ["Rxf8#"], "order": 5, "superhard": false}, {"fen": "k2r3r/q5pp/1pN1pn2/1P1p4/2nP1B2/2P5/5PPP/R4RK1 w - - 0 21", "moves": ["Rxa7#"], "order": 6, "superhard": false}, {"fen": "3rk2r/1pq1bpp1/p4n1p/2P1N3/1P1N1P2/PQ2B3/6PP/R4bK1 w k - 0 23", "moves": ["Qxf7#"], "order": 7, "superhard": false}, {"fen": "r1bqk2r/pp1nbppn/2p1p2p/8/2BP3B/2N2Q2/PPP1N1PP/R4RK1 w kq - 2 11", "moves": ["Qxf7#"], "order": 8, "superhard": false}, {"fen": "r1b2r1k/pp4pp/1q6/2Npp3/3n4/6P1/PPP3KP/R2Q1R2 w - - 2 19", "moves": ["Rxf8#"], "order": 9, "superhard": false}, {"fen": "r6k/pp1n3r/1q1N4/1Np5/3P4/7Q/PP5P/6RK w - - 8 32", "moves": ["Nf7#"], "order": 10, "superhard": false}, {"fen": "r2qk2r/3b1pp1/p7/1pbQPpN1/2nP3P/2P5/5P2/RN2K2R w KQkq - 0 18", "moves": ["Qxf7#"], "order": 11, "superhard": false}, {"fen": "r1b1k2r/1p3ppp/1qp2n2/4NP2/2Q1P3/pPb5/P1P3PP/2KR1B1R w kq - 0 16", "moves": ["Qxf7#"], "order": 12, "superhard": false}, {"fen": "4br1k/6rp/1n2qP1N/3p1R1B/pppPp2P/2P1P3/PP6/6RK w - - 0 37", "moves": ["fxg7#"], "order": 13, "superhard": false}, {"fen": "5r2/2rR4/p3p1pk/1p2qpp1/4n3/4Q3/PP2N2P/K4R2 w - - 4 35", "moves": ["Qh3#"], "order": 14, "superhard": false}, {"fen": "r1bQB2r/pp1nn1k1/2p5/7p/4Pq2/2N5/PPP3PP/3R2K1 w - - 0 21", "moves": ["Qxe7+"], "order": 15, "superhard": false}, {"fen": "r1bqk2r/1pp2pb1/p1n4p/3QPn2/8/1BN1Bp2/PP3PPP/R3R1K1 w kq - 0 14", "moves": ["Qxf7#"], "order": 16, "superhard": false}, {"fen": "k1r4r/q7/1pN1p3/2Pp1pp1/1P1PnP1p/4P2R/6PP/R5K1 w - - 0 28", "moves": ["Rxa7#"], "order": 17, "superhard": false}, {"fen": "r2qkbnr/pp3ppp/2p5/8/2p5/4PQ2/PP1P2PP/RNB2RK1 w kq - 0 10", "moves": ["Qxf7#"], "order": 18, "superhard": false}, {"fen": "2r3rk/1bq2p1p/p1n1p2Q/1p1pP2p/1P6/P4N2/2B2PPP/2R3K1 w - - 2 27", "moves": ["Qxh7#"], "order": 19, "superhard": false}, {"fen": "4r1k1/1b3pp1/p4n1p/1Npq4/3p4/3B3P/1PP2PP1/1R3QK1 w - - 0 25", "moves": ["Nc7", "Qc6", "Nxe8"], "order": 27, "superhard": true}];
 
+let puzzleChess = new Chess();
+let puzzleState = {
+  index: 0, moveIndex: 0,
+  selected: null, validTargets: [],
+  lastFrom: null, lastTo: null,
+  streak: 0, best: 0,
+  animating: false, awaitingNext: false,
+};
+
+function loadPuzzleBest() {
+  const saved = localStorage.getItem('kitsune_puzzle_best');
+  puzzleState.best = saved ? parseInt(saved, 10) : 0;
+  const el = document.getElementById('puzzleBestVal');
+  if (el) el.textContent = puzzleState.best;
+}
+
+function savePuzzleBest() {
+  if (puzzleState.streak > puzzleState.best) {
+    puzzleState.best = puzzleState.streak;
+    localStorage.setItem('kitsune_puzzle_best', String(puzzleState.best));
+  }
+  const el = document.getElementById('puzzleBestVal');
+  if (el) el.textContent = puzzleState.best;
+}
+
+function currentPuzzle() { return PUZZLES[puzzleState.index]; }
+
+function startPuzzle(idx) {
+  puzzleState.index = idx % PUZZLES.length;
+  puzzleState.moveIndex = 0;
+  puzzleState.selected = null;
+  puzzleState.validTargets = [];
+  puzzleState.lastFrom = null;
+  puzzleState.lastTo = null;
+  puzzleState.animating = false;
+  puzzleState.awaitingNext = false;
+  const p = currentPuzzle();
+  puzzleChess = new Chess(p.fen);
+  document.getElementById('puzzleNextRow').style.display = 'none';
+  document.getElementById('btnPuzzleAnswer').style.display = '';
+  const banner = document.getElementById('puzzleSuperhardBanner');
+  if (banner) banner.style.display = p.superhard ? 'block' : 'none';
+  renderPuzzleBoard();
+  setPuzzleStatus(LANG === 'ja' ? (puzzleChess.turn() === 'w' ? '白番です。正解の手を指してください。' : '黒番です。正解の手を指してください。')
+                                 : (puzzleChess.turn() === 'w' ? "White to move. Find the winning move." : "Black to move. Find the winning move."));
+}
+
+function getPuzzleCellEl(sq) {
+  return document.querySelector(`#puzzleBoard .p-cell[data-sq="${sq}"]`);
+}
+
+function renderPuzzleBoard() {
+  const board = document.getElementById('puzzleBoard');
+  if (!board) return;
+  board.innerHTML = '';
+  const FILES = ['a','b','c','d','e','f','g','h'];
+  const RANKS = [8,7,6,5,4,3,2,1];
+  for (let row = 0; row < 8; row++) {
+    for (let col = 0; col < 8; col++) {
+      const sq = FILES[col] + RANKS[row];
+      const cell = document.createElement('div');
+      cell.className = 'p-cell ' + ((col + row) % 2 === 0 ? 'light' : 'dark');
+      cell.dataset.sq = sq;
+      if (puzzleState.lastFrom === sq) cell.classList.add('last-from');
+      if (puzzleState.lastTo === sq) cell.classList.add('last-to');
+      if (puzzleState.selected === sq) cell.classList.add('selected');
+      if (puzzleState.validTargets.includes(sq)) cell.classList.add(puzzleChess.get(sq) ? 'valid-capture' : 'valid-move');
+      if (col === 0) { const l = document.createElement('span'); l.className = 'cell-label-puzzle'; l.style.bottom = '2px'; l.style.left = '3px'; l.textContent = RANKS[row]; cell.appendChild(l); }
+      if (row === 7) { const l = document.createElement('span'); l.className = 'cell-label-puzzle'; l.style.bottom = '2px'; l.style.right = '3px'; l.textContent = FILES[col]; cell.appendChild(l); }
+      const p = puzzleChess.get(sq);
+      if (p) cell.appendChild(makePieceEl(p));
+      cell.addEventListener('click', () => onPuzzleCellClick(sq));
+      board.appendChild(cell);
+    }
+  }
+}
+
+function expectedPuzzleSAN() { return currentPuzzle().moves[puzzleState.moveIndex]; }
+
+function setPuzzleStatus(msg, cls) {
+  const el = document.getElementById('puzzleStatusMsg');
+  if (!el) return;
+  el.textContent = msg;
+  el.className = 'status-msg' + (cls ? ' ' + cls : '');
+}
+
+function onPuzzleCellClick(sq) {
+  if (puzzleState.animating || puzzleState.awaitingNext) return;
+  const piece = puzzleChess.get(sq);
+  const turn = puzzleChess.turn();
+  if (puzzleState.selected) {
+    if (puzzleState.validTargets.includes(sq)) {
+      const fromSq = puzzleState.selected;
+      const result = puzzleChess.move({ from: fromSq, to: sq, promotion: 'q' });
+      if (result && result.san === expectedPuzzleSAN()) {
+        puzzleState.animating = true;
+        puzzleState.selected = null; puzzleState.validTargets = [];
+        renderPuzzleBoard();
+        animatePuzzleMove(fromSq, sq, () => {
+          puzzleState.lastFrom = result.from; puzzleState.lastTo = result.to;
+          puzzleState.moveIndex++;
+          puzzleState.animating = false;
+          renderPuzzleBoard();
+          advancePuzzleAfterPlayerMove();
+        });
+      } else {
+        if (result) puzzleChess.undo();
+        doPuzzleWrong(sq);
+      }
+    } else if (piece && piece.color === turn) {
+      selectPuzzlePiece(sq);
+    } else { doPuzzleWrong(sq); }
+  } else {
+    if (!piece || piece.color !== turn) return;
+    selectPuzzlePiece(sq);
+  }
+}
+
+function selectPuzzlePiece(sq) {
+  puzzleState.selected = sq;
+  const legal = puzzleChess.moves({ square: sq, verbose: true });
+  const m = legal.find(x => x.san === expectedPuzzleSAN());
+  puzzleState.validTargets = m ? [m.to] : [];
+  renderPuzzleBoard();
+}
+
+function advancePuzzleAfterPlayerMove() {
+  const p = currentPuzzle();
+  if (puzzleState.moveIndex >= p.moves.length) {
+    onPuzzleSolved();
+    return;
+  }
+  // 相手の強制応手を自動再生
+  const oppSAN = p.moves[puzzleState.moveIndex];
+  setTimeout(() => {
+    const oppMove = puzzleChess.move(oppSAN);
+    if (!oppMove) return;
+    puzzleState.animating = true;
+    animatePuzzleMove(oppMove.from, oppMove.to, () => {
+      puzzleState.lastFrom = oppMove.from; puzzleState.lastTo = oppMove.to;
+      puzzleState.moveIndex++;
+      puzzleState.animating = false;
+      renderPuzzleBoard();
+      if (puzzleState.moveIndex >= p.moves.length) {
+        onPuzzleSolved();
+      } else {
+        setPuzzleStatus(LANG === 'ja' ? '続きの正解の手を指してください。' : 'Find the next move.');
+      }
+    });
+  }, 500);
+}
+
+function onPuzzleSolved() {
+  puzzleState.streak++;
+  savePuzzleBest();
+  document.getElementById('puzzleStreakVal').textContent = puzzleState.streak;
+  const p = currentPuzzle();
+  if (p.superhard) {
+    setPuzzleStatus(LANG === 'ja' ? '⚡ 激ムズ正解！素晴らしい！⚡' : '⚡ Super-hard SOLVED! Amazing! ⚡', 'good');
+    flashSuperhard();
+    setFoxImg('sparkle');
+  } else {
+    setPuzzleStatus(LANG === 'ja' ? '正解！🎉' : 'Correct! 🎉', 'good');
+    setFoxImg(puzzleState.streak % 5 === 0 ? 'excited' : 'happy');
+  }
+  playCorrect();
+  setTimeout(() => { startPuzzle(puzzleState.index + 1); }, 900);
+}
+
+function doPuzzleWrong(sq) {
+  setPuzzleStatus(LANG === 'ja' ? '不正解。もう一度試してください。' : 'Not quite. Try again.', 'bad');
+  setFoxImg('confused');
+  playWrong();
+  puzzleState.selected = null; puzzleState.validTargets = [];
+  const cell = getPuzzleCellEl(sq);
+  if (cell) { cell.classList.add('wrong-flash'); setTimeout(() => cell.classList.remove('wrong-flash'), 400); }
+  renderPuzzleBoard();
+}
+
+function showPuzzleAnswer() {
+  puzzleState.streak = 0; // 答えを見たらストリークはリセット
+  document.getElementById('puzzleStreakVal').textContent = 0;
+  const p = currentPuzzle();
+  const remaining = p.moves.slice(puzzleState.moveIndex).join(' ');
+  setPuzzleStatus((LANG === 'ja' ? '正解: ' : 'Answer: ') + remaining, 'bad');
+  setFoxImg('sad');
+  document.getElementById('btnPuzzleAnswer').style.display = 'none';
+  document.getElementById('puzzleNextRow').style.display = '';
+  puzzleState.awaitingNext = true;
+}
+
+function nextPuzzle() {
+  startPuzzle(puzzleState.index + 1);
+}
+
+function flashSuperhard() {
+  const cell = getPuzzleCellEl(puzzleState.lastTo);
+  if (cell) { cell.classList.add('superhard-flash'); setTimeout(() => cell.classList.remove('superhard-flash'), 600); }
+}
+
+function setFoxImg(kind) {
+  const map = {
+    happy: FOX_HAPPY_SRC, sad: 'https://raw.githubusercontent.com/swallowtail1056-collab/Kitsune/main/jene_sad.png',
+    confused: 'https://raw.githubusercontent.com/swallowtail1056-collab/Kitsune/main/jene_confused.png',
+    excited: 'https://raw.githubusercontent.com/swallowtail1056-collab/Kitsune/main/jene_excited.png',
+    sparkle: 'https://raw.githubusercontent.com/swallowtail1056-collab/Kitsune/main/jene_sparkle.png',
+  };
+  const img = document.getElementById('puzzleFoxImg');
+  if (img && map[kind]) img.src = map[kind];
+}
+
+// animateMove を流用しつつ、パズル盤面(#puzzleBoard, .p-cell)専用に座標を取るバージョン
+function animatePuzzleMove(fromSq, toSq, callback) {
+  const fromCell = getPuzzleCellEl(fromSq);
+  const toCell = getPuzzleCellEl(toSq);
+  if (!fromCell || !toCell) { callback(); return; }
+  const pieceEl = fromCell.querySelector('.piece');
+  if (!pieceEl) { callback(); return; }
+  const fromRect = fromCell.getBoundingClientRect();
+  const toRect = toCell.getBoundingClientRect();
+  const clone = pieceEl.cloneNode(true);
+  clone.style.position = 'fixed';
+  clone.style.zIndex = '9999';
+  clone.style.width = fromRect.width + 'px';
+  clone.style.height = fromRect.height + 'px';
+  clone.style.left = fromRect.left + 'px';
+  clone.style.top = fromRect.top + 'px';
+  clone.style.pointerEvents = 'none';
+  clone.style.margin = '0';
+  document.body.appendChild(clone);
+  pieceEl.style.opacity = '0';
+  requestAnimationFrame(() => {
+    clone.style.transition = 'left 0.3s cubic-bezier(0.25,0.46,0.45,0.94),top 0.3s cubic-bezier(0.25,0.46,0.45,0.94)';
+    requestAnimationFrame(() => {
+      clone.style.left = toRect.left + 'px';
+      clone.style.top = toRect.top + 'px';
+    });
+  });
+  setTimeout(() => { clone.remove(); callback(); }, 340);
+}
 </script>
   <footer style="text-align: center; margin-top: 50px; padding: 20px 0; border-top: 1px solid #d4bda7;">
     <a href="disclaimer.html" style="color: #8b5a2b; text-decoration: none; font-size: 14px; font-weight: bold; margin-right: 20px;">免責事項 / Privacy Policy (JPN)</a>
