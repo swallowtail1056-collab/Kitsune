@@ -1613,6 +1613,13 @@ document.querySelectorAll('#filterLevel option, #filterStyle option, #filterColo
     button.textContent = (LANG === 'ja') ? jaText : enText;
   });
   }); 
+  // パズルページの見出し(box-card h3)
+  const puzzleCards = document.querySelectorAll('#page-puzzle .box-card h3 .lang-text, #page-puzzle .lang-text');
+  puzzleCards.forEach(el => {
+    const jaText = el.getAttribute('data-ja');
+    const enText = el.getAttribute('data-en');
+    if (jaText && enText) el.textContent = LANG === 'ja' ? jaText : enText;
+  });
   buildOpeningTabs();
   buildQuizOpeningTabs();
   renderHistory();
