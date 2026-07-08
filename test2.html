@@ -2569,6 +2569,7 @@ function startPuzzle(idx) {
   document.getElementById('btnPuzzleAnswer').style.display = '';
   const banner = document.getElementById('puzzleSuperhardBanner');
   if (banner) banner.style.display = p.superhard ? 'block' : 'none';
+  setFoxImg('normal');   // ← この行を追加
   renderPuzzleBoard();
   setPuzzleStatus(LANG === 'ja' ? (puzzleChess.turn() === 'w' ? '白番です。正解の手を指してください。' : '黒番です。正解の手を指してください。')
                                  : (puzzleChess.turn() === 'w' ? "White to move. Find the winning move." : "Black to move. Find the winning move."));
