@@ -1508,6 +1508,11 @@ function applyLang() {
   // フィルターボタン
   document.querySelectorAll('.filter-btn[data-ja][data-en]').forEach(btn => {
     btn.textContent = LANG==='ja' ? btn.dataset.ja : btn.dataset.en;
+    });
+    // 練習ページのドロップダウン(レベル・スタイル・手番)
+document.querySelectorAll('#filterLevel option, #filterStyle option, #filterColor option').forEach(opt => {
+  opt.textContent = LANG==='ja' ? opt.dataset.ja : opt.dataset.en;
+
  // 💡 新設された4つのメニューボタン（.lang-text）を一斉に切り替える処理
   document.querySelectorAll('.chess-articles-menu .lang-text').forEach(button => {
     const jaText = button.getAttribute('data-ja');
