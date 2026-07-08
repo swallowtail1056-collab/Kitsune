@@ -2659,8 +2659,7 @@ function onPuzzleCellClick(sq) {
 function selectPuzzlePiece(sq) {
   puzzleState.selected = sq;
   const legal = puzzleChess.moves({ square: sq, verbose: true });
-  const m = legal.find(x => x.san === expectedPuzzleSAN());
-  puzzleState.validTargets = m ? [m.to] : [];
+  puzzleState.validTargets = legal.map(m => m.to);
   renderPuzzleBoard();
 }
 
