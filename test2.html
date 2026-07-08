@@ -1516,6 +1516,7 @@ function showPage(id,btn) {
   if(pg) pg.classList.add('active');
   if(btn) btn.classList.add('active-page');
   if(id==='quiz') buildQuizOpeningTabs();
+  if(id==='puzzle' && !window.puzzleStarted){ window.puzzleStarted=true; loadPuzzleBest(); startPuzzle(0); }
 }
 
 function setLang(lang,btn) {
