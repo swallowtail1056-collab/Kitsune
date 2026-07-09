@@ -2702,7 +2702,9 @@ function onPuzzleSolved() {
 }
 
 function doPuzzleWrong(sq) {
-  setPuzzleStatus(LANG === 'ja' ? '不正解。もう一度試してください。' : 'Not quite. Try again.', 'bad');
+  puzzleState.streak = 0;
+  document.getElementById('puzzleStreakVal').textContent = 0;
+  setPuzzleStatus(LANG === 'ja' ? '不正解。ストリークが途切れました。もう一度試してください。' : 'Wrong. Streak reset. Try again.', 'bad');
   setFoxImg('confused');
   playWrong();
   puzzleState.selected = null; puzzleState.validTargets = [];
