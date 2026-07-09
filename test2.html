@@ -1611,11 +1611,20 @@ document.querySelectorAll('#filterLevel option, #filterStyle option, #filterColo
   document.querySelectorAll('.chess-articles-menu .lang-text').forEach(button => {
     const jaText = button.getAttribute('data-ja');
     const enText = button.getAttribute('data-en');
-    button.textContent = (LANG === 'ja') ? jaText : enText;
+   button.textContent = (LANG === 'ja') ? jaText : enText;
   });
   }); 
   // パズルページの見出し(box-card h3)
-document.querySelectorAll('#page-puzzle .lang-text').forEach(el => {
+  document.querySelectorAll('#page-puzzle .lang-text').forEach(el => {
+    const jaText = el.getAttribute('data-ja');
+    const enText = el.getAttribute('data-en');
+    if (jaText && enText) el.textContent = LANG === 'ja' ? jaText : enText;
+  });
+  if (typeof puzzleState !== 'undefined' && !puzzleState.awaitingNext) {
+    setPuzzleStatus(LANG === 'ja'
+      ? (puzzleChess.turn() === 'w' ? '白番です。正解の手を指してください。' : '黒番です。正解の手を指してください。')
+      : (puzzleChess.turn() === 'w' ? "White to move. Find the winning move." : "Black to move. Find the winning move."));
+  }
   buildOpeningTabs();
   buildQuizOpeningTabs();
   renderHistory();
