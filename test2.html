@@ -2599,7 +2599,7 @@ function renderPuzzleBoard() {
       if (puzzleState.lastFrom === sq) cell.classList.add('last-from');
       if (puzzleState.lastTo === sq) cell.classList.add('last-to');
       if (puzzleState.selected === sq) cell.classList.add('selected');
-      if (puzzleState.validTargets.includes(sq)) cell.classList.add(puzzleChess.get(sq) ? 'valid-capture' : 'valid-move');
+    
       if (col === 0) { const l = document.createElement('span'); l.className = 'cell-label-puzzle'; l.style.bottom = '2px'; l.style.left = '3px'; l.textContent = RANKS[row]; cell.appendChild(l); }
       if (row === 7) { const l = document.createElement('span'); l.className = 'cell-label-puzzle'; l.style.bottom = '2px'; l.style.right = '3px'; l.textContent = FILES[col]; cell.appendChild(l); }
       const p = puzzleChess.get(sq);
