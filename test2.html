@@ -1422,6 +1422,15 @@ const OPENINGS = [
     desc:{ja:'ペトロフ・ディフェンスに対し、白がナイトを犠牲にして黒キングを引きずり出す過激な作戦。正確な指し回しが要求されるが、成功すれば強烈な攻めになる。',
           en:'Against the Petrov Defense, White sacrifices a knight to drag out Black\'s king! Needs precise play, but rewards success with a powerful, thrilling attack! 🦊'},
     moves:['e4','e5','Nf3','Nf6','Nxe5','d6','Nxf7','Kxf7','d4','c5']
+      { id:'cochrane-gambit', name:'コクラン・ギャンビット', level:'advanced', style:'attack', color:'white',
+    desc:{ja:'...',
+          en:'...'},
+    moves:['e4','e5','Nf3','Nf6','Nxe5','d6','Nxf7','Kxf7','d4','c5'] },
+];
+// ← ここでOPENINGS配列が正しく閉じる
+
+// この下に、getOpeningTip用の長文解説オブジェクトが続く(既存のOPENING_TIPSのようなオブジェクト名の定義行がこの少し下にあるはずです)
+'sveshnikov-sicilian': { ja:'💡 スヴェシニコフ...
     'sveshnikov-sicilian': { ja:'💡 スヴェシニコフ・シシリアンは1970年代にソ連の棋士エフゲニー・スヴェシニコフが実戦投入し体系化した、シャープなシシリアン変化だよ！1.e4 c5 2.Nf3 Nc6 3.d4 cxd4 4.Nxd4 Nf6 5.Nc3 e5という手順で、黒はわざとd5マスに弱点を作るんだ。続く6.Ndb5 d6 7.Bg5 a6 8.Na3 b5が本筋で、白のナイトを盤の端に追いやりながら黒はクイーンサイドで空間を稼ぐよ。ここから9.Nd5 Be7 10.Bxf6 Bxf6と進み、白はd5マスのナイトを拠点に長期戦を狙うのに対し、黒はビショップペアと活発な駒運びで対抗するのが典型的な力関係なんだ。当時は「弱点だらけの無謀な手」と酷評されたけど、スヴェシニコフ自身が実戦で結果を出し続けたことで評価が一変したよ。現在ではマグヌス・カールセンをはじめ多くのトップ棋士が黒番の主力兵器として愛用している、実戦的で人気の高い変化なんだ！',
                       en:'💡 The Sveshnikov Sicilian was pioneered and championed by Soviet grandmaster Evgeny Sveshnikov in the 1970s! After 1.e4 c5 2.Nf3 Nc6 3.d4 cxd4 4.Nxd4 Nf6 5.Nc3 e5, Black deliberately creates a hole on d5. The main line continues 6.Ndb5 d6 7.Bg5 a6 8.Na3 b5, pushing White\'s knight to the rim while Black grabs queenside space. Play often continues 9.Nd5 Be7 10.Bxf6 Bxf6, where White anchors a knight on d5 for a long strategic battle while Black relies on the bishop pair and active piece play to compensate. Critics initially dismissed it as reckless, but Sveshnikov proved its soundness through consistent tournament results. Today it\'s a favorite weapon of top players including Magnus Carlsen, prized for its sharp, fighting character!' },
   'taimanov-sicilian': { ja:'💡 タイマノフ・シシリアンはソ連の名棋士マーク・タイマノフにちなんで名付けられた、柔軟性を重視するシシリアン変化だよ！1.e4 c5 2.Nf3 Nc6 3.d4 cxd4 4.Nxd4 e6 5.Nc3 Qc7という手順で、黒はすぐにポーン構造を決めないのが最大の特徴なんだ。ここから6.g3 a6のように白がフィアンケットを選べば黒はb5・Bb7とクイーンサイドを広げ、逆に6.Be2 Nf6 7.O-Oのように白が早くキャスリングすればBb4やd6など臨機応変にプランを切り替えられるよ。相手の出方をぎりぎりまで見極めてから最適な配置を選べるこの柔軟さのおかげで、白は事前に用意した対策を使いにくくなるんだ。ガルリ・カスパロフやレフ・ポルガーといった強豪も好んで指した、知的な駆け引きが楽しめる変化なんだ！',
