@@ -2942,6 +2942,7 @@ function onPuzzleSolved() {
 function doPuzzleWrong(sq) {
   puzzleState.streak = 0;
   document.getElementById('puzzleStreakVal').textContent = 0;
+　 addWrongPuzzle(currentPuzzle().order);
   setPuzzleStatus(LANG === 'ja' ? '不正解。ストリークが途切れました。もう一度試してください。' : 'Wrong. Streak reset. Try again.', 'bad');
   setFoxImg('confused');
   playWrong();
@@ -2955,6 +2956,7 @@ function showPuzzleAnswer() {
   puzzleState.streak = 0; // 答えを見たらストリークはリセット
   document.getElementById('puzzleStreakVal').textContent = 0;
   const p = currentPuzzle();
+  addWrongPuzzle(p.order);
   const remaining = p.moves.slice(puzzleState.moveIndex).join(' ');
   setPuzzleStatus((LANG === 'ja' ? '正解: ' : 'Answer: ') + remaining, 'bad');
   setFoxImg('sad');
