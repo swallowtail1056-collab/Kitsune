@@ -2970,7 +2970,8 @@ function showPuzzleAnswer() {
 }
 
 function nextPuzzle() {
-  startPuzzle(puzzleState.index + 1);
+  if (puzzleState.reviewMode) { advanceReviewMode(); }
+  else { startPuzzle(puzzleState.index + 1); }
 }
 
 function flashSuperhard() {
