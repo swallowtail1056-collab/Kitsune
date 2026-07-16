@@ -2935,8 +2935,12 @@ function onPuzzleSolved() {
     setPuzzleStatus(LANG === 'ja' ? '正解！🎉' : 'Correct! 🎉', 'good');
     setFoxImg(puzzleState.streak % 5 === 0 ? 'excited' : 'happy');
   }
-  playCorrect();
-  setTimeout(() => { startPuzzle(puzzleState.index + 1); }, 900);
+ playCorrect();
+  removeWrongPuzzle(p.order);
+  setTimeout(() => {
+    if (puzzleState.reviewMode) { advanceReviewMode(); }
+    else { startPuzzle(puzzleState.index + 1); }
+  }, 900);
 }
 
 function doPuzzleWrong(sq) {
