@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>A Daily Tactics Routine That Actually Raises Your Win Rate / 毎日のタクティクス練習法 - KitsuneChess</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Crimson+Pro:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root { --bg: #f5edd6; --brown: #7c4a1e; --brown-dark: #4a2a0e; --text: #111; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: var(--bg); color: var(--text); font-family: 'Crimson Pro', serif; font-weight: 600; line-height: 1.85; padding: 40px 20px; }
+  .container { max-width: 720px; margin: 0 auto; padding: 20px 10px; }
+
+  .back-link { display: inline-block; margin-bottom: 22px; color: var(--brown-dark); text-decoration: none; font-weight: 700; font-size: 0.9rem; }
+  .back-link:hover { text-decoration: underline; }
+
+  .lang-switch { text-align: right; margin-bottom: 25px; }
+  .lang-btn { background: #f7ebd3; border: 1px solid #c4b193; color: var(--brown-dark); padding: 6px 14px; border-radius: 4px; cursor: pointer; font-weight: 700; font-size: 0.85rem; transition: all 0.2s; }
+  .lang-btn:hover { background: var(--brown); color: #fff; }
+
+  h1 { font-family: 'Cinzel', serif; color: var(--brown-dark); font-size: 1.6rem; text-align: center; margin-bottom: 22px; border-bottom: 2px solid rgba(184, 134, 11, 0.3); padding-bottom: 12px; }
+  h2 { font-family: 'Cinzel', serif; color: var(--brown); font-size: 1.2rem; margin: 32px 0 14px; border-left: 4px solid var(--brown); padding-left: 10px; }
+  h3 { color: var(--brown-dark); font-size: 1.02rem; margin: 20px 0 8px; }
+  p { font-size: 1.02rem; margin-bottom: 18px; text-align: left; }
+  ul { margin: 0 0 18px 22px; }
+  li { margin-bottom: 8px; }
+
+  .lead-box { background: #fff8e8; border: 2px solid var(--brown); border-radius: 14px; padding: 20px 22px; margin-bottom: 30px; box-shadow: 2px 3px 8px rgba(0,0,0,0.05); }
+  .faq-q { font-weight: 700; color: var(--brown-dark); margin-bottom: 4px; }
+  .faq-a { margin-bottom: 18px; }
+
+  .footer { text-align: center; margin-top: 45px; font-size: 0.9rem; }
+  .footer a { color: var(--brown); text-decoration: none; font-weight: 700; border: 1px solid var(--brown); padding: 8px 18px; border-radius: 6px; transition: all 0.2s; }
+  .footer a:hover { background: var(--brown); color: #fff; }
+
+  .lang-en { display: none; }
+  .en-mode .lang-ja { display: none; }
+  .en-mode .lang-en { display: block; }
+  .en-mode button.lang-en { display: inline-block; }
+</style>
+</head>
+<body>
+<div class="container">
+  <a href="info.html" class="back-link">← Back to Info / 一覧へ戻る</a>
+
+  <div class="lang-switch">
+    <button class="lang-btn lang-ja" onclick="toggleLanguage()">English (英語へ)</button>
+    <button class="lang-btn lang-en" onclick="toggleLanguage()">日本語 (To Japanese)</button>
+  </div>
+
+  <!-- ================= 日本語パート ================= -->
+  <div class="lang-ja">
+    <h1>勝率が劇的に上がる!毎日やりたいタクティクス練習法</h1>
+
+    <div class="lead-box">
+      <p style="margin:0;">「タクティクス練習はやった方がいい」と分かっているクラブプレイヤーは多いですが、その時間の多くはスピード重視のパズルアプリで消費されてしまいがちです。10分で50問解けると充実した気分にはなりますが、実際にはほとんど身についていないことが多いです。本当に効果があるのは、もっと小さく、もっとゆっくりしたルーティンを地道に続けることです。今回はその具体的なやり方を紹介します。</p>
+    </div>
+
+    <h2>タクティクス練習がこれほど効く理由</h2>
+    <p>クラブレベルの対局は、深い序盤研究や繊細な終盤技術で決まることはめったにありません。だいたいは、誰かがフォークを見逃したり、駒をタダで取られたり、2手の組み合わせを見落としたりして決まります。これは初心者からレーティング1800くらいの強いクラブプレイヤーまで共通しています。フォーク・ピン・スキュワー・ディスカバードアタック・簡単なメイトパターンといった戦術眼は、レーティングを最も早く上げてくれるスキルです。なぜなら、相手もあなたと同じような見落としをしているからです。ただ、その頻度が少し低いだけなんです。</p>
+    <p>良いニュースは、このスキルは「感覚」や「センス」の話ではなく、意図的な練習にとても素直に反応してくれるということです。数値で測れるし、ドリルできるし、正しいやり方で練習すれば数週間で伸びていくのが実感できます。</p>
+
+    <h2>パズルラッシュやスピードパズルの問題点</h2>
+    <p>タイム制のパズルモードは楽しいですし、無意味というわけではありませんが、すでに半分見覚えのある局面でのパターン認識しか鍛えられません。本当に難しくて見覚えのない問題を急いで解くと、ほとんど何も身につきません。当てずっぽうで正解して次に進むか、間違えてすぐ忘れるか、そのどちらかです。どちらにしても、実質的な学びはゼロです。</p>
+    <p>もっと良いやり方は、1問1問を反射神経のテストではなく、小さな研究課題として扱うことです。その分遅くなりますし、その瞬間の爽快感は減りますが、実際の対局に活きてくるのはこちらのやり方です。</p>
+
+    <h2>ルーティン:1日15〜20分</h2>
+    <p>おすすめの構成を、3つの短いフェーズに分けて紹介します。20分もあれば十分で、パズル本でもアプリでも、KitsuneChess自体のパズルセットでも使えます。</p>
+
+    <h3>フェーズ1 ── 時間を計らず、全力で取り組む(10分)</h3>
+    <p>自分の現在のレーティングくらい、あるいは少し上のパズルを5〜8問選びます。タイマーは使いません。1問ごとに、答えが見つかるか、本当にアイデアが尽きるまで向き合います。だいたい2〜5分あれば十分です。目的はスピードではなく、それっぽい第一感の手をすぐ指すのではなく、最後まで読み切る癖をつけることです。</p>
+    <p>間違えた問題は、解答をちらっと見て次に進むのではなく、盤面を戻して「何を見逃したのか」を自問してください。相手の防御手段を見落としていたのか、あるマスを守っていた駒の存在を忘れていたのか。実際の上達の大部分は、正解した問題ではなく、間違えた問題がなぜ間違いだったのかを突き詰めるところで起きています。</p>
+
+    <h3>フェーズ2 ── 昨日の間違いを復習する(5分)</h3>
+    <p>ノートでもメモアプリでも何でもいいので、間違えたパズルの短いリストを作っておきます。1日1回、何か他のことを始める前に、そのうち2〜3問を記憶を頼りに解き直してみてください。この手の分散復習は地味ですが、パターンを2〜3日で忘れてしまうのを防ぐ、一番信頼できる方法の1つです。</p>
+
+    <h3>フェーズ3 ── 自分の対局から1問(5分)</h3>
+    <p>最近の対局で、自分が戦術を見逃した場面や、逆に相手が見逃した場面があれば、その局面をそのまま盤に並べて、きちんと読み切ってみてください。自分の対局から作ったパズルは、データベースのランダムな問題より記憶に残りやすい傾向があります。おそらく、その局面にはすでに感情的な記憶(その対局そのものの記憶)が結びついているからでしょう。対局を覚えていれば、教訓も一緒に覚えていられるんです。</p>
+
+    <h2>難易度についての補足</h2>
+    <p>見栄えがするからという理由で、いきなり難しいパズルに挑みたくなる気持ちは分かりますが、そこは我慢してください。正答率が60〜70%を下回っているなら、おそらく自分のレベルより上で練習していて、読みではなく当てずっぽうを鍛えてしまっている可能性が高いです。目安としては、ほとんどの問題は「頑張れば解ける」レベルにして、5問に1問くらいは本当に背伸びした難易度にするのがちょうどいいバランスです。</p>
+
+    <h2>問題の出どころも意外と大事</h2>
+    <p>多くのタクティクスアプリは、エンジン同士の対局からアルゴリズム的にパズルを生成していますが、それ自体は悪くないものの、人間のアマチュア対局とは少し違った味わいの戦術になりがちです。エンジンは、人間の相手なら絶対に踏み込まないような不正確さまで容赦なく罰してくるからです。実際の人間の対局、しかも自分と近いレーティング帯の対局から作られたパズルセットの方が、より直接的に役立つ感覚があります。罰せられているミスが、まさに自分がやりそうな、あるいは相手にされそうなミスだからです。</p>
+    <p>KitsuneChessのパズルセットが、純粋に合成された局面ではなく、実際に記録された対局から作られているのはこのためです。ここで鍛えるパターンが、エンジン同士の対局にしか出てこないような抽象的な曲芸ではなく、実際に自分の対局で盤上に現れるパターンであってほしいという狙いがあります。</p>
+
+    <h3>手数を大まかな難易度の目安にする</h3>
+    <p>難易度を測る実用的な方法の1つは、勝ちに至る組み合わせが何手かかるかを数えることです。1手の戦術(タダ取りできる駒を見つけるだけ)は簡単です。3手の組み合わせは、たいてい1つの強制的なアイデア(チェック・駒取り・脅し)の後に、仕上げの1手が続く形です。5手、7手、それ以上になってくると、本物の組み合わせで、駒取りでもチェックでもない「静かな一手」が途中に挟まっていることが多く、これこそ実戦で人間の相手が一番見逃しやすい手です。自分でパズルセットを作る・選ぶなら、手数でおおまかに難易度を分けて、少しずつ段階を上げていくのが、レーティングエンジンなしでもできるシンプルで効果的な方法です。</p>
+
+    <h2>習慣を静かに壊してしまう「よくある言い訳」</h2>
+    <p>タクティクス練習を続けられなくなる理由として、何度も聞くものがいくつかあります。どれも、優しく反論する価値があります。</p>
+    <ul>
+      <li><strong>「時間がない」</strong> 集中して、時間を計らずにやるなら、15分で本当に十分です。問題はほとんどの場合、時間ではなく、集中していない練習は「効いている気がしない」ので、気づかないうちにやめてしまうことです。</li>
+      <li><strong>「同じような問題ばかり間違える」</strong> それはやめる理由ではなく、次に何を鍛えるべきかを教えてくれる、一番はっきりしたサインです。何度も間違えるパターンは、何度「見た」ことがあっても、まだ本当には身についていないパターンです。</li>
+      <li><strong>「実戦に活きている気がしない」</strong> それはたいてい量の問題ではなく、復習の問題です。間違えた問題を復習せずに問題数だけ増やすのは、時間の使い方としてはかなり非効率な部類に入ります。</li>
+    </ul>
+
+    <h2>特に鍛えておきたい頻出パターン</h2>
+    <p>すべての戦術が同じ頻度で実戦に出てくるわけではありません。以下のパターンは特に頻出で、意識的に多めに練習しておく価値があります。</p>
+    <ul>
+      <li><strong>ナイトフォーク</strong> ── 特に、王とルークを同時に狙う最終ランクでのフォークや、駒交換後にタダになった駒を拾うフォーク。</li>
+      <li><strong>eファイルや長い斜め線上のピン</strong> ── アマチュアの対局の多くは中央のファイルが開きやすく、ピンされたナイトやビショップが長期的な弱点になりがちです。</li>
+      <li><strong>back-rank(最終ランク)のメイト</strong> ── 王様に逃げ場がないことに気づけるかどうかは、読みというより習慣です。まだその習慣を身につけていない相手からは、安く勝ち点を拾える場面です。</li>
+      <li><strong>防御駒を排除する</strong> ── 1つの駒が同時に2つの防御任務をこなしていることに気づき、それを排除・そらす方法を見つけること。</li>
+    </ul>
+
+    <h2>まとめ</h2>
+    <ul>
+      <li>時間を計らず全力で取り組むパズルの方が、速いタイム制パズルより身につく。</li>
+      <li>新しい問題を解くより、昨日の間違いを復習する方が大事。</li>
+      <li>自分の対局から作ったパズルはランダムなものより記憶に残りやすい。</li>
+      <li>正答率は60〜70%を目安に。簡単すぎても難しすぎても時間の無駄になる。</li>
+      <li>ナイトフォーク・ピン・back-rankメイト・防御駒の排除は、クラブレベルで頻繁に出てくる。</li>
+    </ul>
+
+    <h2>よくある質問</h2>
+    <div class="faq-q">タクティクス練習の効果はどれくらいで実感できますか?</div>
+    <div class="faq-a">多くのプレイヤーは、毎日続けて4〜6週間ほどでレーティングの変化を実感します。ただしこれは、解いた問題数よりも、間違いをどれだけ丁寧に復習しているかに大きく左右されます。</div>
+
+    <div class="faq-q">パズルアプリと本、どちらを使うべきですか?</div>
+    <div class="faq-a">どちらでも構いません。フォーマットより大事なのは、時間を計らずに解いて、間違いを復習しているかどうかです。パズル本はほぼ自動的にゆっくり深く考えさせてくれるので、今でもそちらを好むコーチもいます。</div>
+
+    <div class="faq-q">自分のレーティングより上のパズルを解くのは良くないですか?</div>
+    <div class="faq-a">時々なら問題ありません。むしろ感覚を保つのに役立ちます。ただ、練習の大半が自分のコンフォートゾーンより上だと、読みよりも当てずっぽうに時間を使うことになり、見た目より効果の薄い練習になってしまいます。</div>
+
+    <div class="footer">
+      <a href="info.html">🦊 Info一覧へ戻る</a>
+    </div>
+  </div>
+
+  <!-- ================= English Part ================= -->
+  <div class="lang-en">
+    <h1>A Daily Tactics Routine That Actually Raises Your Win Rate</h1>
+
+    <div class="lead-box">
+      <p style="margin:0;">Most club players know they should "do tactics," but a lot of that time gets wasted on puzzle apps that reward speed over understanding. Solving fifty puzzles in ten minutes feels productive. It usually isn't. What actually moves the needle is a smaller, slower routine repeated consistently — and that's what this article walks through.</p>
+    </div>
+
+    <h2>Why Tactics Training Works So Well</h2>
+    <p>Chess games at the club level are rarely decided by deep opening preparation or subtle endgame technique. They're decided by someone missing a fork, hanging a piece, or overlooking a two-move combination. This is true from beginner level all the way up to strong club players rated 1800 or so. Tactical awareness — spotting forks, pins, skewers, discovered attacks, and simple mating patterns — is the single skill most likely to raise your rating quickly, because your opponents are making the same kinds of mistakes you are, just slightly less often.</p>
+    <p>The good news is that this skill responds well to deliberate practice in a way that, say, "positional understanding" doesn't. You can measure it, you can drill it, and you can watch it improve within a few weeks if you train the right way.</p>
+
+    <h2>The Problem With Puzzle Rush and Speed Puzzles</h2>
+    <p>Timed puzzle modes are fun, and they're not useless, but they train pattern recognition on positions you already half-recognize. When a puzzle is unfamiliar and genuinely hard, rushing through it teaches you almost nothing — you either guess right and move on, or guess wrong and immediately forget why. Either way, no real learning happened.</p>
+    <p>A better approach treats each puzzle as a small research project rather than a reflex test. That's slower, and it feels less satisfying in the moment, but it's the version of practice that actually transfers to your real games.</p>
+
+    <h2>The Routine: 15–20 Minutes a Day</h2>
+    <p>Here's the structure I'd recommend, broken into three short phases. It doesn't need to take more than twenty minutes, and it works whether you're using a puzzle book, an app, or KitsuneChess's own puzzle set.</p>
+
+    <h3>Phase 1 — Untimed, Full-Effort Puzzles (10 minutes)</h3>
+    <p>Pick 5 to 8 puzzles somewhere around your current rating, maybe slightly above. Don't use a timer. For each one, sit with the position until you find the answer or genuinely run out of ideas — usually two to five minutes is enough. The goal isn't speed; it's forcing yourself to calculate all the way to the end of a line instead of playing the first move that looks plausible.</p>
+    <p>If you get one wrong, don't just glance at the solution and move on. Set the position back up and ask what you missed. Was it a defensive resource for the opponent? A piece you forgot was defending a square? This is where most of the actual improvement happens — not in the puzzles you get right, but in figuring out precisely why the ones you missed went wrong.</p>
+
+    <h3>Phase 2 — Review Yesterday's Mistakes (5 minutes)</h3>
+    <p>Keep a short list — a notebook, a notes app, whatever's easiest — of puzzles you got wrong. Once a day, quickly replay two or three of them from memory before doing anything else. This kind of spaced repetition is unglamorous, but it's one of the more reliable ways to make a pattern actually stick instead of fading after a day or two.</p>
+
+    <h3>Phase 3 — One Puzzle From Your Own Games (5 minutes)</h3>
+    <p>If you have a recent game where you missed a tactic, or where your opponent missed one against you, set that exact position up and calculate it properly. Puzzles from your own games tend to stick better than random ones from a database, probably because there's already an emotional memory attached to the position — you remember the game, so you remember the lesson.</p>
+
+    <h2>A Note on Difficulty</h2>
+    <p>There's a temptation to jump straight to hard puzzles because they feel more impressive to solve. Resist it. If you're getting fewer than 60–70% of your puzzles right, you're probably working above your level in a way that trains guessing rather than calculation. A good rule of thumb: most of your puzzles should feel solvable with real effort, with maybe one in five being a genuine stretch.</p>
+
+    <h2>Where the Puzzles Actually Come From Matters</h2>
+    <p>A lot of tactics apps generate puzzles algorithmically from engine games, which is fine, but it produces a slightly different flavor of tactic than what shows up in human amateur games — engines punish inaccuracies that a human opponent would never even consider playing into. Puzzle sets pulled from real human games, especially games played by players around your own rating range, tend to feel more directly useful, because the mistakes being punished are ones you're actually likely to make or face yourself.</p>
+    <p>This is part of why KitsuneChess's own puzzle set is built from real recorded games rather than purely synthetic positions — the goal is that the patterns you drill are the ones that will actually show up across the board from you, not abstract tactical gymnastics that rarely occur outside of engine-versus-engine play.</p>
+
+    <h3>Sorting by Move Count as a Rough Difficulty Proxy</h3>
+    <p>One practical way to grade puzzle difficulty, especially if you're building or curating your own set, is by counting how many moves the winning combination takes to complete. A one-move tactic (spot the hanging piece, take it) is trivial. A three-move combination usually involves a single forcing idea — a check, a capture, or a threat — followed by a clean-up move. By the time you're at five, seven, or more moves, you're usually looking at a real combination with a quiet in-between move that isn't a capture or a check, which is exactly the kind of move human opponents miss most often over the board. If you're building a personal practice set, grading roughly by move count and gradually working up the ladder is a simple, effective way to structure difficulty without needing a rating engine at all.</p>
+
+    <h2>Common Excuses That Quietly Kill the Habit</h2>
+    <p>A few reasons people give up on tactics training show up again and again, and most of them are worth pushing back on gently:</p>
+    <ul>
+      <li><strong>"I don't have time."</strong> Fifteen minutes is genuinely enough if it's focused and untimed. The issue is almost never time; it's usually that unfocused practice feels like it isn't working, so people quietly stop.</li>
+      <li><strong>"I keep missing the same kinds of puzzles."</strong> That's not a sign to quit — it's the single clearest signal of exactly what to drill next. A pattern you keep missing is a pattern you haven't actually learned yet, no matter how many times you've "seen" it.</li>
+      <li><strong>"It doesn't feel like it's translating to real games."</strong> This is usually a review problem, not a volume problem. Solving more puzzles without reviewing the ones you got wrong is close to the least efficient way to spend the time.</li>
+    </ul>
+
+    <h2>Common Patterns Worth Drilling Specifically</h2>
+    <p>Not all tactics are equally common in real games. A few patterns show up disproportionately often and are worth deliberately over-practicing:</p>
+    <ul>
+      <li><strong>The knight fork</strong> — especially forks on the back rank hitting a king and rook, or forks picking up an undefended piece after a trade.</li>
+      <li><strong>Pins along the e-file and long diagonals</strong> — many amateur games open central files where a pinned knight or bishop becomes a long-term liability.</li>
+      <li><strong>Back-rank mates</strong> — recognizing when a king has no escape squares is a habit, not a calculation, and it's one of the cheapest points you can pick up against players who haven't built that habit yet.</li>
+      <li><strong>Removing the defender</strong> — noticing when a single piece is doing two defensive jobs at once, and finding a way to eliminate or distract it.</li>
+    </ul>
+
+    <h2>Key Takeaways</h2>
+    <ul>
+      <li>Untimed puzzles solved with full effort teach you more than fast, timed ones.</li>
+      <li>Reviewing yesterday's mistakes matters more than solving new puzzles.</li>
+      <li>Puzzles pulled from your own games tend to stick better than random ones.</li>
+      <li>Stay around 60–70% accuracy — too easy and too hard both waste your time.</li>
+      <li>Knight forks, pins, back-rank mates, and removing the defender come up constantly at club level.</li>
+    </ul>
+
+    <h2>Frequently Asked Questions</h2>
+    <div class="faq-q">How long before I see a rating improvement from tactics training?</div>
+    <div class="faq-a">Most players notice a difference within four to six weeks of consistent daily practice, though it depends heavily on how carefully you review mistakes rather than just how many puzzles you solve.</div>
+
+    <div class="faq-q">Should I use a puzzle app or a book?</div>
+    <div class="faq-a">Either works. What matters far more than the format is whether you're solving untimed and reviewing your misses. A puzzle book forces slower, more deliberate thinking almost by default, which is why some coaches still prefer it even now.</div>
+
+    <div class="faq-q">Is it bad to solve puzzles above my rating?</div>
+    <div class="faq-a">Occasionally, yes — it keeps you sharp. But if the majority of your practice is above your comfort zone, you'll spend more time guessing than calculating, which is a much weaker form of practice than it looks like from the outside.</div>
+
+    <div class="footer">
+      <a href="info.html">🦊 Back to Info</a>
+    </div>
+  </div>
+</div>
+
+<script>
+  function toggleLanguage() {
+    document.body.classList.toggle('en-mode');
+  }
+</script>
+</body>
+</html>
