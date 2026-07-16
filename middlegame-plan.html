@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>How to Evaluate a Position and Never Get Lost in the Middlegame / 中盤の形勢判断のコツ - KitsuneChess</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Crimson+Pro:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root { --bg: #f5edd6; --brown: #7c4a1e; --brown-dark: #4a2a0e; --text: #111; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: var(--bg); color: var(--text); font-family: 'Crimson Pro', serif; font-weight: 600; line-height: 1.85; padding: 40px 20px; }
+  .container { max-width: 720px; margin: 0 auto; padding: 20px 10px; }
+
+  .back-link { display: inline-block; margin-bottom: 22px; color: var(--brown-dark); text-decoration: none; font-weight: 700; font-size: 0.9rem; }
+  .back-link:hover { text-decoration: underline; }
+
+  .lang-switch { text-align: right; margin-bottom: 25px; }
+  .lang-btn { background: #f7ebd3; border: 1px solid #c4b193; color: var(--brown-dark); padding: 6px 14px; border-radius: 4px; cursor: pointer; font-weight: 700; font-size: 0.85rem; transition: all 0.2s; }
+  .lang-btn:hover { background: var(--brown); color: #fff; }
+
+  h1 { font-family: 'Cinzel', serif; color: var(--brown-dark); font-size: 1.6rem; text-align: center; margin-bottom: 22px; border-bottom: 2px solid rgba(184, 134, 11, 0.3); padding-bottom: 12px; }
+  h2 { font-family: 'Cinzel', serif; color: var(--brown); font-size: 1.2rem; margin: 32px 0 14px; border-left: 4px solid var(--brown); padding-left: 10px; }
+  h3 { color: var(--brown-dark); font-size: 1.02rem; margin: 20px 0 8px; }
+  p { font-size: 1.02rem; margin-bottom: 18px; text-align: left; }
+  ul { margin: 0 0 18px 22px; }
+  li { margin-bottom: 8px; }
+
+  .lead-box { background: #fff8e8; border: 2px solid var(--brown); border-radius: 14px; padding: 20px 22px; margin-bottom: 30px; box-shadow: 2px 3px 8px rgba(0,0,0,0.05); }
+  .faq-q { font-weight: 700; color: var(--brown-dark); margin-bottom: 4px; }
+  .faq-a { margin-bottom: 18px; }
+
+  .footer { text-align: center; margin-top: 45px; font-size: 0.9rem; }
+  .footer a { color: var(--brown); text-decoration: none; font-weight: 700; border: 1px solid var(--brown); padding: 8px 18px; border-radius: 6px; transition: all 0.2s; }
+  .footer a:hover { background: var(--brown); color: #fff; }
+
+  .lang-en { display: none; }
+  .en-mode .lang-ja { display: none; }
+  .en-mode .lang-en { display: block; }
+  .en-mode button.lang-en { display: inline-block; }
+</style>
+</head>
+<body>
+<div class="container">
+  <a href="info.html" class="back-link">← Back to Info / 一覧へ戻る</a>
+
+  <div class="lang-switch">
+    <button class="lang-btn lang-ja" onclick="toggleLanguage()">English (英語へ)</button>
+    <button class="lang-btn lang-en" onclick="toggleLanguage()">日本語 (To Japanese)</button>
+  </div>
+
+  <!-- ================= 日本語パート ================= -->
+  <div class="lang-ja">
+    <h1>中盤(ミドルゲーム)で迷わないための形勢判断のコツ</h1>
+
+    <div class="lead-box">
+      <p style="margin:0;">序盤が終わった瞬間、急に手が止まってしまう人は多いです。定跡はもう外れているし、詰みも遠い。そういうときに頼りになるのは「今、自分は良いのか悪いのか」を判断する簡単な物差しです。派手な計算力よりも先に、この物差しを持っているかどうかで中盤の安定感がまったく変わってきます。</p>
+    </div>
+
+    <h2>なぜ「形勢判断」を鍛えるべきなのか</h2>
+    <p>チェスの本を読むと「良い駒の配置」「弱点の作り方」といった話がたくさん出てきますが、それらはすべて「今の局面がどちらに有利か」を判断できて初めて活きてきます。逆に言えば、形勢判断さえできれば、どちらの側に立って計画を立てればいいかが自然と見えてきます。守るべきか、攻めるべきか、駒を交換すべきか。すべてこの判断からスタートします。</p>
+
+    <h2>まず駒の損得を確認する</h2>
+    <p>当たり前に聞こえるかもしれませんが、実戦では駒の損得を数え間違えることが意外とよくあります。ポーン=1、ナイトとビショップ=3、ルーク=5、クイーン=9、という基本値を使って、盤上の駒をざっと数える癖をつけてください。ここで大事なのは、数え終わった後にすぐ次の項目に進むことです。駒の損得だけを見て満足してしまうと、駒得なのに実は負けている局面を見逃します。</p>
+
+    <h2>次にキングの安全を見る</h2>
+    <p>駒がいくら多くても、自分の王様が丸裸なら形勢は良くありません。キャスリングは済んでいるか、王様の前のポーン構造は崩れていないか、相手の駒がどれだけ王様に近づいているかを確認してください。片方だけキャスリングを済ませていて、もう片方が中央に取り残されている局面は、駒の損得を無視してでも「取り残された側が悪い」と判断していいことがほとんどです。</p>
+
+    <h3>「攻撃参加数」で見るとさらに分かりやすい</h3>
+    <p>キング周りの安全度を判断するときに役立つのが、実際に敵陣まで到達している(または数手で到達できる)駒の数を数えるという方法です。攻撃側の駒が3つ以上敵キング周辺に迫っていて、守備側がそれに見合う数の駒で守れていない場合、たとえ駒の損得が互角でも、攻撃側がすでに有利であることが多いです。</p>
+
+    <h2>次に駒の活動性を見る</h2>
+    <p>駒の数が同じでも、片方のビショップが自分のポーンに完全に塞がれていて、もう片方のビショップが盤全体をにらんでいる、という状況はよくあります。それぞれの駒について「今、何マス動けるか」「攻撃・防御に参加できているか」を大まかにイメージしてください。動けない駒は、盤上に存在していないのとほぼ同じです。</p>
+
+    <h2>ポーン構造を確認する</h2>
+    <p>ポーン構造は一度崩れると、なかなか元に戻せません。孤立ポーン(隣にポーンがいないポーン)、二重ポーン(同じファイルに2つ並んだポーン)、後退ポーン(仲間より後ろに取り残されたポーン)は、それ自体が終盤に向けての弱点になりがちです。逆に、相手にこうした弱点があれば、無理に攻めなくても、その弱点を狙い続けるだけで優位に立てることがあります。</p>
+
+    <h2>4つの視点を1つにまとめる</h2>
+    <p>駒の損得・キングの安全・駒の活動性・ポーン構造。この4つは、それぞれ単独で完璧な答えを出してくれるわけではありません。駒は少し損しているけれど、その分キングが安全で、駒がよく働いている、というような局面は日常茶飯事です。大事なのは、この4つを順番にざっと確認する習慣を持つことです。1つの要素だけを見て「有利/不利」を即断しないようにしてください。</p>
+
+    <h3>迷ったときの実践的な質問</h3>
+    <p>4つの視点を一気に思い出せないときは、シンプルにこう自問してみてください。「もし今すぐこの局面のまま全ての駒を交換していったら、どちらが勝ちやすいか?」これは、駒の損得・ポーン構造・キングの安全をまとめて考えさせてくれる質問で、次にすべきことが自然と見えてきます。交換して勝ちやすいなら積極的に駒を捌いていく、逆なら複雑にして相手にミスを誘う、という方針が立てられます。</p>
+
+    <h2>計画を立てる:弱点を見つけたら、そこに狙いを定める</h2>
+    <p>形勢判断ができたら、次は「何を目指すか」です。相手に弱いポーンがあるなら、そこに駒を集中させる。相手のキングが心もとないなら、攻め駒を増やしていく。自分に弱点があるなら、それを補強するか、局面を単純化して弱点を目立たなくする。計画のない中盤ほど疲れるものはありません。1つでも具体的な目標を持てば、次の一手を選ぶのがぐっと楽になります。</p>
+
+    <h2>まとめ</h2>
+    <ul>
+      <li>駒の損得・キングの安全・駒の活動性・ポーン構造の4つを順番に確認する。</li>
+      <li>片方だけキャスリングを済ませていない局面は、駒の損得より優先して危険信号とみなす。</li>
+      <li>動けない駒は、盤上にほぼ存在しないのと同じだと考える。</li>
+      <li>孤立ポーンや二重ポーンなどの弱点は、無理に攻めなくても長期的な優位につながる。</li>
+      <li>迷ったら「全部交換していったらどちらが勝ちやすいか」を自問する。</li>
+    </ul>
+
+    <h2>よくある質問</h2>
+    <div class="faq-q">形勢判断にはどれくらい時間をかけるべきですか?</div>
+    <div class="faq-a">実戦では数秒〜十数秒で十分です。慣れてくると、4つの視点を意識的に順番に見なくても、パッと局面の印象で大まかな判断ができるようになります。最初のうちは意識的に、慣れてきたら直感的に、という流れで身につけていくのが自然です。</div>
+
+    <div class="faq-q">駒得なのに形勢判断では「悪い」と出ることはありますか?</div>
+    <div class="faq-a">よくあります。駒得していても、キングが危険だったり、駒がまったく働いていなかったりすれば、実際には苦しい局面ということが珍しくありません。駒の損得だけを見て安心してしまうのは、中盤でよくある落とし穴の1つです。</div>
+
+    <div class="faq-q">弱いポーンが1つあるだけで、負けが決まってしまうのですか?</div>
+    <div class="faq-a">いいえ。弱点は「そこを狙えば有利に働きやすい目標」であって、即座の敗北を意味するわけではありません。弱点を抱えている側も、駒の活動性やキングの安全で埋め合わせができれば、十分に戦えます。</div>
+
+    <div class="footer">
+      <a href="info.html">🦊 Info一覧へ戻る</a>
+    </div>
+  </div>
+
+  <!-- ================= English Part ================= -->
+  <div class="lang-en">
+    <h1>How to Evaluate a Position and Never Get Lost in the Middlegame</h1>
+
+    <div class="lead-box">
+      <p style="margin:0;">A lot of players hit a wall the moment the opening ends. The theory has run out, checkmate is nowhere in sight, and suddenly every move feels like a guess. What actually helps in that moment isn't deep calculation — it's a simple set of questions for figuring out who's actually doing better. Get comfortable with that before anything else, and the rest of the middlegame gets a lot less overwhelming.</p>
+    </div>
+
+    <h2>Why Position Evaluation Matters More Than It Seems</h2>
+    <p>Chess books are full of advice about good piece placement and creating weaknesses, but none of that means much until you can tell which side is actually better right now. Once you can answer that, deciding whether to defend, attack, or simplify becomes far more natural — every plan starts from that one judgment.</p>
+
+    <h2>Start With Material</h2>
+    <p>This sounds obvious, but miscounting material happens more often than you'd think in real games. Use the standard values — pawn 1, knight and bishop 3, rook 5, queen 9 — and get in the habit of quickly tallying the board. The key is to move on right after counting. Stopping there is a common trap, since a material edge doesn't mean much if you're actually losing for other reasons.</p>
+
+    <h2>Then Check King Safety</h2>
+    <p>Extra material doesn't help if your king is standing wide open. Check whether both sides have castled, whether the pawn shield in front of each king is intact, and how many enemy pieces are actually pointed at the king. When one side has castled and the other is still stuck in the center, that alone is often reason enough to call the stuck side worse — regardless of material.</p>
+
+    <h3>A Useful Shortcut: Count the Attackers</h3>
+    <p>One practical way to judge king safety is to count how many pieces can actually reach the enemy king's area within a move or two. If the attacking side already has three or more pieces bearing down on the king and the defender doesn't have a matching number of defenders in place, the attacker is often already better — even in a materially even position.</p>
+
+    <h2>Look at Piece Activity</h2>
+    <p>Two sides can have identical material and still be worlds apart if one bishop is boxed in by its own pawns while the other rakes across the entire board. For each piece, get a rough sense of how many squares it actually controls and whether it's contributing to attack or defense. A piece that can't move is barely different from a piece that isn't on the board at all.</p>
+
+    <h2>Check the Pawn Structure</h2>
+    <p>Pawn structure, once damaged, rarely gets fixed. Isolated pawns (no friendly pawns on either adjacent file), doubled pawns (two pawns stacked on the same file), and backward pawns (left behind by their neighbors) tend to become long-term weaknesses heading into the endgame. If your opponent has one of these, you often don't need a brilliant attack — just steady pressure on that one weakness can be enough.</p>
+
+    <h2>Putting the Four Factors Together</h2>
+    <p>Material, king safety, piece activity, and pawn structure rarely give a perfectly clean verdict on their own. It's completely normal to be down a little material but ahead on king safety and activity. What matters is building the habit of running through all four rather than locking in a judgment from just one. A single factor is almost never the whole story.</p>
+
+    <h3>A Practical Question for When You're Stuck</h3>
+    <p>If running through all four feels like too much in the moment, a simpler question often does the job: "If every piece got traded off right now, who would be better off?" This naturally folds material, pawn structure, and king safety into one judgment, and it tells you what to do next — trade pieces if simplifying favors you, or keep things complicated if it doesn't.</p>
+
+    <h2>Turning Evaluation Into a Plan</h2>
+    <p>Once you know who's better, the next step is deciding what to aim for. If your opponent has a weak pawn, build pressure against it. If their king looks shaky, bring more attackers into range. If you're the one with a weakness, either reinforce it or trade down to make it less relevant. Nothing drains a middlegame faster than drifting without a plan — even one concrete goal makes the next move much easier to find.</p>
+
+    <h2>Key Takeaways</h2>
+    <ul>
+      <li>Check material, king safety, piece activity, and pawn structure, in that order.</li>
+      <li>Treat an uncastled king as a red flag that often outweighs material.</li>
+      <li>A piece that can't move contributes almost nothing to the position.</li>
+      <li>Weaknesses like isolated or doubled pawns create long-term pressure points, even without an immediate attack.</li>
+      <li>When stuck, ask who would be better off if every piece traded off right now.</li>
+    </ul>
+
+    <h2>Frequently Asked Questions</h2>
+    <div class="faq-q">How much time should I spend evaluating a position?</div>
+    <div class="faq-a">In real games, a few seconds to about ten is usually enough. With practice, you won't need to consciously run through all four factors — a quick glance will give you a reasonable sense of who's better, and the deliberate checklist becomes something you fall back on only when a position is genuinely unclear.</div>
+
+    <div class="faq-q">Can you be up material and still be worse?</div>
+    <div class="faq-a">Very often, yes. Extra material means little if your king is unsafe or your pieces aren't doing anything. Stopping the evaluation at material alone is one of the most common mistakes players make in the middlegame.</div>
+
+    <div class="faq-q">Does having one weak pawn mean I'm losing?</div>
+    <div class="faq-a">No. A weakness is a target the opponent can press — not an automatic loss. A side with a weak pawn can still be perfectly fine if it compensates with active pieces or a safer king.</div>
+
+    <div class="footer">
+      <a href="info.html">🦊 Back to Info</a>
+    </div>
+  </div>
+</div>
+
+<script>
+  function toggleLanguage() {
+    document.body.classList.toggle('en-mode');
+  }
+</script>
+</body>
+</html>

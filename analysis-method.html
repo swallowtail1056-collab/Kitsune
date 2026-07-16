@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reviewing Your Own Games: An Efficient AI-Assisted Method / AIを活用した棋譜の復習法 - KitsuneChess</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Crimson+Pro:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root { --bg: #f5edd6; --brown: #7c4a1e; --brown-dark: #4a2a0e; --text: #111; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: var(--bg); color: var(--text); font-family: 'Crimson Pro', serif; font-weight: 600; line-height: 1.85; padding: 40px 20px; }
+  .container { max-width: 720px; margin: 0 auto; padding: 20px 10px; }
+
+  .back-link { display: inline-block; margin-bottom: 22px; color: var(--brown-dark); text-decoration: none; font-weight: 700; font-size: 0.9rem; }
+  .back-link:hover { text-decoration: underline; }
+
+  .lang-switch { text-align: right; margin-bottom: 25px; }
+  .lang-btn { background: #f7ebd3; border: 1px solid #c4b193; color: var(--brown-dark); padding: 6px 14px; border-radius: 4px; cursor: pointer; font-weight: 700; font-size: 0.85rem; transition: all 0.2s; }
+  .lang-btn:hover { background: var(--brown); color: #fff; }
+
+  h1 { font-family: 'Cinzel', serif; color: var(--brown-dark); font-size: 1.6rem; text-align: center; margin-bottom: 22px; border-bottom: 2px solid rgba(184, 134, 11, 0.3); padding-bottom: 12px; }
+  h2 { font-family: 'Cinzel', serif; color: var(--brown); font-size: 1.2rem; margin: 32px 0 14px; border-left: 4px solid var(--brown); padding-left: 10px; }
+  h3 { color: var(--brown-dark); font-size: 1.02rem; margin: 20px 0 8px; }
+  p { font-size: 1.02rem; margin-bottom: 18px; text-align: left; }
+  ul { margin: 0 0 18px 22px; }
+  li { margin-bottom: 8px; }
+
+  .lead-box { background: #fff8e8; border: 2px solid var(--brown); border-radius: 14px; padding: 20px 22px; margin-bottom: 30px; box-shadow: 2px 3px 8px rgba(0,0,0,0.05); }
+  .faq-q { font-weight: 700; color: var(--brown-dark); margin-bottom: 4px; }
+  .faq-a { margin-bottom: 18px; }
+
+  .footer { text-align: center; margin-top: 45px; font-size: 0.9rem; }
+  .footer a { color: var(--brown); text-decoration: none; font-weight: 700; border: 1px solid var(--brown); padding: 8px 18px; border-radius: 6px; transition: all 0.2s; }
+  .footer a:hover { background: var(--brown); color: #fff; }
+
+  .lang-en { display: none; }
+  .en-mode .lang-ja { display: none; }
+  .en-mode .lang-en { display: block; }
+  .en-mode button.lang-en { display: inline-block; }
+</style>
+</head>
+<body>
+<div class="container">
+  <a href="info.html" class="back-link">← Back to Info / 一覧へ戻る</a>
+
+  <div class="lang-switch">
+    <button class="lang-btn lang-ja" onclick="toggleLanguage()">English (英語へ)</button>
+    <button class="lang-btn lang-en" onclick="toggleLanguage()">日本語 (To Japanese)</button>
+  </div>
+
+  <!-- ================= 日本語パート ================= -->
+  <div class="lang-ja">
+    <h1>自分の棋譜を振り返る:AIを活用した効率的な復習のやり方</h1>
+
+    <div class="lead-box">
+      <p style="margin:0;">対局が終わった瞬間にそのまま次の対局に進んでしまう人は多いですが、実は一番伸びしろが眠っているのは「終わった対局を振り返る時間」です。エンジンやAIを使えば、以前よりずっと少ない労力で、自分の弱点を具体的に洗い出せるようになりました。ただし、使い方を間違えると「エンジンの評価値を眺めるだけ」で終わってしまいがちです。この記事では、実際に力になる復習のやり方を紹介します。</p>
+    </div>
+
+    <h2>なぜ対局後の復習が一番伸びるのか</h2>
+    <p>対局中は時間に追われながら判断しているので、どうしても見落としが出ます。しかし対局が終わった後は、時間制限なしに、じっくりと「あの場面で本当は何が起きていたのか」を確認できます。同じ量の練習をするなら、新しい対局を1つ増やすより、終わった対局を1つ丁寧に振り返るほうが、身につく学びの密度は圧倒的に高いです。</p>
+
+    <h2>エンジンの評価値だけを見て終わらせない</h2>
+    <p>Stockfishのようなエンジンにかければ、どの手が悪かったかは一瞬で分かります。ただ、評価値の変化(例えば+0.3から-2.1に落ちた、など)を見るだけで終わってしまうと、「悪手だった」ということは分かっても「なぜ悪手だったのか」は分からないままです。これでは同じ間違いを繰り返す可能性が高いままです。</p>
+
+    <h3>評価値が落ちた場面こそAIに「理由」を聞く</h3>
+    <p>ここでAIチャットの出番です。エンジンが指摘した局面をそのままAIに伝えて、「なぜこの手が悪かったのか、初心者にも分かるように説明して」と聞いてみてください。エンジンは数値は教えてくれますが、日本語や英語で理由を説明してはくれません。AIチャットは、その数値の裏にある「見落としていた駒の利き」「タイミングの問題」「終盤の技術」といった言葉での説明を補ってくれます。数値と言葉、この両方が揃って初めて、次の対局で活かせる学びになります。</p>
+
+    <h2>実践的な復習の流れ</h2>
+    <p>おすすめの手順は次の通りです。</p>
+    <ul>
+      <li><strong>①エンジンで対局全体をチェックし、評価値が大きく動いた箇所(悪手・疑問手)を洗い出す。</strong></li>
+      <li><strong>②その中から2〜3箇所だけに絞る。</strong>全部を深掘りしようとすると疲れて続かなくなります。特に痛かった場面、または同じパターンで何度も間違えている場面を優先してください。</li>
+      <li><strong>③その局面をAIチャットに貼り付けて、盤面の状況と「なぜ悪手だったか」を自然な言葉で説明してもらう。</strong></li>
+      <li><strong>④説明を読んだら、実際に代替手を盤に並べて、正しい手順を自分の手で追体験する。</strong>読むだけで終わらせず、必ず手を動かすことが定着への近道です。</li>
+    </ul>
+
+    <h2>「同じ間違い」を見つけるために記録をつける</h2>
+    <p>1局だけ振り返っても見えてこないパターンが、10局分まとめて見ると急に見えてくることがあります。「終盤でいつも時間を使いすぎている」「同じ種類の駒交換で毎回損をしている」といった傾向は、複数の対局を並べて初めて浮かび上がってきます。簡単なメモで構わないので、振り返るたびに「今回の主な原因」を一言書き残しておくと、数週間後に見返したときに自分の癖がはっきり見えてきます。</p>
+
+    <h2>AIに丸投げしすぎない</h2>
+    <p>AIやエンジンは強力な道具ですが、最初から最後まで正解を教えてもらう形にしてしまうと、実際の対局本番でその判断力は身につきません。理想は、まず自分なりに「なぜこの手が良さそうか」を考えてから、AIやエンジンの説明と照らし合わせることです。自分の読みとAIの説明にズレがあったときこそ、一番学びが大きい瞬間です。</p>
+
+    <h2>まとめ</h2>
+    <ul>
+      <li>新しい対局を増やすより、終わった対局を丁寧に振り返るほうが学びの密度は高い。</li>
+      <li>エンジンの評価値だけで満足せず、「なぜ悪手だったか」を言葉で説明してもらう。</li>
+      <li>復習は2〜3箇所に絞り、盤面を実際に動かして追体験する。</li>
+      <li>複数の対局をまとめて振り返ることで、単発では見えないクセが見つかる。</li>
+      <li>AIに答えを丸投げせず、自分の読みとの違いを確認することが一番の学びになる。</li>
+    </ul>
+
+    <h2>よくある質問</h2>
+    <div class="faq-q">復習にはどれくらい時間をかければいいですか?</div>
+    <div class="faq-a">1局あたり10〜15分程度で十分です。全ての手を見直す必要はなく、評価値が大きく動いた2〜3箇所に絞れば、短時間でも十分に効果があります。</div>
+
+    <div class="faq-q">エンジンとAIチャット、両方使う必要がありますか?</div>
+    <div class="faq-a">役割が異なるので、両方使うのが理想です。エンジンは「どの手が悪かったか」を数値で正確に教えてくれますが、「なぜ悪かったか」を自然な言葉で説明するのは苦手です。AIチャットはその逆で、具体的な最善手の精度はエンジンに劣りますが、理由を分かりやすく言語化してくれます。</div>
+
+    <div class="faq-q">初心者でもAIを使った復習は効果がありますか?</div>
+    <div class="faq-a">むしろ初心者ほど効果的です。何が悪かったのか自分だけでは判断しづらい段階だからこそ、AIによる分かりやすい説明が、独学では気づきにくいパターンへの気づきにつながります。</div>
+
+    <div class="footer">
+      <a href="info.html">🦊 Info一覧へ戻る</a>
+    </div>
+  </div>
+
+  <!-- ================= English Part ================= -->
+  <div class="lang-en">
+    <h1>Reviewing Your Own Games: An Efficient AI-Assisted Method</h1>
+
+    <div class="lead-box">
+      <p style="margin:0;">A lot of players finish a game and immediately queue up another one, but the biggest untapped source of improvement is usually the game that just ended. Engines and AI tools have made it far easier to pinpoint exactly where things went wrong — the trouble is, it's just as easy to use them badly, staring at an evaluation bar without actually learning anything. Here's a method that actually turns review time into real improvement.</p>
+    </div>
+
+    <h2>Why Post-Game Review Is Where the Real Growth Happens</h2>
+    <p>During a game, you're making decisions under time pressure, and mistakes slip through as a result. After the game, with no clock running, you can actually sit with a position and figure out what was really happening. For the same amount of time invested, reviewing one finished game carefully tends to teach you more than simply playing one more game.</p>
+
+    <h2>Don't Stop at the Evaluation Bar</h2>
+    <p>Run a game through an engine like Stockfish and it'll instantly flag which moves were bad. But if you stop at watching the evaluation swing — say, from +0.3 to -2.1 — you'll know a move was a mistake without knowing why it was a mistake. That's exactly the kind of gap that lets the same error repeat itself in future games.</p>
+
+    <h3>Ask an AI "Why" at Every Evaluation Drop</h3>
+    <p>This is where an AI chat tool earns its keep. Take the position the engine flagged and ask it to explain, in plain language a beginner would understand, why that move was a mistake. Engines are excellent at telling you what the numbers say, but they don't naturally explain the reasoning in words. An AI chat fills in that gap — the piece you forgot was watching a square, the timing issue, the endgame technique you missed. It's the combination of the number and the explanation that actually turns into something usable in your next game.</p>
+
+    <h2>A Practical Review Routine</h2>
+    <p>Here's a routine worth trying:</p>
+    <ul>
+      <li><strong>1. Run the whole game through an engine</strong> and flag the moments where the evaluation swung significantly (mistakes and inaccuracies).</li>
+      <li><strong>2. Narrow it down to two or three spots.</strong> Trying to deep-dive everything is exhausting and rarely sustainable. Prioritize the moments that hurt the most, or ones where you notice the same kind of mistake recurring.</li>
+      <li><strong>3. Paste that position into an AI chat</strong> and ask it to describe the position and explain, in natural language, why the move was a mistake.</li>
+      <li><strong>4. Set up the position on a real board and play through the better move yourself.</strong> Reading the explanation isn't enough on its own — actually moving the pieces is what makes it stick.</li>
+    </ul>
+
+    <h2>Keep Notes to Spot Repeating Mistakes</h2>
+    <p>Patterns that are invisible in a single game often jump out once you look across ten of them. Things like "I keep burning too much time in the endgame" or "I keep losing the same kind of trade" only become visible once several games are laid side by side. A quick one-line note after each review — just the main takeaway — makes your own habits much easier to spot when you look back a few weeks later.</p>
+
+    <h2>Don't Outsource Everything to AI</h2>
+    <p>Engines and AI tools are powerful, but if you let them hand you the answer from the very first moment, you never actually build the judgment you'll need at the board during a real game. The better approach is to form your own guess about why a move looks good first, then compare it against what the engine and AI actually say. The moments where your own reasoning and the AI's explanation don't match are exactly where the real learning happens.</p>
+
+    <h2>Key Takeaways</h2>
+    <ul>
+      <li>Reviewing one finished game carefully teaches more than simply playing another one.</li>
+      <li>Don't stop at the evaluation number — ask why the move was a mistake, in words.</li>
+      <li>Limit deep review to two or three key moments, and physically play through the better line.</li>
+      <li>Reviewing multiple games together reveals habits that a single game never shows.</li>
+      <li>Form your own guess before checking the AI's explanation — the gap between the two is where you learn the most.</li>
+    </ul>
+
+    <h2>Frequently Asked Questions</h2>
+    <div class="faq-q">How much time should I spend reviewing a game?</div>
+    <div class="faq-a">About 10–15 minutes per game is plenty. You don't need to examine every move — narrowing in on two or three moments where the evaluation swung significantly is enough to get real value in a short amount of time.</div>
+
+    <div class="faq-q">Do I need both an engine and an AI chat tool?</div>
+    <div class="faq-a">Ideally, yes — they serve different roles. An engine tells you precisely which move was wrong through its evaluation, but it isn't built to explain the reasoning in natural language. An AI chat is the opposite: less precise about the exact best move, but far better at putting the reasoning into words you can actually use.</div>
+
+    <div class="faq-q">Is AI-assisted review useful for beginners too?</div>
+    <div class="faq-a">If anything, it's even more useful for beginners. At a stage where it's genuinely hard to tell what went wrong on your own, a clear AI explanation can surface patterns that would otherwise take much longer to notice through self-study alone.</div>
+
+    <div class="footer">
+      <a href="info.html">🦊 Back to Info</a>
+    </div>
+  </div>
+</div>
+
+<script>
+  function toggleLanguage() {
+    document.body.classList.toggle('en-mode');
+  }
+</script>
+</body>
+</html>

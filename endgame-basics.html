@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Essential Endgame Mating Patterns You Can't Afford to Miss / 終盤の基本メイトパターン - KitsuneChess</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Crimson+Pro:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root { --bg: #f5edd6; --brown: #7c4a1e; --brown-dark: #4a2a0e; --text: #111; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: var(--bg); color: var(--text); font-family: 'Crimson Pro', serif; font-weight: 600; line-height: 1.85; padding: 40px 20px; }
+  .container { max-width: 720px; margin: 0 auto; padding: 20px 10px; }
+
+  .back-link { display: inline-block; margin-bottom: 22px; color: var(--brown-dark); text-decoration: none; font-weight: 700; font-size: 0.9rem; }
+  .back-link:hover { text-decoration: underline; }
+
+  .lang-switch { text-align: right; margin-bottom: 25px; }
+  .lang-btn { background: #f7ebd3; border: 1px solid #c4b193; color: var(--brown-dark); padding: 6px 14px; border-radius: 4px; cursor: pointer; font-weight: 700; font-size: 0.85rem; transition: all 0.2s; }
+  .lang-btn:hover { background: var(--brown); color: #fff; }
+
+  h1 { font-family: 'Cinzel', serif; color: var(--brown-dark); font-size: 1.6rem; text-align: center; margin-bottom: 22px; border-bottom: 2px solid rgba(184, 134, 11, 0.3); padding-bottom: 12px; }
+  h2 { font-family: 'Cinzel', serif; color: var(--brown); font-size: 1.2rem; margin: 32px 0 14px; border-left: 4px solid var(--brown); padding-left: 10px; }
+  h3 { color: var(--brown-dark); font-size: 1.02rem; margin: 20px 0 8px; }
+  p { font-size: 1.02rem; margin-bottom: 18px; text-align: left; }
+  ul { margin: 0 0 18px 22px; }
+  li { margin-bottom: 8px; }
+
+  .lead-box { background: #fff8e8; border: 2px solid var(--brown); border-radius: 14px; padding: 20px 22px; margin-bottom: 30px; box-shadow: 2px 3px 8px rgba(0,0,0,0.05); }
+  .faq-q { font-weight: 700; color: var(--brown-dark); margin-bottom: 4px; }
+  .faq-a { margin-bottom: 18px; }
+
+  .footer { text-align: center; margin-top: 45px; font-size: 0.9rem; }
+  .footer a { color: var(--brown); text-decoration: none; font-weight: 700; border: 1px solid var(--brown); padding: 8px 18px; border-radius: 6px; transition: all 0.2s; }
+  .footer a:hover { background: var(--brown); color: #fff; }
+
+  .lang-en { display: none; }
+  .en-mode .lang-ja { display: none; }
+  .en-mode .lang-en { display: block; }
+  .en-mode button.lang-en { display: inline-block; }
+</style>
+</head>
+<body>
+<div class="container">
+  <a href="info.html" class="back-link">← Back to Info / 一覧へ戻る</a>
+
+  <div class="lang-switch">
+    <button class="lang-btn lang-ja" onclick="toggleLanguage()">English (英語へ)</button>
+    <button class="lang-btn lang-en" onclick="toggleLanguage()">日本語 (To Japanese)</button>
+  </div>
+
+  <!-- ================= 日本語パート ================= -->
+  <div class="lang-ja">
+    <h1>勝ちを逃さない!終盤(エンドゲーム)の基本メイトパターン</h1>
+
+    <div class="lead-box">
+      <p style="margin:0;">序盤・中盤をどれだけ上手く指しても、最後にはっきりメイトの形を知らないと、勝ちを勝ちとして終わらせられないことがあります。逆に、いくつかの基本パターンさえ体に染み込ませておけば、駒がほとんど残っていない局面でも迷わず終わらせられるようになります。この記事では、実戦で本当によく出てくるメイトパターンだけを厳選して紹介します。</p>
+    </div>
+
+    <h2>なぜ基本メイトパターンを覚える必要があるのか</h2>
+    <p>終盤で駒得を築いても、それをメイトまで正確に運べなければ勝ちにはなりません。特に持ち時間が少ない対局では、「勝っているはずなのに、どう終わらせればいいか分からず、逆にドローやスタレメイトにしてしまう」ということが本当によく起こります。基本パターンを覚えておくことは、せっかく築いた優勢を最後まで守り切るための保険のようなものです。</p>
+
+    <h2>クイーン+キング対キング</h2>
+    <p>最もシンプルで、最も頻繁に出てくる形です。コツは、相手の王様を盤の端(できれば角)に追い込むことです。クイーンだけで距離を詰めすぎると逆にステイルメイトになりやすいので、常に自分の王様を近づけながら、少しずつ包囲網を狭めていくのがポイントです。相手の王様から1マス離れた位置でチェックをかけ続け、自キングで支援するイメージを持ってください。</p>
+
+    <h3>よくある失敗:ステイルメイトにしてしまう</h3>
+    <p>クイーンで王様を追い詰めすぎて、相手の王様が身動きできなくなり、しかもチェックがかかっていない状態を作ってしまうと、それはステイルメイトで引き分けになります。これは駒得側にとって非常にもったいないミスです。追い込むときは、常に「相手の王様にまだ動けるマスが残っているか」を確認する癖をつけてください。</p>
+
+    <h2>ルーク+キング対キング</h2>
+    <p>クイーンより少し手順は増えますが、原理は同じです。ルークで相手の王様の動ける範囲を1つの辺に制限し、自分の王様でじりじりと近づいて、最終的に自キングとルークの連携で端に追い詰めます。ルークだけを動かして王様を放置すると、いつまで経ってもメイトにたどり着けないので、必ず両方の駒を連動させて動かすことを意識してください。</p>
+
+    <h2>2ルーク(はしごメイト)</h2>
+    <p>「はしごメイト」と呼ばれる、2つのルークだけで完結するパターンです。片方のルークで王様の逃げ道を1列封鎖し、もう片方のルークでその隣の列からチェックをかける、という動作を交互に繰り返して、王様をどんどん端に追いやります。このパターンの良さは、自分の王様の助けがまったく要らないことです。覚えておくと、終盤で駒がバタバタ交換された後でも安心して仕留められます。</p>
+
+    <h2>back-rank(最終ランク)メイト</h2>
+    <p>王様がキャスリングした後、前のポーンを一度も動かさずに固めてしまうと、最終ランクに逃げ道がなくなり、ルークやクイーンによる一撃でメイトされてしまうことがあります。これは終盤に限らず、対局のどの段階でも起こり得る、実戦で最も頻繁に見るメイトパターンの1つです。自分の王様にこの弱点がないか、そして相手の王様にこの弱点があるかを、常に頭の片隅で確認しておく価値があります。</p>
+
+    <h3>back-rankメイトを避ける簡単な方法</h3>
+    <p>安全な場面で、王様の前のポーンを1つだけ前進させておく(いわゆる「luft(逃げ道)」を作る)だけで、このパターンをほぼ完全に防げます。特に相手にルークやクイーンが残っている終盤では、こうした小さな予防が勝敗を分けることがあります。</p>
+
+    <h2>ビショップ+ナイトによるメイト(発展編)</h2>
+    <p>キング+ビショップ+ナイト対キングという、駒がかなり少なくなった終盤で出てくる、やや難易度の高いパターンです。相手の王様をビショップの色のついた隅に追い詰める必要があり、手順もやや複雑です。初心者のうちは無理に手順を丸暗記するより、「このパターンが存在する」ことだけ知っておいて、実際に出会ったときにじっくり考える、という向き合い方でも十分です。</p>
+
+    <h2>まとめ</h2>
+    <ul>
+      <li>クイーン・ルークのメイトは、常に自キングを近づけながら包囲する。</li>
+      <li>クイーンでの追い込みはステイルメイトに要注意。相手の王様に動けるマスが残っているか毎回確認する。</li>
+      <li>2ルークの「はしごメイト」は自キングの助けなしで完結する、覚えておくと安心なパターン。</li>
+      <li>back-rankメイトは実戦で最も頻出。luft(逃げ道)を作るだけでほぼ防げる。</li>
+      <li>ビショップ+ナイトのメイトは難易度が高いので、まずは存在を知っておくだけでも十分。</li>
+    </ul>
+
+    <h2>よくある質問</h2>
+    <div class="faq-q">どのメイトパターンから覚えるべきですか?</div>
+    <div class="faq-a">まずはクイーン+キング対キングと、back-rankメイトの2つで十分です。実戦で出てくる頻度が圧倒的に高く、この2つだけでもかなりの終盤を正確に終わらせられるようになります。</div>
+
+    <div class="faq-q">ステイルメイトを避けるコツはありますか?</div>
+    <div class="faq-a">追い込んでいる最中、常に「今の一手を指した後、相手の王様に合法手が残っているか」を確認する習慣を持ってください。特にクイーンでの単独の追い込みは、油断すると簡単にステイルメイトになります。</div>
+
+    <div class="faq-q">ビショップ+ナイトのメイトは覚える必要がありますか?</div>
+    <div class="faq-a">実戦での出現頻度は低いので、初心者や中級者のうちは優先度を下げても構いません。まずは頻出パターンを固めてから、余裕があれば挑戦してみるくらいで十分です。</div>
+
+    <div class="footer">
+      <a href="info.html">🦊 Info一覧へ戻る</a>
+    </div>
+  </div>
+
+  <!-- ================= English Part ================= -->
+  <div class="lang-en">
+    <h1>Essential Endgame Mating Patterns You Can't Afford to Miss</h1>
+
+    <div class="lead-box">
+      <p style="margin:0;">Playing a great opening and middlegame doesn't mean much if you can't actually finish the game once you get there. On the other hand, once a handful of basic mating patterns are second nature, closing out even the barest of endgames stops being stressful. This article covers only the patterns that actually come up again and again in real games.</p>
+    </div>
+
+    <h2>Why Bother Memorizing Basic Mates?</h2>
+    <p>Building a material advantage in the endgame doesn't count for much if you can't convert it into an actual checkmate. This is especially true under time pressure, where "I'm clearly winning but I don't know how to finish" turns into an accidental draw or stalemate more often than you'd expect. Knowing these patterns is basically insurance for the advantage you've already earned.</p>
+
+    <h2>Queen and King vs. King</h2>
+    <p>The simplest and by far the most common pattern. The idea is to herd the enemy king toward the edge of the board — ideally a corner. Closing in with the queen alone too aggressively tends to produce stalemates, so bring your own king up gradually while tightening the net with the queen, checking from a square's distance and letting your king do the supporting work.</p>
+
+    <h3>The Common Mistake: Accidental Stalemate</h3>
+    <p>If you box the enemy king in so tightly that it has no legal moves and isn't currently in check, that's stalemate — a draw, and a frustrating one for the side that was winning. Get in the habit of double-checking, every time you close in, whether the enemy king still has somewhere to go.</p>
+
+    <h2>Rook and King vs. King</h2>
+    <p>A few more steps than the queen version, but the same underlying idea. Use the rook to confine the enemy king to one edge of the board, bring your own king in steadily, and finish with the two pieces working together to force the king to the edge. Moving only the rook while ignoring your king almost never gets there — both pieces need to advance together.</p>
+
+    <h2>Two Rooks (The "Ladder Mate")</h2>
+    <p>Often called the ladder mate, this pattern needs nothing but two rooks. One rook cuts off an entire rank or file, the other delivers check from the adjacent one, and you alternate the two, pushing the king toward the edge one step at a time. The beauty of this pattern is that it doesn't need your own king's help at all — a handy thing to know once most of the other pieces have been traded off.</p>
+
+    <h2>Back-Rank Mate</h2>
+    <p>Once a king has castled, if the pawns in front of it never move, the king can end up with nowhere to run on the back rank — vulnerable to a single rook or queen delivering mate along that row. This isn't limited to the endgame; it's one of the most common mating patterns at any stage of the game. It's worth keeping in the back of your mind on both sides of the board — whether your own king has this weakness, and whether your opponent's does.</p>
+
+    <h3>A Simple Way to Avoid It</h3>
+    <p>Pushing one pawn in front of your king forward — giving it a bit of "luft," or breathing room — nearly eliminates this pattern entirely. In endgames where the opponent still has a rook or queen on the board, this small precaution can end up deciding the game.</p>
+
+    <h2>Bishop and Knight Mate (An Advanced Pattern)</h2>
+    <p>King, bishop, and knight versus a lone king is a trickier pattern that comes up once material has been reduced quite far. The enemy king has to be driven into the corner matching the bishop's color, and the technique is noticeably more involved. For beginners, it's perfectly fine to simply know this pattern exists rather than memorizing the full technique — you can work it out carefully if and when it actually comes up.</p>
+
+    <h2>Key Takeaways</h2>
+    <ul>
+      <li>Queen and rook mates both rely on bringing your own king closer while tightening the net.</li>
+      <li>Watch carefully for accidental stalemate when closing in with a queen alone.</li>
+      <li>The two-rook "ladder mate" needs no help from your own king — a reliable pattern to know cold.</li>
+      <li>Back-rank mate is the most common pattern in real games; a little luft nearly eliminates it.</li>
+      <li>Bishop-and-knight mate is advanced — knowing it exists is enough for most players.</li>
+    </ul>
+
+    <h2>Frequently Asked Questions</h2>
+    <div class="faq-q">Which mating pattern should I learn first?</div>
+    <div class="faq-a">Queen and king vs. king, plus awareness of back-rank mate, cover the overwhelming majority of real endgames. Those two alone will let you finish most winning positions cleanly.</div>
+
+    <div class="faq-q">How do I avoid accidentally stalemating my opponent?</div>
+    <div class="faq-a">Build the habit of checking, after every move while closing in, whether the enemy king still has a legal move available. Queen-only mating attempts are especially prone to accidental stalemate if you're not paying attention.</div>
+
+    <div class="faq-q">Do I really need to learn the bishop-and-knight mate?</div>
+    <div class="faq-a">Not urgently. It comes up rarely in practice, so beginners and intermediate players can safely deprioritize it until the more common patterns are solid.</div>
+
+    <div class="footer">
+      <a href="info.html">🦊 Back to Info</a>
+    </div>
+  </div>
+</div>
+
+<script>
+  function toggleLanguage() {
+    document.body.classList.toggle('en-mode');
+  }
+</script>
+</body>
+</html>
