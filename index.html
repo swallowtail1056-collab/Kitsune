@@ -416,11 +416,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
 <div id="page-game" class="page">
   <div class="chess-articles-menu" id="articlesMenu" style="display:flex; justify-content: center; flex-wrap: wrap; gap: 10px; padding: 16px 16px 0 16px; max-width:960px; margin:0 auto; width:100%;">
-    <button onclick="window.open('about.html', '_blank')" class="lang-text" data-ja="サイトへの想い" data-en="Vision" style="background: rgba(90,58,24,0.06); border: 1px solid rgba(90,58,24,0.25); color: #222; padding: 6px 14px; border-radius: 6px; font-size: 0.88rem; font-weight: 700; transition: all 0.2s; white-space: nowrap; cursor: pointer;">サイトへの想い</button>
-    <button onclick="window.open('history.html', '_blank')" class="lang-text" data-ja="チェスの歴史" data-en="Chess History" style="background: rgba(90,58,24,0.06); border: 1px solid rgba(90,58,24,0.25); color: #222; padding: 6px 14px; border-radius: 6px; font-size: 0.88rem; font-weight: 700; transition: all 0.2s; white-space: nowrap; cursor: pointer;">チェスの歴史</button>
-    <button onclick="window.open('rules.html', '_blank')" class="lang-text" data-ja="チェス脳の鍛え方" data-en="Train Your Brain" style="background: rgba(90,58,24,0.06); border: 1px solid rgba(90,58,24,0.25); color: #222; padding: 6px 14px; border-radius: 6px; font-size: 0.88rem; font-weight: 700; transition: all 0.2s; white-space: nowrap; cursor: pointer;">チェス脳の鍛え方</button>
-    <button onclick="window.open('tactics.html', '_blank')" class="lang-text" data-ja="f7の狙い方" data-en="Targeting f7" style="background: rgba(90,58,24,0.06); border: 1px solid rgba(90,58,24,0.25); color: #222; padding: 6px 14px; border-radius: 6px; font-size: 0.88rem; font-weight: 700; transition: all 0.2s; white-space: nowrap; cursor: pointer;">f7の狙い方</button>
- <button onclick="window.open('openings_list.html', '_blank')" class="lang-text" data-ja="定跡解説の一覧" data-en="Opening Guides" style="background: rgba(90,58,24,0.06); border: 1px solid rgba(90,58,24,0.25); color: #222; padding: 6px 14px; border-radius: 6px; font-size: 0.88rem; font-weight: 700; transition: all 0.2s; white-space: nowrap; cursor: pointer;">定跡解説の一覧</button>
+    <button onclick="window.open('openings_list.html', '_blank')" class="lang-text" data-ja="定跡解説の一覧" data-en="Opening Guides" style="background: rgba(90,58,24,0.06); border: 1px solid rgba(90,58,24,0.25); color: #222; padding: 6px 14px; border-radius: 6px; font-size: 0.88rem; font-weight: 700; transition: all 0.2s; white-space: nowrap; cursor: pointer;">定跡解説の一覧</button>
   </div>
 
   <div class="app">
@@ -597,6 +593,15 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <span class="lbl lang-text" data-ja="ベスト記録" data-en="Best Streak">ベスト記録</span>
       </div>
     </div>
+  </div>
+  <div class="box-card" style="text-align:center;">
+    <div style="font-size:0.85rem;font-weight:700;color:var(--text-sub);margin-bottom:8px;">
+      <span class="lang-text" data-ja="間違えた問題" data-en="Missed Puzzles">間違えた問題</span>:
+      <span id="wrongPuzzleCount">0</span><span class="lang-text" data-ja="問" data-en="">問</span>
+    </div>
+    <button class="btn btn-secondary" onclick="startReviewMode()">
+      <span class="lang-text" data-ja="🔁 間違えた問題だけ解く" data-en="🔁 Practice Missed Puzzles">🔁 間違えた問題だけ解く</span>
+    </button>
   </div>
 
   <div class="box-card" id="puzzleSuperhardBanner" style="display:none;text-align:center;background:linear-gradient(135deg,rgba(184,134,11,0.25),rgba(122,0,122,0.15));border:2px solid var(--yellow);">
@@ -1747,6 +1752,11 @@ document.querySelectorAll('#filterLevel option, #filterStyle option, #filterColo
     const enText = el.getAttribute('data-en');
     if (jaText && enText) el.textContent = LANG === 'ja' ? jaText : enText;
   });
+  document.querySelectorAll('footer .lang-text').forEach(el => {
+    const jaText = el.getAttribute('data-ja');
+    const enText = el.getAttribute('data-en');
+    if (jaText && enText) el.textContent = LANG === 'ja' ? jaText : enText;
+  });
   if (typeof puzzleState !== 'undefined' && !puzzleState.awaitingNext) {
     setPuzzleStatus(LANG === 'ja'
       ? (puzzleChess.turn() === 'w' ? '白番です。正解の手を指してください。' : '黒番です。正解の手を指してください。')
@@ -2703,6 +2713,7 @@ updateScores();
 initFox();
 initWelcome();
 renderHistory();
+  updateWrongCount();
 // applyLang called after startApp
 // ============================================================
 // PUZZLE STREAK MODE
@@ -2711,6 +2722,56 @@ const PUZZLES = [{"fen":"2kr3r/Q1p3pp/2p2n2/3p4/3PqB2/P1Pb2P1/5P1P/5RK1 w - - 3 
 
 
 let puzzleChess = new Chess();
+  const WRONG_STORAGE_KEY = 'kitsune_puzzle_wrong';
+
+function loadWrongPuzzles() {
+  try {
+    const raw = localStorage.getItem(WRONG_STORAGE_KEY);
+    return raw ? JSON.parse(raw) : [];
+  } catch(e) { return []; }
+}
+function saveWrongPuzzles(list) {
+  try { localStorage.setItem(WRONG_STORAGE_KEY, JSON.stringify(list)); } catch(e) {}
+}
+function addWrongPuzzle(order) {
+  const list = loadWrongPuzzles();
+  if (!list.includes(order)) { list.push(order); saveWrongPuzzles(list); }
+  updateWrongCount();
+}
+function removeWrongPuzzle(order) {
+  const list = loadWrongPuzzles();
+  const idx = list.indexOf(order);
+  if (idx !== -1) { list.splice(idx, 1); saveWrongPuzzles(list); }
+  updateWrongCount();
+}
+function updateWrongCount() {
+  const el = document.getElementById('wrongPuzzleCount');
+  if (el) el.textContent = loadWrongPuzzles().length;
+}
+function startReviewMode() {
+  const wrong = loadWrongPuzzles();
+  if (wrong.length === 0) {
+    setPuzzleStatus(LANG === 'ja' ? 'まだ間違えた問題はありません。' : 'No missed puzzles yet.', 'good');
+    return;
+  }
+  puzzleState.reviewMode = true;
+  puzzleState.reviewList = wrong.slice();
+  puzzleState.reviewPos = 0;
+  const order = puzzleState.reviewList[0];
+  const idx = PUZZLES.findIndex(p => p.order === order);
+  startPuzzle(idx);
+}
+function advanceReviewMode() {
+  puzzleState.reviewPos++;
+  if (puzzleState.reviewPos >= puzzleState.reviewList.length) {
+    puzzleState.reviewMode = false;
+    setPuzzleStatus(LANG === 'ja' ? '間違えた問題をすべて復習しました！' : 'You reviewed all missed puzzles!', 'good');
+    return;
+  }
+  const order = puzzleState.reviewList[puzzleState.reviewPos];
+  const idx = PUZZLES.findIndex(p => p.order === order);
+  startPuzzle(idx);
+}
 let puzzleState = {
   index: 0, moveIndex: 0,
   selected: null, validTargets: [],
@@ -2875,13 +2936,18 @@ function onPuzzleSolved() {
     setPuzzleStatus(LANG === 'ja' ? '正解！🎉' : 'Correct! 🎉', 'good');
     setFoxImg(puzzleState.streak % 5 === 0 ? 'excited' : 'happy');
   }
-  playCorrect();
-  setTimeout(() => { startPuzzle(puzzleState.index + 1); }, 900);
+ playCorrect();
+  removeWrongPuzzle(p.order);
+  setTimeout(() => {
+    if (puzzleState.reviewMode) { advanceReviewMode(); }
+    else { startPuzzle(puzzleState.index + 1); }
+  }, 900);
 }
 
 function doPuzzleWrong(sq) {
   puzzleState.streak = 0;
   document.getElementById('puzzleStreakVal').textContent = 0;
+　 addWrongPuzzle(currentPuzzle().order);
   setPuzzleStatus(LANG === 'ja' ? '不正解。ストリークが途切れました。もう一度試してください。' : 'Wrong. Streak reset. Try again.', 'bad');
   setFoxImg('confused');
   playWrong();
@@ -2895,6 +2961,7 @@ function showPuzzleAnswer() {
   puzzleState.streak = 0; // 答えを見たらストリークはリセット
   document.getElementById('puzzleStreakVal').textContent = 0;
   const p = currentPuzzle();
+  addWrongPuzzle(p.order);
   const remaining = p.moves.slice(puzzleState.moveIndex).join(' ');
   setPuzzleStatus((LANG === 'ja' ? '正解: ' : 'Answer: ') + remaining, 'bad');
   setFoxImg('sad');
@@ -2904,7 +2971,8 @@ function showPuzzleAnswer() {
 }
 
 function nextPuzzle() {
-  startPuzzle(puzzleState.index + 1);
+  if (puzzleState.reviewMode) { advanceReviewMode(); }
+  else { startPuzzle(puzzleState.index + 1); }
 }
 
 function flashSuperhard() {
@@ -2955,8 +3023,7 @@ function animatePuzzleMove(fromSq, toSq, callback) {
 }
 </script>
   <footer style="text-align: center; margin-top: 50px; padding: 20px 0; border-top: 1px solid #d4bda7;">
-    <a href="disclaimer.html" style="color: #8b5a2b; text-decoration: none; font-size: 14px; font-weight: bold; margin-right: 20px;">免責事項 / Privacy Policy (JPN)</a>
-    <a href="disclaimer-en.html" style="color: #8b5a2b; text-decoration: none; font-size: 14px; font-weight: bold;">Disclaimer (ENG)</a>
+    <a href="info.html" class="footer-info-link">info</a>
 </footer>
 </body>
 </html>
