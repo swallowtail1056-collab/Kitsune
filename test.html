@@ -1743,6 +1743,11 @@ document.querySelectorAll('#filterLevel option, #filterStyle option, #filterColo
     const enText = el.getAttribute('data-en');
     if (jaText && enText) el.textContent = LANG === 'ja' ? jaText : enText;
   });
+  document.querySelectorAll('footer .lang-text').forEach(el => {
+    const jaText = el.getAttribute('data-ja');
+    const enText = el.getAttribute('data-en');
+    if (jaText && enText) el.textContent = LANG === 'ja' ? jaText : enText;
+  });
   if (typeof puzzleState !== 'undefined' && !puzzleState.awaitingNext) {
     setPuzzleStatus(LANG === 'ja'
       ? (puzzleChess.turn() === 'w' ? '白番です。正解の手を指してください。' : '黒番です。正解の手を指してください。')
@@ -2954,11 +2959,11 @@ function animatePuzzleMove(fromSq, toSq, callback) {
     <a href="disclaimer.html" style="color: #8b5a2b; text-decoration: none; font-size: 14px; font-weight: bold; margin-right: 20px;">免責事項 / Privacy Policy (JPN)</a>
     <a href="disclaimer-en.html" style="color: #8b5a2b; text-decoration: none; font-size: 14px; font-weight: bold;">Disclaimer (ENG)</a>
 <div style="margin-top:10px;">
-      <a href="about.html" style="color:#8b5a2b; text-decoration:none; font-size:12px; font-weight:bold; margin-right:14px;">サイトへの想い</a>
-      <a href="history.html" style="color:#8b5a2b; text-decoration:none; font-size:12px; font-weight:bold; margin-right:14px;">チェスの歴史</a>
-      <a href="rules.html" style="color:#8b5a2b; text-decoration:none; font-size:12px; font-weight:bold; margin-right:14px;">チェス脳の鍛え方</a>
-      <a href="tactics.html" style="color:#8b5a2b; text-decoration:none; font-size:12px; font-weight:bold;">f7の狙い方</a>
-    </div> 
+      <a href="about.html" class="lang-text" data-ja="サイトへの想い" data-en="Vision" style="color:#8b5a2b; text-decoration:none; font-size:12px; font-weight:bold; margin-right:14px;">サイトへの想い</a>
+      <a href="history.html" class="lang-text" data-ja="チェスの歴史" data-en="Chess History" style="color:#8b5a2b; text-decoration:none; font-size:12px; font-weight:bold; margin-right:14px;">チェスの歴史</a>
+      <a href="rules.html" class="lang-text" data-ja="チェス脳の鍛え方" data-en="Train Your Brain" style="color:#8b5a2b; text-decoration:none; font-size:12px; font-weight:bold; margin-right:14px;">チェス脳の鍛え方</a>
+      <a href="tactics.html" class="lang-text" data-ja="f7の狙い方" data-en="Targeting f7" style="color:#8b5a2b; text-decoration:none; font-size:12px; font-weight:bold;">f7の狙い方</a>
+    </div>
   </footer>
 </body>
 </html>
