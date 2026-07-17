@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>初心者がやりがちなミス10選と改善法 - KitsuneChess</title>
+<meta name="description" content="チェス初心者が繰り返してしまうミスのパターンを10個厳選。それぞれの原因と具体的な改善方法を分かりやすく解説します。">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Crimson+Pro:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root { --bg: #f5edd6; --brown: #7c4a1e; --brown-dark: #4a2a0e; --text: #111; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: var(--bg); color: var(--text); font-family: 'Crimson Pro', serif; font-weight: 600; line-height: 1.8; padding: 40px 20px; }
+  .container { max-width: 720px; margin: 0 auto; background: transparent; border: none; padding: 20px 10px; }
+  .lang-en, .lang-ja { text-align: left !important; word-break: break-word !important; }
+  .lang-switch { text-align: right; margin-bottom: 25px; }
+  .lang-btn { background: #f7ebd3; border: 1px solid #c4b193; color: var(--brown-dark); padding: 6px 14px; border-radius: 4px; cursor: pointer; font-weight: 700; font-size: 0.85rem; transition: all 0.2s; }
+  .lang-btn:hover { background: var(--brown); color: #fff; }
+  h1 { font-family: 'Cinzel', serif; color: var(--brown-dark); font-size: 1.8rem; text-align: center; margin-bottom: 24px; border-bottom: 2px solid rgba(184,134,11,0.3); padding-bottom: 12px; }
+  h2 { font-family: 'Cinzel', serif; color: var(--brown); font-size: 1.1rem; margin: 30px 0 12px; border-left: 4px solid var(--brown); padding-left: 10px; }
+  p { font-size: 1.05rem; margin-bottom: 18px; }
+  .mistake-card { background: #fff8e8; border: 2px solid var(--brown); border-radius: 16px; padding: 22px 26px; margin: 20px 0; box-shadow: 2px 3px 8px rgba(0,0,0,0.05); }
+  .mistake-label { display: inline-block; background: var(--brown); color: #fff; font-family: 'Cinzel', serif; font-size: 0.75rem; padding: 3px 12px; border-radius: 4px; margin-bottom: 12px; letter-spacing: 1px; }
+  .fix-box { background: rgba(124,74,30,0.15); border-left: 4px solid var(--brown); padding: 12px 16px; margin-top: 14px; border-radius: 0 8px 8px 0; font-size: 0.95rem; }
+  .fix-label { font-weight: 700; color: var(--brown-dark); font-size: 0.85rem; margin-bottom: 4px; }
+  .footer { text-align: center; margin-top: 45px; font-size: 0.9rem; }
+  .footer a { color: var(--brown); text-decoration: none; font-weight: 700; border: 1px solid var(--brown); padding: 8px 18px; border-radius: 6px; transition: all 0.2s; }
+  .footer a:hover { background: var(--brown); color: #fff; }
+  .lang-en { display: none; }
+  .en-mode .lang-ja { display: none; }
+  .en-mode .lang-en { display: block; }
+  .en-mode button.lang-en { display: inline-block; }
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="lang-switch">
+    <button class="lang-btn lang-ja" onclick="toggleLanguage()">English</button>
+    <button class="lang-btn lang-en" onclick="toggleLanguage()">日本語</button>
+  </div>
+
+  <div class="lang-ja">
+    <h1>⚠ 初心者がやりがちな<br>ミス10選と改善法</h1>
+    <p>チェスを始めたばかりの頃、誰もが同じようなミスを繰り返すものです。これは決して恥ずかしいことではなく、すべての上級者が通ってきた道です。大切なのは、そのミスのパターンを知り、意識して直していくことです。ここでは初心者に最もよく見られるミス10選と、その具体的な改善方法をご紹介します。</p>
+
+    <h2>ミス① クイーンを早く出しすぎる</h2>
+    <div class="mistake-card">
+      <span class="mistake-label">MISTAKE 01</span>
+      <p>ゲーム開始直後にクイーンを前線に出し、相手のナイトやビショップに追い回されて時間を無駄にしてしまうパターンです。クイーンは最強の駒ですが、序盤は最も攻撃を受けやすい状況でもあります。</p>
+      <div class="fix-box">
+        <div class="fix-label">✅ 改善法</div>
+        まずナイト・ビショップを展開し、キャスリングでキングを安全にしてからクイーンを活用しましょう。クイーンの活躍の場は中盤以降です。
+      </div>
+    </div>
+
+    <h2>ミス② 1つの駒ばかり動かす</h2>
+    <div class="mistake-card">
+      <span class="mistake-label">MISTAKE 02</span>
+      <p>同じ駒を何度も動かして、他の駒の展開が遅れてしまうミスです。序盤の目標は「すべての駒を使える状態にすること」であり、1つの駒に頼りすぎると残りの駒が「眠った」まま中盤を迎えてしまいます。</p>
+      <div class="fix-box">
+        <div class="fix-label">✅ 改善法</div>
+        序盤は「まだ動いていない駒を動かす」を基本原則にしましょう。すでに発展済みの駒を再移動させるのは、明確な理由がある時だけにします。
+      </div>
+    </div>
+
+    <h2>ミス③ キャスリングを忘れる・遅らせる</h2>
+    <div class="mistake-card">
+      <span class="mistake-label">MISTAKE 03</span>
+      <p>キャスリングのタイミングを見誤り、センターにキングをさらしたまま中盤を迎えてしまうミスです。特に経験の浅い段階では、キングを安全な場所に移動させることが最優先事項です。</p>
+      <div class="fix-box">
+        <div class="fix-label">✅ 改善法</div>
+        ナイト・ビショップをキングサイドに展開したら、できるだけ早くキャスリングしましょう。目安は序盤10手以内です。
+      </div>
+    </div>
+
+    <h2>ミス④ 相手の手を読まない</h2>
+    <div class="mistake-card">
+      <span class="mistake-label">MISTAKE 04</span>
+      <p>自分の攻撃計画ばかりに集中して、相手が何を狙っているかを考えないミスです。チェスは2人でやるゲームです。自分の次の手を考える前に、「相手は今何を狙っているか？」を必ず確認する習慣が上達の基本です。</p>
+      <div class="fix-box">
+        <div class="fix-label">✅ 改善法</div>
+        相手が手を指した直後に「この手の目的は何か？」と必ず自問しましょう。相手の脅威を見落とすことが、最も多い敗因のひとつです。
+      </div>
+    </div>
+
+    <h2>ミス⑤ ポーンを無計画に進める</h2>
+    <div class="mistake-card">
+      <span class="mistake-label">MISTAKE 05</span>
+      <p>なんとなくポーンを前に進め続け、後で守れなくなって失ってしまうミスです。ポーンは後退できない唯一の駒であり、一度進んだら引き返せません。特に孤立ポーン（隣にポーンがない状態）は格好の攻撃目標になります。</p>
+      <div class="fix-box">
+        <div class="fix-label">✅ 改善法</div>
+        ポーンを動かす前に「このポーンを守れるか？」「このポーンを動かすことで生まれる弱点は何か？」を考えましょう。ポーンは慎重に扱うことが大切です。
+      </div>
+    </div>
+
+    <h2>ミス⑥ タダ取りを見落とす</h2>
+    <div class="mistake-card">
+      <span class="mistake-label">MISTAKE 06</span>
+      <p>自分の駒が守られていない場所（アンガード）に置いたまま気づかず、相手にタダで取られてしまうミスです。初心者の対局では、これが最も頻繁に起きる物質的損失の原因です。</p>
+      <div class="fix-box">
+        <div class="fix-label">✅ 改善法</div>
+        手を指した後、「今この手で守りが薄くなった場所はないか？」を確認しましょう。特に駒を移動させた後、その駒が守っていた場所が無防備になっていないかチェックすることが大切です。
+      </div>
+    </div>
+
+    <h2>ミス⑦ 終盤でキングを動かさない</h2>
+    <div class="mistake-card">
+      <span class="mistake-label">MISTAKE 07</span>
+      <p>終盤になってもキングをコーナーに隠したままにして、チャンスを逃すミスです。終盤ではキングは強力な戦力です。駒が少なくなれば、キングを積極的に中央に進出させて攻撃に参加させるのが基本原則です。</p>
+      <div class="fix-box">
+        <div class="fix-label">✅ 改善法</div>
+        クイーンが交換されたら、キングを中央に向かって積極的に動かしましょう。終盤のキングは攻撃の核になることができます。
+      </div>
+    </div>
+
+    <h2>ミス⑧ 急いで攻撃しようとする</h2>
+    <div class="mistake-card">
+      <span class="mistake-label">MISTAKE 08</span>
+      <p>準備が整っていないのに攻撃を仕掛け、反撃を受けて逆に不利になってしまうミスです。良い攻撃には必ず準備が必要です。展開が完了する前の攻撃は、たいてい失敗に終わります。</p>
+      <div class="fix-box">
+        <div class="fix-label">✅ 改善法</div>
+        攻撃を始める前のチェックリスト：①すべての駒が展開されているか、②キャスリングは済んでいるか、③攻撃する方向に自分の駒が集中しているか——この3点を必ず確認しましょう。
+      </div>
+    </div>
+
+    <h2>ミス⑨ バックランクメイトを見落とす</h2>
+    <div class="mistake-card">
+      <span class="mistake-label">MISTAKE 09</span>
+      <p>キャスリング後にポーンで守られているキングが、バックランク（最後列）からルークやクイーンでメイトされてしまうミスです。これは初中級者の対局で非常によく見られる詰み方です。</p>
+      <div class="fix-box">
+        <div class="fix-label">✅ 改善法</div>
+        キャスリング後に「逃げ道を1マス作る」（h3またはg3にポーンを突く）ことを習慣にしましょう。これだけでバックランクメイトの多くを防ぐことができます。
+      </div>
+    </div>
+
+    <h2>ミス⑩ 負けた局面を分析しない</h2>
+    <div class="mistake-card">
+      <span class="mistake-label">MISTAKE 10</span>
+      <p>負けた後にすぐ次の対局に移り、「どこで間違えたか」を振り返らないミスです。チェスの上達で最も重要なのは、自分のミスから学ぶことです。対局の記録を残し、負けた局面を分析する習慣がなければ、同じミスを繰り返し続けることになります。</p>
+      <div class="fix-box">
+        <div class="fix-label">✅ 改善法</div>
+        対局後に「自分が間違えたと思う手」を3つ見つけましょう。Lichessなどの無料ツールで局面を解析し、より良い手を探してください。これを続けることが最速の上達法です。
+      </div>
+    </div>
+
+    <h2>まとめ——上達の本質</h2>
+    <p>これら10のミスに共通するのは、「焦り」と「見落とし」です。チェスは時間をかけて考えるほど良い手が見つかるゲームです。焦らず、相手の意図を考え、自分の駒の安全を確認する——このシンプルな習慣を身につけるだけで、チェスは確実に上達していきます。</p>
+    <p>KitsuneChessの定跡レッスンでは、各手の意図を一手ずつ解説しています。「なぜその手が良いのか」を理解することが、こうしたミスを減らす最も効果的な道です。</p>
+
+    <div class="footer"><a href="javascript:window.close();">← 戻る</a></div>
+  </div>
+
+  <div class="lang-en">
+    <h1>⚠ 10 Common Beginner Mistakes<br>and How to Fix Them</h1>
+    <p>When starting out in chess, everyone makes the same types of mistakes. This is nothing to be ashamed of — every advanced player has walked this same road. What matters is recognizing these mistake patterns and consciously working to correct them. Here we present the 10 most common beginner mistakes and concrete ways to fix them.</p>
+
+    <h2>Mistake #1: Bringing the Queen Out Too Early</h2>
+    <div class="mistake-card">
+      <span class="mistake-label">MISTAKE 01</span>
+      <p>Moving the queen to the front lines immediately after the game starts, then wasting time as it gets chased around by the opponent's knights and bishops. The queen is the most powerful piece, but in the opening it is also most exposed to attack.</p>
+      <div class="fix-box"><div class="fix-label">✅ Fix</div>Develop knights and bishops first, castle to keep the king safe, then bring the queen into action. The queen's time to shine is the middlegame, not the opening.</div>
+    </div>
+
+    <h2>Mistake #2: Moving the Same Piece Over and Over</h2>
+    <div class="mistake-card">
+      <span class="mistake-label">MISTAKE 02</span>
+      <p>Moving the same piece repeatedly while the rest of the army sits undeveloped. The goal of the opening is to have all pieces ready for action. Relying too heavily on one piece means the rest enter the middlegame "asleep."</p>
+      <div class="fix-box"><div class="fix-label">✅ Fix</div>Follow the principle of "develop a piece that hasn't moved yet." Only move a developed piece again when you have a clear reason to do so.</div>
+    </div>
+
+    <h2>Mistake #3: Forgetting or Delaying Castling</h2>
+    <div class="mistake-card">
+      <span class="mistake-label">MISTAKE 03</span>
+      <p>Misjudging the timing of castling and entering the middlegame with the king still exposed in the center. Especially for less experienced players, moving the king to safety is the top priority.</p>
+      <div class="fix-box"><div class="fix-label">✅ Fix</div>Once you have developed your kingside knight and bishop, castle as soon as possible. Aim to castle within the first 10 moves.</div>
+    </div>
+
+    <h2>Mistake #4: Not Reading the Opponent's Moves</h2>
+    <div class="mistake-card">
+      <span class="mistake-label">MISTAKE 04</span>
+      <p>Focusing only on your own attacking plans and failing to consider what the opponent is threatening. Chess is a two-player game. Before thinking about your next move, always ask: "What is my opponent trying to do?"</p>
+      <div class="fix-box"><div class="fix-label">✅ Fix</div>After every opponent move, ask yourself "What is the purpose of this move?" Missing the opponent's threats is one of the most common causes of defeat.</div>
+    </div>
+
+    <h2>Mistake #5: Advancing Pawns Without a Plan</h2>
+    <div class="mistake-card">
+      <span class="mistake-label">MISTAKE 05</span>
+      <p>Randomly pushing pawns forward only to lose them because they can't be defended. Pawns are the only pieces that cannot retreat. Isolated pawns (with no neighboring pawns) become easy targets.</p>
+      <div class="fix-box"><div class="fix-label">✅ Fix</div>Before pushing a pawn, ask "Can I defend this pawn?" and "What weaknesses does this move create?" Treat pawns with care.</div>
+    </div>
+
+    <h2>Mistake #6: Missing Hanging Pieces</h2>
+    <div class="mistake-card">
+      <span class="mistake-label">MISTAKE 06</span>
+      <p>Leaving pieces unguarded without noticing, allowing the opponent to capture them for free. This is the most common cause of material loss in beginner games.</p>
+      <div class="fix-box"><div class="fix-label">✅ Fix</div>After making a move, check: "Did this move leave any piece unprotected?" Verify that the piece you just moved is not now leaving something else undefended.</div>
+    </div>
+
+    <h2>Mistake #7: Not Activating the King in the Endgame</h2>
+    <div class="mistake-card">
+      <span class="mistake-label">MISTAKE 07</span>
+      <p>Keeping the king hidden in the corner even in the endgame, missing important opportunities. In the endgame, the king is a powerful fighting piece. The basic principle is to advance the king actively toward the center.</p>
+      <div class="fix-box"><div class="fix-label">✅ Fix</div>Once the queens are exchanged, actively march the king toward the center. In the endgame, the king can become the core of your attack.</div>
+    </div>
+
+    <h2>Mistake #8: Attacking Too Hastily</h2>
+    <div class="mistake-card">
+      <span class="mistake-label">MISTAKE 08</span>
+      <p>Launching an attack before preparation is complete, only to face a counterattack and fall into a worse position. Good attacks require preparation. Attacks launched before development is complete almost always fail.</p>
+      <div class="fix-box"><div class="fix-label">✅ Fix</div>Pre-attack checklist: ① Are all pieces developed? ② Have you castled? ③ Are your pieces concentrated toward the attacking direction?</div>
+    </div>
+
+    <h2>Mistake #9: Missing Back-Rank Mate</h2>
+    <div class="mistake-card">
+      <span class="mistake-label">MISTAKE 09</span>
+      <p>After castling, allowing the king to be checkmated by a rook or queen sliding along the back rank. This is one of the most common mating patterns in amateur games.</p>
+      <div class="fix-box"><div class="fix-label">✅ Fix</div>After castling, make a habit of creating an escape square by advancing a pawn to h3 or g3. This simple move prevents most back-rank mate threats.</div>
+    </div>
+
+    <h2>Mistake #10: Not Analyzing Lost Games</h2>
+    <div class="mistake-card">
+      <span class="mistake-label">MISTAKE 10</span>
+      <p>After a loss, immediately jumping into the next game without reflecting on "where did I go wrong?" The most important part of improving at chess is learning from your own mistakes.</p>
+      <div class="fix-box"><div class="fix-label">✅ Fix</div>After each game, identify 3 moves you think you got wrong. Use a free tool like Lichess to analyze those positions and find better moves. Making this a habit is the fastest path to improvement.</div>
+    </div>
+
+    <h2>Summary — The Essence of Improvement</h2>
+    <p>What these 10 mistakes share is "rushing" and "overlooking." Chess rewards taking time to think. Not rushing, thinking about the opponent's intentions, and verifying the safety of your pieces — simply building these habits will reliably improve your chess.</p>
+    <p>KitsuneChess's opening lessons explain the purpose behind each move, one step at a time. Understanding "why a move is good" is the most effective way to reduce these kinds of mistakes.</p>
+
+    <div class="footer"><a href="javascript:window.close();">← Back</a></div>
+  </div>
+</div>
+<script>function toggleLanguage(){document.body.classList.toggle('en-mode');}</script>
+</body>
+</html>

@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>チェスの駒それぞれの個性と使いこなし方 - KitsuneChess</title>
+<meta name="description" content="キング・クイーン・ルーク・ビショップ・ナイト・ポーン——6種類の駒それぞれの強さ・弱さ・使いこなし方を徹底解説します。">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Crimson+Pro:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root { --bg: #f5edd6; --brown: #7c4a1e; --brown-dark: #4a2a0e; --text: #111; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: var(--bg); color: var(--text); font-family: 'Crimson Pro', serif; font-weight: 600; line-height: 1.8; padding: 40px 20px; }
+  .container { max-width: 720px; margin: 0 auto; background: transparent; border: none; padding: 20px 10px; }
+  .lang-en, .lang-ja { text-align: left !important; word-break: break-word !important; }
+  .lang-switch { text-align: right; margin-bottom: 25px; }
+  .lang-btn { background: #f7ebd3; border: 1px solid #c4b193; color: var(--brown-dark); padding: 6px 14px; border-radius: 4px; cursor: pointer; font-weight: 700; font-size: 0.85rem; transition: all 0.2s; }
+  .lang-btn:hover { background: var(--brown); color: #fff; }
+  h1 { font-family: 'Cinzel', serif; color: var(--brown-dark); font-size: 1.8rem; text-align: center; margin-bottom: 24px; border-bottom: 2px solid rgba(184,134,11,0.3); padding-bottom: 12px; }
+  h2 { font-family: 'Cinzel', serif; color: var(--brown); font-size: 1.2rem; margin: 35px 0 15px; border-left: 4px solid var(--brown); padding-left: 10px; }
+  p { font-size: 1.05rem; margin-bottom: 18px; }
+  .piece-card { background: #f0e4c8; border: 2px solid var(--brown); border-radius: 16px; padding: 25px; margin: 24px 0; box-shadow: 2px 3px 8px rgba(0,0,0,0.08); }
+  .piece-header { display: flex; align-items: center; gap: 16px; margin-bottom: 14px; }
+  .piece-symbol { font-size: 2.5rem; line-height: 1; }
+  .piece-name { font-family: 'Cinzel', serif; font-size: 1.1rem; color: var(--brown-dark); font-weight: 700; }
+  .piece-value { font-size: 0.85rem; color: #5a3a18; margin-top: 3px; }
+  .tag-row { display: flex; flex-wrap: wrap; gap: 6px; margin: 10px 0 14px; }
+  .tag { display: inline-block; padding: 2px 10px; border-radius: 20px; font-size: 0.78rem; font-weight: 700; letter-spacing: 0.3px; }
+  .tag-strong { background: var(--brown-dark); color: #fff; }
+  .tag-weak { background: #8b4a2a; color: #fff; }
+  .tag-special { background: #4a5a7c; color: #fff; }
+  .accent-box { background: rgba(124,74,30,0.15); border-left: 4px solid var(--brown); padding: 14px 18px; margin: 14px 0; border-radius: 0 8px 8px 0; }
+  .footer { text-align: center; margin-top: 45px; font-size: 0.9rem; }
+  .footer a { color: var(--brown); text-decoration: none; font-weight: 700; border: 1px solid var(--brown); padding: 8px 18px; border-radius: 6px; transition: all 0.2s; }
+  .footer a:hover { background: var(--brown); color: #fff; }
+  .lang-en { display: none; }
+  .en-mode .lang-ja { display: none; }
+  .en-mode .lang-en { display: block; }
+  .en-mode button.lang-en { display: inline-block; }
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="lang-switch">
+    <button class="lang-btn lang-ja" onclick="toggleLanguage()">English</button>
+    <button class="lang-btn lang-en" onclick="toggleLanguage()">日本語</button>
+  </div>
+
+  <div class="lang-ja">
+    <h1>♟ チェスの駒——<br>それぞれの個性と使いこなし方</h1>
+    <p>チェスには6種類の駒があります。それぞれ動き方が異なり、得意な局面・不得意な局面も違います。「どの駒がどんな場面で輝くか」を理解することが、チェス上達の根本となります。ここでは各駒の個性を深く掘り下げ、実戦での使いこなし方を解説します。</p>
+
+    <h2>キング（King）</h2>
+    <div class="piece-card">
+      <div class="piece-header">
+        <div class="piece-symbol">♔</div>
+        <div><div class="piece-name">キング / King</div><div class="piece-value">ゲームの目的。取られたらゲーム終了</div></div>
+      </div>
+      <div class="tag-row">
+        <span class="tag tag-strong">序盤：守りを固める</span>
+        <span class="tag tag-strong">終盤：攻撃の核</span>
+        <span class="tag tag-weak">中盤：危険にさらされやすい</span>
+      </div>
+      <p>キングは1マスずつしか動けませんが、縦・横・斜めのすべての方向に移動できます。チェスの目的はキングをチェックメイトすることであり、キングを失ったらゲームは終わりです。</p>
+      <p>序盤・中盤はキャスリングでキングをコーナーに隠し、ポーンの壁で守ることが鉄則です。しかし終盤でピースが少なくなると、キングは強力な攻撃駒に変身します。終盤のキングを積極的に中央に進出させることが、多くの場合勝利への鍵となります。</p>
+      <div class="accent-box">キャスリングは単に「キングを安全にする」だけでなく、ルークを中央に向けて活性化させる効果もあります。この一石二鳥の一手を早めに実行することが序盤の基本です。</div>
+    </div>
+
+    <h2>クイーン（Queen）</h2>
+    <div class="piece-card">
+      <div class="piece-header">
+        <div class="piece-symbol">♕</div>
+        <div><div class="piece-name">クイーン / Queen</div><div class="piece-value">価値：約9ポーン分。最強の駒</div></div>
+      </div>
+      <div class="tag-row">
+        <span class="tag tag-strong">縦・横・斜め全方向</span>
+        <span class="tag tag-strong">遠距離攻撃に最適</span>
+        <span class="tag tag-weak">序盤は攻撃を受けやすい</span>
+      </div>
+      <p>クイーンはルークとビショップを合わせた動きができる、チェスで最も強力な駒です。縦・横・斜めの任意の方向に何マスでも動けます。その圧倒的な機動力は、相手に常に脅威を与え続けます。</p>
+      <p>ただし、クイーンは序盤に前線に出すべきではありません。相手のナイトやビショップに追い回され、手数を無駄にしてしまいます。クイーンが最も輝くのは、相手の防御が崩れてきた中盤から終盤にかけてです。</p>
+      <div class="accent-box">クイーンは強力すぎるがゆえに、相手は常にクイーンを攻撃しようとします。クイーンを活用するには、逃げ場を常に確保しておくことが重要です。</div>
+    </div>
+
+    <h2>ルーク（Rook）</h2>
+    <div class="piece-card">
+      <div class="piece-header">
+        <div class="piece-symbol">♖</div>
+        <div><div class="piece-name">ルーク / Rook</div><div class="piece-value">価値：約5ポーン分。2番目に強い駒</div></div>
+      </div>
+      <div class="tag-row">
+        <span class="tag tag-strong">オープンファイルで無敵</span>
+        <span class="tag tag-strong">終盤で真価を発揮</span>
+        <span class="tag tag-weak">序盤は出番が少ない</span>
+        <span class="tag tag-special">キャスリングで活性化</span>
+      </div>
+      <p>ルークは縦または横に何マスでも動ける、クイーンに次いで強力な駒です。ポーンが少なくなってオープンファイル（ポーンのない縦列）が生まれると、ルークの力は飛躍的に増します。</p>
+      <p>序盤のルークは動き回る機会が少ないですが、キャスリングによってルークを中央に向けることが重要です。また、2枚のルークを同じファイルに重ねる「バッテリー」は、ルークの最も強力な使い方のひとつです。</p>
+      <div class="accent-box">「ルークは7段目（相手の陣内）に侵入すると最強になる」——これはチェスの格言として広く知られています。相手のポーンがまだ7段目にある終盤では、ルークで7段目を制圧することが決定的優位につながります。</div>
+    </div>
+
+    <h2>ビショップ（Bishop）</h2>
+    <div class="piece-card">
+      <div class="piece-header">
+        <div class="piece-symbol">♗</div>
+        <div><div class="piece-name">ビショップ / Bishop</div><div class="piece-value">価値：約3ポーン分。ナイトと同等</div></div>
+      </div>
+      <div class="tag-row">
+        <span class="tag tag-strong">オープンな局面で強力</span>
+        <span class="tag tag-strong">長い対角線を制圧</span>
+        <span class="tag tag-weak">ポーンに行く手を阻まれやすい</span>
+        <span class="tag tag-special">白マスと黒マスに1枚ずつ</span>
+      </div>
+      <p>ビショップは斜め方向に何マスでも動けます。白マスのビショップは生涯白マスのみ、黒マスのビショップは生涯黒マスのみを動きます。この特性から、「悪いビショップ」（自分のポーンと同じ色のマスに閉じ込められたビショップ）という概念が生まれます。</p>
+      <p>ビショップはオープンな局面で真価を発揮します。ポーンが少なく開けた盤面では、長い対角線を通じて盤面の広い範囲を支配できます。一方、ポーンが多くクローズドな局面ではナイトの方が優れる場合が多いです。</p>
+      <div class="accent-box">2枚のビショップ（ビショップペア）を保持することは大きなアドバンテージです。特に終盤ではビショップペアが決定的な役割を果たすことが多くなります。</div>
+    </div>
+
+    <h2>ナイト（Knight）</h2>
+    <div class="piece-card">
+      <div class="piece-header">
+        <div class="piece-symbol">♘</div>
+        <div><div class="piece-name">ナイト / Knight</div><div class="piece-value">価値：約3ポーン分。最も独特な動き</div></div>
+      </div>
+      <div class="tag-row">
+        <span class="tag tag-strong">駒を飛び越えられる唯一の駒</span>
+        <span class="tag tag-strong">クローズドな局面で真価</span>
+        <span class="tag tag-weak">端のマスでは弱い</span>
+        <span class="tag tag-special">L字型の動き</span>
+      </div>
+      <p>ナイトはL字型（縦2マス横1マス、または縦1マス横2マス）に動き、他の駒を飛び越えることができる唯一の駒です。この独特な動き方は、他の駒では届かないマスに突然現れることを可能にし、相手に予測困難なプレッシャーを与えます。</p>
+      <p>ナイトは「アウトポスト」（相手のポーンが攻撃できない安全なマス）に置かれると最強になります。特にd5やe5などの中央のアウトポストは、ナイトの理想的な拠点です。</p>
+      <div class="accent-box">「ナイトは端を嫌う」はチェスの格言です。端のマスに置かれたナイトは攻撃できるマスが大幅に減ります。ナイトは常に盤面の中央付近に置くことを意識しましょう。</div>
+    </div>
+
+    <h2>ポーン（Pawn）</h2>
+    <div class="piece-card">
+      <div class="piece-header">
+        <div class="piece-symbol">♙</div>
+        <div><div class="piece-name">ポーン / Pawn</div><div class="piece-value">価値：1ポーン分。最小だが最重要な駒</div></div>
+      </div>
+      <div class="tag-row">
+        <span class="tag tag-strong">陣地を形成する骨格</span>
+        <span class="tag tag-strong">8段目でプロモーション</span>
+        <span class="tag tag-weak">後退できない</span>
+        <span class="tag tag-special">斜め取り・アンパッサン</span>
+      </div>
+      <p>ポーンは前にしか進めず、攻撃は斜め前の1マスのみです。後退できない唯一の駒ですが、この「小さな駒」こそが局面を最も大きく左右する存在です。ポーンの配置（ポーン構造）がその局面の性質を決め、両プレイヤーの長期的な戦略を規定します。</p>
+      <p>ポーンが相手陣の最後列（8段目）に到達すると、クイーン・ルーク・ビショップ・ナイトのいずれかに「プロモーション（昇格）」できます。ほとんどの場合クイーンに昇格します。この可能性こそが、ポーンが終盤で最も重要な戦力となる理由です。</p>
+      <div class="accent-box">「チェスの魂はポーンにある」——ルイ・ポールセンの言葉です。孤立ポーン・二重ポーン・通過ポーンなどの概念を学ぶことで、局面評価の精度が格段に上がります。</div>
+    </div>
+
+    <h2>駒の組み合わせで生まれる力</h2>
+    <p>各駒の個性を理解した上で重要なのは、「駒の組み合わせ」です。ルーク同士の連携、ビショップとナイトの補完関係、クイーンとルークのコンビネーション——これらの組み合わせによって、個々の駒の力の合計を超えた力が生まれます。</p>
+    <p>チェスの上達とは、こうした駒の相互作用を直感的に理解できるようになることです。KitsuneChessの定跡レッスンでは、各オープニングで各駒がどのような役割を担うかを解説しています。定跡を学ぶことは、駒の使い方を学ぶことでもあります。</p>
+
+    <div class="footer"><a href="javascript:window.close();">← 戻る</a></div>
+  </div>
+
+  <div class="lang-en">
+    <h1>♟ Chess Pieces —<br>Their Characters and How to Use Them</h1>
+    <p>Chess has six types of pieces. Each moves differently and shines in different types of positions. Understanding "which piece excels in which situation" is the foundation of chess improvement. Here we take a deep look at each piece's character and explain how to use them effectively in real games.</p>
+
+    <h2>King</h2>
+    <div class="piece-card">
+      <div class="piece-header"><div class="piece-symbol">♔</div><div><div class="piece-name">King</div><div class="piece-value">The objective. If captured, the game ends.</div></div></div>
+      <div class="tag-row"><span class="tag tag-strong">Opening: Build a fortress</span><span class="tag tag-strong">Endgame: Core attacker</span><span class="tag tag-weak">Middlegame: Vulnerable</span></div>
+      <p>The king moves only one square at a time but can go in any direction. The goal of chess is to checkmate the opponent's king. In the opening and middlegame, the iron rule is to tuck the king safely in a corner via castling.</p>
+      <p>However, as pieces disappear in the endgame, the king transforms into a powerful attacking piece. Actively advancing the king toward the center in the endgame is often the key to victory.</p>
+      <div class="accent-box">Castling doesn't just make the king safe — it also activates the rook by directing it toward the center. Executing this "two birds with one stone" move early is a key opening principle.</div>
+    </div>
+
+    <h2>Queen</h2>
+    <div class="piece-card">
+      <div class="piece-header"><div class="piece-symbol">♕</div><div><div class="piece-name">Queen</div><div class="piece-value">Worth ~9 pawns. The most powerful piece.</div></div></div>
+      <div class="tag-row"><span class="tag tag-strong">Moves in all 8 directions</span><span class="tag tag-strong">Perfect for long-range attacks</span><span class="tag tag-weak">Vulnerable to attack in the opening</span></div>
+      <p>The queen combines the movements of the rook and bishop. It can move any number of squares in any direction. Its overwhelming mobility makes it a constant threat to the opponent.</p>
+      <p>However, the queen should not be brought to the front lines in the opening. Chased around by knights and bishops, you waste precious moves. The queen shines brightest in the middlegame and endgame.</p>
+      <div class="accent-box">Because the queen is so powerful, opponents will always look for ways to attack it. To use the queen effectively, always ensure it has escape routes.</div>
+    </div>
+
+    <h2>Rook</h2>
+    <div class="piece-card">
+      <div class="piece-header"><div class="piece-symbol">♖</div><div><div class="piece-name">Rook</div><div class="piece-value">Worth ~5 pawns. Second strongest piece.</div></div></div>
+      <div class="tag-row"><span class="tag tag-strong">Invincible on open files</span><span class="tag tag-strong">Shows true strength in endgame</span><span class="tag tag-weak">Limited opportunities in the opening</span><span class="tag tag-special">Activated by castling</span></div>
+      <p>The rook moves any number of squares horizontally or vertically. When pawns disappear and open files appear, the rook's power grows exponentially.</p>
+      <p>Rooks have few opportunities in the opening, but it's important to direct them toward the center via castling. Doubling two rooks on the same file ("battery") is one of the most powerful uses of the rook.</p>
+      <div class="accent-box">"Rooks are strongest on the 7th rank" — a well-known chess saying. Seizing the 7th rank in the endgame can deliver a decisive advantage.</div>
+    </div>
+
+    <h2>Bishop</h2>
+    <div class="piece-card">
+      <div class="piece-header"><div class="piece-symbol">♗</div><div><div class="piece-name">Bishop</div><div class="piece-value">Worth ~3 pawns. Equal to a knight.</div></div></div>
+      <div class="tag-row"><span class="tag tag-strong">Powerful in open positions</span><span class="tag tag-strong">Controls long diagonals</span><span class="tag tag-weak">Blocked by pawns</span><span class="tag tag-special">One on light, one on dark squares</span></div>
+      <p>The bishop moves diagonally any number of squares. A light-squared bishop stays on light squares for its entire life; a dark-squared bishop stays on dark squares. This gives rise to the "bad bishop" concept.</p>
+      <p>Bishops show their true worth in open positions. On boards with open diagonals, a bishop can control a large portion of the board. In closed positions, knights often prove superior.</p>
+      <div class="accent-box">Holding the bishop pair (both bishops) is a significant advantage, especially in the endgame where they can be decisive.</div>
+    </div>
+
+    <h2>Knight</h2>
+    <div class="piece-card">
+      <div class="piece-header"><div class="piece-symbol">♘</div><div><div class="piece-name">Knight</div><div class="piece-value">Worth ~3 pawns. The most unique movement.</div></div></div>
+      <div class="tag-row"><span class="tag tag-strong">Only piece that can jump</span><span class="tag tag-strong">Excels in closed positions</span><span class="tag tag-weak">Weak on the edges</span><span class="tag tag-special">L-shaped movement</span></div>
+      <p>The knight moves in an L-shape and is the only piece that can jump over other pieces. This unique movement allows it to appear suddenly on squares unreachable by other pieces, creating threats the opponent struggles to predict.</p>
+      <p>Knights are strongest when placed on "outposts" — squares where they cannot be attacked by enemy pawns. Central outposts like d5 or e5 are ideal homes for a knight.</p>
+      <div class="accent-box">"A knight on the rim is dim" — a chess proverb. A knight on the edge has drastically fewer squares it can reach. Always aim to keep your knights near the center.</div>
+    </div>
+
+    <h2>Pawn</h2>
+    <div class="piece-card">
+      <div class="piece-header"><div class="piece-symbol">♙</div><div><div class="piece-name">Pawn</div><div class="piece-value">Worth 1 pawn. Smallest but most critical piece.</div></div></div>
+      <div class="tag-row"><span class="tag tag-strong">Skeleton of the position</span><span class="tag tag-strong">Promotes on the 8th rank</span><span class="tag tag-weak">Cannot move backward</span><span class="tag tag-special">Captures diagonally / En passant</span></div>
+      <p>Pawns can only move forward and attack only diagonally forward one square. They are the only piece that cannot retreat. Yet pawn structure defines the character of the position and determines the long-term strategies of both players.</p>
+      <p>When a pawn reaches the last rank (8th rank), it can promote to any piece — usually a queen. This potential is why pawns become the most critical fighting force in the endgame.</p>
+      <div class="accent-box">"The soul of chess is the pawn" — Louis Paulsen. Learning the concepts of isolated, doubled, and passed pawns will dramatically improve your ability to evaluate positions.</div>
+    </div>
+
+    <h2>The Power Born from Piece Combinations</h2>
+    <p>Understanding each piece individually is important, but how pieces work together matters just as much. Rooks cooperating on open files, the complementary relationship between bishops and knights, the queen-rook combination — these synergies create force that exceeds the sum of the individual parts.</p>
+    <p>Improving at chess means developing an intuitive understanding of these piece interactions. KitsuneChess opening lessons explain the role each piece plays in each opening system. Learning openings is simultaneously learning how to use each piece effectively.</p>
+
+    <div class="footer"><a href="javascript:window.close();">← Back</a></div>
+  </div>
+</div>
+<script>function toggleLanguage(){document.body.classList.toggle('en-mode');}</script>
+</body>
+</html>
