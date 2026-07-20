@@ -614,11 +614,15 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <span class="lang-text" data-ja="⚡ 激ムズ問題！集中して！⚡" data-en="⚡ SUPER HARD PUZZLE! Focus! ⚡" style="font-family:'Cinzel',serif;font-weight:800;color:var(--brown-dark);">⚡ 激ムズ問題！集中して！⚡</span>
   </div>
 
+ <!-- 変更後(SVGオーバーレイを追加) -->
   <div class="game-area">
     <div class="board-wrap">
       <div class="board-row">
         <div class="rank-col" id="puzzleRankCol"></div>
-        <div id="puzzleBoard"></div>
+        <div style="position:relative;display:inline-block;">
+          <div id="puzzleBoard"></div>
+          <svg id="puzzleArrowSvg" viewBox="0 0 8 8" style="position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:5;"></svg>
+        </div>
       </div>
       <div class="file-row" id="puzzleFileRow"></div>
     </div>
