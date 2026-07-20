@@ -46,11 +46,13 @@ nav .nav-inner{
   padding:8px 16px;gap:6px;flex-wrap:nowrap;
 }
 nav h1{font-family:'Crimson Pro',serif;font-size:clamp(0.9rem,3vw,1.4rem);font-weight:700;color:var(--brown);letter-spacing:1px;flex:1;text-transform:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.nav-btns{display:flex;gap:3px;flex-shrink:0;flex-wrap:nowrap;align-items:center;}
+/* 変更後 */
+.nav-btns{display:flex;gap:3px;flex-shrink:0;flex-wrap:nowrap;align-items:center;overflow-x:auto;-webkit-overflow-scrolling:touch;}
 .nav-btn{
   background:rgba(90,58,24,0.08);border:1px solid rgba(90,58,24,0.25);
   color:var(--text-sub);padding:5px 7px;border-radius:5px;
   font-family:'Crimson Pro',serif;font-size:clamp(0.65rem,2.2vw,0.78rem);font-weight:700;cursor:pointer;transition:all 0.2s;white-space:nowrap;
+  text-decoration:none;display:inline-flex;align-items:center;line-height:1;
 }
 .nav-btn:hover{border-color:var(--brown);color:var(--brown);}
 .nav-btn.active-page{background:var(--brown);color:#f5edd6;border-color:var(--brown);}
@@ -406,9 +408,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <div class="nav-btns" id="navBtns">
   <button class="nav-btn active-page" id="navGame" onclick="showPage('game',this)">練習</button>
   <button class="nav-btn" id="navQuiz" onclick="showPage('quiz',this)">クイズ</button>
+ <!-- 変更後 -->
   <button class="nav-btn" id="navPuzzle" onclick="showPage('puzzle',this)">Puzzle</button>
-  <button class="sound-btn" id="btnSound" onclick="toggleSound(this)" title="Sound ON/OFF">🔊</button>
-  <button class="sound-btn" id="btnHome" onclick="goHome()" title="Home">🏠</button>
+  <a href="info.html#about" class="nav-btn" id="navAbout">🦊</a>
+  <a href="info.html#learn" class="nav-btn" id="navLearn">♟</a>
+  <a href="info.html#tips" class="nav-btn" id="navTips">📈</a>
+  <button class="sound-btn" id="btnSound" onclick="toggleSound(this)" title="Sound ON/OFF">🔊</button><button class="sound-btn" id="btnHome" onclick="goHome()" title="Home">🏠</button>
   <button class="nav-btn" id="btnLang" onclick="toggleLang(this)" style="background:rgba(45,107,62,0.15);border-color:var(--green);color:var(--green-dark);">EN</button>
 </div>
   </div>
@@ -450,6 +455,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <h3>▸ 説明</h3>
     <p class="info-text" id="infoText">オープニングを選んで練習を始めてください。</p>
   </div>
+ <!-- 変更後(正しい状態に復元) -->
   <div class="fox-wrap" id="foxWrap">
     <img src="" class="fox-img" id="foxImg" alt="fox mascot">
     <div class="fox-bubble" id="foxBubble">オープニングを選んで練習を始めよう！🦊</div>
@@ -608,11 +614,15 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <span class="lang-text" data-ja="⚡ 激ムズ問題！集中して！⚡" data-en="⚡ SUPER HARD PUZZLE! Focus! ⚡" style="font-family:'Cinzel',serif;font-weight:800;color:var(--brown-dark);">⚡ 激ムズ問題！集中して！⚡</span>
   </div>
 
+ <!-- 変更後(SVGオーバーレイを追加) -->
   <div class="game-area">
     <div class="board-wrap">
       <div class="board-row">
         <div class="rank-col" id="puzzleRankCol"></div>
-        <div id="puzzleBoard"></div>
+        <div style="position:relative;display:inline-block;">
+          <div id="puzzleBoard"></div>
+          <svg id="puzzleArrowSvg" viewBox="0 0 8 8" style="position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:5;"></svg>
+        </div>
       </div>
       <div class="file-row" id="puzzleFileRow"></div>
     </div>
@@ -2814,6 +2824,7 @@ function startPuzzle(idx) {
   const banner = document.getElementById('puzzleSuperhardBanner');
   if (banner) banner.style.display = p.superhard ? 'block' : 'none';
   setFoxImg('normal');   // ← この行を追加
+   clearPuzzleArrows();
   renderPuzzleBoard();
   setPuzzleStatus(LANG === 'ja' ? (puzzleChess.turn() === 'w' ? '白番です。正解の手を指してください。' : '黒番です。正解の手を指してください。')
                                  : (puzzleChess.turn() === 'w' ? "White to move. Find the winning move." : "Black to move. Find the winning move."));
@@ -2957,13 +2968,72 @@ function doPuzzleWrong(sq) {
   renderPuzzleBoard();
 }
 
+function squareToXY(sq) {
+  const file = sq.charCodeAt(0) - 97;
+  const rank = parseInt(sq[1], 10);
+  return { x: file + 0.5, y: (8 - rank) + 0.5 };
+}
+
+function clearPuzzleArrows() {
+  const svg = document.getElementById('puzzleArrowSvg');
+  if (svg) svg.innerHTML = '';
+}
+
+<!-- 変更後 -->
+function drawPuzzleArrow(fromSq, toSq, color) {
+  const svg = document.getElementById('puzzleArrowSvg');
+  if (!svg) return;
+  const ns = 'http://www.w3.org/2000/svg';
+  const arrowColor = color || '#e63946';
+  let defs = svg.querySelector('defs');
+  if (!defs) {
+    defs = document.createElementNS(ns, 'defs');
+    svg.appendChild(defs);
+  }
+  const markerId = 'puzzleArrowHead-' + arrowColor.replace('#','');
+  if (!svg.querySelector('#' + markerId)) {
+    const marker = document.createElementNS(ns, 'marker');
+    marker.setAttribute('id', markerId);
+    marker.setAttribute('markerUnits', 'userSpaceOnUse');
+    marker.setAttribute('markerWidth', '0.7');
+    marker.setAttribute('markerHeight', '0.7');
+    marker.setAttribute('refX', '0.55');
+    marker.setAttribute('refY', '0.35');
+    marker.setAttribute('orient', 'auto');
+    const path = document.createElementNS(ns, 'path');
+    path.setAttribute('d', 'M0,0 L0.7,0.35 L0,0.7 Z');
+    path.setAttribute('fill', arrowColor);
+    marker.appendChild(path);
+    defs.appendChild(marker);
+  }
+  const from = squareToXY(fromSq), to = squareToXY(toSq);
+  const dx = to.x - from.x, dy = to.y - from.y;
+  const len = Math.sqrt(dx*dx + dy*dy) || 1;
+  const shrink = 0.35;
+  const ex = to.x - (dx/len)*shrink, ey = to.y - (dy/len)*shrink;
+  const line = document.createElementNS(ns, 'line');
+  line.setAttribute('x1', from.x); line.setAttribute('y1', from.y);
+  line.setAttribute('x2', ex); line.setAttribute('y2', ey);
+  line.setAttribute('stroke', arrowColor);
+  line.setAttribute('stroke-width', '0.16');
+  line.setAttribute('stroke-linecap', 'round');
+  line.setAttribute('opacity', '0.9');
+  line.setAttribute('marker-end', 'url(#' + markerId + ')');
+  svg.appendChild(line);
+}
+  
 function showPuzzleAnswer() {
   puzzleState.streak = 0; // 答えを見たらストリークはリセット
   document.getElementById('puzzleStreakVal').textContent = 0;
   const p = currentPuzzle();
   addWrongPuzzle(p.order);
-  const remaining = p.moves.slice(puzzleState.moveIndex).join(' ');
-  setPuzzleStatus((LANG === 'ja' ? '正解: ' : 'Answer: ') + remaining, 'bad');
+  const remainingMoves = p.moves.slice(puzzleState.moveIndex);
+  const nextSan = remainingMoves[0];
+  const legalNow = puzzleChess.moves({ verbose: true });
+  const mv = legalNow.find(m => m.san === nextSan);
+  clearPuzzleArrows();
+  if (mv) drawPuzzleArrow(mv.from, mv.to);
+  setPuzzleStatus((LANG === 'ja' ? '正解: ' : 'Answer: ') + remainingMoves.join(' '), 'bad');
   setFoxImg('sad');
   document.getElementById('btnPuzzleAnswer').style.display = 'none';
   document.getElementById('puzzleNextRow').style.display = '';
@@ -3022,8 +3092,5 @@ function animatePuzzleMove(fromSq, toSq, callback) {
   setTimeout(() => { clone.remove(); callback(); }, 340);
 }
 </script>
-  <footer style="text-align: center; margin-top: 50px; padding: 20px 0; border-top: 1px solid #d4bda7;">
-    <a href="info.html" class="footer-info-link">info</a>
-</footer>
-</body>
+ </body>
 </html>
