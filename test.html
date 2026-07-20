@@ -2822,6 +2822,7 @@ function startPuzzle(idx) {
   const banner = document.getElementById('puzzleSuperhardBanner');
   if (banner) banner.style.display = p.superhard ? 'block' : 'none';
   setFoxImg('normal');   // ← この行を追加
+   clearPuzzleArrows();
   renderPuzzleBoard();
   setPuzzleStatus(LANG === 'ja' ? (puzzleChess.turn() === 'w' ? '白番です。正解の手を指してください。' : '黒番です。正解の手を指してください。')
                                  : (puzzleChess.turn() === 'w' ? "White to move. Find the winning move." : "Black to move. Find the winning move."));
@@ -2965,13 +2966,54 @@ function doPuzzleWrong(sq) {
   renderPuzzleBoard();
 }
 
+function squareToXY(sq) {
+  const file = sq.charCodeAt(0) - 97;
+  const rank = parseInt(sq[1], 10);
+  return { x: file + 0.5, y: (8 - rank) + 0.5 };
+}
+
+function clearPuzzleArrows() {
+  const svg = document.getElementById('puzzleArrowSvg');
+  if (svg) svg.innerHTML = '';
+}
+
+function drawPuzzleArrow(fromSq, toSq, color) {
+  const svg = document.getElementById('puzzleArrowSvg');
+  if (!svg) return;
+  const ns = 'http://www.w3.org/2000/svg';
+  if (!svg.querySelector('#puzzleArrowHead')) {
+    const defs = document.createElementNS(ns, 'defs');
+    defs.innerHTML = `<marker id="puzzleArrowHead" markerWidth="3" markerHeight="3" refX="1.4" refY="1.5" orient="auto"><path d="M0,0 L3,1.5 L0,3 Z" fill="${color||'#e8c84a'}"/></marker>`;
+    svg.appendChild(defs);
+  }
+  const from = squareToXY(fromSq), to = squareToXY(toSq);
+  const dx = to.x - from.x, dy = to.y - from.y;
+  const len = Math.sqrt(dx*dx + dy*dy) || 1;
+  const shrink = 0.3;
+  const ex = to.x - (dx/len)*shrink, ey = to.y - (dy/len)*shrink;
+  const line = document.createElementNS(ns, 'line');
+  line.setAttribute('x1', from.x); line.setAttribute('y1', from.y);
+  line.setAttribute('x2', ex); line.setAttribute('y2', ey);
+  line.setAttribute('stroke', color || '#e8c84a');
+  line.setAttribute('stroke-width', '0.14');
+  line.setAttribute('stroke-linecap', 'round');
+  line.setAttribute('opacity', '0.85');
+  line.setAttribute('marker-end', 'url(#puzzleArrowHead)');
+  svg.appendChild(line);
+}
+
 function showPuzzleAnswer() {
   puzzleState.streak = 0; // 答えを見たらストリークはリセット
   document.getElementById('puzzleStreakVal').textContent = 0;
   const p = currentPuzzle();
   addWrongPuzzle(p.order);
-  const remaining = p.moves.slice(puzzleState.moveIndex).join(' ');
-  setPuzzleStatus((LANG === 'ja' ? '正解: ' : 'Answer: ') + remaining, 'bad');
+  const remainingMoves = p.moves.slice(puzzleState.moveIndex);
+  const nextSan = remainingMoves[0];
+  const legalNow = puzzleChess.moves({ verbose: true });
+  const mv = legalNow.find(m => m.san === nextSan);
+  clearPuzzleArrows();
+  if (mv) drawPuzzleArrow(mv.from, mv.to);
+  setPuzzleStatus((LANG === 'ja' ? '正解: ' : 'Answer: ') + remainingMoves.join(' '), 'bad');
   setFoxImg('sad');
   document.getElementById('btnPuzzleAnswer').style.display = 'none';
   document.getElementById('puzzleNextRow').style.display = '';
