@@ -3021,22 +3021,7 @@ function drawPuzzleArrow(fromSq, toSq, color) {
   line.setAttribute('marker-end', 'url(#' + markerId + ')');
   svg.appendChild(line);
 }
-  const from = squareToXY(fromSq), to = squareToXY(toSq);
-  const dx = to.x - from.x, dy = to.y - from.y;
-  const len = Math.sqrt(dx*dx + dy*dy) || 1;
-  const shrink = 0.3;
-  const ex = to.x - (dx/len)*shrink, ey = to.y - (dy/len)*shrink;
-  const line = document.createElementNS(ns, 'line');
-  line.setAttribute('x1', from.x); line.setAttribute('y1', from.y);
-  line.setAttribute('x2', ex); line.setAttribute('y2', ey);
-  line.setAttribute('stroke', color || '#e8c84a');
-  line.setAttribute('stroke-width', '0.14');
-  line.setAttribute('stroke-linecap', 'round');
-  line.setAttribute('opacity', '0.85');
-  line.setAttribute('marker-end', 'url(#puzzleArrowHead)');
-  svg.appendChild(line);
-}
-
+  
 function showPuzzleAnswer() {
   puzzleState.streak = 0; // 答えを見たらストリークはリセット
   document.getElementById('puzzleStreakVal').textContent = 0;
