@@ -409,9 +409,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <div class="nav-btns" id="navBtns">
   <button class="nav-btn active-page" id="navGame" onclick="showPage('game',this)">練習</button>
   <button class="nav-btn" id="navQuiz" onclick="showPage('quiz',this)">クイズ</button>
+ <!-- 変更後 -->
   <button class="nav-btn" id="navPuzzle" onclick="showPage('puzzle',this)">Puzzle</button>
-  <button class="sound-btn" id="btnSound" onclick="toggleSound(this)" title="Sound ON/OFF">🔊</button>
-  <button class="sound-btn" id="btnHome" onclick="goHome()" title="Home">🏠</button>
+  <a href="info.html#about" class="nav-btn" id="navAbout">🦊</a>
+  <a href="info.html#learn" class="nav-btn" id="navLearn">♟</a>
+  <a href="info.html#tips" class="nav-btn" id="navTips">📈</a>
+  <button class="sound-btn" id="btnSound" onclick="toggleSound(this)" title="Sound ON/OFF">🔊</button><button class="sound-btn" id="btnHome" onclick="goHome()" title="Home">🏠</button>
   <button class="nav-btn" id="btnLang" onclick="toggleLang(this)" style="background:rgba(45,107,62,0.15);border-color:var(--green);color:var(--green-dark);">EN</button>
 </div>
   </div>
