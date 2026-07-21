@@ -7,93 +7,116 @@
     
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Crimson+Pro:wght@400;600;700&display=swap" rel="stylesheet">
 
-    <style>
-      body {
-            /* 🎵 英字はCinzel・Crimson Pro、日本語は美しい明朝体（游明朝など）で完全一致 */
-            font-family: 'Crimson Pro', 'Cinzel', "Times New Roman", "Yu Mincho", "游明朝", "MS Mincho", serif;
-            line-height: 1.8;
-            color: #3c2f2f;
-            background-color: #f5edd6; /* indexの--bgと同じ色味 */
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 40px 20px;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-        }
+<style>
+  :root { --bg: #f5edd6; --brown: #7c4a1e; --brown-dark: #4a2a0e; --text: #111; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Crimson Pro', serif;
+    font-weight: 600;
+    line-height: 1.8;
+    color: var(--text);
+    background: var(--bg);
+    padding: 40px 20px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
 
-        .container {
-            background-color: #fcf9f2; /* コンテンツエリアの背景 */
-            padding: 40px;
-            border-radius: 12px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0,05);
-        }
+  .container {
+    max-width: 720px;
+    margin: 0 auto;
+    background: transparent;
+    border: none;
+    padding: 0 10px;
+  }
 
-        h1 {
-            font-size: 24px;
-            color: #8b5a2b;
-            border-bottom: 2px solid #d4bda7;
-            padding-bottom: 15px;
-            margin-top: 0;
-            font-family: 'Cinzel', serif; /* ロゴと同じ、英字がシュッとハネるフォント */
-            letter-spacing: 0.5px;
-        }
+  h1 {
+    font-family: 'Cinzel', serif;
+    color: var(--brown-dark);
+    font-size: 1.8rem;
+    border-bottom: 2px solid rgba(184, 134, 11, 0.3);
+    padding-bottom: 12px;
+    margin-bottom: 24px;
+    letter-spacing: 0.5px;
+  }
 
-        h2 {
-            font-size: 18px;
-            color: #8b5a2b;
-            margin-top: 30px;
-            margin-bottom: 10px;
-            font-family: 'Crimson Pro', serif;
-        }
+  h2 {
+    font-family: 'Cinzel', serif;
+    color: var(--brown);
+    font-size: 1.1rem;
+    margin: 30px 0 10px;
+    border-left: 4px solid var(--brown);
+    padding-left: 10px;
+  }
 
-        p, li {
-            font-size: 15px;
-        }
+  p, li {
+    font-size: 1.05rem;
+    color: #2b2b2b;
+  }
 
-        ul {
-            padding-left: 20px;
-            margin-top: 5px;
-        }
+  ul {
+    padding-left: 20px;
+    margin-top: 5px;
+    margin-bottom: 20px;
+  }
 
-        li {
-            margin-bottom: 8px;
-        }
-        a {
-            color: #b87333; /* リンクカラー（アクセントの茶色） */
-            text-decoration: underline;
-        }
-        a:hover {
-            color: #8b5a2b;
-            text-decoration: none;
-        }
-        .footer-copy {
-            text-align: center;
-            margin-top: 40px;
-            font-size: 13px;
-            color: #8a7a7a;
-        }
-        .back-btn {
-            display: inline-block;
-            margin-top: 20px;
-            padding: 8px 16px;
-            background-color: #8b5a2b;
-            color: #ffffff;
-            text-decoration: none;
-            border-radius: 6px;
-            font-size: 14px;
-        }
-        .back-btn:hover {
-            background-color: #6e441f;
-            color: #ffffff;
-        }
-    /* 免責事項ページの文字色を濃くする */
-.disclaimer-page, .disclaimer-body {
-    color: #2b2b2b !important; /* しっかり読める濃いグレー */
-}
-.disclaimer-page h2, .disclaimer-page h3 {
-    color: #111111 !important; /* 見出しはさらにハッキリした黒に */
-}
-    </style>
+  li {
+    margin-bottom: 8px;
+  }
+
+  a {
+    color: var(--brown);
+    text-decoration: underline;
+  }
+  a:hover {
+    color: var(--brown-dark);
+    text-decoration: none;
+  }
+
+  .footer-copy {
+    text-align: center;
+    margin-top: 40px;
+    font-size: 0.85rem;
+    color: #8a7a7a;
+  }
+
+  .back-btn {
+    display: inline-block;
+    margin-top: 20px;
+    color: var(--brown);
+    text-decoration: none;
+    font-weight: 700;
+    border: 1px solid var(--brown);
+    padding: 8px 18px;
+    border-radius: 6px;
+    transition: all 0.2s;
+  }
+  .back-btn:hover {
+    background: var(--brown);
+    color: #fff;
+  }
+
+  .lang-btn-active {
+    background: var(--brown);
+    color: #fff;
+    border: none;
+    padding: 6px 16px;
+    border-radius: 4px;
+    font-weight: 700;
+    cursor: default;
+    margin-right: 8px;
+  }
+  .lang-btn-inactive {
+    background: #f7ebd3;
+    color: var(--brown-dark);
+    border: 1px solid #c4b193;
+    padding: 6px 16px;
+    border-radius: 4px;
+    font-weight: 700;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+  }
+</style>
 </head>
 <body>
 
