@@ -53,14 +53,14 @@
     <h1>📚 Info</h1>
     <p class="lead">KitsuneChessに関する読み物・ガイド・各種お手続きページをまとめています。気になるものからどうぞご覧ください。</p>
 
-    <h2>🦊 KitsuneChessについて</h2>
+    <h2 id="about-ja">🦊 KitsuneChessについて</h2>
     <ul class="link-list">
       <li><a href="about.html">KitsuneChessへの想い</a></li>
       <li><a href="disclaimer.html">免責事項・プライバシーポリシー</a></li>
       <li><a href="mailto:foxchess.anyuri@gmail.com">お問い合わせ</a></li>
     </ul>
 
-    <h2>♟ チェスを知る</h2>
+    <h2 id="learn-ja">♟ チェスを知る</h2>
     <ul class="link-list">
       <li><a href="history.html">チェスの歴史と起源</a></li>
       <li><a href="famous_games.html">チェス史に残る名局10選</a></li>
@@ -68,7 +68,7 @@
       <li><a href="chess_children.html">子どもとチェス——知育・教育効果の最前線</a></li>
     </ul>
 
-    <h2>📈 上達のコツ</h2>
+   <h2 id="tips-ja">📈 上達のコツ</h2>
     <ul class="link-list">
       <li><a href="chess_pieces.html">チェスの駒——それぞれの個性と使いこなし方</a></li>
       <li><a href="beginner_mistakes.html">初心者がやりがちなミス10選と改善法</a></li>
@@ -91,14 +91,14 @@
     <h1>📚 Info</h1>
     <p class="lead">A collection of KitsuneChess articles, guides, and support pages. Feel free to explore whichever topic interests you.</p>
 
-    <h2>🦊 About KitsuneChess</h2>
+    <h2 id="about-en">🦊 About KitsuneChess</h2>
     <ul class="link-list">
       <li><a href="about.html">About KitsuneChess</a></li>
       <li><a href="disclaimer.html">Disclaimer & Privacy Policy</a></li>
       <li><a href="mailto:foxchess.anyuri@gmail.com">Contact Us</a></li>
     </ul>
 
-    <h2>♟ Discover Chess</h2>
+    <h2 id="learn-en">♟ Discover Chess</h2>
     <ul class="link-list">
       <li><a href="history.html">The History and Origins of Chess</a></li>
       <li><a href="famous_games.html">10 Legendary Chess Games That Changed History</a></li>
@@ -106,7 +106,7 @@
       <li><a href="chess_children.html">Chess and Children: The Cutting Edge of Educational Benefits</a></li>
     </ul>
 
-    <h2>📈 Tips for Improvement</h2>
+    <h2 id="tips-en">📈 Tips for Improvement</h2>
     <ul class="link-list">
       <li><a href="chess_pieces.html">Chess Pieces: Their Characters and How to Use Them</a></li>
       <li><a href="beginner_mistakes.html">10 Common Beginner Mistakes and How to Fix Them</a></li>
@@ -125,9 +125,43 @@
   </div>
 </div>
 <script>
-function toggleLanguage() {
-  document.body.classList.toggle('en-mode');
+function applyStoredLanguage() {
+  const stored = localStorage.getItem('selectedLang');
+  if (stored === 'ja') {
+    document.body.classList.remove('en-mode');
+  } else {
+    document.body.classList.add('en-mode');
+  }
 }
+
+function toggleLanguage() {
+  const isNowEn = !document.body.classList.contains('en-mode');
+  document.body.classList.toggle('en-mode');
+  localStorage.setItem('selectedLang', isNowEn ? 'en' : 'ja');
+  scrollToCurrentSection();
+}
+
+function currentLangSuffix() {
+  return document.body.classList.contains('en-mode') ? 'en' : 'ja';
+}
+
+function scrollToHash(hash) {
+  if (!hash) return;
+  const base = hash.replace('#', '').replace(/-ja$|-en$/, '');
+  const target = document.getElementById(base + '-' + currentLangSuffix());
+  if (target) {
+    setTimeout(() => target.scrollIntoView({ behavior: 'smooth', block: 'start' }), 50);
+  }
+}
+
+function scrollToCurrentSection() {
+  scrollToHash(window.location.hash);
+}
+
+applyStoredLanguage();
+window.addEventListener('DOMContentLoaded', () => {
+  scrollToHash(window.location.hash);
+});
 </script>
 </body>
 </html>
