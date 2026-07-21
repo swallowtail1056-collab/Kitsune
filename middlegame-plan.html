@@ -169,8 +169,18 @@
 
 <script>
   function toggleLanguage() {
+    const isNowEn = !document.body.classList.contains('en-mode');
     document.body.classList.toggle('en-mode');
+    localStorage.setItem('selectedLang', isNowEn ? 'en' : 'ja');
   }
+  (function applyStoredLanguage() {
+    const stored = localStorage.getItem('selectedLang');
+    if (stored === 'ja') {
+      document.body.classList.remove('en-mode');
+    } else {
+      document.body.classList.add('en-mode');
+    }
+  })();
 </script>
 </body>
 </html>
