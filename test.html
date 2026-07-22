@@ -1982,10 +1982,12 @@ function onCellClick(sq) {
           S.animating=false;
           updateScores();
           renderBoard();renderMoveList();updateProgress();
+         <!-- 変更後 -->
           if(!checkCompletion()){
             setStatus(t('statusCorrect')+(chess.turn()==='w'?t('white'):t('black'))+t('statusCorrectEnd'),'good');
             foxOnCorrect();
             playCorrect();
+            maybeAutoPlayOpponent();
           }
         });
       } else {
