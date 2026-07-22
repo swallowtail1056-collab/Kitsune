@@ -1899,9 +1899,41 @@ function animateMove(fromSq, toSq, callback) {
     callback();
   }, 340);
 }
+<!-- 変更後 -->
 // ============================================================
 // GAME LOGIC
 // ============================================================
+function getUserColor() {
+  if (S.opening && S.opening.color === 'black') return 'b';
+  return 'w';
+}
+
+function maybeAutoPlayOpponent() {
+  if (!S.opening || S.moveIndex >= S.opening.moves.length) return;
+  if (S.autoPlaying || S.animating) return;
+  const userColor = getUserColor();
+  if (chess.turn() === userColor) return;
+  const san = expectedSAN();
+  const allMoves = chess.moves({verbose:true});
+  const mv = allMoves.find(x => x.san === san);
+  if (!mv) return;
+  S.animating = true;
+  const fromSq = mv.from, toSq = mv.to;
+  chess.move(san);
+  S.moveIndex++;
+  renderBoard();
+  animateMove(fromSq, toSq, () => {
+    S.lastFrom = fromSq; S.lastTo = toSq;
+    S.animating = false;
+    renderBoard(); renderMoveList(); updateProgress();
+    playMove();
+    if (!checkCompletion()) {
+      setStatus((chess.turn()==='w'?t('white'):t('black'))+t('statusStartMsg'));
+      maybeAutoPlayOpponent();
+    }
+  });
+}
+
 function selectOpening(id) {
   S.opening=OPENINGS.find(o=>o.id===id);
   const it=document.getElementById('infoText');
