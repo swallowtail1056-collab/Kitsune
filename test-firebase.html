@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>Firebase接続テスト</title>
+</head>
+<body>
+  <h1>Firebase接続テスト</h1>
+  <button id="loginBtn">Googleでログイン</button>
+  <button id="logoutBtn" style="display:none;">ログアウト</button>
+  <p id="status">未ログイン</p>
+
+  <!-- Firebase SDK -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+    import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDR6vsVq2uePiFRUmoqYB4LjdGZJiRM4eE",
+      authDomain: "kitsunechess-multiplayer.firebaseapp.com",
+      databaseURL: "https://kitsunechess-multiplayer-default-rtdb.asia-southeast1.firebasedatabase.app",
+      projectId: "kitsunechess-multiplayer",
+      storageBucket: "kitsunechess-multiplayer.firebasestorage.app",
+      messagingSenderId: "1025643200128",
+      appId: "1:1025643200128:web:cf333443c75742ea127065",
+      measurementId: "G-HPDM5LPV3P"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getDatabase(app);
+    const provider = new GoogleAuthProvider();
+
+    document.getElementById('loginBtn').onclick = () => {
+      signInWithPopup(auth, provider).catch(err => {
+        document.getElementById('status').textContent = 'エラー: ' + err.message;
+      });
+    };
+
+    document.getElementById('logoutBtn').onclick = () => signOut(auth);
+
+    onAuthStateChanged(auth, (user) => {
+      const status = document.getElementById('status');
+      const loginBtn = document.getElementById('loginBtn');
+      const logoutBtn = document.getElementById('logoutBtn');
+      if (user) {
+        status.textContent = 'ログイン中: ' + user.displayName + ' (' + user.email + ')';
+        loginBtn.style.display = 'none';
+        logoutBtn.style.display = 'inline-block';
+        // テストとしてデータベースに書き込んでみる
+        set(ref(db, 'users/' + user.uid), {
+          name: user.displayName,
+          email: user.email
+        });
+      } else {
+        status.textContent = '未ログイン';
+        loginBtn.style.display = 'inline-block';
+        logoutBtn.style.display = 'none';
+      }
+    });
+  </script>
+</body>
+</html>
