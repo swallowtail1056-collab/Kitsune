@@ -121,10 +121,10 @@ nav h1{font-family:'Crimson Pro',serif;font-size:clamp(0.9rem,3vw,1.4rem);font-w
 .p-cell.valid-move::after{content:'';width:30%;height:30%;background:rgba(255,210,0,0.85);border-radius:50%;position:absolute;pointer-events:none;}
 .p-cell.valid-capture::after{content:'';position:absolute;inset:0;border:4px solid rgba(255,210,0,0.9);pointer-events:none;}
 .p-cell.wrong-flash{animation:wrongFlash 0.4s ease;}
-.p-cell.superhard-flash{animation:superhardFlash 0.6s ease;}
-@keyframes superhardFlash{
-  0%,100%{filter:none;}
-  50%{filter:brightness(1.3) saturate(2) hue-rotate(30deg);box-shadow:0 0 20px 4px rgba(184,134,11,0.8);}
+.p-cell.mate-flash{animation:mateFlash 0.5s ease;}
+@keyframes mateFlash{
+  0%,100%{box-shadow:none;}
+  50%{box-shadow:inset 0 0 0 4px rgba(230,57,70,0.9);}
 }
 .cell-label-puzzle{position:absolute;font-family:'Crimson Pro',serif;font-weight:800;font-size:clamp(0.85rem,3vw,1.2rem);line-height:1;pointer-events:none;z-index:2;}
 .p-cell.light .cell-label-puzzle{color:rgba(80,40,0,0.85);}
