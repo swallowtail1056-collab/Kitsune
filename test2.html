@@ -2736,11 +2736,9 @@ function goHome() {
     initWelcome();
   }
 }
-function startApp() {
-  // タイマーキャンセル（多重起動防止）
+function startApp(guided) {
   if (_welcomeAutoTimer) { clearTimeout(_welcomeAutoTimer); _welcomeAutoTimer = null; }
   if (_welcomeCountdownTimer) { clearTimeout(_welcomeCountdownTimer); _welcomeCountdownTimer = null; }
-  // ウェルカム非表示・メイン表示
   const wp = document.getElementById('page-welcome');
   if (wp) {
     wp.style.transition = 'opacity 0.4s';
@@ -2753,8 +2751,14 @@ function startApp() {
       if (nav) nav.style.display = '';
       showPage('game', document.querySelector('.nav-btn'));
       applyLang();
+      if (guided) {
+        selectOpening('italian');
+        maybeShowFirstTimeGuide();
+      }
     }, 400);
   }
+}
+window.startApp = startApp;
 }
 
 window.startApp = startApp;
