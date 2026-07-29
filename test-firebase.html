@@ -209,11 +209,15 @@
         container.textContent = LANG === 'ja' ? '届いている申請はありません。' : 'No incoming requests.';
         return;
       }
-      Object.entries(data).forEach(([fromUid, info]) => {
+     <!-- 変更後 -->
+    Object.entries(data).forEach(([fromUid, info]) => {
         const row = document.createElement('div');
         row.className = 'list-item';
         const label = document.createElement('span');
         label.textContent = info.username;
+
+        const btnGroup = document.createElement('span');
+
         const acceptBtn = document.createElement('button');
         acceptBtn.textContent = LANG === 'ja' ? '承認' : 'Accept';
         acceptBtn.onclick = async () => {
@@ -221,8 +225,18 @@
           await set(ref(db, 'friends/' + fromUid + '/' + user.uid), true);
           await remove(ref(db, 'friendRequests/' + user.uid + '/' + fromUid));
         };
+
+        const declineBtn = document.createElement('button');
+        declineBtn.textContent = LANG === 'ja' ? '拒否' : 'Decline';
+        declineBtn.style.background = '#a0785a';
+        declineBtn.onclick = async () => {
+          await remove(ref(db, 'friendRequests/' + user.uid + '/' + fromUid));
+        };
+
+        btnGroup.appendChild(acceptBtn);
+        btnGroup.appendChild(declineBtn);
         row.appendChild(label);
-        row.appendChild(acceptBtn);
+        row.appendChild(btnGroup);
         container.appendChild(row);
       });
     }
