@@ -2739,6 +2739,16 @@ function goHome() {
     initWelcome();
   }
 }
+  function maybeShowFirstTimeGuide() {
+  if (localStorage.getItem('kitsune_guide_seen')) return;
+  const guide = document.getElementById('firstTimeGuide');
+  if (guide) guide.classList.add('show');
+}
+function closeFirstTimeGuide() {
+  localStorage.setItem('kitsune_guide_seen', '1');
+  const guide = document.getElementById('firstTimeGuide');
+  if (guide) guide.classList.remove('show');
+}
 function startApp(guided) {
   if (_welcomeAutoTimer) { clearTimeout(_welcomeAutoTimer); _welcomeAutoTimer = null; }
   if (_welcomeCountdownTimer) { clearTimeout(_welcomeCountdownTimer); _welcomeCountdownTimer = null; }
