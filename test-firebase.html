@@ -2,19 +2,46 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<title>Firebase接続テスト</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Firebase接続テスト / Firebase Connection Test</title>
+<style>
+  body { font-family: sans-serif; max-width: 480px; margin: 40px auto; padding: 0 20px; }
+  button { padding: 8px 16px; margin: 4px 4px 4px 0; cursor: pointer; }
+  input { padding: 6px; margin-right: 6px; }
+  .profile-box { border: 1px solid #ccc; border-radius: 8px; padding: 16px; margin-top: 16px; }
+  .lang-switch { text-align: right; }
+</style>
 </head>
 <body>
-  <h1>Firebase接続テスト</h1>
-  <button id="loginBtn">Googleでログイン</button>
-  <button id="logoutBtn" style="display:none;">ログアウト</button>
-  <p id="status">未ログイン</p>
+  <div class="lang-switch">
+    <button id="langBtn">日本語</button>
+  </div>
+  <h1 data-ja="Firebase接続テスト" data-en="Firebase Connection Test">Firebase接続テスト</h1>
 
-  <!-- Firebase SDK -->
+  <button id="loginBtn" data-ja="Googleでログイン" data-en="Sign in with Google">Googleでログイン</button>
+  <button id="logoutBtn" style="display:none;" data-ja="ログアウト" data-en="Log out">ログアウト</button>
+
+  <div id="profileArea" style="display:none;">
+    <div class="profile-box">
+      <p><strong data-ja="表示名（ユーザーネーム）" data-en="Display Name (Username)">表示名（ユーザーネーム）</strong></p>
+      <input type="text" id="usernameInput" maxlength="20">
+      <button id="saveNameBtn" data-ja="保存" data-en="Save">保存</button>
+      <p id="saveMsg" style="color:green;"></p>
+    </div>
+    <div class="profile-box">
+      <p data-ja="現在のプロフィール" data-en="Current Profile"><strong>現在のプロフィール</strong></p>
+      <p><span data-ja="メール: " data-en="Email: ">メール: </span><span id="profileEmail"></span></p>
+      <p><span data-ja="ユーザー名: " data-en="Username: ">ユーザー名: </span><span id="profileUsername">-</span></p>
+      <img id="profilePhoto" src="" alt="avatar" style="width:60px;height:60px;border-radius:50%;">
+    </div>
+  </div>
+
+  <p id="status" data-ja="未ログイン" data-en="Not logged in">未ログイン</p>
+
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
     import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-    import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+    import { getDatabase, ref, set, get } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyDR6vsVq2uePiFRUmoqYB4LjdGZJiRM4eE",
@@ -32,31 +59,83 @@
     const db = getDatabase(app);
     const provider = new GoogleAuthProvider();
 
+    // ── 言語切り替え(サイト全体と同じ簡易ロジック) ──
+    let LANG = localStorage.getItem('selectedLang') === 'ja' ? 'ja' : 'en';
+    function applyLang() {
+      document.querySelectorAll('[data-ja]').forEach(el => {
+        el.textContent = LANG === 'ja' ? el.dataset.ja : el.dataset.en;
+      });
+      document.getElementById('langBtn').textContent = LANG === 'ja' ? 'English' : '日本語';
+    }
+    document.getElementById('langBtn').onclick = () => {
+      LANG = LANG === 'ja' ? 'en' : 'ja';
+      localStorage.setItem('selectedLang', LANG);
+      applyLang();
+    };
+    applyLang();
+
+    // ── ログイン処理 ──
     document.getElementById('loginBtn').onclick = () => {
       signInWithPopup(auth, provider).catch(err => {
-        document.getElementById('status').textContent = 'エラー: ' + err.message;
+        document.getElementById('status').textContent = 'Error: ' + err.message;
       });
     };
-
     document.getElementById('logoutBtn').onclick = () => signOut(auth);
 
-    onAuthStateChanged(auth, (user) => {
+    // ── ユーザー名の保存 ──
+    document.getElementById('saveNameBtn').onclick = async () => {
+      const user = auth.currentUser;
+      if (!user) return;
+      const name = document.getElementById('usernameInput').value.trim();
+      if (!name) return;
+      await set(ref(db, 'users/' + user.uid), {
+        username: name,
+        email: user.email,
+        photoURL: user.photoURL || ''
+      });
+      document.getElementById('profileUsername').textContent = name;
+      const msg = document.getElementById('saveMsg');
+      msg.textContent = LANG === 'ja' ? '保存しました！' : 'Saved!';
+      setTimeout(() => { msg.textContent = ''; }, 2000);
+    };
+
+    // ── ログイン状態の監視・プロフィール表示 ──
+    onAuthStateChanged(auth, async (user) => {
       const status = document.getElementById('status');
       const loginBtn = document.getElementById('loginBtn');
       const logoutBtn = document.getElementById('logoutBtn');
+      const profileArea = document.getElementById('profileArea');
+
       if (user) {
-        status.textContent = 'ログイン中: ' + user.displayName + ' (' + user.email + ')';
+        status.style.display = 'none';
         loginBtn.style.display = 'none';
         logoutBtn.style.display = 'inline-block';
-        // テストとしてデータベースに書き込んでみる
-        set(ref(db, 'users/' + user.uid), {
-          name: user.displayName,
-          email: user.email
-        });
+        profileArea.style.display = 'block';
+
+        document.getElementById('profileEmail').textContent = user.email;
+        document.getElementById('profilePhoto').src = user.photoURL || '';
+
+        // 既存のユーザー名があれば取得して表示
+        const snap = await get(ref(db, 'users/' + user.uid));
+        if (snap.exists() && snap.val().username) {
+          document.getElementById('profileUsername').textContent = snap.val().username;
+          document.getElementById('usernameInput').value = snap.val().username;
+        } else {
+          // 初回ログイン時はGoogleの表示名を初期値として保存
+          const initialName = user.displayName || '';
+          document.getElementById('usernameInput').value = initialName;
+          await set(ref(db, 'users/' + user.uid), {
+            username: initialName,
+            email: user.email,
+            photoURL: user.photoURL || ''
+          });
+          document.getElementById('profileUsername').textContent = initialName;
+        }
       } else {
-        status.textContent = '未ログイン';
+        status.style.display = 'block';
         loginBtn.style.display = 'inline-block';
         logoutBtn.style.display = 'none';
+        profileArea.style.display = 'none';
       }
     });
   </script>
