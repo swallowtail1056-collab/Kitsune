@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -226,7 +227,7 @@ nav h1{font-family:'Crimson Pro',serif;font-size:clamp(0.9rem,3vw,1.4rem);font-w
 .disclaimer-section.active{display:block;}
 
 /* ── OVERLAY ── */
-.overlay{position:fixed;inset:0;background:rgba(42,26,8,0.75);display:none;align-items:center;justify-content:center;z-index:100;}
+ .overlay{position:fixed;inset:0;background:rgba(42,26,8,0.75);display:none;align-items:center;justify-content:center;z-index:100;}
 .overlay.show{display:flex;}
 .overlay-box{background:linear-gradient(135deg,#f5edd6,#ede0c0);border:2px solid var(--brown);border-radius:12px;padding:34px;text-align:center;max-width:340px;width:90%;animation:popIn 0.4s cubic-bezier(0.34,1.56,0.64,1);position:relative;z-index:102;}
 @keyframes popIn{from{transform:scale(0.7);opacity:0;}to{transform:scale(1);opacity:1;}}
@@ -395,17 +396,22 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <div class="wlc-bubble" id="wlcBubble">
       Hi! I'm Jene, your chess coach! 🦊<br>Let's master openings together!
     </div>
+    <div style="margin-top:10px;font-family:'Crimson Pro',serif;font-size:0.85rem;color:var(--brown-light);font-weight:600;text-align:center;">
+  <span class="lang-text" data-ja="全100種類のオープニング、Stockfishで検証済み" data-en="100 openings, all verified with Stockfish">全100種類のオープニング、Stockfishで検証済み</span>
+</div>
   </div>
 
   <div style="margin-top:8px;animation:fadeUp 0.6s 0.9s ease both;">
     <div id="wlcCountdown" style="font-family:'Crimson Pro',serif;font-size:0.9rem;color:var(--brown-light);font-weight:600;text-align:center;">Tap anywhere to start</div>
   </div>
-
+<button class="wlc-btn" style="margin-top:6px;" onclick="event.stopPropagation();startApp(true)">
+  <span class="lang-text" data-ja="初めての方はこちら →" data-en="New here? Start guided →">初めての方はこちら →</span>
+</button>
   <div class="wlc-lang-row">
     <button class="wlc-lang-btn" onclick="event.stopPropagation();setWelcomeLang('en',this)">English</button>
     <button class="wlc-lang-btn active" onclick="event.stopPropagation();setWelcomeLang('ja',this)">日本語</button>
   </div>
-</div>
+ </div>
 
 <nav id="mainNav" style="display:none;">
 <div class="nav-inner">
@@ -666,6 +672,18 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <div class="btn-row" style="justify-content:center">
       <button class="btn btn-primary" onclick="closeOverlay();restartOpening()">もう一度</button>
       <button class="btn btn-secondary" onclick="closeOverlay()">閉じる</button>
+    </div>
+  </div>
+</div>
+   <div class="overlay" id="firstTimeGuide">
+  <div class="overlay-box">
+    <div class="trophy">🦊</div>
+    <h2><span class="lang-text" data-ja="使い方はかんたん！" data-en="How it works">使い方はかんたん！</span></h2>
+    <p><span class="lang-text" data-ja="①レベルを選ぶ → ②オープニングをタップ → ③盤面で練習しよう！" data-en="① Pick a level → ② Tap an opening → ③ Practice on the board!">①レベルを選ぶ → ②オープニングをタップ → ③盤面で練習しよう！</span></p>
+    <div class="btn-row" style="justify-content:center">
+      <button class="btn btn-primary" onclick="closeFirstTimeGuide()">
+        <span class="lang-text" data-ja="はじめる！" data-en="Let's go!">はじめる！</span>
+      </button>
     </div>
   </div>
 </div>
@@ -2714,8 +2732,12 @@ function setWelcomeLang(lang, btn) {
   if (f2) f2.textContent = isEn ? 'Quiz to test your knowledge' : '理解度テスト付き';
   if (f3) f3.textContent = isEn ? 'Sound & animations included' : 'サウンド＆アニメーション';
   if (f4) f4.textContent = isEn ? 'Japanese & English support'  : '日本語・英語対応';
-}
 
+  // 新規追加：ウェルカム画面のlang-text要素をまとめて切り替え
+  document.querySelectorAll('#page-welcome .lang-text[data-ja][data-en]').forEach(el => {
+    el.textContent = isEn ? el.dataset.en : el.dataset.ja;
+  });
+}
 function goHome() {
   // ウェルカム画面に戻る
   const wp = document.getElementById('page-welcome');
@@ -2730,11 +2752,19 @@ function goHome() {
     initWelcome();
   }
 }
-function startApp() {
-  // タイマーキャンセル（多重起動防止）
+  function maybeShowFirstTimeGuide() {
+  if (localStorage.getItem('kitsune_guide_seen')) return;
+  const guide = document.getElementById('firstTimeGuide');
+  if (guide) guide.classList.add('show');
+}
+function closeFirstTimeGuide() {
+  localStorage.setItem('kitsune_guide_seen', '1');
+  const guide = document.getElementById('firstTimeGuide');
+  if (guide) guide.classList.remove('show');
+}
+function startApp(guided) {
   if (_welcomeAutoTimer) { clearTimeout(_welcomeAutoTimer); _welcomeAutoTimer = null; }
   if (_welcomeCountdownTimer) { clearTimeout(_welcomeCountdownTimer); _welcomeCountdownTimer = null; }
-  // ウェルカム非表示・メイン表示
   const wp = document.getElementById('page-welcome');
   if (wp) {
     wp.style.transition = 'opacity 0.4s';
@@ -2747,12 +2777,14 @@ function startApp() {
       if (nav) nav.style.display = '';
       showPage('game', document.querySelector('.nav-btn'));
       applyLang();
+      if (guided) {
+        selectOpening('italian');
+        maybeShowFirstTimeGuide();
+      }
     }, 400);
   }
 }
-
 window.startApp = startApp;
-
 // ── INIT ──
 document.querySelectorAll('.filter-btn').forEach(btn => {
   btn.addEventListener('click', () => onFilterClick(btn));
