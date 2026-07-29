@@ -2732,8 +2732,12 @@ function setWelcomeLang(lang, btn) {
   if (f2) f2.textContent = isEn ? 'Quiz to test your knowledge' : '理解度テスト付き';
   if (f3) f3.textContent = isEn ? 'Sound & animations included' : 'サウンド＆アニメーション';
   if (f4) f4.textContent = isEn ? 'Japanese & English support'  : '日本語・英語対応';
-}
 
+  // 新規追加：ウェルカム画面のlang-text要素をまとめて切り替え
+  document.querySelectorAll('#page-welcome .lang-text[data-ja][data-en]').forEach(el => {
+    el.textContent = isEn ? el.dataset.en : el.dataset.ja;
+  });
+}
 function goHome() {
   // ウェルカム画面に戻る
   const wp = document.getElementById('page-welcome');
