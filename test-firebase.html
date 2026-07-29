@@ -8,31 +8,50 @@
   body { font-family: sans-serif; max-width: 480px; margin: 40px auto; padding: 0 20px; }
   button { padding: 8px 16px; margin: 4px 4px 4px 0; cursor: pointer; }
   input { padding: 6px; margin-right: 6px; }
-  .profile-box { border: 1px solid #ccc; border-radius: 8px; padding: 16px; margin-top: 16px; }
+  .box { border: 1px solid #ccc; border-radius: 8px; padding: 16px; margin-top: 16px; }
   .lang-switch { text-align: right; }
+  .list-item { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-bottom: 1px solid #eee; }
+  .msg { color: green; font-size: 0.9em; }
+  .err { color: #c0392b; font-size: 0.9em; }
 </style>
 </head>
 <body>
-  <div class="lang-switch">
-    <button id="langBtn">日本語</button>
-  </div>
+  <div class="lang-switch"><button id="langBtn">日本語</button></div>
   <h1 data-ja="Firebase接続テスト" data-en="Firebase Connection Test">Firebase接続テスト</h1>
 
   <button id="loginBtn" data-ja="Googleでログイン" data-en="Sign in with Google">Googleでログイン</button>
   <button id="logoutBtn" style="display:none;" data-ja="ログアウト" data-en="Log out">ログアウト</button>
 
   <div id="profileArea" style="display:none;">
-    <div class="profile-box">
+    <div class="box">
       <p><strong data-ja="表示名（ユーザーネーム）" data-en="Display Name (Username)">表示名（ユーザーネーム）</strong></p>
       <input type="text" id="usernameInput" maxlength="20">
       <button id="saveNameBtn" data-ja="保存" data-en="Save">保存</button>
-      <p id="saveMsg" style="color:green;"></p>
+      <p id="saveMsg" class="msg"></p>
     </div>
-    <div class="profile-box">
-      <p data-ja="現在のプロフィール" data-en="Current Profile"><strong>現在のプロフィール</strong></p>
+
+    <div class="box">
+      <p><strong data-ja="現在のプロフィール" data-en="Current Profile">現在のプロフィール</strong></p>
       <p><span data-ja="メール: " data-en="Email: ">メール: </span><span id="profileEmail"></span></p>
       <p><span data-ja="ユーザー名: " data-en="Username: ">ユーザー名: </span><span id="profileUsername">-</span></p>
       <img id="profilePhoto" src="" alt="avatar" style="width:60px;height:60px;border-radius:50%;">
+    </div>
+
+    <div class="box">
+      <p><strong data-ja="友達を追加" data-en="Add a Friend">友達を追加</strong></p>
+      <input type="text" id="searchInput" data-ja-ph="相手のユーザー名" data-en-ph="Friend's username" placeholder="相手のユーザー名">
+      <button id="sendRequestBtn" data-ja="申請を送る" data-en="Send Request">申請を送る</button>
+      <p id="requestMsg"></p>
+    </div>
+
+    <div class="box">
+      <p><strong data-ja="届いている友達申請" data-en="Incoming Friend Requests">届いている友達申請</strong></p>
+      <div id="incomingList"></div>
+    </div>
+
+    <div class="box">
+      <p><strong data-ja="友達一覧" data-en="Friends List">友達一覧</strong></p>
+      <div id="friendsList"></div>
     </div>
   </div>
 
@@ -41,7 +60,7 @@
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
     import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-    import { getDatabase, ref, set, get } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+    import { getDatabase, ref, set, get, remove, onValue } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyDR6vsVq2uePiFRUmoqYB4LjdGZJiRM4eE",
@@ -59,12 +78,10 @@
     const db = getDatabase(app);
     const provider = new GoogleAuthProvider();
 
-    // ── 言語切り替え(サイト全体と同じ簡易ロジック) ──
     let LANG = localStorage.getItem('selectedLang') === 'ja' ? 'ja' : 'en';
     function applyLang() {
-      document.querySelectorAll('[data-ja]').forEach(el => {
-        el.textContent = LANG === 'ja' ? el.dataset.ja : el.dataset.en;
-      });
+      document.querySelectorAll('[data-ja]').forEach(el => { el.textContent = LANG === 'ja' ? el.dataset.ja : el.dataset.en; });
+      document.querySelectorAll('[data-ja-ph]').forEach(el => { el.placeholder = LANG === 'ja' ? el.dataset.jaPh : el.dataset.enPh; });
       document.getElementById('langBtn').textContent = LANG === 'ja' ? 'English' : '日本語';
     }
     document.getElementById('langBtn').onclick = () => {
@@ -74,32 +91,105 @@
     };
     applyLang();
 
-    // ── ログイン処理 ──
     document.getElementById('loginBtn').onclick = () => {
-      signInWithPopup(auth, provider).catch(err => {
-        document.getElementById('status').textContent = 'Error: ' + err.message;
-      });
+      signInWithPopup(auth, provider).catch(err => { document.getElementById('status').textContent = 'Error: ' + err.message; });
     };
     document.getElementById('logoutBtn').onclick = () => signOut(auth);
 
-    // ── ユーザー名の保存 ──
+    function normName(name) { return name.trim().toLowerCase(); }
+
     document.getElementById('saveNameBtn').onclick = async () => {
       const user = auth.currentUser;
       if (!user) return;
       const name = document.getElementById('usernameInput').value.trim();
       if (!name) return;
-      await set(ref(db, 'users/' + user.uid), {
-        username: name,
-        email: user.email,
-        photoURL: user.photoURL || ''
-      });
+      const key = normName(name);
+      // 既に使われているユーザー名でないか確認(自分以外が使っていないか)
+      const existing = await get(ref(db, 'usernames/' + key));
+      if (existing.exists() && existing.val() !== user.uid) {
+        document.getElementById('saveMsg').textContent = LANG === 'ja' ? 'そのユーザー名はすでに使われています。' : 'That username is already taken.';
+        document.getElementById('saveMsg').className = 'err';
+        return;
+      }
+      await set(ref(db, 'users/' + user.uid), { username: name, email: user.email, photoURL: user.photoURL || '' });
+      await set(ref(db, 'usernames/' + key), user.uid);
       document.getElementById('profileUsername').textContent = name;
       const msg = document.getElementById('saveMsg');
+      msg.className = 'msg';
       msg.textContent = LANG === 'ja' ? '保存しました！' : 'Saved!';
       setTimeout(() => { msg.textContent = ''; }, 2000);
     };
 
-    // ── ログイン状態の監視・プロフィール表示 ──
+    document.getElementById('sendRequestBtn').onclick = async () => {
+      const user = auth.currentUser;
+      if (!user) return;
+      const targetName = document.getElementById('searchInput').value.trim();
+      if (!targetName) return;
+      const key = normName(targetName);
+      const msgEl = document.getElementById('requestMsg');
+
+      const uidSnap = await get(ref(db, 'usernames/' + key));
+      if (!uidSnap.exists()) {
+        msgEl.textContent = LANG === 'ja' ? 'そのユーザー名は見つかりませんでした。' : 'That username was not found.';
+        msgEl.className = 'err';
+        return;
+      }
+      const targetUid = uidSnap.val();
+      if (targetUid === user.uid) {
+        msgEl.textContent = LANG === 'ja' ? '自分自身には申請できません。' : "You can't add yourself.";
+        msgEl.className = 'err';
+        return;
+      }
+      const myProfile = await get(ref(db, 'users/' + user.uid));
+      const myUsername = myProfile.exists() ? myProfile.val().username : user.displayName;
+
+      await set(ref(db, 'friendRequests/' + targetUid + '/' + user.uid), { username: myUsername, sentAt: Date.now() });
+      msgEl.textContent = LANG === 'ja' ? '申請を送りました！' : 'Request sent!';
+      msgEl.className = 'msg';
+      document.getElementById('searchInput').value = '';
+    };
+
+    function renderIncomingRequests(user, data) {
+      const container = document.getElementById('incomingList');
+      container.innerHTML = '';
+      if (!data) {
+        container.textContent = LANG === 'ja' ? '届いている申請はありません。' : 'No incoming requests.';
+        return;
+      }
+      Object.entries(data).forEach(([fromUid, info]) => {
+        const row = document.createElement('div');
+        row.className = 'list-item';
+        const label = document.createElement('span');
+        label.textContent = info.username;
+        const acceptBtn = document.createElement('button');
+        acceptBtn.textContent = LANG === 'ja' ? '承認' : 'Accept';
+        acceptBtn.onclick = async () => {
+          await set(ref(db, 'friends/' + user.uid + '/' + fromUid), true);
+          await set(ref(db, 'friends/' + fromUid + '/' + user.uid), true);
+          await remove(ref(db, 'friendRequests/' + user.uid + '/' + fromUid));
+        };
+        row.appendChild(label);
+        row.appendChild(acceptBtn);
+        container.appendChild(row);
+      });
+    }
+
+    async function renderFriendsList(user, data) {
+      const container = document.getElementById('friendsList');
+      container.innerHTML = '';
+      if (!data) {
+        container.textContent = LANG === 'ja' ? 'まだ友達がいません。' : 'No friends yet.';
+        return;
+      }
+      for (const friendUid of Object.keys(data)) {
+        const snap = await get(ref(db, 'users/' + friendUid + '/username'));
+        const row = document.createElement('div');
+        row.className = 'list-item';
+        row.textContent = snap.exists() ? snap.val() : '(unknown)';
+        container.appendChild(row);
+      }
+    }
+
     onAuthStateChanged(auth, async (user) => {
       const status = document.getElementById('status');
       const loginBtn = document.getElementById('loginBtn');
@@ -115,22 +205,21 @@
         document.getElementById('profileEmail').textContent = user.email;
         document.getElementById('profilePhoto').src = user.photoURL || '';
 
-        // 既存のユーザー名があれば取得して表示
         const snap = await get(ref(db, 'users/' + user.uid));
+        let currentName = '';
         if (snap.exists() && snap.val().username) {
-          document.getElementById('profileUsername').textContent = snap.val().username;
-          document.getElementById('usernameInput').value = snap.val().username;
+          currentName = snap.val().username;
         } else {
-          // 初回ログイン時はGoogleの表示名を初期値として保存
-          const initialName = user.displayName || '';
-          document.getElementById('usernameInput').value = initialName;
-          await set(ref(db, 'users/' + user.uid), {
-            username: initialName,
-            email: user.email,
-            photoURL: user.photoURL || ''
-          });
-          document.getElementById('profileUsername').textContent = initialName;
+          currentName = user.displayName || '';
+          await set(ref(db, 'users/' + user.uid), { username: currentName, email: user.email, photoURL: user.photoURL || '' });
+          await set(ref(db, 'usernames/' + normName(currentName)), user.uid);
         }
+        document.getElementById('profileUsername').textContent = currentName;
+        document.getElementById('usernameInput').value = currentName;
+
+        // リアルタイムで友達申請・友達リストを監視
+        onValue(ref(db, 'friendRequests/' + user.uid), (s) => renderIncomingRequests(user, s.val()));
+        onValue(ref(db, 'friends/' + user.uid), (s) => renderFriendsList(user, s.val()));
       } else {
         status.style.display = 'block';
         loginBtn.style.display = 'inline-block';
