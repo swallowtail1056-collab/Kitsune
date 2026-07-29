@@ -2705,6 +2705,9 @@ function setWelcomeLang(lang, btn) {
   // テキスト切替
   const isEn = lang === 'en';
   const bubble = document.getElementById('wlcBubble');
+  <div style="margin-top:10px;font-family:'Crimson Pro',serif;font-size:0.85rem;color:var(--brown-light);font-weight:600;text-align:center;">
+  <span class="lang-text" data-ja="全100種類のオープニング、Stockfishで検証済み" data-en="100 openings, all verified with Stockfish">全100種類のオープニング、Stockfishで検証済み</span>
+</div>
   if (bubble) bubble.innerHTML = isEn
     ? "Hi! I'm your chess coach! 🦊<br>Let's master openings together!"
     : "こんにちは！ジーン（Jene）だよ！🦊<br>一緒にオープニングを覚えよう！";
