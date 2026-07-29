@@ -209,7 +209,7 @@
         container.textContent = LANG === 'ja' ? '届いている申請はありません。' : 'No incoming requests.';
         return;
       }
-     <!-- 変更後 -->
+  
     Object.entries(data).forEach(([fromUid, info]) => {
         const row = document.createElement('div');
         row.className = 'list-item';
