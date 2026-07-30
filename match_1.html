@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>対局モード (Match Mode) - KitsuneChess</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Crimson+Pro:wght@400;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/chess.js/0.10.3/chess.min.js"></script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1034556404852942" crossorigin="anonymous"></script>
+<style>
+:root {
+  --bg:#f5edd6; --brown:#7c4a1e; --brown-dark:#4a2a0e; --brown-light:#a3692d;
+  --card:#f0e4c8;
+  --text:#111; --text-sub:#222; --text-muted:#444;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  background:var(--bg); color:var(--text);
+  font-family:'Crimson Pro', serif; font-weight:600;
+  max-width:720px; margin:0 auto; padding:16px 16px 60px;
+  line-height:1.8;
+}
+h1 { font-family:'Cinzel', serif; color:var(--brown-dark); font-size:1.6rem;
+  border-bottom:2px solid rgba(124,74,30,0.3); padding-bottom:10px; margin-bottom:16px; }
+h2 { font-family:'Cinzel', serif; color:var(--brown-dark); font-size:1.15rem; margin:22px 0 8px; }
+p { margin-bottom:8px; }
+.lang-switch { text-align:right; margin-bottom:10px; }
+.back-link { display:inline-block; margin-bottom:10px; color:var(--brown-dark); text-decoration:none; font-weight:700; }
+button {
+  font-family:'Crimson Pro', serif; font-weight:700; padding:8px 18px; margin:4px 4px 4px 0;
+  cursor:pointer; background:var(--brown); color:#fff; border:none; border-radius:6px; transition:all 0.2s;
+}
+button:hover { background:var(--brown-dark); }
+button:disabled { opacity:0.6; cursor:default; }
+.lang-switch button, .back-link.btn { background:#f7ebd3; color:var(--brown-dark); border:1px solid #c4b193; }
+.lang-switch button:hover { background:var(--brown); color:#fff; }
+input {
+  font-family:'Crimson Pro', serif; padding:7px 10px; margin-right:6px;
+  border:1px solid rgba(124,74,30,0.4); border-radius:6px; background:#fffdf7;
+}
+.box { background:var(--card); border:2px solid var(--brown); border-radius:10px; padding:16px; margin-top:16px; }
+.box strong { color:var(--brown-dark); font-family:'Cinzel', serif; font-size:0.95rem; }
+.list-item { display:flex; justify-content:space-between; align-items:center; padding:8px 4px; border-bottom:1px solid rgba(124,74,30,0.15); }
+.list-item button { padding:4px 12px; font-size:0.85rem; }
+.msg { color:#2e7d32; font-size:0.9em; font-weight:700; }
+.err { color:#c0392b; font-size:0.9em; font-weight:700; }
+#status { text-align:center; color:var(--brown); font-style:italic; }
+img#profilePhoto { border:2px solid var(--brown); border-radius:50%; width:60px; height:60px; }
+.sq { display:flex; align-items:center; justify-content:center; font-size:1.8rem; user-select:none; cursor:pointer; }
+.sq.light { background:#d4b87a; }
+.sq.dark { background:#7a5230; }
+.sq.selected { outline:3px solid #e8c84a; outline-offset:-3px; }
+#miniBoard { display:grid; grid-template-columns:repeat(8,1fr); width:100%; max-width:400px; aspect-ratio:1; margin:0 auto; border:2px solid var(--brown); }
+footer { text-align:center; padding:16px 16px 0; font-size:0.85rem; color:#888; border-top:1px solid rgba(184,134,11,0.2); margin-top:24px; }
+footer a { color:var(--brown-dark); text-decoration:none; margin:0 8px; }
+</style>
+</head>
+<body>
+
+<div class="lang-switch"><button id="langBtn">English</button></div>
+<a class="back-link" href="index.html" data-ja="🦊 ゲームに戻る" data-en="🦊 Back to Game">🦊 ゲームに戻る</a>
+
+<h1 data-ja="♟ 対局モード" data-en="♟ Match Mode">♟ 対局モード</h1>
+
+<p data-ja="友達とリアルタイムでオンライン対局ができる機能です。ログインして友達を追加すると、いつでも対局を申し込めます。"
+   data-en="Play real-time online chess with your friends. Sign in, add friends, and challenge them to a match anytime.">
+   友達とリアルタイムでオンライン対局ができる機能です。ログインして友達を追加すると、いつでも対局を申し込めます。</p>
+
+<h2 data-ja="🦊 使い方" data-en="🦊 How It Works">🦊 使い方</h2>
+<p data-ja="① Googleアカウントでログイン → ② ユーザー名を登録 → ③ 友達のユーザー名で申請を送る → ④ 承認されたら「対局を申し込む」ボタンから対局スタート。盤面は両者の画面でリアルタイムに同期されます。"
+   data-en="① Sign in with Google → ② Set your username → ③ Send a friend request using their username → ④ Once accepted, click “Challenge” to start a match. The board syncs in real time on both screens.">
+   ① Googleアカウントでログイン → ② ユーザー名を登録 → ③ 友達のユーザー名で申請を送る → ④ 承認されたら「対局を申し込む」ボタンから対局スタート。盤面は両者の画面でリアルタイムに同期されます。</p>
+
+<h2 data-ja="📈 練習モードとの使い分け" data-en="📈 Match Mode vs. Practice Mode">📈 練習モードとの使い分け</h2>
+<p data-ja="対局モードは「実力を試す場」、練習モード(トップページ)は「オープニングを覚える場」です。まずは練習モードで狙いのオープニングの手順を体に入れてから、対局モードで実際に試してみるのがおすすめです。狙った局面に持ち込めるかどうかを確認する、良い実戦練習になります。"
+   data-en="Match Mode is where you test your skills; Practice Mode (on the home page) is where you learn openings. We recommend drilling your target opening in Practice Mode first, then trying it out here in a real match — it's a great way to see if you can actually steer the game into the position you studied.">
+   対局モードは「実力を試す場」、練習モード(トップページ)は「オープニングを覚える場」です。まずは練習モードで狙いのオープニングの手順を体に入れてから、対局モードで実際に試してみるのがおすすめです。狙った局面に持ち込めるかどうかを確認する、良い実戦練習になります。</p>
+
+<h2 data-ja="🤖 AIの難易度について" data-en="🤖 About AI Difficulty">🤖 AIの難易度について</h2>
+<p data-ja="現在は友達同士のオンライン対局のみに対応しています。AI(コンピューター)対戦モードは今後追加予定で、初級・中級・上級など複数の難易度から選べるようにする計画です。実装され次第、このページでもご案内します。"
+   data-en="Right now, Match Mode supports online play against friends only. An AI (computer) opponent mode is planned for the future, with multiple difficulty levels such as Beginner, Intermediate, and Advanced. We'll update this page once it's available.">
+   現在は友達同士のオンライン対局のみに対応しています。AI(コンピューター)対戦モードは今後追加予定で、初級・中級・上級など複数の難易度から選べるようにする計画です。実装され次第、このページでもご案内します。</p>
+
+<button id="loginBtn" data-ja="Googleでログイン" data-en="Sign in with Google">Googleでログイン</button>
+<button id="logoutBtn" style="display:none;" data-ja="ログアウト" data-en="Log out">ログアウト</button>
+
+<div id="profileArea" style="display:none;">
+  <div class="box">
+    <p><strong data-ja="表示名（ユーザーネーム）" data-en="Display Name (Username)">表示名（ユーザーネーム）</strong></p>
+    <input type="text" id="usernameInput" maxlength="20">
+    <button id="saveNameBtn" data-ja="保存" data-en="Save">保存</button>
+    <p id="saveMsg" class="msg"></p>
+  </div>
+
+  <div class="box">
+    <p><strong data-ja="現在のプロフィール" data-en="Current Profile">現在のプロフィール</strong></p>
+    <p><span data-ja="メール: " data-en="Email: ">メール: </span><span id="profileEmail"></span></p>
+    <p><span data-ja="ユーザー名: " data-en="Username: ">ユーザー名: </span><span id="profileUsername">-</span></p>
+    <img id="profilePhoto" src="" alt="avatar">
+  </div>
+
+  <div class="box">
+    <p><strong data-ja="友達を追加" data-en="Add a Friend">友達を追加</strong></p>
+    <input type="text" id="searchInput" data-ja-ph="相手のユーザー名" data-en-ph="Friend's username" placeholder="相手のユーザー名">
+    <button id="sendRequestBtn" data-ja="申請を送る" data-en="Send Request">申請を送る</button>
+    <p id="requestMsg"></p>
+  </div>
+
+  <div class="box">
+    <p><strong data-ja="登録ユーザーを探す" data-en="Find Registered Users">登録ユーザーを探す</strong></p>
+    <input type="text" id="userSearchInput" data-ja-ph="名前で検索(空欄で全員表示)" data-en-ph="Search by name (blank shows everyone)" placeholder="名前で検索(空欄で全員表示)">
+    <div id="userSearchResults" style="margin-top:10px;"></div>
+  </div>
+
+  <div class="box">
+    <p><strong data-ja="届いている友達申請" data-en="Incoming Friend Requests">届いている友達申請</strong></p>
+    <div id="incomingList"></div>
+  </div>
+
+  <div class="box">
+    <p><strong data-ja="友達一覧" data-en="Friends List">友達一覧</strong></p>
+    <div id="friendsList"></div>
+  </div>
+
+  <div class="box" id="matchInviteBox" style="display:none;">
+    <p><strong data-ja="届いている対局申し込み" data-en="Incoming Match Challenges">届いている対局申し込み</strong></p>
+    <div id="matchInvitesList"></div>
+  </div>
+
+  <div class="box" id="gameBox" style="display:none;">
+    <p><strong data-ja="対局中" data-en="Current Match">対局中</strong></p>
+    <p id="gameStatus"></p>
+    <div id="miniBoard"></div>
+    <button id="leaveMatchBtn" data-ja="対局を退出する" data-en="Leave Match" style="margin-top:10px;">対局を退出する</button>
+  </div>
+</div>
+
+<p id="status" data-ja="未ログイン" data-en="Not logged in">未ログイン</p>
+
+<footer>
+  <div>
+    <a href="info.html" data-ja="解説記事" data-en="Articles">解説記事</a>
+    <a href="disclaimer.html" data-ja="免責事項" data-en="Privacy Policy">免責事項</a>
+  </div>
+</footer>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+  import { getDatabase, ref, set, get, remove, onValue } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyDR6vsVq2uePiFRUmoqYB4LjdGZJiRM4eE",
+    authDomain: "kitsunechess-multiplayer.firebaseapp.com",
+    databaseURL: "https://kitsunechess-multiplayer-default-rtdb.asia-southeast1.firebasedatabase.app",
+    projectId: "kitsunechess-multiplayer",
+    storageBucket: "kitsunechess-multiplayer.firebasestorage.app",
+    messagingSenderId: "1025643200128",
+    appId: "1:1025643200128:web:cf333443c75742ea127065",
+    measurementId: "G-HPDM5LPV3P"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getDatabase(app);
+  const provider = new GoogleAuthProvider();
+
+  let LANG = localStorage.getItem('selectedLang') === 'ja' ? 'ja' : 'en';
+  function applyLang() {
+    document.querySelectorAll('[data-ja]').forEach(el => { el.textContent = LANG === 'ja' ? el.dataset.ja : el.dataset.en; });
+    document.querySelectorAll('[data-ja-ph]').forEach(el => { el.placeholder = LANG === 'ja' ? el.dataset.jaPh : el.dataset.enPh; });
+    document.getElementById('langBtn').textContent = LANG === 'ja' ? 'English' : '日本語';
+  }
+  document.getElementById('langBtn').onclick = () => {
+    LANG = LANG === 'ja' ? 'en' : 'ja';
+    localStorage.setItem('selectedLang', LANG);
+    applyLang();
+  };
+  applyLang();
+
+  document.getElementById('loginBtn').onclick = () => {
+    signInWithPopup(auth, provider).catch(err => { document.getElementById('status').textContent = 'Error: ' + err.message; });
+  };
+  document.getElementById('logoutBtn').onclick = () => signOut(auth);
+
+  function normName(name) { return name.trim().toLowerCase(); }
+
+  document.getElementById('saveNameBtn').onclick = async () => {
+    const user = auth.currentUser;
+    if (!user) return;
+    const name = document.getElementById('usernameInput').value.trim();
+    if (!name) return;
+    const key = normName(name);
+    const existing = await get(ref(db, 'usernames/' + key));
+    if (existing.exists() && existing.val() !== user.uid) {
+      document.getElementById('saveMsg').textContent = LANG === 'ja' ? 'そのユーザー名はすでに使われています。' : 'That username is already taken.';
+      document.getElementById('saveMsg').className = 'err';
+      return;
+    }
+    await set(ref(db, 'users/' + user.uid), { username: name, email: user.email, photoURL: user.photoURL || '' });
+    await set(ref(db, 'usernames/' + key), user.uid);
+    document.getElementById('profileUsername').textContent = name;
+    const msg = document.getElementById('saveMsg');
+    msg.className = 'msg';
+    msg.textContent = LANG === 'ja' ? '保存しました！' : 'Saved!';
+    setTimeout(() => { msg.textContent = ''; }, 2000);
+  };
+
+  document.getElementById('sendRequestBtn').onclick = async () => {
+    const user = auth.currentUser;
+    if (!user) return;
+    const targetName = document.getElementById('searchInput').value.trim();
+    if (!targetName) return;
+    const key = normName(targetName);
+    const msgEl = document.getElementById('requestMsg');
+
+    const uidSnap = await get(ref(db, 'usernames/' + key));
+    if (!uidSnap.exists()) {
+      msgEl.textContent = LANG === 'ja' ? 'そのユーザー名は見つかりませんでした。' : 'That username was not found.';
+      msgEl.className = 'err';
+      return;
+    }
+    const targetUid = uidSnap.val();
+    if (targetUid === user.uid) {
+      msgEl.textContent = LANG === 'ja' ? '自分自身には申請できません。' : "You can't add yourself.";
+      msgEl.className = 'err';
+      return;
+    }
+    const myProfile = await get(ref(db, 'users/' + user.uid));
+    const myUsername = myProfile.exists() ? myProfile.val().username : user.displayName;
+
+    await set(ref(db, 'friendRequests/' + targetUid + '/' + user.uid), { username: myUsername, sentAt: Date.now() });
+    await set(ref(db, 'sentRequests/' + user.uid + '/' + targetUid), true);
+    msgEl.textContent = LANG === 'ja' ? '申請を送りました！' : 'Request sent!';
+    msgEl.className = 'msg';
+    document.getElementById('searchInput').value = '';
+    renderUserSearchResults();
+  };
+
+  function renderIncomingRequests(user, data) {
+    const container = document.getElementById('incomingList');
+    container.innerHTML = '';
+    if (!data) {
+      container.textContent = LANG === 'ja' ? '届いている申請はありません。' : 'No incoming requests.';
+      return;
+    }
+    Object.entries(data).forEach(([fromUid, info]) => {
+      const row = document.createElement('div');
+      row.className = 'list-item';
+      const label = document.createElement('span');
+      label.textContent = info.username;
+
+      const btnGroup = document.createElement('span');
+      const acceptBtn = document.createElement('button');
+      acceptBtn.textContent = LANG === 'ja' ? '承認' : 'Accept';
+      acceptBtn.onclick = async () => {
+        await set(ref(db, 'friends/' + user.uid + '/' + fromUid), true);
+        await set(ref(db, 'friends/' + fromUid + '/' + user.uid), true);
+        await remove(ref(db, 'friendRequests/' + user.uid + '/' + fromUid));
+        await remove(ref(db, 'sentRequests/' + fromUid + '/' + user.uid));
+        renderUserSearchResults();
+      };
+      const declineBtn = document.createElement('button');
+      declineBtn.textContent = LANG === 'ja' ? '拒否' : 'Decline';
+      declineBtn.style.background = '#a0785a';
+      declineBtn.onclick = async () => {
+        await remove(ref(db, 'friendRequests/' + user.uid + '/' + fromUid));
+        await remove(ref(db, 'sentRequests/' + fromUid + '/' + user.uid));
+        renderUserSearchResults();
+      };
+
+      btnGroup.appendChild(acceptBtn);
+      btnGroup.appendChild(declineBtn);
+      row.appendChild(label);
+      row.appendChild(btnGroup);
+      container.appendChild(row);
+    });
+  }
+
+  async function renderFriendsList(user, data) {
+    const container = document.getElementById('friendsList');
+    container.innerHTML = '';
+    if (!data) {
+      container.textContent = LANG === 'ja' ? 'まだ友達がいません。' : 'No friends yet.';
+      return;
+    }
+    for (const friendUid of Object.keys(data)) {
+      const snap = await get(ref(db, 'users/' + friendUid + '/username'));
+      const friendName = snap.exists() ? snap.val() : '(unknown)';
+      const row = document.createElement('div');
+      row.className = 'list-item';
+      const label = document.createElement('span');
+      label.textContent = friendName;
+      const challengeBtn = document.createElement('button');
+      challengeBtn.textContent = LANG === 'ja' ? '対局を申し込む' : 'Challenge';
+      challengeBtn.onclick = async () => {
+        const myProfile = await get(ref(db, 'users/' + user.uid));
+        const myName = myProfile.exists() ? myProfile.val().username : user.displayName;
+        await set(ref(db, 'matchInvites/' + friendUid + '/' + user.uid), { username: myName, sentAt: Date.now() });
+        challengeBtn.textContent = LANG === 'ja' ? '送信済み' : 'Sent';
+        challengeBtn.disabled = true;
+      };
+      row.appendChild(label);
+      row.appendChild(challengeBtn);
+      container.appendChild(row);
+    }
+  }
+
+  let curUser = null;
+  let allUsersMap = {};      // uid -> {username, ...}
+  let myFriendsSet = new Set();
+  let myIncomingSet = new Set();
+  let mySentSet = new Set();
+
+  function renderUserSearchResults() {
+    const container = document.getElementById('userSearchResults');
+    if (!container || !curUser) return;
+    const query = normName(document.getElementById('userSearchInput').value || '');
+    container.innerHTML = '';
+
+    const entries = Object.entries(allUsersMap)
+      .filter(([uid, info]) => uid !== curUser.uid && info.username)
+      .filter(([uid, info]) => normName(info.username).includes(query))
+      .sort((a, b) => a[1].username.localeCompare(b[1].username));
+
+    if (entries.length === 0) {
+      container.textContent = LANG === 'ja' ? '該当するユーザーが見つかりません。' : 'No matching users found.';
+      return;
+    }
+
+    entries.forEach(([uid, info]) => {
+      const row = document.createElement('div');
+      row.className = 'list-item';
+      const label = document.createElement('span');
+      label.textContent = info.username;
+      row.appendChild(label);
+
+      if (myFriendsSet.has(uid)) {
+        const badge = document.createElement('span');
+        badge.textContent = LANG === 'ja' ? '友達済み' : 'Already friends';
+        badge.style.color = 'var(--brown-dark)';
+        row.appendChild(badge);
+      } else if (myIncomingSet.has(uid)) {
+        const badge = document.createElement('span');
+        badge.textContent = LANG === 'ja' ? '申請が届いています' : 'Sent you a request';
+        badge.style.color = 'var(--brown-dark)';
+        row.appendChild(badge);
+      } else if (mySentSet.has(uid)) {
+        const btn = document.createElement('button');
+        btn.textContent = LANG === 'ja' ? '送信済み' : 'Sent';
+        btn.disabled = true;
+        row.appendChild(btn);
+      } else {
+        const btn = document.createElement('button');
+        btn.textContent = LANG === 'ja' ? '申請を送る' : 'Add';
+        btn.onclick = async () => {
+          const myProfile = await get(ref(db, 'users/' + curUser.uid));
+          const myUsername = myProfile.exists() ? myProfile.val().username : curUser.displayName;
+          await set(ref(db, 'friendRequests/' + uid + '/' + curUser.uid), { username: myUsername, sentAt: Date.now() });
+          await set(ref(db, 'sentRequests/' + curUser.uid + '/' + uid), true);
+          mySentSet.add(uid);
+          renderUserSearchResults();
+        };
+        row.appendChild(btn);
+      }
+      container.appendChild(row);
+    });
+  }
+
+  function renderMatchInvites(user, data) {
+    const box = document.getElementById('matchInviteBox');
+    const container = document.getElementById('matchInvitesList');
+    container.innerHTML = '';
+    if (!data) { box.style.display = 'none'; return; }
+    box.style.display = 'block';
+    Object.entries(data).forEach(([fromUid, info]) => {
+      const row = document.createElement('div');
+      row.className = 'list-item';
+      const label = document.createElement('span');
+      label.textContent = info.username;
+      const btnGroup = document.createElement('span');
+
+      const acceptBtn = document.createElement('button');
+      acceptBtn.textContent = LANG === 'ja' ? '受ける' : 'Accept';
+      acceptBtn.onclick = async () => {
+        const matchId = 'm_' + Date.now();
+        const iAmWhite = Math.random() < 0.5;
+        const myProfile = await get(ref(db, 'users/' + user.uid));
+        const myName = myProfile.exists() ? myProfile.val().username : user.displayName;
+        await set(ref(db, 'matches/' + matchId), {
+          white: iAmWhite ? user.uid : fromUid,
+          black: iAmWhite ? fromUid : user.uid,
+          whiteName: iAmWhite ? myName : info.username,
+          blackName: iAmWhite ? info.username : myName,
+          fen: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1',
+          turn: 'w',
+          status: 'active'
+        });
+        await set(ref(db, 'currentMatch/' + user.uid), matchId);
+        await set(ref(db, 'currentMatch/' + fromUid), matchId);
+        await remove(ref(db, 'matchInvites/' + user.uid + '/' + fromUid));
+      };
+      const declineBtn = document.createElement('button');
+      declineBtn.textContent = LANG === 'ja' ? '断る' : 'Decline';
+      declineBtn.style.background = '#a0785a';
+      declineBtn.onclick = async () => { await remove(ref(db, 'matchInvites/' + user.uid + '/' + fromUid)); };
+
+      btnGroup.appendChild(acceptBtn);
+      btnGroup.appendChild(declineBtn);
+      row.appendChild(label);
+      row.appendChild(btnGroup);
+      container.appendChild(row);
+    });
+  }
+
+  let myMatchId = null;
+  let myColor = null;
+  let gameChess = null;
+  let selectedSquare = null;
+
+  function startMatchListener(user) {
+    onValue(ref(db, 'currentMatch/' + user.uid), (snap) => {
+      const matchId = snap.val();
+      if (!matchId) {
+        document.getElementById('gameBox').style.display = 'none';
+        myMatchId = null;
+        return;
+      }
+      myMatchId = matchId;
+      document.getElementById('gameBox').style.display = 'block';
+      onValue(ref(db, 'matches/' + matchId), (matchSnap) => {
+        const m = matchSnap.val();
+        if (!m) return;
+        myColor = (m.white === user.uid) ? 'w' : 'b';
+        gameChess = new Chess(m.fen);
+        renderMiniBoard(m, user);
+      });
+    });
+  }
+
+  const PIECE_UNICODE = { wp:'♙', wn:'♘', wb:'♗', wr:'♖', wq:'♕', wk:'♔', bp:'♟', bn:'♞', bb:'♝', br:'♜', bq:'♛', bk:'♚' };
+
+  function renderMiniBoard(m, user) {
+    const boardEl = document.getElementById('miniBoard');
+    boardEl.innerHTML = '';
+    const statusEl = document.getElementById('gameStatus');
+    const oppName = myColor === 'w' ? m.blackName : m.whiteName;
+    const myTurn = m.turn === myColor;
+
+    if (gameChess.game_over()) {
+      let resultMsg;
+      if (gameChess.in_checkmate()) {
+        const winnerColor = m.turn === 'w' ? 'b' : 'w';
+        resultMsg = (winnerColor === myColor) ? (LANG === 'ja' ? '勝ちました！' : 'You won!') : (LANG === 'ja' ? '負けました。' : 'You lost.');
+      } else {
+        resultMsg = LANG === 'ja' ? '引き分けです。' : "It's a draw.";
+      }
+      statusEl.textContent = resultMsg;
+    } else {
+      statusEl.textContent = (LANG === 'ja' ? '対戦相手: ' : 'Opponent: ') + oppName + ' | ' +
+        (myTurn ? (LANG === 'ja' ? 'あなたの番です' : 'Your turn') : (LANG === 'ja' ? '相手の番です' : "Opponent's turn"));
+    }
+
+    const boardArray = gameChess.board();
+    const files = ['a','b','c','d','e','f','g','h'];
+    const order = [...Array(8).keys()];
+    const rowOrder = myColor === 'b' ? [...order].reverse() : order;
+    const colOrder = myColor === 'b' ? [...order].reverse() : order;
+
+    rowOrder.forEach(r => {
+      colOrder.forEach(c => {
+        const piece = boardArray[r][c];
+        const sq = files[c] + (8 - r);
+        const cell = document.createElement('div');
+        cell.className = 'sq ' + (((r + c) % 2 === 0) ? 'light' : 'dark');
+        if (selectedSquare === sq) cell.classList.add('selected');
+        if (piece) cell.textContent = PIECE_UNICODE[piece.color + piece.type];
+        cell.onclick = () => onSquareClick(sq, user);
+        boardEl.appendChild(cell);
+      });
+    });
+  }
+
+  async function onSquareClick(sq, user) {
+    if (!gameChess || gameChess.game_over()) return;
+    const matchSnap = await get(ref(db, 'matches/' + myMatchId));
+    const m = matchSnap.val();
+    if (m.turn !== myColor) return;
+
+    if (!selectedSquare) {
+      const piece = gameChess.get(sq);
+      if (piece && piece.color === myColor) selectedSquare = sq;
+      renderMiniBoard(m, user);
+    } else {
+      const move = gameChess.move({ from: selectedSquare, to: sq, promotion: 'q' });
+      selectedSquare = null;
+      if (move) {
+        await set(ref(db, 'matches/' + myMatchId), { ...m, fen: gameChess.fen(), turn: gameChess.turn() });
+      } else {
+        renderMiniBoard(m, user);
+      }
+    }
+  }
+
+  document.getElementById('leaveMatchBtn').onclick = async () => {
+    const user = auth.currentUser;
+    if (!user) return;
+    await remove(ref(db, 'currentMatch/' + user.uid));
+  };
+
+  onAuthStateChanged(auth, async (user) => {
+    const status = document.getElementById('status');
+    const loginBtn = document.getElementById('loginBtn');
+    const logoutBtn = document.getElementById('logoutBtn');
+    const profileArea = document.getElementById('profileArea');
+
+    if (user) {
+      status.style.display = 'none';
+      loginBtn.style.display = 'none';
+      logoutBtn.style.display = 'inline-block';
+      profileArea.style.display = 'block';
+
+      document.getElementById('profileEmail').textContent = user.email;
+      document.getElementById('profilePhoto').src = user.photoURL || '';
+
+      const snap = await get(ref(db, 'users/' + user.uid));
+      let currentName = '';
+      if (snap.exists() && snap.val().username) {
+        currentName = snap.val().username;
+      } else {
+        currentName = user.displayName || '';
+        await set(ref(db, 'users/' + user.uid), { username: currentName, email: user.email, photoURL: user.photoURL || '' });
+        await set(ref(db, 'usernames/' + normName(currentName)), user.uid);
+      }
+      document.getElementById('profileUsername').textContent = currentName;
+      document.getElementById('usernameInput').value = currentName;
+
+      curUser = user;
+      onValue(ref(db, 'friendRequests/' + user.uid), (s) => renderIncomingRequests(user, s.val()));
+      onValue(ref(db, 'friends/' + user.uid), (s) => renderFriendsList(user, s.val()));
+      onValue(ref(db, 'matchInvites/' + user.uid), (s) => renderMatchInvites(user, s.val()));
+      startMatchListener(user);
+
+      onValue(ref(db, 'users'), (s) => { allUsersMap = s.val() || {}; renderUserSearchResults(); });
+      onValue(ref(db, 'friends/' + user.uid), (s) => { myFriendsSet = new Set(Object.keys(s.val() || {})); renderUserSearchResults(); });
+      onValue(ref(db, 'friendRequests/' + user.uid), (s) => { myIncomingSet = new Set(Object.keys(s.val() || {})); renderUserSearchResults(); });
+      onValue(ref(db, 'sentRequests/' + user.uid), (s) => { mySentSet = new Set(Object.keys(s.val() || {})); renderUserSearchResults(); });
+      document.getElementById('userSearchInput').oninput = renderUserSearchResults;
+    } else {
+      status.style.display = 'block';
+      loginBtn.style.display = 'inline-block';
+      logoutBtn.style.display = 'none';
+      profileArea.style.display = 'none';
+    }
+  });
+</script>
+</body>
+</html>
