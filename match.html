@@ -148,6 +148,8 @@ details[open] summary::before { content:'▾ '; }
     <p id="gameStatus"></p>
     <div id="miniBoard"></div>
     <button id="leaveMatchBtn" data-ja="対局を退出する" data-en="Leave Match" style="margin-top:10px;">対局を退出する</button>
+    <button id="matchChatToggle" data-ja="💬 チャット" data-en="💬 Chat" style="margin-top:10px;">💬 チャット</button>
+    <div id="matchChatPanel" style="display:none;"></div>
   </div>
 </div>
 
@@ -163,7 +165,7 @@ details[open] summary::before { content:'▾ '; }
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
   import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-  import { getDatabase, ref, set, get, remove, onValue } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+  import { getDatabase, ref, set, get, push, remove, onValue } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyDR6vsVq2uePiFRUmoqYB4LjdGZJiRM4eE",
@@ -317,10 +319,73 @@ details[open] summary::before { content:'▾ '; }
         challengeBtn.textContent = LANG === 'ja' ? '送信済み' : 'Sent';
         challengeBtn.disabled = true;
       };
+      const msgBtn = document.createElement('button');
+      msgBtn.textContent = LANG === 'ja' ? '✉️ メッセージ' : '✉️ Message';
+      msgBtn.style.background = '#a3692d';
+      const chatPanel = document.createElement('div');
+      chatPanel.style.display = 'none';
+      chatPanel.style.width = '100%';
+      let dmAttached = false;
+      msgBtn.onclick = () => {
+        const opening = chatPanel.style.display === 'none';
+        chatPanel.style.display = opening ? 'block' : 'none';
+        if (opening && !dmAttached) {
+          dmAttached = true;
+          attachChat(chatPanel, 'directMessages/' + pairKey(user.uid, friendUid), user);
+        }
+      };
       row.appendChild(label);
       row.appendChild(challengeBtn);
+      row.appendChild(msgBtn);
       container.appendChild(row);
+      container.appendChild(chatPanel);
     }
+  }
+
+  function pairKey(a, b) { return [a, b].sort().join('_'); }
+
+  function attachChat(containerEl, chatPath, user) {
+    containerEl.innerHTML = '';
+    const list = document.createElement('div');
+    list.style.cssText = 'max-height:180px;overflow-y:auto;background:#fffdf7;border:1px solid rgba(124,74,30,0.3);border-radius:6px;padding:8px;margin:8px 0;font-size:0.85rem;';
+    const inputRow = document.createElement('div');
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.placeholder = LANG === 'ja' ? 'メッセージを入力...' : 'Type a message...';
+    input.style.width = '65%';
+    const sendBtn = document.createElement('button');
+    sendBtn.textContent = LANG === 'ja' ? '送信' : 'Send';
+    const doSend = async () => {
+      const text = input.value.trim();
+      if (!text) return;
+      const myProfile = await get(ref(db, 'users/' + user.uid));
+      const myName = myProfile.exists() ? myProfile.val().username : user.displayName;
+      await set(push(ref(db, chatPath)), { from: user.uid, fromName: myName, text, sentAt: Date.now() });
+      input.value = '';
+    };
+    sendBtn.onclick = doSend;
+    input.onkeydown = (e) => { if (e.key === 'Enter') doSend(); };
+    inputRow.appendChild(input);
+    inputRow.appendChild(sendBtn);
+    containerEl.appendChild(list);
+    containerEl.appendChild(inputRow);
+
+    onValue(ref(db, chatPath), (snap) => {
+      const data = snap.val();
+      list.innerHTML = '';
+      if (!data) {
+        list.textContent = LANG === 'ja' ? 'まだメッセージはありません。' : 'No messages yet.';
+        return;
+      }
+      Object.values(data).sort((a, b) => a.sentAt - b.sentAt).forEach(msg => {
+        const line = document.createElement('div');
+        const who = msg.from === user.uid ? (LANG === 'ja' ? '自分' : 'You') : msg.fromName;
+        line.textContent = who + ': ' + msg.text;
+        line.style.marginBottom = '4px';
+        list.appendChild(line);
+      });
+      list.scrollTop = list.scrollHeight;
+    });
   }
 
   let curUser = null;
@@ -441,6 +506,8 @@ details[open] summary::before { content:'▾ '; }
       if (!matchId) {
         document.getElementById('gameBox').style.display = 'none';
         document.getElementById('lobbyArea').style.display = 'block';
+        document.getElementById('matchChatPanel').style.display = 'none';
+        matchChatAttached = null;
         myMatchId = null;
         return;
       }
@@ -566,6 +633,18 @@ const PIECE_IMG = {
     const user = auth.currentUser;
     if (!user) return;
     await remove(ref(db, 'currentMatch/' + user.uid));
+  };
+
+  let matchChatAttached = null;
+  document.getElementById('matchChatToggle').onclick = () => {
+    const panel = document.getElementById('matchChatPanel');
+    const opening = panel.style.display === 'none';
+    panel.style.display = opening ? 'block' : 'none';
+    const user = auth.currentUser;
+    if (opening && user && myMatchId && matchChatAttached !== myMatchId) {
+      matchChatAttached = myMatchId;
+      attachChat(panel, 'matches/' + myMatchId + '/messages', user);
+    }
   };
 
   onAuthStateChanged(auth, async (user) => {
