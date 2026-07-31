@@ -46,7 +46,12 @@ input {
 .err { color:#c0392b; font-size:0.9em; font-weight:700; }
 #status { text-align:center; color:var(--brown); font-style:italic; }
 img#profilePhoto { border:2px solid var(--brown); border-radius:50%; width:60px; height:60px; }
-.sq { display:flex; align-items:center; justify-content:center; font-size:1.8rem; user-select:none; cursor:pointer; }
+.sq { position:relative; display:flex; align-items:center; justify-content:center; font-size:1.8rem; user-select:none; cursor:pointer; }
+.sq-label { position:absolute; font-family:'Crimson Pro', serif; font-weight:800; font-size:0.7rem; line-height:1; pointer-events:none; z-index:2; }
+.sq.light .sq-label { color:rgba(80,40,0,0.85); }
+.sq.dark .sq-label { color:rgba(255,240,200,0.95); }
+.sq-label.rank-label { top:2px; left:3px; }
+.sq-label.file-label { bottom:2px; right:3px; }
 .sq.light { background:#d4b87a; }
 .sq.dark { background:#7a5230; }
 .sq.selected { outline:3px solid #e8c84a; outline-offset:-3px; }
@@ -490,11 +495,23 @@ const PIECE_IMG = {
         const cell = document.createElement('div');
         cell.className = 'sq ' + (((r + c) % 2 === 0) ? 'light' : 'dark');
         if (selectedSquare === sq) cell.classList.add('selected');
+        if (colOrder.indexOf(c) === 0) {
+          const rankLabel = document.createElement('span');
+          rankLabel.className = 'sq-label rank-label';
+          rankLabel.textContent = 8 - r;
+          cell.appendChild(rankLabel);
+        }
+        if (rowOrder.indexOf(r) === rowOrder.length - 1) {
+          const fileLabel = document.createElement('span');
+          fileLabel.className = 'sq-label file-label';
+          fileLabel.textContent = files[c];
+          cell.appendChild(fileLabel);
+        }
         if (piece) {
         const img = document.createElement('img');
         img.src = PIECE_IMG[piece.color + piece.type.toUpperCase()];
-        img.style.width = '85%';
-        img.style.height = '85%';
+        img.style.width = '100%';
+        img.style.height = '100%';
         img.style.pointerEvents = 'none';
         cell.appendChild(img);
       }
