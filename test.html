@@ -1802,19 +1802,12 @@ document.querySelectorAll('#filterLevel option, #filterStyle option, #filterColo
     const enText = el.getAttribute('data-en');
     if (jaText && enText) el.textContent = LANG === 'ja' ? jaText : enText;
   });
-  document.querySelectorAll('footer .lang-text').forEach(el => {
-    const jaText = el.getAttribute('data-ja');
-    const enText = el.getAttribute('data-en');
-    if (jaText && enText) el.textContent = LANG === 'ja' ? jaText : enText;
-  });
-  // ↓↓↓ ここに新しいコードを貼り付け ↓↓↓
+
   document.querySelectorAll('.lang-text[data-ja][data-en]').forEach(el => {
     const jaText = el.getAttribute('data-ja');
     const enText = el.getAttribute('data-en');
     el.textContent = LANG === 'ja' ? jaText : enText;
   });
-  // ↑↑↑ ここまで ↑↑↑
-  if (typeof puzzleState !== 'undefined' && !puzzleState.awaitingNext) {
   if (typeof puzzleState !== 'undefined' && !puzzleState.awaitingNext) {
     setPuzzleStatus(LANG === 'ja'
       ? (puzzleChess.turn() === 'w' ? '白番です。正解の手を指してください。' : '黒番です。正解の手を指してください。')
