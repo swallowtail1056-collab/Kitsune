@@ -198,6 +198,7 @@ footer a { color:var(--brown-dark); text-decoration:none; margin:0 8px; }
       return;
     }
     await set(ref(db, 'users/' + user.uid), { username: name, email: user.email, photoURL: user.photoURL || '' });
+    await set(ref(db, 'publicProfiles/' + user.uid), { username: name });
     await set(ref(db, 'usernames/' + key), user.uid);
     document.getElementById('profileUsername').textContent = name;
     const msg = document.getElementById('saveMsg');
@@ -285,7 +286,7 @@ footer a { color:var(--brown-dark); text-decoration:none; margin:0 8px; }
       return;
     }
     for (const friendUid of Object.keys(data)) {
-      const snap = await get(ref(db, 'users/' + friendUid + '/username'));
+      const snap = await get(ref(db, 'publicProfiles/' + friendUid + '/username'));
       const friendName = snap.exists() ? snap.val() : '(unknown)';
       const row = document.createElement('div');
       row.className = 'list-item';
@@ -530,6 +531,7 @@ footer a { color:var(--brown-dark); text-decoration:none; margin:0 8px; }
       } else {
         currentName = user.displayName || '';
         await set(ref(db, 'users/' + user.uid), { username: currentName, email: user.email, photoURL: user.photoURL || '' });
+        await set(ref(db, 'publicProfiles/' + user.uid), { username: currentName });
         await set(ref(db, 'usernames/' + normName(currentName)), user.uid);
       }
       document.getElementById('profileUsername').textContent = currentName;
@@ -541,7 +543,7 @@ footer a { color:var(--brown-dark); text-decoration:none; margin:0 8px; }
       onValue(ref(db, 'matchInvites/' + user.uid), (s) => renderMatchInvites(user, s.val()));
       startMatchListener(user);
 
-      onValue(ref(db, 'users'), (s) => { allUsersMap = s.val() || {}; renderUserSearchResults(); });
+      onValue(ref(db, 'publicProfiles'), (s) => { allUsersMap = s.val() || {}; renderUserSearchResults(); });
       onValue(ref(db, 'friends/' + user.uid), (s) => { myFriendsSet = new Set(Object.keys(s.val() || {})); renderUserSearchResults(); });
       onValue(ref(db, 'friendRequests/' + user.uid), (s) => { myIncomingSet = new Set(Object.keys(s.val() || {})); renderUserSearchResults(); });
       onValue(ref(db, 'sentRequests/' + user.uid), (s) => { mySentSet = new Set(Object.keys(s.val() || {})); renderUserSearchResults(); });
