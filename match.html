@@ -99,6 +99,7 @@ details[open] summary::before { content:'▾ '; }
 <button id="logoutBtn" style="display:none;" data-ja="ログアウト" data-en="Log out">ログアウト</button>
 
 <div id="profileArea" style="display:none;">
+  <div id="lobbyArea">
   <div class="box">
     <p><strong data-ja="表示名（ユーザーネーム）" data-en="Display Name (Username)">表示名（ユーザーネーム）</strong></p>
     <input type="text" id="usernameInput" maxlength="20">
@@ -139,6 +140,7 @@ details[open] summary::before { content:'▾ '; }
   <div class="box" id="matchInviteBox" style="display:none;">
     <p><strong data-ja="届いている対局申し込み" data-en="Incoming Match Challenges">届いている対局申し込み</strong></p>
     <div id="matchInvitesList"></div>
+  </div>
   </div>
 
   <div class="box" id="gameBox" style="display:none;">
@@ -438,11 +440,13 @@ details[open] summary::before { content:'▾ '; }
       const matchId = snap.val();
       if (!matchId) {
         document.getElementById('gameBox').style.display = 'none';
+        document.getElementById('lobbyArea').style.display = 'block';
         myMatchId = null;
         return;
       }
       myMatchId = matchId;
       document.getElementById('gameBox').style.display = 'block';
+      document.getElementById('lobbyArea').style.display = 'none';
       onValue(ref(db, 'matches/' + matchId), (matchSnap) => {
         const m = matchSnap.val();
         if (!m) return;
