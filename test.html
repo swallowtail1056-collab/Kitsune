@@ -14,9 +14,16 @@
   --green:#2d6b3e; --green-dark:#1a4028; --yellow:#b8860b;
   --board-light:#d4b87a; --board-dark:#7a5230;
   --text:#111; --text-sub:#222; --text-muted:#444;
+  --card-bg:#f0e4c8; --input-bg:#fffdf7;
+}
+html[data-theme="dark"] {
+  --bg:#0a0a0a; --brown:#d4a72c; --brown-dark:#e8e8e8; --brown-light:#a3692d;
+  --green:#4a9c63; --green-dark:#2d6b3e; --yellow:#d4a72c;
+  --text:#e8e8e8; --text-sub:#d0d0d0; --text-muted:#999;
+  --card-bg:#1a1a1a; --input-bg:#111;
 }
 *{margin:0;padding:0;box-sizing:border-box;}
-body{background:var(--bg);color:var(--text);font-family:'Crimson Pro',serif;font-weight:600;min-height:100vh;}
+body{background:var(--bg);color:var(--text);font-family:'Crimson Pro',serif;font-weight:600;min-height:100vh;transition:background 0.2s,color 0.2s;}
 /* 全ページコンテンツを中央揃え */
 #page-game .app,
 #page-quiz .app,
@@ -424,6 +431,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <a href="info.html#learn" class="nav-btn" id="navLearn" aria-label="Discover Chess / Info">♟</a>
   <a href="info.html#tips" class="nav-btn" id="navTips" aria-label="Tips for Improvement / Info">📈</a>
   <button class="sound-btn" id="btnSound" onclick="toggleSound(this)" title="Sound ON/OFF">🔊</button><button class="sound-btn" id="btnHome" onclick="goHome()" title="Home">🏠</button>
+  <button class="sound-btn" id="btnTheme" onclick="toggleTheme()" title="Dark Mode">🌙</button>
   <button class="nav-btn" id="btnLang" onclick="toggleLang(this)" style="background:rgba(45,107,62,0.15);border-color:var(--green);color:var(--green-dark);">EN</button>
 </div>
   </div>
@@ -433,16 +441,18 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <div class="chess-articles-menu" id="articlesMenu" style="display:flex; justify-content: center; flex-wrap: wrap; gap: 10px; padding: 16px 16px 0 16px; max-width:960px; margin:0 auto; width:100%;">
     <button onclick="window.open('openings_list.html', '_blank')" class="lang-text" data-ja="定跡解説の一覧" data-en="Opening Guides" style="background: rgba(90,58,24,0.06); border: 1px solid rgba(90,58,24,0.25); color: #222; padding: 6px 14px; border-radius: 6px; font-size: 0.88rem; font-weight: 700; transition: all 0.2s; white-space: nowrap; cursor: pointer;">定跡解説の一覧</button>
   </div>
-<div style="max-width:720px;margin:8px auto 0;padding:0 16px;">
-<details>
-<summary style="cursor:pointer;color:#7c4a1e;font-family:'Cinzel',serif;font-weight:700;font-size:0.9rem;padding:8px 0;list-style:none;"><span class="lang-text" data-ja="▸ 練習モードの使い方" data-en="▸ How to Use Practice Mode">▸ 練習モードの使い方</span></summary>
-<div style="font-family:'Crimson Pro',serif;font-weight:600;font-size:0.9rem;color:#333;line-height:1.8;padding:4px 0 12px;">
-<p class="lang-text" data-ja="KitsuneChessの練習モードは、シシリアン・ディフェンスやルイ・ロペス、フレンチ・ディフェンスをはじめとした100種類のオープニング(定跡)を、実際に手を動かしながら覚えられるトレーニングツールです。まず下部のフィルターから、初心者〜上級者までのレベルや、攻撃型・バランス型といったプレイスタイルで絞り込み、気になるオープニングを選びます。盤面には次に指すべき手の候補が表示されるので、正しい手を選んでいくだけで、自然とそのオープニングの流れが身についていきます。単なる丸暗記ではなく、なぜその一手が良いのかという意図をクイズ形式で問われる場面もあり、理解を伴った定着を目指しています。ある程度手順に慣れてきたら、パズル形式のトレーニングで応用力を試したり、対局モードで実際の相手を前に試してみることで、練習で覚えた知識が本当に使えるかどうかを確認できます。チェスのルール自体がまだ不安な方は、ページ内の「ルール」解説から駒の動かし方や特殊な指し手(キャスリングやアンパッサンなど)を先に確認しておくと、練習にもスムーズに入れます。画面右上のボタンからは日本語・英語をいつでも切り替えられるので、日本語話者はもちろん、海外のチェスファンにも同じ内容で練習してもらえます。完全無料でアプリ内課金も一切なく、ブラウザさえあればいつでもどこからでも練習を再開できるので、通勤・通学の合間や寝る前の数分間など、すきま時間を使ってコツコツ続けるのにも向いています。まずは気になるオープニングを1つ選んで、気軽に試してみてください。同じオープニングでも、フィルターの条件を変えて何度か繰り返し練習することで、手順の理解がより深まっていきます。"
-   data-en="KitsuneChess's Practice Mode is a training tool for learning 100 chess openings — including the Sicilian Defense, the Ruy Lopez, and the French Defense — by actually playing out the moves. Start by using the filters below to narrow things down by level (Beginner to Advanced) or playing style (Attacking, Balanced, and more), then pick an opening that catches your eye. The board shows candidate moves for each step, so simply choosing the right move builds a natural feel for how that opening flows. It's not just memorization, either — quiz-style questions along the way ask why a given move is good, aiming for real understanding rather than rote repetition. Once you're comfortable with the sequence, you can test your instincts with puzzle-style training, or try it out for real in Match Mode to see whether what you practiced actually holds up against another player. If you're still unsure about the basic rules, the “Rules” page covers piece movement and special moves like castling and en passant, which makes it easier to jump into practice. You can switch between Japanese and English anytime from the button in the top corner, so it works equally well for Japanese speakers and chess fans abroad. It's completely free with no in-app purchases, and since all you need is a browser, you can pick up practice anytime, anywhere — a few minutes during a commute or before bed works just as well as a longer session. Pick an opening that interests you and give it a try. Revisiting the same opening under different filter settings will also deepen your understanding over time.">
-KitsuneChessの練習モードは、シシリアン・ディフェンスやルイ・ロペス、フレンチ・ディフェンスをはじめとした100種類のオープニング(定跡)を、実際に手を動かしながら覚えられるトレーニングツールです。まず下部のフィルターから、初心者〜上級者までのレベルや、攻撃型・バランス型といったプレイスタイルで絞り込み、気になるオープニングを選びます。盤面には次に指すべき手の候補が表示されるので、正しい手を選んでいくだけで、自然とそのオープニングの流れが身についていきます。単なる丸暗記ではなく、なぜその一手が良いのかという意図をクイズ形式で問われる場面もあり、理解を伴った定着を目指しています。ある程度手順に慣れてきたら、パズル形式のトレーニングで応用力を試したり、対局モードで実際の相手を前に試してみることで、練習で覚えた知識が本当に使えるかどうかを確認できます。チェスのルール自体がまだ不安な方は、ページ内の「ルール」解説から駒の動かし方や特殊な指し手(キャスリングやアンパッサンなど)を先に確認しておくと、練習にもスムーズに入れます。画面右上のボタンからは日本語・英語をいつでも切り替えられるので、日本語話者はもちろん、海外のチェスファンにも同じ内容で練習してもらえます。完全無料でアプリ内課金も一切なく、ブラウザさえあればいつでもどこからでも練習を再開できるので、通勤・通学の合間や寝る前の数分間など、すきま時間を使ってコツコツ続けるのにも向いています。まずは気になるオープニングを1つ選んで、気軽に試してみてください。同じオープニングでも、フィルターの条件を変えて何度か繰り返し練習することで、手順の理解がより深まっていきます。</p>
-</div>
-</details>
-</div>
+
+  <div style="max-width:720px;margin:8px auto 0;padding:0 16px;">
+  <details>
+  <summary style="cursor:pointer;color:#7c4a1e;font-family:'Cinzel',serif;font-weight:700;font-size:0.9rem;padding:8px 0;list-style:none;"><span class="lang-text" data-ja="▸ 練習モードの使い方" data-en="▸ How to Use Practice Mode">▸ 練習モードの使い方</span></summary>
+  <div style="font-family:'Crimson Pro',serif;font-weight:600;font-size:0.9rem;color:#333;line-height:1.8;padding:4px 0 12px;">
+  <p class="lang-text" data-ja="KitsuneChessの練習モードは、シシリアン・ディフェンスやルイ・ロペス、フレンチ・ディフェンスをはじめとした100種類のオープニング(定跡)を、実際に手を動かしながら覚えられるトレーニングツールです。まず下部のフィルターから、初心者〜上級者までのレベルや、攻撃型・バランス型といったプレイスタイルで絞り込み、気になるオープニングを選びます。盤面には次に指すべき手の候補が表示されるので、正しい手を選んでいくだけで、自然とそのオープニングの流れが身についていきます。単なる丸暗記ではなく、なぜその一手が良いのかという意図をクイズ形式で問われる場面もあり、理解を伴った定着を目指しています。ある程度手順に慣れてきたら、パズル形式のトレーニングで応用力を試したり、対局モードで実際の相手を前に試してみることで、練習で覚えた知識が本当に使えるかどうかを確認できます。チェスのルール自体がまだ不安な方は、ページ内の「ルール」解説から駒の動かし方や特殊な指し手(キャスリングやアンパッサンなど)を先に確認しておくと、練習にもスムーズに入れます。画面右上のボタンからは日本語・英語をいつでも切り替えられるので、日本語話者はもちろん、海外のチェスファンにも同じ内容で練習してもらえます。完全無料でアプリ内課金も一切なく、ブラウザさえあればいつでもどこからでも練習を再開できるので、通勤・通学の合間や寝る前の数分間など、すきま時間を使ってコツコツ続けるのにも向いています。まずは気になるオープニングを1つ選んで、気軽に試してみてください。同じオープニングでも、フィルターの条件を変えて何度か繰り返し練習することで、手順の理解がより深まっていきます。"
+     data-en="KitsuneChess's Practice Mode is a training tool for learning 100 chess openings — including the Sicilian Defense, the Ruy Lopez, and the French Defense — by actually playing out the moves. Start by using the filters below to narrow things down by level (Beginner to Advanced) or playing style (Attacking, Balanced, and more), then pick an opening that catches your eye. The board shows candidate moves for each step, so simply choosing the right move builds a natural feel for how that opening flows. It's not just memorization, either — quiz-style questions along the way ask why a given move is good, aiming for real understanding rather than rote repetition. Once you're comfortable with the sequence, you can test your instincts with puzzle-style training, or try it out for real in Match Mode to see whether what you practiced actually holds up against another player. If you're still unsure about the basic rules, the “Rules” page covers piece movement and special moves like castling and en passant, which makes it easier to jump into practice. You can switch between Japanese and English anytime from the button in the top corner, so it works equally well for Japanese speakers and chess fans abroad. It's completely free with no in-app purchases, and since all you need is a browser, you can pick up practice anytime, anywhere — a few minutes during a commute or before bed works just as well as a longer session. Pick an opening that interests you and give it a try. Revisiting the same opening under different filter settings will also deepen your understanding over time.">
+  KitsuneChessの練習モードは、シシリアン・ディフェンスやルイ・ロペス、フレンチ・ディフェンスをはじめとした100種類のオープニング(定跡)を、実際に手を動かしながら覚えられるトレーニングツールです。まず下部のフィルターから、初心者〜上級者までのレベルや、攻撃型・バランス型といったプレイスタイルで絞り込み、気になるオープニングを選びます。盤面には次に指すべき手の候補が表示されるので、正しい手を選んでいくだけで、自然とそのオープニングの流れが身についていきます。単なる丸暗記ではなく、なぜその一手が良いのかという意図をクイズ形式で問われる場面もあり、理解を伴った定着を目指しています。ある程度手順に慣れてきたら、パズル形式のトレーニングで応用力を試したり、対局モードで実際の相手を前に試してみることで、練習で覚えた知識が本当に使えるかどうかを確認できます。チェスのルール自体がまだ不安な方は、ページ内の「ルール」解説から駒の動かし方や特殊な指し手(キャスリングやアンパッサンなど)を先に確認しておくと、練習にもスムーズに入れます。画面右上のボタンからは日本語・英語をいつでも切り替えられるので、日本語話者はもちろん、海外のチェスファンにも同じ内容で練習してもらえます。完全無料でアプリ内課金も一切なく、ブラウザさえあればいつでもどこからでも練習を再開できるので、通勤・通学の合間や寝る前の数分間など、すきま時間を使ってコツコツ続けるのにも向いています。まずは気になるオープニングを1つ選んで、気軽に試してみてください。同じオープニングでも、フィルターの条件を変えて何度か繰り返し練習することで、手順の理解がより深まっていきます。</p>
+  </div>
+  </details>
+  </div>
+
   <div class="app">
   <div class="box-card">
     <h3 id="filterTitle">▸ <span class="lang-text" data-ja="オープニングを選択" data-en="SELECT OPENING">オープニングを選択</span></h3>
@@ -696,7 +706,8 @@ KitsuneChessの練習モードは、シシリアン・ディフェンスやル�
     </div>
   </div>
 </div>
- <footer style="text-align:center;padding:16px 16px 28px;font-family:'Crimson Pro',serif;font-size:0.9rem;font-weight:600;color:#888;letter-spacing:1px;border-top:1px solid rgba(184,134,11,0.2);margin-top:12px;">
+
+<footer style="text-align:center;padding:16px 16px 28px;font-family:'Crimson Pro',serif;font-size:0.9rem;font-weight:600;color:#888;letter-spacing:1px;border-top:1px solid rgba(184,134,11,0.2);margin-top:12px;">
   <div style="margin-bottom:10px;">
     <a href="https://kitsunechess.com/info.html" style="color:#7c4a1e;text-decoration:none;margin:0 8px;">Articles / 解説記事</a>
     <a href="https://kitsunechess.com/disclaimer.html" style="color:#7c4a1e;text-decoration:none;margin:0 8px;">Privacy Policy / 免責事項</a>
@@ -1704,6 +1715,19 @@ function setLang(lang,btn) {
   if(btn) btn.classList.add('active');
 }
 
+let THEME = localStorage.getItem('selectedTheme') === 'dark' ? 'dark' : 'light';
+function applyTheme() {
+  document.documentElement.setAttribute('data-theme', THEME);
+  const btn = document.getElementById('btnTheme');
+  if (btn) btn.textContent = THEME === 'dark' ? '☀️' : '🌙';
+}
+function toggleTheme() {
+  THEME = THEME === 'dark' ? 'light' : 'dark';
+  localStorage.setItem('selectedTheme', THEME);
+  applyTheme();
+}
+applyTheme();
+
 function toggleLang(btn) {
   LANG=LANG==='ja'?'en':'ja';
   const langBtn=document.getElementById('btnLang');
@@ -1802,7 +1826,7 @@ document.querySelectorAll('#filterLevel option, #filterStyle option, #filterColo
     const enText = el.getAttribute('data-en');
     if (jaText && enText) el.textContent = LANG === 'ja' ? jaText : enText;
   });
-
+  // 上記のどのエリアにも属さない.lang-text要素をまとめて切り替える(汎用処理)
   document.querySelectorAll('.lang-text[data-ja][data-en]').forEach(el => {
     const jaText = el.getAttribute('data-ja');
     const enText = el.getAttribute('data-en');
