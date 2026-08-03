@@ -12,12 +12,20 @@
   --bg:#f5edd6; --brown:#7c4a1e; --brown-dark:#4a2a0e; --brown-light:#a3692d;
   --card:#f0e4c8;
   --text:#111; --text-sub:#222; --text-muted:#444;
+  --input-bg:#fffdf7; --board-border:var(--brown);
+}
+html[data-theme="dark"] {
+  --bg:#241811; --brown:#c9975a; --brown-dark:#f0dcb8; --brown-light:#a3692d;
+  --card:#3a281a;
+  --text:#f0e4c8; --text-sub:#e8d9bc; --text-muted:#c9b898;
+  --input-bg:#2f2015; --board-border:#c9975a;
 }
 * { margin:0; padding:0; box-sizing:border-box; }
 body {
   background:var(--bg); color:var(--text);
   font-family:'Crimson Pro', serif; font-weight:600;
   max-width:720px; margin:0 auto; padding:16px 16px 60px;
+  transition:background 0.2s, color 0.2s;
   line-height:1.8;
 }
 h1 { font-family:'Cinzel', serif; color:var(--brown-dark); font-size:1.6rem;
@@ -36,7 +44,7 @@ button:disabled { opacity:0.6; cursor:default; }
 .lang-switch button:hover { background:var(--brown); color:#fff; }
 input {
   font-family:'Crimson Pro', serif; padding:7px 10px; margin-right:6px;
-  border:1px solid rgba(124,74,30,0.4); border-radius:6px; background:#fffdf7;
+  border:1px solid rgba(124,74,30,0.4); border-radius:6px; background:var(--input-bg); color:var(--text);
 }
 .box { background:var(--card); border:2px solid var(--brown); border-radius:10px; padding:16px; margin-top:16px; }
 .box strong { color:var(--brown-dark); font-family:'Cinzel', serif; font-size:0.95rem; }
@@ -68,7 +76,10 @@ details[open] summary::before { content:'▾ '; }
 </head>
 <body>
 
-<div class="lang-switch"><button id="langBtn">English</button></div>
+<div class="lang-switch">
+  <button id="themeBtn" style="margin-right:6px;">🌙</button>
+  <button id="langBtn">English</button>
+</div>
 <a class="back-link" href="index.html" data-ja="🦊 ゲームに戻る" data-en="🦊 Back to Game">🦊 ゲームに戻る</a>
 
 <h1 data-ja="♟ 対局モード" data-en="♟ Match Mode">♟ 対局モード</h1>
@@ -195,6 +206,18 @@ details[open] summary::before { content:'▾ '; }
     applyLang();
   };
   applyLang();
+
+  let THEME = localStorage.getItem('selectedTheme') === 'dark' ? 'dark' : 'light';
+  function applyTheme() {
+    document.documentElement.setAttribute('data-theme', THEME);
+    document.getElementById('themeBtn').textContent = THEME === 'dark' ? '☀️' : '🌙';
+  }
+  document.getElementById('themeBtn').onclick = () => {
+    THEME = THEME === 'dark' ? 'light' : 'dark';
+    localStorage.setItem('selectedTheme', THEME);
+    applyTheme();
+  };
+  applyTheme();
 
   document.getElementById('loginBtn').onclick = () => {
     signInWithPopup(auth, provider).catch(err => { document.getElementById('status').textContent = 'Error: ' + err.message; });
@@ -347,7 +370,7 @@ details[open] summary::before { content:'▾ '; }
   function attachChat(containerEl, chatPath, user) {
     containerEl.innerHTML = '';
     const list = document.createElement('div');
-    list.style.cssText = 'max-height:180px;overflow-y:auto;background:#fffdf7;border:1px solid rgba(124,74,30,0.3);border-radius:6px;padding:8px;margin:8px 0;font-size:0.85rem;';
+    list.style.cssText = 'max-height:180px;overflow-y:auto;background:var(--input-bg);color:var(--text);border:1px solid rgba(124,74,30,0.3);border-radius:6px;padding:8px;margin:8px 0;font-size:0.85rem;';
     const inputRow = document.createElement('div');
     const input = document.createElement('input');
     input.type = 'text';
