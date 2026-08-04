@@ -849,7 +849,7 @@ details[open] summary::before { content:'▾ '; }
         if (!m) return;
         myColor = (m.white === user.uid) ? 'w' : 'b';
         gameChess = new Chess(m.fen);
-        renderMiniBoard(m, user);
+        renderMiniBoard(m, user, matchId);
       });
     });
   }
@@ -881,9 +881,9 @@ const PIECE_IMG = {
   const K_FACTOR = 32;
   const appliedRatingsFor = new Set();
 
-  async function applyEloIfNeeded(m, user, myResult) {
+  async function applyEloIfNeeded(matchId, m, user, myResult) {
     // myResult: 1 = win, 0.5 = draw, 0 = loss (from my own perspective)
-    const dedupeKey = myMatchId + '_' + myColor;
+    const dedupeKey = matchId + '_' + myColor;
     if (appliedRatingsFor.has(dedupeKey)) return;
     const flagField = myColor === 'w' ? 'ratingAppliedWhite' : 'ratingAppliedBlack';
     if (m[flagField]) { appliedRatingsFor.add(dedupeKey); return; }
@@ -907,11 +907,11 @@ const PIECE_IMG = {
     const draws = (myProfile.draws || 0) + (myResult === 0.5 ? 1 : 0);
 
     await update(ref(db, 'publicProfiles/' + user.uid), { rating: newRating, wins, losses, draws });
-    await update(ref(db, 'matches/' + myMatchId), { [flagField]: true });
+    await update(ref(db, 'matches/' + matchId), { [flagField]: true });
   }
 
   let lastMoveSoundKey = null;
-  function renderMiniBoard(m, user) {
+  function renderMiniBoard(m, user, matchId) {
     const boardEl = document.getElementById('miniBoard');
     boardEl.innerHTML = '';
     const statusEl = document.getElementById('gameStatus');
@@ -920,7 +920,7 @@ const PIECE_IMG = {
     const myTurn = m.turn === myColor;
 
     if (m.lastMove) {
-      const moveKey = myMatchId + '_' + m.lastMove.from + m.lastMove.to + '_' + m.turn;
+      const moveKey = matchId + '_' + m.lastMove.from + m.lastMove.to + '_' + m.turn;
       if (moveKey !== lastMoveSoundKey) {
         lastMoveSoundKey = moveKey;
         if (gameChess.in_check() && !gameChess.game_over()) {
@@ -936,17 +936,17 @@ const PIECE_IMG = {
       statusEl.textContent = wonByTimeout
         ? (LANG === 'ja' ? '時間切れで勝ちました！' : 'You won on time!')
         : (LANG === 'ja' ? '時間切れで負けました。' : 'You lost on time.');
-      applyEloIfNeeded(m, user, wonByTimeout ? 1 : 0);
+      applyEloIfNeeded(matchId, m, user, wonByTimeout ? 1 : 0);
     } else if (gameChess.game_over()) {
       let resultMsg;
       if (gameChess.in_checkmate()) {
         const winnerColor = m.turn === 'w' ? 'b' : 'w';
         const iWon = winnerColor === myColor;
         resultMsg = iWon ? (LANG === 'ja' ? '勝ちました！' : 'You won!') : (LANG === 'ja' ? '負けました。' : 'You lost.');
-        applyEloIfNeeded(m, user, iWon ? 1 : 0);
+        applyEloIfNeeded(matchId, m, user, iWon ? 1 : 0);
       } else {
         resultMsg = LANG === 'ja' ? '引き分けです。' : "It's a draw.";
-        applyEloIfNeeded(m, user, 0.5);
+        applyEloIfNeeded(matchId, m, user, 0.5);
       }
       statusEl.textContent = resultMsg;
     } else {
@@ -1016,7 +1016,8 @@ const PIECE_IMG = {
 
   async function onSquareClick(sq, user) {
     if (!gameChess || gameChess.game_over()) return;
-    const matchSnap = await get(ref(db, 'matches/' + myMatchId));
+    const matchId = myMatchId;
+    const matchSnap = await get(ref(db, 'matches/' + matchId));
     const m = matchSnap.val();
     if (m.status !== 'active') return;
     if (m.turn !== myColor) return;
@@ -1024,7 +1025,7 @@ const PIECE_IMG = {
     if (!selectedSquare) {
       const piece = gameChess.get(sq);
       if (piece && piece.color === myColor) selectedSquare = sq;
-      renderMiniBoard(m, user);
+      renderMiniBoard(m, user, matchId);
     } else {
       const move = gameChess.move({ from: selectedSquare, to: sq, promotion: 'q' });
       selectedSquare = null;
@@ -1033,19 +1034,19 @@ const PIECE_IMG = {
         const myTimeKey = myColor === 'w' ? 'whiteTime' : 'blackTime';
         const remainingAfterMove = (m[myTimeKey] || 0) - elapsed;
         if (remainingAfterMove <= 0) {
-          await set(ref(db, 'matches/' + myMatchId), {
+          await set(ref(db, 'matches/' + matchId), {
             ...m, [myTimeKey]: 0, status: 'timeout', winner: myColor === 'w' ? 'b' : 'w'
           });
           return;
         }
         const newTime = remainingAfterMove + (m.increment || 0);
-        await set(ref(db, 'matches/' + myMatchId), {
+        await set(ref(db, 'matches/' + matchId), {
           ...m, fen: gameChess.fen(), turn: gameChess.turn(),
           [myTimeKey]: newTime, turnStartedAt: Date.now(),
           lastMove: { from: move.from, to: move.to }
         });
       } else {
-        renderMiniBoard(m, user);
+        renderMiniBoard(m, user, matchId);
       }
     }
   }
@@ -1054,8 +1055,9 @@ const PIECE_IMG = {
   function startClockTicker(user) {
     if (clockInterval) clearInterval(clockInterval);
     clockInterval = setInterval(async () => {
-      if (!myMatchId) return;
-      const matchSnap = await get(ref(db, 'matches/' + myMatchId));
+      const matchId = myMatchId;
+      if (!matchId) return;
+      const matchSnap = await get(ref(db, 'matches/' + matchId));
       const m = matchSnap.val();
       if (!m || m.status !== 'active') return;
       const turnColor = m.turn;
@@ -1064,11 +1066,11 @@ const PIECE_IMG = {
       const remaining = (m[timeKey] || 0) - elapsed;
       if (remaining <= 0) {
         // どちらの画面が開いていても時間切れを検知できるようにする
-        await set(ref(db, 'matches/' + myMatchId), {
+        await set(ref(db, 'matches/' + matchId), {
           ...m, [timeKey]: 0, status: 'timeout', winner: turnColor === 'w' ? 'b' : 'w'
         });
       } else if (myColor === turnColor) {
-        renderMiniBoard(m, user);
+        renderMiniBoard(m, user, matchId);
       }
     }, 1000);
   }
