@@ -102,10 +102,24 @@ details[open] summary::before { content:'▾ '; }
    対局モードは「実力を試す場」、トップページの練習モードは「オープニングの手順を体に染み込ませる場」と考えると分かりやすいです。まずは練習モードで狙っているオープニング(例えばシシリアン・ディフェンスやルイ・ロペスなど)の定跡を繰り返し練習し、手順を体に覚え込ませます。その上で対局モードに移り、実際の相手を前にして試してみるのがおすすめの流れです。練習で覚えた通りに局面へ持ち込めるか、相手がどう応じてくるか、実戦の中でしか得られない発見がたくさんあります。オープニングを暗記するだけで終わらせず、実際に指して初めて、本当の意味での理解につながります。</p>
 
 <h2 data-ja="🤖 AIの難易度について" data-en="🤖 About AI Difficulty">🤖 AIの難易度について</h2>
-<p data-ja="現在の対局モードは、友達同士のオンライン対局のみに対応しています。コンピューター(AI)を相手にした一人での対局モードは今後追加予定で、初級・中級・上級といった複数の難易度レベルから選んで練習できるようにする計画です。友達がまだオンラインでない時間帯でも、AI相手に気軽に実戦形式の練習ができるようになる予定なので、実装され次第このページでもご案内します。持ち時間(Rapid・Blitz・Bullet、固定時間・インクリメントありから選択可)、対局数・勝敗記録・Eloレーティングはすでに実装済みで、KitsuneChessの対局モードは今後も少しずつ機能を充実させていく予定です。"
-   data-en="Right now, Match Mode supports online play against friends only. A single-player mode against a computer (AI) opponent is planned for the future, with multiple difficulty levels such as Beginner, Intermediate, and Advanced. That will make it possible to get real match-style practice even when none of your friends are online — we'll update this page as soon as it's available. Time controls (Rapid, Blitz, and Bullet, with a choice of fixed time or increment), match history, win/loss records, and an Elo rating system are already live. Match Mode will keep growing with more features over time.">
-   現在の対局モードは、友達同士のオンライン対局のみに対応しています。コンピューター(AI)を相手にした一人での対局モードは今後追加予定で、初級・中級・上級といった複数の難易度レベルから選んで練習できるようにする計画です。友達がまだオンラインでない時間帯でも、AI相手に気軽に実戦形式の練習ができるようになる予定なので、実装され次第このページでもご案内します。持ち時間(Rapid・Blitz・Bullet、固定時間・インクリメントありから選択可)、対局数・勝敗記録・Eloレーティングはすでに実装済みで、KitsuneChessの対局モードは今後も少しずつ機能を充実させていく予定です。</p>
+<p data-ja="友達同士のオンライン対局に加えて、コンピューター(AI)を相手にした一人での対局モードもすでに実装済みです。初級・中級・上級の3段階の難易度から選べ、ログイン不要でいつでもすぐに始められます。初級はランダムに手を指し、中級は駒を取れる手を優先し、上級は数手先まで読んで手を選びます。友達がまだオンラインでない時間帯でも、AI相手に気軽に実戦形式の練習ができます。持ち時間(Rapid・Blitz・Bullet、固定時間・インクリメントありから選択可)、対局数・勝敗記録・Eloレーティングもあわせて実装済みで、KitsuneChessの対局モードは今後も少しずつ機能を充実させていく予定です。"
+   data-en="Alongside online play against friends, a single-player mode against a computer (AI) opponent is already live. Choose from three difficulty levels — Beginner, Intermediate, and Advanced — and jump in instantly with no login required. Beginner plays random moves, Intermediate prioritizes capturing pieces, and Advanced looks a few moves ahead before choosing. This means you can get real match-style practice even when none of your friends are online. Time controls (Rapid, Blitz, and Bullet, with a choice of fixed time or increment), match history, win/loss records, and an Elo rating system are also live. Match Mode will keep growing with more features over time.">
+   友達同士のオンライン対局に加えて、コンピューター(AI)を相手にした一人での対局モードもすでに実装済みです。初級・中級・上級の3段階の難易度から選べ、ログイン不要でいつでもすぐに始められます。初級はランダムに手を指し、中級は駒を取れる手を優先し、上級は数手先まで読んで手を選びます。友達がまだオンラインでない時間帯でも、AI相手に気軽に実戦形式の練習ができます。持ち時間(Rapid・Blitz・Bullet、固定時間・インクリメントありから選択可)、対局数・勝敗記録・Eloレーティングもあわせて実装済みで、KitsuneChessの対局モードは今後も少しずつ機能を充実させていく予定です。</p>
 </details>
+
+<div class="box" id="aiModeBox">
+  <p><strong data-ja="🤖 AIと対局する(ログイン不要)" data-en="🤖 Play vs AI (no login required)">🤖 AIと対局する(ログイン不要)</strong></p>
+  <div id="aiDifficultyPanel">
+    <button id="aiEasyBtn" data-ja="初級" data-en="Beginner">初級</button>
+    <button id="aiMediumBtn" data-ja="中級" data-en="Intermediate">中級</button>
+    <button id="aiHardBtn" data-ja="上級" data-en="Advanced">上級</button>
+  </div>
+  <div id="aiGameArea" style="display:none;">
+    <p id="aiGameStatus"></p>
+    <div id="aiBoard"></div>
+    <button id="aiQuitBtn" data-ja="対局をやめる" data-en="Quit Game" style="margin-top:10px;">対局をやめる</button>
+  </div>
+</div>
 
 <button id="loginBtn" data-ja="Googleでログイン" data-en="Sign in with Google">Googleでログイン</button>
 <button id="logoutBtn" style="display:none;" data-ja="ログアウト" data-en="Log out">ログアウト</button>
@@ -221,6 +235,150 @@ details[open] summary::before { content:'▾ '; }
     applyTheme();
   };
   applyTheme();
+
+  // ===== AIと対局する(ログイン不要) =====
+  let aiChess = null;
+  let aiSelectedSquare = null;
+  let aiDifficulty = 'easy';
+  const AI_PIECE_VAL = { p: 1, n: 3, b: 3, r: 5, q: 9, k: 0 };
+
+  function aiEvaluateBoard(chess) {
+    let score = 0;
+    chess.board().forEach(row => row.forEach(sq => {
+      if (!sq) return;
+      const val = AI_PIECE_VAL[sq.type];
+      score += sq.color === 'b' ? val : -val; // AI is black; positive = good for AI
+    }));
+    return score;
+  }
+
+  function aiPickMove(chess, difficulty) {
+    const moves = chess.moves({ verbose: true });
+    if (moves.length === 0) return null;
+    if (difficulty === 'easy') {
+      return moves[Math.floor(Math.random() * moves.length)];
+    }
+    if (difficulty === 'medium') {
+      // 駒が取れる手を優先し、その中で一番得な手を選ぶ。無ければランダム
+      const captures = moves.filter(m => m.captured);
+      if (captures.length === 0) return moves[Math.floor(Math.random() * moves.length)];
+      captures.sort((a, b) => AI_PIECE_VAL[b.captured] - AI_PIECE_VAL[a.captured]);
+      return captures[0];
+    }
+    // hard: 2手先まで簡易ミニマックス
+    let bestMove = moves[0];
+    let bestScore = -Infinity;
+    moves.forEach(m => {
+      chess.move(m);
+      let score;
+      if (chess.game_over()) {
+        score = chess.in_checkmate() ? 1000 : 0;
+      } else {
+        const oppMoves = chess.moves({ verbose: true });
+        let worstForAI = Infinity;
+        oppMoves.forEach(om => {
+          chess.move(om);
+          const s = aiEvaluateBoard(chess);
+          if (s < worstForAI) worstForAI = s;
+          chess.undo();
+        });
+        score = oppMoves.length === 0 ? aiEvaluateBoard(chess) : worstForAI;
+      }
+      chess.undo();
+      if (score > bestScore) { bestScore = score; bestMove = m; }
+    });
+    return bestMove;
+  }
+
+  function renderAiBoard() {
+    const boardEl = document.getElementById('aiBoard');
+    const statusEl = document.getElementById('aiGameStatus');
+    boardEl.innerHTML = '';
+    boardEl.style.cssText = 'display:grid;grid-template-columns:repeat(8,1fr);grid-template-rows:repeat(8,1fr);width:100%;max-width:400px;aspect-ratio:1;margin:0 auto;border:2px solid var(--board-border,var(--brown));';
+
+    if (aiChess.game_over()) {
+      if (aiChess.in_checkmate()) {
+        const iWon = aiChess.turn() === 'b'; // AI(黒)が手詰まり=プレイヤーの勝ち
+        statusEl.textContent = iWon ? (LANG === 'ja' ? 'あなたの勝ちです！' : 'You won!') : (LANG === 'ja' ? 'AIの勝ちです。' : 'The AI won.');
+      } else {
+        statusEl.textContent = LANG === 'ja' ? '引き分けです。' : "It's a draw.";
+      }
+    } else {
+      statusEl.textContent = aiChess.turn() === 'w'
+        ? (LANG === 'ja' ? 'あなたの番です' : 'Your turn')
+        : (LANG === 'ja' ? 'AIが考え中...' : 'AI is thinking...');
+    }
+
+    const boardArray = aiChess.board();
+    const files = ['a','b','c','d','e','f','g','h'];
+    for (let r = 0; r < 8; r++) {
+      for (let c = 0; c < 8; c++) {
+        const piece = boardArray[r][c];
+        const sq = files[c] + (8 - r);
+        const cell = document.createElement('div');
+        cell.className = 'sq ' + (((r + c) % 2 === 0) ? 'light' : 'dark');
+        if (aiSelectedSquare === sq) cell.classList.add('selected');
+        if (c === 0) {
+          const rankLabel = document.createElement('span');
+          rankLabel.className = 'sq-label rank-label';
+          rankLabel.textContent = 8 - r;
+          cell.appendChild(rankLabel);
+        }
+        if (r === 7) {
+          const fileLabel = document.createElement('span');
+          fileLabel.className = 'sq-label file-label';
+          fileLabel.textContent = files[c];
+          cell.appendChild(fileLabel);
+        }
+        if (piece) {
+          const img = document.createElement('img');
+          img.src = PIECE_IMG[piece.color + piece.type.toUpperCase()];
+          img.style.width = '100%'; img.style.height = '100%'; img.style.pointerEvents = 'none';
+          cell.appendChild(img);
+        }
+        cell.onclick = () => onAiSquareClick(sq);
+        boardEl.appendChild(cell);
+      }
+    }
+  }
+
+  function onAiSquareClick(sq) {
+    if (!aiChess || aiChess.game_over() || aiChess.turn() !== 'w') return;
+    if (!aiSelectedSquare) {
+      const piece = aiChess.get(sq);
+      if (piece && piece.color === 'w') aiSelectedSquare = sq;
+      renderAiBoard();
+    } else {
+      const move = aiChess.move({ from: aiSelectedSquare, to: sq, promotion: 'q' });
+      aiSelectedSquare = null;
+      renderAiBoard();
+      if (move && !aiChess.game_over()) {
+        setTimeout(() => {
+          const aiMove = aiPickMove(aiChess, aiDifficulty);
+          if (aiMove) aiChess.move(aiMove);
+          renderAiBoard();
+        }, 500);
+      }
+    }
+  }
+
+  function startAiGame(difficulty) {
+    aiDifficulty = difficulty;
+    aiChess = new Chess();
+    aiSelectedSquare = null;
+    document.getElementById('aiDifficultyPanel').style.display = 'none';
+    document.getElementById('aiGameArea').style.display = 'block';
+    renderAiBoard();
+  }
+  document.getElementById('aiEasyBtn').onclick = () => startAiGame('easy');
+  document.getElementById('aiMediumBtn').onclick = () => startAiGame('medium');
+  document.getElementById('aiHardBtn').onclick = () => startAiGame('hard');
+  document.getElementById('aiQuitBtn').onclick = () => {
+    aiChess = null;
+    document.getElementById('aiGameArea').style.display = 'none';
+    document.getElementById('aiDifficultyPanel').style.display = 'block';
+  };
+  // ===== ここまでAIモード =====
 
   document.getElementById('loginBtn').onclick = () => {
     signInWithPopup(auth, provider).catch(err => { document.getElementById('status').textContent = 'Error: ' + err.message; });
