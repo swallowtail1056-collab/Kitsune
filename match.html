@@ -101,9 +101,9 @@ details[open] summary::before { content:'▾ '; }
    対局モードは「実力を試す場」、トップページの練習モードは「オープニングの手順を体に染み込ませる場」と考えると分かりやすいです。まずは練習モードで狙っているオープニング(例えばシシリアン・ディフェンスやルイ・ロペスなど)の定跡を繰り返し練習し、手順を体に覚え込ませます。その上で対局モードに移り、実際の相手を前にして試してみるのがおすすめの流れです。練習で覚えた通りに局面へ持ち込めるか、相手がどう応じてくるか、実戦の中でしか得られない発見がたくさんあります。オープニングを暗記するだけで終わらせず、実際に指して初めて、本当の意味での理解につながります。</p>
 
 <h2 data-ja="🤖 AIの難易度について" data-en="🤖 About AI Difficulty">🤖 AIの難易度について</h2>
-<p data-ja="現在の対局モードは、友達同士のオンライン対局のみに対応しています。コンピューター(AI)を相手にした一人での対局モードは今後追加予定で、初級・中級・上級といった複数の難易度レベルから選んで練習できるようにする計画です。友達がまだオンラインでない時間帯でも、AI相手に気軽に実戦形式の練習ができるようになる予定なので、実装され次第このページでもご案内します。持ち時間(Rapid・Blitz・Bulletなど)の設定や、対局数・勝敗記録・レーティング機能なども合わせて開発を進めており、KitsuneChessの対局モードは今後も少しずつ機能を充実させていく予定です。"
-   data-en="Right now, Match Mode supports online play against friends only. A single-player mode against a computer (AI) opponent is planned for the future, with multiple difficulty levels such as Beginner, Intermediate, and Advanced. That will make it possible to get real match-style practice even when none of your friends are online — we'll update this page as soon as it's available. We're also working on time controls (Rapid, Blitz, Bullet, and more), along with match history, win/loss records, and a rating system. Match Mode will keep growing with more features over time.">
-   現在の対局モードは、友達同士のオンライン対局のみに対応しています。コンピューター(AI)を相手にした一人での対局モードは今後追加予定で、初級・中級・上級といった複数の難易度レベルから選んで練習できるようにする計画です。友達がまだオンラインでない時間帯でも、AI相手に気軽に実戦形式の練習ができるようになる予定なので、実装され次第このページでもご案内します。持ち時間(Rapid・Blitz・Bulletなど)の設定や、対局数・勝敗記録・レーティング機能なども合わせて開発を進めており、KitsuneChessの対局モードは今後も少しずつ機能を充実させていく予定です。</p>
+<p data-ja="現在の対局モードは、友達同士のオンライン対局のみに対応しています。コンピューター(AI)を相手にした一人での対局モードは今後追加予定で、初級・中級・上級といった複数の難易度レベルから選んで練習できるようにする計画です。友達がまだオンラインでない時間帯でも、AI相手に気軽に実戦形式の練習ができるようになる予定なので、実装され次第このページでもご案内します。持ち時間(Rapid・Blitz・Bullet、固定時間・インクリメントありから選択可)、対局数・勝敗記録・Eloレーティングはすでに実装済みで、KitsuneChessの対局モードは今後も少しずつ機能を充実させていく予定です。"
+   data-en="Right now, Match Mode supports online play against friends only. A single-player mode against a computer (AI) opponent is planned for the future, with multiple difficulty levels such as Beginner, Intermediate, and Advanced. That will make it possible to get real match-style practice even when none of your friends are online — we'll update this page as soon as it's available. Time controls (Rapid, Blitz, and Bullet, with a choice of fixed time or increment), match history, win/loss records, and an Elo rating system are already live. Match Mode will keep growing with more features over time.">
+   現在の対局モードは、友達同士のオンライン対局のみに対応しています。コンピューター(AI)を相手にした一人での対局モードは今後追加予定で、初級・中級・上級といった複数の難易度レベルから選んで練習できるようにする計画です。友達がまだオンラインでない時間帯でも、AI相手に気軽に実戦形式の練習ができるようになる予定なので、実装され次第このページでもご案内します。持ち時間(Rapid・Blitz・Bullet、固定時間・インクリメントありから選択可)、対局数・勝敗記録・Eloレーティングはすでに実装済みで、KitsuneChessの対局モードは今後も少しずつ機能を充実させていく予定です。</p>
 </details>
 
 <button id="loginBtn" data-ja="Googleでログイン" data-en="Sign in with Google">Googleでログイン</button>
@@ -122,6 +122,7 @@ details[open] summary::before { content:'▾ '; }
     <p><strong data-ja="現在のプロフィール" data-en="Current Profile">現在のプロフィール</strong></p>
     <p><span data-ja="メール: " data-en="Email: ">メール: </span><span id="profileEmail"></span></p>
     <p><span data-ja="ユーザー名: " data-en="Username: ">ユーザー名: </span><span id="profileUsername">-</span></p>
+    <p><span data-ja="レーティング: " data-en="Rating: ">レーティング: </span><span id="profileRating">1200</span></p>
     <img id="profilePhoto" src="" alt="avatar">
   </div>
 
@@ -177,7 +178,7 @@ details[open] summary::before { content:'▾ '; }
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
   import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-  import { getDatabase, ref, set, get, push, remove, onValue } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+  import { getDatabase, ref, set, get, push, update, remove, onValue } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyDR6vsVq2uePiFRUmoqYB4LjdGZJiRM4eE",
@@ -328,12 +329,15 @@ details[open] summary::before { content:'▾ '; }
       return;
     }
     for (const friendUid of Object.keys(data)) {
-      const snap = await get(ref(db, 'publicProfiles/' + friendUid + '/username'));
-      const friendName = snap.exists() ? snap.val() : '(unknown)';
+      const snap = await get(ref(db, 'publicProfiles/' + friendUid));
+      const friendProfile = snap.val() || {};
+      const friendName = friendProfile.username || '(unknown)';
+      const rating = friendProfile.rating || 1200;
+      const wld = (friendProfile.wins || 0) + '勝' + (friendProfile.losses || 0) + '敗' + (friendProfile.draws || 0) + '分';
       const row = document.createElement('div');
       row.className = 'list-item';
       const label = document.createElement('span');
-      label.textContent = friendName;
+      label.textContent = friendName + '（' + rating + '・' + wld + '）';
       const challengeBtn = document.createElement('button');
       challengeBtn.textContent = LANG === 'ja' ? '対局を申し込む' : 'Challenge';
       const tcPanel = document.createElement('span');
@@ -411,6 +415,23 @@ details[open] summary::before { content:'▾ '; }
 
   function pairKey(a, b) { return [a, b].sort().join('_'); }
 
+  const translationCache = {};
+  async function translateText(text, sourceLang, targetLang) {
+    const cacheKey = sourceLang + '|' + targetLang + '|' + text;
+    if (translationCache[cacheKey]) return translationCache[cacheKey];
+    try {
+      const url = 'https://api.mymemory.translated.net/get?q=' + encodeURIComponent(text) +
+        '&langpair=' + sourceLang + '|' + targetLang;
+      const res = await fetch(url);
+      const data = await res.json();
+      const translated = data && data.responseData && data.responseData.translatedText ? data.responseData.translatedText : null;
+      translationCache[cacheKey] = translated;
+      return translated;
+    } catch (e) {
+      return null;
+    }
+  }
+
   function attachChat(containerEl, chatPath, user) {
     containerEl.innerHTML = '';
     const list = document.createElement('div');
@@ -427,7 +448,7 @@ details[open] summary::before { content:'▾ '; }
       if (!text) return;
       const myProfile = await get(ref(db, 'users/' + user.uid));
       const myName = myProfile.exists() ? myProfile.val().username : user.displayName;
-      await set(push(ref(db, chatPath)), { from: user.uid, fromName: myName, text, sentAt: Date.now() });
+      await set(push(ref(db, chatPath)), { from: user.uid, fromName: myName, text, lang: LANG, sentAt: Date.now() });
       input.value = '';
     };
     sendBtn.onclick = doSend;
@@ -447,8 +468,21 @@ details[open] summary::before { content:'▾ '; }
       Object.values(data).sort((a, b) => a.sentAt - b.sentAt).forEach(msg => {
         const line = document.createElement('div');
         const who = msg.from === user.uid ? (LANG === 'ja' ? '自分' : 'You') : msg.fromName;
-        line.textContent = who + ': ' + msg.text;
+        const origLine = document.createElement('div');
+        origLine.textContent = who + ': ' + msg.text;
         line.style.marginBottom = '4px';
+        line.appendChild(origLine);
+
+        const msgLang = msg.lang || 'en';
+        if (msgLang !== LANG) {
+          const transLine = document.createElement('div');
+          transLine.style.cssText = 'font-size:0.78rem;color:var(--text-muted);font-style:italic;';
+          transLine.textContent = (LANG === 'ja' ? '翻訳中...' : 'Translating...');
+          line.appendChild(transLine);
+          translateText(msg.text, msgLang, LANG).then(translated => {
+            transLine.textContent = translated ? ('→ ' + translated) : '';
+          });
+        }
         list.appendChild(line);
       });
       list.scrollTop = list.scrollHeight;
@@ -481,7 +515,9 @@ details[open] summary::before { content:'▾ '; }
       const row = document.createElement('div');
       row.className = 'list-item';
       const label = document.createElement('span');
-      label.textContent = info.username;
+      const rating = info.rating || 1200;
+      const wld = (info.wins || 0) + '勝' + (info.losses || 0) + '敗' + (info.draws || 0) + '分';
+      label.textContent = info.username + '（' + rating + '・' + wld + '）';
       row.appendChild(label);
 
       if (myFriendsSet.has(uid)) {
@@ -630,6 +666,38 @@ const PIECE_IMG = {
     return mins + ':' + String(secs).padStart(2, '0');
   }
 
+  const K_FACTOR = 32;
+  const appliedRatingsFor = new Set();
+
+  async function applyEloIfNeeded(m, user, myResult) {
+    // myResult: 1 = win, 0.5 = draw, 0 = loss (from my own perspective)
+    const dedupeKey = myMatchId + '_' + myColor;
+    if (appliedRatingsFor.has(dedupeKey)) return;
+    const flagField = myColor === 'w' ? 'ratingAppliedWhite' : 'ratingAppliedBlack';
+    if (m[flagField]) { appliedRatingsFor.add(dedupeKey); return; }
+    appliedRatingsFor.add(dedupeKey);
+
+    const oppUid = myColor === 'w' ? m.black : m.white;
+    const [myProfileSnap, oppProfileSnap] = await Promise.all([
+      get(ref(db, 'publicProfiles/' + user.uid)),
+      get(ref(db, 'publicProfiles/' + oppUid))
+    ]);
+    const myProfile = myProfileSnap.val() || {};
+    const oppProfile = oppProfileSnap.val() || {};
+    const myRating = myProfile.rating || 1200;
+    const oppRating = oppProfile.rating || 1200;
+
+    const expected = 1 / (1 + Math.pow(10, (oppRating - myRating) / 400));
+    const newRating = Math.round(myRating + K_FACTOR * (myResult - expected));
+
+    const wins = (myProfile.wins || 0) + (myResult === 1 ? 1 : 0);
+    const losses = (myProfile.losses || 0) + (myResult === 0 ? 1 : 0);
+    const draws = (myProfile.draws || 0) + (myResult === 0.5 ? 1 : 0);
+
+    await update(ref(db, 'publicProfiles/' + user.uid), { rating: newRating, wins, losses, draws });
+    await update(ref(db, 'matches/' + myMatchId), { [flagField]: true });
+  }
+
   function renderMiniBoard(m, user) {
     const boardEl = document.getElementById('miniBoard');
     boardEl.innerHTML = '';
@@ -643,13 +711,17 @@ const PIECE_IMG = {
       statusEl.textContent = wonByTimeout
         ? (LANG === 'ja' ? '時間切れで勝ちました！' : 'You won on time!')
         : (LANG === 'ja' ? '時間切れで負けました。' : 'You lost on time.');
+      applyEloIfNeeded(m, user, wonByTimeout ? 1 : 0);
     } else if (gameChess.game_over()) {
       let resultMsg;
       if (gameChess.in_checkmate()) {
         const winnerColor = m.turn === 'w' ? 'b' : 'w';
-        resultMsg = (winnerColor === myColor) ? (LANG === 'ja' ? '勝ちました！' : 'You won!') : (LANG === 'ja' ? '負けました。' : 'You lost.');
+        const iWon = winnerColor === myColor;
+        resultMsg = iWon ? (LANG === 'ja' ? '勝ちました！' : 'You won!') : (LANG === 'ja' ? '負けました。' : 'You lost.');
+        applyEloIfNeeded(m, user, iWon ? 1 : 0);
       } else {
         resultMsg = LANG === 'ja' ? '引き分けです。' : "It's a draw.";
+        applyEloIfNeeded(m, user, 0.5);
       }
       statusEl.textContent = resultMsg;
     } else {
@@ -763,7 +835,8 @@ const PIECE_IMG = {
       const timeKey = turnColor === 'w' ? 'whiteTime' : 'blackTime';
       const elapsed = Date.now() - (m.turnStartedAt || Date.now());
       const remaining = (m[timeKey] || 0) - elapsed;
-      if (remaining <= 0 && myColor === turnColor) {
+      if (remaining <= 0) {
+        // どちらの画面が開いていても時間切れを検知できるようにする
         await set(ref(db, 'matches/' + myMatchId), {
           ...m, [timeKey]: 0, status: 'timeout', winner: turnColor === 'w' ? 'b' : 'w'
         });
@@ -818,6 +891,10 @@ const PIECE_IMG = {
       }
       document.getElementById('profileUsername').textContent = currentName;
       document.getElementById('usernameInput').value = currentName;
+      onValue(ref(db, 'publicProfiles/' + user.uid), (s) => {
+        const p = s.val() || {};
+        document.getElementById('profileRating').textContent = p.rating || 1200;
+      });
 
       curUser = user;
       onValue(ref(db, 'friendRequests/' + user.uid), (s) => renderIncomingRequests(user, s.val()));
