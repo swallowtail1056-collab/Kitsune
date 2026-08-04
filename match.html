@@ -157,6 +157,7 @@ details[open] summary::before { content:'▾ '; }
   <div class="box" id="gameBox" style="display:none;">
     <p><strong data-ja="対局中" data-en="Current Match">対局中</strong></p>
     <p id="gameStatus"></p>
+    <p id="gameClock" style="font-weight:700;color:var(--brown-dark);"></p>
     <div id="miniBoard"></div>
     <button id="leaveMatchBtn" data-ja="対局を退出する" data-en="Leave Match" style="margin-top:10px;">対局を退出する</button>
     <button id="matchChatToggle" data-ja="💬 チャット" data-en="💬 Chat" style="margin-top:10px;">💬 チャット</button>
@@ -335,12 +336,51 @@ details[open] summary::before { content:'▾ '; }
       label.textContent = friendName;
       const challengeBtn = document.createElement('button');
       challengeBtn.textContent = LANG === 'ja' ? '対局を申し込む' : 'Challenge';
-      challengeBtn.onclick = async () => {
-        const myProfile = await get(ref(db, 'users/' + user.uid));
-        const myName = myProfile.exists() ? myProfile.val().username : user.displayName;
-        await set(ref(db, 'matchInvites/' + friendUid + '/' + user.uid), { username: myName, sentAt: Date.now() });
-        challengeBtn.textContent = LANG === 'ja' ? '送信済み' : 'Sent';
-        challengeBtn.disabled = true;
+      const tcPanel = document.createElement('span');
+      tcPanel.style.display = 'none';
+
+      const fixedLabel = document.createElement('label');
+      fixedLabel.style.cssText = 'display:block;font-size:0.78rem;margin-bottom:4px;';
+      const fixedCheckbox = document.createElement('input');
+      fixedCheckbox.type = 'checkbox';
+      fixedCheckbox.style.marginRight = '4px';
+      fixedLabel.appendChild(fixedCheckbox);
+      fixedLabel.appendChild(document.createTextNode(LANG === 'ja' ? '固定(インクリメントなし)' : 'Fixed (no increment)'));
+      tcPanel.appendChild(fixedLabel);
+
+      const tcButtonsRow = document.createElement('div');
+      tcPanel.appendChild(tcButtonsRow);
+
+      const TC_OPTIONS = [
+        { key: 'bullet', incLabel: 'Bullet (2+1)', fixedLabel: 'Bullet (1 min)' },
+        { key: 'blitz', incLabel: 'Blitz (5+3)', fixedLabel: 'Blitz (5 min)' },
+        { key: 'rapid', incLabel: 'Rapid (10+5)', fixedLabel: 'Rapid (10 min)' }
+      ];
+      const tcBtnEls = [];
+      TC_OPTIONS.forEach(opt => {
+        const tcBtn = document.createElement('button');
+        tcBtn.textContent = opt.incLabel;
+        tcBtn.style.fontSize = '0.8rem';
+        tcBtn.onclick = async () => {
+          const myProfile = await get(ref(db, 'users/' + user.uid));
+          const myName = myProfile.exists() ? myProfile.val().username : user.displayName;
+          await set(ref(db, 'matchInvites/' + friendUid + '/' + user.uid), {
+            username: myName, sentAt: Date.now(), timeControl: opt.key, fixed: fixedCheckbox.checked
+          });
+          tcPanel.style.display = 'none';
+          challengeBtn.textContent = LANG === 'ja' ? '送信済み' : 'Sent';
+          challengeBtn.disabled = true;
+        };
+        tcButtonsRow.appendChild(tcBtn);
+        tcBtnEls.push({ btn: tcBtn, opt });
+      });
+      fixedCheckbox.onchange = () => {
+        tcBtnEls.forEach(({ btn, opt }) => {
+          btn.textContent = fixedCheckbox.checked ? opt.fixedLabel : opt.incLabel;
+        });
+      };
+      challengeBtn.onclick = () => {
+        tcPanel.style.display = tcPanel.style.display === 'none' ? 'inline-block' : 'none';
       };
       const msgBtn = document.createElement('button');
       msgBtn.textContent = LANG === 'ja' ? '✉️ メッセージ' : '✉️ Message';
@@ -359,6 +399,7 @@ details[open] summary::before { content:'▾ '; }
       };
       row.appendChild(label);
       row.appendChild(challengeBtn);
+      row.appendChild(tcPanel);
       row.appendChild(msgBtn);
       container.appendChild(row);
       container.appendChild(chatPanel);
@@ -492,6 +533,14 @@ details[open] summary::before { content:'▾ '; }
         const iAmWhite = Math.random() < 0.5;
         const myProfile = await get(ref(db, 'users/' + user.uid));
         const myName = myProfile.exists() ? myProfile.val().username : user.displayName;
+        const TC_MS = {
+          bullet: { base: 2 * 60 * 1000, inc: 1000 },
+          blitz: { base: 5 * 60 * 1000, inc: 3000 },
+          rapid: { base: 10 * 60 * 1000, inc: 5000 }
+        };
+        const timeControl = info.timeControl && TC_MS[info.timeControl] ? info.timeControl : 'rapid';
+        const baseMs = TC_MS[timeControl].base;
+        const incMs = info.fixed ? 0 : TC_MS[timeControl].inc;
         await set(ref(db, 'matches/' + matchId), {
           white: iAmWhite ? user.uid : fromUid,
           black: iAmWhite ? fromUid : user.uid,
@@ -499,7 +548,12 @@ details[open] summary::before { content:'▾ '; }
           blackName: iAmWhite ? info.username : myName,
           fen: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1',
           turn: 'w',
-          status: 'active'
+          status: 'active',
+          timeControl: timeControl,
+          increment: incMs,
+          whiteTime: baseMs,
+          blackTime: baseMs,
+          turnStartedAt: Date.now()
         });
         await set(ref(db, 'currentMatch/' + user.uid), matchId);
         await set(ref(db, 'currentMatch/' + fromUid), matchId);
@@ -532,11 +586,13 @@ details[open] summary::before { content:'▾ '; }
         document.getElementById('matchChatPanel').style.display = 'none';
         matchChatAttached = null;
         myMatchId = null;
+        if (clockInterval) { clearInterval(clockInterval); clockInterval = null; }
         return;
       }
       myMatchId = matchId;
       document.getElementById('gameBox').style.display = 'block';
       document.getElementById('lobbyArea').style.display = 'none';
+      startClockTicker(user);
       onValue(ref(db, 'matches/' + matchId), (matchSnap) => {
         const m = matchSnap.val();
         if (!m) return;
@@ -564,14 +620,27 @@ const PIECE_IMG = {
 
   const PIECE_UNICODE = { wp:'♙', wn:'♘', wb:'♗', wr:'♖', wq:'♕', wk:'♔', bp:'♟', bn:'♞', bb:'♝', br:'♜', bq:'♛', bk:'♚' };
 
+  function fmtTime(ms) {
+    const total = Math.max(0, Math.ceil(ms / 1000));
+    const mins = Math.floor(total / 60);
+    const secs = total % 60;
+    return mins + ':' + String(secs).padStart(2, '0');
+  }
+
   function renderMiniBoard(m, user) {
     const boardEl = document.getElementById('miniBoard');
     boardEl.innerHTML = '';
     const statusEl = document.getElementById('gameStatus');
+    const clockEl = document.getElementById('gameClock');
     const oppName = myColor === 'w' ? m.blackName : m.whiteName;
     const myTurn = m.turn === myColor;
 
-    if (gameChess.game_over()) {
+    if (m.status === 'timeout') {
+      const wonByTimeout = m.winner === myColor;
+      statusEl.textContent = wonByTimeout
+        ? (LANG === 'ja' ? '時間切れで勝ちました！' : 'You won on time!')
+        : (LANG === 'ja' ? '時間切れで負けました。' : 'You lost on time.');
+    } else if (gameChess.game_over()) {
       let resultMsg;
       if (gameChess.in_checkmate()) {
         const winnerColor = m.turn === 'w' ? 'b' : 'w';
@@ -583,6 +652,19 @@ const PIECE_IMG = {
     } else {
       statusEl.textContent = (LANG === 'ja' ? '対戦相手: ' : 'Opponent: ') + oppName + ' | ' +
         (myTurn ? (LANG === 'ja' ? 'あなたの番です' : 'Your turn') : (LANG === 'ja' ? '相手の番です' : "Opponent's turn"));
+    }
+
+    if (clockEl) {
+      const elapsed = (m.status === 'active') ? (Date.now() - (m.turnStartedAt || Date.now())) : 0;
+      const wTime = m.whiteTime - (m.turn === 'w' && m.status === 'active' ? elapsed : 0);
+      const bTime = m.blackTime - (m.turn === 'b' && m.status === 'active' ? elapsed : 0);
+      const myTime = myColor === 'w' ? wTime : bTime;
+      const oppTime = myColor === 'w' ? bTime : wTime;
+      const tcLabel = { bullet: 'Bullet', blitz: 'Blitz', rapid: 'Rapid' }[m.timeControl] || '';
+      const incLabel = m.increment ? ('+' + (m.increment / 1000) + 's') : '';
+      clockEl.textContent = tcLabel + incLabel + '　' +
+        (LANG === 'ja' ? '相手 ' : 'Opponent ') + fmtTime(oppTime) + '　|　' +
+        (LANG === 'ja' ? '自分 ' : 'You ') + fmtTime(myTime);
     }
 
     const boardArray = gameChess.board();
@@ -635,6 +717,7 @@ const PIECE_IMG = {
     if (!gameChess || gameChess.game_over()) return;
     const matchSnap = await get(ref(db, 'matches/' + myMatchId));
     const m = matchSnap.val();
+    if (m.status !== 'active') return;
     if (m.turn !== myColor) return;
 
     if (!selectedSquare) {
@@ -645,11 +728,46 @@ const PIECE_IMG = {
       const move = gameChess.move({ from: selectedSquare, to: sq, promotion: 'q' });
       selectedSquare = null;
       if (move) {
-        await set(ref(db, 'matches/' + myMatchId), { ...m, fen: gameChess.fen(), turn: gameChess.turn() });
+        const elapsed = Date.now() - (m.turnStartedAt || Date.now());
+        const myTimeKey = myColor === 'w' ? 'whiteTime' : 'blackTime';
+        const remainingAfterMove = (m[myTimeKey] || 0) - elapsed;
+        if (remainingAfterMove <= 0) {
+          await set(ref(db, 'matches/' + myMatchId), {
+            ...m, [myTimeKey]: 0, status: 'timeout', winner: myColor === 'w' ? 'b' : 'w'
+          });
+          return;
+        }
+        const newTime = remainingAfterMove + (m.increment || 0);
+        await set(ref(db, 'matches/' + myMatchId), {
+          ...m, fen: gameChess.fen(), turn: gameChess.turn(),
+          [myTimeKey]: newTime, turnStartedAt: Date.now()
+        });
       } else {
         renderMiniBoard(m, user);
       }
     }
+  }
+
+  let clockInterval = null;
+  function startClockTicker(user) {
+    if (clockInterval) clearInterval(clockInterval);
+    clockInterval = setInterval(async () => {
+      if (!myMatchId) return;
+      const matchSnap = await get(ref(db, 'matches/' + myMatchId));
+      const m = matchSnap.val();
+      if (!m || m.status !== 'active') return;
+      const turnColor = m.turn;
+      const timeKey = turnColor === 'w' ? 'whiteTime' : 'blackTime';
+      const elapsed = Date.now() - (m.turnStartedAt || Date.now());
+      const remaining = (m[timeKey] || 0) - elapsed;
+      if (remaining <= 0 && myColor === turnColor) {
+        await set(ref(db, 'matches/' + myMatchId), {
+          ...m, [timeKey]: 0, status: 'timeout', winner: turnColor === 'w' ? 'b' : 'w'
+        });
+      } else if (myColor === turnColor) {
+        renderMiniBoard(m, user);
+      }
+    }, 1000);
   }
 
   document.getElementById('leaveMatchBtn').onclick = async () => {
