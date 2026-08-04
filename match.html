@@ -64,7 +64,7 @@ img#profilePhoto { border:2px solid var(--brown); border-radius:50%; width:60px;
 .sq.light { background:#d4b87a; }
 .sq.dark { background:#7a5230; }
 .sq.selected { outline:3px solid #e8c84a; outline-offset:-3px; }
-.sq.last-move { background-color:rgba(232,200,74,0.45) !important; }
+.sq.last-move::before { content:''; position:absolute; top:4px; left:4px; width:16%; height:16%; border-radius:50%; background:#e8c84a; z-index:3; box-shadow:0 0 2px rgba(0,0,0,0.5); }
 .sq.hint-move::after { content:''; position:absolute; width:28%; height:28%; border-radius:50%; background:rgba(80,40,0,0.35); pointer-events:none; }
 .sq.hint-capture::after { content:''; position:absolute; width:100%; height:100%; border-radius:50%; box-sizing:border-box; border:4px solid rgba(80,40,0,0.35); pointer-events:none; }
 #miniBoard { display:grid; grid-template-columns:repeat(8,1fr); grid-template-rows:repeat(8,1fr); width:100%; max-width:400px; aspect-ratio:1; margin:0 auto; border:2px solid var(--brown); }
@@ -237,6 +237,40 @@ details[open] summary::before { content:'▾ '; }
   };
   applyTheme();
 
+  function playCheckSound() {
+    try {
+      const ctx = new (window.AudioContext || window.webkitAudioContext)();
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'square';
+      osc.frequency.setValueAtTime(900, ctx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(300, ctx.currentTime + 0.08);
+      gain.gain.setValueAtTime(0.25, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.1);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start();
+      osc.stop(ctx.currentTime + 0.1);
+    } catch (e) { /* 音声再生に失敗しても対局自体には影響させない */ }
+  }
+
+  function playMoveSound() {
+    try {
+      const ctx = new (window.AudioContext || window.webkitAudioContext)();
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(500, ctx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(200, ctx.currentTime + 0.05);
+      gain.gain.setValueAtTime(0.15, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.06);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start();
+      osc.stop(ctx.currentTime + 0.06);
+    } catch (e) { /* 音声再生に失敗しても対局自体には影響させない */ }
+  }
+
   // ===== AIと対局する(ログイン不要) =====
   let aiChess = null;
   let aiSelectedSquare = null;
@@ -360,7 +394,10 @@ details[open] summary::before { content:'▾ '; }
     } else {
       const move = aiChess.move({ from: aiSelectedSquare, to: sq, promotion: 'q' });
       aiSelectedSquare = null;
-      if (move) aiLastMove = { from: move.from, to: move.to };
+      if (move) {
+        aiLastMove = { from: move.from, to: move.to };
+        aiChess.in_check() ? playCheckSound() : playMoveSound();
+      }
       renderAiBoard();
       if (move && !aiChess.game_over()) {
         setTimeout(() => {
@@ -368,6 +405,7 @@ details[open] summary::before { content:'▾ '; }
           if (aiMove) {
             aiChess.move(aiMove);
             aiLastMove = { from: aiMove.from, to: aiMove.to };
+            aiChess.in_check() ? playCheckSound() : playMoveSound();
           }
           renderAiBoard();
         }, 500);
@@ -872,6 +910,7 @@ const PIECE_IMG = {
     await update(ref(db, 'matches/' + myMatchId), { [flagField]: true });
   }
 
+  let lastMoveSoundKey = null;
   function renderMiniBoard(m, user) {
     const boardEl = document.getElementById('miniBoard');
     boardEl.innerHTML = '';
@@ -879,6 +918,18 @@ const PIECE_IMG = {
     const clockEl = document.getElementById('gameClock');
     const oppName = myColor === 'w' ? m.blackName : m.whiteName;
     const myTurn = m.turn === myColor;
+
+    if (m.lastMove) {
+      const moveKey = myMatchId + '_' + m.lastMove.from + m.lastMove.to + '_' + m.turn;
+      if (moveKey !== lastMoveSoundKey) {
+        lastMoveSoundKey = moveKey;
+        if (gameChess.in_check() && !gameChess.game_over()) {
+          playCheckSound();
+        } else {
+          playMoveSound();
+        }
+      }
+    }
 
     if (m.status === 'timeout') {
       const wonByTimeout = m.winner === myColor;
