@@ -64,6 +64,7 @@ img#profilePhoto { border:2px solid var(--brown); border-radius:50%; width:60px;
 .sq.light { background:#d4b87a; }
 .sq.dark { background:#7a5230; }
 .sq.selected { outline:3px solid #e8c84a; outline-offset:-3px; }
+.sq.last-move { background-color:rgba(232,200,74,0.45) !important; }
 .sq.hint-move::after { content:''; position:absolute; width:28%; height:28%; border-radius:50%; background:rgba(80,40,0,0.35); pointer-events:none; }
 .sq.hint-capture::after { content:''; position:absolute; width:100%; height:100%; border-radius:50%; box-sizing:border-box; border:4px solid rgba(80,40,0,0.35); pointer-events:none; }
 #miniBoard { display:grid; grid-template-columns:repeat(8,1fr); grid-template-rows:repeat(8,1fr); width:100%; max-width:400px; aspect-ratio:1; margin:0 auto; border:2px solid var(--brown); }
@@ -239,6 +240,7 @@ details[open] summary::before { content:'▾ '; }
   // ===== AIと対局する(ログイン不要) =====
   let aiChess = null;
   let aiSelectedSquare = null;
+  let aiLastMove = null;
   let aiDifficulty = 'easy';
   const AI_PIECE_VAL = { p: 1, n: 3, b: 3, r: 5, q: 9, k: 0 };
 
@@ -323,6 +325,7 @@ details[open] summary::before { content:'▾ '; }
         const cell = document.createElement('div');
         cell.className = 'sq ' + (((r + c) % 2 === 0) ? 'light' : 'dark');
         if (aiSelectedSquare === sq) cell.classList.add('selected');
+        if (aiLastMove && (aiLastMove.from === sq || aiLastMove.to === sq)) cell.classList.add('last-move');
         if (aiLegalTargets.has(sq)) cell.classList.add(piece ? 'hint-capture' : 'hint-move');
         if (c === 0) {
           const rankLabel = document.createElement('span');
@@ -357,11 +360,15 @@ details[open] summary::before { content:'▾ '; }
     } else {
       const move = aiChess.move({ from: aiSelectedSquare, to: sq, promotion: 'q' });
       aiSelectedSquare = null;
+      if (move) aiLastMove = { from: move.from, to: move.to };
       renderAiBoard();
       if (move && !aiChess.game_over()) {
         setTimeout(() => {
           const aiMove = aiPickMove(aiChess, aiDifficulty);
-          if (aiMove) aiChess.move(aiMove);
+          if (aiMove) {
+            aiChess.move(aiMove);
+            aiLastMove = { from: aiMove.from, to: aiMove.to };
+          }
           renderAiBoard();
         }, 500);
       }
@@ -372,6 +379,7 @@ details[open] summary::before { content:'▾ '; }
     aiDifficulty = difficulty;
     aiChess = new Chess();
     aiSelectedSquare = null;
+    aiLastMove = null;
     document.getElementById('aiDifficultyPanel').style.display = 'none';
     document.getElementById('aiGameArea').style.display = 'block';
     renderAiBoard();
@@ -928,6 +936,7 @@ const PIECE_IMG = {
         cell.className = 'sq ' + (((r + c) % 2 === 0) ? 'light' : 'dark');
         if (selectedSquare === sq) cell.classList.add('selected');
         if (legalTargets.has(sq)) cell.classList.add(piece ? 'hint-capture' : 'hint-move');
+        if (m.lastMove && (m.lastMove.from === sq || m.lastMove.to === sq)) cell.classList.add('last-move');
         if (colOrder.indexOf(c) === 0) {
           const rankLabel = document.createElement('span');
           rankLabel.className = 'sq-label rank-label';
@@ -981,7 +990,8 @@ const PIECE_IMG = {
         const newTime = remainingAfterMove + (m.increment || 0);
         await set(ref(db, 'matches/' + myMatchId), {
           ...m, fen: gameChess.fen(), turn: gameChess.turn(),
-          [myTimeKey]: newTime, turnStartedAt: Date.now()
+          [myTimeKey]: newTime, turnStartedAt: Date.now(),
+          lastMove: { from: move.from, to: move.to }
         });
       } else {
         renderMiniBoard(m, user);
