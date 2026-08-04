@@ -339,46 +339,49 @@ details[open] summary::before { content:'▾ '; }
       const tcPanel = document.createElement('span');
       tcPanel.style.display = 'none';
 
-      const fixedLabel = document.createElement('label');
-      fixedLabel.style.cssText = 'display:block;font-size:0.78rem;margin-bottom:4px;';
-      const fixedCheckbox = document.createElement('input');
-      fixedCheckbox.type = 'checkbox';
-      fixedCheckbox.style.marginRight = '4px';
-      fixedLabel.appendChild(fixedCheckbox);
-      fixedLabel.appendChild(document.createTextNode(LANG === 'ja' ? '固定(インクリメントなし)' : 'Fixed (no increment)'));
-      tcPanel.appendChild(fixedLabel);
+      const fixedRowLabel = document.createElement('div');
+      fixedRowLabel.style.cssText = 'font-size:0.75rem;color:var(--text-muted);margin-top:4px;';
+      fixedRowLabel.textContent = LANG === 'ja' ? '固定' : 'Fixed';
+      const fixedRow = document.createElement('div');
+      tcPanel.appendChild(fixedRowLabel);
+      tcPanel.appendChild(fixedRow);
 
-      const tcButtonsRow = document.createElement('div');
-      tcPanel.appendChild(tcButtonsRow);
+      const incRowLabel = document.createElement('div');
+      incRowLabel.style.cssText = 'font-size:0.75rem;color:var(--text-muted);margin-top:6px;';
+      incRowLabel.textContent = LANG === 'ja' ? 'インクリメントあり' : 'With increment';
+      const incRow = document.createElement('div');
+      tcPanel.appendChild(incRowLabel);
+      tcPanel.appendChild(incRow);
 
       const TC_OPTIONS = [
         { key: 'bullet', incLabel: 'Bullet (2+1)', fixedLabel: 'Bullet (1 min)' },
         { key: 'blitz', incLabel: 'Blitz (5+3)', fixedLabel: 'Blitz (5 min)' },
         { key: 'rapid', incLabel: 'Rapid (10+5)', fixedLabel: 'Rapid (10 min)' }
       ];
-      const tcBtnEls = [];
-      TC_OPTIONS.forEach(opt => {
-        const tcBtn = document.createElement('button');
-        tcBtn.textContent = opt.incLabel;
-        tcBtn.style.fontSize = '0.8rem';
-        tcBtn.onclick = async () => {
-          const myProfile = await get(ref(db, 'users/' + user.uid));
-          const myName = myProfile.exists() ? myProfile.val().username : user.displayName;
-          await set(ref(db, 'matchInvites/' + friendUid + '/' + user.uid), {
-            username: myName, sentAt: Date.now(), timeControl: opt.key, fixed: fixedCheckbox.checked
-          });
-          tcPanel.style.display = 'none';
-          challengeBtn.textContent = LANG === 'ja' ? '送信済み' : 'Sent';
-          challengeBtn.disabled = true;
-        };
-        tcButtonsRow.appendChild(tcBtn);
-        tcBtnEls.push({ btn: tcBtn, opt });
-      });
-      fixedCheckbox.onchange = () => {
-        tcBtnEls.forEach(({ btn, opt }) => {
-          btn.textContent = fixedCheckbox.checked ? opt.fixedLabel : opt.incLabel;
+      const sendInvite = async (opt, fixed) => {
+        const myProfile = await get(ref(db, 'users/' + user.uid));
+        const myName = myProfile.exists() ? myProfile.val().username : user.displayName;
+        await set(ref(db, 'matchInvites/' + friendUid + '/' + user.uid), {
+          username: myName, sentAt: Date.now(), timeControl: opt.key, fixed: fixed
         });
+        tcPanel.style.display = 'none';
+        challengeBtn.textContent = LANG === 'ja' ? '送信済み' : 'Sent';
+        challengeBtn.disabled = true;
       };
+      TC_OPTIONS.forEach(opt => {
+        const fixedBtn = document.createElement('button');
+        fixedBtn.textContent = opt.fixedLabel;
+        fixedBtn.style.fontSize = '0.8rem';
+        fixedBtn.onclick = () => sendInvite(opt, true);
+        fixedRow.appendChild(fixedBtn);
+
+        const incBtn = document.createElement('button');
+        incBtn.textContent = opt.incLabel;
+        incBtn.style.fontSize = '0.8rem';
+        incBtn.style.background = '#a3692d';
+        incBtn.onclick = () => sendInvite(opt, false);
+        incRow.appendChild(incBtn);
+      });
       challengeBtn.onclick = () => {
         tcPanel.style.display = tcPanel.style.display === 'none' ? 'inline-block' : 'none';
       };
