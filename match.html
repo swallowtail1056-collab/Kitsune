@@ -192,6 +192,7 @@ details[open] summary::before { content:'▾ '; }
     <button id="leaveMatchBtn" data-ja="対局を退出する" data-en="Leave Match" style="margin-top:10px;">対局を退出する</button>
     <button id="matchChatToggle" data-ja="💬 チャット" data-en="💬 Chat" style="margin-top:10px;">💬 チャット</button>
     <button id="analysisToggleBtn" data-ja="🔍 局面を分析する" data-en="🔍 Analyze Position" style="margin-top:10px;">🔍 局面を分析する</button>
+    <button id="historyToggleBtn" data-ja="📜 履歴を見る" data-en="📜 View History" style="margin-top:10px;">📜 履歴を見る</button>
     <div id="matchChatPanel" style="display:none;"></div>
     <div id="analysisPanel" style="display:none;margin-top:10px;">
       <p style="font-size:0.8rem;color:var(--text-muted);" data-ja="ここで自由に駒を動かして試せます。本番の対局には影響しません。" data-en="Move pieces freely here to explore ideas. This has no effect on the real game.">ここで自由に駒を動かして試せます。本番の対局には影響しません。</p>
@@ -200,6 +201,16 @@ details[open] summary::before { content:'▾ '; }
       <button id="analysisHintBtn" data-ja="💡 候補手を見る" data-en="💡 Suggest a Move" style="margin-top:8px;">💡 候補手を見る</button>
       <button id="analysisCloseBtn" data-ja="分析を終える" data-en="Close Analysis" style="margin-top:8px;">分析を終える</button>
       <p id="analysisHintText" style="font-size:0.85rem;color:var(--text-muted);margin-top:6px;"></p>
+    </div>
+    <div id="historyPanel" style="display:none;margin-top:10px;">
+      <p style="font-size:0.8rem;color:var(--text-muted);" data-ja="過去の局面を見返せます。ここから指すことはできません。" data-en="Browse past positions. You can't move pieces here.">過去の局面を見返せます。ここから指すことはできません。</p>
+      <div id="historyBoard"></div>
+      <p id="historyMoveLabel" style="text-align:center;font-weight:700;margin-top:6px;"></p>
+      <div style="text-align:center;margin-top:6px;">
+        <button id="historyPrevBtn">◀ <span data-ja="前の手" data-en="Prev">前の手</span></button>
+        <button id="historyNextBtn"><span data-ja="次の手" data-en="Next">次の手</span> ▶</button>
+      </div>
+      <button id="historyCloseBtn" data-ja="履歴を閉じる" data-en="Close History" style="margin-top:8px;">履歴を閉じる</button>
     </div>
   </div>
 </div>
@@ -1361,7 +1372,75 @@ const PIECE_IMG = {
     }
   };
 
+  // ===== 対局の履歴ビューア(閲覧専用、過去の局面を1手ずつ振り返れる) =====
+  let latestMatchData = null;
+  let historyIndex = 0;
+
+  function renderHistoryBoard() {
+    const boardEl = document.getElementById('historyBoard');
+    const labelEl = document.getElementById('historyMoveLabel');
+    if (!boardEl || !latestMatchData) return;
+    const moves = latestMatchData.moves || [];
+    historyIndex = Math.max(0, Math.min(historyIndex, moves.length));
+
+    const replay = new Chess();
+    for (let i = 0; i < historyIndex; i++) {
+      replay.move(moves[i].san);
+    }
+
+    labelEl.textContent = (LANG === 'ja' ? '手数: ' : 'Move: ') + historyIndex + ' / ' + moves.length;
+
+    boardEl.innerHTML = '';
+    boardEl.style.cssText = 'display:grid;grid-template-columns:repeat(8,1fr);grid-template-rows:repeat(8,1fr);width:100%;max-width:400px;aspect-ratio:1;margin:0 auto;border:2px solid var(--board-border,var(--brown));';
+    const boardArray = replay.board();
+    const files = ['a','b','c','d','e','f','g','h'];
+    const flip = myColor === 'b';
+    const order = [...Array(8).keys()];
+    const rowOrder = flip ? [...order].reverse() : order;
+    const colOrder = flip ? [...order].reverse() : order;
+    const lastMv = historyIndex > 0 ? moves[historyIndex - 1] : null;
+
+    rowOrder.forEach(r => {
+      colOrder.forEach(c => {
+        const piece = boardArray[r][c];
+        const sq = files[c] + (8 - r);
+        const cell = document.createElement('div');
+        cell.className = 'sq ' + (((r + c) % 2 === 0) ? 'light' : 'dark');
+        if (piece) {
+          const img = document.createElement('img');
+          img.src = PIECE_IMG[piece.color + piece.type.toUpperCase()];
+          img.style.width = '100%'; img.style.height = '100%'; img.style.pointerEvents = 'none';
+          cell.appendChild(img);
+        }
+        boardEl.appendChild(cell);
+      });
+    });
+  }
+
+  document.getElementById('historyToggleBtn').onclick = () => {
+    const panel = document.getElementById('historyPanel');
+    const opening = panel.style.display === 'none';
+    panel.style.display = opening ? 'block' : 'none';
+    if (opening && latestMatchData) {
+      historyIndex = (latestMatchData.moves || []).length;
+      renderHistoryBoard();
+    }
+  };
+  document.getElementById('historyPrevBtn').onclick = () => {
+    historyIndex = Math.max(0, historyIndex - 1);
+    renderHistoryBoard();
+  };
+  document.getElementById('historyNextBtn').onclick = () => {
+    const max = (latestMatchData && latestMatchData.moves) ? latestMatchData.moves.length : 0;
+    historyIndex = Math.min(max, historyIndex + 1);
+    renderHistoryBoard();
+  };
+  document.getElementById('historyCloseBtn').onclick = () => {
+    document.getElementById('historyPanel').style.display = 'none';
+  };
+
   function renderMiniBoard(m, user, matchId) {
+    latestMatchData = m;
     const boardEl = document.getElementById('miniBoard');
     boardEl.innerHTML = '';
     const statusEl = document.getElementById('gameStatus');
