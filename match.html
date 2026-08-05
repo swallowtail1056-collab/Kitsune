@@ -392,6 +392,38 @@ details[open] summary::before { content:'▾ '; }
     } catch (e) { /* 音声再生に失敗しても対局自体には影響させない */ }
   }
 
+  function playCastleSound() {
+    try {
+      const ctx = new (window.AudioContext || window.webkitAudioContext)();
+      const playClick = (startTime, freq) => {
+        const duration = 0.05;
+        const bufferSize = Math.floor(ctx.sampleRate * duration);
+        const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+        const data = buffer.getChannelData(0);
+        for (let i = 0; i < bufferSize; i++) {
+          data[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / bufferSize, 3);
+        }
+        const noise = ctx.createBufferSource();
+        noise.buffer = buffer;
+        const bandpass = ctx.createBiquadFilter();
+        bandpass.type = 'bandpass';
+        bandpass.frequency.value = freq;
+        bandpass.Q.value = 1.1;
+        const gain = ctx.createGain();
+        gain.gain.setValueAtTime(0.7, startTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, startTime + duration);
+        noise.connect(bandpass);
+        bandpass.connect(gain);
+        gain.connect(ctx.destination);
+        noise.start(startTime);
+        noise.stop(startTime + duration);
+      };
+      // 王と、少し遅れてルーク。2回連続の軽いクリック音
+      playClick(ctx.currentTime, 3200);
+      playClick(ctx.currentTime + 0.09, 3800);
+    } catch (e) { /* 音声再生に失敗しても対局自体には影響させない */ }
+  }
+
   // ===== AIと対局する(ログイン不要) =====
   let aiChess = null;
   let aiSelectedSquare = null;
@@ -550,6 +582,7 @@ details[open] summary::before { content:'▾ '; }
         aiLastMoveDotTimer = setTimeout(renderAiBoard, 1550);
         if (aiChess.in_checkmate()) playCheckmateSound();
         else if (aiChess.in_check()) playCheckSound();
+        else if (move.san.startsWith('O-O')) playCastleSound();
         else playMoveSound();
       }
       renderAiBoard();
@@ -565,6 +598,7 @@ details[open] summary::before { content:'▾ '; }
             aiLastMoveDotTimer = setTimeout(renderAiBoard, 1550);
             if (aiChess.in_checkmate()) playCheckmateSound();
             else if (aiChess.in_check()) playCheckSound();
+            else if (aiMove.san.startsWith('O-O')) playCastleSound();
             else playMoveSound();
           }
           renderAiBoard();
@@ -1571,6 +1605,8 @@ const PIECE_IMG = {
           playCheckmateSound();
         } else if (gameChess.in_check()) {
           playCheckSound();
+        } else if (m.moves && m.moves.length && m.moves[m.moves.length - 1].san && m.moves[m.moves.length - 1].san.startsWith('O-O')) {
+          playCastleSound();
         } else {
           playMoveSound();
         }
