@@ -64,7 +64,7 @@ img#profilePhoto { border:2px solid var(--brown); border-radius:50%; width:60px;
 .sq.light { background:#d4b87a; }
 .sq.dark { background:#7a5230; }
 .sq.selected { outline:3px solid #e8c84a; outline-offset:-3px; }
-.sq.last-move::after { content:''; position:absolute; width:24%; height:24%; border-radius:50%; background:rgba(184,134,11,0.35); pointer-events:none; z-index:2; }
+.sq.last-move::after { content:''; position:absolute; width:32%; height:32%; border-radius:50%; background:rgba(232,200,74,0.45); pointer-events:none; z-index:2; }
 .sq.hint-move::after { content:''; position:absolute; width:28%; height:28%; border-radius:50%; background:rgba(80,40,0,0.35); pointer-events:none; }
 .sq.hint-capture::after { content:''; position:absolute; width:100%; height:100%; border-radius:50%; box-sizing:border-box; border:4px solid rgba(80,40,0,0.35); pointer-events:none; }
 #miniBoard { display:grid; grid-template-columns:repeat(8,1fr); grid-template-rows:repeat(8,1fr); width:100%; max-width:400px; aspect-ratio:1; margin:0 auto; border:2px solid var(--brown); }
@@ -256,6 +256,13 @@ details[open] summary::before { content:'▾ '; }
     LANG = LANG === 'ja' ? 'en' : 'ja';
     localStorage.setItem('selectedLang', LANG);
     applyLang();
+    if (curUser) {
+      renderIncomingRequests(curUser, latestIncomingData);
+      renderFriendsList(curUser, latestFriendsData);
+      renderMatchInvites(curUser, latestMatchInvitesData);
+      renderUserSearchResults();
+      renderAnalysis(latestAnalysisData || {}, latestRatingData);
+    }
   };
   applyLang();
 
@@ -1020,6 +1027,11 @@ details[open] summary::before { content:'▾ '; }
   }
 
   let curUser = null;
+  let latestIncomingData = null;
+  let latestFriendsData = null;
+  let latestMatchInvitesData = null;
+  let latestAnalysisData = null;
+  let latestRatingData = 1200;
   let allUsersMap = {};      // uid -> {username, ...}
   let myFriendsSet = new Set();
   let myIncomingSet = new Set();
@@ -1717,13 +1729,15 @@ const PIECE_IMG = {
       onValue(ref(db, 'publicProfiles/' + user.uid), (s) => {
         const p = s.val() || {};
         document.getElementById('profileRating').textContent = p.rating || 1200;
-        renderAnalysis(p.analysis || {}, p.rating || 1200);
+        latestAnalysisData = p.analysis || {};
+        latestRatingData = p.rating || 1200;
+        renderAnalysis(latestAnalysisData, latestRatingData);
       });
 
       curUser = user;
-      onValue(ref(db, 'friendRequests/' + user.uid), (s) => renderIncomingRequests(user, s.val()));
-      onValue(ref(db, 'friends/' + user.uid), (s) => renderFriendsList(user, s.val()));
-      onValue(ref(db, 'matchInvites/' + user.uid), (s) => renderMatchInvites(user, s.val()));
+      onValue(ref(db, 'friendRequests/' + user.uid), (s) => { latestIncomingData = s.val(); renderIncomingRequests(user, latestIncomingData); });
+      onValue(ref(db, 'friends/' + user.uid), (s) => { latestFriendsData = s.val(); renderFriendsList(user, latestFriendsData); });
+      onValue(ref(db, 'matchInvites/' + user.uid), (s) => { latestMatchInvitesData = s.val(); renderMatchInvites(user, latestMatchInvitesData); });
       startMatchListener(user);
 
       onValue(ref(db, 'publicProfiles'), (s) => { allUsersMap = s.val() || {}; renderUserSearchResults(); });
