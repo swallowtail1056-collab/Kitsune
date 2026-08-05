@@ -120,6 +120,17 @@ details[open] summary::before { content:'▾ '; }
     <p id="aiCapturedArea" style="font-size:1.1rem;"></p>
     <div id="aiBoard"></div>
     <button id="aiQuitBtn" data-ja="対局をやめる" data-en="Quit Game" style="margin-top:10px;">対局をやめる</button>
+    <button id="aiHistoryToggleBtn" data-ja="📜 履歴を見る" data-en="📜 View History" style="margin-top:10px;">📜 履歴を見る</button>
+    <div id="aiHistoryPanel" style="display:none;margin-top:10px;">
+      <p style="font-size:0.8rem;color:var(--text-muted);" data-ja="過去の局面を見返せます。ここから指すことはできません。" data-en="Browse past positions. You can't move pieces here.">過去の局面を見返せます。ここから指すことはできません。</p>
+      <div id="aiHistoryBoard"></div>
+      <p id="aiHistoryMoveLabel" style="text-align:center;font-weight:700;margin-top:6px;"></p>
+      <div style="text-align:center;margin-top:6px;">
+        <button id="aiHistoryPrevBtn">◀ <span data-ja="前の手" data-en="Prev">前の手</span></button>
+        <button id="aiHistoryNextBtn"><span data-ja="次の手" data-en="Next">次の手</span> ▶</button>
+      </div>
+      <button id="aiHistoryCloseBtn" data-ja="履歴を閉じる" data-en="Close History" style="margin-top:8px;">履歴を閉じる</button>
+    </div>
   </div>
 </div>
 
@@ -385,6 +396,8 @@ details[open] summary::before { content:'▾ '; }
   let aiChess = null;
   let aiSelectedSquare = null;
   let aiLastMove = null;
+  let aiLastMoveDotExpiry = 0;
+  let aiLastMoveDotTimer = null;
   let aiMoveHistory = [];
   let aiDifficulty = 'easy';
   const AI_PIECE_VAL = { p: 1, n: 3, b: 3, r: 5, q: 9, k: 0 };
@@ -494,7 +507,7 @@ details[open] summary::before { content:'▾ '; }
         const cell = document.createElement('div');
         cell.className = 'sq ' + (((r + c) % 2 === 0) ? 'light' : 'dark');
         if (aiSelectedSquare === sq) cell.classList.add('selected');
-        if (aiLastMove && (aiLastMove.from === sq || aiLastMove.to === sq)) cell.classList.add('last-move');
+        if (aiLastMove && Date.now() < aiLastMoveDotExpiry && (aiLastMove.from === sq || aiLastMove.to === sq)) cell.classList.add('last-move');
         if (aiLegalTargets.has(sq)) cell.classList.add(piece ? 'hint-capture' : 'hint-move');
         if (c === 0) {
           const rankLabel = document.createElement('span');
@@ -532,6 +545,9 @@ details[open] summary::before { content:'▾ '; }
       if (move) {
         aiLastMove = { from: move.from, to: move.to };
         aiMoveHistory.push({ san: move.san, color: move.color, captured: move.captured || null });
+        aiLastMoveDotExpiry = Date.now() + 1500;
+        clearTimeout(aiLastMoveDotTimer);
+        aiLastMoveDotTimer = setTimeout(renderAiBoard, 1550);
         if (aiChess.in_checkmate()) playCheckmateSound();
         else if (aiChess.in_check()) playCheckSound();
         else playMoveSound();
@@ -544,6 +560,9 @@ details[open] summary::before { content:'▾ '; }
             aiChess.move(aiMove);
             aiLastMove = { from: aiMove.from, to: aiMove.to };
             aiMoveHistory.push({ san: aiMove.san, color: aiMove.color, captured: aiMove.captured || null });
+            aiLastMoveDotExpiry = Date.now() + 1500;
+            clearTimeout(aiLastMoveDotTimer);
+            aiLastMoveDotTimer = setTimeout(renderAiBoard, 1550);
             if (aiChess.in_checkmate()) playCheckmateSound();
             else if (aiChess.in_check()) playCheckSound();
             else playMoveSound();
@@ -554,12 +573,64 @@ details[open] summary::before { content:'▾ '; }
     }
   }
 
+  let aiHistoryIndex = 0;
+  function renderAiHistoryBoard() {
+    const boardEl = document.getElementById('aiHistoryBoard');
+    const labelEl = document.getElementById('aiHistoryMoveLabel');
+    if (!boardEl) return;
+    const moves = aiMoveHistory || [];
+    aiHistoryIndex = Math.max(0, Math.min(aiHistoryIndex, moves.length));
+    const replay = new Chess();
+    for (let i = 0; i < aiHistoryIndex; i++) replay.move(moves[i].san);
+    labelEl.textContent = (LANG === 'ja' ? '手数: ' : 'Move: ') + aiHistoryIndex + ' / ' + moves.length;
+
+    boardEl.innerHTML = '';
+    boardEl.style.cssText = 'display:grid;grid-template-columns:repeat(8,1fr);grid-template-rows:repeat(8,1fr);width:100%;max-width:400px;aspect-ratio:1;margin:0 auto;border:2px solid var(--board-border,var(--brown));';
+    const boardArray = replay.board();
+    const files = ['a','b','c','d','e','f','g','h'];
+    for (let r = 0; r < 8; r++) {
+      for (let c = 0; c < 8; c++) {
+        const piece = boardArray[r][c];
+        const sq = files[c] + (8 - r);
+        const cell = document.createElement('div');
+        cell.className = 'sq ' + (((r + c) % 2 === 0) ? 'light' : 'dark');
+        if (piece) {
+          const img = document.createElement('img');
+          img.src = PIECE_IMG[piece.color + piece.type.toUpperCase()];
+          img.style.width = '100%'; img.style.height = '100%'; img.style.pointerEvents = 'none';
+          cell.appendChild(img);
+        }
+        boardEl.appendChild(cell);
+      }
+    }
+  }
+  document.getElementById('aiHistoryToggleBtn').onclick = () => {
+    const panel = document.getElementById('aiHistoryPanel');
+    const opening = panel.style.display === 'none';
+    panel.style.display = opening ? 'block' : 'none';
+    if (opening) {
+      aiHistoryIndex = (aiMoveHistory || []).length;
+      renderAiHistoryBoard();
+    }
+  };
+  document.getElementById('aiHistoryPrevBtn').onclick = () => { aiHistoryIndex = Math.max(0, aiHistoryIndex - 1); renderAiHistoryBoard(); };
+  document.getElementById('aiHistoryNextBtn').onclick = () => {
+    const max = (aiMoveHistory || []).length;
+    aiHistoryIndex = Math.min(max, aiHistoryIndex + 1);
+    renderAiHistoryBoard();
+  };
+  document.getElementById('aiHistoryCloseBtn').onclick = () => {
+    document.getElementById('aiHistoryPanel').style.display = 'none';
+  };
+
   function startAiGame(difficulty) {
     aiDifficulty = difficulty;
     aiChess = new Chess();
     aiSelectedSquare = null;
     aiLastMove = null;
     aiMoveHistory = [];
+    aiHistoryIndex = 0;
+    document.getElementById('aiHistoryPanel').style.display = 'none';
     document.getElementById('aiDifficultyPanel').style.display = 'none';
     document.getElementById('aiGameArea').style.display = 'block';
     renderAiBoard();
@@ -1303,6 +1374,8 @@ const PIECE_IMG = {
   }
 
   let lastMoveSoundKey = null;
+  let lastMoveDotExpiry = 0;
+  let lastMoveDotTimer = null;
   // ===== 局面分析ボード(本番の対局には影響しない、自由に動かせるプレビュー盤面) =====
   let analysisChess = null;
   let analysisSelectedSquare = null;
@@ -1491,6 +1564,9 @@ const PIECE_IMG = {
       const moveKey = matchId + '_' + m.lastMove.from + m.lastMove.to + '_' + m.turn;
       if (moveKey !== lastMoveSoundKey) {
         lastMoveSoundKey = moveKey;
+        lastMoveDotExpiry = Date.now() + 1500;
+        clearTimeout(lastMoveDotTimer);
+        lastMoveDotTimer = setTimeout(() => renderMiniBoard(m, user, matchId), 1550);
         if (gameChess.in_checkmate()) {
           playCheckmateSound();
         } else if (gameChess.in_check()) {
@@ -1588,7 +1664,7 @@ const PIECE_IMG = {
         cell.className = 'sq ' + (((r + c) % 2 === 0) ? 'light' : 'dark');
         if (selectedSquare === sq) cell.classList.add('selected');
         if (legalTargets.has(sq)) cell.classList.add(piece ? 'hint-capture' : 'hint-move');
-        if (m.lastMove && (m.lastMove.from === sq || m.lastMove.to === sq)) cell.classList.add('last-move');
+        if (m.lastMove && Date.now() < lastMoveDotExpiry && (m.lastMove.from === sq || m.lastMove.to === sq)) cell.classList.add('last-move');
         if (colOrder.indexOf(c) === 0) {
           const rankLabel = document.createElement('span');
           rankLabel.className = 'sq-label rank-label';
