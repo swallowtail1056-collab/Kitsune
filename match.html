@@ -143,6 +143,11 @@ details[open] summary::before { content:'▾ '; }
   </div>
 
   <div class="box">
+    <p><strong data-ja="📊 自分の対局分析(自分にだけ見えます)" data-en="📊 Your Game Analysis (visible only to you)">📊 自分の対局分析(自分にだけ見えます)</strong></p>
+    <div id="analysisArea"></div>
+  </div>
+
+  <div class="box">
     <p><strong data-ja="友達を追加" data-en="Add a Friend">友達を追加</strong></p>
     <input type="text" id="searchInput" data-ja-ph="相手のユーザー名" data-en-ph="Friend's username" placeholder="相手のユーザー名">
     <button id="sendRequestBtn" data-ja="申請を送る" data-en="Send Request">申請を送る</button>
@@ -169,6 +174,13 @@ details[open] summary::before { content:'▾ '; }
     <p><strong data-ja="届いている対局申し込み" data-en="Incoming Match Challenges">届いている対局申し込み</strong></p>
     <div id="matchInvitesList"></div>
   </div>
+
+  <div style="height:24px;"></div>
+  <div class="box" style="border-color:#a33;">
+    <p><strong data-ja="⚠️ 危険な操作" data-en="⚠️ Danger Zone" style="color:#a33;">⚠️ 危険な操作</strong></p>
+    <p data-ja="友達関係・対局記録・レーティングなど、全てのデータが完全に消え、元に戻せません。" data-en="This permanently erases everything — friends, match history, rating — and cannot be undone.">友達関係・対局記録・レーティングなど、全てのデータが完全に消え、元に戻せません。</p>
+    <button id="deleteAccountBtn" style="background:#a33;margin-top:8px;" data-ja="アカウントを削除する" data-en="Delete My Account">アカウントを削除する</button>
+  </div>
   </div>
 
   <div class="box" id="gameBox" style="display:none;">
@@ -178,7 +190,16 @@ details[open] summary::before { content:'▾ '; }
     <div id="miniBoard"></div>
     <button id="leaveMatchBtn" data-ja="対局を退出する" data-en="Leave Match" style="margin-top:10px;">対局を退出する</button>
     <button id="matchChatToggle" data-ja="💬 チャット" data-en="💬 Chat" style="margin-top:10px;">💬 チャット</button>
+    <button id="analysisToggleBtn" data-ja="🔍 局面を分析する" data-en="🔍 Analyze Position" style="margin-top:10px;">🔍 局面を分析する</button>
     <div id="matchChatPanel" style="display:none;"></div>
+    <div id="analysisPanel" style="display:none;margin-top:10px;">
+      <p style="font-size:0.8rem;color:var(--text-muted);" data-ja="ここで自由に駒を動かして試せます。本番の対局には影響しません。" data-en="Move pieces freely here to explore ideas. This has no effect on the real game.">ここで自由に駒を動かして試せます。本番の対局には影響しません。</p>
+      <div id="analysisBoard"></div>
+      <button id="analysisResetBtn" data-ja="現在の局面に戻す" data-en="Reset to Current Position" style="margin-top:8px;">現在の局面に戻す</button>
+      <button id="analysisHintBtn" data-ja="💡 候補手を見る" data-en="💡 Suggest a Move" style="margin-top:8px;">💡 候補手を見る</button>
+      <button id="analysisCloseBtn" data-ja="分析を終える" data-en="Close Analysis" style="margin-top:8px;">分析を終える</button>
+      <p id="analysisHintText" style="font-size:0.85rem;color:var(--text-muted);margin-top:6px;"></p>
+    </div>
   </div>
 </div>
 
@@ -193,7 +214,7 @@ details[open] summary::before { content:'▾ '; }
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-  import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+  import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, deleteUser, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
   import { getDatabase, ref, set, get, push, update, remove, onValue } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
   const firebaseConfig = {
@@ -357,7 +378,9 @@ details[open] summary::before { content:'▾ '; }
     return score;
   }
 
-  function aiPickMove(chess, difficulty) {
+  function aiPickMove(chess, difficulty, forColor) {
+    forColor = forColor || 'b';
+    const sign = forColor === 'b' ? 1 : -1;
     const moves = chess.moves({ verbose: true });
     if (moves.length === 0) return null;
     if (difficulty === 'easy') {
@@ -370,7 +393,7 @@ details[open] summary::before { content:'▾ '; }
       captures.sort((a, b) => AI_PIECE_VAL[b.captured] - AI_PIECE_VAL[a.captured]);
       return captures[0];
     }
-    // hard: 2手先まで簡易ミニマックス
+    // hard: 2手先まで簡易ミニマックス(forColor側にとっての最善を探索)
     let bestMove = moves[0];
     let bestScore = -Infinity;
     moves.forEach(m => {
@@ -383,11 +406,11 @@ details[open] summary::before { content:'▾ '; }
         let worstForAI = Infinity;
         oppMoves.forEach(om => {
           chess.move(om);
-          const s = aiEvaluateBoard(chess);
+          const s = sign * aiEvaluateBoard(chess);
           if (s < worstForAI) worstForAI = s;
           chess.undo();
         });
-        score = oppMoves.length === 0 ? aiEvaluateBoard(chess) : worstForAI;
+        score = oppMoves.length === 0 ? sign * aiEvaluateBoard(chess) : worstForAI;
       }
       chess.undo();
       if (score > bestScore) { bestScore = score; bestMove = m; }
@@ -510,6 +533,55 @@ details[open] summary::before { content:'▾ '; }
   };
   document.getElementById('logoutBtn').onclick = () => signOut(auth);
 
+  document.getElementById('deleteAccountBtn').onclick = async () => {
+    const user = auth.currentUser;
+    if (!user) return;
+    const confirmMsg = LANG === 'ja'
+      ? '本当にアカウントを削除しますか？友達関係・対局記録・レーティングなど、全てのデータが消え、元に戻せません。'
+      : 'Are you sure you want to delete your account? All your data — friends, match history, rating — will be permanently erased.';
+    if (!confirm(confirmMsg)) return;
+
+    try {
+      const myUid = user.uid;
+
+      // 自分のユーザー名を取得(usernames登録の削除に使う)
+      const profileSnap = await get(ref(db, 'users/' + myUid));
+      const myUsername = profileSnap.exists() ? profileSnap.val().username : '';
+
+      // 友達関係を、相手側のデータからも削除
+      const friendsSnap = await get(ref(db, 'friends/' + myUid));
+      const friendUids = friendsSnap.exists() ? Object.keys(friendsSnap.val()) : [];
+      for (const friendUid of friendUids) {
+        await remove(ref(db, 'friends/' + friendUid + '/' + myUid));
+        await remove(ref(db, 'matchInvites/' + friendUid + '/' + myUid));
+      }
+
+      // 自分が送った友達申請を、相手側のfriendRequestsからも削除
+      const sentSnap = await get(ref(db, 'sentRequests/' + myUid));
+      const sentToUids = sentSnap.exists() ? Object.keys(sentSnap.val()) : [];
+      for (const targetUid of sentToUids) {
+        await remove(ref(db, 'friendRequests/' + targetUid + '/' + myUid));
+      }
+
+      // 自分自身に関する記録を削除
+      await remove(ref(db, 'friends/' + myUid));
+      await remove(ref(db, 'friendRequests/' + myUid));
+      await remove(ref(db, 'sentRequests/' + myUid));
+      await remove(ref(db, 'matchInvites/' + myUid));
+      await remove(ref(db, 'currentMatch/' + myUid));
+      await remove(ref(db, 'publicProfiles/' + myUid));
+      await remove(ref(db, 'users/' + myUid));
+      if (myUsername) await remove(ref(db, 'usernames/' + normName(myUsername)));
+
+      // Firebase認証アカウント自体も削除
+      await deleteUser(user);
+
+      alert(LANG === 'ja' ? 'アカウントを削除しました。' : 'Your account has been deleted.');
+    } catch (e) {
+      alert((LANG === 'ja' ? '削除中にエラーが発生しました: ' : 'An error occurred while deleting: ') + e.message);
+    }
+  };
+
   function normName(name) { return name.trim().toLowerCase(); }
 
   document.getElementById('saveNameBtn').onclick = async () => {
@@ -564,6 +636,122 @@ details[open] summary::before { content:'▾ '; }
     document.getElementById('searchInput').value = '';
     renderUserSearchResults();
   };
+
+  function renderAnalysis(a, rating) {
+    const el = document.getElementById('analysisArea');
+    if (!el) return;
+    const gamesPlayed = a.gamesPlayed || 0;
+    if (gamesPlayed === 0) {
+      el.textContent = LANG === 'ja' ? 'まだ対局データがありません。対局が終わるとここに表示されます。' : 'No game data yet. This will fill in once you finish a match.';
+      return;
+    }
+    const avgPlies = (a.totalPliesSum || 0) / gamesPlayed;
+    const wWins = a.winsAsWhite || 0, wLosses = a.lossesAsWhite || 0, wDraws = a.drawsAsWhite || 0;
+    const bWins = a.winsAsBlack || 0, bLosses = a.lossesAsBlack || 0, bDraws = a.drawsAsBlack || 0;
+    let favMove = '-', favCount = 0, favMoveTotal = 0;
+    Object.entries(a.firstMoveCounts || {}).forEach(([san, count]) => {
+      favMoveTotal += count;
+      if (count > favCount) { favMove = san; favCount = count; }
+    });
+    const hangs = a.totalHangs || 0;
+    const hangsPerGame = hangs / gamesPlayed;
+
+    // レーティングに応じて3段階(初級/中級/上級)に分け、しきい値と文言の厳しさを変える
+    const tier = rating < 1150 ? 'beginner' : (rating < 1350 ? 'intermediate' : 'advanced');
+    const hangThreshold = tier === 'beginner' ? 3.0 : (tier === 'intermediate' ? 1.5 : 0.6);
+    const shortGameThreshold = tier === 'beginner' ? 10 : (tier === 'intermediate' ? 15 : 20);
+
+    const lines = [];
+    lines.push((LANG === 'ja' ? '対局数: ' : 'Games played: ') + gamesPlayed);
+    lines.push((LANG === 'ja' ? '白番: ' : 'As White: ') + wWins + (LANG === 'ja' ? '勝' : 'W') + wLosses + (LANG === 'ja' ? '敗' : 'L') + wDraws + (LANG === 'ja' ? '分' : 'D'));
+    lines.push((LANG === 'ja' ? '黒番: ' : 'As Black: ') + bWins + (LANG === 'ja' ? '勝' : 'W') + bLosses + (LANG === 'ja' ? '敗' : 'L') + bDraws + (LANG === 'ja' ? '分' : 'D'));
+    lines.push((LANG === 'ja' ? '平均手数: ' : 'Avg. game length: ') + avgPlies.toFixed(1) + (LANG === 'ja' ? '手' : ' plies'));
+    lines.push((LANG === 'ja' ? 'よく指す最初の一手: ' : 'Favorite opening move: ') + favMove + (favCount ? ' (' + favCount + (LANG === 'ja' ? '回' : 'x') + ')' : ''));
+    lines.push((LANG === 'ja' ? '駒の取られ損(簡易判定): ' : 'Pieces lost for free (rough estimate): ') + hangs + (LANG === 'ja' ? '回' : ''));
+
+    // 対局数が増えるにつれて、追加の詳しい解説を出す
+    if (gamesPlayed >= 5) {
+      const recent = a.recentResults || [];
+      const recentW = recent.filter(r => r === 'W').length;
+      const recentL = recent.filter(r => r === 'L').length;
+      const recentD = recent.filter(r => r === 'D').length;
+      const formLabel = recentW > recentL
+        ? (LANG === 'ja' ? '調子は上向きです' : "you're on a good run")
+        : (recentL > recentW ? (LANG === 'ja' ? '少し苦しい時期です' : 'a bit of a rough patch') : (LANG === 'ja' ? '五分五分です' : 'holding steady'));
+      lines.push((LANG === 'ja' ? '直近' + recent.length + '局: ' : 'Last ' + recent.length + ' games: ')
+        + recentW + (LANG === 'ja' ? '勝' : 'W') + recentL + (LANG === 'ja' ? '敗' : 'L') + recentD + (LANG === 'ja' ? '分' : 'D')
+        + (LANG === 'ja' ? '(' + formLabel + ')' : ' (' + formLabel + ')'));
+    }
+    if (gamesPlayed >= 10) {
+      const fmw = a.firstMoveWins || {};
+      let bestMove = null, bestRate = -1, bestPlayed = 0;
+      Object.entries(a.firstMoveCounts || {}).forEach(([san, played]) => {
+        if (played < 2) return; // 2回以上指したものだけ対象
+        const rate = (fmw[san] || 0) / played;
+        if (rate > bestRate) { bestRate = rate; bestMove = san; bestPlayed = played; }
+      });
+      if (bestMove) {
+        lines.push((LANG === 'ja'
+          ? '一番勝率の良いオープニング: ' + bestMove + '(' + Math.round(bestRate * 100) + '%、' + bestPlayed + '局指しています)'
+          : 'Your best-performing opening: ' + bestMove + ' (' + Math.round(bestRate * 100) + '% win rate over ' + bestPlayed + ' games)'));
+      }
+    }
+
+    // ワンポイントアドバイス:レベル別のしきい値・文言で、最も当てはまるものを1つだけ表示
+    let advice = null;
+    if (hangsPerGame >= hangThreshold) {
+      if (tier === 'beginner') {
+        advice = LANG === 'ja'
+          ? '駒を取られる場面がまだ多いのは、この段階ではよくあることです。焦らず、相手の駒がどこを狙えるか確認する習慣から始めましょう。'
+          : "Losing pieces often is completely normal at this stage. Try building the habit of checking which squares your opponent's pieces can attack.";
+      } else if (tier === 'intermediate') {
+        advice = LANG === 'ja'
+          ? '駒の取られ損が多めです。指す前に「この駒、相手に取られないか」をもう一呼吸確認してみましょう。'
+          : "You're losing pieces for free fairly often. Before each move, take an extra moment to check whether the piece you're moving could be captured.";
+      } else {
+        advice = LANG === 'ja'
+          ? 'このレーティング帯にしては、駒の取られ損がやや目立ちます。終盤に近い局面ほど、細かい見落としが響きやすいので注意しましょう。'
+          : 'For your rating level, unnecessary piece losses stand out a bit. Small oversights matter more as the game progresses, so stay sharp.';
+      }
+    } else if (avgPlies < shortGameThreshold && gamesPlayed >= 3) {
+      advice = LANG === 'ja'
+        ? '対局が短めで終わる傾向があります。序盤で駒を守りながら、じっくり駒を展開する練習をしてみましょう。'
+        : 'Your games tend to end quickly. Try practicing careful piece development in the opening while keeping your pieces protected.';
+    } else if (gamesPlayed >= 4 && (wWins + wLosses + wDraws) > 0 && (bWins + bLosses + bDraws) > 0) {
+      const wRate = wWins / (wWins + wLosses + wDraws || 1);
+      const bRate = bWins / (bWins + bLosses + bDraws || 1);
+      if (wRate - bRate >= 0.3) {
+        advice = LANG === 'ja'
+          ? '黒番での勝率が白番より低めです。黒番の対局を練習モードで多めに練習してみると良さそうです。'
+          : 'Your win rate as Black is noticeably lower than as White. Practicing more Black-side openings might help.';
+      } else if (bRate - wRate >= 0.3) {
+        advice = LANG === 'ja'
+          ? '白番での勝率が黒番より低めです。白番の攻め方のオープニングを見直してみると良さそうです。'
+          : 'Your win rate as White is noticeably lower than as Black. It might help to revisit your White opening choices.';
+      }
+    }
+    if (!advice && favMoveTotal > 0 && favCount / favMoveTotal >= 0.7 && favMoveTotal >= 5) {
+      advice = LANG === 'ja'
+        ? favMove + 'ばかり指す傾向があります。他のオープニングも練習モードで試してみると、対応の幅が広がります。'
+        : "You tend to always open with " + favMove + ". Trying other openings in Practice Mode could widen your range.";
+    }
+    if (!advice) {
+      advice = LANG === 'ja'
+        ? '今のところ大きな偏りは見られません。このまま対局を重ねて、傾向をもっとはっきりさせていきましょう。'
+        : "No strong patterns yet. Keep playing and your tendencies will become clearer over time.";
+    }
+
+    el.innerHTML = '';
+    lines.forEach(line => {
+      const p = document.createElement('p');
+      p.textContent = line;
+      el.appendChild(p);
+    });
+    const adviceBox = document.createElement('p');
+    adviceBox.style.cssText = 'margin-top:10px;padding:8px 10px;background:rgba(184,134,11,0.12);border-left:3px solid var(--brown);border-radius:4px;font-weight:700;';
+    adviceBox.textContent = (LANG === 'ja' ? '💡 ワンポイントアドバイス: ' : '💡 Tip: ') + advice;
+    el.appendChild(adviceBox);
+  }
 
   function renderIncomingRequests(user, data) {
     const container = document.getElementById('incomingList');
@@ -670,6 +858,20 @@ details[open] summary::before { content:'▾ '; }
         incBtn.onclick = () => sendInvite(opt, false);
         incRow.appendChild(incBtn);
       });
+
+      const corrRowLabel = document.createElement('div');
+      corrRowLabel.style.cssText = 'font-size:0.75rem;color:var(--text-muted);margin-top:6px;';
+      corrRowLabel.textContent = LANG === 'ja' ? '通信対局(忙しい人向け)' : 'Correspondence (for busy players)';
+      const corrRow = document.createElement('div');
+      tcPanel.appendChild(corrRowLabel);
+      tcPanel.appendChild(corrRow);
+      const corrBtn = document.createElement('button');
+      corrBtn.textContent = LANG === 'ja' ? '通信対局(1手3日)' : 'Correspondence (3 days/move)';
+      corrBtn.style.fontSize = '0.8rem';
+      corrBtn.style.background = '#5a3a1a';
+      corrBtn.onclick = () => sendInvite({ key: 'correspondence' }, true);
+      corrRow.appendChild(corrBtn);
+
       challengeBtn.onclick = () => {
         tcPanel.style.display = tcPanel.style.display === 'none' ? 'inline-block' : 'none';
       };
@@ -718,6 +920,10 @@ details[open] summary::before { content:'▾ '; }
 
   function attachChat(containerEl, chatPath, user) {
     containerEl.innerHTML = '';
+    const notice = document.createElement('p');
+    notice.style.cssText = 'font-size:0.78rem;color:var(--text-muted);margin-bottom:4px;';
+    notice.textContent = LANG === 'ja' ? '💬 丁寧な言葉遣いでやり取りしましょう' : '💬 Please keep the conversation respectful';
+    containerEl.appendChild(notice);
     const list = document.createElement('div');
     list.style.cssText = 'max-height:180px;overflow-y:auto;background:var(--input-bg);color:var(--text);border:1px solid rgba(124,74,30,0.3);border-radius:6px;padding:8px;margin:8px 0;font-size:0.85rem;';
     const inputRow = document.createElement('div');
@@ -860,7 +1066,8 @@ details[open] summary::before { content:'▾ '; }
         const TC_MS = {
           bullet: { base: 2 * 60 * 1000, inc: 1000 },
           blitz: { base: 5 * 60 * 1000, inc: 3000 },
-          rapid: { base: 10 * 60 * 1000, inc: 5000 }
+          rapid: { base: 10 * 60 * 1000, inc: 5000 },
+          correspondence: { base: 3 * 24 * 60 * 60 * 1000, inc: 0 }
         };
         const timeControl = info.timeControl && TC_MS[info.timeControl] ? info.timeControl : 'rapid';
         const baseMs = TC_MS[timeControl].base;
@@ -946,6 +1153,15 @@ const PIECE_IMG = {
 
   function fmtTime(ms) {
     const total = Math.max(0, Math.ceil(ms / 1000));
+    if (total >= 3600 * 6) {
+      // 数時間以上は「日/時間」表示に切り替える(通信対局向け)
+      const totalHours = Math.floor(total / 3600);
+      const days = Math.floor(totalHours / 24);
+      const hours = totalHours % 24;
+      return days > 0
+        ? (LANG === 'ja' ? days + '日' + hours + '時間' : days + 'd ' + hours + 'h')
+        : (LANG === 'ja' ? hours + '時間' : hours + 'h');
+    }
     const mins = Math.floor(total / 60);
     const secs = total % 60;
     return mins + ':' + String(secs).padStart(2, '0');
@@ -983,7 +1199,167 @@ const PIECE_IMG = {
     await update(ref(db, 'matches/' + matchId), { [flagField]: true });
   }
 
+  const appliedAnalysisFor = new Set();
+  async function applyAnalysisIfNeeded(matchId, m, user, myResult) {
+    const dedupeKey = matchId + '_' + myColor;
+    if (appliedAnalysisFor.has(dedupeKey)) return;
+    const flagField = myColor === 'w' ? 'analysisAppliedWhite' : 'analysisAppliedBlack';
+    if (m[flagField]) { appliedAnalysisFor.add(dedupeKey); return; }
+    appliedAnalysisFor.add(dedupeKey);
+
+    const moves = m.moves || [];
+    const myMoves = moves.filter(mv => mv.color === myColor);
+    const totalPlies = moves.length;
+
+    // 簡易的な「取られ損」判定:自分が駒を取らずに指した直後、相手が駒を取った回数
+    let hangCount = 0;
+    for (let i = 0; i < moves.length - 1; i++) {
+      if (moves[i].color === myColor && !moves[i].captured && moves[i + 1].captured) {
+        hangCount++;
+      }
+    }
+
+    const myFirstMove = myMoves.length > 0 ? myMoves[0].san : null;
+
+    const snap = await get(ref(db, 'publicProfiles/' + user.uid));
+    const profile = snap.val() || {};
+    const a = profile.analysis || {};
+
+    const gamesPlayed = (a.gamesPlayed || 0) + 1;
+    const totalPliesSum = (a.totalPliesSum || 0) + totalPlies;
+    const totalHangs = (a.totalHangs || 0) + hangCount;
+    const firstMoveCounts = { ...(a.firstMoveCounts || {}) };
+    if (myFirstMove) firstMoveCounts[myFirstMove] = (firstMoveCounts[myFirstMove] || 0) + 1;
+    const firstMoveWins = { ...(a.firstMoveWins || {}) };
+    if (myFirstMove && myResult === 1) firstMoveWins[myFirstMove] = (firstMoveWins[myFirstMove] || 0) + 1;
+
+    const resultLetter = myResult === 1 ? 'W' : (myResult === 0 ? 'L' : 'D');
+    const recentResults = [...(a.recentResults || []), resultLetter].slice(-10);
+
+    const colorKey = myColor === 'w' ? 'White' : 'Black';
+    const winsKey = 'winsAs' + colorKey, lossesKey = 'lossesAs' + colorKey, drawsKey = 'drawsAs' + colorKey;
+    const update_ = {
+      analysis: {
+        ...a,
+        gamesPlayed, totalPliesSum, totalHangs, firstMoveCounts, firstMoveWins, recentResults,
+        [winsKey]: (a[winsKey] || 0) + (myResult === 1 ? 1 : 0),
+        [lossesKey]: (a[lossesKey] || 0) + (myResult === 0 ? 1 : 0),
+        [drawsKey]: (a[drawsKey] || 0) + (myResult === 0.5 ? 1 : 0)
+      }
+    };
+    await update(ref(db, 'publicProfiles/' + user.uid), update_);
+    await update(ref(db, 'matches/' + matchId), { [flagField]: true });
+  }
+
   let lastMoveSoundKey = null;
+  // ===== 局面分析ボード(本番の対局には影響しない、自由に動かせるプレビュー盤面) =====
+  let analysisChess = null;
+  let analysisSelectedSquare = null;
+
+  function renderAnalysisBoard() {
+    const boardEl = document.getElementById('analysisBoard');
+    if (!boardEl || !analysisChess) return;
+    boardEl.innerHTML = '';
+    boardEl.style.cssText = 'display:grid;grid-template-columns:repeat(8,1fr);grid-template-rows:repeat(8,1fr);width:100%;max-width:400px;aspect-ratio:1;margin:0 auto;border:2px solid var(--board-border,var(--brown));';
+
+    const boardArray = analysisChess.board();
+    const files = ['a','b','c','d','e','f','g','h'];
+    const flip = myColor === 'b';
+    const order = [...Array(8).keys()];
+    const rowOrder = flip ? [...order].reverse() : order;
+    const colOrder = flip ? [...order].reverse() : order;
+
+    let legalTargets = new Set();
+    if (analysisSelectedSquare) {
+      const legalMoves = analysisChess.moves({ square: analysisSelectedSquare, verbose: true });
+      legalTargets = new Set(legalMoves.map(mv => mv.to));
+    }
+
+    rowOrder.forEach(r => {
+      colOrder.forEach(c => {
+        const piece = boardArray[r][c];
+        const sq = files[c] + (8 - r);
+        const cell = document.createElement('div');
+        cell.className = 'sq ' + (((r + c) % 2 === 0) ? 'light' : 'dark');
+        if (analysisSelectedSquare === sq) cell.classList.add('selected');
+        if (legalTargets.has(sq)) cell.classList.add(piece ? 'hint-capture' : 'hint-move');
+        if (colOrder.indexOf(c) === 0) {
+          const rankLabel = document.createElement('span');
+          rankLabel.className = 'sq-label rank-label';
+          rankLabel.textContent = 8 - r;
+          cell.appendChild(rankLabel);
+        }
+        if (rowOrder.indexOf(r) === rowOrder.length - 1) {
+          const fileLabel = document.createElement('span');
+          fileLabel.className = 'sq-label file-label';
+          fileLabel.textContent = files[c];
+          cell.appendChild(fileLabel);
+        }
+        if (piece) {
+          const img = document.createElement('img');
+          img.src = PIECE_IMG[piece.color + piece.type.toUpperCase()];
+          img.style.width = '100%'; img.style.height = '100%'; img.style.pointerEvents = 'none';
+          cell.appendChild(img);
+        }
+        cell.onclick = () => onAnalysisSquareClick(sq);
+        boardEl.appendChild(cell);
+      });
+    });
+  }
+
+  function onAnalysisSquareClick(sq) {
+    if (!analysisChess) return;
+    if (!analysisSelectedSquare) {
+      const piece = analysisChess.get(sq);
+      if (piece) analysisSelectedSquare = sq;
+      renderAnalysisBoard();
+    } else {
+      const move = analysisChess.move({ from: analysisSelectedSquare, to: sq, promotion: 'q' });
+      analysisSelectedSquare = null;
+      if (!move) {
+        // 移動できなければ、選び直しとして扱う(別の自分の駒を選び直せるように)
+        const piece = analysisChess.get(sq);
+        if (piece) analysisSelectedSquare = sq;
+      }
+      renderAnalysisBoard();
+    }
+  }
+
+  document.getElementById('analysisToggleBtn').onclick = () => {
+    const panel = document.getElementById('analysisPanel');
+    const opening = panel.style.display === 'none';
+    panel.style.display = opening ? 'block' : 'none';
+    if (opening) {
+      analysisChess = new Chess(gameChess.fen());
+      analysisSelectedSquare = null;
+      renderAnalysisBoard();
+    }
+  };
+  document.getElementById('analysisResetBtn').onclick = () => {
+    if (!gameChess) return;
+    analysisChess = new Chess(gameChess.fen());
+    analysisSelectedSquare = null;
+    renderAnalysisBoard();
+  };
+  document.getElementById('analysisCloseBtn').onclick = () => {
+    document.getElementById('analysisPanel').style.display = 'none';
+  };
+  document.getElementById('analysisHintBtn').onclick = () => {
+    if (!analysisChess) return;
+    const hintEl = document.getElementById('analysisHintText');
+    if (analysisChess.game_over()) {
+      hintEl.textContent = LANG === 'ja' ? 'この局面はすでに終局しています。' : 'This position is already game over.';
+      return;
+    }
+    // 既存のAI対局用ロジック(2手先読み)を、手番側の候補手表示に流用
+    const turnColor = analysisChess.turn();
+    const suggestion = aiPickMove(analysisChess, 'hard', turnColor);
+    if (suggestion) {
+      const whoLabel = turnColor === 'w' ? (LANG === 'ja' ? '白' : 'White') : (LANG === 'ja' ? '黒' : 'Black');
+      hintEl.textContent = (LANG === 'ja' ? '💡 候補手(' : '💡 Suggested move (') + whoLabel + (LANG === 'ja' ? '番): ' : '): ') + suggestion.san;
+    }
+  };
+
   function renderMiniBoard(m, user, matchId) {
     const boardEl = document.getElementById('miniBoard');
     boardEl.innerHTML = '';
@@ -1012,6 +1388,7 @@ const PIECE_IMG = {
         ? (LANG === 'ja' ? '時間切れで勝ちました！' : 'You won on time!')
         : (LANG === 'ja' ? '時間切れで負けました。' : 'You lost on time.');
       applyEloIfNeeded(matchId, m, user, wonByTimeout ? 1 : 0);
+      applyAnalysisIfNeeded(matchId, m, user, wonByTimeout ? 1 : 0);
     } else if (gameChess.game_over()) {
       let resultMsg;
       if (gameChess.in_checkmate()) {
@@ -1019,9 +1396,11 @@ const PIECE_IMG = {
         const iWon = winnerColor === myColor;
         resultMsg = iWon ? (LANG === 'ja' ? '勝ちました！' : 'You won!') : (LANG === 'ja' ? '負けました。' : 'You lost.');
         applyEloIfNeeded(matchId, m, user, iWon ? 1 : 0);
+        applyAnalysisIfNeeded(matchId, m, user, iWon ? 1 : 0);
       } else {
         resultMsg = LANG === 'ja' ? '引き分けです。' : "It's a draw.";
         applyEloIfNeeded(matchId, m, user, 0.5);
+        applyAnalysisIfNeeded(matchId, m, user, 0.5);
       }
       statusEl.textContent = resultMsg;
     } else {
@@ -1114,11 +1493,16 @@ const PIECE_IMG = {
           });
           return;
         }
-        const newTime = remainingAfterMove + (m.increment || 0);
+        const CORRESPONDENCE_PER_MOVE_MS = 3 * 24 * 60 * 60 * 1000;
+        const newTime = m.timeControl === 'correspondence'
+          ? CORRESPONDENCE_PER_MOVE_MS
+          : remainingAfterMove + (m.increment || 0);
+        const moveHistory = (m.moves || []).concat([{ san: move.san, color: move.color, captured: move.captured || null }]);
         await set(ref(db, 'matches/' + matchId), {
           ...m, fen: gameChess.fen(), turn: gameChess.turn(),
           [myTimeKey]: newTime, turnStartedAt: Date.now(),
-          lastMove: { from: move.from, to: move.to }
+          lastMove: { from: move.from, to: move.to },
+          moves: moveHistory
         });
       } else {
         renderMiniBoard(m, user, matchId);
@@ -1190,7 +1574,7 @@ const PIECE_IMG = {
       } else {
         currentName = user.displayName || '';
         await set(ref(db, 'users/' + user.uid), { username: currentName, email: user.email, photoURL: user.photoURL || '' });
-        await set(ref(db, 'publicProfiles/' + user.uid), { username: currentName });
+        await set(ref(db, 'publicProfiles/' + user.uid), { username: currentName, founderMember: true, foundedAt: Date.now() });
         await set(ref(db, 'usernames/' + normName(currentName)), user.uid);
       }
       document.getElementById('profileUsername').textContent = currentName;
@@ -1198,6 +1582,7 @@ const PIECE_IMG = {
       onValue(ref(db, 'publicProfiles/' + user.uid), (s) => {
         const p = s.val() || {};
         document.getElementById('profileRating').textContent = p.rating || 1200;
+        renderAnalysis(p.analysis || {}, p.rating || 1200);
       });
 
       curUser = user;
