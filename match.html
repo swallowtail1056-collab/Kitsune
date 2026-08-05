@@ -64,7 +64,7 @@ img#profilePhoto { border:2px solid var(--brown); border-radius:50%; width:60px;
 .sq.light { background:#d4b87a; }
 .sq.dark { background:#7a5230; }
 .sq.selected { outline:3px solid #e8c84a; outline-offset:-3px; }
-.sq.last-move::before { content:''; position:absolute; top:4px; left:4px; width:16%; height:16%; border-radius:50%; background:rgba(80,40,0,0.5); z-index:3; }
+.sq.last-move { background-color:rgba(232,200,74,0.35) !important; }
 .sq.hint-move::after { content:''; position:absolute; width:28%; height:28%; border-radius:50%; background:rgba(80,40,0,0.35); pointer-events:none; }
 .sq.hint-capture::after { content:''; position:absolute; width:100%; height:100%; border-radius:50%; box-sizing:border-box; border:4px solid rgba(80,40,0,0.35); pointer-events:none; }
 #miniBoard { display:grid; grid-template-columns:repeat(8,1fr); grid-template-rows:repeat(8,1fr); width:100%; max-width:400px; aspect-ratio:1; margin:0 auto; border:2px solid var(--brown); }
@@ -187,6 +187,7 @@ details[open] summary::before { content:'▾ '; }
     <p><strong data-ja="対局中" data-en="Current Match">対局中</strong></p>
     <p id="gameStatus"></p>
     <p id="gameClock" style="font-weight:700;color:var(--brown-dark);"></p>
+    <p id="capturedArea" style="font-size:1.1rem;"></p>
     <div id="miniBoard"></div>
     <button id="leaveMatchBtn" data-ja="対局を退出する" data-en="Leave Match" style="margin-top:10px;">対局を退出する</button>
     <button id="matchChatToggle" data-ja="💬 チャット" data-en="💬 Chat" style="margin-top:10px;">💬 チャット</button>
@@ -597,7 +598,7 @@ details[open] summary::before { content:'▾ '; }
       return;
     }
     await set(ref(db, 'users/' + user.uid), { username: name, email: user.email, photoURL: user.photoURL || '' });
-    await set(ref(db, 'publicProfiles/' + user.uid), { username: name });
+    await update(ref(db, 'publicProfiles/' + user.uid), { username: name });
     await set(ref(db, 'usernames/' + key), user.uid);
     document.getElementById('profileUsername').textContent = name;
     const msg = document.getElementById('saveMsg');
@@ -1419,6 +1420,34 @@ const PIECE_IMG = {
       clockEl.textContent = tcLabel + incLabel + '　' +
         (LANG === 'ja' ? '相手 ' : 'Opponent ') + fmtTime(oppTime) + '　|　' +
         (LANG === 'ja' ? '自分 ' : 'You ') + fmtTime(myTime);
+    }
+
+    const capturedEl = document.getElementById('capturedArea');
+    if (capturedEl) {
+      const CAPTURED_SYMBOL = { p:'♟', n:'♞', b:'♝', r:'♜', q:'♛' };
+      const moves = m.moves || [];
+      const byWhite = {}, byBlack = {}; // 白番/黒番が「取った」相手の駒種別カウント
+      let whiteVal = 0, blackVal = 0;
+      moves.forEach(mv => {
+        if (!mv.captured) return;
+        const val = AI_PIECE_VAL[mv.captured] || 0;
+        if (mv.color === 'w') { byWhite[mv.captured] = (byWhite[mv.captured] || 0) + 1; whiteVal += val; }
+        else { byBlack[mv.captured] = (byBlack[mv.captured] || 0) + 1; blackVal += val; }
+      });
+      const myTaken = myColor === 'w' ? byWhite : byBlack;
+      const oppTaken = myColor === 'w' ? byBlack : byWhite;
+      const myVal = myColor === 'w' ? whiteVal : blackVal;
+      const oppVal = myColor === 'w' ? blackVal : whiteVal;
+      const diff = myVal - oppVal;
+
+      const fmtTaken = (obj) => Object.entries(obj).map(([type, n]) => CAPTURED_SYMBOL[type] + (n > 1 ? '×' + n : '')).join(' ');
+      const myLine = (LANG === 'ja' ? '自分が取った駒: ' : 'You captured: ') + (fmtTaken(myTaken) || '-') + (diff > 0 ? ' (+' + diff + ')' : '');
+      const oppLine = (LANG === 'ja' ? '相手が取った駒: ' : 'Opponent captured: ') + (fmtTaken(oppTaken) || '-') + (diff < 0 ? ' (+' + (-diff) + ')' : '');
+      capturedEl.innerHTML = '';
+      const p1 = document.createElement('div'); p1.textContent = myLine;
+      const p2 = document.createElement('div'); p2.textContent = oppLine;
+      capturedEl.appendChild(p1);
+      capturedEl.appendChild(p2);
     }
 
     const boardArray = gameChess.board();
