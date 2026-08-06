@@ -1692,12 +1692,26 @@ const PIECE_IMG = {
 
   // ===== Stockfish(自前ホスティング、詳細レポート専用) =====
   let sfWorker = null;
+  let sfWorkerFailed = false;
   let sfQueue = [];
   let sfLastScore = null;
 
   function getStockfishWorker() {
     if (sfWorker) return sfWorker;
-    sfWorker = new Worker('stockfish/stockfish-18-lite-single.js');
+    try {
+      sfWorker = new Worker('stockfish/stockfish-18-lite-single.js');
+    } catch (e) {
+      sfWorkerFailed = true;
+      return null;
+    }
+    sfWorker.onerror = () => {
+      sfWorkerFailed = true;
+      // 待機中の問い合わせを全て解放し、レポートが止まったままにならないようにする
+      while (sfQueue.length) {
+        const resolver = sfQueue.shift();
+        resolver({ uci: null, score: 0 });
+      }
+    };
     sfWorker.onmessage = (e) => {
       const line = typeof e.data === 'string' ? e.data : '';
       if (!line) return;
@@ -1724,9 +1738,18 @@ const PIECE_IMG = {
   function stockfishEval(fen, movetimeMs) {
     return new Promise((resolve) => {
       const worker = getStockfishWorker();
-      sfQueue.push(resolve);
+      if (!worker || sfWorkerFailed) { resolve({ uci: null, score: 0 }); return; }
+      let settled = false;
+      const wrappedResolve = (result) => {
+        if (settled) return;
+        settled = true;
+        resolve(result);
+      };
+      sfQueue.push(wrappedResolve);
       worker.postMessage('position fen ' + fen);
       worker.postMessage('go movetime ' + (movetimeMs || 250));
+      // 安全策:規定時間内に応答がなければ、詰まらせずに諦めて先に進む
+      setTimeout(() => wrappedResolve({ uci: null, score: 0 }), (movetimeMs || 250) + 3000);
     });
   }
 
