@@ -64,7 +64,7 @@ img#profilePhoto { border:2px solid var(--brown); border-radius:50%; width:60px;
 .sq.light { background:#d4b87a; }
 .sq.dark { background:#7a5230; }
 .sq.selected { outline:3px solid #e8c84a; outline-offset:-3px; }
-.sq.last-move::after { content:''; position:absolute; width:32%; height:32%; border-radius:50%; background:rgba(232,200,74,0.45); pointer-events:none; z-index:2; }
+.sq.last-move { background-color:rgba(206,210,107,0.55) !important; }
 .sq.hint-move::after { content:''; position:absolute; width:28%; height:28%; border-radius:50%; background:rgba(80,40,0,0.35); pointer-events:none; }
 .sq.hint-capture::after { content:''; position:absolute; width:100%; height:100%; border-radius:50%; box-sizing:border-box; border:4px solid rgba(80,40,0,0.35); pointer-events:none; }
 #miniBoard { display:grid; grid-template-columns:repeat(8,1fr); grid-template-rows:repeat(8,1fr); width:100%; max-width:400px; aspect-ratio:1; margin:0 auto; border:2px solid var(--brown); }
@@ -223,6 +223,12 @@ details[open] summary::before { content:'▾ '; }
         <button id="historyNextBtn"><span data-ja="次の手" data-en="Next">次の手</span> ▶</button>
       </div>
       <button id="historyCloseBtn" data-ja="履歴を閉じる" data-en="Close History" style="margin-top:8px;">履歴を閉じる</button>
+    </div>
+    <button id="reportToggleBtn" style="display:none;margin-top:10px;" data-ja="🔬 詳細な振り返りレポート" data-en="🔬 Detailed Review Report">🔬 詳細な振り返りレポート</button>
+    <div id="reportPanel" style="display:none;margin-top:10px;">
+      <p style="font-size:0.8rem;color:var(--text-muted);" data-ja="自分の手を1手ずつAIが簡易チェックします。あくまで参考程度にご覧ください。" data-en="A simple AI check of each of your moves. Please treat this as a rough guide only.">自分の手を1手ずつAIが簡易チェックします。あくまで参考程度にご覧ください。</p>
+      <div id="reportList" style="max-height:260px;overflow-y:auto;background:var(--input-bg);border:1px solid rgba(124,74,30,0.3);border-radius:6px;padding:8px;font-size:0.85rem;"></div>
+      <button id="reportCloseBtn" data-ja="レポートを閉じる" data-en="Close Report" style="margin-top:8px;">レポートを閉じる</button>
     </div>
   </div>
 </div>
@@ -1352,7 +1358,8 @@ const PIECE_IMG = {
     const draws = (myProfile.draws || 0) + (myResult === 0.5 ? 1 : 0);
 
     await update(ref(db, 'publicProfiles/' + user.uid), { rating: newRating, wins, losses, draws });
-    await update(ref(db, 'matches/' + matchId), { [flagField]: true });
+    const deltaField = myColor === 'w' ? 'eloDeltaWhite' : 'eloDeltaBlack';
+    await update(ref(db, 'matches/' + matchId), { [flagField]: true, [deltaField]: newRating - myRating });
   }
 
   const appliedAnalysisFor = new Set();
@@ -1585,6 +1592,82 @@ const PIECE_IMG = {
     document.getElementById('historyPanel').style.display = 'none';
   };
 
+  function generateDetailedReport(m) {
+    const moves = m.moves || [];
+    const replay = new Chess();
+    const report = [];
+    moves.forEach((mv, i) => {
+      if (mv.color !== myColor) { replay.move(mv.san); return; }
+      const beforeFen = replay.fen();
+      const before = new Chess(beforeFen);
+      const bestMove = aiPickMove(before, 'hard', myColor);
+      replay.move(mv.san);
+      const nextMv = moves[i + 1];
+      const hungAfter = nextMv && !mv.captured && nextMv.captured;
+
+      let tag, note;
+      if (hungAfter) {
+        tag = LANG === 'ja' ? '⚠️ この後、駒を取られています' : '⚠️ A piece was lost right after this';
+        note = (bestMove && bestMove.san !== mv.san)
+          ? (LANG === 'ja' ? 'こちらの方が安全でした: ' : 'This would have been safer: ') + bestMove.san
+          : '';
+      } else if (bestMove && bestMove.san !== mv.san && bestMove.captured && !mv.captured) {
+        tag = LANG === 'ja' ? '💡 もっと良い手があったかもしれません' : '💡 A better move may have been available';
+        note = (LANG === 'ja' ? '候補: ' : 'Candidate: ') + bestMove.san;
+      } else {
+        tag = LANG === 'ja' ? '✓ 問題なさそうです' : '✓ Looks reasonable';
+        note = '';
+      }
+      report.push({ moveNum: Math.floor(i / 2) + 1, san: mv.san, tag, note });
+    });
+    return report;
+  }
+
+  document.getElementById('reportToggleBtn').onclick = () => {
+    const panel = document.getElementById('reportPanel');
+    const opening = panel.style.display === 'none';
+    panel.style.display = opening ? 'block' : 'none';
+    if (opening && latestMatchData) {
+      const listEl = document.getElementById('reportList');
+      listEl.innerHTML = LANG === 'ja' ? '計算中...' : 'Calculating...';
+      setTimeout(() => {
+        const report = generateDetailedReport(latestMatchData);
+        listEl.innerHTML = '';
+
+        const deltaField = myColor === 'w' ? 'eloDeltaWhite' : 'eloDeltaBlack';
+        const delta = latestMatchData[deltaField];
+        if (typeof delta === 'number') {
+          const deltaLine = document.createElement('p');
+          deltaLine.style.fontWeight = '700';
+          deltaLine.style.marginBottom = '6px';
+          deltaLine.textContent = (LANG === 'ja' ? '今回の対局でのレーティング変動: ' : 'Rating change from this game: ') + (delta >= 0 ? '+' : '') + delta;
+          listEl.appendChild(deltaLine);
+        }
+        const issueCount = report.filter(r => r.tag.indexOf('✓') === -1).length;
+        const summaryLine = document.createElement('p');
+        summaryLine.style.cssText = 'margin-bottom:10px;padding:6px 8px;background:rgba(184,134,11,0.12);border-left:3px solid var(--brown);border-radius:4px;';
+        summaryLine.textContent = LANG === 'ja'
+          ? '自分の手' + report.length + '手中、' + issueCount + '手に見直したいポイントがありました。'
+          : 'Out of ' + report.length + ' of your moves, ' + issueCount + ' had points worth reviewing.';
+        listEl.appendChild(summaryLine);
+
+        if (report.length === 0) {
+          listEl.appendChild(document.createTextNode(LANG === 'ja' ? '振り返る手がありません。' : 'No moves to review.'));
+          return;
+        }
+        report.forEach(r => {
+          const line = document.createElement('div');
+          line.style.marginBottom = '6px';
+          line.textContent = r.moveNum + '. ' + r.san + '　' + r.tag + (r.note ? '(' + r.note + ')' : '');
+          listEl.appendChild(line);
+        });
+      }, 30);
+    }
+  };
+  document.getElementById('reportCloseBtn').onclick = () => {
+    document.getElementById('reportPanel').style.display = 'none';
+  };
+
   function renderMiniBoard(m, user, matchId) {
     latestMatchData = m;
     const boardEl = document.getElementById('miniBoard');
@@ -1620,6 +1703,7 @@ const PIECE_IMG = {
         : (LANG === 'ja' ? '時間切れで負けました。' : 'You lost on time.');
       applyEloIfNeeded(matchId, m, user, wonByTimeout ? 1 : 0);
       applyAnalysisIfNeeded(matchId, m, user, wonByTimeout ? 1 : 0);
+      document.getElementById('reportToggleBtn').style.display = 'inline-block';
     } else if (gameChess.game_over()) {
       let resultMsg;
       if (gameChess.in_checkmate()) {
@@ -1634,9 +1718,11 @@ const PIECE_IMG = {
         applyAnalysisIfNeeded(matchId, m, user, 0.5);
       }
       statusEl.textContent = resultMsg;
+      document.getElementById('reportToggleBtn').style.display = 'inline-block';
     } else {
       statusEl.textContent = (LANG === 'ja' ? '対戦相手: ' : 'Opponent: ') + oppName + ' | ' +
         (myTurn ? (LANG === 'ja' ? 'あなたの番です' : 'Your turn') : (LANG === 'ja' ? '相手の番です' : "Opponent's turn"));
+      document.getElementById('reportToggleBtn').style.display = 'none';
     }
 
     if (clockEl) {
