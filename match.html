@@ -131,6 +131,12 @@ details[open] summary::before { content:'▾ '; }
       </div>
       <button id="aiHistoryCloseBtn" data-ja="履歴を閉じる" data-en="Close History" style="margin-top:8px;">履歴を閉じる</button>
     </div>
+    <button id="aiReportToggleBtn" style="display:none;margin-top:10px;" data-ja="🔬 詳細な振り返りレポート" data-en="🔬 Detailed Review Report">🔬 詳細な振り返りレポート</button>
+    <div id="aiReportPanel" style="display:none;margin-top:10px;">
+      <p style="font-size:0.8rem;color:var(--text-muted);" data-ja="自分の手を1手ずつStockfishが解析します。あくまで参考程度にご覧ください。" data-en="A Stockfish check of each of your moves. Please treat this as a rough guide only.">自分の手を1手ずつStockfishが解析します。あくまで参考程度にご覧ください。</p>
+      <div id="aiReportList" style="max-height:260px;overflow-y:auto;background:var(--input-bg);border:1px solid rgba(124,74,30,0.3);border-radius:6px;padding:8px;font-size:0.85rem;"></div>
+      <button id="aiReportCloseBtn" data-ja="レポートを閉じる" data-en="Close Report" style="margin-top:8px;">レポートを閉じる</button>
+    </div>
   </div>
 </div>
 
@@ -152,7 +158,7 @@ details[open] summary::before { content:'▾ '; }
     <p><span data-ja="ユーザー名: " data-en="Username: ">ユーザー名: </span><span id="profileUsername">-</span></p>
     <p><span data-ja="レーティング: " data-en="Rating: ">レーティング: </span><span id="profileRating">1200</span></p>
     <p><span data-ja="先行登録者特典: " data-en="Founding Member: ">先行登録者特典: </span><span id="profileFounder">-</span></p>
-    <button id="claimFounderBtn" data-ja="先行登録者特典を有効にする" data-en="Claim Founding Member Status" style="margin-top:6px;font-size:0.85rem;">先行登録者特典を有効にする</button>
+    <button id="resetRatingBtn" data-ja="レーティングを1200にリセット" data-en="Reset Rating to 1200" style="margin-top:6px;font-size:0.85rem;background:#a3692d;">レーティングを1200にリセット</button>
     <img id="profilePhoto" src="" alt="avatar">
   </div>
 
@@ -265,6 +271,7 @@ details[open] summary::before { content:'▾ '; }
   const db = getDatabase(app);
   const provider = new GoogleAuthProvider();
 
+  const FOUNDER_CUTOFF = new Date('2026-10-01T00:00:00+09:00').getTime();
   let LANG = localStorage.getItem('selectedLang') === 'ja' ? 'ja' : 'en';
   function applyLang() {
     document.querySelectorAll('[data-ja]').forEach(el => { el.textContent = LANG === 'ja' ? el.dataset.ja : el.dataset.en; });
@@ -505,10 +512,12 @@ details[open] summary::before { content:'▾ '; }
       } else {
         statusEl.textContent = LANG === 'ja' ? '引き分けです。' : "It's a draw.";
       }
+      document.getElementById('aiReportToggleBtn').style.display = 'inline-block';
     } else {
       statusEl.textContent = aiChess.turn() === 'w'
         ? (LANG === 'ja' ? 'あなたの番です' : 'Your turn')
         : (LANG === 'ja' ? 'AIが考え中...' : 'AI is thinking...');
+      document.getElementById('aiReportToggleBtn').style.display = 'none';
     }
 
     const aiCapturedEl = document.getElementById('aiCapturedArea');
@@ -665,6 +674,77 @@ details[open] summary::before { content:'▾ '; }
     document.getElementById('aiHistoryPanel').style.display = 'none';
   };
 
+  async function generateAiDetailedReport(onProgress) {
+    const moves = aiMoveHistory || [];
+    const replay = new Chess();
+    const report = [];
+    for (let i = 0; i < moves.length; i++) {
+      const mv = moves[i];
+      if (mv.color !== 'w') { replay.move(mv.san); continue; }
+      const beforeFen = replay.fen();
+
+      const bestResult = await stockfishEval(beforeFen, 10);
+      const bestSan = uciToSan(beforeFen, bestResult.uci);
+      const bestScore = (typeof bestResult.score === 'number') ? bestResult.score : 0;
+
+      replay.move(mv.san);
+      const afterFen = replay.fen();
+      const afterResult = await stockfishEval(afterFen, 10);
+      const afterScoreForOpponent = (typeof afterResult.score === 'number') ? afterResult.score : 0;
+      const myScoreAfterMyMove = -afterScoreForOpponent;
+
+      const centipawnLoss = Math.max(0, bestScore - myScoreAfterMyMove);
+
+      let tag;
+      if (centipawnLoss >= 300) tag = LANG === 'ja' ? '❌ 大きなミス' : '❌ Blunder';
+      else if (centipawnLoss >= 150) tag = LANG === 'ja' ? '⚠️ ミス' : '⚠️ Mistake';
+      else if (centipawnLoss >= 50) tag = LANG === 'ja' ? '💡 やや改善の余地あり' : '💡 Slight inaccuracy';
+      else tag = LANG === 'ja' ? '✓ 良い手です' : '✓ Good move';
+
+      const note = (bestSan && bestSan !== mv.san && centipawnLoss >= 50)
+        ? (LANG === 'ja' ? '候補: ' : 'Candidate: ') + bestSan
+        : '';
+
+      report.push({ moveNum: Math.floor(i / 2) + 1, san: mv.san, tag, note });
+      if (onProgress) onProgress(report.length);
+    }
+    return report;
+  }
+
+  document.getElementById('aiReportToggleBtn').onclick = async () => {
+    const panel = document.getElementById('aiReportPanel');
+    const opening = panel.style.display === 'none';
+    panel.style.display = opening ? 'block' : 'none';
+    if (opening) {
+      const listEl = document.getElementById('aiReportList');
+      listEl.innerHTML = LANG === 'ja' ? 'Stockfishで計算中... (0)' : 'Calculating with Stockfish... (0)';
+      const report = await generateAiDetailedReport((done) => {
+        listEl.innerHTML = (LANG === 'ja' ? 'Stockfishで計算中... (' : 'Calculating with Stockfish... (') + done + ')';
+      });
+      listEl.innerHTML = '';
+      const issueCount = report.filter(r => r.tag.indexOf('✓') === -1).length;
+      const summaryLine = document.createElement('p');
+      summaryLine.style.cssText = 'margin-bottom:10px;padding:6px 8px;background:rgba(184,134,11,0.12);border-left:3px solid var(--brown);border-radius:4px;';
+      summaryLine.textContent = LANG === 'ja'
+        ? '自分の手' + report.length + '手中、' + issueCount + '手に見直したいポイントがありました。'
+        : 'Out of ' + report.length + ' of your moves, ' + issueCount + ' had points worth reviewing.';
+      listEl.appendChild(summaryLine);
+      if (report.length === 0) {
+        listEl.appendChild(document.createTextNode(LANG === 'ja' ? '振り返る手がありません。' : 'No moves to review.'));
+      } else {
+        report.forEach(r => {
+          const line = document.createElement('div');
+          line.style.marginBottom = '6px';
+          line.textContent = r.moveNum + '. ' + r.san + '　' + r.tag + (r.note ? '(' + r.note + ')' : '');
+          listEl.appendChild(line);
+        });
+      }
+    }
+  };
+  document.getElementById('aiReportCloseBtn').onclick = () => {
+    document.getElementById('aiReportPanel').style.display = 'none';
+  };
+
   function startAiGame(difficulty) {
     aiDifficulty = difficulty;
     aiChess = new Chess();
@@ -673,6 +753,7 @@ details[open] summary::before { content:'▾ '; }
     aiMoveHistory = [];
     aiHistoryIndex = 0;
     document.getElementById('aiHistoryPanel').style.display = 'none';
+    document.getElementById('aiReportPanel').style.display = 'none';
     document.getElementById('aiDifficultyPanel').style.display = 'none';
     document.getElementById('aiGameArea').style.display = 'block';
     renderAiBoard();
@@ -692,12 +773,16 @@ details[open] summary::before { content:'▾ '; }
   };
   document.getElementById('logoutBtn').onclick = () => signOut(auth);
 
-  document.getElementById('claimFounderBtn').onclick = async () => {
+  document.getElementById('resetRatingBtn').onclick = async () => {
     const user = auth.currentUser;
     if (!user) return;
+    const confirmMsg = LANG === 'ja'
+      ? 'レーティングを1200に、勝敗数を0にリセットします。よろしいですか？'
+      : 'This will reset your rating to 1200 and your win/loss/draw counts to 0. Continue?';
+    if (!confirm(confirmMsg)) return;
     try {
-      await update(ref(db, 'publicProfiles/' + user.uid), { founderMember: true, foundedAt: Date.now() });
-      alert(LANG === 'ja' ? '先行登録者特典を有効にしました。' : 'Founding member status activated.');
+      await update(ref(db, 'publicProfiles/' + user.uid), { rating: 1200, wins: 0, losses: 0, draws: 0 });
+      alert(LANG === 'ja' ? 'リセットしました。' : 'Reset complete.');
     } catch (e) {
       alert((LANG === 'ja' ? 'エラーが発生しました: ' : 'An error occurred: ') + e.message);
     }
@@ -1993,7 +2078,7 @@ const PIECE_IMG = {
       } else {
         currentName = user.displayName || '';
         await set(ref(db, 'users/' + user.uid), { username: currentName, email: user.email, photoURL: user.photoURL || '' });
-        await set(ref(db, 'publicProfiles/' + user.uid), { username: currentName, founderMember: true, foundedAt: Date.now() });
+        await set(ref(db, 'publicProfiles/' + user.uid), { username: currentName, founderMember: Date.now() < FOUNDER_CUTOFF, foundedAt: Date.now() });
         await set(ref(db, 'usernames/' + normName(currentName)), user.uid);
       }
       document.getElementById('profileUsername').textContent = currentName;
