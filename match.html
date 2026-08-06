@@ -908,6 +908,15 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       document.getElementById('saveMsg').className = 'err';
       return;
     }
+    // 名前を変更した場合、古いusernamesの記録が残らないよう削除する
+    const oldProfileSnap = await get(ref(db, 'users/' + user.uid));
+    const oldName = oldProfileSnap.exists() ? oldProfileSnap.val().username : null;
+    if (oldName) {
+      const oldKey = normName(oldName);
+      if (oldKey !== key) {
+        await remove(ref(db, 'usernames/' + oldKey));
+      }
+    }
     await set(ref(db, 'users/' + user.uid), { username: name, email: user.email, photoURL: user.photoURL || '' });
     await update(ref(db, 'publicProfiles/' + user.uid), { username: name });
     await set(ref(db, 'usernames/' + key), user.uid);
