@@ -1414,12 +1414,13 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           blackName: iAmWhite ? info.username : myName,
           fen: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1',
           turn: 'w',
-          status: 'active',
+          status: 'waiting',
           timeControl: timeControl,
           increment: incMs,
           whiteTime: baseMs,
           blackTime: baseMs,
-          turnStartedAt: Date.now()
+          whiteJoined: false,
+          blackJoined: false
         });
         await set(ref(db, 'currentMatch/' + user.uid), matchId);
         await set(ref(db, 'currentMatch/' + fromUid), matchId);
@@ -1459,11 +1460,24 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       document.getElementById('gameBox').style.display = 'block';
       document.getElementById('lobbyArea').style.display = 'none';
       startClockTicker(user);
-      onValue(ref(db, 'matches/' + matchId), (matchSnap) => {
+      let joinFlagSet = false;
+      onValue(ref(db, 'matches/' + matchId), async (matchSnap) => {
         const m = matchSnap.val();
         if (!m) return;
         myColor = (m.white === user.uid) ? 'w' : 'b';
         gameChess = new Chess(m.fen);
+
+        if (!joinFlagSet) {
+          joinFlagSet = true;
+          const joinField = myColor === 'w' ? 'whiteJoined' : 'blackJoined';
+          if (!m[joinField]) {
+            await update(ref(db, 'matches/' + matchId), { [joinField]: true });
+          }
+        }
+        if (m.status === 'waiting' && m.whiteJoined && m.blackJoined) {
+          await update(ref(db, 'matches/' + matchId), { status: 'active', turnStartedAt: Date.now() });
+        }
+
         renderMiniBoard(m, user, matchId);
       });
     });
@@ -2015,7 +2029,12 @@ const PIECE_IMG = {
       }
     }
 
-    if (m.status === 'timeout') {
+    if (m.status === 'waiting') {
+      const oppJoined = myColor === 'w' ? m.blackJoined : m.whiteJoined;
+      statusEl.textContent = oppJoined
+        ? (LANG === 'ja' ? 'まもなく開始します...' : 'Starting shortly...')
+        : (LANG === 'ja' ? '相手がまだ入室していません。しばらくお待ちください。' : "Waiting for your opponent to join. The clock hasn't started yet.");
+    } else if (m.status === 'timeout') {
       const wonByTimeout = m.winner === myColor;
       statusEl.textContent = wonByTimeout
         ? (LANG === 'ja' ? '時間切れで勝ちました！' : 'You won on time!')
