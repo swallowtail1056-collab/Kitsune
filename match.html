@@ -105,9 +105,9 @@ details[open] summary::before { content:'▾ '; }
    対局モードは「実力を試す場」、トップページの練習モードは「オープニングの手順を体に染み込ませる場」と考えると分かりやすいです。まずは練習モードで狙っているオープニング(例えばシシリアン・ディフェンスやルイ・ロペスなど)の定跡を繰り返し練習し、手順を体に覚え込ませます。その上で対局モードに移り、実際の相手を前にして試してみるのがおすすめの流れです。練習で覚えた通りに局面へ持ち込めるか、相手がどう応じてくるか、実戦の中でしか得られない発見がたくさんあります。オープニングを暗記するだけで終わらせず、実際に指して初めて、本当の意味での理解につながります。</p>
 
 <h2 data-ja="🤖 AIの難易度について" data-en="🤖 About AI Difficulty">🤖 AIの難易度について</h2>
-<p data-ja="友達同士のオンライン対局に加えて、コンピューター(AI)を相手にした一人での対局モードもすでに実装済みです。初級・中級・上級の3段階の難易度から選べ、ログイン不要でいつでもすぐに始められます。初級はランダムに手を指し、中級は駒を取れる手を優先し、上級は数手先まで読んで手を選びます。友達がまだオンラインでない時間帯でも、AI相手に気軽に実戦形式の練習ができます。持ち時間(Rapid・Blitz・Bullet、固定時間・インクリメントありから選択可)、対局数・勝敗記録・Eloレーティングもあわせて実装済みで、KitsuneChessの対局モードは今後も少しずつ機能を充実させていく予定です。"
-   data-en="Alongside online play against friends, a single-player mode against a computer (AI) opponent is already live. Choose from three difficulty levels — Beginner, Intermediate, and Advanced — and jump in instantly with no login required. Beginner plays random moves, Intermediate prioritizes capturing pieces, and Advanced looks a few moves ahead before choosing. This means you can get real match-style practice even when none of your friends are online. Time controls (Rapid, Blitz, and Bullet, with a choice of fixed time or increment), match history, win/loss records, and an Elo rating system are also live. Match Mode will keep growing with more features over time.">
-   友達同士のオンライン対局に加えて、コンピューター(AI)を相手にした一人での対局モードもすでに実装済みです。初級・中級・上級の3段階の難易度から選べ、ログイン不要でいつでもすぐに始められます。初級はランダムに手を指し、中級は駒を取れる手を優先し、上級は数手先まで読んで手を選びます。友達がまだオンラインでない時間帯でも、AI相手に気軽に実戦形式の練習ができます。持ち時間(Rapid・Blitz・Bullet、固定時間・インクリメントありから選択可)、対局数・勝敗記録・Eloレーティングもあわせて実装済みで、KitsuneChessの対局モードは今後も少しずつ機能を充実させていく予定です。</p>
+<p data-ja="友達同士のオンライン対局に加えて、コンピューター(AI)を相手にした一人での対局モードもすでに実装済みです。初級・中級・上級の3段階の難易度から選べ、ログイン不要でいつでもすぐに始められます。初級はランダムに手を指し、中級は駒を取れる手を優先します。上級は本物のチェスエンジン(Stockfish)が指すので、かなり手強いです。友達がまだオンラインでない時間帯でも、AI相手に気軽に実戦形式の練習ができます。持ち時間(Rapid・Blitz・Bullet、固定時間・インクリメントありから選択可)、対局数・勝敗記録・Eloレーティングもあわせて実装済みで、KitsuneChessの対局モードは今後も少しずつ機能を充実させていく予定です。"
+   data-en="Alongside online play against friends, a single-player mode against a computer (AI) opponent is already live. Choose from three difficulty levels — Beginner, Intermediate, and Advanced — and jump in instantly with no login required. Beginner plays random moves, and Intermediate prioritizes capturing pieces. Advanced is powered by a real chess engine (Stockfish), so it plays a genuinely strong game. This means you can get real match-style practice even when none of your friends are online. Time controls (Rapid, Blitz, and Bullet, with a choice of fixed time or increment), match history, win/loss records, and an Elo rating system are also live. Match Mode will keep growing with more features over time.">
+   友達同士のオンライン対局に加えて、コンピューター(AI)を相手にした一人での対局モードもすでに実装済みです。初級・中級・上級の3段階の難易度から選べ、ログイン不要でいつでもすぐに始められます。初級はランダムに手を指し、中級は駒を取れる手を優先します。上級は本物のチェスエンジン(Stockfish)が指すので、かなり手強いです。友達がまだオンラインでない時間帯でも、AI相手に気軽に実戦形式の練習ができます。持ち時間(Rapid・Blitz・Bullet、固定時間・インクリメントありから選択可)、対局数・勝敗記録・Eloレーティングもあわせて実装済みで、KitsuneChessの対局モードは今後も少しずつ機能を充実させていく予定です。</p>
 </details>
 
 <div class="box" id="aiModeBox">
@@ -623,8 +623,10 @@ details[open] summary::before { content:'▾ '; }
       }
       renderAiBoard();
       if (move && !aiChess.game_over()) {
-        setTimeout(() => {
-          const aiMove = aiPickMove(aiChess, aiDifficulty);
+        setTimeout(async () => {
+          const aiMove = aiDifficulty === 'hard'
+            ? await stockfishPickMove(aiChess.fen(), 400)
+            : aiPickMove(aiChess, aiDifficulty);
           if (aiMove) {
             aiChess.move(aiMove);
             aiLastMove = { from: aiMove.from, to: aiMove.to };
@@ -682,6 +684,18 @@ details[open] summary::before { content:'▾ '; }
         cell.className = 'sq ' + (((r + c) % 2 === 0) ? 'light' : 'dark');
         if (showHighlight && (sq === aiHistoryHighlight.from || sq === aiHistoryHighlight.to)) {
           cell.classList.add('recommend-move');
+        }
+        if (c === 0) {
+          const rankLabel = document.createElement('span');
+          rankLabel.className = 'sq-label rank-label';
+          rankLabel.textContent = 8 - r;
+          cell.appendChild(rankLabel);
+        }
+        if (r === 7) {
+          const fileLabel = document.createElement('span');
+          fileLabel.className = 'sq-label file-label';
+          fileLabel.textContent = files[c];
+          cell.appendChild(fileLabel);
         }
         if (piece) {
           const img = document.createElement('img');
@@ -1742,6 +1756,18 @@ const PIECE_IMG = {
         if (showHighlight && (sq === historyHighlight.from || sq === historyHighlight.to)) {
           cell.classList.add('recommend-move');
         }
+        if (colOrder.indexOf(c) === 0) {
+          const rankLabel = document.createElement('span');
+          rankLabel.className = 'sq-label rank-label';
+          rankLabel.textContent = 8 - r;
+          cell.appendChild(rankLabel);
+        }
+        if (rowOrder.indexOf(r) === rowOrder.length - 1) {
+          const fileLabel = document.createElement('span');
+          fileLabel.className = 'sq-label file-label';
+          fileLabel.textContent = files[c];
+          cell.appendChild(fileLabel);
+        }
         if (piece) {
           const img = document.createElement('img');
           img.src = PIECE_IMG[piece.color + piece.type.toUpperCase()];
@@ -1846,6 +1872,15 @@ const PIECE_IMG = {
     const promotion = uci.length > 4 ? uci[4] : undefined;
     const move = chess.move({ from, to, promotion: promotion || 'q' });
     return move ? move.san : null;
+  }
+
+  async function stockfishPickMove(fen, movetimeMs) {
+    const result = await stockfishEval(fen, movetimeMs);
+    if (!result.uci || result.uci === '(none)') return null;
+    const chess = new Chess(fen);
+    const from = result.uci.slice(0, 2), to = result.uci.slice(2, 4);
+    const promotion = result.uci.length > 4 ? result.uci[4] : 'q';
+    return chess.move({ from, to, promotion });
   }
 
   async function generateDetailedReport(m, onProgress) {
