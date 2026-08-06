@@ -151,6 +151,8 @@ details[open] summary::before { content:'▾ '; }
     <p><span data-ja="メール: " data-en="Email: ">メール: </span><span id="profileEmail"></span></p>
     <p><span data-ja="ユーザー名: " data-en="Username: ">ユーザー名: </span><span id="profileUsername">-</span></p>
     <p><span data-ja="レーティング: " data-en="Rating: ">レーティング: </span><span id="profileRating">1200</span></p>
+    <p><span data-ja="先行登録者特典: " data-en="Founding Member: ">先行登録者特典: </span><span id="profileFounder">-</span></p>
+    <button id="claimFounderBtn" data-ja="先行登録者特典を有効にする" data-en="Claim Founding Member Status" style="margin-top:6px;font-size:0.85rem;">先行登録者特典を有効にする</button>
     <img id="profilePhoto" src="" alt="avatar">
   </div>
 
@@ -689,6 +691,17 @@ details[open] summary::before { content:'▾ '; }
     signInWithPopup(auth, provider).catch(err => { document.getElementById('status').textContent = 'Error: ' + err.message; });
   };
   document.getElementById('logoutBtn').onclick = () => signOut(auth);
+
+  document.getElementById('claimFounderBtn').onclick = async () => {
+    const user = auth.currentUser;
+    if (!user) return;
+    try {
+      await update(ref(db, 'publicProfiles/' + user.uid), { founderMember: true, foundedAt: Date.now() });
+      alert(LANG === 'ja' ? '先行登録者特典を有効にしました。' : 'Founding member status activated.');
+    } catch (e) {
+      alert((LANG === 'ja' ? 'エラーが発生しました: ' : 'An error occurred: ') + e.message);
+    }
+  };
 
   document.getElementById('deleteAccountBtn').onclick = async () => {
     const user = auth.currentUser;
@@ -1988,6 +2001,9 @@ const PIECE_IMG = {
       onValue(ref(db, 'publicProfiles/' + user.uid), (s) => {
         const p = s.val() || {};
         document.getElementById('profileRating').textContent = p.rating || 1200;
+        document.getElementById('profileFounder').textContent = p.founderMember
+          ? (LANG === 'ja' ? '有効です ✓' : 'Active ✓')
+          : (LANG === 'ja' ? '未設定' : 'Not set');
         latestAnalysisData = p.analysis || {};
         latestRatingData = p.rating || 1200;
         renderAnalysis(latestAnalysisData, latestRatingData);
