@@ -208,11 +208,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <div id="matchInvitesList"></div>
   </div>
 
-  <div style="height:24px;"></div>
-  <div class="box" style="border-color:#a33;">
-    <p><strong data-ja="⚠️ 危険な操作" data-en="⚠️ Danger Zone" style="color:#a33;">⚠️ 危険な操作</strong></p>
-    <p data-ja="友達関係・対局記録・レーティングなど、全てのデータが完全に消え、元に戻せません。" data-en="This permanently erases everything — friends, match history, rating — and cannot be undone.">友達関係・対局記録・レーティングなど、全てのデータが完全に消え、元に戻せません。</p>
-    <button id="deleteAccountBtn" style="background:#a33;margin-top:8px;" data-ja="アカウントを削除する" data-en="Delete My Account">アカウントを削除する</button>
+  <div style="height:24px;text-align:center;">
+    <a href="#" id="deleteAccountBtn" style="color:var(--text-muted);text-decoration:underline;font-size:0.8rem;" data-ja="アカウントを削除する" data-en="Delete My Account">アカウントを削除する</a>
   </div>
   </div>
 
@@ -863,7 +860,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     }
   };
 
-  document.getElementById('deleteAccountBtn').onclick = async () => {
+  document.getElementById('deleteAccountBtn').onclick = async (e) => {
+    e.preventDefault();
     const user = auth.currentUser;
     if (!user) return;
     const confirmMsg = LANG === 'ja'
