@@ -65,6 +65,8 @@ img#profilePhoto { border:2px solid var(--brown); border-radius:50%; width:60px;
 .sq.dark { background:#7a5230; }
 .sq.selected { outline:3px solid #e8c84a; outline-offset:-3px; }
 .sq.last-move { background-color:rgba(206,210,107,0.55) !important; }
+.sq.checkmate-king { background-color:rgba(200,30,30,0.65) !important; }
+.sq.recommend-move { outline:3px solid #2d8a3e; outline-offset:-3px; }
 .sq.hint-move::after { content:''; position:absolute; width:28%; height:28%; border-radius:50%; background:rgba(80,40,0,0.35); pointer-events:none; }
 .sq.hint-capture::after { content:''; position:absolute; width:100%; height:100%; border-radius:50%; box-sizing:border-box; border:4px solid rgba(80,40,0,0.35); pointer-events:none; }
 #miniBoard { display:grid; grid-template-columns:repeat(8,1fr); grid-template-rows:repeat(8,1fr); width:100%; max-width:400px; aspect-ratio:1; margin:0 auto; border:2px solid var(--brown); }
@@ -449,6 +451,19 @@ details[open] summary::before { content:'▾ '; }
   let aiDifficulty = 'easy';
   const AI_PIECE_VAL = { p: 1, n: 3, b: 3, r: 5, q: 9, k: 0 };
 
+  function findKingSquare(boardArray, color) {
+    const files = ['a','b','c','d','e','f','g','h'];
+    for (let r = 0; r < 8; r++) {
+      for (let c = 0; c < 8; c++) {
+        const piece = boardArray[r][c];
+        if (piece && piece.type === 'k' && piece.color === color) {
+          return files[c] + (8 - r);
+        }
+      }
+    }
+    return null;
+  }
+
   function aiEvaluateBoard(chess) {
     let score = 0;
     chess.board().forEach(row => row.forEach(sq => {
@@ -549,6 +564,9 @@ details[open] summary::before { content:'▾ '; }
       const legalMoves = aiChess.moves({ square: aiSelectedSquare, verbose: true });
       aiLegalTargets = new Set(legalMoves.map(mv => mv.to));
     }
+    const aiCheckmateKingSq = aiChess.in_checkmate()
+      ? findKingSquare(boardArray, aiChess.turn())
+      : null;
     for (let r = 0; r < 8; r++) {
       for (let c = 0; c < 8; c++) {
         const piece = boardArray[r][c];
@@ -558,6 +576,7 @@ details[open] summary::before { content:'▾ '; }
         if (aiSelectedSquare === sq) cell.classList.add('selected');
         if (aiLastMove && Date.now() < aiLastMoveDotExpiry && (aiLastMove.from === sq || aiLastMove.to === sq)) cell.classList.add('last-move');
         if (aiLegalTargets.has(sq)) cell.classList.add(piece ? 'hint-capture' : 'hint-move');
+        if (aiCheckmateKingSq === sq) cell.classList.add('checkmate-king');
         if (c === 0) {
           const rankLabel = document.createElement('span');
           rankLabel.className = 'sq-label rank-label';
@@ -625,6 +644,7 @@ details[open] summary::before { content:'▾ '; }
   }
 
   let aiHistoryIndex = 0;
+  let aiHistoryHighlight = null;
   function renderAiHistoryBoard() {
     const boardEl = document.getElementById('aiHistoryBoard');
     const labelEl = document.getElementById('aiHistoryMoveLabel');
@@ -633,7 +653,22 @@ details[open] summary::before { content:'▾ '; }
     aiHistoryIndex = Math.max(0, Math.min(aiHistoryIndex, moves.length));
     const replay = new Chess();
     for (let i = 0; i < aiHistoryIndex; i++) replay.move(moves[i].san);
-    labelEl.textContent = (LANG === 'ja' ? '手数: ' : 'Move: ') + aiHistoryIndex + ' / ' + moves.length;
+
+    const showHighlight = aiHistoryHighlight && aiHistoryHighlight.targetIndex === aiHistoryIndex;
+    if (showHighlight) {
+      const actualMv = moves[aiHistoryIndex];
+      labelEl.innerHTML = '';
+      const l1 = document.createElement('div');
+      l1.textContent = (LANG === 'ja' ? '手数: ' : 'Move: ') + aiHistoryIndex + ' / ' + moves.length;
+      const l2 = document.createElement('div');
+      l2.style.cssText = 'color:#2d8a3e;font-weight:800;margin-top:4px;';
+      const bestSanForLabel = uciToSan(replay.fen(), aiHistoryHighlight.from + aiHistoryHighlight.to);
+      l2.textContent = (LANG === 'ja' ? '💡 こう指すべきでした: ' : '💡 This is what you should have played: ') + (bestSanForLabel || '');
+      labelEl.appendChild(l1);
+      labelEl.appendChild(l2);
+    } else {
+      labelEl.textContent = (LANG === 'ja' ? '手数: ' : 'Move: ') + aiHistoryIndex + ' / ' + moves.length;
+    }
 
     boardEl.innerHTML = '';
     boardEl.style.cssText = 'display:grid;grid-template-columns:repeat(8,1fr);grid-template-rows:repeat(8,1fr);width:100%;max-width:400px;aspect-ratio:1;margin:0 auto;border:2px solid var(--board-border,var(--brown));';
@@ -645,6 +680,9 @@ details[open] summary::before { content:'▾ '; }
         const sq = files[c] + (8 - r);
         const cell = document.createElement('div');
         cell.className = 'sq ' + (((r + c) % 2 === 0) ? 'light' : 'dark');
+        if (showHighlight && (sq === aiHistoryHighlight.from || sq === aiHistoryHighlight.to)) {
+          cell.classList.add('recommend-move');
+        }
         if (piece) {
           const img = document.createElement('img');
           img.src = PIECE_IMG[piece.color + piece.type.toUpperCase()];
@@ -661,6 +699,7 @@ details[open] summary::before { content:'▾ '; }
     panel.style.display = opening ? 'block' : 'none';
     if (opening) {
       aiHistoryIndex = (aiMoveHistory || []).length;
+      aiHistoryHighlight = null;
       renderAiHistoryBoard();
     }
   };
@@ -705,7 +744,7 @@ details[open] summary::before { content:'▾ '; }
         ? (LANG === 'ja' ? '候補: ' : 'Candidate: ') + bestSan
         : '';
 
-      report.push({ moveNum: Math.floor(i / 2) + 1, san: mv.san, tag, note });
+      report.push({ moveNum: Math.floor(i / 2) + 1, san: mv.san, tag, note, plyIndex: i, bestUci: bestResult.uci, isFlagged: centipawnLoss >= 50 });
       if (onProgress) onProgress(report.length);
     }
     return report;
@@ -736,6 +775,17 @@ details[open] summary::before { content:'▾ '; }
           const line = document.createElement('div');
           line.style.marginBottom = '6px';
           line.textContent = r.moveNum + '. ' + r.san + '　' + r.tag + (r.note ? '(' + r.note + ')' : '');
+          if (r.isFlagged) {
+            line.style.cursor = 'pointer';
+            line.style.textDecoration = 'underline';
+            line.onclick = () => {
+              document.getElementById('aiHistoryPanel').style.display = 'block';
+              aiHistoryIndex = r.plyIndex;
+              aiHistoryHighlight = r.bestUci ? { from: r.bestUci.slice(0, 2), to: r.bestUci.slice(2, 4), targetIndex: r.plyIndex } : null;
+              renderAiHistoryBoard();
+              document.getElementById('aiHistoryPanel').scrollIntoView({ behavior: 'smooth' });
+            };
+          }
           listEl.appendChild(line);
         });
       }
@@ -1626,6 +1676,7 @@ const PIECE_IMG = {
   // ===== 対局の履歴ビューア(閲覧専用、過去の局面を1手ずつ振り返れる) =====
   let latestMatchData = null;
   let historyIndex = 0;
+  let historyHighlight = null;
 
   function renderHistoryBoard() {
     const boardEl = document.getElementById('historyBoard');
@@ -1639,7 +1690,20 @@ const PIECE_IMG = {
       replay.move(moves[i].san);
     }
 
-    labelEl.textContent = (LANG === 'ja' ? '手数: ' : 'Move: ') + historyIndex + ' / ' + moves.length;
+    const showHighlight = historyHighlight && historyHighlight.targetIndex === historyIndex;
+    if (showHighlight) {
+      const bestSanForLabel = uciToSan(replay.fen(), historyHighlight.from + historyHighlight.to);
+      labelEl.innerHTML = '';
+      const l1 = document.createElement('div');
+      l1.textContent = (LANG === 'ja' ? '手数: ' : 'Move: ') + historyIndex + ' / ' + moves.length;
+      const l2 = document.createElement('div');
+      l2.style.cssText = 'color:#2d8a3e;font-weight:800;margin-top:4px;';
+      l2.textContent = (LANG === 'ja' ? '💡 こう指すべきでした: ' : '💡 This is what you should have played: ') + (bestSanForLabel || '');
+      labelEl.appendChild(l1);
+      labelEl.appendChild(l2);
+    } else {
+      labelEl.textContent = (LANG === 'ja' ? '手数: ' : 'Move: ') + historyIndex + ' / ' + moves.length;
+    }
 
     boardEl.innerHTML = '';
     boardEl.style.cssText = 'display:grid;grid-template-columns:repeat(8,1fr);grid-template-rows:repeat(8,1fr);width:100%;max-width:400px;aspect-ratio:1;margin:0 auto;border:2px solid var(--board-border,var(--brown));';
@@ -1657,6 +1721,9 @@ const PIECE_IMG = {
         const sq = files[c] + (8 - r);
         const cell = document.createElement('div');
         cell.className = 'sq ' + (((r + c) % 2 === 0) ? 'light' : 'dark');
+        if (showHighlight && (sq === historyHighlight.from || sq === historyHighlight.to)) {
+          cell.classList.add('recommend-move');
+        }
         if (piece) {
           const img = document.createElement('img');
           img.src = PIECE_IMG[piece.color + piece.type.toUpperCase()];
@@ -1674,6 +1741,7 @@ const PIECE_IMG = {
     panel.style.display = opening ? 'block' : 'none';
     if (opening && latestMatchData) {
       historyIndex = (latestMatchData.moves || []).length;
+      historyHighlight = null;
       renderHistoryBoard();
     }
   };
@@ -1799,7 +1867,7 @@ const PIECE_IMG = {
         ? (LANG === 'ja' ? '候補: ' : 'Candidate: ') + bestSan
         : '';
 
-      report.push({ moveNum: Math.floor(i / 2) + 1, san: mv.san, tag, note });
+      report.push({ moveNum: Math.floor(i / 2) + 1, san: mv.san, tag, note, plyIndex: i, bestUci: bestResult.uci, isFlagged: centipawnLoss >= 50 });
       if (onProgress) onProgress(report.length);
     }
     return report;
@@ -1842,6 +1910,17 @@ const PIECE_IMG = {
           const line = document.createElement('div');
           line.style.marginBottom = '6px';
           line.textContent = r.moveNum + '. ' + r.san + '　' + r.tag + (r.note ? '(' + r.note + ')' : '');
+          if (r.isFlagged) {
+            line.style.cursor = 'pointer';
+            line.style.textDecoration = 'underline';
+            line.onclick = () => {
+              document.getElementById('historyPanel').style.display = 'block';
+              historyIndex = r.plyIndex;
+              historyHighlight = r.bestUci ? { from: r.bestUci.slice(0, 2), to: r.bestUci.slice(2, 4), targetIndex: r.plyIndex } : null;
+              renderHistoryBoard();
+              document.getElementById('historyPanel').scrollIntoView({ behavior: 'smooth' });
+            };
+          }
           listEl.appendChild(line);
         });
     }
@@ -1959,6 +2038,9 @@ const PIECE_IMG = {
       const moves = gameChess.moves({ square: selectedSquare, verbose: true });
       legalTargets = new Set(moves.map(mv => mv.to));
     }
+    const checkmateKingSq = gameChess.in_checkmate()
+      ? findKingSquare(boardArray, gameChess.turn())
+      : null;
 
     rowOrder.forEach(r => {
       colOrder.forEach(c => {
@@ -1969,6 +2051,7 @@ const PIECE_IMG = {
         if (selectedSquare === sq) cell.classList.add('selected');
         if (legalTargets.has(sq)) cell.classList.add(piece ? 'hint-capture' : 'hint-move');
         if (m.lastMove && Date.now() < lastMoveDotExpiry && (m.lastMove.from === sq || m.lastMove.to === sq)) cell.classList.add('last-move');
+        if (checkmateKingSq === sq) cell.classList.add('checkmate-king');
         if (colOrder.indexOf(c) === 0) {
           const rankLabel = document.createElement('span');
           rankLabel.className = 'sq-label rank-label';
