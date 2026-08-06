@@ -683,13 +683,13 @@ details[open] summary::before { content:'▾ '; }
       if (mv.color !== 'w') { replay.move(mv.san); continue; }
       const beforeFen = replay.fen();
 
-      const bestResult = await stockfishEval(beforeFen, 10);
+      const bestResult = await stockfishEval(beforeFen, 250);
       const bestSan = uciToSan(beforeFen, bestResult.uci);
       const bestScore = (typeof bestResult.score === 'number') ? bestResult.score : 0;
 
       replay.move(mv.san);
       const afterFen = replay.fen();
-      const afterResult = await stockfishEval(afterFen, 10);
+      const afterResult = await stockfishEval(afterFen, 250);
       const afterScoreForOpponent = (typeof afterResult.score === 'number') ? afterResult.score : 0;
       const myScoreAfterMyMove = -afterScoreForOpponent;
 
@@ -1721,12 +1721,12 @@ const PIECE_IMG = {
     return sfWorker;
   }
 
-  function stockfishEval(fen, depth) {
+  function stockfishEval(fen, movetimeMs) {
     return new Promise((resolve) => {
       const worker = getStockfishWorker();
       sfQueue.push(resolve);
       worker.postMessage('position fen ' + fen);
-      worker.postMessage('go depth ' + (depth || 10));
+      worker.postMessage('go movetime ' + (movetimeMs || 250));
     });
   }
 
@@ -1749,14 +1749,14 @@ const PIECE_IMG = {
       const beforeFen = replay.fen();
 
       // ①この局面でのStockfishの最善手と評価値
-      const bestResult = await stockfishEval(beforeFen, 10);
+      const bestResult = await stockfishEval(beforeFen, 250);
       const bestSan = uciToSan(beforeFen, bestResult.uci);
       const bestScore = (typeof bestResult.score === 'number') ? bestResult.score : 0;
 
       // ②実際に指した手を適用し、その直後の局面をStockfishで評価(手番は相手に移る)
       replay.move(mv.san);
       const afterFen = replay.fen();
-      const afterResult = await stockfishEval(afterFen, 10);
+      const afterResult = await stockfishEval(afterFen, 250);
       const afterScoreForOpponent = (typeof afterResult.score === 'number') ? afterResult.score : 0;
       const myScoreAfterMyMove = -afterScoreForOpponent; // 手番が相手に移っているので符号を反転
 
