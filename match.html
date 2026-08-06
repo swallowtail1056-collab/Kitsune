@@ -171,7 +171,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <p><span data-ja="ユーザー名: " data-en="Username: ">ユーザー名: </span><span id="profileUsername">-</span></p>
     <p><span data-ja="レーティング: " data-en="Rating: ">レーティング: </span><span id="profileRating">1200</span></p>
     <p><span data-ja="先行登録者特典: " data-en="Founding Member: ">先行登録者特典: </span><span id="profileFounder">-</span></p>
-    <button id="resetRatingBtn" data-ja="レーティングを1200にリセット" data-en="Reset Rating to 1200" style="margin-top:6px;font-size:0.85rem;background:#a3692d;">レーティングを1200にリセット</button>
     <img id="profilePhoto" src="" alt="avatar">
   </div>
 
@@ -844,21 +843,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     signInWithPopup(auth, provider).catch(err => { document.getElementById('status').textContent = 'Error: ' + err.message; });
   };
   document.getElementById('logoutBtn').onclick = () => signOut(auth);
-
-  document.getElementById('resetRatingBtn').onclick = async () => {
-    const user = auth.currentUser;
-    if (!user) return;
-    const confirmMsg = LANG === 'ja'
-      ? 'レーティングを1200に、勝敗数を0にリセットします。よろしいですか？'
-      : 'This will reset your rating to 1200 and your win/loss/draw counts to 0. Continue?';
-    if (!confirm(confirmMsg)) return;
-    try {
-      await update(ref(db, 'publicProfiles/' + user.uid), { rating: 1200, wins: 0, losses: 0, draws: 0 });
-      alert(LANG === 'ja' ? 'リセットしました。' : 'Reset complete.');
-    } catch (e) {
-      alert((LANG === 'ja' ? 'エラーが発生しました: ' : 'An error occurred: ') + e.message);
-    }
-  };
 
   document.getElementById('deleteAccountBtn').onclick = async (e) => {
     e.preventDefault();
