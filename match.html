@@ -1592,47 +1592,109 @@ const PIECE_IMG = {
     document.getElementById('historyPanel').style.display = 'none';
   };
 
-  function generateDetailedReport(m) {
+  // ===== Stockfish(自前ホスティング、詳細レポート専用) =====
+  let sfWorker = null;
+  let sfQueue = [];
+  let sfLastScore = null;
+
+  function getStockfishWorker() {
+    if (sfWorker) return sfWorker;
+    sfWorker = new Worker('stockfish/stockfish-18-lite-single.js');
+    sfWorker.onmessage = (e) => {
+      const line = typeof e.data === 'string' ? e.data : '';
+      if (!line) return;
+      if (line.indexOf('score cp') !== -1) {
+        const mm = line.match(/score cp (-?\d+)/);
+        if (mm) sfLastScore = parseInt(mm[1], 10);
+      } else if (line.indexOf('score mate') !== -1) {
+        const mm = line.match(/score mate (-?\d+)/);
+        if (mm) sfLastScore = (parseInt(mm[1], 10) > 0 ? 10000 : -10000);
+      }
+      if (line.indexOf('bestmove') === 0) {
+        const bestMoveUci = line.split(' ')[1];
+        const score = sfLastScore;
+        sfLastScore = null;
+        const resolver = sfQueue.shift();
+        if (resolver) resolver({ uci: bestMoveUci, score: score });
+      }
+    };
+    sfWorker.postMessage('uci');
+    sfWorker.postMessage('isready');
+    return sfWorker;
+  }
+
+  function stockfishEval(fen, depth) {
+    return new Promise((resolve) => {
+      const worker = getStockfishWorker();
+      sfQueue.push(resolve);
+      worker.postMessage('position fen ' + fen);
+      worker.postMessage('go depth ' + (depth || 10));
+    });
+  }
+
+  function uciToSan(fen, uci) {
+    if (!uci || uci === '(none)') return null;
+    const chess = new Chess(fen);
+    const from = uci.slice(0, 2), to = uci.slice(2, 4);
+    const promotion = uci.length > 4 ? uci[4] : undefined;
+    const move = chess.move({ from, to, promotion: promotion || 'q' });
+    return move ? move.san : null;
+  }
+
+  async function generateDetailedReport(m, onProgress) {
     const moves = m.moves || [];
     const replay = new Chess();
     const report = [];
-    moves.forEach((mv, i) => {
-      if (mv.color !== myColor) { replay.move(mv.san); return; }
+    for (let i = 0; i < moves.length; i++) {
+      const mv = moves[i];
+      if (mv.color !== myColor) { replay.move(mv.san); continue; }
       const beforeFen = replay.fen();
-      const before = new Chess(beforeFen);
-      const bestMove = aiPickMove(before, 'hard', myColor);
+
+      // ①この局面でのStockfishの最善手と評価値
+      const bestResult = await stockfishEval(beforeFen, 10);
+      const bestSan = uciToSan(beforeFen, bestResult.uci);
+      const bestScore = (typeof bestResult.score === 'number') ? bestResult.score : 0;
+
+      // ②実際に指した手を適用し、その直後の局面をStockfishで評価(手番は相手に移る)
       replay.move(mv.san);
-      const nextMv = moves[i + 1];
-      const hungAfter = nextMv && !mv.captured && nextMv.captured;
+      const afterFen = replay.fen();
+      const afterResult = await stockfishEval(afterFen, 10);
+      const afterScoreForOpponent = (typeof afterResult.score === 'number') ? afterResult.score : 0;
+      const myScoreAfterMyMove = -afterScoreForOpponent; // 手番が相手に移っているので符号を反転
+
+      const centipawnLoss = Math.max(0, bestScore - myScoreAfterMyMove);
 
       let tag, note;
-      if (hungAfter) {
-        tag = LANG === 'ja' ? '⚠️ この後、駒を取られています' : '⚠️ A piece was lost right after this';
-        note = (bestMove && bestMove.san !== mv.san)
-          ? (LANG === 'ja' ? 'こちらの方が安全でした: ' : 'This would have been safer: ') + bestMove.san
-          : '';
-      } else if (bestMove && bestMove.san !== mv.san && bestMove.captured && !mv.captured) {
-        tag = LANG === 'ja' ? '💡 もっと良い手があったかもしれません' : '💡 A better move may have been available';
-        note = (LANG === 'ja' ? '候補: ' : 'Candidate: ') + bestMove.san;
+      if (centipawnLoss >= 300) {
+        tag = LANG === 'ja' ? '❌ 大きなミス' : '❌ Blunder';
+      } else if (centipawnLoss >= 150) {
+        tag = LANG === 'ja' ? '⚠️ ミス' : '⚠️ Mistake';
+      } else if (centipawnLoss >= 50) {
+        tag = LANG === 'ja' ? '💡 やや改善の余地あり' : '💡 Slight inaccuracy';
       } else {
-        tag = LANG === 'ja' ? '✓ 問題なさそうです' : '✓ Looks reasonable';
-        note = '';
+        tag = LANG === 'ja' ? '✓ 良い手です' : '✓ Good move';
       }
+      note = (bestSan && bestSan !== mv.san && centipawnLoss >= 50)
+        ? (LANG === 'ja' ? '候補: ' : 'Candidate: ') + bestSan
+        : '';
+
       report.push({ moveNum: Math.floor(i / 2) + 1, san: mv.san, tag, note });
-    });
+      if (onProgress) onProgress(report.length);
+    }
     return report;
   }
 
-  document.getElementById('reportToggleBtn').onclick = () => {
+  document.getElementById('reportToggleBtn').onclick = async () => {
     const panel = document.getElementById('reportPanel');
     const opening = panel.style.display === 'none';
     panel.style.display = opening ? 'block' : 'none';
     if (opening && latestMatchData) {
       const listEl = document.getElementById('reportList');
-      listEl.innerHTML = LANG === 'ja' ? '計算中...' : 'Calculating...';
-      setTimeout(() => {
-        const report = generateDetailedReport(latestMatchData);
-        listEl.innerHTML = '';
+      listEl.innerHTML = LANG === 'ja' ? 'Stockfishで計算中... (0)' : 'Calculating with Stockfish... (0)';
+      const report = await generateDetailedReport(latestMatchData, (done) => {
+        listEl.innerHTML = (LANG === 'ja' ? 'Stockfishで計算中... (' : 'Calculating with Stockfish... (') + done + ')';
+      });
+      listEl.innerHTML = '';
 
         const deltaField = myColor === 'w' ? 'eloDeltaWhite' : 'eloDeltaBlack';
         const delta = latestMatchData[deltaField];
@@ -1661,7 +1723,6 @@ const PIECE_IMG = {
           line.textContent = r.moveNum + '. ' + r.san + '　' + r.tag + (r.note ? '(' + r.note + ')' : '');
           listEl.appendChild(line);
         });
-      }, 30);
     }
   };
   document.getElementById('reportCloseBtn').onclick = () => {
