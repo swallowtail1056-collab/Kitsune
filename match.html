@@ -1111,10 +1111,16 @@ details[open] summary::before { content:'▾ '; }
       const friendName = friendProfile.username || '(unknown)';
       const rating = friendProfile.rating || 1200;
       const wld = (friendProfile.wins || 0) + '勝' + (friendProfile.losses || 0) + '敗' + (friendProfile.draws || 0) + '分';
+      const vsSnap = await get(ref(db, 'publicProfiles/' + user.uid + '/vsRecord/' + friendUid));
+      const vs = vsSnap.val() || { wins: 0, losses: 0, draws: 0 };
+      const vsLabel = LANG === 'ja'
+        ? '対戦成績: ' + vs.wins + '勝' + vs.losses + '敗' + vs.draws + '分'
+        : 'Head-to-head: ' + vs.wins + 'W ' + vs.losses + 'L ' + vs.draws + 'D';
       const row = document.createElement('div');
       row.className = 'list-item';
+      row.style.flexWrap = 'wrap';
       const label = document.createElement('span');
-      label.textContent = friendName + '（' + rating + '・' + wld + '）';
+      label.innerHTML = friendName + '（' + rating + '・' + wld + '）<br><span style="font-size:0.78rem;color:var(--text-muted);">' + vsLabel + '</span>';
       const challengeBtn = document.createElement('button');
       challengeBtn.textContent = LANG === 'ja' ? '対局を申し込む' : 'Challenge';
       const tcPanel = document.createElement('span');
@@ -1505,7 +1511,19 @@ const PIECE_IMG = {
     const losses = (myProfile.losses || 0) + (myResult === 0 ? 1 : 0);
     const draws = (myProfile.draws || 0) + (myResult === 0.5 ? 1 : 0);
 
-    await update(ref(db, 'publicProfiles/' + user.uid), { rating: newRating, wins, losses, draws });
+    // 相手ごとの対戦成績(head-to-head)も別途記録
+    const vsRecord = myProfile.vsRecord || {};
+    const oppVs = vsRecord[oppUid] || { wins: 0, losses: 0, draws: 0 };
+    const newOppVs = {
+      wins: oppVs.wins + (myResult === 1 ? 1 : 0),
+      losses: oppVs.losses + (myResult === 0 ? 1 : 0),
+      draws: oppVs.draws + (myResult === 0.5 ? 1 : 0)
+    };
+
+    await update(ref(db, 'publicProfiles/' + user.uid), {
+      rating: newRating, wins, losses, draws,
+      ['vsRecord/' + oppUid]: newOppVs
+    });
     const deltaField = myColor === 'w' ? 'eloDeltaWhite' : 'eloDeltaBlack';
     await update(ref(db, 'matches/' + matchId), { [flagField]: true, [deltaField]: newRating - myRating });
   }
