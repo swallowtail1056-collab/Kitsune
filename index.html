@@ -123,8 +123,7 @@ nav h1{font-family:'Crimson Pro',serif;font-size:clamp(0.9rem,3vw,1.4rem);font-w
 .p-cell{aspect-ratio:1;display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative;overflow:hidden;-webkit-tap-highlight-color:transparent;}
 .p-cell.light{background:var(--board-light);}
 .p-cell.dark{background:var(--board-dark);}
-.p-cell.last-from{background:rgba(232,200,74,0.45)!important;}
-.p-cell.last-to{background:rgba(232,200,74,0.65)!important;}
+.p-cell.last-from,.p-cell.last-to{background-color:rgba(206,210,107,0.55)!important;}
 .p-cell.selected{box-shadow:inset 0 0 0 3px var(--yellow);}
 .p-cell.valid-move::after{content:'';width:30%;height:30%;background:rgba(255,210,0,0.85);border-radius:50%;position:absolute;pointer-events:none;}
 .p-cell.valid-capture::after{content:'';position:absolute;inset:0;border:4px solid rgba(255,210,0,0.9);pointer-events:none;}
@@ -173,8 +172,7 @@ nav h1{font-family:'Crimson Pro',serif;font-size:clamp(0.9rem,3vw,1.4rem);font-w
 .cell{aspect-ratio:1;display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative;overflow:hidden;-webkit-tap-highlight-color:transparent;}
 .cell.light{background:var(--board-light);}
 .cell.dark{background:var(--board-dark);}
-.cell.last-from{background:rgba(232,200,74,0.45)!important;}
-.cell.last-to{background:rgba(232,200,74,0.65)!important;}
+.cell.last-from,.cell.last-to{background-color:rgba(206,210,107,0.55)!important;}
 .cell.selected{box-shadow:inset 0 0 0 3px var(--yellow);}
 .cell.valid-move::after{content:'';width:30%;height:30%;background:rgba(255,210,0,0.85);border-radius:50%;position:absolute;pointer-events:none;box-shadow:0 0 4px rgba(0,0,0,0.4);}
 .cell.valid-capture::after{content:'';position:absolute;inset:0;border:4px solid rgba(255,210,0,0.9);pointer-events:none;box-shadow:inset 0 0 4px rgba(0,0,0,0.3);}
@@ -427,6 +425,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <button class="nav-btn active-page" id="navGame" onclick="showPage('game',this)">練習</button>
   <button class="nav-btn" id="navQuiz" onclick="showPage('quiz',this)">クイズ</button>
   <button class="nav-btn" id="navPuzzle" onclick="showPage('puzzle',this)">Puzzle</button>
+  <a href="match.html" class="nav-btn lang-text" id="navMatch" data-ja="⚔️ 対局" data-en="⚔️ Match" style="background:rgba(184,134,11,0.18);border-color:var(--yellow);color:var(--brown-dark);font-weight:800;">⚔️ 対局</a>
    <a href="info.html#about" class="nav-btn" id="navAbout" aria-label="About KitsuneChess / Info">🦊</a>
   <a href="info.html#learn" class="nav-btn" id="navLearn" aria-label="Discover Chess / Info">♟</a>
   <a href="info.html#tips" class="nav-btn" id="navTips" aria-label="Tips for Improvement / Info">📈</a>
@@ -496,6 +495,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <div id="chessboard"></div>
       </div>
       <div class="file-row" id="fileRow"></div>
+      <p id="capturedArea" style="font-size:1.05rem;text-align:center;margin-top:6px;"></p>
     </div>
     <div class="side-panel">
       <div class="box-card">
@@ -709,6 +709,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
 <footer style="text-align:center;padding:16px 16px 28px;font-family:'Crimson Pro',serif;font-size:0.9rem;font-weight:600;color:#888;letter-spacing:1px;border-top:1px solid rgba(184,134,11,0.2);margin-top:12px;">
   <div style="margin-bottom:10px;">
+    <a href="https://kitsunechess.com/match.html" style="color:var(--brown);text-decoration:none;margin:0 8px;">⚔️ Match Mode / 対局モード</a>
     <a href="https://kitsunechess.com/info.html" style="color:var(--brown);text-decoration:none;margin:0 8px;">Articles / 解説記事</a>
     <a href="https://kitsunechess.com/disclaimer.html" style="color:var(--brown);text-decoration:none;margin:0 8px;">Privacy Policy / 免責事項</a>
   </div>
@@ -1855,6 +1856,29 @@ function getCellEl(sq) {
   return document.querySelector(`.cell[data-sq="${sq}"]`);
 }
 
+function renderCapturedPieces() {
+  const el = document.getElementById('capturedArea');
+  if (!el) return;
+  const CAPTURED_SYMBOL = { p:'♟', n:'♞', b:'♝', r:'♜', q:'♛' };
+  const history = chess.history({ verbose: true });
+  const byWhite = {}, byBlack = {};
+  const VAL = { p:1, n:3, b:3, r:5, q:9, k:0 };
+  let whiteVal = 0, blackVal = 0;
+  history.forEach(mv => {
+    if (!mv.captured) return;
+    const val = VAL[mv.captured] || 0;
+    if (mv.color === 'w') { byWhite[mv.captured] = (byWhite[mv.captured] || 0) + 1; whiteVal += val; }
+    else { byBlack[mv.captured] = (byBlack[mv.captured] || 0) + 1; blackVal += val; }
+  });
+  const diff = whiteVal - blackVal;
+  const fmtTaken = (obj) => Object.entries(obj).map(([type, n]) => CAPTURED_SYMBOL[type] + (n > 1 ? '×' + n : '')).join(' ');
+  const wLine = fmtTaken(byWhite);
+  const bLine = fmtTaken(byBlack);
+  if (!wLine && !bLine) { el.textContent = ''; return; }
+  el.textContent = (LANG === 'ja' ? '白が獲得: ' : 'White captured: ') + (wLine || '-') + (diff > 0 ? ' (+' + diff + ')' : '') +
+    '　|　' + (LANG === 'ja' ? '黒が獲得: ' : 'Black captured: ') + (bLine || '-') + (diff < 0 ? ' (+' + (-diff) + ')' : '');
+}
+
 function renderBoard() {
   const board=document.getElementById('chessboard');
   if(!board) return;
@@ -1881,6 +1905,7 @@ function renderBoard() {
       board.appendChild(cell);
     }
   }
+  renderCapturedPieces();
 }
 
 function makePieceEl(p) {
@@ -1902,33 +1927,6 @@ function animateMove(fromSq, toSq, callback) {
 
   const fromRect = fromCell.getBoundingClientRect();
   const toRect   = toCell.getBoundingClientRect();
-
-  // 軌跡ライン
-  const boardEl  = document.getElementById('chessboard');
-  const boardRect = boardEl.getBoundingClientRect();
-  const cx1 = fromRect.left + fromRect.width/2  - boardRect.left;
-  const cy1 = fromRect.top  + fromRect.height/2 - boardRect.top;
-  const cx2 = toRect.left   + toRect.width/2    - boardRect.left;
-  const cy2 = toRect.top    + toRect.height/2   - boardRect.top;
-  const trailLen = Math.sqrt((cx2-cx1)**2+(cy2-cy1)**2);
-  const angle    = Math.atan2(cy2-cy1,cx2-cx1)*180/Math.PI;
-  const trail = document.createElement('div');
-  trail.style.position = 'absolute';
-  trail.style.left     = cx1+'px';
-  trail.style.top      = (cy1-2)+'px';
-  trail.style.width    = trailLen+'px';
-  trail.style.height   = '4px';
-  trail.style.background = 'linear-gradient(90deg,rgba(232,200,74,0),rgba(232,200,74,0.75),rgba(232,200,74,0))';
-  trail.style.transformOrigin = '0 50%';
-  trail.style.transform = 'rotate('+angle+'deg)';
-  trail.style.opacity   = '0';
-  trail.style.transition = 'opacity 0.12s';
-  trail.style.pointerEvents = 'none';
-  trail.style.zIndex   = '10';
-  trail.style.borderRadius = '2px';
-  boardEl.style.position = 'relative';
-  boardEl.appendChild(trail);
-  requestAnimationFrame(()=>{ trail.style.opacity='1'; });
 
   // 駒クローンをbodyに固定配置してアニメーション
   const fontSize = getComputedStyle(pieceEl).fontSize;
@@ -1959,8 +1957,6 @@ function animateMove(fromSq, toSq, callback) {
 
   setTimeout(()=>{
     clone.remove();
-    trail.style.opacity = '0';
-    setTimeout(()=>trail.remove(), 400);
     callback();
   }, 340);
 }
