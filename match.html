@@ -1147,7 +1147,13 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       const label = document.createElement('span');
       label.innerHTML = friendName + '（' + rating + '・' + wld + '）<br><span style="font-size:0.78rem;color:var(--text-muted);">' + vsLabel + '</span>';
       const challengeBtn = document.createElement('button');
-      challengeBtn.textContent = LANG === 'ja' ? '対局を申し込む' : 'Challenge';
+      const pendingInviteSnap = await get(ref(db, 'matchInvites/' + friendUid + '/' + user.uid));
+      let hasPendingInvite = pendingInviteSnap.exists();
+      const updateChallengeBtnLabel = () => {
+        challengeBtn.textContent = hasPendingInvite ? (LANG === 'ja' ? '申し込みを取り消す' : 'Cancel Challenge') : (LANG === 'ja' ? '対局を申し込む' : 'Challenge');
+        challengeBtn.style.background = hasPendingInvite ? '#a33' : '';
+      };
+      updateChallengeBtnLabel();
       const tcPanel = document.createElement('span');
       tcPanel.style.display = 'none';
 
@@ -1177,8 +1183,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           username: myName, sentAt: Date.now(), timeControl: opt.key, fixed: fixed
         });
         tcPanel.style.display = 'none';
-        challengeBtn.textContent = LANG === 'ja' ? '送信済み' : 'Sent';
-        challengeBtn.disabled = true;
+        hasPendingInvite = true;
+        updateChallengeBtnLabel();
       };
       TC_OPTIONS.forEach(opt => {
         const fixedBtn = document.createElement('button');
@@ -1208,7 +1214,13 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       corrBtn.onclick = () => sendInvite({ key: 'correspondence' }, true);
       corrRow.appendChild(corrBtn);
 
-      challengeBtn.onclick = () => {
+      challengeBtn.onclick = async () => {
+        if (hasPendingInvite) {
+          await remove(ref(db, 'matchInvites/' + friendUid + '/' + user.uid));
+          hasPendingInvite = false;
+          updateChallengeBtnLabel();
+          return;
+        }
         tcPanel.style.display = tcPanel.style.display === 'none' ? 'inline-block' : 'none';
       };
       const msgBtn = document.createElement('button');
