@@ -121,7 +121,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
    友達同士のオンライン対局に加えて、コンピューター(AI)を相手にした一人での対局モードもすでに実装済みです。初級・中級・上級の3段階の難易度から選べ、ログイン不要でいつでもすぐに始められます。初級はランダムに手を指し、中級は駒を取れる手を優先します。上級は本物のチェスエンジン(Stockfish)が指すので、かなり手強いです。友達がまだオンラインでない時間帯でも、AI相手に気軽に実戦形式の練習ができます。持ち時間(Rapid・Blitz・Bullet、固定時間・インクリメントありから選択可)、対局数・勝敗記録・Eloレーティングもあわせて実装済みで、KitsuneChessの対局モードは今後も少しずつ機能を充実させていく予定です。</p>
 </details>
 
-<div class="box" id="aiModeBox">
+<div class="box" id="aiModeBox" style="padding:8px;">
   <p><strong data-ja="🤖 AIと対局する(ログイン不要)" data-en="🤖 Play vs AI (no login required)">🤖 AIと対局する(ログイン不要)</strong></p>
   <div id="aiDifficultyPanel">
     <button id="aiEasyBtn" data-ja="初級" data-en="Beginner">初級</button>
@@ -212,7 +212,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   </div>
   </div>
 
-  <div class="box" id="gameBox" style="display:none;">
+  <div class="box" id="gameBox" style="display:none;padding:6px;border:none;background:transparent;">
     <p><strong data-ja="対局中" data-en="Current Match">対局中</strong></p>
     <p id="gameStatus"></p>
     <p id="gameClock" style="font-weight:700;color:var(--brown-dark);"></p>
