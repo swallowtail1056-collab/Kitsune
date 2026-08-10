@@ -1,1 +1,9 @@
 
+[{
+      "relation": ["delegate_permission/common.handle_all_urls"],
+      "target": {
+        "namespace": "android_app",
+        "package_name": "com.kitsunechess.match",
+        "sha256_cert_fingerprints": ["8E:C4:4A:39:1B:B9:15:BE:C6:71:C9:61:E1:C4:F5:18:18:22:9D:85:61:78:05:E5:82:53:41:DE:FD:B8:04:4B"]
+      }
+    }]
