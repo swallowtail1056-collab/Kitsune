@@ -374,76 +374,126 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     } catch (e) { /* 音声再生に失敗しても対局自体には影響させない */ }
   }
 
+  // Sound A: chess piece contact — a sharp "click" transient layered over a weighty low "thud"
   function playMoveSound() {
     try {
       const ctx = new (window.AudioContext || window.webkitAudioContext)();
-      const duration = 0.07;
-      const bufferSize = Math.floor(ctx.sampleRate * duration);
-      const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
-      const data = buffer.getChannelData(0);
-      for (let i = 0; i < bufferSize; i++) {
-        data[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / bufferSize, 2.5);
+      const now = ctx.currentTime;
+
+      // Sharp click (piece touching the board)
+      const clickDuration = 0.05;
+      const clickBufferSize = Math.floor(ctx.sampleRate * clickDuration);
+      const clickBuffer = ctx.createBuffer(1, clickBufferSize, ctx.sampleRate);
+      const clickData = clickBuffer.getChannelData(0);
+      for (let i = 0; i < clickBufferSize; i++) {
+        clickData[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / clickBufferSize, 4);
       }
-      const noise = ctx.createBufferSource();
-      noise.buffer = buffer;
+      const clickNoise = ctx.createBufferSource();
+      clickNoise.buffer = clickBuffer;
+      const clickFilter = ctx.createBiquadFilter();
+      clickFilter.type = 'bandpass';
+      clickFilter.frequency.value = 1900;
+      clickFilter.Q.value = 1.1;
+      const clickGain = ctx.createGain();
+      clickGain.gain.setValueAtTime(0.65, now);
+      clickGain.gain.exponentialRampToValueAtTime(0.001, now + clickDuration);
+      clickNoise.connect(clickFilter);
+      clickFilter.connect(clickGain);
+      clickGain.connect(ctx.destination);
+      clickNoise.start(now);
+      clickNoise.stop(now + clickDuration);
 
-      const bandpass = ctx.createBiquadFilter();
-      bandpass.type = 'bandpass';
-      bandpass.frequency.value = 700;
-      bandpass.Q.value = 0.7;
-
-      const gain = ctx.createGain();
-      gain.gain.setValueAtTime(0.5, ctx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration);
-
-      noise.connect(bandpass);
-      bandpass.connect(gain);
-      gain.connect(ctx.destination);
-      noise.start();
-      noise.stop(ctx.currentTime + duration);
+      // Weighty thud (wooden piece landing on the board)
+      const thudOsc = ctx.createOscillator();
+      const thudGain = ctx.createGain();
+      thudOsc.type = 'sine';
+      thudOsc.frequency.setValueAtTime(190, now);
+      thudOsc.frequency.exponentialRampToValueAtTime(65, now + 0.1);
+      thudGain.gain.setValueAtTime(0.55, now);
+      thudGain.gain.exponentialRampToValueAtTime(0.001, now + 0.12);
+      thudOsc.connect(thudGain);
+      thudGain.connect(ctx.destination);
+      thudOsc.start(now);
+      thudOsc.stop(now + 0.12);
     } catch (e) { /* 音声再生に失敗しても対局自体には影響させない */ }
   }
 
+  // Generates a decaying-noise impulse response buffer for algorithmic reverb (ConvolverNode)
+  function createReverbImpulse(ctx, duration, decay) {
+    const rate = ctx.sampleRate;
+    const length = Math.floor(rate * duration);
+    const impulse = ctx.createBuffer(2, length, rate);
+    for (let channel = 0; channel < 2; channel++) {
+      const channelData = impulse.getChannelData(channel);
+      for (let i = 0; i < length; i++) {
+        channelData[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / length, decay);
+      }
+    }
+    return impulse;
+  }
+
+  // Sound B: checkmate — a deep water droplet "plop" with a long, echoing well-like reverb tail
   function playCheckmateSound() {
     try {
       const ctx = new (window.AudioContext || window.webkitAudioContext)();
       const now = ctx.currentTime;
 
-      // 低音の「ズン」という衝撃音
-      const thudOsc = ctx.createOscillator();
-      const thudGain = ctx.createGain();
-      thudOsc.type = 'sine';
-      thudOsc.frequency.setValueAtTime(160, now);
-      thudOsc.frequency.exponentialRampToValueAtTime(45, now + 0.35);
-      thudGain.gain.setValueAtTime(0.8, now);
-      thudGain.gain.exponentialRampToValueAtTime(0.001, now + 0.4);
-      thudOsc.connect(thudGain);
-      thudGain.connect(ctx.destination);
-      thudOsc.start(now);
-      thudOsc.stop(now + 0.4);
+      // Droplet "plop": quick downward pitch sweep
+      const dropOsc = ctx.createOscillator();
+      const dropGain = ctx.createGain();
+      dropOsc.type = 'sine';
+      dropOsc.frequency.setValueAtTime(750, now);
+      dropOsc.frequency.exponentialRampToValueAtTime(110, now + 0.2);
+      dropGain.gain.setValueAtTime(0.001, now);
+      dropGain.gain.linearRampToValueAtTime(0.9, now + 0.012);
+      dropGain.gain.exponentialRampToValueAtTime(0.001, now + 0.4);
 
-      // 重ねるノイズの打撃音
-      const duration = 0.25;
-      const bufferSize = Math.floor(ctx.sampleRate * duration);
-      const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
-      const data = buffer.getChannelData(0);
-      for (let i = 0; i < bufferSize; i++) {
-        data[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / bufferSize, 2);
+      // Soft splash transient at the moment of contact
+      const splashDuration = 0.06;
+      const splashBufferSize = Math.floor(ctx.sampleRate * splashDuration);
+      const splashBuffer = ctx.createBuffer(1, splashBufferSize, ctx.sampleRate);
+      const splashData = splashBuffer.getChannelData(0);
+      for (let i = 0; i < splashBufferSize; i++) {
+        splashData[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / splashBufferSize, 3);
       }
-      const noise = ctx.createBufferSource();
-      noise.buffer = buffer;
-      const bandpass = ctx.createBiquadFilter();
-      bandpass.type = 'bandpass';
-      bandpass.frequency.value = 1200;
-      bandpass.Q.value = 0.5;
-      const noiseGain = ctx.createGain();
-      noiseGain.gain.setValueAtTime(0.7, now);
-      noiseGain.gain.exponentialRampToValueAtTime(0.001, now + duration);
-      noise.connect(bandpass);
-      bandpass.connect(noiseGain);
-      noiseGain.connect(ctx.destination);
-      noise.start(now);
-      noise.stop(now + duration);
+      const splashNoise = ctx.createBufferSource();
+      splashNoise.buffer = splashBuffer;
+      const splashFilter = ctx.createBiquadFilter();
+      splashFilter.type = 'lowpass';
+      splashFilter.frequency.value = 1400;
+      const splashGain = ctx.createGain();
+      splashGain.gain.setValueAtTime(0.35, now);
+      splashGain.gain.exponentialRampToValueAtTime(0.001, now + splashDuration);
+
+      // Deep well reverb (long, dark echo tail)
+      const convolver = ctx.createConvolver();
+      convolver.buffer = createReverbImpulse(ctx, 2.5, 2.2);
+      const reverbLowpass = ctx.createBiquadFilter();
+      reverbLowpass.type = 'lowpass';
+      reverbLowpass.frequency.value = 900;
+      const reverbGain = ctx.createGain();
+      reverbGain.gain.value = 0.85;
+      const dryGain = ctx.createGain();
+      dryGain.gain.value = 0.5;
+
+      dropOsc.connect(dropGain);
+      splashNoise.connect(splashFilter);
+      splashFilter.connect(splashGain);
+
+      dropGain.connect(dryGain);
+      dropGain.connect(convolver);
+      splashGain.connect(convolver);
+      convolver.connect(reverbLowpass);
+      reverbLowpass.connect(reverbGain);
+
+      dryGain.connect(ctx.destination);
+      splashGain.connect(ctx.destination);
+      reverbGain.connect(ctx.destination);
+
+      dropOsc.start(now);
+      dropOsc.stop(now + 0.4);
+      splashNoise.start(now);
+      splashNoise.stop(now + splashDuration);
     } catch (e) { /* 音声再生に失敗しても対局自体には影響させない */ }
   }
 
