@@ -2340,6 +2340,19 @@ const PIECE_IMG = {
   document.getElementById('leaveMatchBtn').onclick = async () => {
     const user = auth.currentUser;
     if (!user) return;
+    const isActiveMatch = myMatchId && myColor && latestMatchData && latestMatchData.status === 'active';
+    if (isActiveMatch) {
+      const confirmMsg = LANG === 'ja' ? '対局中に退出すると投了扱いになり、相手の勝ちになります。よろしいですか？' : 'Leaving an active match counts as a resignation and your opponent will win. Continue?';
+      if (!confirm(confirmMsg)) return;
+      const winnerColor = myColor === 'w' ? 'b' : 'w';
+      await update(ref(db, 'matches/' + myMatchId), { status: 'resigned', winner: winnerColor, drawOfferBy: null });
+    }
+    document.getElementById('gameBox').style.display = 'none';
+    document.getElementById('lobbyArea').style.display = 'block';
+    document.getElementById('matchChatPanel').style.display = 'none';
+    matchChatAttached = null;
+    myMatchId = null;
+    if (clockInterval) { clearInterval(clockInterval); clockInterval = null; }
     await remove(ref(db, 'currentMatch/' + user.uid));
   };
 
