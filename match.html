@@ -63,14 +63,18 @@ img#profilePhoto { border:2px solid var(--brown); border-radius:50%; width:60px;
 .sq-label.file-label { bottom:2px; right:3px; }
 .sq.light { background:#d4b87a; }
 .sq.dark { background:#7a5230; }
-.thumb-card { display:flex; flex-direction:column; align-items:center; gap:4px; background:var(--card); border:2px solid var(--brown); border-radius:8px; padding:8px; cursor:pointer; width:96px; }
+.thumb-card { display:flex; flex-direction:column; align-items:center; gap:4px; background:var(--card); border:2px solid var(--brown); border-radius:8px; padding:8px; cursor:pointer; width:150px; }
 .thumb-card:hover { opacity:0.85; }
-.thumb-board { display:grid; grid-template-columns:repeat(8,1fr); grid-template-rows:repeat(8,1fr); width:80px; height:80px; border:1px solid var(--brown); }
+.thumb-board { display:grid; grid-template-columns:repeat(8,1fr); grid-template-rows:repeat(8,1fr); width:130px; height:130px; border:2px solid var(--board-border,var(--brown)); }
 .thumb-sq { position:relative; }
 .thumb-sq.light { background:#d4b87a; }
 .thumb-sq.dark { background:#7a5230; }
 .thumb-sq img { width:100%; height:100%; }
-.thumb-name { font-size:0.75rem; font-weight:700; text-align:center; word-break:break-all; }
+.thumb-sq .sq-label { font-size:0.5rem; }
+.thumb-names { text-align:center; }
+.thumb-name { font-size:0.75rem; font-weight:700; word-break:break-all; }
+.thumb-name.opp { color:var(--brown-dark); }
+.thumb-vs { font-size:0.65rem; color:var(--text-muted); }
 .thumb-turn { font-size:0.7rem; text-align:center; }
 .thumb-turn.my-turn { color:#2d8a3e; font-weight:700; }
 .sq.selected { outline:3px solid #e8c84a; outline-offset:-3px; }
@@ -1492,9 +1496,22 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         const piece = boardArray[r][c];
         const cell = document.createElement('div');
         cell.className = 'thumb-sq ' + (((r + c) % 2 === 0) ? 'light' : 'dark');
+        if (colOrder.indexOf(c) === 0) {
+          const rankLabel = document.createElement('span');
+          rankLabel.className = 'sq-label rank-label';
+          rankLabel.textContent = 8 - r;
+          cell.appendChild(rankLabel);
+        }
+        if (rowOrder.indexOf(r) === rowOrder.length - 1) {
+          const fileLabel = document.createElement('span');
+          fileLabel.className = 'sq-label file-label';
+          fileLabel.textContent = files[c];
+          cell.appendChild(fileLabel);
+        }
         if (piece) {
           const img = document.createElement('img');
           img.src = PIECE_IMG[piece.color + piece.type.toUpperCase()];
+          img.style.width = '100%'; img.style.height = '100%'; img.style.pointerEvents = 'none';
           cell.appendChild(img);
         }
         container.appendChild(cell);
@@ -1518,9 +1535,20 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       const boardEl = document.createElement('div');
       boardEl.className = 'thumb-board';
       renderThumbBoard(boardEl, s.fen, s.myColor === 'b');
-      const nameEl = document.createElement('div');
-      nameEl.className = 'thumb-name';
-      nameEl.textContent = s.oppName;
+      const namesEl = document.createElement('div');
+      namesEl.className = 'thumb-names';
+      const myNameEl = document.createElement('div');
+      myNameEl.className = 'thumb-name';
+      myNameEl.textContent = s.myName;
+      const vsEl = document.createElement('div');
+      vsEl.className = 'thumb-vs';
+      vsEl.textContent = 'vs';
+      const oppNameEl = document.createElement('div');
+      oppNameEl.className = 'thumb-name opp';
+      oppNameEl.textContent = s.oppName;
+      namesEl.appendChild(myNameEl);
+      namesEl.appendChild(vsEl);
+      namesEl.appendChild(oppNameEl);
       const turnEl = document.createElement('div');
       const myTurn = s.status === 'active' && s.turn === s.myColor;
       turnEl.className = 'thumb-turn' + (myTurn ? ' my-turn' : '');
@@ -1528,7 +1556,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         ? (LANG === 'ja' ? '終局' : 'Finished')
         : (myTurn ? (LANG === 'ja' ? 'あなたの番' : 'Your turn') : (LANG === 'ja' ? '相手の番' : "Opponent's turn"));
       card.appendChild(boardEl);
-      card.appendChild(nameEl);
+      card.appendChild(namesEl);
       card.appendChild(turnEl);
       card.onclick = () => openMatch(auth.currentUser, matchId);
       list.appendChild(card);
@@ -1568,6 +1596,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           const myC = (m.white === user.uid) ? 'w' : 'b';
           activeMatchSummaries[matchId] = {
             oppName: myC === 'w' ? m.blackName : m.whiteName,
+            myName: myC === 'w' ? m.whiteName : m.blackName,
             myColor: myC,
             turn: m.turn,
             fen: m.fen,
