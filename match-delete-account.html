@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>アカウントの削除方法 (Delete Your Account) - KitsuneChess 対局モード</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Crimson+Pro:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#f5edd6; --brown:#7c4a1e; --brown-dark:#4a2a0e;
+  --card:#f0e4c8; --text:#111; --text-muted:#444;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  background:var(--bg); color:var(--text);
+  font-family:'Crimson Pro', serif; font-weight:600;
+  max-width:720px; margin:0 auto; padding:16px 16px 60px;
+  line-height:1.8;
+}
+h1 {
+  font-family:'Cinzel', serif; font-weight:700; color:var(--brown-dark);
+  font-size:1.5rem; border-bottom:2px solid rgba(124,74,30,0.3); padding-bottom:10px; margin-bottom:20px;
+}
+h2 {
+  font-family:'Cinzel', serif; font-weight:700; color:var(--brown-dark);
+  font-size:1.15rem; margin-top:28px; margin-bottom:10px;
+}
+p, li { margin-bottom:10px; }
+ol, ul { padding-left:26px; margin-bottom:14px; }
+.section { background:var(--card); border:2px solid var(--brown); border-radius:10px; padding:16px 18px; margin-top:18px; }
+a { color:var(--brown-dark); }
+footer { text-align:center; padding:24px 0 0; font-size:0.85rem; color:#888; margin-top:32px; }
+footer a { margin:0 8px; }
+.lang-block-en { margin-top:6px; color:var(--text-muted); }
+</style>
+</head>
+<body>
+
+<h1>🦊 アカウントの削除方法 / How to Delete Your Account</h1>
+
+<div class="section">
+<p>KitsuneChess 対局モード(developer: swallowtail1056-collab)では、アプリ内からいつでもご自身のアカウントと関連データを完全に削除できます。ログインすら不要な手順ではなく、アカウントにログインした状態で操作します。</p>
+<p class="lang-block-en">Within KitsuneChess Match Mode (developer: swallowtail1056-collab), you can permanently delete your account and all associated data at any time from inside the app. You must be signed in to complete this.</p>
+</div>
+
+<h2>削除の手順 / Deletion Steps</h2>
+<div class="section">
+<ol>
+  <li><a href="https://kitsunechess.com/match.html">https://kitsunechess.com/match.html</a> を開き、Googleアカウントでログインします。</li>
+  <li>ページ下部にある「アカウントを削除する」リンクをタップします。</li>
+  <li>確認ダイアログが表示されるので、内容を確認して削除を確定します。</li>
+</ol>
+<p class="lang-block-en">Ordered steps:</p>
+<ol class="lang-block-en">
+  <li>Open <a href="https://kitsunechess.com/match.html">https://kitsunechess.com/match.html</a> and sign in with your Google account.</li>
+  <li>Tap the "Delete My Account" link near the bottom of the page.</li>
+  <li>Confirm the deletion in the dialog that appears.</li>
+</ol>
+</div>
+
+<h2>削除されるデータ / Data That Is Deleted</h2>
+<div class="section">
+<p>削除を実行すると、以下のデータが<strong>即座に完全削除</strong>され、保持期間はありません。</p>
+<ul>
+  <li>プロフィール情報(表示名、ユーザーネーム、レーティング)</li>
+  <li>友達リストおよび友達申請の履歴</li>
+  <li>対局記録(手順、勝敗、進行中の対局を含む)</li>
+  <li>チャットメッセージ</li>
+  <li>オンライン状態・最終ログイン情報</li>
+  <li>Firebase Authenticationのアカウント自体</li>
+</ul>
+<p class="lang-block-en">Upon deletion, the following data is <strong>permanently and immediately deleted</strong>, with no retention period:</p>
+<ul class="lang-block-en">
+  <li>Profile information (display name, username, rating)</li>
+  <li>Friends list and friend request history</li>
+  <li>Match records (moves, results, including in-progress matches)</li>
+  <li>Chat messages</li>
+  <li>Online status and last-seen information</li>
+  <li>The Firebase Authentication account itself</li>
+</ul>
+</div>
+
+<footer>
+  <a href="https://kitsunechess.com/match.html">🦊 対局モードへ戻る / Back to Match Mode</a>
+  <a href="https://kitsunechess.com/match-privacy.html">プライバシーポリシー / Privacy Policy</a>
+</footer>
+
+</body>
+</html>
