@@ -63,6 +63,16 @@ img#profilePhoto { border:2px solid var(--brown); border-radius:50%; width:60px;
 .sq-label.file-label { bottom:2px; right:3px; }
 .sq.light { background:#d4b87a; }
 .sq.dark { background:#7a5230; }
+.thumb-card { display:flex; flex-direction:column; align-items:center; gap:4px; background:var(--card); border:2px solid var(--brown); border-radius:8px; padding:8px; cursor:pointer; width:96px; }
+.thumb-card:hover { opacity:0.85; }
+.thumb-board { display:grid; grid-template-columns:repeat(8,1fr); grid-template-rows:repeat(8,1fr); width:80px; height:80px; border:1px solid var(--brown); }
+.thumb-sq { position:relative; }
+.thumb-sq.light { background:#d4b87a; }
+.thumb-sq.dark { background:#7a5230; }
+.thumb-sq img { width:100%; height:100%; }
+.thumb-name { font-size:0.75rem; font-weight:700; text-align:center; word-break:break-all; }
+.thumb-turn { font-size:0.7rem; text-align:center; }
+.thumb-turn.my-turn { color:#2d8a3e; font-weight:700; }
 .sq.selected { outline:3px solid #e8c84a; outline-offset:-3px; }
 .sq.last-move { background-color:rgba(206,210,107,0.55) !important; }
 .sq.checkmate-king { background-color:rgba(200,30,30,0.65) !important; }
@@ -163,6 +173,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
 <div id="profileArea" style="display:none;">
   <div id="lobbyArea">
+  <div class="box" id="activeMatchesBox" style="display:none;">
+    <p><strong data-ja="⚔ 進行中の対局" data-en="⚔ Games in Progress">⚔ 進行中の対局</strong></p>
+    <div id="activeMatchesList" style="display:flex;flex-wrap:wrap;gap:10px;margin-top:8px;"></div>
+  </div>
+
   <div class="box">
     <p><strong data-ja="表示名（ユーザーネーム）" data-en="Display Name (Username)">表示名（ユーザーネーム）</strong></p>
     <input type="text" id="usernameInput" maxlength="20">
@@ -218,6 +233,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   </div>
 
   <div class="box" id="gameBox" style="display:none;padding:6px;border:none;background:transparent;">
+    <button id="backToListBtn" data-ja="← 対局一覧に戻る" data-en="← Back to Games List" style="margin-bottom:8px;">← 対局一覧に戻る</button>
     <p><strong data-ja="対局中" data-en="Current Match">対局中</strong></p>
     <p id="gameStatus"></p>
     <p id="gameClock" style="font-weight:700;color:var(--brown-dark);"></p>
@@ -888,7 +904,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       await remove(ref(db, 'friendRequests/' + myUid));
       await remove(ref(db, 'sentRequests/' + myUid));
       await remove(ref(db, 'matchInvites/' + myUid));
-      await remove(ref(db, 'currentMatch/' + myUid));
+      await remove(ref(db, 'currentMatches/' + myUid));
       await remove(ref(db, 'publicProfiles/' + myUid));
       await remove(ref(db, 'users/' + myUid));
       if (myUsername) await remove(ref(db, 'usernames/' + normName(myUsername)));
@@ -1439,8 +1455,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           whiteJoined: false,
           blackJoined: false
         });
-        await set(ref(db, 'currentMatch/' + user.uid), matchId);
-        await set(ref(db, 'currentMatch/' + fromUid), matchId);
+        await set(ref(db, 'currentMatches/' + user.uid + '/' + matchId), true);
+        await set(ref(db, 'currentMatches/' + fromUid + '/' + matchId), true);
         await remove(ref(db, 'matchInvites/' + user.uid + '/' + fromUid));
       };
       const declineBtn = document.createElement('button');
@@ -1460,43 +1476,139 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   let myColor = null;
   let gameChess = null;
   let selectedSquare = null;
+  let openedMatchUnsub = null;
+  let activeMatchListeners = {};
+  let activeMatchSummaries = {};
+
+  function renderThumbBoard(container, fen, flip) {
+    container.innerHTML = '';
+    const boardArray = new Chess(fen).board();
+    const files = ['a','b','c','d','e','f','g','h'];
+    const order = [...Array(8).keys()];
+    const rowOrder = flip ? [...order].reverse() : order;
+    const colOrder = flip ? [...order].reverse() : order;
+    rowOrder.forEach(r => {
+      colOrder.forEach(c => {
+        const piece = boardArray[r][c];
+        const cell = document.createElement('div');
+        cell.className = 'thumb-sq ' + (((r + c) % 2 === 0) ? 'light' : 'dark');
+        if (piece) {
+          const img = document.createElement('img');
+          img.src = PIECE_IMG[piece.color + piece.type.toUpperCase()];
+          cell.appendChild(img);
+        }
+        container.appendChild(cell);
+      });
+    });
+  }
+
+  function renderActiveMatchesList() {
+    const box = document.getElementById('activeMatchesBox');
+    const list = document.getElementById('activeMatchesList');
+    const entries = Object.entries(activeMatchSummaries);
+    if (entries.length === 0) {
+      box.style.display = 'none';
+      return;
+    }
+    box.style.display = 'block';
+    list.innerHTML = '';
+    entries.forEach(([matchId, s]) => {
+      const card = document.createElement('div');
+      card.className = 'thumb-card';
+      const boardEl = document.createElement('div');
+      boardEl.className = 'thumb-board';
+      renderThumbBoard(boardEl, s.fen, s.myColor === 'b');
+      const nameEl = document.createElement('div');
+      nameEl.className = 'thumb-name';
+      nameEl.textContent = s.oppName;
+      const turnEl = document.createElement('div');
+      const myTurn = s.status === 'active' && s.turn === s.myColor;
+      turnEl.className = 'thumb-turn' + (myTurn ? ' my-turn' : '');
+      turnEl.textContent = s.status !== 'active'
+        ? (LANG === 'ja' ? '終局' : 'Finished')
+        : (myTurn ? (LANG === 'ja' ? 'あなたの番' : 'Your turn') : (LANG === 'ja' ? '相手の番' : "Opponent's turn"));
+      card.appendChild(boardEl);
+      card.appendChild(nameEl);
+      card.appendChild(turnEl);
+      card.onclick = () => openMatch(auth.currentUser, matchId);
+      list.appendChild(card);
+    });
+  }
 
   function startMatchListener(user) {
-    onValue(ref(db, 'currentMatch/' + user.uid), (snap) => {
-      const matchId = snap.val();
-      if (!matchId) {
-        document.getElementById('gameBox').style.display = 'none';
-        document.getElementById('lobbyArea').style.display = 'block';
-        document.getElementById('matchChatPanel').style.display = 'none';
-        matchChatAttached = null;
-        myMatchId = null;
-        if (clockInterval) { clearInterval(clockInterval); clockInterval = null; }
-        return;
-      }
-      myMatchId = matchId;
-      document.getElementById('gameBox').style.display = 'block';
-      document.getElementById('lobbyArea').style.display = 'none';
-      startClockTicker(user);
-      let joinFlagSet = false;
-      onValue(ref(db, 'matches/' + matchId), async (matchSnap) => {
-        const m = matchSnap.val();
-        if (!m) return;
-        myColor = (m.white === user.uid) ? 'w' : 'b';
-        gameChess = new Chess(m.fen);
+    onValue(ref(db, 'currentMatches/' + user.uid), (snap) => {
+      const data = snap.val() || {};
+      const matchIds = Object.keys(data);
 
-        if (!joinFlagSet) {
-          joinFlagSet = true;
-          const joinField = myColor === 'w' ? 'whiteJoined' : 'blackJoined';
-          if (!m[joinField]) {
-            await update(ref(db, 'matches/' + matchId), { [joinField]: true });
-          }
+      // 消えた対局のリスナーを解除
+      Object.keys(activeMatchListeners).forEach(matchId => {
+        if (!matchIds.includes(matchId)) {
+          activeMatchListeners[matchId]();
+          delete activeMatchListeners[matchId];
+          delete activeMatchSummaries[matchId];
         }
-        if (m.status === 'waiting' && m.whiteJoined && m.blackJoined) {
-          await update(ref(db, 'matches/' + matchId), { status: 'active', turnStartedAt: Date.now() });
-        }
-
-        renderMiniBoard(m, user, matchId);
       });
+
+      // 新しく増えた対局にリスナーを追加
+      matchIds.forEach(matchId => {
+        if (activeMatchListeners[matchId]) return;
+        activeMatchListeners[matchId] = onValue(ref(db, 'matches/' + matchId), (matchSnap) => {
+          const m = matchSnap.val();
+          if (!m) return;
+          const myC = (m.white === user.uid) ? 'w' : 'b';
+          activeMatchSummaries[matchId] = {
+            oppName: myC === 'w' ? m.blackName : m.whiteName,
+            myColor: myC,
+            turn: m.turn,
+            fen: m.fen,
+            status: m.status
+          };
+          renderActiveMatchesList();
+        });
+      });
+
+      if (matchIds.length === 0) {
+        renderActiveMatchesList();
+      }
+    });
+  }
+
+  function closeOpenedMatch() {
+    if (openedMatchUnsub) { openedMatchUnsub(); openedMatchUnsub = null; }
+    document.getElementById('gameBox').style.display = 'none';
+    document.getElementById('lobbyArea').style.display = 'block';
+    document.getElementById('matchChatPanel').style.display = 'none';
+    matchChatAttached = null;
+    myMatchId = null;
+    if (clockInterval) { clearInterval(clockInterval); clockInterval = null; }
+  }
+
+  function openMatch(user, matchId) {
+    if (!user || !matchId) return;
+    if (openedMatchUnsub) { openedMatchUnsub(); openedMatchUnsub = null; }
+    myMatchId = matchId;
+    document.getElementById('gameBox').style.display = 'block';
+    document.getElementById('lobbyArea').style.display = 'none';
+    startClockTicker(user);
+    let joinFlagSet = false;
+    openedMatchUnsub = onValue(ref(db, 'matches/' + matchId), async (matchSnap) => {
+      const m = matchSnap.val();
+      if (!m) return;
+      myColor = (m.white === user.uid) ? 'w' : 'b';
+      gameChess = new Chess(m.fen);
+
+      if (!joinFlagSet) {
+        joinFlagSet = true;
+        const joinField = myColor === 'w' ? 'whiteJoined' : 'blackJoined';
+        if (!m[joinField]) {
+          await update(ref(db, 'matches/' + matchId), { [joinField]: true });
+        }
+      }
+      if (m.status === 'waiting' && m.whiteJoined && m.blackJoined) {
+        await update(ref(db, 'matches/' + matchId), { status: 'active', turnStartedAt: Date.now() });
+      }
+
+      renderMiniBoard(m, user, matchId);
     });
   }
 
@@ -2337,23 +2449,23 @@ const PIECE_IMG = {
     }, 1000);
   }
 
+  document.getElementById('backToListBtn').onclick = () => {
+    closeOpenedMatch();
+  };
+
   document.getElementById('leaveMatchBtn').onclick = async () => {
     const user = auth.currentUser;
-    if (!user) return;
-    const isActiveMatch = myMatchId && myColor && latestMatchData && latestMatchData.status === 'active';
+    if (!user || !myMatchId) return;
+    const isActiveMatch = myColor && latestMatchData && latestMatchData.status === 'active';
     if (isActiveMatch) {
       const confirmMsg = LANG === 'ja' ? '対局中に退出すると投了扱いになり、相手の勝ちになります。よろしいですか？' : 'Leaving an active match counts as a resignation and your opponent will win. Continue?';
       if (!confirm(confirmMsg)) return;
       const winnerColor = myColor === 'w' ? 'b' : 'w';
       await update(ref(db, 'matches/' + myMatchId), { status: 'resigned', winner: winnerColor, drawOfferBy: null });
     }
-    document.getElementById('gameBox').style.display = 'none';
-    document.getElementById('lobbyArea').style.display = 'block';
-    document.getElementById('matchChatPanel').style.display = 'none';
-    matchChatAttached = null;
-    myMatchId = null;
-    if (clockInterval) { clearInterval(clockInterval); clockInterval = null; }
-    await remove(ref(db, 'currentMatch/' + user.uid));
+    const leavingMatchId = myMatchId;
+    closeOpenedMatch();
+    await remove(ref(db, 'currentMatches/' + user.uid + '/' + leavingMatchId));
   };
 
   document.getElementById('resignBtn').onclick = async () => {
