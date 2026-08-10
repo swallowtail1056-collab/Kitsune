@@ -443,12 +443,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
       // Deep well/garden reverb (shared by the water and the knock)
       const convolver = ctx.createConvolver();
-      convolver.buffer = createReverbImpulse(ctx, 2.6, 2.2);
+      convolver.buffer = createReverbImpulse(ctx, 4.5, 1.3);
       const reverbLowpass = ctx.createBiquadFilter();
       reverbLowpass.type = 'lowpass';
-      reverbLowpass.frequency.value = 1000;
+      reverbLowpass.frequency.value = 700;
       const reverbGain = ctx.createGain();
-      reverbGain.gain.value = 0.8;
+      reverbGain.gain.value = 1.4;
       convolver.connect(reverbLowpass);
       reverbLowpass.connect(reverbGain);
       reverbGain.connect(ctx.destination);
@@ -2288,7 +2288,7 @@ const PIECE_IMG = {
       const oppJoined = myColor === 'w' ? m.blackJoined : m.whiteJoined;
       statusEl.textContent = oppJoined
         ? (LANG === 'ja' ? 'まもなく開始します...' : 'Starting shortly...')
-        : (LANG === 'ja' ? '相手がまだ入室していません。しばらくお待ちください。' : "Waiting for your opponent to join. The clock hasn't started yet.");
+        : (LANG === 'ja' ? (oppName + ' がまだ入室していません。しばらくお待ちください。') : ("Waiting for " + oppName + " to join. The clock hasn't started yet."));
     } else if (m.status === 'timeout') {
       const wonByTimeout = m.winner === myColor;
       statusEl.textContent = wonByTimeout
