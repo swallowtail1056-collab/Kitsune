@@ -70,6 +70,11 @@ img#profilePhoto { border:2px solid var(--brown); border-radius:50%; width:60px;
 .sq.hint-move::after { content:''; position:absolute; width:28%; height:28%; border-radius:50%; background:rgba(80,40,0,0.35); pointer-events:none; }
 .sq.hint-capture::after { content:''; position:absolute; width:100%; height:100%; border-radius:50%; box-sizing:border-box; border:4px solid rgba(80,40,0,0.35); pointer-events:none; }
 #miniBoard { display:grid; grid-template-columns:repeat(8,1fr); grid-template-rows:repeat(8,1fr); width:100%; max-width:400px; aspect-ratio:1; margin:0 auto; border:2px solid var(--brown); }
+@media (max-width:480px) {
+  body { padding-left:6px; padding-right:6px; }
+  #gameBox { padding:2px !important; }
+  #miniBoard { width:100vw; max-width:100vw; margin-left:calc(50% - 50vw); margin-right:calc(50% - 50vw); border-left:none; border-right:none; border-top-width:1px; border-bottom-width:1px; }
+}
 footer { text-align:center; padding:16px 16px 0; font-size:0.85rem; color:#888; border-top:1px solid rgba(184,134,11,0.2); margin-top:24px; }
 footer a { color:var(--brown-dark); text-decoration:none; margin:0 8px; }
 details summary { cursor:pointer; color:var(--brown-dark); font-family:'Cinzel', serif; font-weight:700; font-size:0.95rem; padding:8px 0; list-style:none; }
@@ -2010,6 +2015,18 @@ const PIECE_IMG = {
     document.getElementById('reportPanel').style.display = 'none';
   };
 
+  function squareToVisualRC(sq, myColor) {
+    const files = ['a','b','c','d','e','f','g','h'];
+    const c = files.indexOf(sq[0]);
+    const r = 8 - parseInt(sq[1], 10);
+    const order = [...Array(8).keys()];
+    const rowOrder = myColor === 'b' ? [...order].reverse() : order;
+    const colOrder = myColor === 'b' ? [...order].reverse() : order;
+    return { vr: rowOrder.indexOf(r), vc: colOrder.indexOf(c) };
+  }
+
+  let lastAnimatedMoveKey = null;
+
   function renderMiniBoard(m, user, matchId) {
     latestMatchData = m;
     const boardEl = document.getElementById('miniBoard');
@@ -2162,14 +2179,39 @@ const PIECE_IMG = {
         boardEl.appendChild(cell);
       });
     });
+
+    if (m.lastMove && m.lastMove.from && m.lastMove.to) {
+      const moveKey = matchId + ':' + m.lastMove.from + m.lastMove.to + ':' + ((m.moves || []).length);
+      if (moveKey !== lastAnimatedMoveKey) {
+        lastAnimatedMoveKey = moveKey;
+        const { vr: fr, vc: fc } = squareToVisualRC(m.lastMove.from, myColor);
+        const { vr: tr, vc: tc } = squareToVisualRC(m.lastMove.to, myColor);
+        const toCell = boardEl.children[tr * 8 + tc];
+        const img = toCell ? toCell.querySelector('img') : null;
+        if (img) {
+          const cellSize = boardEl.clientWidth / 8;
+          const dx = (fc - tc) * cellSize;
+          const dy = (fr - tr) * cellSize;
+          img.style.position = 'relative';
+          img.style.zIndex = '5';
+          img.style.transition = 'none';
+          img.style.transform = `translate(${dx}px, ${dy}px)`;
+          requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+              img.style.transition = 'transform 0.24s cubic-bezier(0.33, 1.15, 0.6, 1)';
+              img.style.transform = 'translate(0px, 0px)';
+            });
+          });
+        }
+      }
+    }
   }
 
   async function onSquareClick(sq, user) {
     if (!gameChess || gameChess.game_over()) return;
     const matchId = myMatchId;
-    const matchSnap = await get(ref(db, 'matches/' + matchId));
-    const m = matchSnap.val();
-    if (m.status !== 'active') return;
+    const m = latestMatchData;
+    if (!m || m.status !== 'active') return;
     if (m.turn !== myColor) return;
 
     if (!selectedSquare) {
