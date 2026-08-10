@@ -1535,7 +1535,17 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     });
   }
 
+  async function migrateLegacyCurrentMatch(user) {
+    const legacySnap = await get(ref(db, 'currentMatch/' + user.uid));
+    const legacyMatchId = legacySnap.val();
+    if (legacyMatchId) {
+      await set(ref(db, 'currentMatches/' + user.uid + '/' + legacyMatchId), true);
+      await remove(ref(db, 'currentMatch/' + user.uid));
+    }
+  }
+
   function startMatchListener(user) {
+    migrateLegacyCurrentMatch(user);
     onValue(ref(db, 'currentMatches/' + user.uid), (snap) => {
       const data = snap.val() || {};
       const matchIds = Object.keys(data);
