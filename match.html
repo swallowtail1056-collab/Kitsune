@@ -250,6 +250,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <button id="backToListBtn" data-ja="← 対局一覧に戻る" data-en="← Back to Games List" style="margin-bottom:8px;">← 対局一覧に戻る</button>
     <p><strong data-ja="対局中" data-en="Current Match">対局中</strong></p>
     <p id="gameStatus"></p>
+    <p id="oppPresence" style="font-size:0.8rem;color:var(--text-muted);"></p>
     <p id="gameClock" style="font-weight:700;color:var(--brown-dark);"></p>
     <p id="capturedArea" style="font-size:1.1rem;"></p>
     <div id="miniBoard"></div>
@@ -301,7 +302,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
   import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, deleteUser, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-  import { getDatabase, ref, set, get, push, update, remove, onValue } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+  import { getDatabase, ref, set, get, push, update, remove, onValue, onDisconnect, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyDR6vsVq2uePiFRUmoqYB4LjdGZJiRM4eE",
@@ -1196,6 +1197,28 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     });
   }
 
+  function formatPresenceLabel(presence) {
+    const isOnline = presence && presence.online === true;
+    const dotColor = isOnline ? '#2d8a3e' : '#999';
+    const dot = '<span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:' + dotColor + ';margin-right:6px;"></span>';
+    if (isOnline) {
+      return { dot: dot, text: LANG === 'ja' ? 'オンライン' : 'Online' };
+    }
+    const lastSeen = presence && presence.lastSeen;
+    if (!lastSeen || typeof lastSeen !== 'number') {
+      return { dot: dot, text: LANG === 'ja' ? 'オフライン' : 'Offline' };
+    }
+    const elapsedMs = Date.now() - lastSeen;
+    const mins = Math.floor(elapsedMs / 60000);
+    let rel;
+    if (mins < 1) rel = LANG === 'ja' ? 'たった今' : 'just now';
+    else if (mins < 60) rel = LANG === 'ja' ? mins + '分前' : mins + 'm ago';
+    else if (mins < 1440) rel = LANG === 'ja' ? Math.floor(mins / 60) + '時間前' : Math.floor(mins / 60) + 'h ago';
+    else rel = LANG === 'ja' ? Math.floor(mins / 1440) + '日前' : Math.floor(mins / 1440) + 'd ago';
+    const label = LANG === 'ja' ? '最終ログイン: ' + rel : 'Last seen: ' + rel;
+    return { dot: dot, text: label };
+  }
+
   async function renderFriendsList(user, data) {
     const container = document.getElementById('friendsList');
     container.innerHTML = '';
@@ -1214,11 +1237,13 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       const vsLabel = LANG === 'ja'
         ? '対戦成績: ' + vs.wins + '勝' + vs.losses + '敗' + vs.draws + '分'
         : 'Head-to-head: ' + vs.wins + 'W ' + vs.losses + 'L ' + vs.draws + 'D';
+      const presenceSnap = await get(ref(db, 'presence/' + friendUid));
+      const presenceLabel = formatPresenceLabel(presenceSnap.val());
       const row = document.createElement('div');
       row.className = 'list-item';
       row.style.flexWrap = 'wrap';
       const label = document.createElement('span');
-      label.innerHTML = friendName + '（' + rating + '・' + wld + '）<br><span style="font-size:0.78rem;color:var(--text-muted);">' + vsLabel + '</span>';
+      label.innerHTML = presenceLabel.dot + friendName + '（' + rating + '・' + wld + '）<br><span style="font-size:0.78rem;color:var(--text-muted);">' + vsLabel + '</span><br><span style="font-size:0.75rem;color:var(--text-muted);">' + presenceLabel.text + '</span>';
       const challengeBtn = document.createElement('button');
       const pendingInviteSnap = await get(ref(db, 'matchInvites/' + friendUid + '/' + user.uid));
       let hasPendingInvite = pendingInviteSnap.exists();
@@ -1681,8 +1706,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     });
   }
 
+  let oppPresenceUnsub = null;
+
   function closeOpenedMatch() {
     if (openedMatchUnsub) { openedMatchUnsub(); openedMatchUnsub = null; }
+    if (oppPresenceUnsub) { oppPresenceUnsub(); oppPresenceUnsub = null; }
     document.getElementById('gameBox').style.display = 'none';
     document.getElementById('lobbyArea').style.display = 'block';
     document.getElementById('matchChatPanel').style.display = 'none';
@@ -1694,16 +1722,28 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   function openMatch(user, matchId) {
     if (!user || !matchId) return;
     if (openedMatchUnsub) { openedMatchUnsub(); openedMatchUnsub = null; }
+    if (oppPresenceUnsub) { oppPresenceUnsub(); oppPresenceUnsub = null; }
     myMatchId = matchId;
     document.getElementById('gameBox').style.display = 'block';
     document.getElementById('lobbyArea').style.display = 'none';
     startClockTicker(user);
     let joinFlagSet = false;
+    let oppPresenceAttached = false;
     openedMatchUnsub = onValue(ref(db, 'matches/' + matchId), async (matchSnap) => {
       const m = matchSnap.val();
       if (!m) return;
       myColor = (m.white === user.uid) ? 'w' : 'b';
       gameChess = new Chess(m.fen);
+
+      if (!oppPresenceAttached) {
+        oppPresenceAttached = true;
+        const oppUid = myColor === 'w' ? m.black : m.white;
+        oppPresenceUnsub = onValue(ref(db, 'presence/' + oppUid), (presenceSnap) => {
+          const label = formatPresenceLabel(presenceSnap.val());
+          const el = document.getElementById('oppPresence');
+          if (el) el.innerHTML = label.dot + label.text;
+        });
+      }
 
       if (!joinFlagSet) {
         joinFlagSet = true;
@@ -2666,6 +2706,18 @@ const PIECE_IMG = {
     }
   };
 
+  function setupPresence(user) {
+    const presenceRef = ref(db, 'presence/' + user.uid);
+    const connectedRef = ref(db, '.info/connected');
+    onValue(connectedRef, (snap) => {
+      if (snap.val() === true) {
+        onDisconnect(presenceRef).set({ online: false, lastSeen: serverTimestamp() }).then(() => {
+          set(presenceRef, { online: true, lastSeen: serverTimestamp() });
+        });
+      }
+    });
+  }
+
   onAuthStateChanged(auth, async (user) => {
     const status = document.getElementById('status');
     const loginBtn = document.getElementById('loginBtn');
@@ -2680,6 +2732,7 @@ const PIECE_IMG = {
 
       document.getElementById('profileEmail').textContent = user.email;
       document.getElementById('profilePhoto').src = user.photoURL || '';
+      setupPresence(user);
 
       const snap = await get(ref(db, 'users/' + user.uid));
       let currentName = '';
