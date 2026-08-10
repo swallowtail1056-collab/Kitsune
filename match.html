@@ -82,7 +82,14 @@ img#profilePhoto { border:2px solid var(--brown); border-radius:50%; width:60px;
 .thumb-turn.my-turn { color:#2d8a3e; font-weight:700; }
 .sq.selected { outline:3px solid #e8c84a; outline-offset:-3px; }
 .sq.last-move { background-color:rgba(206,210,107,0.55) !important; }
-.sq.checkmate-king { background-color:rgba(200,30,30,0.65) !important; }
+.sq.checkmate-king {
+  background:
+    radial-gradient(circle at 25% 25%, rgba(255,255,255,0.75) 0%, transparent 35%),
+    radial-gradient(circle at 75% 65%, rgba(255,255,255,0.55) 0%, transparent 30%),
+    radial-gradient(circle at 45% 85%, rgba(255,255,255,0.45) 0%, transparent 25%),
+    linear-gradient(135deg, rgba(195,230,255,0.92), rgba(120,180,235,0.85)) !important;
+  box-shadow: inset 0 0 14px rgba(255,255,255,0.75);
+}
 .sq.recommend-move { outline:3px solid #2d8a3e; outline-offset:-3px; }
 .sq.hint-move::after { content:''; position:absolute; width:28%; height:28%; border-radius:50%; background:rgba(80,40,0,0.35); pointer-events:none; }
 .sq.hint-capture::after { content:''; position:absolute; width:100%; height:100%; border-radius:50%; box-sizing:border-box; border:4px solid rgba(80,40,0,0.35); pointer-events:none; }
@@ -433,102 +440,69 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     return impulse;
   }
 
-  // Sound B: checkmate — shishi-odoshi (deer scarer): water trickles and spills, then a hollow
-  // wooden "kon" knock as the bamboo tube strikes stone, echoing away in a deep reverb tail
+  // Sound B: checkmate — the check sound's sharp metallic attack, scaled up with a longer
+  // ringing tone and a fuller reverb tail so it carries much more weight and resonance
   function playCheckmateSound() {
     try {
       const ctx = new (window.AudioContext || window.webkitAudioContext)();
       const now = ctx.currentTime;
-      const knockTime = now + 0.22;
 
-      // Deep well/garden reverb (shared by the water and the knock)
+      // Reverb send for lingering resonance
       const convolver = ctx.createConvolver();
-      convolver.buffer = createReverbImpulse(ctx, 4.5, 1.3);
-      const reverbLowpass = ctx.createBiquadFilter();
-      reverbLowpass.type = 'lowpass';
-      reverbLowpass.frequency.value = 700;
+      convolver.buffer = createReverbImpulse(ctx, 3.5, 1.5);
+      const reverbFilter = ctx.createBiquadFilter();
+      reverbFilter.type = 'lowpass';
+      reverbFilter.frequency.value = 2000;
       const reverbGain = ctx.createGain();
-      reverbGain.gain.value = 1.4;
-      convolver.connect(reverbLowpass);
-      reverbLowpass.connect(reverbGain);
+      reverbGain.gain.value = 1.3;
+      convolver.connect(reverbFilter);
+      reverbFilter.connect(reverbGain);
       reverbGain.connect(ctx.destination);
 
-      // Water trickling and spilling as the bamboo tube tips over
-      const waterDuration = 0.26;
-      const waterBufferSize = Math.floor(ctx.sampleRate * waterDuration);
-      const waterBuffer = ctx.createBuffer(1, waterBufferSize, ctx.sampleRate);
-      const waterData = waterBuffer.getChannelData(0);
-      for (let i = 0; i < waterBufferSize; i++) {
-        waterData[i] = Math.random() * 2 - 1;
+      // Sharp metallic attack
+      const duration = 0.13;
+      const bufferSize = Math.floor(ctx.sampleRate * duration);
+      const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+      const data = buffer.getChannelData(0);
+      for (let i = 0; i < bufferSize; i++) {
+        data[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / bufferSize, 3);
       }
-      const waterNoise = ctx.createBufferSource();
-      waterNoise.buffer = waterBuffer;
-      const waterFilter = ctx.createBiquadFilter();
-      waterFilter.type = 'bandpass';
-      waterFilter.Q.value = 0.6;
-      waterFilter.frequency.setValueAtTime(2600, now);
-      waterFilter.frequency.linearRampToValueAtTime(900, knockTime);
-      const waterGain = ctx.createGain();
-      waterGain.gain.setValueAtTime(0.001, now);
-      waterGain.gain.linearRampToValueAtTime(0.4, now + 0.1);
-      waterGain.gain.linearRampToValueAtTime(0.28, now + 0.16);
-      waterGain.gain.exponentialRampToValueAtTime(0.001, knockTime + 0.02);
-      waterNoise.connect(waterFilter);
-      waterFilter.connect(waterGain);
-      waterGain.connect(ctx.destination);
-      waterGain.connect(convolver);
+      const noise = ctx.createBufferSource();
+      noise.buffer = buffer;
+      const bandpass = ctx.createBiquadFilter();
+      bandpass.type = 'bandpass';
+      bandpass.frequency.value = 1174.66; // D6
+      bandpass.Q.value = 0.8;
+      const gain = ctx.createGain();
+      gain.gain.setValueAtTime(1, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + duration);
+      noise.connect(bandpass);
+      bandpass.connect(gain);
+      gain.connect(ctx.destination);
+      gain.connect(convolver);
+      noise.start(now);
+      noise.stop(now + duration);
 
-      // Hollow wooden "kon" knock — fundamental plus quickly-decaying harmonics for a woody timbre
-      const knockPartials = [
-        { freq: 420, gain: 0.8, decay: 0.28 },
-        { freq: 760, gain: 0.35, decay: 0.12 },
-        { freq: 1180, gain: 0.18, decay: 0.06 }
+      // Ringing tone tuned to D — an octave stack ("レ") carried by the reverb's tail
+      const ringPartials = [
+        { freq: 146.83, gain: 0.6, decay: 1.2 },  // D3
+        { freq: 293.66, gain: 0.4, decay: 0.9 },  // D4
+        { freq: 587.33, gain: 0.24, decay: 0.6 }  // D5
       ];
-      const knockGain = ctx.createGain();
-      knockGain.gain.value = 1;
-      knockGain.connect(ctx.destination);
-      knockGain.connect(convolver);
-      knockPartials.forEach((p) => {
+      ringPartials.forEach((p) => {
         const osc = ctx.createOscillator();
         const g = ctx.createGain();
         osc.type = 'triangle';
-        osc.frequency.setValueAtTime(p.freq, knockTime);
-        osc.frequency.exponentialRampToValueAtTime(p.freq * 0.85, knockTime + p.decay);
-        g.gain.setValueAtTime(0.001, knockTime);
-        g.gain.linearRampToValueAtTime(p.gain, knockTime + 0.008);
-        g.gain.exponentialRampToValueAtTime(0.001, knockTime + p.decay);
+        osc.frequency.value = p.freq;
+        g.gain.setValueAtTime(0.001, now);
+        g.gain.linearRampToValueAtTime(p.gain, now + 0.006);
+        g.gain.exponentialRampToValueAtTime(0.001, now + p.decay);
         osc.connect(g);
-        g.connect(knockGain);
-        osc.start(knockTime);
-        osc.stop(knockTime + p.decay + 0.05);
+        g.connect(ctx.destination);
+        g.connect(convolver);
+        osc.start(now);
+        osc.stop(now + p.decay + 0.05);
       });
-
-      // A short knock-attack noise burst for the percussive "crack" of contact
-      const crackDuration = 0.03;
-      const crackBufferSize = Math.floor(ctx.sampleRate * crackDuration);
-      const crackBuffer = ctx.createBuffer(1, crackBufferSize, ctx.sampleRate);
-      const crackData = crackBuffer.getChannelData(0);
-      for (let i = 0; i < crackBufferSize; i++) {
-        crackData[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / crackBufferSize, 2);
-      }
-      const crackNoise = ctx.createBufferSource();
-      crackNoise.buffer = crackBuffer;
-      const crackFilter = ctx.createBiquadFilter();
-      crackFilter.type = 'bandpass';
-      crackFilter.frequency.value = 1500;
-      crackFilter.Q.value = 0.8;
-      const crackGain = ctx.createGain();
-      crackGain.gain.setValueAtTime(0.5, knockTime);
-      crackGain.gain.exponentialRampToValueAtTime(0.001, knockTime + crackDuration);
-      crackNoise.connect(crackFilter);
-      crackFilter.connect(crackGain);
-      crackGain.connect(ctx.destination);
-      crackGain.connect(convolver);
-
-      waterNoise.start(now);
-      waterNoise.stop(knockTime + 0.05);
-      crackNoise.start(knockTime);
-      crackNoise.stop(knockTime + crackDuration);
     } catch (e) { /* 音声再生に失敗しても対局自体には影響させない */ }
   }
 
@@ -1630,11 +1604,15 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       namesEl.appendChild(vsEl);
       namesEl.appendChild(oppNameEl);
       const turnEl = document.createElement('div');
-      const myTurn = s.status === 'active' && s.turn === s.myColor;
+      const myTurn = s.phase === 'active' && s.turn === s.myColor;
       turnEl.className = 'thumb-turn' + (myTurn ? ' my-turn' : '');
-      turnEl.textContent = s.status !== 'active'
-        ? (LANG === 'ja' ? '終局' : 'Finished')
-        : (myTurn ? (LANG === 'ja' ? 'あなたの番' : 'Your turn') : (LANG === 'ja' ? '相手の番' : "Opponent's turn"));
+      if (s.phase === 'waiting') {
+        turnEl.textContent = LANG === 'ja' ? '対局開始待ち' : 'Waiting to start';
+      } else if (s.phase === 'finished') {
+        turnEl.textContent = LANG === 'ja' ? '終局' : 'Finished';
+      } else {
+        turnEl.textContent = myTurn ? (LANG === 'ja' ? 'あなたの番' : 'Your turn') : (LANG === 'ja' ? '相手の番' : "Opponent's turn");
+      }
       card.appendChild(boardEl);
       card.appendChild(namesEl);
       card.appendChild(turnEl);
@@ -1674,13 +1652,24 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           const m = matchSnap.val();
           if (!m) return;
           const myC = (m.white === user.uid) ? 'w' : 'b';
+          let phase = 'active';
+          if (m.status === 'waiting') {
+            phase = 'waiting';
+          } else if (m.status === 'resigned' || m.status === 'timeout' || m.status === 'draw_agreed') {
+            phase = 'finished';
+          } else if (m.status === 'active') {
+            try {
+              if (new Chess(m.fen).game_over()) phase = 'finished';
+            } catch (e) { /* FEN解析に失敗しても対局一覧の表示は継続する */ }
+          }
           activeMatchSummaries[matchId] = {
             oppName: myC === 'w' ? m.blackName : m.whiteName,
             myName: myC === 'w' ? m.whiteName : m.blackName,
             myColor: myC,
             turn: m.turn,
             fen: m.fen,
-            status: m.status
+            status: m.status,
+            phase: phase
           };
           renderActiveMatchesList();
         });
