@@ -129,6 +129,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <button id="langBtn">English</button>
 </div>
 <a class="back-link" href="index.html" data-ja="🦊 ゲームに戻る" data-en="🦊 Back to Game">🦊 ゲームに戻る</a>
+<a href="https://kitsunechess.com" target="_blank" rel="noopener" style="display:block;margin:-4px 0 10px;font-size:0.78rem;color:var(--brown-light);text-decoration:none;font-weight:600;">kitsunechess.com</a>
 
 <h1 data-ja="♟ 対局モード" data-en="♟ Match Mode">♟ 対局モード</h1>
 
@@ -165,6 +166,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <p id="aiGameStatus"></p>
     <p id="aiCapturedArea" style="font-size:1.1rem;"></p>
     <div id="aiBoard"></div>
+    <div id="aiBoardNavRow" style="display:none;text-align:center;margin-top:6px;">
+      <button id="aiBoardNavPrevBtn">◀</button>
+      <span id="aiBoardNavLabel" style="font-size:0.85rem;color:var(--text-muted);margin:0 8px;"></span>
+      <button id="aiBoardNavNextBtn">▶</button>
+      <button id="aiBoardNavLiveBtn" style="display:none;margin-left:8px;background:#2d8a3e;" data-ja="● ライブに戻る" data-en="● Back to Live">● ライブに戻る</button>
+    </div>
     <button id="aiQuitBtn" data-ja="対局をやめる" data-en="Quit Game" style="margin-top:10px;">対局をやめる</button>
     <button id="aiHistoryToggleBtn" data-ja="📜 履歴を見る" data-en="📜 View History" style="margin-top:10px;">📜 履歴を見る</button>
     <div id="aiHistoryPanel" style="display:none;margin-top:10px;">
@@ -286,7 +293,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <div class="box" id="gameBox" style="display:none;padding:6px;border:none;background:transparent;">
     <button id="backToListBtn" data-ja="← 対局一覧に戻る" data-en="← Back to Games List" style="margin-bottom:8px;">← 対局一覧に戻る</button>
     <p><strong data-ja="対局中" data-en="Current Match">対局中</strong></p>
-    <p id="gameStatus"></p>
+    <div style="display:flex;align-items:center;gap:8px;">
+      <img id="oppAvatarImg" style="display:none;width:32px;height:32px;border-radius:50%;object-fit:cover;flex-shrink:0;background:rgba(90,58,24,0.1);" alt="">
+      <p id="gameStatus" style="margin:0;"></p>
+    </div>
     <p id="oppPresence" style="font-size:0.8rem;color:var(--text-muted);"></p>
     <p id="gameClock" style="font-weight:700;color:var(--brown-dark);"></p>
     <p id="capturedArea" style="font-size:1.1rem;"></p>
@@ -587,6 +597,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   let aiSelectedSquare = null;
   let aiLastMove = null;
   let aiMoveHistory = [];
+  let aiBoardPly = null; // null = ライブ(最新)局面。数値の時は過去の局面を閲覧中
   let aiDifficulty = 'easy';
   const AI_PIECE_VAL = { p: 1, n: 3, b: 3, r: 5, q: 9, k: 0 };
 
@@ -653,6 +664,41 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     return bestMove;
   }
 
+  function buildCapturedRow(labelText, obj, iconColor, plusNum) {
+    const row = document.createElement('div');
+    row.style.cssText = 'display:flex;align-items:center;flex-wrap:wrap;gap:2px;';
+    const label = document.createElement('span');
+    label.textContent = labelText;
+    label.style.marginRight = '4px';
+    row.appendChild(label);
+    const entries = Object.entries(obj);
+    if (entries.length === 0) {
+      const dash = document.createElement('span');
+      dash.textContent = '-';
+      row.appendChild(dash);
+    } else {
+      entries.forEach(([type, n]) => {
+        const img = document.createElement('img');
+        img.src = PIECE_IMG[iconColor + type.toUpperCase()];
+        img.style.cssText = 'width:18px;height:18px;vertical-align:middle;';
+        row.appendChild(img);
+        if (n > 1) {
+          const cnt = document.createElement('span');
+          cnt.textContent = '×' + n;
+          cnt.style.cssText = 'font-size:0.8rem;margin-right:4px;';
+          row.appendChild(cnt);
+        }
+      });
+    }
+    if (plusNum > 0) {
+      const d = document.createElement('span');
+      d.textContent = ' (+' + plusNum + ')';
+      d.style.cssText = 'margin-left:4px;font-weight:700;';
+      row.appendChild(d);
+    }
+    return row;
+  }
+
   function renderAiBoard() {
     const boardEl = document.getElementById('aiBoard');
     const statusEl = document.getElementById('aiGameStatus');
@@ -676,7 +722,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
     const aiCapturedEl = document.getElementById('aiCapturedArea');
     if (aiCapturedEl) {
-      const CAPTURED_SYMBOL = { p:'♟', n:'♞', b:'♝', r:'♜', q:'♛' };
       const byWhite = {}, byBlack = {};
       let whiteVal = 0, blackVal = 0;
       aiMoveHistory.forEach(mv => {
@@ -686,14 +731,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         else { byBlack[mv.captured] = (byBlack[mv.captured] || 0) + 1; blackVal += val; }
       });
       const diff = whiteVal - blackVal; // プレイヤー(白)から見た損得
-      const fmtTaken = (obj) => Object.entries(obj).map(([type, n]) => CAPTURED_SYMBOL[type] + (n > 1 ? '×' + n : '')).join(' ');
-      const myLine = (LANG === 'ja' ? '自分が取った駒: ' : 'You captured: ') + (fmtTaken(byWhite) || '-') + (diff > 0 ? ' (+' + diff + ')' : '');
-      const aiLine = (LANG === 'ja' ? 'AIが取った駒: ' : 'AI captured: ') + (fmtTaken(byBlack) || '-') + (diff < 0 ? ' (+' + (-diff) + ')' : '');
       aiCapturedEl.innerHTML = '';
-      const p1 = document.createElement('div'); p1.textContent = myLine;
-      const p2 = document.createElement('div'); p2.textContent = aiLine;
-      aiCapturedEl.appendChild(p1);
-      aiCapturedEl.appendChild(p2);
+      aiCapturedEl.appendChild(buildCapturedRow(LANG === 'ja' ? '自分が取った駒: ' : 'You captured: ', byWhite, 'b', diff > 0 ? diff : 0));
+      aiCapturedEl.appendChild(buildCapturedRow(LANG === 'ja' ? 'AIが取った駒: ' : 'AI captured: ', byBlack, 'w', diff < 0 ? -diff : 0));
     }
 
     const boardArray = aiChess.board();
@@ -706,16 +746,47 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     const aiCheckmateKingSq = aiChess.in_checkmate()
       ? findKingSquare(boardArray, aiChess.turn())
       : null;
+
+    const aiTotalPlies = aiMoveHistory.length;
+    if (aiBoardPly !== null) aiBoardPly = Math.max(0, Math.min(aiBoardPly, aiTotalPlies));
+    const aiViewingHistory = aiBoardPly !== null;
+    let aiDisplayChess = aiChess;
+    let aiDisplayLastMove = aiLastMove;
+    let aiDisplayBoardArray = boardArray;
+    let aiDisplayCheckmateKingSq = aiCheckmateKingSq;
+    if (aiViewingHistory) {
+      aiDisplayChess = new Chess();
+      for (let i = 0; i < aiBoardPly; i++) aiDisplayChess.move(aiMoveHistory[i].san);
+      aiDisplayBoardArray = aiDisplayChess.board();
+      aiDisplayCheckmateKingSq = null;
+      aiDisplayLastMove = null;
+      if (aiBoardPly > 0) {
+        const replayCheck = new Chess();
+        for (let i = 0; i < aiBoardPly - 1; i++) replayCheck.move(aiMoveHistory[i].san);
+        const mv = replayCheck.move(aiMoveHistory[aiBoardPly - 1].san);
+        aiDisplayLastMove = mv ? { from: mv.from, to: mv.to } : null;
+      }
+    }
+
+    const aiNavRow = document.getElementById('aiBoardNavRow');
+    const aiNavLabel = document.getElementById('aiBoardNavLabel');
+    const aiNavLiveBtn = document.getElementById('aiBoardNavLiveBtn');
+    if (aiNavRow) {
+      aiNavRow.style.display = aiTotalPlies > 0 ? 'block' : 'none';
+      aiNavLabel.textContent = (aiViewingHistory ? aiBoardPly : aiTotalPlies) + ' / ' + aiTotalPlies;
+      aiNavLiveBtn.style.display = aiViewingHistory ? 'inline-block' : 'none';
+    }
+
     for (let r = 0; r < 8; r++) {
       for (let c = 0; c < 8; c++) {
-        const piece = boardArray[r][c];
+        const piece = aiDisplayBoardArray[r][c];
         const sq = files[c] + (8 - r);
         const cell = document.createElement('div');
         cell.className = 'sq ' + (((r + c) % 2 === 0) ? 'light' : 'dark');
-        if (aiSelectedSquare === sq) cell.classList.add('selected');
-        if (aiLastMove && (aiLastMove.from === sq || aiLastMove.to === sq)) cell.classList.add('last-move');
-        if (aiLegalTargets.has(sq)) cell.classList.add(piece ? 'hint-capture' : 'hint-move');
-        if (aiCheckmateKingSq === sq) cell.classList.add('checkmate-king');
+        if (aiSelectedSquare === sq && !aiViewingHistory) cell.classList.add('selected');
+        if (aiDisplayLastMove && (aiDisplayLastMove.from === sq || aiDisplayLastMove.to === sq)) cell.classList.add('last-move');
+        if (!aiViewingHistory && aiLegalTargets.has(sq)) cell.classList.add(piece ? 'hint-capture' : 'hint-move');
+        if (aiDisplayCheckmateKingSq === sq) cell.classList.add('checkmate-king');
         if (c === 0) {
           const rankLabel = document.createElement('span');
           rankLabel.className = 'sq-label rank-label';
@@ -734,13 +805,32 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           img.style.width = '100%'; img.style.height = '100%'; img.style.pointerEvents = 'none';
           cell.appendChild(img);
         }
-        cell.onclick = () => onAiSquareClick(sq);
+        cell.onclick = aiViewingHistory ? null : () => onAiSquareClick(sq);
         boardEl.appendChild(cell);
       }
     }
   }
 
+  document.getElementById('aiBoardNavPrevBtn').onclick = () => {
+    const total = aiMoveHistory.length;
+    const current = aiBoardPly === null ? total : aiBoardPly;
+    aiBoardPly = Math.max(0, current - 1);
+    renderAiBoard();
+  };
+  document.getElementById('aiBoardNavNextBtn').onclick = () => {
+    const total = aiMoveHistory.length;
+    const current = aiBoardPly === null ? total : aiBoardPly;
+    const next = Math.min(total, current + 1);
+    aiBoardPly = (next === total) ? null : next;
+    renderAiBoard();
+  };
+  document.getElementById('aiBoardNavLiveBtn').onclick = () => {
+    aiBoardPly = null;
+    renderAiBoard();
+  };
+
   function onAiSquareClick(sq) {
+    if (aiBoardPly !== null) return;
     if (!aiChess || aiChess.game_over() || aiChess.turn() !== 'w') return;
     if (!aiSelectedSquare) {
       const piece = aiChess.get(sq);
@@ -959,6 +1049,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     aiSelectedSquare = null;
     aiLastMove = null;
     aiMoveHistory = [];
+    aiBoardPly = null;
     aiHistoryIndex = 0;
     document.getElementById('aiHistoryPanel').style.display = 'none';
     document.getElementById('aiReportPanel').style.display = 'none';
@@ -1055,7 +1146,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       }
     }
     await set(ref(db, 'users/' + user.uid), { username: name, email: user.email, photoURL: user.photoURL || '' });
-    await update(ref(db, 'publicProfiles/' + user.uid), { username: name });
+    await update(ref(db, 'publicProfiles/' + user.uid), { username: name, photoURL: user.photoURL || '' });
     await set(ref(db, 'usernames/' + key), user.uid);
     document.getElementById('profileUsername').textContent = name;
     const msg = document.getElementById('saveMsg');
@@ -1297,7 +1388,18 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       row.className = 'list-item';
       row.style.flexWrap = 'wrap';
       const label = document.createElement('span');
-      label.innerHTML = presenceLabel.dot + friendName + '（' + rating + '・' + wld + '）<br><span style="font-size:0.78rem;color:var(--text-muted);">' + vsLabel + '</span><br><span style="font-size:0.75rem;color:var(--text-muted);">' + presenceLabel.text + '</span>';
+      label.style.display = 'flex';
+      label.style.alignItems = 'flex-start';
+      label.style.gap = '8px';
+      const avatarImg = document.createElement('img');
+      avatarImg.src = friendProfile.photoURL || '';
+      avatarImg.style.cssText = 'width:28px;height:28px;border-radius:50%;object-fit:cover;flex-shrink:0;margin-top:2px;background:rgba(90,58,24,0.1);';
+      avatarImg.onerror = () => { avatarImg.style.display = 'none'; };
+      if (!friendProfile.photoURL) avatarImg.style.display = 'none';
+      const textSpan = document.createElement('span');
+      textSpan.innerHTML = presenceLabel.dot + friendName + '（' + rating + '・' + wld + '）<br><span style="font-size:0.78rem;color:var(--text-muted);">' + vsLabel + '</span><br><span style="font-size:0.75rem;color:var(--text-muted);">' + presenceLabel.text + '</span>';
+      label.appendChild(avatarImg);
+      label.appendChild(textSpan);
       const challengeBtn = document.createElement('button');
       const pendingInviteSnap = await get(ref(db, 'matchInvites/' + friendUid + '/' + user.uid));
       let hasPendingInvite = pendingInviteSnap.exists();
@@ -1781,6 +1883,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     if (oppPresenceUnsub) { oppPresenceUnsub(); oppPresenceUnsub = null; }
     myMatchId = matchId;
     boardPly = null;
+    const oppAvatarReset = document.getElementById('oppAvatarImg');
+    if (oppAvatarReset) oppAvatarReset.style.display = 'none';
     document.getElementById('gameBox').style.display = 'block';
     document.getElementById('lobbyArea').style.display = 'none';
     startClockTicker(user);
@@ -1799,6 +1903,15 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           const label = formatPresenceLabel(presenceSnap.val());
           const el = document.getElementById('oppPresence');
           if (el) el.innerHTML = label.dot + label.text;
+        });
+        get(ref(db, 'publicProfiles/' + oppUid)).then((oppProfileSnap) => {
+          const oppPhotoURL = oppProfileSnap.val() && oppProfileSnap.val().photoURL;
+          const avatarEl = document.getElementById('oppAvatarImg');
+          if (avatarEl && oppPhotoURL) {
+            avatarEl.src = oppPhotoURL;
+            avatarEl.style.display = '';
+            avatarEl.onerror = () => { avatarEl.style.display = 'none'; };
+          }
         });
       }
 
@@ -2531,7 +2644,6 @@ const PIECE_IMG = {
 
     const capturedEl = document.getElementById('capturedArea');
     if (capturedEl) {
-      const CAPTURED_SYMBOL = { p:'♟', n:'♞', b:'♝', r:'♜', q:'♛' };
       const moves = m.moves || [];
       const byWhite = {}, byBlack = {}; // 白番/黒番が「取った」相手の駒種別カウント
       let whiteVal = 0, blackVal = 0;
@@ -2546,15 +2658,12 @@ const PIECE_IMG = {
       const myVal = myColor === 'w' ? whiteVal : blackVal;
       const oppVal = myColor === 'w' ? blackVal : whiteVal;
       const diff = myVal - oppVal;
+      const oppIconColor = myColor === 'w' ? 'b' : 'w';
+      const myIconColor = myColor === 'w' ? 'w' : 'b';
 
-      const fmtTaken = (obj) => Object.entries(obj).map(([type, n]) => CAPTURED_SYMBOL[type] + (n > 1 ? '×' + n : '')).join(' ');
-      const myLine = (LANG === 'ja' ? '自分が取った駒: ' : 'You captured: ') + (fmtTaken(myTaken) || '-') + (diff > 0 ? ' (+' + diff + ')' : '');
-      const oppLine = (LANG === 'ja' ? '相手が取った駒: ' : 'Opponent captured: ') + (fmtTaken(oppTaken) || '-') + (diff < 0 ? ' (+' + (-diff) + ')' : '');
       capturedEl.innerHTML = '';
-      const p1 = document.createElement('div'); p1.textContent = myLine;
-      const p2 = document.createElement('div'); p2.textContent = oppLine;
-      capturedEl.appendChild(p1);
-      capturedEl.appendChild(p2);
+      capturedEl.appendChild(buildCapturedRow(LANG === 'ja' ? '自分が取った駒: ' : 'You captured: ', myTaken, oppIconColor, diff > 0 ? diff : 0));
+      capturedEl.appendChild(buildCapturedRow(LANG === 'ja' ? '相手が取った駒: ' : 'Opponent captured: ', oppTaken, myIconColor, diff < 0 ? -diff : 0));
     }
 
     const totalPlies = (m.moves || []).length;
@@ -2853,9 +2962,11 @@ const PIECE_IMG = {
       } else {
         currentName = user.displayName || '';
         await set(ref(db, 'users/' + user.uid), { username: currentName, email: user.email, photoURL: user.photoURL || '' });
-        await set(ref(db, 'publicProfiles/' + user.uid), { username: currentName, founderMember: Date.now() < FOUNDER_CUTOFF, foundedAt: Date.now() });
+        await set(ref(db, 'publicProfiles/' + user.uid), { username: currentName, photoURL: user.photoURL || '', founderMember: Date.now() < FOUNDER_CUTOFF, foundedAt: Date.now() });
         await set(ref(db, 'usernames/' + normName(currentName)), user.uid);
       }
+      // 既存アカウントでもアバターが常に最新になるよう、ログインのたびに同期しておく
+      await update(ref(db, 'publicProfiles/' + user.uid), { photoURL: user.photoURL || '' });
       document.getElementById('profileUsername').textContent = currentName;
       document.getElementById('usernameInput').value = currentName;
       onValue(ref(db, 'publicProfiles/' + user.uid), (s) => {
