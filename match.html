@@ -249,7 +249,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <p><span data-ja="ユーザー名: " data-en="Username: ">ユーザー名: </span><span id="profileUsername">-</span></p>
     <p><span data-ja="レーティング: " data-en="Rating: ">レーティング: </span><span id="profileRating">1200</span></p>
     <p><span data-ja="先行登録者特典: " data-en="Founding Member: ">先行登録者特典: </span><span id="profileFounder">-</span></p>
-    <img id="profilePhoto" src="" alt="avatar">
+    <div style="position:relative;display:inline-block;">
+      <img id="profilePhoto" src="" alt="avatar">
+      <span id="profileOnlineDot" style="position:absolute;bottom:2px;right:2px;width:14px;height:14px;border-radius:50%;background:#2d8a3e;border:2px solid var(--card);"></span>
+    </div>
   </div>
 
   <div class="box">
@@ -988,56 +991,45 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   }
 
   document.getElementById('aiReportToggleBtn').onclick = async () => {
-    const reportWin = window.open('', '_blank');
-    if (!reportWin) {
-      alert(LANG === 'ja' ? 'ポップアップがブロックされました。ポップアップを許可してください。' : 'Popup was blocked. Please allow popups.');
-      return;
-    }
-    reportWin.document.write(
-      '<!DOCTYPE html><html><head><meta charset="UTF-8"><title>' + (LANG === 'ja' ? '対局レポート' : 'Match Report') + '</title>' +
-      '<style>body{font-family:sans-serif;background:#f5edd6;color:#111;max-width:600px;margin:0 auto;padding:20px;line-height:1.7;}' +
-      'h1{color:#4a2a0e;}.line{margin-bottom:6px;cursor:pointer;}.line:hover{text-decoration:underline;}.summary{padding:8px;background:rgba(184,134,11,0.12);border-left:3px solid #7c4a1e;border-radius:4px;margin-bottom:12px;}</style>' +
-      '</head><body><h1>🔬 ' + (LANG === 'ja' ? '振り返りレポート' : 'Review Report') + '</h1><div id="out">' +
-      (LANG === 'ja' ? '計算中...' : 'Calculating...') + '</div></body></html>'
-    );
-    reportWin.document.close();
-
-    const report = await generateAiDetailedReport((done) => {
-      const outEl = reportWin.document.getElementById('out');
-      if (outEl) outEl.textContent = (LANG === 'ja' ? 'Stockfishで計算中... (' : 'Calculating with Stockfish... (') + done + ')';
-    });
-
-    const outEl = reportWin.document.getElementById('out');
-    if (!outEl) return;
-    outEl.innerHTML = '';
-
-    const issueCount = report.filter(r => r.tag.indexOf('✓') === -1).length;
-    const summaryLine = reportWin.document.createElement('p');
-    summaryLine.className = 'summary';
-    summaryLine.textContent = LANG === 'ja'
-      ? '自分の手' + report.length + '手中、' + issueCount + '手に見直したいポイントがありました。'
-      : 'Out of ' + report.length + ' of your moves, ' + issueCount + ' had points worth reviewing.';
-    outEl.appendChild(summaryLine);
-
-    if (report.length === 0) {
-      outEl.appendChild(reportWin.document.createTextNode(LANG === 'ja' ? '振り返る手がありません。' : 'No moves to review.'));
-      return;
-    }
-    report.forEach(r => {
-      const line = reportWin.document.createElement('div');
-      line.className = 'line';
-      line.textContent = r.moveNum + '. ' + r.san + '　' + r.tag + (r.note ? '(' + r.note + ')' : '');
-      if (r.isFlagged) {
-        line.onclick = () => {
-          document.getElementById('aiHistoryPanel').style.display = 'block';
-          aiHistoryIndex = r.plyIndex;
-          aiHistoryHighlight = r.bestUci ? { from: r.bestUci.slice(0, 2), to: r.bestUci.slice(2, 4), targetIndex: r.plyIndex } : null;
-          renderAiHistoryBoard();
-          document.getElementById('aiHistoryPanel').scrollIntoView({ behavior: 'smooth' });
-        };
+    const panel = document.getElementById('aiReportPanel');
+    const opening = panel.style.display === 'none';
+    panel.style.display = opening ? 'block' : 'none';
+    if (opening) {
+      const listEl = document.getElementById('aiReportList');
+      listEl.innerHTML = LANG === 'ja' ? 'Stockfishで計算中... (0)' : 'Calculating with Stockfish... (0)';
+      const report = await generateAiDetailedReport((done) => {
+        listEl.innerHTML = (LANG === 'ja' ? 'Stockfishで計算中... (' : 'Calculating with Stockfish... (') + done + ')';
+      });
+      listEl.innerHTML = '';
+      const issueCount = report.filter(r => r.tag.indexOf('✓') === -1).length;
+      const summaryLine = document.createElement('p');
+      summaryLine.style.cssText = 'margin-bottom:10px;padding:6px 8px;background:rgba(184,134,11,0.12);border-left:3px solid var(--brown);border-radius:4px;';
+      summaryLine.textContent = LANG === 'ja'
+        ? '自分の手' + report.length + '手中、' + issueCount + '手に見直したいポイントがありました。'
+        : 'Out of ' + report.length + ' of your moves, ' + issueCount + ' had points worth reviewing.';
+      listEl.appendChild(summaryLine);
+      if (report.length === 0) {
+        listEl.appendChild(document.createTextNode(LANG === 'ja' ? '振り返る手がありません。' : 'No moves to review.'));
+      } else {
+        report.forEach(r => {
+          const line = document.createElement('div');
+          line.style.marginBottom = '6px';
+          line.textContent = r.moveNum + '. ' + r.san + '　' + r.tag + (r.note ? '(' + r.note + ')' : '');
+          if (r.isFlagged) {
+            line.style.cursor = 'pointer';
+            line.style.textDecoration = 'underline';
+            line.onclick = () => {
+              document.getElementById('aiHistoryPanel').style.display = 'block';
+              aiHistoryIndex = r.plyIndex;
+              aiHistoryHighlight = r.bestUci ? { from: r.bestUci.slice(0, 2), to: r.bestUci.slice(2, 4), targetIndex: r.plyIndex } : null;
+              renderAiHistoryBoard();
+              document.getElementById('aiHistoryPanel').scrollIntoView({ behavior: 'smooth' });
+            };
+          }
+          listEl.appendChild(line);
+        });
       }
-      outEl.appendChild(line);
-    });
+    }
   };
   document.getElementById('aiReportCloseBtn').onclick = () => {
     document.getElementById('aiReportPanel').style.display = 'none';
@@ -1346,22 +1338,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     const isOnline = presence && presence.online === true;
     const dotColor = isOnline ? '#2d8a3e' : '#999';
     const dot = '<span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:' + dotColor + ';margin-right:6px;"></span>';
-    if (isOnline) {
-      return { dot: dot, text: LANG === 'ja' ? 'オンライン' : 'Online' };
-    }
-    const lastSeen = presence && presence.lastSeen;
-    if (!lastSeen || typeof lastSeen !== 'number') {
-      return { dot: dot, text: LANG === 'ja' ? 'オフライン' : 'Offline' };
-    }
-    const elapsedMs = Date.now() - lastSeen;
-    const mins = Math.floor(elapsedMs / 60000);
-    let rel;
-    if (mins < 1) rel = LANG === 'ja' ? 'たった今' : 'just now';
-    else if (mins < 60) rel = LANG === 'ja' ? mins + '分前' : mins + 'm ago';
-    else if (mins < 1440) rel = LANG === 'ja' ? Math.floor(mins / 60) + '時間前' : Math.floor(mins / 60) + 'h ago';
-    else rel = LANG === 'ja' ? Math.floor(mins / 1440) + '日前' : Math.floor(mins / 1440) + 'd ago';
-    const label = LANG === 'ja' ? '最終ログイン: ' + rel : 'Last seen: ' + rel;
-    return { dot: dot, text: label };
+    return { dot: dot, text: isOnline ? (LANG === 'ja' ? 'オンライン' : 'Online') : (LANG === 'ja' ? 'オフライン' : 'Offline') };
   }
 
   async function renderFriendsList(user, data) {
@@ -2391,65 +2368,56 @@ const PIECE_IMG = {
   }
 
   document.getElementById('reportToggleBtn').onclick = async () => {
-    if (!latestMatchData) return;
-    const reportWin = window.open('', '_blank');
-    if (!reportWin) {
-      alert(LANG === 'ja' ? 'ポップアップがブロックされました。ポップアップを許可してください。' : 'Popup was blocked. Please allow popups.');
-      return;
+    const panel = document.getElementById('reportPanel');
+    const opening = panel.style.display === 'none';
+    panel.style.display = opening ? 'block' : 'none';
+    if (opening && latestMatchData) {
+      const listEl = document.getElementById('reportList');
+      listEl.innerHTML = LANG === 'ja' ? 'Stockfishで計算中... (0)' : 'Calculating with Stockfish... (0)';
+      const report = await generateDetailedReport(latestMatchData, (done) => {
+        listEl.innerHTML = (LANG === 'ja' ? 'Stockfishで計算中... (' : 'Calculating with Stockfish... (') + done + ')';
+      });
+      listEl.innerHTML = '';
+
+        const deltaField = myColor === 'w' ? 'eloDeltaWhite' : 'eloDeltaBlack';
+        const delta = latestMatchData[deltaField];
+        if (typeof delta === 'number') {
+          const deltaLine = document.createElement('p');
+          deltaLine.style.fontWeight = '700';
+          deltaLine.style.marginBottom = '6px';
+          deltaLine.textContent = (LANG === 'ja' ? '今回の対局でのレーティング変動: ' : 'Rating change from this game: ') + (delta >= 0 ? '+' : '') + delta;
+          listEl.appendChild(deltaLine);
+        }
+        const issueCount = report.filter(r => r.tag.indexOf('✓') === -1).length;
+        const summaryLine = document.createElement('p');
+        summaryLine.style.cssText = 'margin-bottom:10px;padding:6px 8px;background:rgba(184,134,11,0.12);border-left:3px solid var(--brown);border-radius:4px;';
+        summaryLine.textContent = LANG === 'ja'
+          ? '自分の手' + report.length + '手中、' + issueCount + '手に見直したいポイントがありました。'
+          : 'Out of ' + report.length + ' of your moves, ' + issueCount + ' had points worth reviewing.';
+        listEl.appendChild(summaryLine);
+
+        if (report.length === 0) {
+          listEl.appendChild(document.createTextNode(LANG === 'ja' ? '振り返る手がありません。' : 'No moves to review.'));
+          return;
+        }
+        report.forEach(r => {
+          const line = document.createElement('div');
+          line.style.marginBottom = '6px';
+          line.textContent = r.moveNum + '. ' + r.san + '　' + r.tag + (r.note ? '(' + r.note + ')' : '');
+          if (r.isFlagged) {
+            line.style.cursor = 'pointer';
+            line.style.textDecoration = 'underline';
+            line.onclick = () => {
+              document.getElementById('historyPanel').style.display = 'block';
+              historyIndex = r.plyIndex;
+              historyHighlight = r.bestUci ? { from: r.bestUci.slice(0, 2), to: r.bestUci.slice(2, 4), targetIndex: r.plyIndex } : null;
+              renderHistoryBoard();
+              document.getElementById('historyPanel').scrollIntoView({ behavior: 'smooth' });
+            };
+          }
+          listEl.appendChild(line);
+        });
     }
-    reportWin.document.write(
-      '<!DOCTYPE html><html><head><meta charset="UTF-8"><title>' + (LANG === 'ja' ? '対局レポート' : 'Match Report') + '</title>' +
-      '<style>body{font-family:sans-serif;background:#f5edd6;color:#111;max-width:600px;margin:0 auto;padding:20px;line-height:1.7;}' +
-      'h1{color:#4a2a0e;}.line{margin-bottom:6px;cursor:pointer;}.line:hover{text-decoration:underline;}.summary{padding:8px;background:rgba(184,134,11,0.12);border-left:3px solid #7c4a1e;border-radius:4px;margin-bottom:12px;}</style>' +
-      '</head><body><h1>🔬 ' + (LANG === 'ja' ? '対局レポート' : 'Match Report') + '</h1><div id="out">' +
-      (LANG === 'ja' ? '計算中...' : 'Calculating...') + '</div></body></html>'
-    );
-    reportWin.document.close();
-
-    const report = await generateDetailedReport(latestMatchData, (done) => {
-      const outEl = reportWin.document.getElementById('out');
-      if (outEl) outEl.textContent = (LANG === 'ja' ? 'Stockfishで計算中... (' : 'Calculating with Stockfish... (') + done + ')';
-    });
-
-    const outEl = reportWin.document.getElementById('out');
-    if (!outEl) return;
-    outEl.innerHTML = '';
-
-    const deltaField = myColor === 'w' ? 'eloDeltaWhite' : 'eloDeltaBlack';
-    const delta = latestMatchData[deltaField];
-    if (typeof delta === 'number') {
-      const deltaLine = reportWin.document.createElement('p');
-      deltaLine.style.fontWeight = '700';
-      deltaLine.textContent = (LANG === 'ja' ? '今回の対局でのレーティング変動: ' : 'Rating change from this game: ') + (delta >= 0 ? '+' : '') + delta;
-      outEl.appendChild(deltaLine);
-    }
-    const issueCount = report.filter(r => r.tag.indexOf('✓') === -1).length;
-    const summaryLine = reportWin.document.createElement('p');
-    summaryLine.className = 'summary';
-    summaryLine.textContent = LANG === 'ja'
-      ? '自分の手' + report.length + '手中、' + issueCount + '手に見直したいポイントがありました。'
-      : 'Out of ' + report.length + ' of your moves, ' + issueCount + ' had points worth reviewing.';
-    outEl.appendChild(summaryLine);
-
-    if (report.length === 0) {
-      outEl.appendChild(reportWin.document.createTextNode(LANG === 'ja' ? '振り返る手がありません。' : 'No moves to review.'));
-      return;
-    }
-    report.forEach(r => {
-      const line = reportWin.document.createElement('div');
-      line.className = 'line';
-      line.textContent = r.moveNum + '. ' + r.san + '　' + r.tag + (r.note ? '(' + r.note + ')' : '');
-      if (r.isFlagged) {
-        line.onclick = () => {
-          document.getElementById('historyPanel').style.display = 'block';
-          historyIndex = r.plyIndex;
-          historyHighlight = r.bestUci ? { from: r.bestUci.slice(0, 2), to: r.bestUci.slice(2, 4), targetIndex: r.plyIndex } : null;
-          renderHistoryBoard();
-          document.getElementById('historyPanel').scrollIntoView({ behavior: 'smooth' });
-        };
-      }
-      outEl.appendChild(line);
-    });
   };
   document.getElementById('reportCloseBtn').onclick = () => {
     document.getElementById('reportPanel').style.display = 'none';
@@ -3080,9 +3048,10 @@ const PIECE_IMG = {
         cell.dataset.sq = sq;
         if (puzzleState.lastFrom === sq || puzzleState.lastTo === sq) cell.classList.add('last-move');
         if (puzzleState.selected === sq) cell.classList.add('selected');
+        const piece = puzzleChess.get(sq);
+        if (puzzleState.validTargets && puzzleState.validTargets.includes(sq)) cell.classList.add(piece ? 'hint-capture' : 'hint-move');
         if (col === 0) { const l = document.createElement('span'); l.className = 'sq-label rank-label'; l.textContent = ranks[row]; cell.appendChild(l); }
         if (row === 7) { const l = document.createElement('span'); l.className = 'sq-label file-label'; l.textContent = files[col]; cell.appendChild(l); }
-        const piece = puzzleChess.get(sq);
         if (piece) {
           const img = document.createElement('img');
           img.src = PIECE_IMG[piece.color + piece.type.toUpperCase()];
