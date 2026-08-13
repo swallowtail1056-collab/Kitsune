@@ -366,7 +366,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
   import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, deleteUser, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-  import { getDatabase, ref, set, get, push, update, remove, onValue, onDisconnect, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+  import { getDatabase, ref, set, get, push, update, remove, onValue, onDisconnect, serverTimestamp, runTransaction } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyDR6vsVq2uePiFRUmoqYB4LjdGZJiRM4eE",
@@ -1998,8 +1998,15 @@ const PIECE_IMG = {
     const dedupeKey = matchId + '_' + myColor;
     if (appliedRatingsFor.has(dedupeKey)) return;
     const flagField = myColor === 'w' ? 'ratingAppliedWhite' : 'ratingAppliedBlack';
-    if (m[flagField]) { appliedRatingsFor.add(dedupeKey); return; }
+
+    // トランザクションでフラグを「早い者勝ち」で確保する。
+    // 同じ対局を複数タブ/アプリで同時に開いていても、二重に加算されないようにするための対策。
+    const claim = await runTransaction(ref(db, 'matches/' + matchId + '/' + flagField), (current) => {
+      if (current === true) return; // 既に確保済み → 中断(このクライアントは何もしない)
+      return true;
+    });
     appliedRatingsFor.add(dedupeKey);
+    if (!claim.committed) return; // 他のタブ/セッションが先に処理済み
 
     const oppUid = myColor === 'w' ? m.black : m.white;
     const [myProfileSnap, oppProfileSnap] = await Promise.all([
@@ -2032,7 +2039,7 @@ const PIECE_IMG = {
       ['vsRecord/' + oppUid]: newOppVs
     });
     const deltaField = myColor === 'w' ? 'eloDeltaWhite' : 'eloDeltaBlack';
-    await update(ref(db, 'matches/' + matchId), { [flagField]: true, [deltaField]: newRating - myRating });
+    await update(ref(db, 'matches/' + matchId), { [deltaField]: newRating - myRating });
 
     // 対局が終わるたびに、独立した「対局履歴」レコードを保存しておく
     // (currentMatches側は「対局を退出する」で消えるが、こちらは消えない)
@@ -2055,8 +2062,12 @@ const PIECE_IMG = {
     const dedupeKey = matchId + '_' + myColor;
     if (appliedAnalysisFor.has(dedupeKey)) return;
     const flagField = myColor === 'w' ? 'analysisAppliedWhite' : 'analysisAppliedBlack';
-    if (m[flagField]) { appliedAnalysisFor.add(dedupeKey); return; }
+    const claim = await runTransaction(ref(db, 'matches/' + matchId + '/' + flagField), (current) => {
+      if (current === true) return;
+      return true;
+    });
     appliedAnalysisFor.add(dedupeKey);
+    if (!claim.committed) return;
 
     const moves = m.moves || [];
     const myMoves = moves.filter(mv => mv.color === myColor);
@@ -2099,7 +2110,6 @@ const PIECE_IMG = {
       }
     };
     await update(ref(db, 'publicProfiles/' + user.uid), update_);
-    await update(ref(db, 'matches/' + matchId), { [flagField]: true });
   }
 
   let lastMoveSoundKey = null;
