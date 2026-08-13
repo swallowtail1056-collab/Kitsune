@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>アンパッサン(En Passant)とは？ - KitsuneChess</title>
+<meta name="description" content="チェスの特殊ルール「アンパッサン」をアニメーション付きで解説。2マス前進したポーンを通りすがりに取る仕組みが分かります。">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Crimson+Pro:wght@400;600;700&display=swap" rel="stylesheet">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1034556404852942" crossorigin="anonymous"></script>
+<style>
+:root {
+  --bg:#f5edd6; --brown:#7c4a1e; --brown-dark:#4a2a0e; --brown-light:#a3692d;
+  --card:#f0e4c8; --text:#111; --text-muted:#444;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  background:var(--bg); color:var(--text);
+  font-family:'Crimson Pro', serif; font-weight:600;
+  max-width:720px; margin:0 auto; padding:16px 16px 60px;
+  line-height:1.8;
+}
+h1 { font-family:'Cinzel', serif; color:var(--brown-dark); font-size:1.6rem;
+  border-bottom:2px solid rgba(124,74,30,0.3); padding-bottom:10px; margin-bottom:16px; }
+h2 { font-family:'Cinzel', serif; color:var(--brown-dark); font-size:1.15rem; margin:22px 0 8px; }
+p { margin-bottom:12px; }
+.lang-switch { text-align:right; margin-bottom:10px; }
+.back-link { display:inline-block; margin-bottom:10px; color:var(--brown-dark); text-decoration:none; font-weight:700; }
+button {
+  font-family:'Crimson Pro', serif; font-weight:700; padding:8px 18px; margin:4px 4px 4px 0;
+  cursor:pointer; background:var(--brown); color:#fff; border:none; border-radius:6px;
+}
+button:hover { background:var(--brown-dark); }
+button:disabled { opacity:0.6; cursor:default; }
+.lang-switch button { background:#f7ebd3; color:var(--brown-dark); border:1px solid #c4b193; }
+.box { background:var(--card); border:2px solid var(--brown); border-radius:10px; padding:16px; margin-top:16px; text-align:center; }
+
+.tb-board { display:grid; grid-template-columns:repeat(8,minmax(0,1fr)); grid-template-rows:repeat(8,minmax(0,1fr));
+  width:100%; max-width:360px; aspect-ratio:1; margin:0 auto; border:2px solid var(--brown); }
+.tb-sq { position:relative; }
+.tb-label { position:absolute; font-family:'Crimson Pro', serif; font-weight:800; font-size:0.65rem; line-height:1; pointer-events:none; z-index:2; }
+.tb-light .tb-label { color:rgba(80,40,0,0.85); }
+.tb-dark .tb-label { color:rgba(255,240,200,0.95); }
+.tb-rank-label { top:2px; left:3px; }
+.tb-file-label { bottom:2px; right:3px; }
+.tb-light { background:#d4b87a; }
+.tb-dark { background:#7a5230; }
+.tb-highlight { background-color:#cdd26b !important; }
+.tb-piece { width:100%; height:100%; pointer-events:none; }
+.tb-caption { margin-top:10px; font-weight:700; min-height:1.6em; color:var(--brown-dark); }
+.tb-controls { margin-top:8px; }
+
+footer { text-align:center; padding:16px 16px 0; font-size:0.85rem; color:#888; border-top:1px solid rgba(184,134,11,0.2); margin-top:24px; }
+footer a { color:var(--brown-dark); text-decoration:none; margin:0 8px; }
+</style>
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-KKPG2SSX');</script>
+</head>
+<body>
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KKPG2SSX"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+
+<div class="lang-switch">
+  <button id="langBtn">日本語</button>
+</div>
+<a class="back-link" href="info.html" data-ja="🦊 Info一覧へ戻る" data-en="🦊 Back to Info">🦊 Info一覧へ戻る</a>
+
+<h1 data-ja="👻 アンパッサン / En Passant とは？" data-en="👻 What is En Passant?">👻 アンパッサン / En Passant とは？</h1>
+
+<p data-ja="アンパッサン（En Passant）は、フランス語で「通りすがりに」を意味する、少し特殊なポーンの取り方です。チェスのルールの中でも初心者がつまずきやすい部分ですが、仕組みを理解すればとてもシンプルです。"
+   data-en="En passant is French for &quot;in passing,&quot; and it's a special pawn capture that trips up a lot of beginners. Once you understand the mechanics, though, it's actually very simple.">
+   アンパッサン（En Passant）は、フランス語で「通りすがりに」を意味する、少し特殊なポーンの取り方です。チェスのルールの中でも初心者がつまずきやすい部分ですが、仕組みを理解すればとてもシンプルです。</p>
+
+<p data-ja="通常、ポーンが2マス同時に前進できるのは、まだ一度も動いていない最初の位置からだけです。このとき、もし相手のポーンがちょうど「1マス隣」の、進んだ先と同じ段に並んでいたら、その相手のポーンは直後の1手に限り、まるで自分が1マスしか進まなかったかのように、斜め前に進んで取ることができます。これがアンパッサンです。"
+   data-en="Normally, a pawn can advance two squares only from its starting position. If an enemy pawn happens to be sitting right beside it — on the same rank it just landed on — that enemy pawn may, on its very next move only, capture it diagonally exactly as if it had advanced just one square instead of two. That's en passant.">
+   通常、ポーンが2マス同時に前進できるのは、まだ一度も動いていない最初の位置からだけです。このとき、もし相手のポーンがちょうど「1マス隣」の、進んだ先と同じ段に並んでいたら、その相手のポーンは直後の1手に限り、まるで自分が1マスしか進まなかったかのように、斜め前に進んで取ることができます。これがアンパッサンです。</p>
+
+<div class="box">
+  <div id="epDemo"></div>
+</div>
+
+<p data-ja="上のアニメーションでは、黒のポーンがd7からd5へ2マス前進した直後、隣にいた白のポーンがe5からd6へ斜めに移動し、まるで通り過ぎた黒ポーンを追い抜きざまに捕まえるように取っている様子を示しています。"
+   data-en="The animation above shows Black's pawn advancing two squares from d7 to d5. Immediately afterward, White's neighboring pawn slides diagonally from e5 to d6 — capturing the black pawn as though catching it mid-stride as it passed by.">
+   上のアニメーションでは、黒のポーンがd7からd5へ2マス前進した直後、隣にいた白のポーンがe5からd6へ斜めに移動し、まるで通り過ぎた黒ポーンを追い抜きざまに捕まえるように取っている様子を示しています。</p>
+
+<h2 data-ja="アンパッサンが成立する条件" data-en="When En Passant Applies">アンパッサンが成立する条件</h2>
+<p data-ja="この特殊ルールには、重要な条件が2つあります。1つ目は、取る側のポーンが、必ず自分から見て5段目（黒番なら4段目）にいる必要があること。2つ目は、アンパッサンで取れるのは、相手が2マス前進した「その直後の1手」だけだということです。1手でも他の手を挟んでしまうと、その権利は永久に消えてしまいます。"
+   data-en="This special rule has two key conditions. First, the capturing pawn must already be on its own fifth rank (the fourth rank, from Black's perspective). Second, en passant is only legal on the very next move after the two-square advance — if you play any other move first, the right to capture that way disappears permanently.">
+   この特殊ルールには、重要な条件が2つあります。1つ目は、取る側のポーンが、必ず自分から見て5段目（黒番なら4段目）にいる必要があること。2つ目は、アンパッサンで取れるのは、相手が2マス前進した「その直後の1手」だけだということです。1手でも他の手を挟んでしまうと、その権利は永久に消えてしまいます。</p>
+
+<p data-ja="アンパッサンが存在する理由は、ポーンが2マス前進するルールが後から追加された際に、「2マス進めば必ず斜めからの攻撃を避けられる」という抜け道をふさぐためだと言われています。もしこのルールがなければ、ポーンを2マス進めるだけで簡単に相手の攻撃をかわせてしまい、ゲームバランスが崩れてしまいます。"
+   data-en="En passant exists because, historically, once pawns were allowed to move two squares on their first move, it created a loophole — a pawn could always dodge a diagonal attack simply by advancing two squares instead of one. Without this rule, that two-square advance would let pawns slip past attackers too easily, throwing off the game's balance.">
+   アンパッサンが存在する理由は、ポーンが2マス前進するルールが後から追加された際に、「2マス進めば必ず斜めからの攻撃を避けられる」という抜け道をふさぐためだと言われています。もしこのルールがなければ、ポーンを2マス進めるだけで簡単に相手の攻撃をかわせてしまい、ゲームバランスが崩れてしまいます。</p>
+
+<p data-ja="実戦では気づかずに見逃してしまうことも多いルールなので、相手が自分のポーンの隣に2マス前進してきたときは、アンパッサンが可能かどうかを一度確認する習慣をつけておくと良いでしょう。KitsuneChessの対局モードでも、このルールは正しく実装されているので、ぜひ実際に試してみてください。"
+   data-en="Because it's easy to miss in real games, it's worth building the habit of checking whether en passant is available any time an opponent's pawn advances two squares right next to yours. KitsuneChess's Match Mode implements this rule correctly, so give it a try in an actual game.">
+   実戦では気づかずに見逃してしまうことも多いルールなので、相手が自分のポーンの隣に2マス前進してきたときは、アンパッサンが可能かどうかを一度確認する習慣をつけておくと良いでしょう。KitsuneChessの対局モードでも、このルールは正しく実装されているので、ぜひ実際に試してみてください。</p>
+
+<footer>
+  <div>
+    <a href="info.html" data-ja="解説記事一覧" data-en="Articles">解説記事一覧</a>
+    <a href="disclaimer.html" data-ja="免責事項" data-en="Privacy Policy">免責事項</a>
+  </div>
+</footer>
+
+<script src="tactics-board.js"></script>
+<script>
+  let LANG = localStorage.getItem('selectedLang') === 'en' ? 'en' : 'ja';
+  let boardHandle = null;
+
+  function applyLang() {
+    document.querySelectorAll('[data-ja]').forEach(el => { el.textContent = LANG === 'ja' ? el.dataset.ja : el.dataset.en; });
+    document.getElementById('langBtn').textContent = LANG === 'ja' ? 'English' : '日本語';
+    if (boardHandle) boardHandle.refreshLang();
+  }
+  document.getElementById('langBtn').onclick = () => {
+    LANG = LANG === 'ja' ? 'en' : 'ja';
+    localStorage.setItem('selectedLang', LANG);
+    applyLang();
+  };
+  applyLang();
+
+  boardHandle = TacticBoard({
+    containerId: 'epDemo',
+    fen: '4k3/3p4/8/4P3/8/8/8/4K3 b - - 0 1',
+    moves: [
+      { from: 'd7', to: 'd5' },
+      { from: 'e5', to: 'd6', capture: 'd5' }
+    ],
+    captions: {
+      ja: ['黒番。黒ポーンがd7、白ポーンがe5にいます。', '黒がd7からd5へ2マス前進。', '白がe5からd6へ、アンパッサンでポーンを取る!'],
+      en: ["Black to move. Black's pawn is on d7, White's on e5.", 'Black advances two squares, d7 to d5.', 'White captures en passant: e5 to d6!']
+    }
+  });
+</script>
+</body>
+</html>

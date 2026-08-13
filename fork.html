@@ -67,7 +67,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 </div>
 <a class="back-link" href="info.html" data-ja="🦊 Info一覧へ戻る" data-en="🦊 Back to Info">🦊 Info一覧へ戻る</a>
 
-<h1 data-ja="♞ フォーク(Fork)とは？" data-en="♞ What is a Fork?">♞ フォーク(Fork)とは？</h1>
+<h1 data-ja="♞ フォーク / Fork とは？" data-en="♞ What is a Fork?">♞ フォーク / Fork とは？</h1>
 
 <p data-ja="フォーク（Fork）とは、自分の1つの駒を使って、相手の2つ以上の駒を同時に攻撃する戦術のことです。相手はどちらか一方の駒しか守ることができないため、必ずどちらかを失ってしまいます。チェスの基本的な戦術の中でも特に発生しやすく、初心者から上級者まで幅広く使われる重要なテクニックです。"
    data-en="A fork is a tactic where a single piece attacks two or more of your opponent's pieces at the same time. Since the opponent can only defend one of them, you're guaranteed to win material. It's one of the most fundamental tactics in chess, and one that players of every level use constantly.">
@@ -125,7 +125,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   boardHandle = TacticBoard({
     containerId: 'forkDemo',
     fen: 'r3k3/8/N7/8/8/8/8/4K3 w - - 0 1',
-    moves: [{ from: 'a6', to: 'c7' }],
+    moves: [{ from: 'a6', to: 'c7', check: true }],
     captions: {
       ja: ['白番。ナイトがa6にいます。', 'Na6-c7+ 王とルークを同時に攻撃するロイヤルフォーク!'],
       en: ['White to move. The knight sits on a6.', 'Na6-c7+ forks the king and rook at once — a royal fork!']

@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ピン(Pin)とは？ - KitsuneChess</title>
+<meta name="description" content="チェスの基本戦術「ピン」をアニメーション付きで解説。ビショップで王とナイトを串刺しにする絶対ピンを例に学べます。">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Crimson+Pro:wght@400;600;700&display=swap" rel="stylesheet">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1034556404852942" crossorigin="anonymous"></script>
+<style>
+:root {
+  --bg:#f5edd6; --brown:#7c4a1e; --brown-dark:#4a2a0e; --brown-light:#a3692d;
+  --card:#f0e4c8; --text:#111; --text-muted:#444;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  background:var(--bg); color:var(--text);
+  font-family:'Crimson Pro', serif; font-weight:600;
+  max-width:720px; margin:0 auto; padding:16px 16px 60px;
+  line-height:1.8;
+}
+h1 { font-family:'Cinzel', serif; color:var(--brown-dark); font-size:1.6rem;
+  border-bottom:2px solid rgba(124,74,30,0.3); padding-bottom:10px; margin-bottom:16px; }
+h2 { font-family:'Cinzel', serif; color:var(--brown-dark); font-size:1.15rem; margin:22px 0 8px; }
+p { margin-bottom:12px; }
+.lang-switch { text-align:right; margin-bottom:10px; }
+.back-link { display:inline-block; margin-bottom:10px; color:var(--brown-dark); text-decoration:none; font-weight:700; }
+button {
+  font-family:'Crimson Pro', serif; font-weight:700; padding:8px 18px; margin:4px 4px 4px 0;
+  cursor:pointer; background:var(--brown); color:#fff; border:none; border-radius:6px;
+}
+button:hover { background:var(--brown-dark); }
+button:disabled { opacity:0.6; cursor:default; }
+.lang-switch button { background:#f7ebd3; color:var(--brown-dark); border:1px solid #c4b193; }
+.box { background:var(--card); border:2px solid var(--brown); border-radius:10px; padding:16px; margin-top:16px; text-align:center; }
+
+.tb-board { display:grid; grid-template-columns:repeat(8,minmax(0,1fr)); grid-template-rows:repeat(8,minmax(0,1fr));
+  width:100%; max-width:360px; aspect-ratio:1; margin:0 auto; border:2px solid var(--brown); }
+.tb-sq { position:relative; }
+.tb-label { position:absolute; font-family:'Crimson Pro', serif; font-weight:800; font-size:0.65rem; line-height:1; pointer-events:none; z-index:2; }
+.tb-light .tb-label { color:rgba(80,40,0,0.85); }
+.tb-dark .tb-label { color:rgba(255,240,200,0.95); }
+.tb-rank-label { top:2px; left:3px; }
+.tb-file-label { bottom:2px; right:3px; }
+.tb-light { background:#d4b87a; }
+.tb-dark { background:#7a5230; }
+.tb-highlight { background-color:#cdd26b !important; }
+.tb-piece { width:100%; height:100%; pointer-events:none; }
+.tb-caption { margin-top:10px; font-weight:700; min-height:1.6em; color:var(--brown-dark); }
+.tb-controls { margin-top:8px; }
+
+footer { text-align:center; padding:16px 16px 0; font-size:0.85rem; color:#888; border-top:1px solid rgba(184,134,11,0.2); margin-top:24px; }
+footer a { color:var(--brown-dark); text-decoration:none; margin:0 8px; }
+</style>
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-KKPG2SSX');</script>
+</head>
+<body>
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KKPG2SSX"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+
+<div class="lang-switch">
+  <button id="langBtn">日本語</button>
+</div>
+<a class="back-link" href="info.html" data-ja="🦊 Info一覧へ戻る" data-en="🦊 Back to Info">🦊 Info一覧へ戻る</a>
+
+<h1 data-ja="📌 ピン / Pin とは？" data-en="📌 What is a Pin?">📌 ピン / Pin とは？</h1>
+
+<p data-ja="ピン（Pin）とは、自分の駒が相手の駒を狙う直線（縦・横・斜め）の延長線上に、相手のより価値の高い駒（多くの場合は王）が並んでいる状況を利用する戦術です。狙われている駒は、下がったり避けたりして動くと、後ろにいるもっと大切な駒が直接攻撃を受けてしまうため、その場から動けなくなってしまいます。この「動けない」状態を利用して、他の駒で追加の攻撃を仕掛けるのがピンの基本的な使い方です。"
+   data-en="A pin happens when your piece threatens an opponent's piece that has a more valuable piece (often the king) lined up directly behind it on the same rank, file, or diagonal. If the pinned piece moves away, the more valuable piece behind it gets exposed to attack — so it effectively can't move. This immobility is exactly what makes pins so useful: you can bring in more attackers while the pinned piece is helpless to respond.">
+   ピン（Pin）とは、自分の駒が相手の駒を狙う直線（縦・横・斜め）の延長線上に、相手のより価値の高い駒（多くの場合は王）が並んでいる状況を利用する戦術です。狙われている駒は、下がったり避けたりして動くと、後ろにいるもっと大切な駒が直接攻撃を受けてしまうため、その場から動けなくなってしまいます。この「動けない」状態を利用して、他の駒で追加の攻撃を仕掛けるのがピンの基本的な使い方です。</p>
+
+<div class="box">
+  <div id="pinDemo"></div>
+</div>
+
+<p data-ja="特に強力なのが、王が絡む「絶対ピン」です。チェスのルール上、王手を放置したまま他の手を指すことは反則なので、ピンされた駒は完全に身動きが取れなくなります。上のアニメーションでは、白のビショップがf1からb5へ移動することで、e8にいる黒の王とd7の黒のナイトが同じ斜めのライン上に並び、ナイトが完全に釘付けにされる様子を示しています。"
+   data-en="The most powerful version involves the king — an &quot;absolute pin.&quot; Since it's illegal to make a move that leaves your own king in check, a piece pinned to the king literally cannot move at all. The animation above shows White's bishop sliding from f1 to b5, lining up Black's king on e8 and Black's knight on d7 along the same diagonal — the knight is now completely pinned in place.">
+   特に強力なのが、王が絡む「絶対ピン」です。チェスのルール上、王手を放置したまま他の手を指すことは反則なので、ピンされた駒は完全に身動きが取れなくなります。上のアニメーションでは、白のビショップがf1からb5へ移動することで、e8にいる黒の王とd7の黒のナイトが同じ斜めのライン上に並び、ナイトが完全に釘付けにされる様子を示しています。</p>
+
+<h2 data-ja="ピンの活かし方" data-en="How to Use a Pin">ピンの活かし方</h2>
+<p data-ja="ピンをかけられた駒は、実質的に「いないもの」として扱えることが多く、その駒が本来守っていたマスや駒を、他の駒で自由に攻撃できるようになります。たとえばピンされたナイトの周りにあるポーンを、他の駒でまとめて攻撃すれば、ナイトは反撃に参加できないまま、一方的に駒を失っていくことになります。"
+   data-en="A pinned piece can often be treated as though it isn't even there — squares or pieces it was defending become fair game for a fresh attack. For example, if you gang up on the pawns around a pinned knight with your other pieces, the knight can't join the defense, and you can win material one piece at a time.">
+   ピンをかけられた駒は、実質的に「いないもの」として扱えることが多く、その駒が本来守っていたマスや駒を、他の駒で自由に攻撃できるようになります。たとえばピンされたナイトの周りにあるポーンを、他の駒でまとめて攻撃すれば、ナイトは反撃に参加できないまま、一方的に駒を失っていくことになります。</p>
+
+<p data-ja="ピンには、王が絡まない「相対ピン」もあります。この場合、ピンされた駒を動かすこと自体は反則ではありませんが、動かすと後ろの価値の高い駒（クイーンなど）が取られてしまうため、実質的には動かせません。"
+   data-en="There's also a &quot;relative pin,&quot; which doesn't involve the king. Here, moving the pinned piece isn't illegal — but doing so would expose a more valuable piece (like a queen) behind it to capture, so in practice it still can't move.">
+   ピンには、王が絡まない「相対ピン」もあります。この場合、ピンされた駒を動かすこと自体は反則ではありませんが、動かすと後ろの価値の高い駒（クイーンなど）が取られてしまうため、実質的には動かせません。</p>
+
+<p data-ja="自分の駒を並べるときは、味方の王や重要な駒が、相手のビショップ・ルーク・クイーンの通り道に一直線に並んでいないかを常に意識しましょう。逆に、相手の駒が縦・横・斜めに並んでいる場面を見つけたら、ピンを狙える絶好のチャンスです。ピンは単体でも駒得につながりますが、他の戦術（両取りや駒の集中攻撃）と組み合わせることで、さらに大きな効果を発揮します。ピンを実戦で見抜けるようになると、相手の駒配置の弱点が一気に見えるようになります。KitsuneChessのパズルストリークにもピンを使った問題が数多く出題されるので、繰り返し練習して感覚を養ってみてください。"
+   data-en="When arranging your own pieces, always be mindful of whether your king or valuable pieces line up along a path your opponent's bishop, rook, or queen could exploit. Conversely, when you spot your opponent's pieces lined up on a rank, file, or diagonal, that's a great opportunity to look for a pin. Pins win material on their own, but they're even more powerful combined with other tactics like double attacks or piling up attackers. Once you start spotting pins in real games, weaknesses in your opponent's position will jump out at you. KitsuneChess's Puzzle Streak includes plenty of pin-based positions, so keep practicing to sharpen your eye.">
+   自分の駒を並べるときは、味方の王や重要な駒が、相手のビショップ・ルーク・クイーンの通り道に一直線に並んでいないかを常に意識しましょう。逆に、相手の駒が縦・横・斜めに並んでいる場面を見つけたら、ピンを狙える絶好のチャンスです。ピンは単体でも駒得につながりますが、他の戦術（両取りや駒の集中攻撃）と組み合わせることで、さらに大きな効果を発揮します。ピンを実戦で見抜けるようになると、相手の駒配置の弱点が一気に見えるようになります。KitsuneChessのパズルストリークにもピンを使った問題が数多く出題されるので、繰り返し練習して感覚を養ってみてください。</p>
+
+
+<footer>
+  <div>
+    <a href="info.html" data-ja="解説記事一覧" data-en="Articles">解説記事一覧</a>
+    <a href="disclaimer.html" data-ja="免責事項" data-en="Privacy Policy">免責事項</a>
+  </div>
+</footer>
+
+<script src="tactics-board.js"></script>
+<script>
+  let LANG = localStorage.getItem('selectedLang') === 'en' ? 'en' : 'ja';
+  let boardHandle = null;
+
+  function applyLang() {
+    document.querySelectorAll('[data-ja]').forEach(el => { el.textContent = LANG === 'ja' ? el.dataset.ja : el.dataset.en; });
+    document.getElementById('langBtn').textContent = LANG === 'ja' ? 'English' : '日本語';
+    if (boardHandle) boardHandle.refreshLang();
+  }
+  document.getElementById('langBtn').onclick = () => {
+    LANG = LANG === 'ja' ? 'en' : 'ja';
+    localStorage.setItem('selectedLang', LANG);
+    applyLang();
+  };
+  applyLang();
+
+  boardHandle = TacticBoard({
+    containerId: 'pinDemo',
+    fen: '4k3/3n4/8/8/8/8/8/4KB2 w - - 0 1',
+    moves: [{ from: 'f1', to: 'b5' }],
+    captions: {
+      ja: ['白番。ビショップがf1にいます。', 'Bf1-b5 ナイトが動くと王手になるため、ナイトは完全に釘付け（ピン）されている!'],
+      en: ['White to move. The bishop sits on f1.', 'Bf1-b5 pins the knight — if it moves, the king would be left in check!']
+    }
+  });
+</script>
+</body>
+</html>

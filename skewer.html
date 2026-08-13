@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>スキュア(Skewer)とは？ - KitsuneChess</title>
+<meta name="description" content="チェスの基本戦術「スキュア」をアニメーション付きで解説。ルークで王とルークを一直線に串刺しにする例で学べます。">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Crimson+Pro:wght@400;600;700&display=swap" rel="stylesheet">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1034556404852942" crossorigin="anonymous"></script>
+<style>
+:root {
+  --bg:#f5edd6; --brown:#7c4a1e; --brown-dark:#4a2a0e; --brown-light:#a3692d;
+  --card:#f0e4c8; --text:#111; --text-muted:#444;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  background:var(--bg); color:var(--text);
+  font-family:'Crimson Pro', serif; font-weight:600;
+  max-width:720px; margin:0 auto; padding:16px 16px 60px;
+  line-height:1.8;
+}
+h1 { font-family:'Cinzel', serif; color:var(--brown-dark); font-size:1.6rem;
+  border-bottom:2px solid rgba(124,74,30,0.3); padding-bottom:10px; margin-bottom:16px; }
+h2 { font-family:'Cinzel', serif; color:var(--brown-dark); font-size:1.15rem; margin:22px 0 8px; }
+p { margin-bottom:12px; }
+.lang-switch { text-align:right; margin-bottom:10px; }
+.back-link { display:inline-block; margin-bottom:10px; color:var(--brown-dark); text-decoration:none; font-weight:700; }
+button {
+  font-family:'Crimson Pro', serif; font-weight:700; padding:8px 18px; margin:4px 4px 4px 0;
+  cursor:pointer; background:var(--brown); color:#fff; border:none; border-radius:6px;
+}
+button:hover { background:var(--brown-dark); }
+button:disabled { opacity:0.6; cursor:default; }
+.lang-switch button { background:#f7ebd3; color:var(--brown-dark); border:1px solid #c4b193; }
+.box { background:var(--card); border:2px solid var(--brown); border-radius:10px; padding:16px; margin-top:16px; text-align:center; }
+
+.tb-board { display:grid; grid-template-columns:repeat(8,minmax(0,1fr)); grid-template-rows:repeat(8,minmax(0,1fr));
+  width:100%; max-width:360px; aspect-ratio:1; margin:0 auto; border:2px solid var(--brown); }
+.tb-sq { position:relative; }
+.tb-label { position:absolute; font-family:'Crimson Pro', serif; font-weight:800; font-size:0.65rem; line-height:1; pointer-events:none; z-index:2; }
+.tb-light .tb-label { color:rgba(80,40,0,0.85); }
+.tb-dark .tb-label { color:rgba(255,240,200,0.95); }
+.tb-rank-label { top:2px; left:3px; }
+.tb-file-label { bottom:2px; right:3px; }
+.tb-light { background:#d4b87a; }
+.tb-dark { background:#7a5230; }
+.tb-highlight { background-color:#cdd26b !important; }
+.tb-piece { width:100%; height:100%; pointer-events:none; }
+.tb-caption { margin-top:10px; font-weight:700; min-height:1.6em; color:var(--brown-dark); }
+.tb-controls { margin-top:8px; }
+
+footer { text-align:center; padding:16px 16px 0; font-size:0.85rem; color:#888; border-top:1px solid rgba(184,134,11,0.2); margin-top:24px; }
+footer a { color:var(--brown-dark); text-decoration:none; margin:0 8px; }
+</style>
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-KKPG2SSX');</script>
+</head>
+<body>
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KKPG2SSX"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+
+<div class="lang-switch">
+  <button id="langBtn">日本語</button>
+</div>
+<a class="back-link" href="info.html" data-ja="🦊 Info一覧へ戻る" data-en="🦊 Back to Info">🦊 Info一覧へ戻る</a>
+
+<h1 data-ja="🗡️ スキュア / Skewer とは？" data-en="🗡️ What is a Skewer?">🗡️ スキュア / Skewer とは？</h1>
+
+<p data-ja="スキュア（Skewer）とは、ピンとよく似た戦術ですが、駒の並び順が逆になっているのが特徴です。ピンでは「価値の低い駒の後ろに価値の高い駒」が並んでいましたが、スキュアでは「価値の高い駒（多くの場合は王）の後ろに価値の低い駒」が並びます。手前の大切な駒が攻撃を避けるために動くと、後ろに隠れていた駒がそのまま攻撃にさらされてしまう、という仕組みです。"
+   data-en="A skewer is closely related to a pin, but with the order of pieces reversed. In a pin, the less valuable piece is in front and the more valuable one (often the king) is behind. In a skewer, the more valuable piece is in front, with a less valuable piece hiding behind it. When the piece in front has to move out of the attack, the piece behind gets left exposed.">
+   スキュア（Skewer）とは、ピンとよく似た戦術ですが、駒の並び順が逆になっているのが特徴です。ピンでは「価値の低い駒の後ろに価値の高い駒」が並んでいましたが、スキュアでは「価値の高い駒（多くの場合は王）の後ろに価値の低い駒」が並びます。手前の大切な駒が攻撃を避けるために動くと、後ろに隠れていた駒がそのまま攻撃にさらされてしまう、という仕組みです。</p>
+
+<div class="box">
+  <div id="skewerDemo"></div>
+</div>
+
+<p data-ja="上のアニメーションでは、白のルークがa1からe1へ移動することで、e5にいる黒の王に王手をかけると同時に、そのまま奥のe8にいる黒のルークまで一直線に狙う「スキュア」の例を示しています。黒は王手を放置できないため、必ず王を動かさなければなりません。しかし王が動いた瞬間、後ろに隠れていたルークが白のルークの攻撃に完全にさらされてしまい、次の手で失われてしまいます。"
+   data-en="The animation above shows White's rook sliding from a1 to e1, delivering check to Black's king on e5 while lining up Black's rook on e8 behind it — a classic skewer. Black cannot ignore the check and must move the king. The instant it does, the rook behind it is left fully exposed to White's rook and will be lost on the next move.">
+   上のアニメーションでは、白のルークがa1からe1へ移動することで、e5にいる黒の王に王手をかけると同時に、そのまま奥のe8にいる黒のルークまで一直線に狙う「スキュア」の例を示しています。黒は王手を放置できないため、必ず王を動かさなければなりません。しかし王が動いた瞬間、後ろに隠れていたルークが白のルークの攻撃に完全にさらされてしまい、次の手で失われてしまいます。</p>
+
+<h2 data-ja="スキュアが決まりやすい場面" data-en="When Skewers Happen">スキュアが決まりやすい場面</h2>
+<p data-ja="スキュアは、ルーク・ビショップ・クイーンのように、まっすぐ長い距離を攻撃できる駒（ロングレンジピース）でしか作ることができません。ナイトやポーンには射程を貫通する動きがないため、スキュアを狙う際は、まずこの3種類の駒の利き筋を意識することが大切です。"
+   data-en="Skewers can only be created by long-range pieces — rooks, bishops, and queens — since they attack in a straight line through multiple squares. Knights and pawns can't create this kind of through-attack, so when hunting for a skewer, start by focusing on the lines controlled by these three pieces.">
+   スキュアは、ルーク・ビショップ・クイーンのように、まっすぐ長い距離を攻撃できる駒（ロングレンジピース）でしか作ることができません。ナイトやポーンには射程を貫通する動きがないため、スキュアを狙う際は、まずこの3種類の駒の利き筋を意識することが大切です。</p>
+
+<p data-ja="特に、相手の王とルークやクイーンが縦・横・斜めの同じライン上に並んでいる場面は、スキュアの絶好のチャンスです。序盤や中盤で無意識にそうした配置になっていることも多いので、駒を動かすたびに「王の後ろに何か駒が隠れていないか」を確認する癖をつけましょう。"
+   data-en="A great opportunity arises whenever your opponent's king and a rook or queen end up lined up on the same rank, file, or diagonal — which happens more often than you'd expect, especially without either side noticing. Make a habit of checking, every time you move a piece, whether anything valuable is hiding behind the enemy king.">
+   特に、相手の王とルークやクイーンが縦・横・斜めの同じライン上に並んでいる場面は、スキュアの絶好のチャンスです。序盤や中盤で無意識にそうした配置になっていることも多いので、駒を動かすたびに「王の後ろに何か駒が隠れていないか」を確認する癖をつけましょう。</p>
+
+<p data-ja="ピンとスキュアは兄弟のような戦術で、どちらも「串刺し」という共通のイメージで理解すると覚えやすくなります。KitsuneChessのパズルストリークにも、ピンとスキュアを組み合わせた応用問題が多数出題されるので、両方の違いを意識しながら練習してみてください。実戦で使いこなせるようになると、終盤でのルーク同士の戦いや、王とルークが残る局面で特に大きな武器になります。なお、王が絡まないスキュアもあります。たとえば相手のクイーンの後ろにルークが並んでいる場合、クイーンを逃がされてもルークを手に入れられるので、駒得を狙える有効な戦術です。"
+   data-en="Pins and skewers are close cousins, and thinking of both as forms of &quot;skewering&quot; a line of pieces makes them easier to remember together. KitsuneChess's Puzzle Streak includes combined pin-and-skewer positions, so practice telling them apart as you go. Once you're comfortable spotting skewers in real games, they become a major weapon in rook endgames and any position where the king and a rook remain on the board. Skewers don't always involve the king, either — if an opponent's queen has a rook lined up behind it, even letting the queen escape still nets you the rook, making it a reliably profitable tactic.">
+   ピンとスキュアは兄弟のような戦術で、どちらも「串刺し」という共通のイメージで理解すると覚えやすくなります。KitsuneChessのパズルストリークにも、ピンとスキュアを組み合わせた応用問題が多数出題されるので、両方の違いを意識しながら練習してみてください。実戦で使いこなせるようになると、終盤でのルーク同士の戦いや、王とルークが残る局面で特に大きな武器になります。なお、王が絡まないスキュアもあります。たとえば相手のクイーンの後ろにルークが並んでいる場合、クイーンを逃がされてもルークを手に入れられるので、駒得を狙える有効な戦術です。</p>
+
+<footer>
+  <div>
+    <a href="info.html" data-ja="解説記事一覧" data-en="Articles">解説記事一覧</a>
+    <a href="disclaimer.html" data-ja="免責事項" data-en="Privacy Policy">免責事項</a>
+  </div>
+</footer>
+
+<script src="tactics-board.js"></script>
+<script>
+  let LANG = localStorage.getItem('selectedLang') === 'en' ? 'en' : 'ja';
+  let boardHandle = null;
+
+  function applyLang() {
+    document.querySelectorAll('[data-ja]').forEach(el => { el.textContent = LANG === 'ja' ? el.dataset.ja : el.dataset.en; });
+    document.getElementById('langBtn').textContent = LANG === 'ja' ? 'English' : '日本語';
+    if (boardHandle) boardHandle.refreshLang();
+  }
+  document.getElementById('langBtn').onclick = () => {
+    LANG = LANG === 'ja' ? 'en' : 'ja';
+    localStorage.setItem('selectedLang', LANG);
+    applyLang();
+  };
+  applyLang();
+
+  boardHandle = TacticBoard({
+    containerId: 'skewerDemo',
+    fen: '4r3/8/8/4k3/8/8/8/R5K1 w - - 0 1',
+    moves: [{ from: 'a1', to: 'e1', check: true }],
+    captions: {
+      ja: ['白番。ルークがa1にいます。', 'Ra1-e1+ 王手をかけつつ、奥のルークを串刺しにするスキュア!'],
+      en: ['White to move. The rook sits on a1.', 'Ra1-e1+ checks the king while skewering the rook behind it!']
+    }
+  });
+</script>
+</body>
+</html>
