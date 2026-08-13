@@ -236,6 +236,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <div id="activeMatchesList" style="display:flex;flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;gap:10px;margin-top:8px;padding-bottom:8px;"></div>
   </div>
 
+  <details class="box" id="matchHistoryBox">
+    <summary data-ja="🗂 対局履歴" data-en="🗂 Match History">🗂 対局履歴</summary>
+    <div id="matchHistoryList"></div>
+  </details>
+
   <div class="box">
     <p><strong data-ja="表示名（ユーザーネーム）" data-en="Display Name (Username)">表示名（ユーザーネーム）</strong></p>
     <input type="text" id="usernameInput" maxlength="20">
@@ -1745,6 +1750,36 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     });
   }
 
+  function renderMatchHistory(data) {
+    const listEl = document.getElementById('matchHistoryList');
+    if (!listEl) return;
+    listEl.innerHTML = '';
+    const entries = Object.values(data || {}).sort((a, b) => (b.finishedAt || 0) - (a.finishedAt || 0));
+    if (entries.length === 0) {
+      const p = document.createElement('p');
+      p.style.cssText = 'font-size:0.85rem;color:var(--text-muted);';
+      p.textContent = LANG === 'ja' ? 'まだ対局履歴がありません。' : 'No match history yet.';
+      listEl.appendChild(p);
+      return;
+    }
+    entries.forEach(e => {
+      const row = document.createElement('div');
+      row.className = 'list-item';
+      const resultLabel = e.result === 'win' ? (LANG === 'ja' ? '勝ち' : 'Win')
+        : e.result === 'loss' ? (LANG === 'ja' ? '負け' : 'Loss')
+        : (LANG === 'ja' ? '引き分け' : 'Draw');
+      const resultColor = e.result === 'win' ? '#2d8a3e' : (e.result === 'loss' ? '#a33' : 'var(--text-muted)');
+      const date = e.finishedAt ? new Date(e.finishedAt).toLocaleDateString(LANG === 'ja' ? 'ja-JP' : 'en-US') : '';
+      const colorLabel = e.myColor === 'w' ? (LANG === 'ja' ? '白番' : 'White') : (LANG === 'ja' ? '黒番' : 'Black');
+      const deltaText = typeof e.ratingDelta === 'number' ? (e.ratingDelta >= 0 ? '+' + e.ratingDelta : String(e.ratingDelta)) : '';
+      const label = document.createElement('span');
+      label.innerHTML = '<strong style="color:' + resultColor + ';">' + resultLabel + '</strong> vs ' + (e.oppName || '?') +
+        '（' + colorLabel + '）<br><span style="font-size:0.78rem;color:var(--text-muted);">' + date + (deltaText ? '　Elo ' + deltaText : '') + '</span>';
+      row.appendChild(label);
+      listEl.appendChild(row);
+    });
+  }
+
   function renderActiveMatchesList() {
     const box = document.getElementById('activeMatchesBox');
     const list = document.getElementById('activeMatchesList');
@@ -1998,6 +2033,21 @@ const PIECE_IMG = {
     });
     const deltaField = myColor === 'w' ? 'eloDeltaWhite' : 'eloDeltaBlack';
     await update(ref(db, 'matches/' + matchId), { [flagField]: true, [deltaField]: newRating - myRating });
+
+    // 対局が終わるたびに、独立した「対局履歴」レコードを保存しておく
+    // (currentMatches側は「対局を退出する」で消えるが、こちらは消えない)
+    const resultWord = myResult === 1 ? 'win' : (myResult === 0 ? 'loss' : 'draw');
+    await set(ref(db, 'matchHistory/' + user.uid + '/' + matchId), {
+      oppUid: oppUid,
+      oppName: myColor === 'w' ? m.blackName : m.whiteName,
+      myColor: myColor,
+      result: resultWord,
+      ratingDelta: newRating - myRating,
+      ratingAfter: newRating,
+      timeControl: m.timeControl || null,
+      status: m.status || 'checkmate',
+      finishedAt: Date.now()
+    });
   }
 
   const appliedAnalysisFor = new Set();
@@ -2989,6 +3039,7 @@ const PIECE_IMG = {
       onValue(ref(db, 'friends/' + user.uid), (s) => { latestFriendsData = s.val(); renderFriendsList(user, latestFriendsData); });
       onValue(ref(db, 'matchInvites/' + user.uid), (s) => { latestMatchInvitesData = s.val(); renderMatchInvites(user, latestMatchInvitesData); });
       startMatchListener(user);
+      onValue(ref(db, 'matchHistory/' + user.uid), (s) => { renderMatchHistory(s.val()); });
 
       onValue(ref(db, 'publicProfiles'), (s) => { allUsersMap = s.val() || {}; renderUserSearchResults(); });
       onValue(ref(db, 'friends/' + user.uid), (s) => { myFriendsSet = new Set(Object.keys(s.val() || {})); renderUserSearchResults(); });
