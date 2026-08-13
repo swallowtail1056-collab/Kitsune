@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>おとり(Decoy)とは？ - KitsuneChess</title>
+<meta name="description" content="チェスの戦術「おとり」をアニメーション付きで解説。クイーンの犠牲で王をおびき寄せ、ナイトでフォークを決める例が分かります。">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Crimson+Pro:wght@400;600;700&display=swap" rel="stylesheet">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1034556404852942" crossorigin="anonymous"></script>
+<style>
+:root {
+  --bg:#f5edd6; --brown:#7c4a1e; --brown-dark:#4a2a0e; --brown-light:#a3692d;
+  --card:#f0e4c8; --text:#111; --text-muted:#444;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  background:var(--bg); color:var(--text);
+  font-family:'Crimson Pro', serif; font-weight:600;
+  max-width:720px; margin:0 auto; padding:16px 16px 60px;
+  line-height:1.8;
+}
+h1 { font-family:'Cinzel', serif; color:var(--brown-dark); font-size:1.6rem;
+  border-bottom:2px solid rgba(124,74,30,0.3); padding-bottom:10px; margin-bottom:16px; }
+h2 { font-family:'Cinzel', serif; color:var(--brown-dark); font-size:1.15rem; margin:22px 0 8px; }
+p { margin-bottom:12px; }
+.lang-switch { text-align:right; margin-bottom:10px; }
+.back-link { display:inline-block; margin-bottom:10px; color:var(--brown-dark); text-decoration:none; font-weight:700; }
+button {
+  font-family:'Crimson Pro', serif; font-weight:700; padding:8px 18px; margin:4px 4px 4px 0;
+  cursor:pointer; background:var(--brown); color:#fff; border:none; border-radius:6px;
+}
+button:hover { background:var(--brown-dark); }
+button:disabled { opacity:0.6; cursor:default; }
+.lang-switch button { background:#f7ebd3; color:var(--brown-dark); border:1px solid #c4b193; }
+.box { background:var(--card); border:2px solid var(--brown); border-radius:10px; padding:16px; margin-top:16px; text-align:center; }
+
+.tb-board { display:grid; grid-template-columns:repeat(8,minmax(0,1fr)); grid-template-rows:repeat(8,minmax(0,1fr));
+  width:100%; max-width:360px; aspect-ratio:1; margin:0 auto; border:2px solid var(--brown); }
+.tb-sq { position:relative; }
+.tb-label { position:absolute; font-family:'Crimson Pro', serif; font-weight:800; font-size:0.65rem; line-height:1; pointer-events:none; z-index:2; }
+.tb-light .tb-label { color:rgba(80,40,0,0.85); }
+.tb-dark .tb-label { color:rgba(255,240,200,0.95); }
+.tb-rank-label { top:2px; left:3px; }
+.tb-file-label { bottom:2px; right:3px; }
+.tb-light { background:#d4b87a; }
+.tb-dark { background:#7a5230; }
+.tb-highlight { background-color:#cdd26b !important; }
+.tb-piece { width:100%; height:100%; pointer-events:none; }
+.tb-caption { margin-top:10px; font-weight:700; min-height:1.6em; color:var(--brown-dark); }
+.tb-controls { margin-top:8px; }
+
+footer { text-align:center; padding:16px 16px 0; font-size:0.85rem; color:#888; border-top:1px solid rgba(184,134,11,0.2); margin-top:24px; }
+footer a { color:var(--brown-dark); text-decoration:none; margin:0 8px; }
+</style>
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-KKPG2SSX');</script>
+</head>
+<body>
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KKPG2SSX"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+
+<div class="lang-switch">
+  <button id="langBtn">日本語</button>
+</div>
+<a class="back-link" href="info.html" data-ja="🦊 Info一覧へ戻る" data-en="🦊 Back to Info">🦊 Info一覧へ戻る</a>
+
+<h1 data-ja="🪤 おとり / Decoy とは？" data-en="🪤 What is a Decoy?">🪤 おとり / Decoy とは？</h1>
+
+<p data-ja="おとり（Decoy）とは、相手の駒（多くの場合は王）を、本来いるべきではない不利なマスへとおびき寄せる戦術です。犠牲（サクリファイス）を伴うことが多く、一見すると駒を損しているように見えても、おびき寄せた後に大きな見返りを得られる場合に成立します。"
+   data-en="A decoy tactic lures an opponent's piece — often the king — onto an unfavorable square, usually by offering a sacrifice. It might look like you're losing material at first, but the point is to profit even more once the target piece has been forced onto the wrong square.">
+   おとり（Decoy）とは、相手の駒（多くの場合は王）を、本来いるべきではない不利なマスへとおびき寄せる戦術です。犠牲（サクリファイス）を伴うことが多く、一見すると駒を損しているように見えても、おびき寄せた後に大きな見返りを得られる場合に成立します。</p>
+
+<div class="box">
+  <div id="decoyDemo"></div>
+</div>
+
+<p data-ja="上のアニメーションでは、白のクイーンがc3からh8へ移動して王手をかけています。これはクイーンを犠牲にする手ですが、黒キングはこの王手を防ぐには取るしかなく、g8からh8へキングを動かして応じます。しかしこれによってキングはまさにおとりに誘われた形になり、次に白のナイトがh4からg6へ移動すると、キングとルークの両方に王手（フォーク）がかかってしまいます。"
+   data-en="In the animation above, White's queen sacrifices itself by moving from c3 to h8 with check. Black has no way to meet the check except to capture: the king moves from g8 to h8. But that's exactly the trap — the king has been decoyed onto h8. Now White's knight jumps from h4 to g6, forking the king and the rook on f8 at once.">
+   上のアニメーションでは、白のクイーンがc3からh8へ移動して王手をかけています。これはクイーンを犠牲にする手ですが、黒キングはこの王手を防ぐには取るしかなく、g8からh8へキングを動かして応じます。しかしこれによってキングはまさにおとりに誘われた形になり、次に白のナイトがh4からg6へ移動すると、キングとルークの両方に王手（フォーク）がかかってしまいます。</p>
+
+<h2 data-ja="おとりの考え方" data-en="How to Think About Decoys">おとりの考え方</h2>
+
+<p data-ja="おとりを成功させるコツは、「相手がその手を拒否できない」状況を作ることです。今回のように王手をかければ、相手には取るか逃げるかの選択肢しかなくなります。特に、逃げ場がなく取らざるを得ない場合は、おとりが最も強力に機能します。"
+   data-en="The key to a successful decoy is creating a situation your opponent can't refuse. Delivering check, as in this example, leaves them with only two options: capture or move away. When there's no square to escape to, capturing becomes forced — and that's when a decoy works best.">
+   おとりを成功させるコツは、「相手がその手を拒否できない」状況を作ることです。今回のように王手をかければ、相手には取るか逃げるかの選択肢しかなくなります。特に、逃げ場がなく取らざるを得ない場合は、おとりが最も強力に機能します。</p>
+
+<p data-ja="おとりは、王だけでなく、守備の要になっている他の駒（守備駒）に対しても使えます。守備駒をおびき寄せて本来の持ち場から引き離すことで、それまで守られていたマスや駒を一気に攻撃できるようになります。"
+   data-en="Decoys aren't limited to the king — they also work against defending pieces. Luring a key defender away from its post opens up whatever square or piece it was protecting to a fresh attack.">
+   おとりは、王だけでなく、守備の要になっている他の駒（守備駒）に対しても使えます。守備駒をおびき寄せて本来の持ち場から引き離すことで、それまで守られていたマスや駒を一気に攻撃できるようになります。</p>
+
+<p data-ja="おとりの戦術は、フォークやディスカバードアタックなど、他の戦術と組み合わせて使われることがほとんどです。「なぜこの駒を犠牲にするのか」という目的を持って読みを進める練習を積むと、実戦で驚くようなコンビネーションを見つけられるようになります。KitsuneChessのパズルストリークでも、おとりを使った詰みや駒得の問題が多数出題されています。"
+   data-en="Decoys are almost always combined with other tactics like forks or discovered attacks. Practicing the habit of calculating &quot;why am I giving up this piece?&quot; will help you spot surprising combinations in real games. KitsuneChess's Puzzle Streak includes plenty of decoy-based puzzles leading to mate or material gain.">
+   おとりの戦術は、フォークやディスカバードアタックなど、他の戦術と組み合わせて使われることがほとんどです。「なぜこの駒を犠牲にするのか」という目的を持って読みを進める練習を積むと、実戦で驚くようなコンビネーションを見つけられるようになります。KitsuneChessのパズルストリークでも、おとりを使った詰みや駒得の問題が多数出題されています。</p>
+
+
+<footer>
+  <div>
+    <a href="info.html" data-ja="解説記事一覧" data-en="Articles">解説記事一覧</a>
+    <a href="disclaimer.html" data-ja="免責事項" data-en="Privacy Policy">免責事項</a>
+  </div>
+</footer>
+
+<script src="tactics-board.js"></script>
+<script>
+  let LANG = localStorage.getItem('selectedLang') === 'en' ? 'en' : 'ja';
+  let boardHandle = null;
+
+  function applyLang() {
+    document.querySelectorAll('[data-ja]').forEach(el => { el.textContent = LANG === 'ja' ? el.dataset.ja : el.dataset.en; });
+    document.getElementById('langBtn').textContent = LANG === 'ja' ? 'English' : '日本語';
+    if (boardHandle) boardHandle.refreshLang();
+  }
+  document.getElementById('langBtn').onclick = () => {
+    LANG = LANG === 'ja' ? 'en' : 'ja';
+    localStorage.setItem('selectedLang', LANG);
+    applyLang();
+  };
+  applyLang();
+
+  boardHandle = TacticBoard({
+    containerId: 'decoyDemo',
+    fen: '5rk1/8/8/8/7N/2Q5/8/4K3 w - - 0 1',
+    moves: [
+      { from: 'c3', to: 'h8', check: true },
+      { from: 'g8', to: 'h8', captured: true },
+      { from: 'h4', to: 'g6', check: true }
+    ],
+    captions: {
+      ja: ['白番。クイーンがc3にいます。', 'Qc3-h8+ クイーンを犠牲にする王手!', '黒はキングでクイーンを取るしかない…おとりに誘われた!', 'Nh4-g6+ キングとルークをフォーク!'],
+      en: ['White to move. The queen sits on c3.', 'Qc3-h8+ a check that sacrifices the queen!', 'Black is forced to capture with the king — right into the trap!', 'Nh4-g6+ forking the king and rook!']
+    }
+  });
+</script>
+</body>
+</html>

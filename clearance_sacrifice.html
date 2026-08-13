@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>クリアランス(Clearance Sacrifice)とは？ - KitsuneChess</title>
+<meta name="description" content="チェスの戦術「クリアランス(開放の犠打)」をアニメーション付きで解説。クイーンの犠牲でルークの道を開通させてメイトを決める例です。">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Crimson+Pro:wght@400;600;700&display=swap" rel="stylesheet">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1034556404852942" crossorigin="anonymous"></script>
+<style>
+:root {
+  --bg:#f5edd6; --brown:#7c4a1e; --brown-dark:#4a2a0e; --brown-light:#a3692d;
+  --card:#f0e4c8; --text:#111; --text-muted:#444;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  background:var(--bg); color:var(--text);
+  font-family:'Crimson Pro', serif; font-weight:600;
+  max-width:720px; margin:0 auto; padding:16px 16px 60px;
+  line-height:1.8;
+}
+h1 { font-family:'Cinzel', serif; color:var(--brown-dark); font-size:1.6rem;
+  border-bottom:2px solid rgba(124,74,30,0.3); padding-bottom:10px; margin-bottom:16px; }
+h2 { font-family:'Cinzel', serif; color:var(--brown-dark); font-size:1.15rem; margin:22px 0 8px; }
+p { margin-bottom:12px; }
+.lang-switch { text-align:right; margin-bottom:10px; }
+.back-link { display:inline-block; margin-bottom:10px; color:var(--brown-dark); text-decoration:none; font-weight:700; }
+button {
+  font-family:'Crimson Pro', serif; font-weight:700; padding:8px 18px; margin:4px 4px 4px 0;
+  cursor:pointer; background:var(--brown); color:#fff; border:none; border-radius:6px;
+}
+button:hover { background:var(--brown-dark); }
+button:disabled { opacity:0.6; cursor:default; }
+.lang-switch button { background:#f7ebd3; color:var(--brown-dark); border:1px solid #c4b193; }
+.box { background:var(--card); border:2px solid var(--brown); border-radius:10px; padding:16px; margin-top:16px; text-align:center; }
+
+.tb-board { display:grid; grid-template-columns:repeat(8,minmax(0,1fr)); grid-template-rows:repeat(8,minmax(0,1fr));
+  width:100%; max-width:360px; aspect-ratio:1; margin:0 auto; border:2px solid var(--brown); }
+.tb-sq { position:relative; }
+.tb-label { position:absolute; font-family:'Crimson Pro', serif; font-weight:800; font-size:0.65rem; line-height:1; pointer-events:none; z-index:2; }
+.tb-light .tb-label { color:rgba(80,40,0,0.85); }
+.tb-dark .tb-label { color:rgba(255,240,200,0.95); }
+.tb-rank-label { top:2px; left:3px; }
+.tb-file-label { bottom:2px; right:3px; }
+.tb-light { background:#d4b87a; }
+.tb-dark { background:#7a5230; }
+.tb-highlight { background-color:#cdd26b !important; }
+.tb-piece { width:100%; height:100%; pointer-events:none; }
+.tb-caption { margin-top:10px; font-weight:700; min-height:1.6em; color:var(--brown-dark); }
+.tb-controls { margin-top:8px; }
+
+footer { text-align:center; padding:16px 16px 0; font-size:0.85rem; color:#888; border-top:1px solid rgba(184,134,11,0.2); margin-top:24px; }
+footer a { color:var(--brown-dark); text-decoration:none; margin:0 8px; }
+</style>
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-KKPG2SSX');</script>
+</head>
+<body>
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KKPG2SSX"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+
+<div class="lang-switch">
+  <button id="langBtn">日本語</button>
+</div>
+<a class="back-link" href="info.html" data-ja="🦊 Info一覧へ戻る" data-en="🦊 Back to Info">🦊 Info一覧へ戻る</a>
+
+<h1 data-ja="🧹 クリアランス / Clearance Sacrifice とは？" data-en="🧹 What is a Clearance Sacrifice?">🧹 クリアランス / Clearance Sacrifice とは？</h1>
+
+<p data-ja="クリアランス（Clearance Sacrifice、開放の犠打）とは、自分の駒（多くは長距離を攻撃できる駒）を動かすことで、そのマスやライン（列・段・斜め）を別の自分の駒のために「空ける」戦術です。単に駒をどかすだけでなく、多くの場合は相手に応手を強制する一手（王手や駒の獲得）を兼ねることで、時間を無駄にせず一石二鳥の効果を狙います。"
+   data-en="A clearance sacrifice is when you move one of your own pieces — often deliberately giving it up — to open a square or line for a different piece of yours. It's not just about getting out of the way: the clearing move usually also forces a response, like check or winning material, so you don't lose any time in the process.">
+   クリアランス（Clearance Sacrifice、開放の犠打）とは、自分の駒（多くは長距離を攻撃できる駒）を動かすことで、そのマスやライン（列・段・斜め）を別の自分の駒のために「空ける」戦術です。単に駒をどかすだけでなく、多くの場合は相手に応手を強制する一手（王手や駒の獲得）を兼ねることで、時間を無駄にせず一石二鳥の効果を狙います。</p>
+
+<div class="box">
+  <div id="clearanceDemo"></div>
+</div>
+
+<p data-ja="上のアニメーションでは、白のクイーンがd5にいて、自分のルーク（d1）がd8まで進む道をふさいでいます。そこで白はクイーンをd5からa5へ動かし、黒のルークを取ります。王手ではありませんが、この一手でd列が完全に開通します。黒には有効な手立てがなく、白のルークがd1からd8へ進んでチェックメイトになります。"
+   data-en="In the animation above, White's queen sits on d5, blocking its own rook on d1 from reaching d8. White solves this by moving the queen from d5 to a5, capturing Black's rook. It's not check, but the move clears the d-file completely. Black has nothing effective to play, and White's rook slides from d1 to d8: checkmate.">
+   上のアニメーションでは、白のクイーンがd5にいて、自分のルーク（d1）がd8まで進む道をふさいでいます。そこで白はクイーンをd5からa5へ動かし、黒のルークを取ります。王手ではありませんが、この一手でd列が完全に開通します。黒には有効な手立てがなく、白のルークがd1からd8へ進んでチェックメイトになります。</p>
+
+<h2 data-ja="クリアランスを見つけるコツ" data-en="How to Spot Clearance Opportunities">クリアランスを見つけるコツ</h2>
+
+<p data-ja="クリアランスを狙うには、まず「自分の駒同士が邪魔し合っていないか」を確認することが出発点です。強力な攻撃を仕掛けたいのに、自分の駒がその通り道をふさいでいる場面は、実戦でも意外とよく起こります。"
+   data-en="The starting point for spotting a clearance sacrifice is checking whether your own pieces are getting in each other's way. It happens more often than you'd think — you want to launch a strong attack, but one of your own pieces is sitting right on the path.">
+   クリアランスを狙うには、まず「自分の駒同士が邪魔し合っていないか」を確認することが出発点です。強力な攻撃を仕掛けたいのに、自分の駒がその通り道をふさいでいる場面は、実戦でも意外とよく起こります。</p>
+
+<p data-ja="理想的なクリアランスは、今回の例のように、動かす駒自体も何らかの脅威（王手や駒の獲得）を作れる一手です。ただ道を空けるだけでなく、その一手自体にも意味を持たせることで、相手に反撃の時間を与えずに済みます。KitsuneChessのパズルストリークにも、クリアランスをテーマにした問題が出題されているので、ぜひ挑戦してみてください。"
+   data-en="The best clearance sacrifices, like the example above, also create a threat of their own — check, or winning material — rather than just passively getting out of the way. That way, your opponent never gets a free tempo to counterattack. KitsuneChess's Puzzle Streak includes clearance-themed puzzles, so give them a try.">
+   理想的なクリアランスは、今回の例のように、動かす駒自体も何らかの脅威（王手や駒の獲得）を作れる一手です。ただ道を空けるだけでなく、その一手自体にも意味を持たせることで、相手に反撃の時間を与えずに済みます。KitsuneChessのパズルストリークにも、クリアランスをテーマにした問題が出題されているので、ぜひ挑戦してみてください。</p>
+
+
+<footer>
+  <div>
+    <a href="info.html" data-ja="解説記事一覧" data-en="Articles">解説記事一覧</a>
+    <a href="disclaimer.html" data-ja="免責事項" data-en="Privacy Policy">免責事項</a>
+  </div>
+</footer>
+
+<script src="tactics-board.js"></script>
+<script>
+  let LANG = localStorage.getItem('selectedLang') === 'en' ? 'en' : 'ja';
+  let boardHandle = null;
+
+  function applyLang() {
+    document.querySelectorAll('[data-ja]').forEach(el => { el.textContent = LANG === 'ja' ? el.dataset.ja : el.dataset.en; });
+    document.getElementById('langBtn').textContent = LANG === 'ja' ? 'English' : '日本語';
+    if (boardHandle) boardHandle.refreshLang();
+  }
+  document.getElementById('langBtn').onclick = () => {
+    LANG = LANG === 'ja' ? 'en' : 'ja';
+    localStorage.setItem('selectedLang', LANG);
+    applyLang();
+  };
+  applyLang();
+
+  boardHandle = TacticBoard({
+    containerId: 'clearanceDemo',
+    fen: '1n4k1/5ppp/8/r2Q4/8/8/8/3R2K1 w - - 0 1',
+    moves: [
+      { from: 'd5', to: 'a5', captured: true },
+      { from: 'b8', to: 'a6' },
+      { from: 'd1', to: 'd8', check: true }
+    ],
+    captions: {
+      ja: ['白番。クイーンがd5にいて、自分のルークの道をふさいでいる。', 'Qxa5 駒を取りつつ、d列を開通!', '黒に有効な手はない…', 'Rd8# 開通したd列でチェックメイト!'],
+      en: ['White to move. The queen on d5 blocks its own rook.', 'Qxa5 wins material and clears the d-file!', 'Black has nothing effective to play…', 'Rd8# — checkmate down the newly-opened file!']
+    }
+  });
+</script>
+</body>
+</html>

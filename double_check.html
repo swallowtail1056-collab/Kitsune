@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ダブルチェック(Double Check)とは？ - KitsuneChess</title>
+<meta name="description" content="チェスの戦術「ダブルチェック」をアニメーション付きで解説。ナイトの一手で2つの駒から同時に王手がかかる仕組みが分かります。">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Crimson+Pro:wght@400;600;700&display=swap" rel="stylesheet">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1034556404852942" crossorigin="anonymous"></script>
+<style>
+:root {
+  --bg:#f5edd6; --brown:#7c4a1e; --brown-dark:#4a2a0e; --brown-light:#a3692d;
+  --card:#f0e4c8; --text:#111; --text-muted:#444;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  background:var(--bg); color:var(--text);
+  font-family:'Crimson Pro', serif; font-weight:600;
+  max-width:720px; margin:0 auto; padding:16px 16px 60px;
+  line-height:1.8;
+}
+h1 { font-family:'Cinzel', serif; color:var(--brown-dark); font-size:1.6rem;
+  border-bottom:2px solid rgba(124,74,30,0.3); padding-bottom:10px; margin-bottom:16px; }
+h2 { font-family:'Cinzel', serif; color:var(--brown-dark); font-size:1.15rem; margin:22px 0 8px; }
+p { margin-bottom:12px; }
+.lang-switch { text-align:right; margin-bottom:10px; }
+.back-link { display:inline-block; margin-bottom:10px; color:var(--brown-dark); text-decoration:none; font-weight:700; }
+button {
+  font-family:'Crimson Pro', serif; font-weight:700; padding:8px 18px; margin:4px 4px 4px 0;
+  cursor:pointer; background:var(--brown); color:#fff; border:none; border-radius:6px;
+}
+button:hover { background:var(--brown-dark); }
+button:disabled { opacity:0.6; cursor:default; }
+.lang-switch button { background:#f7ebd3; color:var(--brown-dark); border:1px solid #c4b193; }
+.box { background:var(--card); border:2px solid var(--brown); border-radius:10px; padding:16px; margin-top:16px; text-align:center; }
+
+.tb-board { display:grid; grid-template-columns:repeat(8,minmax(0,1fr)); grid-template-rows:repeat(8,minmax(0,1fr));
+  width:100%; max-width:360px; aspect-ratio:1; margin:0 auto; border:2px solid var(--brown); }
+.tb-sq { position:relative; }
+.tb-label { position:absolute; font-family:'Crimson Pro', serif; font-weight:800; font-size:0.65rem; line-height:1; pointer-events:none; z-index:2; }
+.tb-light .tb-label { color:rgba(80,40,0,0.85); }
+.tb-dark .tb-label { color:rgba(255,240,200,0.95); }
+.tb-rank-label { top:2px; left:3px; }
+.tb-file-label { bottom:2px; right:3px; }
+.tb-light { background:#d4b87a; }
+.tb-dark { background:#7a5230; }
+.tb-highlight { background-color:#cdd26b !important; }
+.tb-piece { width:100%; height:100%; pointer-events:none; }
+.tb-caption { margin-top:10px; font-weight:700; min-height:1.6em; color:var(--brown-dark); }
+.tb-controls { margin-top:8px; }
+
+footer { text-align:center; padding:16px 16px 0; font-size:0.85rem; color:#888; border-top:1px solid rgba(184,134,11,0.2); margin-top:24px; }
+footer a { color:var(--brown-dark); text-decoration:none; margin:0 8px; }
+</style>
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-KKPG2SSX');</script>
+</head>
+<body>
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KKPG2SSX"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+
+<div class="lang-switch">
+  <button id="langBtn">日本語</button>
+</div>
+<a class="back-link" href="info.html" data-ja="🦊 Info一覧へ戻る" data-en="🦊 Back to Info">🦊 Info一覧へ戻る</a>
+
+<h1 data-ja="⚡ ダブルチェック / Double Check とは？" data-en="⚡ What is Double Check?">⚡ ダブルチェック / Double Check とは？</h1>
+
+<p data-ja="ダブルチェック（Double Check）とは、1回の指し手で、相手の王に対して同時に2つの駒から王手をかける戦術です。1つはディスカバードアタックと同じ仕組みで生まれる王手、もう1つは実際に動かした駒自身がかける王手です。"
+   data-en="A double check is when a single move puts the enemy king in check from two pieces at once — one from a discovered attack revealed behind the piece you move, and another from the piece you just moved itself.">
+   ダブルチェック（Double Check）とは、1回の指し手で、相手の王に対して同時に2つの駒から王手をかける戦術です。1つはディスカバードアタックと同じ仕組みで生まれる王手、もう1つは実際に動かした駒自身がかける王手です。</p>
+
+<div class="box">
+  <div id="dcDemo"></div>
+</div>
+
+<p data-ja="上のアニメーションでは、白のナイトがg4からf6へ移動しています。ナイト自身がf6からg8の黒キングに王手をかけると同時に、g4を離れたことでg1のルークからのg列の王手も開通し、まさに2つの駒から同時に王手がかかるダブルチェックになっています。"
+   data-en="In the animation above, White's knight jumps from g4 to f6. The knight itself now delivers check to Black's king on g8 — and by leaving g4, it also opens the g-file for White's rook on g1 to check the king too. Two pieces, one move, two simultaneous checks: a double check.">
+   上のアニメーションでは、白のナイトがg4からf6へ移動しています。ナイト自身がf6からg8の黒キングに王手をかけると同時に、g4を離れたことでg1のルークからのg列の王手も開通し、まさに2つの駒から同時に王手がかかるダブルチェックになっています。</p>
+
+<h2 data-ja="なぜダブルチェックは特別なのか" data-en="Why Double Check Is So Dangerous">なぜダブルチェックは特別なのか</h2>
+
+<p data-ja="通常の王手であれば、相手は「王を動かす」「王手をかけている駒を取る」「間に駒を割り込ませて防ぐ（合駒）」の3通りの方法で対応できます。しかしダブルチェックの場合、2つの王手を同時に防げる駒や合駒は基本的に存在しません。そのため、相手の唯一の対応手段は「王を動かすこと」だけになります。"
+   data-en="A normal check gives the defender three options: move the king, capture the checking piece, or block the line with another piece. With a double check, though, there's no single piece or block that can stop two different checks at once — so the only legal response is to move the king.">
+   通常の王手であれば、相手は「王を動かす」「王手をかけている駒を取る」「間に駒を割り込ませて防ぐ（合駒）」の3通りの方法で対応できます。しかしダブルチェックの場合、2つの王手を同時に防げる駒や合駒は基本的に存在しません。そのため、相手の唯一の対応手段は「王を動かすこと」だけになります。</p>
+
+<p data-ja="この「選択肢が1つしかない」という性質が、ダブルチェックを非常に強力な武器にします。相手の王の逃げ場が1マスもなければ、そのままチェックメイトになることも珍しくありません。有名な詰みのパターンの中にも、ダブルチェックを使ったものが数多く存在します。"
+   data-en="That single forced response is exactly what makes double check so powerful. If the king has no square to escape to, the double check is checkmate on the spot. Many famous mating patterns rely on exactly this mechanism.">
+   この「選択肢が1つしかない」という性質が、ダブルチェックを非常に強力な武器にします。相手の王の逃げ場が1マスもなければ、そのままチェックメイトになることも珍しくありません。有名な詰みのパターンの中にも、ダブルチェックを使ったものが数多く存在します。</p>
+
+<p data-ja="ダブルチェックを狙うには、まず自分の駒の後ろに、王への攻撃ラインを持つ長距離の駒（ルーク・ビショップ・クイーン）を配置しておくことが第一歩です。そのうえで、前にいる駒自身も相手の王を攻撃できる位置に動かせないか探してみましょう。KitsuneChessのパズルストリークにも、ダブルチェックを使った詰みの問題が出題されるので、ぜひ挑戦してみてください。"
+   data-en="To set up a double check, first position a long-range piece — a rook, bishop, or queen — behind one of your own pieces along a line toward the enemy king. Then look for a move where the piece in front can itself reach a square that also attacks the king. KitsuneChess's Puzzle Streak includes double-check mating puzzles, so give them a try.">
+   ダブルチェックを狙うには、まず自分の駒の後ろに、王への攻撃ラインを持つ長距離の駒（ルーク・ビショップ・クイーン）を配置しておくことが第一歩です。そのうえで、前にいる駒自身も相手の王を攻撃できる位置に動かせないか探してみましょう。KitsuneChessのパズルストリークにも、ダブルチェックを使った詰みの問題が出題されるので、ぜひ挑戦してみてください。</p>
+
+
+<footer>
+  <div>
+    <a href="info.html" data-ja="解説記事一覧" data-en="Articles">解説記事一覧</a>
+    <a href="disclaimer.html" data-ja="免責事項" data-en="Privacy Policy">免責事項</a>
+  </div>
+</footer>
+
+<script src="tactics-board.js"></script>
+<script>
+  let LANG = localStorage.getItem('selectedLang') === 'en' ? 'en' : 'ja';
+  let boardHandle = null;
+
+  function applyLang() {
+    document.querySelectorAll('[data-ja]').forEach(el => { el.textContent = LANG === 'ja' ? el.dataset.ja : el.dataset.en; });
+    document.getElementById('langBtn').textContent = LANG === 'ja' ? 'English' : '日本語';
+    if (boardHandle) boardHandle.refreshLang();
+  }
+  document.getElementById('langBtn').onclick = () => {
+    LANG = LANG === 'ja' ? 'en' : 'ja';
+    localStorage.setItem('selectedLang', LANG);
+    applyLang();
+  };
+  applyLang();
+
+  boardHandle = TacticBoard({
+    containerId: 'dcDemo',
+    fen: '6k1/8/8/8/6N1/8/8/4K1R1 w - - 0 1',
+    moves: [{ from: 'g4', to: 'f6', check: true }],
+    captions: {
+      ja: ['白番。ナイトがg4にいます。', 'Ng4-f6+ ナイト自身の王手と、ルークからの王手が同時に発生するダブルチェック!'],
+      en: ['White to move. The knight sits on g4.', 'Ng4-f6+ the knight checks directly, while the rook checks too — double check!']
+    }
+  });
+</script>
+</body>
+</html>

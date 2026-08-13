@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>駒の閉じ込め(Trapping a Piece)とは？ - KitsuneChess</title>
+<meta name="description" content="チェスの戦術「駒の閉じ込め」をアニメーション付きで解説。逃げ場を失ったナイトがそのまま捕獲される例が分かります。">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Crimson+Pro:wght@400;600;700&display=swap" rel="stylesheet">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1034556404852942" crossorigin="anonymous"></script>
+<style>
+:root {
+  --bg:#f5edd6; --brown:#7c4a1e; --brown-dark:#4a2a0e; --brown-light:#a3692d;
+  --card:#f0e4c8; --text:#111; --text-muted:#444;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  background:var(--bg); color:var(--text);
+  font-family:'Crimson Pro', serif; font-weight:600;
+  max-width:720px; margin:0 auto; padding:16px 16px 60px;
+  line-height:1.8;
+}
+h1 { font-family:'Cinzel', serif; color:var(--brown-dark); font-size:1.6rem;
+  border-bottom:2px solid rgba(124,74,30,0.3); padding-bottom:10px; margin-bottom:16px; }
+h2 { font-family:'Cinzel', serif; color:var(--brown-dark); font-size:1.15rem; margin:22px 0 8px; }
+p { margin-bottom:12px; }
+.lang-switch { text-align:right; margin-bottom:10px; }
+.back-link { display:inline-block; margin-bottom:10px; color:var(--brown-dark); text-decoration:none; font-weight:700; }
+button {
+  font-family:'Crimson Pro', serif; font-weight:700; padding:8px 18px; margin:4px 4px 4px 0;
+  cursor:pointer; background:var(--brown); color:#fff; border:none; border-radius:6px;
+}
+button:hover { background:var(--brown-dark); }
+button:disabled { opacity:0.6; cursor:default; }
+.lang-switch button { background:#f7ebd3; color:var(--brown-dark); border:1px solid #c4b193; }
+.box { background:var(--card); border:2px solid var(--brown); border-radius:10px; padding:16px; margin-top:16px; text-align:center; }
+
+.tb-board { display:grid; grid-template-columns:repeat(8,minmax(0,1fr)); grid-template-rows:repeat(8,minmax(0,1fr));
+  width:100%; max-width:360px; aspect-ratio:1; margin:0 auto; border:2px solid var(--brown); }
+.tb-sq { position:relative; }
+.tb-label { position:absolute; font-family:'Crimson Pro', serif; font-weight:800; font-size:0.65rem; line-height:1; pointer-events:none; z-index:2; }
+.tb-light .tb-label { color:rgba(80,40,0,0.85); }
+.tb-dark .tb-label { color:rgba(255,240,200,0.95); }
+.tb-rank-label { top:2px; left:3px; }
+.tb-file-label { bottom:2px; right:3px; }
+.tb-light { background:#d4b87a; }
+.tb-dark { background:#7a5230; }
+.tb-highlight { background-color:#cdd26b !important; }
+.tb-piece { width:100%; height:100%; pointer-events:none; }
+.tb-caption { margin-top:10px; font-weight:700; min-height:1.6em; color:var(--brown-dark); }
+.tb-controls { margin-top:8px; }
+
+footer { text-align:center; padding:16px 16px 0; font-size:0.85rem; color:#888; border-top:1px solid rgba(184,134,11,0.2); margin-top:24px; }
+footer a { color:var(--brown-dark); text-decoration:none; margin:0 8px; }
+</style>
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-KKPG2SSX');</script>
+</head>
+<body>
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KKPG2SSX"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+
+<div class="lang-switch">
+  <button id="langBtn">日本語</button>
+</div>
+<a class="back-link" href="info.html" data-ja="🦊 Info一覧へ戻る" data-en="🦊 Back to Info">🦊 Info一覧へ戻る</a>
+
+<h1 data-ja="🕸️ 駒の閉じ込め / Trapping a Piece とは？" data-en="🕸️ What is Trapping a Piece?">🕸️ 駒の閉じ込め / Trapping a Piece とは？</h1>
+
+<p data-ja="駒の閉じ込め（Trapping a Piece）とは、相手の駒（特にナイトやビショップ）の逃げ道をすべてふさいでしまい、次の一手で確実に捕獲できる状態に追い込む戦術です。駒得を狙う戦術の中でも、派手さはありませんが実戦で非常によく起こる、堅実で効果的なテクニックです。"
+   data-en="Trapping a piece means cutting off every possible escape square for one of your opponent's pieces — often a knight or bishop — so that it's guaranteed to be captured next move. It's not the flashiest tactic, but it comes up constantly in real games and is a reliable way to win material.">
+   駒の閉じ込め（Trapping a Piece）とは、相手の駒（特にナイトやビショップ）の逃げ道をすべてふさいでしまい、次の一手で確実に捕獲できる状態に追い込む戦術です。駒得を狙う戦術の中でも、派手さはありませんが実戦で非常によく起こる、堅実で効果的なテクニックです。</p>
+
+<div class="box">
+  <div id="trapDemo"></div>
+</div>
+
+<p data-ja="上のアニメーションでは、白のナイトが盤の隅、a8に取り残されています。通常ならb6かc7へ逃げられるはずですが、b6は黒のポーン（a7）に狙われており、c7は黒キングに守られているため、どちらのマスへ動いても次の手で取られてしまいます。逃げ場を完全に失ったナイトは、黒のビショップがg2からa8へ移動することで、そのまま捕獲されてしまいます。"
+   data-en="In the animation above, White's knight is stranded in the corner on a8. Normally it could hop to b6 or c7 to escape, but b6 is covered by Black's pawn on a7, and c7 is defended by Black's king — so either destination would just lose the knight on the very next move anyway. With nowhere safe to go, the knight is captured outright when Black's bishop swoops in from g2 to a8.">
+   上のアニメーションでは、白のナイトが盤の隅、a8に取り残されています。通常ならb6かc7へ逃げられるはずですが、b6は黒のポーン（a7）に狙われており、c7は黒キングに守られているため、どちらのマスへ動いても次の手で取られてしまいます。逃げ場を完全に失ったナイトは、黒のビショップがg2からa8へ移動することで、そのまま捕獲されてしまいます。</p>
+
+<h2 data-ja="駒を閉じ込めるコツ" data-en="How to Trap a Piece">駒を閉じ込めるコツ</h2>
+
+<p data-ja="駒の閉じ込めが特に決まりやすいのは、ナイトが盤の端や隅に追いやられた場面です。ナイトは移動できるマスがもともと少ない駒なので、少し包囲するだけで簡単に逃げ場をなくしてしまえます。ビショップも同様に、狭い範囲に閉じ込められると身動きが取れなくなります。"
+   data-en="Trapping works especially well against knights pushed to the edge or corner of the board. Since a knight already has very few available squares to begin with, it doesn't take much effort to surround it completely. Bishops are vulnerable in a similar way once they get boxed into a narrow diagonal.">
+   駒の閉じ込めが特に決まりやすいのは、ナイトが盤の端や隅に追いやられた場面です。ナイトは移動できるマスがもともと少ない駒なので、少し包囲するだけで簡単に逃げ場をなくしてしまえます。ビショップも同様に、狭い範囲に閉じ込められると身動きが取れなくなります。</p>
+
+<p data-ja="相手の駒を閉じ込めるには、まずその駒が今どのマスに動けるかをすべて数え上げ、1つずつポーンや他の駒でふさいでいくのが基本的な手順です。逆に、自分の駒が閉じ込められそうな気配を感じたら、早めに安全なマスへ逃がしておくことも忘れないようにしましょう。KitsuneChessのパズルストリークにも、駒の閉じ込めをテーマにした問題が出題されています。"
+   data-en="To trap an opponent's piece, start by listing every square it could possibly move to, then work on covering them one by one with pawns or other pieces. And keep the reverse in mind too — if one of your own pieces looks like it might get trapped, move it to safety early before it's too late. KitsuneChess's Puzzle Streak includes trapped-piece puzzles as well.">
+   相手の駒を閉じ込めるには、まずその駒が今どのマスに動けるかをすべて数え上げ、1つずつポーンや他の駒でふさいでいくのが基本的な手順です。逆に、自分の駒が閉じ込められそうな気配を感じたら、早めに安全なマスへ逃がしておくことも忘れないようにしましょう。KitsuneChessのパズルストリークにも、駒の閉じ込めをテーマにした問題が出題されています。</p>
+
+
+<footer>
+  <div>
+    <a href="info.html" data-ja="解説記事一覧" data-en="Articles">解説記事一覧</a>
+    <a href="disclaimer.html" data-ja="免責事項" data-en="Privacy Policy">免責事項</a>
+  </div>
+</footer>
+
+<script src="tactics-board.js"></script>
+<script>
+  let LANG = localStorage.getItem('selectedLang') === 'en' ? 'en' : 'ja';
+  let boardHandle = null;
+
+  function applyLang() {
+    document.querySelectorAll('[data-ja]').forEach(el => { el.textContent = LANG === 'ja' ? el.dataset.ja : el.dataset.en; });
+    document.getElementById('langBtn').textContent = LANG === 'ja' ? 'English' : '日本語';
+    if (boardHandle) boardHandle.refreshLang();
+  }
+  document.getElementById('langBtn').onclick = () => {
+    LANG = LANG === 'ja' ? 'en' : 'ja';
+    localStorage.setItem('selectedLang', LANG);
+    applyLang();
+  };
+  applyLang();
+
+  boardHandle = TacticBoard({
+    containerId: 'trapDemo',
+    fen: 'N1k5/p7/8/8/8/8/6b1/4K3 b - - 0 1',
+    moves: [{ from: 'g2', to: 'a8', captured: true }],
+    captions: {
+      ja: ['黒番。白ナイトはa8に閉じ込められている(b6もc7も逃げられない)。', 'Bxa8 逃げ場のないナイトを捕獲!'],
+      en: ['Black to move. White\'s knight on a8 has no safe square to flee to.', 'Bxa8 captures the trapped knight!']
+    }
+  });
+</script>
+</body>
+</html>

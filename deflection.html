@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>デフレクション(Deflection)とは？ - KitsuneChess</title>
+<meta name="description" content="チェスの戦術「デフレクション(誘引)」をアニメーション付きで解説。守備駒を排除してバックランクメイトを決める例が分かります。">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Crimson+Pro:wght@400;600;700&display=swap" rel="stylesheet">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1034556404852942" crossorigin="anonymous"></script>
+<style>
+:root {
+  --bg:#f5edd6; --brown:#7c4a1e; --brown-dark:#4a2a0e; --brown-light:#a3692d;
+  --card:#f0e4c8; --text:#111; --text-muted:#444;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  background:var(--bg); color:var(--text);
+  font-family:'Crimson Pro', serif; font-weight:600;
+  max-width:720px; margin:0 auto; padding:16px 16px 60px;
+  line-height:1.8;
+}
+h1 { font-family:'Cinzel', serif; color:var(--brown-dark); font-size:1.6rem;
+  border-bottom:2px solid rgba(124,74,30,0.3); padding-bottom:10px; margin-bottom:16px; }
+h2 { font-family:'Cinzel', serif; color:var(--brown-dark); font-size:1.15rem; margin:22px 0 8px; }
+p { margin-bottom:12px; }
+.lang-switch { text-align:right; margin-bottom:10px; }
+.back-link { display:inline-block; margin-bottom:10px; color:var(--brown-dark); text-decoration:none; font-weight:700; }
+button {
+  font-family:'Crimson Pro', serif; font-weight:700; padding:8px 18px; margin:4px 4px 4px 0;
+  cursor:pointer; background:var(--brown); color:#fff; border:none; border-radius:6px;
+}
+button:hover { background:var(--brown-dark); }
+button:disabled { opacity:0.6; cursor:default; }
+.lang-switch button { background:#f7ebd3; color:var(--brown-dark); border:1px solid #c4b193; }
+.box { background:var(--card); border:2px solid var(--brown); border-radius:10px; padding:16px; margin-top:16px; text-align:center; }
+
+.tb-board { display:grid; grid-template-columns:repeat(8,minmax(0,1fr)); grid-template-rows:repeat(8,minmax(0,1fr));
+  width:100%; max-width:360px; aspect-ratio:1; margin:0 auto; border:2px solid var(--brown); }
+.tb-sq { position:relative; }
+.tb-label { position:absolute; font-family:'Crimson Pro', serif; font-weight:800; font-size:0.65rem; line-height:1; pointer-events:none; z-index:2; }
+.tb-light .tb-label { color:rgba(80,40,0,0.85); }
+.tb-dark .tb-label { color:rgba(255,240,200,0.95); }
+.tb-rank-label { top:2px; left:3px; }
+.tb-file-label { bottom:2px; right:3px; }
+.tb-light { background:#d4b87a; }
+.tb-dark { background:#7a5230; }
+.tb-highlight { background-color:#cdd26b !important; }
+.tb-piece { width:100%; height:100%; pointer-events:none; }
+.tb-caption { margin-top:10px; font-weight:700; min-height:1.6em; color:var(--brown-dark); }
+.tb-controls { margin-top:8px; }
+
+footer { text-align:center; padding:16px 16px 0; font-size:0.85rem; color:#888; border-top:1px solid rgba(184,134,11,0.2); margin-top:24px; }
+footer a { color:var(--brown-dark); text-decoration:none; margin:0 8px; }
+</style>
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-KKPG2SSX');</script>
+</head>
+<body>
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KKPG2SSX"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+
+<div class="lang-switch">
+  <button id="langBtn">日本語</button>
+</div>
+<a class="back-link" href="info.html" data-ja="🦊 Info一覧へ戻る" data-en="🦊 Back to Info">🦊 Info一覧へ戻る</a>
+
+<h1 data-ja="🧲 デフレクション / Deflection とは？" data-en="🧲 What is Deflection?">🧲 デフレクション / Deflection とは？</h1>
+
+<p data-ja="デフレクション（Deflection、誘引）とは、相手の守備駒を、本来守っている場所から強制的に引き離す（あるいは取り除く）戦術です。ピンやフォークと同じく相手の駒の動きを制限する戦術ですが、デフレクションは「守っている駒そのものを排除する」という直接的なアプローチが特徴です。"
+   data-en="Deflection is a tactic that forces an opponent's defending piece away from the square or piece it's protecting — or removes it from the board entirely. Like pins and forks, it restricts what your opponent's pieces can do, but deflection takes the direct approach of eliminating the defender itself.">
+   デフレクション（Deflection、誘引）とは、相手の守備駒を、本来守っている場所から強制的に引き離す（あるいは取り除く）戦術です。ピンやフォークと同じく相手の駒の動きを制限する戦術ですが、デフレクションは「守っている駒そのものを排除する」という直接的なアプローチが特徴です。</p>
+
+<div class="box">
+  <div id="deflectionDemo"></div>
+</div>
+
+<p data-ja="上のアニメーションでは、白のビショップがb6からd8へ移動し、黒キングの逃げ場を守っていた黒のルークを直接取ってしまいます。これによって、8段目（バックランク）を守る駒がいなくなります。続いて白のルークがe1からe8へ移動すると、黒キングはf7・g7・h7のポーンに囲まれて逃げ場がなく、そのままチェックメイトになります。"
+   data-en="In the animation above, White's bishop moves from b6 to d8, directly capturing the black rook that was guarding the back rank behind the king. With the defender gone, White's rook then slides from e1 to e8. Black's king — hemmed in by its own pawns on f7, g7, and h7 — has nowhere to run. Checkmate.">
+   上のアニメーションでは、白のビショップがb6からd8へ移動し、黒キングの逃げ場を守っていた黒のルークを直接取ってしまいます。これによって、8段目（バックランク）を守る駒がいなくなります。続いて白のルークがe1からe8へ移動すると、黒キングはf7・g7・h7のポーンに囲まれて逃げ場がなく、そのままチェックメイトになります。</p>
+
+<h2 data-ja="デフレクションの見つけ方" data-en="How to Spot a Deflection">デフレクションの見つけ方</h2>
+
+<p data-ja="デフレクションを狙うには、まず相手の駒配置の中から「この駒がいなくなったら、何が起きるか」を考える習慣が大切です。特に、1つの駒が2つ以上の役割（複数のマスや複数の駒の防衛）を同時に担っている「過負荷」の状態は、デフレクションの絶好の標的になります。"
+   data-en="To find deflection opportunities, get in the habit of asking &quot;what would happen if this particular piece weren't here?&quot; Pieces that are stretched thin — defending two or more things at once, a state known as overloading — make especially good targets for deflection.">
+   デフレクションを狙うには、まず相手の駒配置の中から「この駒がいなくなったら、何が起きるか」を考える習慣が大切です。特に、1つの駒が2つ以上の役割（複数のマスや複数の駒の防衛）を同時に担っている「過負荷」の状態は、デフレクションの絶好の標的になります。</p>
+
+<p data-ja="デフレクションは、駒を犠牲にしてでも実行する価値があることが多くあります。守備駒を排除した後に得られる見返り（メイトや大駒の獲得）が、犠牲にした駒の価値を大きく上回るなら、迷わず実行すべき好手になります。KitsuneChessのパズルストリークでも、デフレクションを使った詰みの問題が数多く出題されているので、ぜひ挑戦してみてください。"
+   data-en="Deflection is often worth a material sacrifice. If what you gain by removing the defender — checkmate, or winning a major piece — outweighs what you gave up, it's a move you should play without hesitation. KitsuneChess's Puzzle Streak includes plenty of deflection-based mating puzzles, so give them a try.">
+   デフレクションは、駒を犠牲にしてでも実行する価値があることが多くあります。守備駒を排除した後に得られる見返り（メイトや大駒の獲得）が、犠牲にした駒の価値を大きく上回るなら、迷わず実行すべき好手になります。KitsuneChessのパズルストリークでも、デフレクションを使った詰みの問題が数多く出題されているので、ぜひ挑戦してみてください。</p>
+
+
+<footer>
+  <div>
+    <a href="info.html" data-ja="解説記事一覧" data-en="Articles">解説記事一覧</a>
+    <a href="disclaimer.html" data-ja="免責事項" data-en="Privacy Policy">免責事項</a>
+  </div>
+</footer>
+
+<script src="tactics-board.js"></script>
+<script>
+  let LANG = localStorage.getItem('selectedLang') === 'en' ? 'en' : 'ja';
+  let boardHandle = null;
+
+  function applyLang() {
+    document.querySelectorAll('[data-ja]').forEach(el => { el.textContent = LANG === 'ja' ? el.dataset.ja : el.dataset.en; });
+    document.getElementById('langBtn').textContent = LANG === 'ja' ? 'English' : '日本語';
+    if (boardHandle) boardHandle.refreshLang();
+  }
+  document.getElementById('langBtn').onclick = () => {
+    LANG = LANG === 'ja' ? 'en' : 'ja';
+    localStorage.setItem('selectedLang', LANG);
+    applyLang();
+  };
+  applyLang();
+
+  boardHandle = TacticBoard({
+    containerId: 'deflectionDemo',
+    fen: '3r2k1/5ppp/1B6/8/8/8/8/4R1K1 w - - 0 1',
+    moves: [
+      { from: 'b6', to: 'd8', captured: true },
+      { from: 'g8', to: 'h8' },
+      { from: 'e1', to: 'e8', check: true }
+    ],
+    captions: {
+      ja: ['白番。ビショップがb6、ルークがe1にいます。', 'Bxd8 バックランクの守備駒を排除!', '黒はもう防ぎようがない…', 'Re8# 守り手がいなくなり、そのままチェックメイト!'],
+      en: ['White to move. The bishop is on b6, the rook on e1.', 'Bxd8 removes the back-rank defender!', 'Black has no way to defend anymore…', 'Re8# — with no defender left, it\'s checkmate!']
+    }
+  });
+</script>
+</body>
+</html>

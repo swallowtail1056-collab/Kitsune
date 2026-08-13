@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>スマザードメイト(Smothered Mate)とは？ - KitsuneChess</title>
+<meta name="description" content="チェスの有名な詰み「スマザードメイト(窒息詰み)」をアニメーション付きで解説。フィリドールの遺産と呼ばれる美しい手順が分かります。">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Crimson+Pro:wght@400;600;700&display=swap" rel="stylesheet">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1034556404852942" crossorigin="anonymous"></script>
+<style>
+:root {
+  --bg:#f5edd6; --brown:#7c4a1e; --brown-dark:#4a2a0e; --brown-light:#a3692d;
+  --card:#f0e4c8; --text:#111; --text-muted:#444;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  background:var(--bg); color:var(--text);
+  font-family:'Crimson Pro', serif; font-weight:600;
+  max-width:720px; margin:0 auto; padding:16px 16px 60px;
+  line-height:1.8;
+}
+h1 { font-family:'Cinzel', serif; color:var(--brown-dark); font-size:1.6rem;
+  border-bottom:2px solid rgba(124,74,30,0.3); padding-bottom:10px; margin-bottom:16px; }
+h2 { font-family:'Cinzel', serif; color:var(--brown-dark); font-size:1.15rem; margin:22px 0 8px; }
+p { margin-bottom:12px; }
+.lang-switch { text-align:right; margin-bottom:10px; }
+.back-link { display:inline-block; margin-bottom:10px; color:var(--brown-dark); text-decoration:none; font-weight:700; }
+button {
+  font-family:'Crimson Pro', serif; font-weight:700; padding:8px 18px; margin:4px 4px 4px 0;
+  cursor:pointer; background:var(--brown); color:#fff; border:none; border-radius:6px;
+}
+button:hover { background:var(--brown-dark); }
+button:disabled { opacity:0.6; cursor:default; }
+.lang-switch button { background:#f7ebd3; color:var(--brown-dark); border:1px solid #c4b193; }
+.box { background:var(--card); border:2px solid var(--brown); border-radius:10px; padding:16px; margin-top:16px; text-align:center; }
+
+.tb-board { display:grid; grid-template-columns:repeat(8,minmax(0,1fr)); grid-template-rows:repeat(8,minmax(0,1fr));
+  width:100%; max-width:360px; aspect-ratio:1; margin:0 auto; border:2px solid var(--brown); }
+.tb-sq { position:relative; }
+.tb-label { position:absolute; font-family:'Crimson Pro', serif; font-weight:800; font-size:0.65rem; line-height:1; pointer-events:none; z-index:2; }
+.tb-light .tb-label { color:rgba(80,40,0,0.85); }
+.tb-dark .tb-label { color:rgba(255,240,200,0.95); }
+.tb-rank-label { top:2px; left:3px; }
+.tb-file-label { bottom:2px; right:3px; }
+.tb-light { background:#d4b87a; }
+.tb-dark { background:#7a5230; }
+.tb-highlight { background-color:#cdd26b !important; }
+.tb-piece { width:100%; height:100%; pointer-events:none; }
+.tb-caption { margin-top:10px; font-weight:700; min-height:1.6em; color:var(--brown-dark); }
+.tb-controls { margin-top:8px; }
+
+footer { text-align:center; padding:16px 16px 0; font-size:0.85rem; color:#888; border-top:1px solid rgba(184,134,11,0.2); margin-top:24px; }
+footer a { color:var(--brown-dark); text-decoration:none; margin:0 8px; }
+</style>
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-KKPG2SSX');</script>
+</head>
+<body>
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KKPG2SSX"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+
+<div class="lang-switch">
+  <button id="langBtn">日本語</button>
+</div>
+<a class="back-link" href="info.html" data-ja="🦊 Info一覧へ戻る" data-en="🦊 Back to Info">🦊 Info一覧へ戻る</a>
+
+<h1 data-ja="😮‍💨 スマザードメイト / Smothered Mate とは？" data-en="😮‍💨 What is Smothered Mate?">😮‍💨 スマザードメイト / Smothered Mate とは？</h1>
+
+<p data-ja="スマザードメイト（Smothered Mate、窒息詰み）とは、王が自分自身の駒に完全に取り囲まれて身動きが取れない状態で、ナイトによって詰まされる特別なチェックメイトのパターンです。ナイトは他の駒と違い、跳び越えて攻撃できる唯一の駒なので、味方の駒に完全に囲まれた王でも、ナイトの前だけは無防備になってしまいます。"
+   data-en="A smothered mate is a special kind of checkmate where the king is completely boxed in by its own pieces and delivered mate by a knight. Since the knight is the only piece that can jump over other pieces to attack, a king can be entirely surrounded by its own army and still be checkmated — because nothing can block or capture the knight.">
+   スマザードメイト（Smothered Mate、窒息詰み）とは、王が自分自身の駒に完全に取り囲まれて身動きが取れない状態で、ナイトによって詰まされる特別なチェックメイトのパターンです。ナイトは他の駒と違い、跳び越えて攻撃できる唯一の駒なので、味方の駒に完全に囲まれた王でも、ナイトの前だけは無防備になってしまいます。</p>
+
+<div class="box">
+  <div id="smotheredDemo"></div>
+</div>
+
+<p data-ja="上のアニメーションは、チェスの歴史上もっとも有名な詰みの1つ「フィリドールの遺産」と呼ばれる形です。黒キングはh8にいて、ルーク(f8)とポーン(g7・h7)にほぼ囲まれています。白のクイーンがd5からg8へ移動して王手をかけると、ナイト(h6)がそのマスを守っているため、黒キングはクイーンを取ることができず、ルークで取り返すしかありません(Rxg8)。これによって黒キングは完全に窒息状態になり、白のナイトがh6からf7へ移動すると、逃げ場も合駒もなく、そのままチェックメイトになります。"
+   data-en="The animation above shows one of the most famous mating patterns in chess history, known as &quot;Philidor's Legacy.&quot; Black's king on h8 is nearly surrounded by its own rook (f8) and pawns (g7, h7). White's queen moves from d5 to g8 with check — but since the knight on h6 defends that square, the king can't capture the queen, and the rook is forced to recapture instead (Rxg8). This completely smothers the king. White's knight then jumps from h6 to f7 — no escape, no block, no capture possible. Checkmate.">
+   上のアニメーションは、チェスの歴史上もっとも有名な詰みの1つ「フィリドールの遺産」と呼ばれる形です。黒キングはh8にいて、ルーク(f8)とポーン(g7・h7)にほぼ囲まれています。白のクイーンがd5からg8へ移動して王手をかけると、ナイト(h6)がそのマスを守っているため、黒キングはクイーンを取ることができず、ルークで取り返すしかありません(Rxg8)。これによって黒キングは完全に窒息状態になり、白のナイトがh6からf7へ移動すると、逃げ場も合駒もなく、そのままチェックメイトになります。</p>
+
+<h2 data-ja="スマザードメイトの特徴" data-en="What Makes Smothered Mate Special">スマザードメイトの特徴</h2>
+
+<p data-ja="この詰みが美しいと言われる理由は、クイーンという最も強力な駒を「あえて」犠牲にすることで、王を完全な窒息状態に追い込む点にあります。犠牲にしたクイーンの価値をはるかに上回る、確実なチェックメイトという成果を手に入れているのです。"
+   data-en="What makes this mate so admired is that it deliberately sacrifices the queen — the most powerful piece on the board — purely to smother the king completely. The value given up is far outweighed by what it buys: a guaranteed, unstoppable checkmate.">
+   この詰みが美しいと言われる理由は、クイーンという最も強力な駒を「あえて」犠牲にすることで、王を完全な窒息状態に追い込む点にあります。犠牲にしたクイーンの価値をはるかに上回る、確実なチェックメイトという成果を手に入れているのです。</p>
+
+<p data-ja="スマザードメイトは、キャスリング（王を囲むポーンとルークの配置）をした直後の王によく起こります。自陣の駒で守りを固めたはずが、逆にその駒たちが自分の逃げ場をふさいでしまうという、皮肉な弱点でもあります。ナイトの動きに慣れて、この美しいコンビネーションを実戦で決められるようになりましょう。KitsuneChessのパズルストリークにも、スマザードメイトの練習問題が用意されています。"
+   data-en="Smothered mate tends to happen to kings shortly after castling, surrounded by the very pawns and rook meant to protect them — a slightly ironic weakness, since those protectors end up blocking the king's own escape. Get comfortable with knight maneuvers, and you'll be ready to land this beautiful combination yourself. KitsuneChess's Puzzle Streak includes smothered mate practice positions as well.">
+   スマザードメイトは、キャスリング（王を囲むポーンとルークの配置）をした直後の王によく起こります。自陣の駒で守りを固めたはずが、逆にその駒たちが自分の逃げ場をふさいでしまうという、皮肉な弱点でもあります。ナイトの動きに慣れて、この美しいコンビネーションを実戦で決められるようになりましょう。KitsuneChessのパズルストリークにも、スマザードメイトの練習問題が用意されています。</p>
+
+
+<footer>
+  <div>
+    <a href="info.html" data-ja="解説記事一覧" data-en="Articles">解説記事一覧</a>
+    <a href="disclaimer.html" data-ja="免責事項" data-en="Privacy Policy">免責事項</a>
+  </div>
+</footer>
+
+<script src="tactics-board.js"></script>
+<script>
+  let LANG = localStorage.getItem('selectedLang') === 'en' ? 'en' : 'ja';
+  let boardHandle = null;
+
+  function applyLang() {
+    document.querySelectorAll('[data-ja]').forEach(el => { el.textContent = LANG === 'ja' ? el.dataset.ja : el.dataset.en; });
+    document.getElementById('langBtn').textContent = LANG === 'ja' ? 'English' : '日本語';
+    if (boardHandle) boardHandle.refreshLang();
+  }
+  document.getElementById('langBtn').onclick = () => {
+    LANG = LANG === 'ja' ? 'en' : 'ja';
+    localStorage.setItem('selectedLang', LANG);
+    applyLang();
+  };
+  applyLang();
+
+  boardHandle = TacticBoard({
+    containerId: 'smotheredDemo',
+    fen: '5r1k/6pp/7N/3Q4/8/8/8/1K6 w - - 0 1',
+    moves: [
+      { from: 'd5', to: 'g8', check: true },
+      { from: 'f8', to: 'g8', captured: true },
+      { from: 'h6', to: 'f7', check: true }
+    ],
+    captions: {
+      ja: ['白番。黒キングh8はほぼ囲まれている。', 'Qd5-g8+ ナイトに守られ、キングは取れない!', 'Rxg8 ルークで取り返すしかない…完全に窒息!', 'Nh6-f7# 逃げ場なし、そのままチェックメイト!'],
+      en: ['White to move. Black\'s king on h8 is almost boxed in.', 'Qd5-g8+ defended by the knight — the king can\'t capture!', 'Rxg8 is forced — now the king is fully smothered!', 'Nh6-f7# — no escape, checkmate!']
+    }
+  });
+</script>
+</body>
+</html>

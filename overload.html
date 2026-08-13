@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>過負荷(Overloading)とは？ - KitsuneChess</title>
+<meta name="description" content="チェスの戦術「過負荷」をアニメーション付きで解説。2つの役目を同時に担うルークの弱点を突いてメイトを決める例が分かります。">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Crimson+Pro:wght@400;600;700&display=swap" rel="stylesheet">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1034556404852942" crossorigin="anonymous"></script>
+<style>
+:root {
+  --bg:#f5edd6; --brown:#7c4a1e; --brown-dark:#4a2a0e; --brown-light:#a3692d;
+  --card:#f0e4c8; --text:#111; --text-muted:#444;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  background:var(--bg); color:var(--text);
+  font-family:'Crimson Pro', serif; font-weight:600;
+  max-width:720px; margin:0 auto; padding:16px 16px 60px;
+  line-height:1.8;
+}
+h1 { font-family:'Cinzel', serif; color:var(--brown-dark); font-size:1.6rem;
+  border-bottom:2px solid rgba(124,74,30,0.3); padding-bottom:10px; margin-bottom:16px; }
+h2 { font-family:'Cinzel', serif; color:var(--brown-dark); font-size:1.15rem; margin:22px 0 8px; }
+p { margin-bottom:12px; }
+.lang-switch { text-align:right; margin-bottom:10px; }
+.back-link { display:inline-block; margin-bottom:10px; color:var(--brown-dark); text-decoration:none; font-weight:700; }
+button {
+  font-family:'Crimson Pro', serif; font-weight:700; padding:8px 18px; margin:4px 4px 4px 0;
+  cursor:pointer; background:var(--brown); color:#fff; border:none; border-radius:6px;
+}
+button:hover { background:var(--brown-dark); }
+button:disabled { opacity:0.6; cursor:default; }
+.lang-switch button { background:#f7ebd3; color:var(--brown-dark); border:1px solid #c4b193; }
+.box { background:var(--card); border:2px solid var(--brown); border-radius:10px; padding:16px; margin-top:16px; text-align:center; }
+
+.tb-board { display:grid; grid-template-columns:repeat(8,minmax(0,1fr)); grid-template-rows:repeat(8,minmax(0,1fr));
+  width:100%; max-width:360px; aspect-ratio:1; margin:0 auto; border:2px solid var(--brown); }
+.tb-sq { position:relative; }
+.tb-label { position:absolute; font-family:'Crimson Pro', serif; font-weight:800; font-size:0.65rem; line-height:1; pointer-events:none; z-index:2; }
+.tb-light .tb-label { color:rgba(80,40,0,0.85); }
+.tb-dark .tb-label { color:rgba(255,240,200,0.95); }
+.tb-rank-label { top:2px; left:3px; }
+.tb-file-label { bottom:2px; right:3px; }
+.tb-light { background:#d4b87a; }
+.tb-dark { background:#7a5230; }
+.tb-highlight { background-color:#cdd26b !important; }
+.tb-piece { width:100%; height:100%; pointer-events:none; }
+.tb-caption { margin-top:10px; font-weight:700; min-height:1.6em; color:var(--brown-dark); }
+.tb-controls { margin-top:8px; }
+
+footer { text-align:center; padding:16px 16px 0; font-size:0.85rem; color:#888; border-top:1px solid rgba(184,134,11,0.2); margin-top:24px; }
+footer a { color:var(--brown-dark); text-decoration:none; margin:0 8px; }
+</style>
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-KKPG2SSX');</script>
+</head>
+<body>
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KKPG2SSX"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+
+<div class="lang-switch">
+  <button id="langBtn">日本語</button>
+</div>
+<a class="back-link" href="info.html" data-ja="🦊 Info一覧へ戻る" data-en="🦊 Back to Info">🦊 Info一覧へ戻る</a>
+
+<h1 data-ja="📦 過負荷 / Overloading とは？" data-en="📦 What is Overloading?">📦 過負荷 / Overloading とは？</h1>
+
+<p data-ja="過負荷（Overloading）とは、相手の1つの駒が、2つ以上の重要な役割（複数のマスや複数の駒の防衛）を同時に担っている状態を指します。その駒は「一度に1つのことしかできない」ため、片方の役割を果たすために動けば、もう片方が手薄になってしまいます。この弱点を突くのが過負荷を利用した戦術です。"
+   data-en="A piece is overloaded when it's responsible for two or more important defensive jobs at once — guarding two different squares, or two different pieces. Since a single piece can only do one thing at a time, if it deals with one threat, the other job it was covering is left unprotected. Overloading tactics exploit exactly this weakness.">
+   過負荷（Overloading）とは、相手の1つの駒が、2つ以上の重要な役割（複数のマスや複数の駒の防衛）を同時に担っている状態を指します。その駒は「一度に1つのことしかできない」ため、片方の役割を果たすために動けば、もう片方が手薄になってしまいます。この弱点を突くのが過負荷を利用した戦術です。</p>
+
+<div class="box">
+  <div id="overloadDemo"></div>
+</div>
+
+<p data-ja="上のアニメーションでは、黒のルークがd8にいて、8段目のバックランク（王の逃げ場を守る役目）と、d5にいる黒ナイトの2つを同時に守っています。白のビショップがb3からd5へ移動してナイトを取ると、黒ルークは「ナイトを取り返す」か「バックランクを守り続ける」かの二択を迫られます。ルークがナイトを取り返すためにd5へ動くと、バックランクの守りが消え、白のルークがe1からe8へ移動してチェックメイトになります。"
+   data-en="In the animation above, Black's rook on d8 is doing double duty — guarding the back rank (protecting the king's escape) and defending the knight on d5. When White's bishop captures the knight (b3 to d5), the overloaded rook faces an impossible choice: recapture the bishop, or keep guarding the back rank. If it recaptures, the back rank is left undefended, and White's rook slides from e1 to e8 — checkmate.">
+   上のアニメーションでは、黒のルークがd8にいて、8段目のバックランク（王の逃げ場を守る役目）と、d5にいる黒ナイトの2つを同時に守っています。白のビショップがb3からd5へ移動してナイトを取ると、黒ルークは「ナイトを取り返す」か「バックランクを守り続ける」かの二択を迫られます。ルークがナイトを取り返すためにd5へ動くと、バックランクの守りが消え、白のルークがe1からe8へ移動してチェックメイトになります。</p>
+
+<h2 data-ja="過負荷を狙うコツ" data-en="How to Exploit Overloading">過負荷を狙うコツ</h2>
+
+<p data-ja="過負荷を見つけるには、相手の駒を1つずつ見て、「この駒は何を守っているか」をすべて書き出してみるのが有効です。もし1つの駒が2つ以上の役割を持っていたら、それは過負荷の候補です。"
+   data-en="To spot overloading, go through your opponent's pieces one by one and list out everything each one is protecting. If any single piece is covering two or more jobs, that's a candidate for an overloading tactic.">
+   過負荷を見つけるには、相手の駒を1つずつ見て、「この駒は何を守っているか」をすべて書き出してみるのが有効です。もし1つの駒が2つ以上の役割を持っていたら、それは過負荷の候補です。</p>
+
+<p data-ja="過負荷の駒を見つけたら、その駒が守っている2つの対象のうち、どちらか一方を攻撃してみましょう。相手がその攻撃に応じれば、もう一方が手薄になります。デフレクションやピンと組み合わせて使われることも多く、実戦で非常に有効な戦術です。KitsuneChessのパズルストリークにも過負荷をテーマにした問題が出題されているので、練習してみてください。"
+   data-en="Once you've spotted an overloaded piece, attack one of the two things it's defending. If your opponent responds to that threat, the other one becomes vulnerable. Overloading is often combined with deflection or pins, and it's a genuinely effective tactic in real games. KitsuneChess's Puzzle Streak includes overloading-themed puzzles, so give them a try.">
+   過負荷の駒を見つけたら、その駒が守っている2つの対象のうち、どちらか一方を攻撃してみましょう。相手がその攻撃に応じれば、もう一方が手薄になります。デフレクションやピンと組み合わせて使われることも多く、実戦で非常に有効な戦術です。KitsuneChessのパズルストリークにも過負荷をテーマにした問題が出題されているので、練習してみてください。</p>
+
+
+<footer>
+  <div>
+    <a href="info.html" data-ja="解説記事一覧" data-en="Articles">解説記事一覧</a>
+    <a href="disclaimer.html" data-ja="免責事項" data-en="Privacy Policy">免責事項</a>
+  </div>
+</footer>
+
+<script src="tactics-board.js"></script>
+<script>
+  let LANG = localStorage.getItem('selectedLang') === 'en' ? 'en' : 'ja';
+  let boardHandle = null;
+
+  function applyLang() {
+    document.querySelectorAll('[data-ja]').forEach(el => { el.textContent = LANG === 'ja' ? el.dataset.ja : el.dataset.en; });
+    document.getElementById('langBtn').textContent = LANG === 'ja' ? 'English' : '日本語';
+    if (boardHandle) boardHandle.refreshLang();
+  }
+  document.getElementById('langBtn').onclick = () => {
+    LANG = LANG === 'ja' ? 'en' : 'ja';
+    localStorage.setItem('selectedLang', LANG);
+    applyLang();
+  };
+  applyLang();
+
+  boardHandle = TacticBoard({
+    containerId: 'overloadDemo',
+    fen: '3r2k1/5ppp/8/3n4/8/1B6/8/4R1K1 w - - 0 1',
+    moves: [
+      { from: 'b3', to: 'd5', captured: true },
+      { from: 'd8', to: 'd5', captured: true },
+      { from: 'e1', to: 'e8', check: true }
+    ],
+    captions: {
+      ja: ['白番。ビショップb3、ルークe1。黒ルークd8は2つの役目を持つ。', 'Bxd5 ナイトを取る。黒ルークは板挟みに…', 'Rxd5 取り返すとバックランクの守りが消える!', 'Re8# 守り手がおらず、そのままチェックメイト!'],
+      en: ['White to move. The bishop is on b3, rook on e1 — Black\'s rook on d8 is doing two jobs.', 'Bxd5 captures the knight. The rook is now overloaded…', 'Rxd5 recaptures — but the back rank is left undefended!', 'Re8# — checkmate, with no defender left!']
+    }
+  });
+</script>
+</body>
+</html>

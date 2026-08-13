@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>風車(Windmill)とは？ - KitsuneChess</title>
+<meta name="description" content="チェスの連続技「風車」をアニメーション付きで解説。ルークとビショップが交互に王手をかけながら駒を奪い続ける仕組みが分かります。">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Crimson+Pro:wght@400;600;700&display=swap" rel="stylesheet">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1034556404852942" crossorigin="anonymous"></script>
+<style>
+:root {
+  --bg:#f5edd6; --brown:#7c4a1e; --brown-dark:#4a2a0e; --brown-light:#a3692d;
+  --card:#f0e4c8; --text:#111; --text-muted:#444;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  background:var(--bg); color:var(--text);
+  font-family:'Crimson Pro', serif; font-weight:600;
+  max-width:720px; margin:0 auto; padding:16px 16px 60px;
+  line-height:1.8;
+}
+h1 { font-family:'Cinzel', serif; color:var(--brown-dark); font-size:1.6rem;
+  border-bottom:2px solid rgba(124,74,30,0.3); padding-bottom:10px; margin-bottom:16px; }
+h2 { font-family:'Cinzel', serif; color:var(--brown-dark); font-size:1.15rem; margin:22px 0 8px; }
+p { margin-bottom:12px; }
+.lang-switch { text-align:right; margin-bottom:10px; }
+.back-link { display:inline-block; margin-bottom:10px; color:var(--brown-dark); text-decoration:none; font-weight:700; }
+button {
+  font-family:'Crimson Pro', serif; font-weight:700; padding:8px 18px; margin:4px 4px 4px 0;
+  cursor:pointer; background:var(--brown); color:#fff; border:none; border-radius:6px;
+}
+button:hover { background:var(--brown-dark); }
+button:disabled { opacity:0.6; cursor:default; }
+.lang-switch button { background:#f7ebd3; color:var(--brown-dark); border:1px solid #c4b193; }
+.box { background:var(--card); border:2px solid var(--brown); border-radius:10px; padding:16px; margin-top:16px; text-align:center; }
+
+.tb-board { display:grid; grid-template-columns:repeat(8,minmax(0,1fr)); grid-template-rows:repeat(8,minmax(0,1fr));
+  width:100%; max-width:360px; aspect-ratio:1; margin:0 auto; border:2px solid var(--brown); }
+.tb-sq { position:relative; }
+.tb-label { position:absolute; font-family:'Crimson Pro', serif; font-weight:800; font-size:0.65rem; line-height:1; pointer-events:none; z-index:2; }
+.tb-light .tb-label { color:rgba(80,40,0,0.85); }
+.tb-dark .tb-label { color:rgba(255,240,200,0.95); }
+.tb-rank-label { top:2px; left:3px; }
+.tb-file-label { bottom:2px; right:3px; }
+.tb-light { background:#d4b87a; }
+.tb-dark { background:#7a5230; }
+.tb-highlight { background-color:#cdd26b !important; }
+.tb-piece { width:100%; height:100%; pointer-events:none; }
+.tb-caption { margin-top:10px; font-weight:700; min-height:1.6em; color:var(--brown-dark); }
+.tb-controls { margin-top:8px; }
+
+footer { text-align:center; padding:16px 16px 0; font-size:0.85rem; color:#888; border-top:1px solid rgba(184,134,11,0.2); margin-top:24px; }
+footer a { color:var(--brown-dark); text-decoration:none; margin:0 8px; }
+</style>
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-KKPG2SSX');</script>
+</head>
+<body>
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KKPG2SSX"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+
+<div class="lang-switch">
+  <button id="langBtn">日本語</button>
+</div>
+<a class="back-link" href="info.html" data-ja="🦊 Info一覧へ戻る" data-en="🦊 Back to Info">🦊 Info一覧へ戻る</a>
+
+<h1 data-ja="🌀 風車 / Windmill とは？" data-en="🌀 What is a Windmill?">🌀 風車 / Windmill とは？</h1>
+
+<p data-ja="風車（Windmill）とは、ディスカバードチェック（あぶり出しの王手）を繰り返し使うことで、相手の王を左右に揺さぶりながら次々と駒を奪っていく、非常に強力な連続技です。ルークがビショップの利き筋を出たり入ったりするたびに、あるときはあぶり出しの王手、あるときはルーク自身の直接王手が交互に発生し、相手はその間ずっと対応に追われ続けます。"
+   data-en="A windmill is a devastating combination that repeatedly uses discovered check to swing the enemy king back and forth while gobbling up material move after move. As a rook slides in and out of a bishop's line of sight, it alternates between a discovered check from the bishop and a direct check from the rook itself — leaving the opponent stuck reacting the entire time.">
+   風車（Windmill）とは、ディスカバードチェック（あぶり出しの王手）を繰り返し使うことで、相手の王を左右に揺さぶりながら次々と駒を奪っていく、非常に強力な連続技です。ルークがビショップの利き筋を出たり入ったりするたびに、あるときはあぶり出しの王手、あるときはルーク自身の直接王手が交互に発生し、相手はその間ずっと対応に追われ続けます。</p>
+
+<div class="box">
+  <div id="windmillDemo"></div>
+</div>
+
+<p data-ja="上のアニメーションでは、白のルークがg7にいて、b2にいるビショップの長い斜めのラインをふさいでいます。ルークがg7からf7へ動いてポーンを取ると、ビショップの利き筋が開通してあぶり出しの王手がかかり、黒キングはg8へ逃げるしかありません。続いてルークがf7からg7へ戻ると、今度はルーク自身がg8のキングに直接王手をかけます。キングはh8へ戻らされ、ルークが再びg7からe7へ動いてもう1枚ポーンを取ると、またビショップの王手が発見されます。この「行って戻って」を繰り返すたびに、黒は駒を失い続けてしまいます。"
+   data-en="In the animation above, White's rook sits on g7, blocking the bishop's long diagonal from b2. When the rook slides from g7 to f7, capturing a pawn, the bishop's line opens up — a discovered check — and Black's king has no choice but to flee to g8. The rook then returns from f7 to g7, delivering direct check to the king on g8 itself, forcing it back to h8. The rook swings out again, from g7 to e7, capturing another pawn and rediscovering the bishop's check. Every back-and-forth swing costs Black another piece.">
+   上のアニメーションでは、白のルークがg7にいて、b2にいるビショップの長い斜めのラインをふさいでいます。ルークがg7からf7へ動いてポーンを取ると、ビショップの利き筋が開通してあぶり出しの王手がかかり、黒キングはg8へ逃げるしかありません。続いてルークがf7からg7へ戻ると、今度はルーク自身がg8のキングに直接王手をかけます。キングはh8へ戻らされ、ルークが再びg7からe7へ動いてもう1枚ポーンを取ると、またビショップの王手が発見されます。この「行って戻って」を繰り返すたびに、黒は駒を失い続けてしまいます。</p>
+
+<h2 data-ja="風車が成立する条件" data-en="What a Windmill Needs">風車が成立する条件</h2>
+
+<p data-ja="風車を成立させるには、ビショップの長い斜めのライン上に自分のルークが乗っていて、その先に相手の王がいる、という配置がまず必要です。さらに、王がその場から完全に逃げ出せないよう、周囲のマスを味方の駒でふさいでおく（またはルーク自身の利き筋でふさぐ）ことも欠かせません。"
+   data-en="For a windmill to work, you first need your own rook sitting on a bishop's long diagonal, with the enemy king further down that same line. On top of that, the king needs to be unable to escape the area entirely — its nearby squares must be covered, either by its own pieces or by the rook's own reach.">
+   風車を成立させるには、ビショップの長い斜めのライン上に自分のルークが乗っていて、その先に相手の王がいる、という配置がまず必要です。さらに、王がその場から完全に逃げ出せないよう、周囲のマスを味方の駒でふさいでおく（またはルーク自身の利き筋でふさぐ）ことも欠かせません。</p>
+
+<p data-ja="風車が決まると、相手はほとんど何もできないまま駒を失い続けることになり、大きなアドバンテージにつながります。ディスカバードアタックとダブルチェックの応用形とも言える戦術なので、まずはその2つをしっかり理解してから挑戦すると習得しやすくなります。KitsuneChessのパズルストリークにも、風車をテーマにした応用問題が出題されています。"
+   data-en="Once a windmill gets going, the opponent can do almost nothing but watch material disappear, often swinging the game decisively in your favor. It's essentially an extended application of discovered attacks and double checks, so make sure you're comfortable with both of those first. KitsuneChess's Puzzle Streak includes windmill-themed puzzles as well.">
+   風車が決まると、相手はほとんど何もできないまま駒を失い続けることになり、大きなアドバンテージにつながります。ディスカバードアタックとダブルチェックの応用形とも言える戦術なので、まずはその2つをしっかり理解してから挑戦すると習得しやすくなります。KitsuneChessのパズルストリークにも、風車をテーマにした応用問題が出題されています。</p>
+
+
+<footer>
+  <div>
+    <a href="info.html" data-ja="解説記事一覧" data-en="Articles">解説記事一覧</a>
+    <a href="disclaimer.html" data-ja="免責事項" data-en="Privacy Policy">免責事項</a>
+  </div>
+</footer>
+
+<script src="tactics-board.js"></script>
+<script>
+  let LANG = localStorage.getItem('selectedLang') === 'en' ? 'en' : 'ja';
+  let boardHandle = null;
+
+  function applyLang() {
+    document.querySelectorAll('[data-ja]').forEach(el => { el.textContent = LANG === 'ja' ? el.dataset.ja : el.dataset.en; });
+    document.getElementById('langBtn').textContent = LANG === 'ja' ? 'English' : '日本語';
+    if (boardHandle) boardHandle.refreshLang();
+  }
+  document.getElementById('langBtn').onclick = () => {
+    LANG = LANG === 'ja' ? 'en' : 'ja';
+    localStorage.setItem('selectedLang', LANG);
+    applyLang();
+  };
+  applyLang();
+
+  boardHandle = TacticBoard({
+    containerId: 'windmillDemo',
+    fen: '7k/4ppRp/8/8/8/8/1B6/7K w - - 0 1',
+    moves: [
+      { from: 'g7', to: 'f7', captured: true, check: true },
+      { from: 'h8', to: 'g8' },
+      { from: 'f7', to: 'g7', check: true },
+      { from: 'g8', to: 'h8' },
+      { from: 'g7', to: 'e7', captured: true, check: true }
+    ],
+    captions: {
+      ja: ['白番。ルークがビショップの利き筋をふさいでいる。', 'Rxf7+ ポーンを取ると、ビショップの王手が発見される!', 'Kg8 唯一の応手。', 'Rg7+ 今度はルーク自身が直接王手!', 'Kh8 また戻らされる。', 'Rxe7+ もう1枚獲得しつつ、再び王手…この繰り返しが「風車」!'],
+      en: ['White to move. The rook blocks the bishop\'s diagonal.', 'Rxf7+ captures a pawn and uncovers the bishop\'s check!', 'Kg8 is the only reply.', 'Rg7+ — now the rook checks directly!', 'Kh8 is forced back again.', 'Rxe7+ — another pawn falls, and check again… that\'s the windmill!']
+    }
+  });
+</script>
+</body>
+</html>

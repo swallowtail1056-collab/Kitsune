@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>バックランクメイト(Back Rank Mate)とは？ - KitsuneChess</title>
+<meta name="description" content="チェスの有名な詰み「バックランクメイト」をアニメーション付きで解説。自分のポーンに囲まれた王が最終列で詰む仕組みが分かります。">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Crimson+Pro:wght@400;600;700&display=swap" rel="stylesheet">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1034556404852942" crossorigin="anonymous"></script>
+<style>
+:root {
+  --bg:#f5edd6; --brown:#7c4a1e; --brown-dark:#4a2a0e; --brown-light:#a3692d;
+  --card:#f0e4c8; --text:#111; --text-muted:#444;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  background:var(--bg); color:var(--text);
+  font-family:'Crimson Pro', serif; font-weight:600;
+  max-width:720px; margin:0 auto; padding:16px 16px 60px;
+  line-height:1.8;
+}
+h1 { font-family:'Cinzel', serif; color:var(--brown-dark); font-size:1.6rem;
+  border-bottom:2px solid rgba(124,74,30,0.3); padding-bottom:10px; margin-bottom:16px; }
+h2 { font-family:'Cinzel', serif; color:var(--brown-dark); font-size:1.15rem; margin:22px 0 8px; }
+p { margin-bottom:12px; }
+.lang-switch { text-align:right; margin-bottom:10px; }
+.back-link { display:inline-block; margin-bottom:10px; color:var(--brown-dark); text-decoration:none; font-weight:700; }
+button {
+  font-family:'Crimson Pro', serif; font-weight:700; padding:8px 18px; margin:4px 4px 4px 0;
+  cursor:pointer; background:var(--brown); color:#fff; border:none; border-radius:6px;
+}
+button:hover { background:var(--brown-dark); }
+button:disabled { opacity:0.6; cursor:default; }
+.lang-switch button { background:#f7ebd3; color:var(--brown-dark); border:1px solid #c4b193; }
+.box { background:var(--card); border:2px solid var(--brown); border-radius:10px; padding:16px; margin-top:16px; text-align:center; }
+
+.tb-board { display:grid; grid-template-columns:repeat(8,minmax(0,1fr)); grid-template-rows:repeat(8,minmax(0,1fr));
+  width:100%; max-width:360px; aspect-ratio:1; margin:0 auto; border:2px solid var(--brown); }
+.tb-sq { position:relative; }
+.tb-label { position:absolute; font-family:'Crimson Pro', serif; font-weight:800; font-size:0.65rem; line-height:1; pointer-events:none; z-index:2; }
+.tb-light .tb-label { color:rgba(80,40,0,0.85); }
+.tb-dark .tb-label { color:rgba(255,240,200,0.95); }
+.tb-rank-label { top:2px; left:3px; }
+.tb-file-label { bottom:2px; right:3px; }
+.tb-light { background:#d4b87a; }
+.tb-dark { background:#7a5230; }
+.tb-highlight { background-color:#cdd26b !important; }
+.tb-piece { width:100%; height:100%; pointer-events:none; }
+.tb-caption { margin-top:10px; font-weight:700; min-height:1.6em; color:var(--brown-dark); }
+.tb-controls { margin-top:8px; }
+
+footer { text-align:center; padding:16px 16px 0; font-size:0.85rem; color:#888; border-top:1px solid rgba(184,134,11,0.2); margin-top:24px; }
+footer a { color:var(--brown-dark); text-decoration:none; margin:0 8px; }
+</style>
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-KKPG2SSX');</script>
+</head>
+<body>
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KKPG2SSX"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+
+<div class="lang-switch">
+  <button id="langBtn">日本語</button>
+</div>
+<a class="back-link" href="info.html" data-ja="🦊 Info一覧へ戻る" data-en="🦊 Back to Info">🦊 Info一覧へ戻る</a>
+
+<h1 data-ja="🏰 バックランクメイト / Back Rank Mate とは？" data-en="🏰 What is Back Rank Mate?">🏰 バックランクメイト / Back Rank Mate とは？</h1>
+
+<p data-ja="バックランクメイト（Back Rank Mate、最終ランクメイト）とは、キャスリングをした後によく見られる、非常に有名なチェックメイトのパターンです。王を守るために並べたはずのポーンが、逆に王自身の逃げ場をふさいでしまい、その状態でルークやクイーンに最終列（バックランク）から王手をかけられると、逃げることも防ぐこともできずに詰んでしまいます。"
+   data-en="A back rank mate is one of the most common — and most infamous — checkmating patterns, usually happening right after castling. The very pawns placed in front of the king to protect it end up blocking its own escape squares. If a rook or queen delivers check along the back rank in that situation, the king can neither run nor block, and it's mate.">
+   バックランクメイト（Back Rank Mate、最終ランクメイト）とは、キャスリングをした後によく見られる、非常に有名なチェックメイトのパターンです。王を守るために並べたはずのポーンが、逆に王自身の逃げ場をふさいでしまい、その状態でルークやクイーンに最終列（バックランク）から王手をかけられると、逃げることも防ぐこともできずに詰んでしまいます。</p>
+
+<div class="box">
+  <div id="backRankDemo"></div>
+</div>
+
+<p data-ja="上のアニメーションでは、黒キングがg8にいて、f7・g7・h7のポーンに完全に囲まれています。白のルークがa1からa8へ移動すると、8段目全体に沿って王手がかかります。黒キングはh8へ逃げようとしても、ルークの利き筋がキングを透かしてh8まで届いているため移動できず、f8やh8への脱出もポーンにふさがれています。結果、防ぐ手立てが一切なく、そのままチェックメイトになります。"
+   data-en="In the animation above, Black's king on g8 is completely boxed in by its own pawns on f7, g7, and h7. When White's rook slides from a1 to a8, it delivers check all the way along the 8th rank. Black's king can't escape to h8 — the rook's attack extends straight through to that square once the king would vacate g8 — and every other nearby square is blocked by its own pawns. With no way to block or capture the rook, it's checkmate.">
+   上のアニメーションでは、黒キングがg8にいて、f7・g7・h7のポーンに完全に囲まれています。白のルークがa1からa8へ移動すると、8段目全体に沿って王手がかかります。黒キングはh8へ逃げようとしても、ルークの利き筋がキングを透かしてh8まで届いているため移動できず、f8やh8への脱出もポーンにふさがれています。結果、防ぐ手立てが一切なく、そのままチェックメイトになります。</p>
+
+<h2 data-ja="バックランクメイトを防ぐには" data-en="How to Prevent Back Rank Mate">バックランクメイトを防ぐには</h2>
+
+<p data-ja="この詰みを防ぐ一番簡単な方法は、「逃げ道（ルフトまたはエアホール）」をあらかじめ作っておくことです。ポーンを1つだけ前に進めて（たとえばh7からh6へ）、キングが最終列から離れられる小さなマスを用意しておくだけで、バックランクメイトの心配はほぼなくなります。"
+   data-en="The simplest way to prevent this is to create some &quot;luft&quot; (German for &quot;air&quot;) ahead of time — a small escape square for the king. Just pushing one pawn forward, like h7 to h6, gives the king somewhere to step off the back rank, and back rank mate is no longer a threat.">
+   この詰みを防ぐ一番簡単な方法は、「逃げ道（ルフトまたはエアホール）」をあらかじめ作っておくことです。ポーンを1つだけ前に進めて（たとえばh7からh6へ）、キングが最終列から離れられる小さなマスを用意しておくだけで、バックランクメイトの心配はほぼなくなります。</p>
+
+<p data-ja="逆に、相手のキングがルフトを作らないまま最終列に留まっている場合は、常にバックランクメイトのチャンスがないか意識しましょう。ルークやクイーンをオープンファイル（駒のない列）に配置できれば、決定打になることが多いです。KitsuneChessのパズルストリークにも、バックランクメイトを扱った問題が多数出題されています。"
+   data-en="On the flip side, whenever your opponent's king is stuck on the back rank without any luft, keep an eye out for back rank mate opportunities. Getting a rook or queen onto an open file is often all it takes to deliver the decisive blow. KitsuneChess's Puzzle Streak features plenty of back rank mate puzzles as well.">
+   逆に、相手のキングがルフトを作らないまま最終列に留まっている場合は、常にバックランクメイトのチャンスがないか意識しましょう。ルークやクイーンをオープンファイル（駒のない列）に配置できれば、決定打になることが多いです。KitsuneChessのパズルストリークにも、バックランクメイトを扱った問題が多数出題されています。</p>
+
+
+<footer>
+  <div>
+    <a href="info.html" data-ja="解説記事一覧" data-en="Articles">解説記事一覧</a>
+    <a href="disclaimer.html" data-ja="免責事項" data-en="Privacy Policy">免責事項</a>
+  </div>
+</footer>
+
+<script src="tactics-board.js"></script>
+<script>
+  let LANG = localStorage.getItem('selectedLang') === 'en' ? 'en' : 'ja';
+  let boardHandle = null;
+
+  function applyLang() {
+    document.querySelectorAll('[data-ja]').forEach(el => { el.textContent = LANG === 'ja' ? el.dataset.ja : el.dataset.en; });
+    document.getElementById('langBtn').textContent = LANG === 'ja' ? 'English' : '日本語';
+    if (boardHandle) boardHandle.refreshLang();
+  }
+  document.getElementById('langBtn').onclick = () => {
+    LANG = LANG === 'ja' ? 'en' : 'ja';
+    localStorage.setItem('selectedLang', LANG);
+    applyLang();
+  };
+  applyLang();
+
+  boardHandle = TacticBoard({
+    containerId: 'backRankDemo',
+    fen: '6k1/5ppp/8/8/8/8/8/R6K w - - 0 1',
+    moves: [{ from: 'a1', to: 'a8', check: true }],
+    captions: {
+      ja: ['白番。黒キングは自分のポーンに囲まれている。', 'Ra1-a8# 逃げ場なし、そのままチェックメイト!'],
+      en: ['White to move. Black\'s king is boxed in by its own pawns.', 'Ra1-a8# — no escape, checkmate!']
+    }
+  });
+</script>
+</body>
+</html>
