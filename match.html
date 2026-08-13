@@ -66,7 +66,7 @@ img#profilePhoto { border:2px solid var(--brown); border-radius:50%; width:60px;
 .sq-label.file-label { bottom:2px; right:3px; }
 .sq.light { background:#d4b87a; }
 .sq.dark { background:#7a5230; }
-.thumb-card { display:flex; flex-direction:column; align-items:center; gap:4px; background:var(--card); border:2px solid var(--brown); border-radius:8px; padding:8px; cursor:pointer; width:150px; }
+.thumb-card { display:flex; flex-direction:column; align-items:center; gap:4px; background:var(--card); border:2px solid var(--brown); border-radius:8px; padding:8px; cursor:pointer; width:150px; flex-shrink:0; }
 .thumb-card:hover { opacity:0.85; }
 .thumb-board { display:grid; grid-template-columns:repeat(8,minmax(0,1fr)); grid-template-rows:repeat(8,minmax(0,1fr)); width:130px; height:130px; border:2px solid var(--board-border,var(--brown)); }
 .thumb-sq { position:relative; }
@@ -233,7 +233,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <div id="lobbyArea">
   <div class="box" id="activeMatchesBox" style="display:none;">
     <p><strong data-ja="⚔ 進行中の対局" data-en="⚔ Games in Progress">⚔ 進行中の対局</strong></p>
-    <div id="activeMatchesList" style="display:flex;flex-wrap:wrap;gap:10px;margin-top:8px;"></div>
+    <div id="activeMatchesList" style="display:flex;flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;gap:10px;margin-top:8px;padding-bottom:8px;"></div>
   </div>
 
   <div class="box">
@@ -295,7 +295,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
   <div class="box" id="gameBox" style="display:none;padding:6px;border:none;background:transparent;">
     <button id="backToListBtn" data-ja="← 対局一覧に戻る" data-en="← Back to Games List" style="margin-bottom:8px;">← 対局一覧に戻る</button>
-    <p><strong data-ja="対局中" data-en="Current Match">対局中</strong></p>
+    <div style="display:flex;justify-content:space-between;align-items:center;">
+      <p style="margin:0;"><strong data-ja="対局中" data-en="Current Match">対局中</strong></p>
+      <button id="matchChatToggle" data-ja="💬 チャット" data-en="💬 Chat" style="margin:0;">💬 チャット</button>
+    </div>
     <div style="display:flex;align-items:center;gap:8px;">
       <img id="oppAvatarImg" style="display:none;width:32px;height:32px;border-radius:50%;object-fit:cover;flex-shrink:0;background:rgba(90,58,24,0.1);" alt="">
       <p id="gameStatus" style="margin:0;"></p>
@@ -311,11 +314,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <button id="boardNavLiveBtn" style="display:none;margin-left:8px;background:#2d8a3e;" data-ja="● ライブに戻る" data-en="● Back to Live">● ライブに戻る</button>
     </div>
     <div id="drawOfferArea" style="display:none;margin-top:8px;"></div>
+    <button id="rematchBtn" style="display:none;margin-top:10px;background:#2d8a3e;" data-ja="🔁 再戦を申し込む" data-en="🔁 Request Rematch">🔁 再戦を申し込む</button>
     <button id="resignBtn" data-ja="🏳️ 投了する" data-en="🏳️ Resign" style="margin-top:10px;">🏳️ 投了する</button>
     <button id="offerDrawBtn" data-ja="🤝 ドローを提案する" data-en="🤝 Offer a Draw" style="margin-top:10px;">🤝 ドローを提案する</button>
     <button id="takebackBtn" data-ja="↩️ 待ったを申し出る" data-en="↩️ Request Takeback" style="margin-top:10px;">↩️ 待ったを申し出る</button>
     <button id="leaveMatchBtn" data-ja="対局を退出する" data-en="Leave Match" style="margin-top:10px;">対局を退出する</button>
-    <button id="matchChatToggle" data-ja="💬 チャット" data-en="💬 Chat" style="margin-top:10px;">💬 チャット</button>
     <button id="analysisToggleBtn" data-ja="🔍 局面を分析する" data-en="🔍 Analyze Position" style="margin-top:10px;">🔍 局面を分析する</button>
     <button id="historyToggleBtn" data-ja="📜 履歴を見る" data-en="📜 View History" style="margin-top:10px;">📜 履歴を見る</button>
     <div id="matchChatPanel" style="display:none;"></div>
@@ -409,9 +412,19 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   };
   applyTheme();
 
+  // 共有AudioContext:毎回新規作成すると、相手の指し手など「ユーザー操作を伴わない」タイミングで
+  // ブラウザの自動再生ポリシーによりsuspended状態のまま音が鳴らないことがあるため、
+  // 一度作成したものを使い回し、必要に応じてresume()する
+  let sharedAudioCtx = null;
+  function getSharedAudioCtx() {
+    if (!sharedAudioCtx) sharedAudioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    if (sharedAudioCtx.state === 'suspended') sharedAudioCtx.resume();
+    return sharedAudioCtx;
+  }
+
   function playCheckSound() {
     try {
-      const ctx = new (window.AudioContext || window.webkitAudioContext)();
+      const ctx = getSharedAudioCtx();
       const duration = 0.09;
       const bufferSize = Math.floor(ctx.sampleRate * duration);
       const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
@@ -442,7 +455,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   // Sound A: chess piece contact — a sharp "click" transient layered over a weighty low "thud"
   function playMoveSound() {
     try {
-      const ctx = new (window.AudioContext || window.webkitAudioContext)();
+      const ctx = getSharedAudioCtx();
       const now = ctx.currentTime;
 
       // Sharp click (piece touching the board)
@@ -501,7 +514,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   // ringing tone and a fuller reverb tail so it carries much more weight and resonance
   function playCheckmateSound() {
     try {
-      const ctx = new (window.AudioContext || window.webkitAudioContext)();
+      const ctx = getSharedAudioCtx();
       const now = ctx.currentTime;
 
       // Reverb send for lingering resonance
@@ -565,7 +578,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
   function playCastleSound() {
     try {
-      const ctx = new (window.AudioContext || window.webkitAudioContext)();
+      const ctx = getSharedAudioCtx();
       const playClick = (startTime, freq) => {
         const duration = 0.05;
         const bufferSize = Math.floor(ctx.sampleRate * duration);
@@ -1862,6 +1875,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     boardPly = null;
     const oppAvatarReset = document.getElementById('oppAvatarImg');
     if (oppAvatarReset) oppAvatarReset.style.display = 'none';
+    const rematchReset = document.getElementById('rematchBtn');
+    if (rematchReset) { rematchReset.disabled = false; rematchReset.textContent = LANG === 'ja' ? '🔁 再戦を申し込む' : '🔁 Request Rematch'; }
     document.getElementById('gameBox').style.display = 'block';
     document.getElementById('lobbyArea').style.display = 'none';
     startClockTicker(user);
@@ -2473,6 +2488,7 @@ const PIECE_IMG = {
       applyEloIfNeeded(matchId, m, user, wonByTimeout ? 1 : 0);
       applyAnalysisIfNeeded(matchId, m, user, wonByTimeout ? 1 : 0);
       document.getElementById('reportToggleBtn').style.display = 'inline-block';
+      document.getElementById('rematchBtn').style.display = 'inline-block';
     } else if (m.status === 'resigned') {
       const iWonByResign = m.winner === myColor;
       statusEl.textContent = iWonByResign
@@ -2481,11 +2497,13 @@ const PIECE_IMG = {
       applyEloIfNeeded(matchId, m, user, iWonByResign ? 1 : 0);
       applyAnalysisIfNeeded(matchId, m, user, iWonByResign ? 1 : 0);
       document.getElementById('reportToggleBtn').style.display = 'inline-block';
+      document.getElementById('rematchBtn').style.display = 'inline-block';
     } else if (m.status === 'draw_agreed') {
       statusEl.textContent = LANG === 'ja' ? '合意によりドローになりました。' : 'Draw agreed by both players.';
       applyEloIfNeeded(matchId, m, user, 0.5);
       applyAnalysisIfNeeded(matchId, m, user, 0.5);
       document.getElementById('reportToggleBtn').style.display = 'inline-block';
+      document.getElementById('rematchBtn').style.display = 'inline-block';
     } else if (gameChess.game_over()) {
       let resultMsg;
       if (gameChess.in_checkmate()) {
@@ -2501,10 +2519,12 @@ const PIECE_IMG = {
       }
       statusEl.textContent = resultMsg;
       document.getElementById('reportToggleBtn').style.display = 'inline-block';
+      document.getElementById('rematchBtn').style.display = 'inline-block';
     } else {
       statusEl.textContent = (LANG === 'ja' ? '対戦相手: ' : 'Opponent: ') + oppName + ' | ' +
         (myTurn ? (LANG === 'ja' ? 'あなたの番です' : 'Your turn') : (LANG === 'ja' ? '相手の番です' : "Opponent's turn"));
       document.getElementById('reportToggleBtn').style.display = 'none';
+      document.getElementById('rematchBtn').style.display = 'none';
     }
 
     const gameIsActive = m.status === 'active' && !gameChess.game_over();
@@ -2871,6 +2891,22 @@ const PIECE_IMG = {
     await update(ref(db, 'matches/' + myMatchId), { status: 'resigned', winner: winnerColor, drawOfferBy: null });
   };
 
+  document.getElementById('rematchBtn').onclick = async () => {
+    const user = auth.currentUser;
+    if (!user || !latestMatchData) return;
+    const m = latestMatchData;
+    const oppUid = myColor === 'w' ? m.black : m.white;
+    if (!oppUid) return;
+    const btn = document.getElementById('rematchBtn');
+    btn.disabled = true;
+    const myProfile = await get(ref(db, 'users/' + user.uid));
+    const myName = myProfile.exists() ? myProfile.val().username : user.displayName;
+    await set(ref(db, 'matchInvites/' + oppUid + '/' + user.uid), {
+      username: myName, sentAt: Date.now(), timeControl: m.timeControl || 'rapid', fixed: !m.increment
+    });
+    btn.textContent = LANG === 'ja' ? '✓ 再戦を申し込みました' : '✓ Rematch requested';
+  };
+
   document.getElementById('offerDrawBtn').onclick = async () => {
     const user = auth.currentUser;
     if (!user || !myMatchId) return;
@@ -2970,7 +3006,7 @@ const PIECE_IMG = {
   // ===== パズルストリーク =====
   function playPuzzleCorrect() {
     try {
-      const ctx = new (window.AudioContext || window.webkitAudioContext)();
+      const ctx = getSharedAudioCtx();
       const t = ctx.currentTime;
       [523.25, 659.25, 783.99, 1046.5].forEach((freq, i) => {
         const osc = ctx.createOscillator(); const gain = ctx.createGain();
@@ -2985,7 +3021,7 @@ const PIECE_IMG = {
   }
   function playPuzzleWrong() {
     try {
-      const ctx = new (window.AudioContext || window.webkitAudioContext)();
+      const ctx = getSharedAudioCtx();
       const t = ctx.currentTime;
       const osc = ctx.createOscillator(); const gain = ctx.createGain();
       osc.connect(gain); gain.connect(ctx.destination);
