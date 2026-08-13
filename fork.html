@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>フォーク(Fork)とは？ - KitsuneChess</title>
+<meta name="description" content="チェスの基本戦術「フォーク」をアニメーション付きで解説。ナイトのロイヤルフォークを例に、駒得を狙う考え方を学べます。">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Crimson+Pro:wght@400;600;700&display=swap" rel="stylesheet">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1034556404852942" crossorigin="anonymous"></script>
+<style>
+:root {
+  --bg:#f5edd6; --brown:#7c4a1e; --brown-dark:#4a2a0e; --brown-light:#a3692d;
+  --card:#f0e4c8; --text:#111; --text-muted:#444;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  background:var(--bg); color:var(--text);
+  font-family:'Crimson Pro', serif; font-weight:600;
+  max-width:720px; margin:0 auto; padding:16px 16px 60px;
+  line-height:1.8;
+}
+h1 { font-family:'Cinzel', serif; color:var(--brown-dark); font-size:1.6rem;
+  border-bottom:2px solid rgba(124,74,30,0.3); padding-bottom:10px; margin-bottom:16px; }
+h2 { font-family:'Cinzel', serif; color:var(--brown-dark); font-size:1.15rem; margin:22px 0 8px; }
+p { margin-bottom:12px; }
+.lang-switch { text-align:right; margin-bottom:10px; }
+.back-link { display:inline-block; margin-bottom:10px; color:var(--brown-dark); text-decoration:none; font-weight:700; }
+button {
+  font-family:'Crimson Pro', serif; font-weight:700; padding:8px 18px; margin:4px 4px 4px 0;
+  cursor:pointer; background:var(--brown); color:#fff; border:none; border-radius:6px;
+}
+button:hover { background:var(--brown-dark); }
+button:disabled { opacity:0.6; cursor:default; }
+.lang-switch button { background:#f7ebd3; color:var(--brown-dark); border:1px solid #c4b193; }
+.box { background:var(--card); border:2px solid var(--brown); border-radius:10px; padding:16px; margin-top:16px; text-align:center; }
+
+.tb-board { display:grid; grid-template-columns:repeat(8,minmax(0,1fr)); grid-template-rows:repeat(8,minmax(0,1fr));
+  width:100%; max-width:360px; aspect-ratio:1; margin:0 auto; border:2px solid var(--brown); }
+.tb-sq { position:relative; }
+.tb-light { background:#d4b87a; }
+.tb-dark { background:#7a5230; }
+.tb-highlight { background-color:#cdd26b !important; }
+.tb-piece { width:100%; height:100%; pointer-events:none; }
+.tb-caption { margin-top:10px; font-weight:700; min-height:1.6em; color:var(--brown-dark); }
+.tb-controls { margin-top:8px; }
+
+footer { text-align:center; padding:16px 16px 0; font-size:0.85rem; color:#888; border-top:1px solid rgba(184,134,11,0.2); margin-top:24px; }
+footer a { color:var(--brown-dark); text-decoration:none; margin:0 8px; }
+</style>
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-KKPG2SSX');</script>
+</head>
+<body>
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KKPG2SSX"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+
+<div class="lang-switch">
+  <button id="langBtn">日本語</button>
+</div>
+<a class="back-link" href="info.html" data-ja="🦊 Info一覧へ戻る" data-en="🦊 Back to Info">🦊 Info一覧へ戻る</a>
+
+<h1 data-ja="♞ フォーク(Fork)とは？" data-en="♞ What is a Fork?">♞ フォーク(Fork)とは？</h1>
+
+<p data-ja="フォーク（Fork）とは、自分の1つの駒を使って、相手の2つ以上の駒を同時に攻撃する戦術のことです。相手はどちらか一方の駒しか守ることができないため、必ずどちらかを失ってしまいます。チェスの基本的な戦術の中でも特に発生しやすく、初心者から上級者まで幅広く使われる重要なテクニックです。"
+   data-en="A fork is a tactic where a single piece attacks two or more of your opponent's pieces at the same time. Since the opponent can only defend one of them, you're guaranteed to win material. It's one of the most fundamental tactics in chess, and one that players of every level use constantly.">
+   フォーク（Fork）とは、自分の1つの駒を使って、相手の2つ以上の駒を同時に攻撃する戦術のことです。相手はどちらか一方の駒しか守ることができないため、必ずどちらかを失ってしまいます。チェスの基本的な戦術の中でも特に発生しやすく、初心者から上級者まで幅広く使われる重要なテクニックです。</p>
+
+<p data-ja="中でも有名なのが「ナイトのフォーク」です。ナイトはL字型に動く特殊な駒で、他の駒とはまったく違う独特の攻撃範囲を持っています。そのため相手はナイトが実際にどのマスを攻撃できるのかを見落としやすく、思いがけないタイミングで王とルークを同時に狙われてしまうことがよくあります。"
+   data-en="The most famous type is the &quot;knight fork.&quot; Knights move in a distinctive L-shape that no other piece shares, which makes their attacking squares easy to overlook. A king and rook can suddenly find themselves both under attack from a knight in a way that feels completely unexpected.">
+   中でも有名なのが「ナイトのフォーク」です。ナイトはL字型に動く特殊な駒で、他の駒とはまったく違う独特の攻撃範囲を持っています。そのため相手はナイトが実際にどのマスを攻撃できるのかを見落としやすく、思いがけないタイミングで王とルークを同時に狙われてしまうことがよくあります。</p>
+
+<div class="box">
+  <div id="forkDemo"></div>
+</div>
+
+<p data-ja="下のアニメーションでは、白のナイトがa6からc7へ移動することで、黒の王とルークを同時に攻撃する「ロイヤルフォーク」の例を示しています。黒はキングを動かして王手を防ぐことしかできず、その隙に白はもう一方の駒（ルーク）を手に入れることができます。"
+   data-en="The animation above shows White's knight jumping from a6 to c7, delivering check to Black's king while simultaneously attacking Black's rook — a classic &quot;royal fork.&quot; Black has no choice but to move the king out of check, and White is then free to capture the rook.">
+   上のアニメーションでは、白のナイトがa6からc7へ移動することで、黒の王とルークを同時に攻撃する「ロイヤルフォーク」の例を示しています。黒はキングを動かして王手を防ぐことしかできず、その隙に白はもう一方の駒（ルーク）を手に入れることができます。</p>
+
+<h2 data-ja="フォークを見抜くコツ" data-en="How to Spot a Fork">フォークを見抜くコツ</h2>
+<p data-ja="フォークを狙うコツは、相手の駒、特に王や価値の高い駒同士が、ナイトの届く位置関係に並んでいないかを常にチェックする習慣をつけることです。逆に、自分の駒がフォークを受けないように、駒の配置にも普段から注意しておきましょう。"
+   data-en="The key to spotting forks is developing the habit of scanning the board for moments when your opponent's king or valuable pieces line up within a knight's reach — or within reach of any of your pieces. Just as importantly, keep an eye on your own pieces so you don't fall victim to a fork yourself.">
+   フォークを狙うコツは、相手の駒、特に王や価値の高い駒同士が、ナイトの届く位置関係に並んでいないかを常にチェックする習慣をつけることです。逆に、自分の駒がフォークを受けないように、駒の配置にも普段から注意しておきましょう。</p>
+
+<p data-ja="ナイトだけでなく、ポーン・ビショップ・ルーク・クイーンなど、実はどの駒でもフォークを作ることができます。たとえばポーンは斜め前の2マスを同時に攻撃できるので、序盤から中盤にかけて意外な場面でポーンフォークが決まることも珍しくありません。ビショップやクイーンは斜めのラインを使って、離れた2つの駒を別々の斜め方向から同時に狙うことができます。"
+   data-en="Knights aren't the only piece capable of forking. Pawns can attack two pieces diagonally at once, and bishops and queens can hit two pieces along separate diagonals. Even rooks can occasionally line up a fork along a rank or file. Getting comfortable with all these patterns will sharpen your eye for opportunities in real games.">
+   ナイトだけでなく、ポーン・ビショップ・ルーク・クイーンなど、実はどの駒でもフォークを作ることができます。たとえばポーンは斜め前の2マスを同時に攻撃できるので、序盤から中盤にかけて意外な場面でポーンフォークが決まることも珍しくありません。ビショップやクイーンは斜めのラインを使って、離れた2つの駒を別々の斜め方向から同時に狙うことができます。</p>
+
+<p data-ja="実戦でフォークを見抜く一番の近道は、パズル形式の練習問題をたくさん解くことです。KitsuneChessのパズルストリーク機能でも、フォークを含むさまざまな戦術問題が出題されるので、ぜひ活用して感覚を磨いてみてください。フォークは一手で駒得（マテリアルアドバンテージ）を得られる、非常に効率の良い戦術です。序盤・中盤・終盤を問わずあらゆる局面で起こりうるので、自分の駒を動かすたびに「この一手で相手の複数の駒を同時に攻撃できないか」を意識するだけでも、勝率は大きく変わってきます。"
+   data-en="The best way to sharpen your eye for forks in real games is to solve plenty of tactics puzzles. KitsuneChess's Puzzle Streak feature includes plenty of fork-based positions, so give it a try. Because a fork wins material in a single move, it's one of the most efficient tactics available. It can appear in the opening, middlegame, or endgame alike — so make a habit of asking, every time you consider a move, &quot;could this attack two of my opponent's pieces at once?&quot; That single habit can noticeably improve your results.">
+   実戦でフォークを見抜く一番の近道は、パズル形式の練習問題をたくさん解くことです。KitsuneChessのパズルストリーク機能でも、フォークを含むさまざまな戦術問題が出題されるので、ぜひ活用して感覚を磨いてみてください。フォークは一手で駒得（マテリアルアドバンテージ）を得られる、非常に効率の良い戦術です。序盤・中盤・終盤を問わずあらゆる局面で起こりうるので、自分の駒を動かすたびに「この一手で相手の複数の駒を同時に攻撃できないか」を意識するだけでも、勝率は大きく変わってきます。</p>
+
+<footer>
+  <div>
+    <a href="info.html" data-ja="解説記事一覧" data-en="Articles">解説記事一覧</a>
+    <a href="disclaimer.html" data-ja="免責事項" data-en="Privacy Policy">免責事項</a>
+  </div>
+</footer>
+
+<script src="tactics-board.js"></script>
+<script>
+  let LANG = localStorage.getItem('selectedLang') === 'en' ? 'en' : 'ja';
+  let boardHandle = null;
+
+  function applyLang() {
+    document.querySelectorAll('[data-ja]').forEach(el => { el.textContent = LANG === 'ja' ? el.dataset.ja : el.dataset.en; });
+    document.getElementById('langBtn').textContent = LANG === 'ja' ? 'English' : '日本語';
+    if (boardHandle) boardHandle.refreshLang();
+  }
+  document.getElementById('langBtn').onclick = () => {
+    LANG = LANG === 'ja' ? 'en' : 'ja';
+    localStorage.setItem('selectedLang', LANG);
+    applyLang();
+  };
+  applyLang();
+
+  boardHandle = TacticBoard({
+    containerId: 'forkDemo',
+    fen: 'r3k3/8/N7/8/8/8/8/4K3 w - - 0 1',
+    moves: [{ from: 'a6', to: 'c7' }],
+    captions: {
+      ja: ['白番。ナイトがa6にいます。', 'Na6-c7+ 王とルークを同時に攻撃するロイヤルフォーク!'],
+      en: ['White to move. The knight sits on a6.', 'Na6-c7+ forks the king and rook at once — a royal fork!']
+    }
+  });
+</script>
+</body>
+</html>
