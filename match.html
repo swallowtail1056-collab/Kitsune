@@ -1949,9 +1949,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           await update(ref(db, 'matches/' + matchId), { [joinField]: true });
         }
       }
-      if (m.status === 'waiting' && m.whiteJoined && m.blackJoined) {
-        await update(ref(db, 'matches/' + matchId), { status: 'active', turnStartedAt: Date.now() });
-      }
+      // 対局はここでは自動開始しない。時計は「実際に最初の一手が指されたとき」に
+      // onSquareClick側で開始する(ページを開いただけでは時間切れが発生しないようにするため)。
 
       renderMiniBoard(m, user, matchId);
     });
@@ -2536,10 +2535,10 @@ const PIECE_IMG = {
     }
 
     if (m.status === 'waiting') {
-      const oppJoined = myColor === 'w' ? m.blackJoined : m.whiteJoined;
-      statusEl.textContent = oppJoined
-        ? (LANG === 'ja' ? 'まもなく開始します...' : 'Starting shortly...')
-        : (LANG === 'ja' ? (oppName + ' がまだ入室していません。しばらくお待ちください。') : ("Waiting for " + oppName + " to join. The clock hasn't started yet."));
+      const myMoveToStart = myColor === m.turn;
+      statusEl.textContent = myMoveToStart
+        ? (LANG === 'ja' ? 'あなたが最初の一手を指すと対局が始まり、時計も動き出します。' : 'The game — and the clock — will start once you make the first move.')
+        : (LANG === 'ja' ? (oppName + 'が最初の一手を指すと対局が始まります。まだ時計は動いていません。') : (oppName + " will start the game with the first move. The clock hasn't started yet."));
     } else if (m.status === 'timeout') {
       const wonByTimeout = m.winner === myColor;
       statusEl.textContent = wonByTimeout
@@ -2861,7 +2860,7 @@ const PIECE_IMG = {
     if (!gameChess || gameChess.game_over()) return;
     const matchId = myMatchId;
     const m = latestMatchData;
-    if (!m || m.status !== 'active') return;
+    if (!m || (m.status !== 'active' && m.status !== 'waiting')) return;
     if (m.turn !== myColor) return;
 
     if (!selectedSquare) {
@@ -2872,7 +2871,8 @@ const PIECE_IMG = {
       const move = gameChess.move({ from: selectedSquare, to: sq, promotion: 'q' });
       selectedSquare = null;
       if (move) {
-        const elapsed = Date.now() - (m.turnStartedAt || Date.now());
+        // 「waiting」状態からの最初の一手は、まだ時計が動いていないので経過時間0として扱う
+        const elapsed = m.status === 'waiting' ? 0 : (Date.now() - (m.turnStartedAt || Date.now()));
         const myTimeKey = myColor === 'w' ? 'whiteTime' : 'blackTime';
         const remainingAfterMove = (m[myTimeKey] || 0) - elapsed;
         if (remainingAfterMove <= 0) {
@@ -2887,7 +2887,7 @@ const PIECE_IMG = {
           : remainingAfterMove + (m.increment || 0);
         const moveHistory = (m.moves || []).concat([{ san: move.san, color: move.color, captured: move.captured || null }]);
         await set(ref(db, 'matches/' + matchId), {
-          ...m, fen: gameChess.fen(), turn: gameChess.turn(),
+          ...m, status: 'active', fen: gameChess.fen(), turn: gameChess.turn(),
           [myTimeKey]: newTime, turnStartedAt: Date.now(),
           lastMove: { from: move.from, to: move.to },
           moves: moveHistory,
