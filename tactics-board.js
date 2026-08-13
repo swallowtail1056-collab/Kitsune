@@ -78,6 +78,18 @@
           cell.className = 'tb-sq ' + (((r + c) % 2 === 0) ? 'tb-light' : 'tb-dark');
           cell.dataset.sq = sq;
           if (sq === highlightFrom || sq === highlightTo) cell.classList.add('tb-highlight');
+          if (c === 0) {
+            const rankLabel = document.createElement('span');
+            rankLabel.className = 'tb-label tb-rank-label';
+            rankLabel.textContent = 8 - r;
+            cell.appendChild(rankLabel);
+          }
+          if (r === 7) {
+            const fileLabel = document.createElement('span');
+            fileLabel.className = 'tb-label tb-file-label';
+            fileLabel.textContent = FILES[c];
+            cell.appendChild(fileLabel);
+          }
           const piece = board[r][c];
           if (piece) {
             const img = document.createElement('img');

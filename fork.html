@@ -37,6 +37,11 @@ button:disabled { opacity:0.6; cursor:default; }
 .tb-board { display:grid; grid-template-columns:repeat(8,minmax(0,1fr)); grid-template-rows:repeat(8,minmax(0,1fr));
   width:100%; max-width:360px; aspect-ratio:1; margin:0 auto; border:2px solid var(--brown); }
 .tb-sq { position:relative; }
+.tb-label { position:absolute; font-family:'Crimson Pro', serif; font-weight:800; font-size:0.65rem; line-height:1; pointer-events:none; z-index:2; }
+.tb-light .tb-label { color:rgba(80,40,0,0.85); }
+.tb-dark .tb-label { color:rgba(255,240,200,0.95); }
+.tb-rank-label { top:2px; left:3px; }
+.tb-file-label { bottom:2px; right:3px; }
 .tb-light { background:#d4b87a; }
 .tb-dark { background:#7a5230; }
 .tb-highlight { background-color:#cdd26b !important; }
