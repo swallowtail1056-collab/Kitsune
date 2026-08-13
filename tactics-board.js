@@ -20,6 +20,107 @@
 
   const FILES = ['a','b','c','d','e','f','g','h'];
 
+  // ===== 効果音(match.htmlと同じ方式のWeb Audio生成音) =====
+  let sharedAudioCtx = null;
+  function getAudioCtx() {
+    if (!sharedAudioCtx) sharedAudioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    if (sharedAudioCtx.state === 'suspended') sharedAudioCtx.resume();
+    return sharedAudioCtx;
+  }
+  function playMoveSound() {
+    try {
+      const ctx = getAudioCtx();
+      const now = ctx.currentTime;
+      const clickDuration = 0.05;
+      const clickBufferSize = Math.floor(ctx.sampleRate * clickDuration);
+      const clickBuffer = ctx.createBuffer(1, clickBufferSize, ctx.sampleRate);
+      const clickData = clickBuffer.getChannelData(0);
+      for (let i = 0; i < clickBufferSize; i++) {
+        clickData[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / clickBufferSize, 4);
+      }
+      const clickNoise = ctx.createBufferSource();
+      clickNoise.buffer = clickBuffer;
+      const clickFilter = ctx.createBiquadFilter();
+      clickFilter.type = 'bandpass';
+      clickFilter.frequency.value = 1900;
+      clickFilter.Q.value = 1.1;
+      const clickGain = ctx.createGain();
+      clickGain.gain.setValueAtTime(0.55, now);
+      clickGain.gain.exponentialRampToValueAtTime(0.001, now + clickDuration);
+      clickNoise.connect(clickFilter);
+      clickFilter.connect(clickGain);
+      clickGain.connect(ctx.destination);
+      clickNoise.start(now);
+      clickNoise.stop(now + clickDuration);
+
+      const thudOsc = ctx.createOscillator();
+      const thudGain = ctx.createGain();
+      thudOsc.type = 'sine';
+      thudOsc.frequency.setValueAtTime(190, now);
+      thudOsc.frequency.exponentialRampToValueAtTime(65, now + 0.1);
+      thudGain.gain.setValueAtTime(0.45, now);
+      thudGain.gain.exponentialRampToValueAtTime(0.001, now + 0.12);
+      thudOsc.connect(thudGain);
+      thudGain.connect(ctx.destination);
+      thudOsc.start(now);
+      thudOsc.stop(now + 0.12);
+    } catch (e) { /* 再生に失敗しても表示自体には影響させない */ }
+  }
+  function playCheckSound() {
+    try {
+      const ctx = getAudioCtx();
+      const duration = 0.09;
+      const bufferSize = Math.floor(ctx.sampleRate * duration);
+      const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+      const data = buffer.getChannelData(0);
+      for (let i = 0; i < bufferSize; i++) {
+        data[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / bufferSize, 3);
+      }
+      const noise = ctx.createBufferSource();
+      noise.buffer = buffer;
+      const bandpass = ctx.createBiquadFilter();
+      bandpass.type = 'bandpass';
+      bandpass.frequency.value = 2200;
+      bandpass.Q.value = 0.7;
+      const gain = ctx.createGain();
+      gain.gain.setValueAtTime(0.8, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration);
+      noise.connect(bandpass);
+      bandpass.connect(gain);
+      gain.connect(ctx.destination);
+      noise.start();
+      noise.stop(ctx.currentTime + duration);
+    } catch (e) { /* 再生に失敗しても表示自体には影響させない */ }
+  }
+  function playCaptureSound() {
+    try {
+      const ctx = getAudioCtx();
+      const now = ctx.currentTime;
+      const duration = 0.1;
+      const bufferSize = Math.floor(ctx.sampleRate * duration);
+      const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+      const data = buffer.getChannelData(0);
+      for (let i = 0; i < bufferSize; i++) {
+        data[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / bufferSize, 2.2);
+      }
+      const noise = ctx.createBufferSource();
+      noise.buffer = buffer;
+      const bandpass = ctx.createBiquadFilter();
+      bandpass.type = 'bandpass';
+      bandpass.frequency.value = 1200;
+      bandpass.Q.value = 0.9;
+      const gain = ctx.createGain();
+      gain.gain.setValueAtTime(0.6, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + duration);
+      noise.connect(bandpass);
+      bandpass.connect(gain);
+      gain.connect(ctx.destination);
+      noise.start(now);
+      noise.stop(now + duration);
+    } catch (e) { /* 再生に失敗しても表示自体には影響させない */ }
+  }
+
+
   function fenBoardArray(fen) {
     // FENの盤面部分だけを8x8配列（[rank8..rank1][fileA..fileH]）に変換
     const rows = fen.split(' ')[0].split('/');
@@ -69,7 +170,7 @@
       return (localStorage.getItem('selectedLang') === 'en') ? 'en' : 'ja';
     }
 
-    function renderBoard(highlightFrom, highlightTo) {
+    function renderBoard(highlightFrom, highlightTo, highlightCapture) {
       boardEl.innerHTML = '';
       for (let r = 0; r < 8; r++) {
         for (let c = 0; c < 8; c++) {
@@ -77,7 +178,7 @@
           const cell = document.createElement('div');
           cell.className = 'tb-sq ' + (((r + c) % 2 === 0) ? 'tb-light' : 'tb-dark');
           cell.dataset.sq = sq;
-          if (sq === highlightFrom || sq === highlightTo) cell.classList.add('tb-highlight');
+          if (sq === highlightFrom || sq === highlightTo || sq === highlightCapture) cell.classList.add('tb-highlight');
           if (c === 0) {
             const rankLabel = document.createElement('span');
             rankLabel.className = 'tb-label tb-rank-label';
@@ -114,13 +215,25 @@
       const piece = board[from.row][from.col];
       board[from.row][from.col] = null;
       board[to.row][to.col] = piece;
+      if (mv.capture) {
+        const cap = squareCoords(mv.capture);
+        board[cap.row][cap.col] = null;
+      }
     }
 
     function animateStep(mv, done) {
       const fromCell = boardEl.querySelector('[data-sq="' + mv.from + '"]');
       const toCell = boardEl.querySelector('[data-sq="' + mv.to + '"]');
       const img = fromCell ? fromCell.querySelector('img') : null;
-      if (!img || !toCell) { applyMove(mv); renderBoard(mv.from, mv.to); done(); return; }
+      if (!img || !toCell) {
+        applyMove(mv);
+        renderBoard(mv.from, mv.to, mv.capture);
+        if (mv.check) playCheckSound();
+        else if (mv.capture || mv.captured) playCaptureSound();
+        else playMoveSound();
+        done();
+        return;
+      }
       const fromRect = fromCell.getBoundingClientRect();
       const toRect = toCell.getBoundingClientRect();
       const dx = toRect.left - fromRect.left;
@@ -133,7 +246,10 @@
       });
       setTimeout(() => {
         applyMove(mv);
-        renderBoard(mv.from, mv.to);
+        renderBoard(mv.from, mv.to, mv.capture);
+        if (mv.check) playCheckSound();
+        else if (mv.capture || mv.captured) playCaptureSound();
+        else playMoveSound();
         done();
       }, 520);
     }
@@ -142,6 +258,10 @@
       if (animating) return;
       animating = true;
       playBtn.disabled = true;
+      // ボタンを押した「その場」でAudioContextを起動/再開しておく。
+      // setTimeoutの中まで初期化を遅らせると、ブラウザの自動再生ポリシーで
+      // 音が鳴らないことがあるため、ユーザー操作の直後に確実に行う。
+      getAudioCtx();
       board = fenBoardArray(opts.fen);
       stepIndex = 0;
       renderBoard();
