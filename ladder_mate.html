@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>はしご(ラダーメイト)とは？ - KitsuneChess</title>
+<meta name="description" content="チェスの必修メイト手筋「はしご(ラダーメイト)」をアニメーション付きで解説。2つのルークで王を端まで追い詰める手順を学べます。">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Crimson+Pro:wght@400;600;700&display=swap" rel="stylesheet">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1034556404852942" crossorigin="anonymous"></script>
+<style>
+:root {
+  --bg:#f5edd6; --brown:#7c4a1e; --brown-dark:#4a2a0e; --brown-light:#a3692d;
+  --card:#f0e4c8; --text:#111; --text-muted:#444;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  background:var(--bg); color:var(--text);
+  font-family:'Crimson Pro', serif; font-weight:600;
+  max-width:720px; margin:0 auto; padding:16px 16px 60px;
+  line-height:1.8;
+}
+h1 { font-family:'Cinzel', serif; color:var(--brown-dark); font-size:1.6rem;
+  border-bottom:2px solid rgba(124,74,30,0.3); padding-bottom:10px; margin-bottom:16px; }
+h2 { font-family:'Cinzel', serif; color:var(--brown-dark); font-size:1.15rem; margin:22px 0 8px; }
+p { margin-bottom:12px; }
+.lang-switch { text-align:right; margin-bottom:10px; }
+.back-link { display:inline-block; margin-bottom:10px; color:var(--brown-dark); text-decoration:none; font-weight:700; }
+button {
+  font-family:'Crimson Pro', serif; font-weight:700; padding:8px 18px; margin:4px 4px 4px 0;
+  cursor:pointer; background:var(--brown); color:#fff; border:none; border-radius:6px;
+}
+button:hover { background:var(--brown-dark); }
+button:disabled { opacity:0.6; cursor:default; }
+.lang-switch button { background:#f7ebd3; color:var(--brown-dark); border:1px solid #c4b193; }
+.box { background:var(--card); border:2px solid var(--brown); border-radius:10px; padding:16px; margin-top:16px; text-align:center; }
+.tb-board { display:grid; grid-template-columns:repeat(8,minmax(0,1fr)); grid-template-rows:repeat(8,minmax(0,1fr));
+  width:100%; max-width:360px; aspect-ratio:1; margin:0 auto; border:2px solid var(--brown); }
+.tb-sq { position:relative; }
+.tb-label { position:absolute; font-family:'Crimson Pro', serif; font-weight:800; font-size:0.65rem; line-height:1; pointer-events:none; z-index:2; }
+.tb-light .tb-label { color:rgba(80,40,0,0.85); }
+.tb-dark .tb-label { color:rgba(255,240,200,0.95); }
+.tb-rank-label { top:2px; left:3px; }
+.tb-file-label { bottom:2px; right:3px; }
+.tb-light { background:#d4b87a; }
+.tb-dark { background:#7a5230; }
+.tb-highlight { background-color:#cdd26b !important; }
+.tb-piece { width:100%; height:100%; pointer-events:none; }
+.tb-caption { margin-top:10px; font-weight:700; min-height:1.6em; color:var(--brown-dark); }
+.tb-controls { margin-top:8px; }
+footer { text-align:center; padding:16px 16px 0; font-size:0.85rem; color:#888; border-top:1px solid rgba(184,134,11,0.2); margin-top:24px; }
+footer a { color:var(--brown-dark); text-decoration:none; margin:0 8px; }
+</style>
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-KKPG2SSX');</script>
+</head>
+<body>
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KKPG2SSX"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<div class="lang-switch">
+  <button id="langBtn">日本語</button>
+</div>
+<a class="back-link" href="info.html" data-ja="🦊 Info一覧へ戻る" data-en="🦊 Back to Info">🦊 Info一覧へ戻る</a>
+<h1 data-ja="🪜 はしご(ラダーメイト)とは？" data-en="🪜 What is a Ladder Mate?">🪜 はしご(ラダーメイト)とは？</h1>
+<p data-ja="はしご(ラダーメイト)とは、2つのルーク(またはルークとクイーン)を交互に使い、相手の王を1段ずつ盤の端まで追い詰めてチェックメイトする基本手筋です。片方の駒が「王手」をかけている間、もう片方の駒が王の退路をふさぐ「壁」の役目を果たし、それを交互に繰り返すことで、まるで階段(はしご)を上るように王を追い込んでいきます。ルーク2枚 対 王のみ、という終盤の基礎として、初心者が最初に覚えるべきメイト手筋のひとつです。"
+   data-en="A ladder mate (also called a staircase mate) is a fundamental checkmating technique that uses two rooks (or a rook and a queen) working together, taking turns to drive the enemy king step by step toward the edge of the board. While one piece delivers check, the other cuts off the king's retreat like a wall — and by repeating this back and forth, the king is marched toward the edge exactly like climbing a ladder. It's one of the very first mating techniques every beginner learns, typically practiced as a two-rooks-versus-lone-king endgame drill.">
+   はしご(ラダーメイト)とは、2つのルーク(またはルークとクイーン)を交互に使い、相手の王を1段ずつ盤の端まで追い詰めてチェックメイトする基本手筋です。片方の駒が「王手」をかけている間、もう片方の駒が王の退路をふさぐ「壁」の役目を果たし、それを交互に繰り返すことで、まるで階段(はしご)を上るように王を追い込んでいきます。ルーク2枚 対 王のみ、という終盤の基礎として、初心者が最初に覚えるべきメイト手筋のひとつです。</p>
+<p data-ja="仕組みはとてもシンプルです。一方のルークが王と同じ段(ランク)に並んで王手をかけると、王は隣の段へ逃げるしかありません。そのとき、もう一方のルークがすでに1つ手前の段を丸ごと押さえているので、王は後戻りできず、前へ進むことしかできないのです。王が動いたら、王手をかけていたルークではなく、後ろで壁になっていたルークが今度は新しい段まで進んで次の王手を用意します。この「王手→壁の交代」を繰り返すだけで、王は着実に盤の端(1段目や8段目)へ追い詰められていきます。"
+   data-en="The mechanism is simple. One rook lines up on the same rank as the king and delivers check, so the king has nowhere to go but the next rank over. At the same time, the other rook is already covering the rank the king just came from, so retreating is impossible — the king can only move forward. Once the king moves, the rook that was acting as the wall advances to the new rank to set up the next check, and the roles swap back and forth. Just by repeating this &quot;check, then swap the wall&quot; pattern, the king is steadily pushed all the way to the edge of the board (the 1st or 8th rank).">
+   仕組みはとてもシンプルです。一方のルークが王と同じ段(ランク)に並んで王手をかけると、王は隣の段へ逃げるしかありません。そのとき、もう一方のルークがすでに1つ手前の段を丸ごと押さえているので、王は後戻りできず、前へ進むことしかできないのです。王が動いたら、王手をかけていたルークではなく、後ろで壁になっていたルークが今度は新しい段まで進んで次の王手を用意します。この「王手→壁の交代」を繰り返すだけで、王は着実に盤の端(1段目や8段目)へ追い詰められていきます。</p>
+<div class="box">
+  <div id="ladderDemo"></div>
+</div>
+<p data-ja="上のアニメーションでは、白のルーク2枚だけで黒玉を8段目まで追い詰め、最後はバックランク(最終列)でチェックメイトする一連の流れを示しています。Rh6+で玉は7段目へ、Ra7+で玉は8段目へ、そして最後にRh8#で万事休す。玉が動くたびに、王手をかけていない方のルークがすでに退路を封じているので、玉には前に進む以外の選択肢がありません。"
+   data-en="The animation above shows White using only two rooks to march the black king all the way to the 8th rank and deliver checkmate on the back rank. Rh6+ pushes the king to the 7th rank, Ra7+ pushes it to the 8th, and finally Rh8# finishes the job. Every time the king moves, the rook that isn't giving check has already sealed off the retreat, leaving the king with no choice but to keep marching forward.">
+   上のアニメーションでは、白のルーク2枚だけで黒玉を8段目まで追い詰め、最後はバックランク(最終列)でチェックメイトする一連の流れを示しています。Rh6+で玉は7段目へ、Ra7+で玉は8段目へ、そして最後にRh8#で万事休す。玉が動くたびに、王手をかけていない方のルークがすでに退路を封じているので、玉には前に進む以外の選択肢がありません。</p>
+<h2 data-ja="はしごメイトのコツ" data-en="Tips for the Ladder Mate">はしごメイトのコツ</h2>
+<p data-ja="コツは「2枚の駒を絶対に同じ段・同じ筋に並べない」ことです。両方のルークが同じ段に並んでしまうと、次に王手をかけたときにもう1枚が「壁」の役目を果たせず、王に逃げ道を与えてしまいます。常に1枚が王手、もう1枚が1つ後ろの段で待機、という役割分担を意識しましょう。また、王を盤の中心に近い場所からいきなり追い詰めようとせず、まずは片方のルークで退路を1本切ってから王手をかける、という順番を守ると迷わずに進められます。"
+   data-en="The key is to never let both pieces sit on the same rank or file at the same time. If both rooks end up lined up together, neither one is free to act as the wall the next time a check is delivered, and the king slips away. Always keep one rook giving check while the other waits one rank behind as backup. It also helps to cut off a retreat rank with one rook before delivering the next check, rather than trying to rush the king down from the center all at once.">
+   コツは「2枚の駒を絶対に同じ段・同じ筋に並べない」ことです。両方のルークが同じ段に並んでしまうと、次に王手をかけたときにもう1枚が「壁」の役目を果たせず、王に逃げ道を与えてしまいます。常に1枚が王手、もう1枚が1つ後ろの段で待機、という役割分担を意識しましょう。また、王を盤の中心に近い場所からいきなり追い詰めようとせず、まずは片方のルークで退路を1本切ってから王手をかける、という順番を守ると迷わずに進められます。</p>
+<p data-ja="はしごメイトはルーク2枚だけでなく、ルークとクイーンの組み合わせでも同じ要領で使えます。駒の损得が大きくついた終盤で、相手の王がまだ盤の中央付近にいるときに特に有効な手筋です。KitsuneChessのパズルストリークにも、はしごメイトの考え方を使う終盤問題が含まれているので、実戦感覚を養うのにぜひ活用してみてください。難しく感じるかもしれませんが、「王手」と「壁」を交代するだけ、と分かってしまえばとてもシンプルな手筋です。ルークが2枚以上残る終盤に入ったら、まずはしごメイトが使えないか考えてみましょう。"
+   data-en="The ladder mate works just as well with a rook and queen as it does with two rooks. It's especially useful in endgames where you already have a large material advantage and the opposing king is still stuck near the center of the board. KitsuneChess's Puzzle Streak also includes endgame puzzles that use this same idea, so give them a try to build your intuition. It might sound complicated at first, but once you see it as simply &quot;check, then swap who's the wall,&quot; it becomes a very simple technique. Whenever you reach an endgame with two or more rooks on the board, check whether a ladder mate is on the table.">
+   はしごメイトはルーク2枚だけでなく、ルークとクイーンの組み合わせでも同じ要領で使えます。駒の损得が大きくついた終盤で、相手の王がまだ盤の中央付近にいるときに特に有効な手筋です。KitsuneChessのパズルストリークにも、はしごメイトの考え方を使う終盤問題が含まれているので、実戦感覚を養うのにぜひ活用してみてください。難しく感じるかもしれませんが、「王手」と「壁」を交代するだけ、と分かってしまえばとてもシンプルな手筋です。ルークが2枚以上残る終盤に入ったら、まずはしごメイトが使えないか考えてみましょう。</p>
+<footer>
+  <div>
+    <a href="info.html" data-ja="解説記事一覧" data-en="Articles">解説記事一覧</a>
+    <a href="disclaimer.html" data-ja="免責事項" data-en="Privacy Policy">免責事項</a>
+  </div>
+</footer>
+<script src="tactics-board.js"></script>
+<script>
+  let LANG = localStorage.getItem('selectedLang') === 'en' ? 'en' : 'ja';
+  let boardHandle = null;
+  function applyLang() {
+    document.querySelectorAll('[data-ja]').forEach(el => { el.textContent = LANG === 'ja' ? el.dataset.ja : el.dataset.en; });
+    document.getElementById('langBtn').textContent = LANG === 'ja' ? 'English' : '日本語';
+    if (boardHandle) boardHandle.refreshLang();
+  }
+  document.getElementById('langBtn').onclick = () => {
+    LANG = LANG === 'ja' ? 'en' : 'ja';
+    localStorage.setItem('selectedLang', LANG);
+    applyLang();
+  };
+  applyLang();
+  boardHandle = TacticBoard({
+    containerId: 'ladderDemo',
+    fen: '8/8/4k3/R6R/8/8/8/4K3 w - - 0 1',
+    moves: [
+      { from: 'h5', to: 'h6', check: true },
+      { from: 'e6', to: 'e7' },
+      { from: 'a5', to: 'a7', check: true },
+      { from: 'e7', to: 'e8' },
+      { from: 'h6', to: 'h8', check: true }
+    ],
+    captions: {
+      ja: [
+        '白番。ルークがa5とh5に、黒玉がe6にいます。',
+        'Rh6+ 玉は5段目に戻れず、7段目へ逃げるしかありません。',
+        '玉、e7へ。',
+        'Ra7+ 6段目はもう1枚のルークが押さえているので、玉は8段目へ。',
+        '玉、e8へ。もう後がありません。',
+        'Rh8# 8段目・7段目とも塞がれ、チェックメイト！'
+      ],
+      en: [
+        'White to move. Rooks on a5 and h5, Black king on e6.',
+        'Rh6+ The king cannot return to rank 5, so it must flee to rank 7.',
+        'King moves to e7.',
+        'Ra7+ Rank 6 is already sealed by the other rook, so the king is pushed to rank 8.',
+        'King moves to e8 — there is nowhere left to run.',
+        'Rh8# Ranks 7 and 8 are both sealed. Checkmate!'
+      ]
+    }
+  });
+</script>
+</body>
+</html>
