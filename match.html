@@ -412,13 +412,23 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   // ── プッシュ通知(FCM) ──
   let messaging = null;
   let swRegistration = null;
+  let messagingInitError = null; // デバッグ用: 通知が使えない場合の理由を保持
 
   async function initMessaging() {
     try {
-      if (!('serviceWorker' in navigator) || !('Notification' in window)) return;
+      if (!('serviceWorker' in navigator) || !('Notification' in window)) {
+        messagingInitError = 'no-sw-or-notification-api';
+        return;
+      }
       const supported = await isMessagingSupported().catch(() => false);
-      if (!supported) return;
-      swRegistration = await navigator.serviceWorker.register('/firebase-messaging-sw.js');
+      if (!supported) {
+        messagingInitError = 'fcm-not-supported';
+        return;
+      }
+      // 対局ページの既存Service Worker(match-sw.js)にFCMのバックグラウンド処理を統合しているので、
+      // 別ファイルを新たに登録せず、こちらを再利用する(スコープの衝突を避けるため)。
+      swRegistration = await navigator.serviceWorker.register('/match-sw.js');
+      await navigator.serviceWorker.ready;
       messaging = getMessaging(app);
       onMessage(messaging, (payload) => {
         // フォアグラウンド時は通知をブラウザ標準のNotification APIで表示する
@@ -431,6 +441,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         }
       });
     } catch (err) {
+      messagingInitError = err && err.message ? err.message : String(err);
       console.warn('通知の初期化に失敗しました:', err);
     }
   }
@@ -451,7 +462,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     try {
       if (!messaging) await initMessaging();
       if (!messaging) {
-        msgEl.textContent = LANG === 'ja' ? 'このブラウザは通知に対応していません。' : 'This browser does not support notifications.';
+        const reasonSuffix = messagingInitError ? (' (' + messagingInitError + ')') : '';
+        msgEl.textContent = (LANG === 'ja' ? 'このブラウザは通知に対応していません。' : 'This browser does not support notifications.') + reasonSuffix;
         btn.disabled = false;
         return;
       }
