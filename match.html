@@ -3,7 +3,6 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1034556404852942" crossorigin="anonymous"></script>
 <title>対局モード (Match Mode) - KitsuneChess</title>
 <link rel="manifest" href="/match-manifest.json">
 <meta name="theme-color" content="#7c4a1e">
@@ -110,6 +109,20 @@ details summary { cursor:pointer; color:var(--brown-dark); font-family:'Cinzel',
 details summary::-webkit-details-marker { display:none; }
 details summary::before { content:'▸ '; }
 details[open] summary::before { content:'▾ '; }
+/* ── 対局中チャット モーダル ── */
+.modal { display:none; position:fixed; inset:0; background:rgba(20,12,4,0.6); z-index:200; align-items:center; justify-content:center; padding:16px; }
+.modal.show { display:flex; }
+.modal-content {
+  background:var(--bg); border:2px solid var(--brown); border-radius:14px;
+  width:100%; max-width:560px; max-height:88vh; overflow-y:auto;
+  padding:22px 20px 18px; position:relative; box-shadow:0 12px 40px rgba(0,0,0,0.35);
+}
+.modal-content h3 { font-family:'Cinzel', serif; color:var(--brown-dark); margin-bottom:12px; font-size:1.2rem; }
+.close-btn { position:absolute; top:8px; right:14px; font-size:1.8rem; line-height:1; cursor:pointer; color:var(--text-muted); font-weight:700; }
+.close-btn:hover { color:var(--brown-dark); }
+.quick-phrases { display:flex; flex-wrap:wrap; gap:4px; margin-bottom:12px; }
+.quick-phrases button { background:#f7ebd3; color:var(--brown-dark); border:1px solid #c4b193; font-size:0.85rem; padding:6px 10px; margin:3px 3px 3px 0; }
+.quick-phrases button:hover { background:var(--brown); color:#fff; }
 </style>
 <!-- Google Tag Manager -->
 <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
@@ -320,6 +333,15 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <button id="analysisToggleBtn" data-ja="🔍 局面を分析する" data-en="🔍 Analyze Position" style="margin-top:10px;">🔍 局面を分析する</button>
     <button id="historyToggleBtn" data-ja="📜 履歴を見る" data-en="📜 View History" style="margin-top:10px;">📜 履歴を見る</button>
     <div id="matchChatPanel" style="display:none;"></div>
+    <!-- 対局中チャット: 大きなモーダルで表示 -->
+    <div id="chatModal" class="modal">
+      <div class="modal-content">
+        <span class="close-btn" id="chatModalCloseBtn">&times;</span>
+        <h3 id="chatModalTitle" data-ja="💬 対戦チャット" data-en="💬 Match Chat">💬 対戦チャット</h3>
+        <div class="quick-phrases" id="quickPhrasesRow"></div>
+        <div id="chatModalBody"></div>
+      </div>
+    </div>
     <div id="analysisPanel" style="display:none;margin-top:10px;">
       <p style="font-size:0.8rem;color:var(--text-muted);" data-ja="ここで自由に駒を動かして試せます。本番の対局には影響しません。" data-en="Move pieces freely here to explore ideas. This has no effect on the real game.">ここで自由に駒を動かして試せます。本番の対局には影響しません。</p>
       <div id="analysisBoard"></div>
@@ -1484,24 +1506,21 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       const msgBtn = document.createElement('button');
       msgBtn.textContent = LANG === 'ja' ? '✉️ メッセージ' : '✉️ Message';
       msgBtn.style.background = '#a3692d';
-      const chatPanel = document.createElement('div');
-      chatPanel.style.display = 'none';
-      chatPanel.style.width = '100%';
-      let dmAttached = false;
       msgBtn.onclick = () => {
-        const opening = chatPanel.style.display === 'none';
-        chatPanel.style.display = opening ? 'block' : 'none';
-        if (opening && !dmAttached) {
-          dmAttached = true;
-          attachChat(chatPanel, 'directMessages/' + pairKey(user.uid, friendUid), user);
-        }
+        openChatModalFor(
+          'directMessages/' + pairKey(user.uid, friendUid),
+          'dm:' + friendUid,
+          '✉️ ' + friendName + ' とのメッセージ',
+          '✉️ Messages with ' + friendName,
+          ['ナイスゲーム！😄', 'よろしく！👋', 'ありがとう！🤝', '頑張って！🍀'],
+          ['Good game! 😄', 'Hello! 👋', 'Thank you! 🤝', 'Good luck! 🍀']
+        );
       };
       row.appendChild(label);
       row.appendChild(challengeBtn);
       row.appendChild(tcPanel);
       row.appendChild(msgBtn);
       container.appendChild(row);
-      container.appendChild(chatPanel);
     }
   }
 
@@ -1524,36 +1543,76 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     }
   }
 
-  function attachChat(containerEl, chatPath, user) {
+  const QUICK_EMOJIS = ['😀','😄','😆','👍','👋','🤝','🍀','🎉','😅','😢','🤔','♟️','👑','🔥','💪','🙏'];
+
+  function attachChat(containerEl, chatPath, user, options) {
+    options = options || {};
     containerEl.innerHTML = '';
     const notice = document.createElement('p');
     notice.style.cssText = 'font-size:0.78rem;color:var(--text-muted);margin-bottom:4px;';
     notice.textContent = LANG === 'ja' ? '💬 丁寧な言葉遣いでやり取りしましょう' : '💬 Please keep the conversation respectful';
     containerEl.appendChild(notice);
     const list = document.createElement('div');
-    list.style.cssText = 'max-height:180px;overflow-y:auto;background:var(--input-bg);color:var(--text);border:1px solid rgba(124,74,30,0.3);border-radius:6px;padding:8px;margin:8px 0;font-size:0.85rem;';
+    list.style.cssText = 'max-height:' + (options.logMaxHeight || '180px') + ';overflow-y:auto;background:var(--input-bg);color:var(--text);border:1px solid rgba(124,74,30,0.3);border-radius:6px;padding:8px;margin:8px 0;font-size:0.85rem;';
+    containerEl.appendChild(list);
+
     const inputRow = document.createElement('div');
+    inputRow.style.cssText = 'display:flex;gap:6px;align-items:center;flex-wrap:wrap;';
     const input = document.createElement('input');
     input.type = 'text';
     input.placeholder = LANG === 'ja' ? 'メッセージを入力...' : 'Type a message...';
-    input.style.width = '65%';
-    const sendBtn = document.createElement('button');
-    sendBtn.textContent = LANG === 'ja' ? '送信' : 'Send';
-    const doSend = async () => {
-      const text = input.value.trim();
+    input.style.cssText = 'flex:1;min-width:120px;';
+
+    const doSend = async (overrideText) => {
+      const text = (overrideText != null ? overrideText : input.value).trim();
       if (!text) return;
       const myProfile = await get(ref(db, 'users/' + user.uid));
       const myName = myProfile.exists() ? myProfile.val().username : user.displayName;
       const detectedLang = /[\u3040-\u30ff\u3400-\u9fff]/.test(text) ? 'ja' : 'en';
       await set(push(ref(db, chatPath)), { from: user.uid, fromName: myName, text, lang: detectedLang, sentAt: Date.now() });
-      input.value = '';
+      if (overrideText == null) input.value = '';
     };
-    sendBtn.onclick = doSend;
-    input.onkeydown = (e) => { if (e.key === 'Enter') doSend(); };
+
+    let emojiPanel = null;
+    if (options.emojiPicker) {
+      const emojiBtn = document.createElement('button');
+      emojiBtn.type = 'button';
+      emojiBtn.textContent = '😀';
+      emojiBtn.title = LANG === 'ja' ? '絵文字を挿入' : 'Insert emoji';
+      emojiBtn.style.cssText = 'flex-shrink:0;padding:6px 10px;';
+      emojiPanel = document.createElement('div');
+      emojiPanel.style.cssText = 'display:none;flex-wrap:wrap;gap:4px;width:100%;background:var(--input-bg);border:1px solid rgba(124,74,30,0.3);border-radius:6px;padding:6px;';
+      QUICK_EMOJIS.forEach(em => {
+        const eb = document.createElement('button');
+        eb.type = 'button';
+        eb.textContent = em;
+        eb.style.cssText = 'font-size:1.15rem;padding:4px 7px;background:transparent;color:inherit;border:none;box-shadow:none;';
+        eb.onclick = () => { input.value += em; input.focus(); };
+        emojiPanel.appendChild(eb);
+      });
+      emojiBtn.onclick = () => { emojiPanel.style.display = emojiPanel.style.display === 'none' ? 'flex' : 'none'; };
+      inputRow.appendChild(emojiBtn);
+    }
+
     inputRow.appendChild(input);
+    const sendBtn = document.createElement('button');
+    sendBtn.textContent = LANG === 'ja' ? '送信' : 'Send';
+    sendBtn.onclick = () => doSend();
+    input.onkeydown = (e) => { if (e.key === 'Enter') doSend(); };
     inputRow.appendChild(sendBtn);
-    containerEl.appendChild(list);
     containerEl.appendChild(inputRow);
+    if (emojiPanel) containerEl.appendChild(emojiPanel);
+
+    if (options.quickPhrases && options.quickPhraseContainer) {
+      options.quickPhraseContainer.innerHTML = '';
+      options.quickPhrases.forEach(phrase => {
+        const qb = document.createElement('button');
+        qb.type = 'button';
+        qb.textContent = phrase;
+        qb.onclick = () => doSend(phrase);
+        options.quickPhraseContainer.appendChild(qb);
+      });
+    }
 
     onValue(ref(db, chatPath), (snap) => {
       const data = snap.val();
@@ -1874,8 +1933,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     if (oppPresenceUnsub) { oppPresenceUnsub(); oppPresenceUnsub = null; }
     document.getElementById('gameBox').style.display = 'none';
     document.getElementById('lobbyArea').style.display = 'block';
-    document.getElementById('matchChatPanel').style.display = 'none';
-    matchChatAttached = null;
+    document.getElementById('chatModal').classList.remove('show');
+    chatModalAttachedKey = null;
     myMatchId = null;
     boardPly = null;
     if (clockInterval) { clearInterval(clockInterval); clockInterval = null; }
@@ -2970,16 +3029,44 @@ const PIECE_IMG = {
     await update(ref(db, 'matches/' + myMatchId), { takebackRequestBy: myColor });
   };
 
-  let matchChatAttached = null;
-  document.getElementById('matchChatToggle').onclick = () => {
-    const panel = document.getElementById('matchChatPanel');
-    const opening = panel.style.display === 'none';
-    panel.style.display = opening ? 'block' : 'none';
-    const user = auth.currentUser;
-    if (opening && user && myMatchId && matchChatAttached !== myMatchId) {
-      matchChatAttached = myMatchId;
-      attachChat(panel, 'matches/' + myMatchId + '/messages', user);
+  function openMatchChatModal() { document.getElementById('chatModal').classList.add('show'); }
+  function closeMatchChatModal() { document.getElementById('chatModal').classList.remove('show'); }
+  document.getElementById('chatModalCloseBtn').onclick = closeMatchChatModal;
+  document.getElementById('chatModal').onclick = (e) => {
+    if (e.target.id === 'chatModal') closeMatchChatModal();
+  };
+
+  let chatModalAttachedKey = null;
+
+  function openChatModalFor(chatPath, key, titleJa, titleEn, quickJa, quickEn) {
+    openMatchChatModal();
+    const titleEl = document.getElementById('chatModalTitle');
+    if (titleEl) {
+      titleEl.setAttribute('data-ja', titleJa);
+      titleEl.setAttribute('data-en', titleEn);
+      titleEl.textContent = LANG === 'ja' ? titleJa : titleEn;
     }
+    const user = auth.currentUser;
+    if (user && key && chatModalAttachedKey !== key) {
+      chatModalAttachedKey = key;
+      attachChat(document.getElementById('chatModalBody'), chatPath, user, {
+        emojiPicker: true,
+        logMaxHeight: '45vh',
+        quickPhrases: LANG === 'ja' ? quickJa : quickEn,
+        quickPhraseContainer: document.getElementById('quickPhrasesRow')
+      });
+    }
+  }
+
+  document.getElementById('matchChatToggle').onclick = () => {
+    if (!myMatchId) return;
+    openChatModalFor(
+      'matches/' + myMatchId + '/messages',
+      'match:' + myMatchId,
+      '💬 対戦チャット', '💬 Match Chat',
+      ['ナイスゲーム！😄', 'よろしく！👋', 'ありがとう！🤝', '頑張って！🍀'],
+      ['Good game! 😄', 'Hello! 👋', 'Thank you! 🤝', 'Good luck! 🍀']
+    );
   };
 
   function setupPresence(user) {
