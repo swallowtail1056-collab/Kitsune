@@ -2985,6 +2985,22 @@ const PIECE_IMG = {
     }
   }
 
+  // 盤面全体を作り直さずに時計の表示だけを更新する(毎秒呼ばれるため、盤面のガタつき防止)
+  function updateClockDisplay(m) {
+    const clockEl = document.getElementById('gameClock');
+    if (!clockEl) return;
+    const elapsed = (m.status === 'active') ? (Date.now() - (m.turnStartedAt || Date.now())) : 0;
+    const wTime = m.whiteTime - (m.turn === 'w' && m.status === 'active' ? elapsed : 0);
+    const bTime = m.blackTime - (m.turn === 'b' && m.status === 'active' ? elapsed : 0);
+    const myTime = myColor === 'w' ? wTime : bTime;
+    const oppTime = myColor === 'w' ? bTime : wTime;
+    const tcLabel = { bullet: 'Bullet', blitz: 'Blitz', rapid: 'Rapid' }[m.timeControl] || '';
+    const incLabel = m.increment ? ('+' + (m.increment / 1000) + 's') : '';
+    clockEl.textContent = tcLabel + incLabel + '　' +
+      (LANG === 'ja' ? '相手 ' : 'Opponent ') + fmtTime(oppTime) + '　|　' +
+      (LANG === 'ja' ? '自分 ' : 'You ') + fmtTime(myTime);
+  }
+
   let clockInterval = null;
   function startClockTicker(user) {
     if (clockInterval) clearInterval(clockInterval);
@@ -3004,7 +3020,7 @@ const PIECE_IMG = {
           ...m, [timeKey]: 0, status: 'timeout', winner: turnColor === 'w' ? 'b' : 'w'
         });
       } else if (myColor === turnColor) {
-        renderMiniBoard(m, user, matchId);
+        updateClockDisplay(m);
       }
     }, 1000);
   }
