@@ -502,6 +502,14 @@ function setWelcomeLang(lang, btn) {
     el.textContent = isEn ? el.dataset.en : el.dataset.ja;
   });
 }
+
+// 保存されている言語設定を読み込み、なければ英語をデフォルトにする
+(function initLang() {
+  const stored = localStorage.getItem('selectedLang');
+  const lang = stored === 'ja' ? 'ja' : 'en';
+  const btn = document.querySelector('.wlc-lang-btn[onclick*="\'' + lang + '\'"]');
+  setWelcomeLang(lang, btn);
+})();
 </script>
  </body>
 </html>

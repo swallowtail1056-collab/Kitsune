@@ -741,7 +741,7 @@ const PIECE_IMG = {
 // ============================================================
 // i18n
 // ============================================================
-let LANG = 'en';
+let LANG = localStorage.getItem('selectedLang') === 'ja' ? 'ja' : 'en';
 
 const OPENING_NAMES_EN = {
   'ルイ・ロペス':'Ruy Lopez','イタリアン':'Italian Game',
@@ -1628,6 +1628,7 @@ applyTheme();
 
 function toggleLang(btn) {
   LANG=LANG==='ja'?'en':'ja';
+  localStorage.setItem('selectedLang', LANG);
   const langBtn=document.getElementById('btnLang');
   if(langBtn) langBtn.textContent=LANG==='ja'?'EN':'JP';
   applyLang();
@@ -3164,6 +3165,10 @@ if (new URLSearchParams(location.search).get('guided') === '1') {
   if (typeof selectOpening === 'function') selectOpening('italian');
   if (typeof maybeShowFirstTimeGuide === 'function') maybeShowFirstTimeGuide();
 }
+// 保存されている言語設定(なければ英語)を、読み込み直後に実際の表示へ反映する
+var _langBtn = document.getElementById('btnLang');
+if (_langBtn) _langBtn.textContent = LANG === 'ja' ? 'EN' : 'JP';
+applyLang();
 </script>
  </body>
 </html>
