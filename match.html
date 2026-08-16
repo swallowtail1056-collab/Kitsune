@@ -1553,7 +1553,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     notice.textContent = LANG === 'ja' ? '💬 丁寧な言葉遣いでやり取りしましょう' : '💬 Please keep the conversation respectful';
     containerEl.appendChild(notice);
     const list = document.createElement('div');
-    list.style.cssText = 'max-height:' + (options.logMaxHeight || '180px') + ';overflow-y:auto;background:var(--input-bg);color:var(--text);border:1px solid rgba(124,74,30,0.3);border-radius:6px;padding:8px;margin:8px 0;font-size:0.85rem;';
+    list.style.cssText = 'max-height:' + (options.logMaxHeight || '180px') + ';overflow-y:auto;background:#141210;color:#f5efe0;border:1px solid rgba(212,167,44,0.35);border-radius:6px;padding:8px;margin:8px 0;font-size:0.85rem;';
     containerEl.appendChild(list);
 
     const inputRow = document.createElement('div');
@@ -1621,18 +1621,38 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         list.textContent = LANG === 'ja' ? 'まだメッセージはありません。' : 'No messages yet.';
         return;
       }
-      Object.values(data).sort((a, b) => a.sentAt - b.sentAt).forEach(msg => {
+      Object.entries(data).sort((a, b) => a[1].sentAt - b[1].sentAt).forEach(([msgKey, msg]) => {
         const line = document.createElement('div');
-        const who = msg.from === user.uid ? (LANG === 'ja' ? '自分' : 'You') : msg.fromName;
-        const origLine = document.createElement('div');
-        origLine.textContent = who + ': ' + msg.text;
         line.style.marginBottom = '4px';
+        const isMine = msg.from === user.uid;
+        const who = isMine ? (LANG === 'ja' ? '自分' : 'You') : msg.fromName;
+
+        const origLine = document.createElement('div');
+        origLine.style.cssText = 'display:flex;align-items:baseline;gap:6px;flex-wrap:wrap;';
+        const textSpan = document.createElement('span');
+        textSpan.textContent = who + ': ' + msg.text;
+        origLine.appendChild(textSpan);
+
+        if (isMine) {
+          const retractBtn = document.createElement('button');
+          retractBtn.type = 'button';
+          retractBtn.textContent = LANG === 'ja' ? '取り消す' : 'Retract';
+          retractBtn.title = LANG === 'ja' ? '相手の画面からもこのメッセージを削除します' : 'Removes this message from the other person\'s view too';
+          retractBtn.style.cssText = 'font-size:0.68rem;padding:1px 6px;background:transparent;color:#e0a0a0;border:1px solid rgba(245,239,224,0.3);border-radius:4px;box-shadow:none;flex-shrink:0;';
+          retractBtn.onclick = async () => {
+            const confirmMsg = LANG === 'ja' ? 'このメッセージを取り消しますか？相手の画面からも削除されます。' : 'Retract this message? It will also be removed from the other person\'s view.';
+            if (!confirm(confirmMsg)) return;
+            retractBtn.disabled = true;
+            await remove(ref(db, chatPath + '/' + msgKey));
+          };
+          origLine.appendChild(retractBtn);
+        }
         line.appendChild(origLine);
 
         const msgLang = msg.lang || 'en';
         if (msgLang !== LANG) {
           const transLine = document.createElement('div');
-          transLine.style.cssText = 'font-size:0.78rem;color:var(--text-muted);font-style:italic;';
+          transLine.style.cssText = 'font-size:0.78rem;color:#b8b0a0;font-style:italic;';
           transLine.textContent = (LANG === 'ja' ? '翻訳中...' : 'Translating...');
           line.appendChild(transLine);
           translateText(msg.text, msgLang, LANG).then(translated => {
