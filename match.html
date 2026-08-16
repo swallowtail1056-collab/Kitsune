@@ -332,16 +332,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <button id="leaveMatchBtn" data-ja="対局を退出する" data-en="Leave Match" style="margin-top:10px;">対局を退出する</button>
     <button id="analysisToggleBtn" data-ja="🔍 局面を分析する" data-en="🔍 Analyze Position" style="margin-top:10px;">🔍 局面を分析する</button>
     <button id="historyToggleBtn" data-ja="📜 履歴を見る" data-en="📜 View History" style="margin-top:10px;">📜 履歴を見る</button>
-    <div id="matchChatPanel" style="display:none;"></div>
-    <!-- 対局中チャット: 大きなモーダルで表示 -->
-    <div id="chatModal" class="modal">
-      <div class="modal-content">
-        <span class="close-btn" id="chatModalCloseBtn">&times;</span>
-        <h3 id="chatModalTitle" data-ja="💬 対戦チャット" data-en="💬 Match Chat">💬 対戦チャット</h3>
-        <div class="quick-phrases" id="quickPhrasesRow"></div>
-        <div id="chatModalBody"></div>
-      </div>
-    </div>
     <div id="analysisPanel" style="display:none;margin-top:10px;">
       <p style="font-size:0.8rem;color:var(--text-muted);" data-ja="ここで自由に駒を動かして試せます。本番の対局には影響しません。" data-en="Move pieces freely here to explore ideas. This has no effect on the real game.">ここで自由に駒を動かして試せます。本番の対局には影響しません。</p>
       <div id="analysisBoard"></div>
@@ -366,6 +356,16 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <div id="reportList" style="max-height:260px;overflow-y:auto;background:var(--input-bg);border:1px solid rgba(124,74,30,0.3);border-radius:6px;padding:8px;font-size:0.85rem;"></div>
       <button id="reportCloseBtn" data-ja="レポートを閉じる" data-en="Close Report" style="margin-top:8px;">レポートを閉じる</button>
     </div>
+  </div>
+</div>
+
+<!-- チャット用モーダル(対局チャット・友達メッセージ共通)。profileArea/gameBoxの外に置き、display:noneな祖先の影響を受けないようにする -->
+<div id="chatModal" class="modal">
+  <div class="modal-content">
+    <span class="close-btn" id="chatModalCloseBtn">&times;</span>
+    <h3 id="chatModalTitle" data-ja="💬 対戦チャット" data-en="💬 Match Chat">💬 対戦チャット</h3>
+    <div class="quick-phrases" id="quickPhrasesRow"></div>
+    <div id="chatModalBody"></div>
   </div>
 </div>
 
