@@ -269,6 +269,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     </div>
   </div>
 
+  <div class="box" id="notifyBox">
+    <p><strong data-ja="🔔 通知" data-en="🔔 Notifications">🔔 通知</strong></p>
+    <p id="notifyStatusMsg" style="font-size:0.85rem;color:var(--text-muted);" data-ja="対局の招待・自分の手番・チャットをこの端末に通知します。" data-en="Get notified on this device about match invites, your turn, and chat messages.">対局の招待・自分の手番・チャットをこの端末に通知します。</p>
+    <button id="enableNotifyBtn" data-ja="🔔 通知を有効にする" data-en="🔔 Enable Notifications">🔔 通知を有効にする</button>
+  </div>
+
   <div class="box">
     <p><strong data-ja="📊 自分の対局分析(自分にだけ見えます)" data-en="📊 Your Game Analysis (visible only to you)">📊 自分の対局分析(自分にだけ見えます)</strong></p>
     <div id="analysisArea"></div>
@@ -382,6 +388,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
   import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, deleteUser, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
   import { getDatabase, ref, set, get, push, update, remove, onValue, onDisconnect, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+  import { getMessaging, getToken, onMessage, isSupported as isMessagingSupported } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-messaging.js";
+
+  // Firebase Console > プロジェクトの設定 > Cloud Messaging > ウェブ設定 > 「鍵ペアを生成」で取得したVAPIDキーに置き換えてください
+  const VAPID_KEY = "BJM_B6Bask0Jwa1MWX3G6bkWvjSdmMUryQkyM_3pjr4zSQ_qnRPM-x3d8B80PQjUXlzbRr6DYR3so4Y0OaDRuqY";
 
   const firebaseConfig = {
     apiKey: "AIzaSyDR6vsVq2uePiFRUmoqYB4LjdGZJiRM4eE",
@@ -398,6 +408,74 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   const auth = getAuth(app);
   const db = getDatabase(app);
   const provider = new GoogleAuthProvider();
+
+  // ── プッシュ通知(FCM) ──
+  let messaging = null;
+  let swRegistration = null;
+
+  async function initMessaging() {
+    try {
+      if (!('serviceWorker' in navigator) || !('Notification' in window)) return;
+      const supported = await isMessagingSupported().catch(() => false);
+      if (!supported) return;
+      swRegistration = await navigator.serviceWorker.register('/firebase-messaging-sw.js');
+      messaging = getMessaging(app);
+      onMessage(messaging, (payload) => {
+        // フォアグラウンド時は通知をブラウザ標準のNotification APIで表示する
+        const title = (payload.notification && payload.notification.title) || 'KitsuneChess';
+        const body = (payload.notification && payload.notification.body) || '';
+        const link = (payload.data && payload.data.link) || 'match.html';
+        if (Notification.permission === 'granted') {
+          const n = new Notification(title, { body, icon: '/favicon.ico' });
+          n.onclick = () => { window.focus(); window.location.href = link; };
+        }
+      });
+    } catch (err) {
+      console.warn('通知の初期化に失敗しました:', err);
+    }
+  }
+
+  async function enableNotifications() {
+    const btn = document.getElementById('enableNotifyBtn');
+    const msgEl = document.getElementById('notifyStatusMsg');
+    const user = auth.currentUser;
+    if (!user) {
+      alert(LANG === 'ja' ? '通知を有効にするにはログインしてください。' : 'Please sign in to enable notifications.');
+      return;
+    }
+    if (VAPID_KEY === 'YOUR_VAPID_KEY_HERE') {
+      alert(LANG === 'ja' ? '通知機能は準備中です。しばらくお待ちください。' : 'Notifications are not yet configured. Please check back later.');
+      return;
+    }
+    btn.disabled = true;
+    try {
+      if (!messaging) await initMessaging();
+      if (!messaging) {
+        msgEl.textContent = LANG === 'ja' ? 'このブラウザは通知に対応していません。' : 'This browser does not support notifications.';
+        btn.disabled = false;
+        return;
+      }
+      const permission = await Notification.requestPermission();
+      if (permission !== 'granted') {
+        msgEl.textContent = LANG === 'ja' ? '通知が許可されませんでした。ブラウザの設定から許可できます。' : 'Notification permission was not granted. You can allow it from your browser settings.';
+        btn.disabled = false;
+        return;
+      }
+      const token = await getToken(messaging, { vapidKey: VAPID_KEY, serviceWorkerRegistration: swRegistration });
+      if (token) {
+        await set(ref(db, 'users/' + user.uid + '/fcmTokens/' + token), { createdAt: Date.now(), ua: navigator.userAgent });
+        msgEl.textContent = LANG === 'ja' ? '✅ 通知が有効になりました。' : '✅ Notifications are enabled.';
+        btn.textContent = LANG === 'ja' ? '🔔 通知は有効です' : '🔔 Notifications Enabled';
+      } else {
+        msgEl.textContent = LANG === 'ja' ? 'トークンの取得に失敗しました。もう一度お試しください。' : 'Failed to get a notification token. Please try again.';
+        btn.disabled = false;
+      }
+    } catch (err) {
+      console.warn('通知の有効化に失敗しました:', err);
+      msgEl.textContent = LANG === 'ja' ? '通知の有効化に失敗しました。' : 'Failed to enable notifications.';
+      btn.disabled = false;
+    }
+  }
 
   const FOUNDER_CUTOFF = new Date('2026-10-01T00:00:00+09:00').getTime();
   let LANG = localStorage.getItem('selectedLang') === 'ja' ? 'ja' : 'en';
@@ -1164,6 +1242,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   };
 
   function normName(name) { return name.trim().toLowerCase(); }
+
+  document.getElementById('enableNotifyBtn').onclick = enableNotifications;
 
   document.getElementById('saveNameBtn').onclick = async () => {
     const user = auth.currentUser;
@@ -3159,6 +3239,11 @@ const PIECE_IMG = {
       });
 
       curUser = user;
+      if ('Notification' in window && Notification.permission === 'granted') {
+        const enableBtn = document.getElementById('enableNotifyBtn');
+        if (enableBtn) enableBtn.textContent = LANG === 'ja' ? '🔔 通知は有効です' : '🔔 Notifications Enabled';
+      }
+      initMessaging();
       onValue(ref(db, 'friendRequests/' + user.uid), (s) => { latestIncomingData = s.val(); renderIncomingRequests(user, latestIncomingData); });
       onValue(ref(db, 'friends/' + user.uid), (s) => { latestFriendsData = s.val(); renderFriendsList(user, latestFriendsData); });
       onValue(ref(db, 'matchInvites/' + user.uid), (s) => { latestMatchInvitesData = s.val(); renderMatchInvites(user, latestMatchInvitesData); });
