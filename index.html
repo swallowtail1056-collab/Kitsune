@@ -392,7 +392,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <!-- ══ WELCOME PAGE ══ -->
 <div id="page-welcome" class="page active">
   <!-- ヘッダー -->
-  <div class="wlc-logo">🦊 KitsuneChess</div>
+  <div class="wlc-logo">KitsuneChess</div>
   <div class="wlc-tag" id="wlcTag">
     <span class="lang-text" data-ja="チェス・オープニング学習サイト" data-en="Chess Opening Trainer">チェス・オープニング学習サイト</span>
   </div>
@@ -498,12 +498,6 @@ function setWelcomeLang(lang, btn) {
   document.querySelectorAll('.wlc-lang-btn').forEach(b => b.classList.remove('active'));
   if (btn) btn.classList.add('active');
   const isEn = lang === 'en';
-  const bubble = document.getElementById('wlcBubble');
-  if (bubble) bubble.innerHTML = isEn
-    ? "Hi! I'm your chess coach! \ud83e\udd8a<br>Let's master openings together!"
-    : "\u3053\u3093\u306b\u3061\u306f\uff01\u30b8\u30fc\u30f3\uff08Jene\uff09\u3060\u3088\uff01\ud83e\udd8a<br>\u4e00\u7dd2\u306b\u30aa\u30fc\u30d7\u30cb\u30f3\u30b0\u3092\u899a\u3048\u3088\u3046\uff01";
-  const tag = document.getElementById('wlcTag');
-  if (tag) tag.textContent = 'KitsuneChess \u2014 Chess Opening Trainer';
   document.querySelectorAll('#page-welcome .lang-text[data-ja][data-en]').forEach(el => {
     el.textContent = isEn ? el.dataset.en : el.dataset.ja;
   });
