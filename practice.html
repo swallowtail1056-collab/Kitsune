@@ -4,7 +4,6 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1034556404852942" crossorigin="anonymous"></script>
 <title>練習モード (Practice Mode) - KitsuneChess</title>
 <meta name="robots" content="noindex,follow">
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Crimson+Pro:wght@400;600;700&display=swap" rel="stylesheet">
@@ -3226,10 +3225,19 @@ function animatePuzzleMove(fromSq, toSq, callback) {
   });
   setTimeout(() => { clone.remove(); callback(); }, 340);
 }
-</script>
-<script>
+
+// ── ページ読み込み直後の初期表示制御 ──
+// トップページのカードなどから ?tab=puzzle / ?tab=quiz でアクセスされた場合は
+// そのタブ(パズルストリーク / クイズ)を直接開く。それ以外はデフォルトの練習(定跡)タブ。
 document.getElementById('mainNav').style.display = '';
-document.getElementById('page-game').classList.add('active');
+var _tabParam = new URLSearchParams(location.search).get('tab');
+if (_tabParam === 'puzzle') {
+  showPage('puzzle', document.getElementById('navPuzzle'));
+} else if (_tabParam === 'quiz') {
+  showPage('quiz', document.getElementById('navQuiz'));
+} else {
+  document.getElementById('page-game').classList.add('active');
+}
 if (new URLSearchParams(location.search).get('guided') === '1') {
   if (typeof selectOpening === 'function') selectOpening('italian');
   if (typeof maybeShowFirstTimeGuide === 'function') maybeShowFirstTimeGuide();
