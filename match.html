@@ -362,37 +362,37 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <div id="matchChatPanel" style="display:none;"></div>
 
   <!-- チャットモーダル -->
-  <div id="chatModalOverlay" class="chat-modal-overlay" onclick="closeChatModal(event)">
-    <div class="chat-modal-box" onclick="event.stopPropagation()">
+  <div id="chatModalOverlay" class="chat-modal-overlay">
+    <div class="chat-modal-box">
       <div class="chat-modal-header">
         <h3>💬 <span id="chatModalTitle">チャット</span></h3>
-        <button class="chat-modal-close" id="chatModalCloseBtn" onclick="closeChatModal()">✕</button>
+        <button class="chat-modal-close" id="chatModalCloseBtn">✕</button>
       </div>
       <div class="chat-quick-phrases">
-        <button class="chat-quick-btn" onclick="sendQuickMsg('Good game! 🤝')">Good game! 🤝</button>
-        <button class="chat-quick-btn" onclick="sendQuickMsg('Hello! 👋')">Hello! 👋</button>
-        <button class="chat-quick-btn" onclick="sendQuickMsg('Thank you! 😊')">Thank you! 😊</button>
-        <button class="chat-quick-btn" onclick="sendQuickMsg('Good luck! 🍀')">Good luck! 🍀</button>
-        <button class="chat-quick-btn" onclick="sendQuickMsg('Nice move! 👏')">Nice move! 👏</button>
-        <button class="chat-quick-btn" onclick="sendQuickMsg('よろしく！🦊')">よろしく！🦊</button>
+        <button class="chat-quick-btn" data-quickmsg="Good game! 🤝">Good game! 🤝</button>
+        <button class="chat-quick-btn" data-quickmsg="Hello! 👋">Hello! 👋</button>
+        <button class="chat-quick-btn" data-quickmsg="Thank you! 😊">Thank you! 😊</button>
+        <button class="chat-quick-btn" data-quickmsg="Good luck! 🍀">Good luck! 🍀</button>
+        <button class="chat-quick-btn" data-quickmsg="Nice move! 👏">Nice move! 👏</button>
+        <button class="chat-quick-btn" data-quickmsg="よろしく！🦊">よろしく！🦊</button>
       </div>
       <p class="chat-notice">💬 <span id="chatNoticeText">丁寧な言葉遣いでやり取りしましょう</span></p>
       <div id="chatModalLog" class="chat-log"></div>
       <div class="chat-input-row">
-        <button class="chat-emoji-btn" onclick="toggleEmojiPicker()" title="絵文字">😊</button>
+        <button class="chat-emoji-btn" id="chatEmojiToggleBtn" title="絵文字">😊</button>
         <div id="emojiPickerBox" class="emoji-picker-box">
-          <span onclick="insertEmoji('😀')">😀</span><span onclick="insertEmoji('😄')">😄</span>
-          <span onclick="insertEmoji('😊')">😊</span><span onclick="insertEmoji('🤝')">🤝</span>
-          <span onclick="insertEmoji('👋')">👋</span><span onclick="insertEmoji('👏')">👏</span>
-          <span onclick="insertEmoji('🍀')">🍀</span><span onclick="insertEmoji('🎉')">🎉</span>
-          <span onclick="insertEmoji('♟')">♟</span><span onclick="insertEmoji('🦊')">🦊</span>
-          <span onclick="insertEmoji('😅')">😅</span><span onclick="insertEmoji('😂')">😂</span>
-          <span onclick="insertEmoji('🤔')">🤔</span><span onclick="insertEmoji('👍')">👍</span>
-          <span onclick="insertEmoji('❤️')">❤️</span><span onclick="insertEmoji('✨')">✨</span>
-          <span onclick="insertEmoji('😢')">😢</span><span onclick="insertEmoji('😎')">😎</span>
-          <span onclick="insertEmoji('🏆')">🏆</span><span onclick="insertEmoji('⚔️')">⚔️</span>
-          <span onclick="insertEmoji('😮')">😮</span><span onclick="insertEmoji('🙏')">🙏</span>
-          <span onclick="insertEmoji('💪')">💪</span><span onclick="insertEmoji('🔥')">🔥</span>
+          <span data-emoji="😀">😀</span><span data-emoji="😄">😄</span>
+          <span data-emoji="😊">😊</span><span data-emoji="🤝">🤝</span>
+          <span data-emoji="👋">👋</span><span data-emoji="👏">👏</span>
+          <span data-emoji="🍀">🍀</span><span data-emoji="🎉">🎉</span>
+          <span data-emoji="♟">♟</span><span data-emoji="🦊">🦊</span>
+          <span data-emoji="😅">😅</span><span data-emoji="😂">😂</span>
+          <span data-emoji="🤔">🤔</span><span data-emoji="👍">👍</span>
+          <span data-emoji="❤️">❤️</span><span data-emoji="✨">✨</span>
+          <span data-emoji="😢">😢</span><span data-emoji="😎">😎</span>
+          <span data-emoji="🏆">🏆</span><span data-emoji="⚔️">⚔️</span>
+          <span data-emoji="😮">😮</span><span data-emoji="🙏">🙏</span>
+          <span data-emoji="💪">💪</span><span data-emoji="🔥">🔥</span>
         </div>
         <input type="text" id="chatModalInput" placeholder="メッセージを入力...">
         <button class="chat-send-btn" id="chatModalSendBtn">送信</button>
@@ -3200,13 +3200,26 @@ const PIECE_IMG = {
   let matchChatAttached = null;
   // チャットモーダル開閉
   document.getElementById('matchChatToggle').onclick = () => openChatModal();
-  // iOSでは入力欄にフォーカスがある状態だと1回目のタップでキーボードが閉じるだけで
+  // モジュールスクリプト内の関数はHTMLのinline onclickから直接呼べないため、
+  // すべてaddEventListenerで確実にバインドする
+  document.getElementById('chatModalOverlay').addEventListener('click', (ev) => {
+    if (ev.target === document.getElementById('chatModalOverlay')) closeChatModal();
+  });
+  document.getElementById('chatModalCloseBtn').addEventListener('click', () => closeChatModal());
+  // iOS/Androidでは入力欄にフォーカスがある状態だと1回目のタップでキーボードが閉じるだけで
   // クリックが発火しないことがあるため、touchendでも確実に閉じられるようにする
   document.getElementById('chatModalCloseBtn').addEventListener('touchend', (ev) => {
     ev.preventDefault();
     document.getElementById('chatModalInput').blur();
     closeChatModal();
   }, { passive: false });
+  document.querySelectorAll('.chat-quick-btn').forEach((btn) => {
+    btn.addEventListener('click', () => sendQuickMsg(btn.dataset.quickmsg));
+  });
+  document.getElementById('chatEmojiToggleBtn').addEventListener('click', () => toggleEmojiPicker());
+  document.querySelectorAll('#emojiPickerBox span').forEach((span) => {
+    span.addEventListener('click', () => insertEmoji(span.dataset.emoji));
+  });
 
   function openChatModal() {
     const overlay = document.getElementById('chatModalOverlay');
@@ -3244,8 +3257,7 @@ const PIECE_IMG = {
     }
   }
 
-  function closeChatModal(e) {
-    if (e && e.target !== document.getElementById('chatModalOverlay')) return;
+  function closeChatModal() {
     document.getElementById('chatModalOverlay').classList.remove('open');
     document.getElementById('emojiPickerBox').classList.remove('open');
   }
