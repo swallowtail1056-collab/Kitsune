@@ -366,7 +366,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <div class="chat-modal-box" onclick="event.stopPropagation()">
       <div class="chat-modal-header">
         <h3>💬 <span id="chatModalTitle">チャット</span></h3>
-        <button class="chat-modal-close" onclick="closeChatModal()">✕</button>
+        <button class="chat-modal-close" id="chatModalCloseBtn" onclick="closeChatModal()">✕</button>
       </div>
       <div class="chat-quick-phrases">
         <button class="chat-quick-btn" onclick="sendQuickMsg('Good game! 🤝')">Good game! 🤝</button>
@@ -3212,6 +3212,13 @@ const PIECE_IMG = {
   let matchChatAttached = null;
   // チャットモーダル開閉
   document.getElementById('matchChatToggle').onclick = () => openChatModal();
+  // iOSでは入力欄にフォーカスがある状態だと1回目のタップでキーボードが閉じるだけで
+  // クリックが発火しないことがあるため、touchendでも確実に閉じられるようにする
+  document.getElementById('chatModalCloseBtn').addEventListener('touchend', (ev) => {
+    ev.preventDefault();
+    document.getElementById('chatModalInput').blur();
+    closeChatModal();
+  }, { passive: false });
 
   function openChatModal() {
     const overlay = document.getElementById('chatModalOverlay');
