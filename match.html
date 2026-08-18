@@ -361,44 +361,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <button id="historyToggleBtn" data-ja="📜 履歴を見る" data-en="📜 View History" style="margin-top:10px;">📜 履歴を見る</button>
     <div id="matchChatPanel" style="display:none;"></div>
 
-  <!-- チャットモーダル -->
-  <div id="chatModalOverlay" class="chat-modal-overlay">
-    <div class="chat-modal-box">
-      <div class="chat-modal-header">
-        <h3>💬 <span id="chatModalTitle">チャット</span></h3>
-        <button class="chat-modal-close" id="chatModalCloseBtn">✕</button>
-      </div>
-      <div class="chat-quick-phrases">
-        <button class="chat-quick-btn" data-quickmsg="Good game! 🤝">Good game! 🤝</button>
-        <button class="chat-quick-btn" data-quickmsg="Hello! 👋">Hello! 👋</button>
-        <button class="chat-quick-btn" data-quickmsg="Thank you! 😊">Thank you! 😊</button>
-        <button class="chat-quick-btn" data-quickmsg="Good luck! 🍀">Good luck! 🍀</button>
-        <button class="chat-quick-btn" data-quickmsg="Nice move! 👏">Nice move! 👏</button>
-        <button class="chat-quick-btn" data-quickmsg="よろしく！🦊">よろしく！🦊</button>
-      </div>
-      <p class="chat-notice">💬 <span id="chatNoticeText">丁寧な言葉遣いでやり取りしましょう</span></p>
-      <div id="chatModalLog" class="chat-log"></div>
-      <div class="chat-input-row">
-        <button class="chat-emoji-btn" id="chatEmojiToggleBtn" title="絵文字">😊</button>
-        <div id="emojiPickerBox" class="emoji-picker-box">
-          <span data-emoji="😀">😀</span><span data-emoji="😄">😄</span>
-          <span data-emoji="😊">😊</span><span data-emoji="🤝">🤝</span>
-          <span data-emoji="👋">👋</span><span data-emoji="👏">👏</span>
-          <span data-emoji="🍀">🍀</span><span data-emoji="🎉">🎉</span>
-          <span data-emoji="♟">♟</span><span data-emoji="🦊">🦊</span>
-          <span data-emoji="😅">😅</span><span data-emoji="😂">😂</span>
-          <span data-emoji="🤔">🤔</span><span data-emoji="👍">👍</span>
-          <span data-emoji="❤️">❤️</span><span data-emoji="✨">✨</span>
-          <span data-emoji="😢">😢</span><span data-emoji="😎">😎</span>
-          <span data-emoji="🏆">🏆</span><span data-emoji="⚔️">⚔️</span>
-          <span data-emoji="😮">😮</span><span data-emoji="🙏">🙏</span>
-          <span data-emoji="💪">💪</span><span data-emoji="🔥">🔥</span>
-        </div>
-        <input type="text" id="chatModalInput" placeholder="メッセージを入力...">
-        <button class="chat-send-btn" id="chatModalSendBtn">送信</button>
-      </div>
-    </div>
-  </div>
     <div id="analysisPanel" style="display:none;margin-top:10px;">
       <p style="font-size:0.8rem;color:var(--text-muted);" data-ja="ここで自由に駒を動かして試せます。本番の対局には影響しません。" data-en="Move pieces freely here to explore ideas. This has no effect on the real game.">ここで自由に駒を動かして試せます。本番の対局には影響しません。</p>
       <div id="analysisBoard"></div>
@@ -422,6 +384,45 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <p style="font-size:0.8rem;color:var(--text-muted);" data-ja="自分の手を1手ずつAIが簡易チェックします。あくまで参考程度にご覧ください。" data-en="A simple AI check of each of your moves. Please treat this as a rough guide only.">自分の手を1手ずつAIが簡易チェックします。あくまで参考程度にご覧ください。</p>
       <div id="reportList" style="max-height:260px;overflow-y:auto;background:var(--input-bg);border:1px solid rgba(124,74,30,0.3);border-radius:6px;padding:8px;font-size:0.85rem;"></div>
       <button id="reportCloseBtn" data-ja="レポートを閉じる" data-en="Close Report" style="margin-top:8px;">レポートを閉じる</button>
+    </div>
+  </div>
+</div>
+
+<!-- チャットモーダル(gameBox/profileAreaの外に配置し、ロビー画面でも隠れないようにする) -->
+<div id="chatModalOverlay" class="chat-modal-overlay">
+  <div class="chat-modal-box">
+    <div class="chat-modal-header">
+      <h3>💬 <span id="chatModalTitle">チャット</span></h3>
+      <button class="chat-modal-close" id="chatModalCloseBtn">✕</button>
+    </div>
+    <div class="chat-quick-phrases">
+      <button class="chat-quick-btn" data-quickmsg="Good game! 🤝">Good game! 🤝</button>
+      <button class="chat-quick-btn" data-quickmsg="Hello! 👋">Hello! 👋</button>
+      <button class="chat-quick-btn" data-quickmsg="Thank you! 😊">Thank you! 😊</button>
+      <button class="chat-quick-btn" data-quickmsg="Good luck! 🍀">Good luck! 🍀</button>
+      <button class="chat-quick-btn" data-quickmsg="Nice move! 👏">Nice move! 👏</button>
+      <button class="chat-quick-btn" data-quickmsg="よろしく！🦊">よろしく！🦊</button>
+    </div>
+    <p class="chat-notice">💬 <span id="chatNoticeText">丁寧な言葉遣いでやり取りしましょう</span></p>
+    <div id="chatModalLog" class="chat-log"></div>
+    <div class="chat-input-row">
+      <button class="chat-emoji-btn" id="chatEmojiToggleBtn" title="絵文字">😊</button>
+      <div id="emojiPickerBox" class="emoji-picker-box">
+        <span data-emoji="😀">😀</span><span data-emoji="😄">😄</span>
+        <span data-emoji="😊">😊</span><span data-emoji="🤝">🤝</span>
+        <span data-emoji="👋">👋</span><span data-emoji="👏">👏</span>
+        <span data-emoji="🍀">🍀</span><span data-emoji="🎉">🎉</span>
+        <span data-emoji="♟">♟</span><span data-emoji="🦊">🦊</span>
+        <span data-emoji="😅">😅</span><span data-emoji="😂">😂</span>
+        <span data-emoji="🤔">🤔</span><span data-emoji="👍">👍</span>
+        <span data-emoji="❤️">❤️</span><span data-emoji="✨">✨</span>
+        <span data-emoji="😢">😢</span><span data-emoji="😎">😎</span>
+        <span data-emoji="🏆">🏆</span><span data-emoji="⚔️">⚔️</span>
+        <span data-emoji="😮">😮</span><span data-emoji="🙏">🙏</span>
+        <span data-emoji="💪">💪</span><span data-emoji="🔥">🔥</span>
+      </div>
+      <input type="text" id="chatModalInput" placeholder="メッセージを入力...">
+      <button class="chat-send-btn" id="chatModalSendBtn">送信</button>
     </div>
   </div>
 </div>
