@@ -1547,24 +1547,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       const msgBtn = document.createElement('button');
       msgBtn.textContent = LANG === 'ja' ? '✉️ メッセージ' : '✉️ Message';
       msgBtn.style.background = '#a3692d';
-      const chatPanel = document.createElement('div');
-      chatPanel.style.display = 'none';
-      chatPanel.style.width = '100%';
-      let dmAttached = false;
-      msgBtn.onclick = () => {
-        const opening = chatPanel.style.display === 'none';
-        chatPanel.style.display = opening ? 'block' : 'none';
-        if (opening && !dmAttached) {
-          dmAttached = true;
-          attachChat(chatPanel, 'directMessages/' + pairKey(user.uid, friendUid), user);
-        }
-      };
+      msgBtn.onclick = () => openDMModal(user, friendUid, friendName);
       row.appendChild(label);
       row.appendChild(challengeBtn);
       row.appendChild(tcPanel);
       row.appendChild(msgBtn);
       container.appendChild(row);
-      container.appendChild(chatPanel);
     }
   }
 
@@ -3236,6 +3224,23 @@ const PIECE_IMG = {
     if (user && myMatchId && matchChatAttached !== myMatchId) {
       matchChatAttached = myMatchId;
       attachChatModal('matches/' + myMatchId + '/messages', user);
+    }
+  }
+
+  function openDMModal(user, friendUid, friendName) {
+    const overlay = document.getElementById('chatModalOverlay');
+    overlay.classList.add('open');
+    const isJa = LANG === 'ja';
+    document.getElementById('chatModalTitle').textContent = friendName;
+    document.getElementById('chatNoticeText').textContent = isJa
+      ? '丁寧な言葉遣いでやり取りしましょう'
+      : 'Please keep the conversation respectful';
+    document.getElementById('chatModalSendBtn').textContent = isJa ? '送信' : 'Send';
+    document.getElementById('chatModalInput').placeholder = isJa ? 'メッセージを入力...' : 'Type a message...';
+    const path = 'directMessages/' + pairKey(user.uid, friendUid);
+    if (matchChatAttached !== path) {
+      matchChatAttached = path;
+      attachChatModal(path, user);
     }
   }
 
