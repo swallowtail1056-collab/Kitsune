@@ -346,6 +346,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <p id="gameClock" style="font-weight:700;color:var(--brown-dark);"></p>
     <p id="capturedArea" style="font-size:1.1rem;"></p>
     <div id="miniBoard"></div>
+    <div id="matchLikeArea" style="margin-top:6px;"></div>
     <div id="boardNavRow" style="display:none;text-align:center;margin-top:6px;">
       <button id="boardNavPrevBtn">◀</button>
       <span id="boardNavLabel" style="font-size:0.85rem;color:var(--text-muted);margin:0 8px;"></span>
@@ -1031,16 +1032,22 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     if (!tcHtml) tcHtml = '<p style="color:#888;font-size:0.85rem;">' + (isJa ? 'まだ対局記録がありません。' : 'No games played yet.') + '</p>';
 
     const historyData = historySnap.val() || {};
-    const historyEntries = Object.values(historyData).sort((a, b) => b.endedAt - a.endedAt).slice(0, 20);
+    const historyEntries = Object.entries(historyData)
+      .map(([matchId, h]) => ({ matchId, ...h }))
+      .sort((a, b) => b.endedAt - a.endedAt)
+      .slice(0, 20);
     let historyHtml = '';
     const resultLabel = { win: isJa ? '勝ち' : 'Win', loss: isJa ? '負け' : 'Loss', draw: isJa ? '引き分け' : 'Draw' };
     const resultColor = { win: '#4caf50', loss: '#e57373', draw: '#aaa' };
     historyEntries.forEach((h) => {
       const dateText = new Date(h.endedAt).toLocaleDateString(isJa ? 'ja-JP' : 'en-US');
-      historyHtml += '<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.08);font-size:0.85rem;">'
+      historyHtml += '<div style="padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.08);font-size:0.85rem;">'
+        + '<div style="display:flex;justify-content:space-between;">'
         + '<span>' + (h.opponentName || '?') + '<span style="color:#888;"> (' + (TC_LABELS[h.timeControl] || h.timeControl) + ')</span></span>'
         + '<span style="color:' + (resultColor[h.result] || '#aaa') + ';font-weight:700;">' + (resultLabel[h.result] || h.result) + '</span>'
-        + '<span style="color:#888;">' + dateText + '</span></div>';
+        + '<span style="color:#888;">' + dateText + '</span></div>'
+        + '<div class="history-like-slot" data-match-id="' + h.matchId + '" style="margin-top:4px;"></div>'
+        + '</div>';
     });
     if (!historyHtml) historyHtml = '<p style="color:#888;font-size:0.85rem;">' + (isJa ? 'まだ対局履歴がありません。' : 'No match history yet.') + '</p>';
 
@@ -1071,6 +1078,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       + tcHtml
       + '<p style="font-weight:700;margin:16px 0 4px;">📋 ' + (isJa ? '対局履歴' : 'Match History') + '</p>'
       + historyHtml;
+
+    body.querySelectorAll('.history-like-slot').forEach((slot) => {
+      renderLikeButton(slot.dataset.matchId, slot, user);
+    });
 
     if (isOwn) {
       document.getElementById('profileBioSaveBtn').onclick = async () => {
@@ -2982,6 +2993,26 @@ const PIECE_IMG = {
   }
 
   let lastAnimatedMoveKey = null;
+  let lastLikeRenderedMatchId = null;
+
+  async function renderLikeButton(matchId, containerEl, user) {
+    const isJa = LANG === 'ja';
+    const snap = await get(ref(db, 'matchLikes/' + matchId));
+    const data = snap.val() || {};
+    const uids = Object.keys(data);
+    const count = uids.length;
+    const iLiked = !!data[user.uid];
+    containerEl.innerHTML = '';
+    const btn = document.createElement('button');
+    btn.style.cssText = 'font-size:0.85rem;padding:4px 12px;background:' + (iLiked ? '#a3692d' : 'transparent') + ';border:1px solid ' + (iLiked ? '#a3692d' : 'rgba(124,74,30,0.3)') + ';border-radius:16px;';
+    btn.textContent = (iLiked ? '❤️' : '🤍') + ' ' + (isJa ? 'いいね' : 'Like') + (count > 0 ? ' (' + count + ')' : '');
+    btn.onclick = async () => {
+      btn.disabled = true;
+      await set(ref(db, 'matchLikes/' + matchId + '/' + user.uid), iLiked ? null : true);
+      await renderLikeButton(matchId, containerEl, user);
+    };
+    containerEl.appendChild(btn);
+  }
 
   function renderMiniBoard(m, user, matchId) {
     latestMatchData = m;
@@ -2991,6 +3022,11 @@ const PIECE_IMG = {
     const clockEl = document.getElementById('gameClock');
     const oppName = myColor === 'w' ? m.blackName : m.whiteName;
     const myTurn = m.turn === myColor;
+
+    if (lastLikeRenderedMatchId !== matchId) {
+      lastLikeRenderedMatchId = matchId;
+      renderLikeButton(matchId, document.getElementById('matchLikeArea'), user);
+    }
 
     if (m.lastMove) {
       const moveKey = matchId + '_' + m.lastMove.from + m.lastMove.to + '_' + m.turn;
