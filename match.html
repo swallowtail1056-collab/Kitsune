@@ -16,12 +16,14 @@
   --card:#f0e4c8;
   --text:#111; --text-sub:#222; --text-muted:#444;
   --input-bg:#fffdf7; --board-border:var(--brown);
+  --status-bad:#c0392b; --status-good:#1a4028;
 }
 html[data-theme="dark"] {
   --bg:#0a0a0a; --brown:#d4a72c; --brown-dark:#e8e8e8; --brown-light:#a3692d;
   --card:#1a1a1a;
   --text:#e8e8e8; --text-sub:#d0d0d0; --text-muted:#999;
   --input-bg:#111; --board-border:#d4a72c;
+  --status-bad:#ff6b6b; --status-good:#4caf50;
 }
 * { margin:0; padding:0; box-sizing:border-box; }
 body {
@@ -116,6 +118,7 @@ img#profilePhoto { border:2px solid var(--brown); border-radius:50%; width:60px;
 }
 .sq.recommend-move { outline:3px solid #2d8a3e; outline-offset:-3px; }
 .sq.hint-move::after { content:''; position:absolute; width:28%; height:28%; border-radius:50%; background:rgba(80,40,0,0.35); pointer-events:none; }
+.sq.beginner-dot::after { content:''; position:absolute; width:22%; height:22%; border-radius:50%; background:rgba(255,193,7,0.55); pointer-events:none; z-index:3; }
 .sq.hint-capture::after { content:''; position:absolute; width:100%; height:100%; border-radius:50%; box-sizing:border-box; border:4px solid rgba(80,40,0,0.35); pointer-events:none; }
 .sq.wrong-flash{animation:pzWrongFlash 0.4s ease;}
 @keyframes pzWrongFlash{0%,100%{filter:none;}50%{filter:brightness(0.4) sepia(1) saturate(5);}}
@@ -177,6 +180,23 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <p data-ja="友達同士のオンライン対局に加えて、コンピューター(AI)を相手にした一人での対局モードもすでに実装済みです。初級・中級・上級の3段階の難易度から選べ、ログイン不要でいつでもすぐに始められます。初級はランダムに手を指し、中級は駒を取れる手を優先します。上級は本物のチェスエンジン(Stockfish)が指すので、かなり手強いです。友達がまだオンラインでない時間帯でも、AI相手に気軽に実戦形式の練習ができます。持ち時間(Rapid・Blitz・Bullet、固定時間・インクリメントありから選択可)、対局数・勝敗記録・Eloレーティングもあわせて実装済みで、KitsuneChessの対局モードは今後も少しずつ機能を充実させていく予定です。"
    data-en="Alongside online play against friends, a single-player mode against a computer (AI) opponent is already live. Choose from three difficulty levels — Beginner, Intermediate, and Advanced — and jump in instantly with no login required. Beginner plays random moves, and Intermediate prioritizes capturing pieces. Advanced is powered by a real chess engine (Stockfish), so it plays a genuinely strong game. This means you can get real match-style practice even when none of your friends are online. Time controls (Rapid, Blitz, and Bullet, with a choice of fixed time or increment), match history, win/loss records, and an Elo rating system are also live. Match Mode will keep growing with more features over time.">
    友達同士のオンライン対局に加えて、コンピューター(AI)を相手にした一人での対局モードもすでに実装済みです。初級・中級・上級の3段階の難易度から選べ、ログイン不要でいつでもすぐに始められます。初級はランダムに手を指し、中級は駒を取れる手を優先します。上級は本物のチェスエンジン(Stockfish)が指すので、かなり手強いです。友達がまだオンラインでない時間帯でも、AI相手に気軽に実戦形式の練習ができます。持ち時間(Rapid・Blitz・Bullet、固定時間・インクリメントありから選択可)、対局数・勝敗記録・Eloレーティングもあわせて実装済みで、KitsuneChessの対局モードは今後も少しずつ機能を充実させていく予定です。</p>
+</details>
+
+<details class="box" id="beginnerModeBox" style="padding:8px;">
+  <summary data-ja="はじめてモード🦊(ログイン不要)" data-en="Beginner Mode🦊 (no login required)">はじめてモード🦊(ログイン不要)</summary>
+  <p style="font-size:0.85rem;color:var(--text-muted);" data-ja="ジーンが最後の1手前まで一緒に指してくれるよ。最後の決め手だけ、自分で見つけてみよう!" data-en="Jene plays along with you right up to the final move — you find the finishing move yourself!">ジーンが最後の1手前まで一緒に指してくれるよ。最後の決め手だけ、自分で見つけてみよう!</p>
+  <p id="beginnerStatusMsg" style="text-align:center;font-weight:700;min-height:1.4em;color:var(--brown-dark);"></p>
+  <div id="beginnerJeneSpeechRow" style="display:none;align-items:center;gap:8px;justify-content:center;margin-bottom:8px;">
+    <img id="beginnerJeneSpeechImg" src="/jene_wink.png" style="width:36px;height:36px;flex-shrink:0;" onerror="this.src='/jene_wink.png';">
+    <div id="beginnerJeneSpeechBubble" style="background:#fff8ee;border:2px solid var(--brown);border-radius:14px;padding:6px 12px;font-size:0.85rem;color:var(--brown-dark);position:relative;max-width:80%;"></div>
+  </div>
+  <div id="beginnerBoard" class="chessboard"></div>
+  <div style="text-align:center;margin-top:8px;">
+    <button id="btnBeginnerAnswer" data-ja="🔍 答えを見る" data-en="🔍 Show Answer">🔍 答えを見る</button>
+  </div>
+  <div id="beginnerNextRow" style="display:none;text-align:center;margin-top:8px;">
+    <button id="btnBeginnerNext" data-ja="次の問題へ →" data-en="Next Puzzle →">次の問題へ →</button>
+  </div>
 </details>
 
 <details class="box" id="aiModeBox" style="padding:8px;">
@@ -4022,7 +4042,7 @@ const PIECE_IMG = {
     const el = document.getElementById('puzzleStatusMsg');
     if (!el) return;
     el.textContent = msg;
-    el.style.color = cls === 'bad' ? '#7a0000' : (cls === 'good' ? '#1a4028' : 'var(--brown-dark)');
+    el.style.color = cls === 'bad' ? 'var(--status-bad)' : (cls === 'good' ? 'var(--status-good)' : 'var(--brown-dark)');
   }
 
   function expectedPuzzleSAN() { return currentPuzzle().moves[puzzleState.moveIndex]; }
@@ -4297,6 +4317,291 @@ const PIECE_IMG = {
   updateWrongCount();
   startPuzzle(Math.floor(Math.random() * PUZZLES.length));
   // ===== ここまでパズルストリーク =====
+
+  // ===== はじめてモード(単体・ジーンと一緒に) =====
+  const JENE_PHRASES = {
+    ja: [
+      { text: 'ナイス!', img: 'jene_happy.png' },
+      { text: 'その調子!', img: 'jene_excited.png' },
+      { text: 'いいね!', img: 'jene_sparkle.png' },
+      { text: 'ここは相手の{piece}に注目だよ', img: 'jene_normal.png' },
+      { text: '{piece}を動かすとどうなるかな?', img: 'jene_quiz.png' },
+      { text: '相手は何を狙っているか考えてみよう', img: 'jene_confused.png' },
+      { text: 'これは{tactic}の形だね', img: 'jene_sparkle.png' },
+      { text: 'この動き、覚えておくと便利だよ', img: 'jene_normal.png' },
+      { text: 'よく見て!チャンスが近づいてる', img: 'jene_excited.png' },
+      { text: '{piece}の動きに気をつけて', img: 'jene_normal.png' },
+      { text: 'あと少しで決まりそう!', img: 'jene_happy.png' },
+      { text: 'この手順、ゆっくり見ていこう', img: 'jene_welcome.png' }
+    ],
+    en: [
+      { text: 'Nice!', img: 'jene_happy.png' },
+      { text: 'Keep it up!', img: 'jene_excited.png' },
+      { text: 'Great!', img: 'jene_sparkle.png' },
+      { text: 'Watch the {piece} here', img: 'jene_normal.png' },
+      { text: "What happens if the {piece} moves?", img: 'jene_quiz.png' },
+      { text: "Think about what the opponent is planning", img: 'jene_confused.png' },
+      { text: "This looks like a {tactic}!", img: 'jene_sparkle.png' },
+      { text: 'Good move to remember', img: 'jene_normal.png' },
+      { text: "Look closely, something's coming", img: 'jene_excited.png' },
+      { text: 'Keep an eye on the {piece}', img: 'jene_normal.png' },
+      { text: 'Almost there!', img: 'jene_happy.png' },
+      { text: "Let's follow this step by step", img: 'jene_welcome.png' }
+    ]
+  };
+  const PIECE_NAME = {
+    ja: { N: 'ナイト', B: 'ビショップ', R: 'ルーク', Q: 'クイーン', K: 'キング', P: 'ポーン' },
+    en: { N: 'Knight', B: 'Bishop', R: 'Rook', Q: 'Queen', K: 'King', P: 'Pawn' }
+  };
+  const TACTIC_NAME = { ja: ['フォーク', 'ピン', '串刺し', '両取り', '見えないチェック'], en: ['fork', 'pin', 'skewer', 'double attack', 'discovered check'] };
+
+  function pieceLetterFromSAN(san) {
+    const m = san.match(/^[NBRQK]/);
+    return m ? m[0] : 'P';
+  }
+
+  function showBeginnerJeneSpeech(san) {
+    const row = document.getElementById('beginnerJeneSpeechRow');
+    const bubble = document.getElementById('beginnerJeneSpeechBubble');
+    const img = document.getElementById('beginnerJeneSpeechImg');
+    if (!row || !bubble) return;
+    const isJa = LANG === 'ja';
+    const phrases = JENE_PHRASES[isJa ? 'ja' : 'en'];
+    const entry = phrases[Math.floor(Math.random() * phrases.length)];
+    let text = entry.text;
+    const pieceLetter = pieceLetterFromSAN(san);
+    const pieceName = PIECE_NAME[isJa ? 'ja' : 'en'][pieceLetter];
+    const tacticList = TACTIC_NAME[isJa ? 'ja' : 'en'];
+    const tacticName = tacticList[Math.floor(Math.random() * tacticList.length)];
+    text = text.replace('{piece}', pieceName).replace('{tactic}', tacticName);
+    bubble.textContent = text;
+    if (img) img.src = '/' + entry.img;
+    row.style.display = 'flex';
+  }
+  function hideBeginnerJeneSpeech() {
+    const row = document.getElementById('beginnerJeneSpeechRow');
+    if (row) row.style.display = 'none';
+  }
+
+  let beginnerChess = null;
+  let beginnerState = {
+    index: 0, moveIndex: 0, selected: null, validTargets: [],
+    lastFrom: null, lastTo: null, animating: false, awaitingNext: false,
+    retryUsed: false, autoPlaying: false
+  };
+
+  function currentBeginnerPuzzle() { return PUZZLES[beginnerState.index]; }
+  function expectedBeginnerSAN() { return currentBeginnerPuzzle().moves[beginnerState.moveIndex]; }
+  function getBeginnerCellEl(sq) { return document.querySelector('#beginnerBoard .sq[data-sq="' + sq + '"]'); }
+
+  function setBeginnerStatus(msg, cls) {
+    const el = document.getElementById('beginnerStatusMsg');
+    if (!el) return;
+    el.textContent = msg;
+    el.style.color = cls === 'bad' ? 'var(--status-bad)' : (cls === 'good' ? 'var(--status-good)' : 'var(--brown-dark)');
+  }
+
+  function renderBeginnerBoard() {
+    const board = document.getElementById('beginnerBoard');
+    if (!board) return;
+    board.innerHTML = '';
+    const files = ['a','b','c','d','e','f','g','h'];
+    const ranks = [8,7,6,5,4,3,2,1];
+    for (let row = 0; row < 8; row++) {
+      for (let col = 0; col < 8; col++) {
+        const sq = files[col] + ranks[row];
+        const cell = document.createElement('div');
+        cell.className = 'sq ' + ((col + row) % 2 === 0 ? 'light' : 'dark');
+        cell.dataset.sq = sq;
+        if (beginnerState.lastFrom === sq || beginnerState.lastTo === sq) cell.classList.add('last-move');
+        if (beginnerState.selected === sq) cell.classList.add('selected');
+        const piece = beginnerChess.get(sq);
+        if (beginnerState.validTargets && beginnerState.validTargets.includes(sq)) cell.classList.add(piece ? 'hint-capture' : 'hint-move');
+        if (col === 0) { const l = document.createElement('span'); l.className = 'sq-label rank-label'; l.textContent = ranks[row]; cell.appendChild(l); }
+        if (row === 7) { const l = document.createElement('span'); l.className = 'sq-label file-label'; l.textContent = files[col]; cell.appendChild(l); }
+        if (piece) {
+          const img = document.createElement('img');
+          img.src = PIECE_IMG[piece.color + piece.type.toUpperCase()];
+          img.style.width = '100%'; img.style.height = '100%'; img.style.pointerEvents = 'none';
+          cell.appendChild(img);
+        }
+        cell.onclick = (beginnerState.animating || beginnerState.awaitingNext || beginnerState.autoPlaying) ? null : () => onBeginnerCellClick(sq);
+        board.appendChild(cell);
+      }
+    }
+  }
+
+  function animateBeginnerMove(fromSq, toSq, callback) {
+    const fromCell = getBeginnerCellEl(fromSq);
+    const toCell = getBeginnerCellEl(toSq);
+    if (!fromCell || !toCell) { callback(); return; }
+    const pieceEl = fromCell.querySelector('img');
+    if (!pieceEl) { callback(); return; }
+    const fromRect = fromCell.getBoundingClientRect();
+    const toRect = toCell.getBoundingClientRect();
+    const clone = pieceEl.cloneNode(true);
+    clone.style.position = 'fixed';
+    clone.style.zIndex = '9999';
+    clone.style.width = fromRect.width + 'px';
+    clone.style.height = fromRect.height + 'px';
+    clone.style.left = fromRect.left + 'px';
+    clone.style.top = fromRect.top + 'px';
+    clone.style.pointerEvents = 'none';
+    clone.style.margin = '0';
+    document.body.appendChild(clone);
+    pieceEl.style.opacity = '0';
+    requestAnimationFrame(() => {
+      clone.style.transition = 'left 0.3s cubic-bezier(0.25,0.46,0.45,0.94),top 0.3s cubic-bezier(0.25,0.46,0.45,0.94)';
+      requestAnimationFrame(() => {
+        clone.style.left = toRect.left + 'px';
+        clone.style.top = toRect.top + 'px';
+      });
+    });
+    setTimeout(() => { clone.remove(); callback(); }, 340);
+  }
+
+  function startBeginnerPuzzle(idx) {
+    beginnerState.index = ((idx % PUZZLES.length) + PUZZLES.length) % PUZZLES.length;
+    beginnerState.moveIndex = 0;
+    beginnerState.selected = null; beginnerState.validTargets = [];
+    beginnerState.lastFrom = null; beginnerState.lastTo = null;
+    beginnerState.animating = false; beginnerState.awaitingNext = false;
+    beginnerState.retryUsed = false; beginnerState.autoPlaying = false;
+    hideBeginnerJeneSpeech();
+    const p = currentBeginnerPuzzle();
+    beginnerChess = new Chess(p.fen);
+    const nextRow = document.getElementById('beginnerNextRow');
+    if (nextRow) nextRow.style.display = 'none';
+    const ansBtn = document.getElementById('btnBeginnerAnswer');
+    if (ansBtn) ansBtn.style.display = '';
+    renderBeginnerBoard();
+    if (p.moves.length <= 1) {
+      setBeginnerStatus(LANG === 'ja' ? '決め手を見つけてみよう!' : 'Find the finishing move!');
+    } else {
+      setBeginnerStatus(LANG === 'ja' ? 'ジーンと一緒に見ていこう…' : "Let's follow along with Jene…");
+    }
+    runBeginnerGuidedSteps();
+  }
+
+  // 最後の1手以外を自動でジーンが指し進める
+  function runBeginnerGuidedSteps() {
+    const p = currentBeginnerPuzzle();
+    if (p.moves.length <= 1 || beginnerState.moveIndex >= p.moves.length - 1) {
+      beginnerState.autoPlaying = false;
+      hideBeginnerJeneSpeech();
+      setBeginnerStatus(LANG === 'ja' ? 'ここが決め手!自分で指してみよう。' : 'This is the finishing move — find it yourself!');
+      return;
+    }
+    beginnerState.autoPlaying = true;
+    const san = p.moves[beginnerState.moveIndex];
+    setTimeout(() => {
+      const legalNow = beginnerChess.moves({ verbose: true });
+      const mv = legalNow.find(m => m.san === san);
+      if (!mv) { beginnerState.autoPlaying = false; return; }
+      const fromCell = getBeginnerCellEl(mv.from);
+      const toCell = getBeginnerCellEl(mv.to);
+      if (fromCell) fromCell.classList.add('beginner-dot');
+      if (toCell) toCell.classList.add('beginner-dot');
+      showBeginnerJeneSpeech(san);
+      setTimeout(() => {
+        beginnerChess.move(san);
+        beginnerState.animating = true;
+        animateBeginnerMove(mv.from, mv.to, () => {
+          beginnerState.lastFrom = mv.from; beginnerState.lastTo = mv.to;
+          beginnerState.moveIndex++;
+          beginnerState.animating = false;
+          renderBeginnerBoard();
+          runBeginnerGuidedSteps();
+        });
+      }, 900);
+    }, 500);
+  }
+
+  function onBeginnerCellClick(sq) {
+    if (beginnerState.animating || beginnerState.awaitingNext || beginnerState.autoPlaying) return;
+    const piece = beginnerChess.get(sq);
+    const turn = beginnerChess.turn();
+    if (beginnerState.selected) {
+      if (beginnerState.validTargets.includes(sq)) {
+        const fromSq = beginnerState.selected;
+        const result = beginnerChess.move({ from: fromSq, to: sq, promotion: 'q' });
+        if (result && result.san === expectedBeginnerSAN()) {
+          beginnerState.animating = true;
+          beginnerState.selected = null; beginnerState.validTargets = [];
+          renderBeginnerBoard();
+          animateBeginnerMove(fromSq, sq, () => {
+            beginnerState.lastFrom = result.from; beginnerState.lastTo = result.to;
+            beginnerState.moveIndex++;
+            beginnerState.animating = false;
+            renderBeginnerBoard();
+            onBeginnerSolved();
+          });
+        } else {
+          if (result) beginnerChess.undo();
+          doBeginnerWrong(sq);
+        }
+      } else if (piece && piece.color === turn) {
+        selectBeginnerPiece(sq);
+      } else { doBeginnerWrong(sq); }
+    } else {
+      if (!piece || piece.color !== turn) return;
+      selectBeginnerPiece(sq);
+    }
+  }
+
+  function selectBeginnerPiece(sq) {
+    beginnerState.selected = sq;
+    const legal = beginnerChess.moves({ square: sq, verbose: true });
+    beginnerState.validTargets = legal.map(m => m.to);
+    renderBeginnerBoard();
+  }
+
+  function onBeginnerSolved() {
+    setBeginnerStatus(LANG === 'ja' ? '正解!🎉' : 'Correct! 🎉', 'good');
+    playPuzzleCorrect();
+    setTimeout(() => { startBeginnerPuzzle(beginnerState.index + 1); }, 900);
+  }
+
+  function doBeginnerWrong(sq) {
+    playPuzzleWrong();
+    beginnerState.selected = null; beginnerState.validTargets = [];
+    const cell = getBeginnerCellEl(sq);
+    if (cell) { cell.classList.add('wrong-flash'); setTimeout(() => cell.classList.remove('wrong-flash'), 400); }
+    renderBeginnerBoard();
+    if (!beginnerState.retryUsed) {
+      beginnerState.retryUsed = true;
+      setBeginnerStatus(LANG === 'ja' ? 'おしい!もう一度考えてみよう。' : 'Close! Try once more.', 'bad');
+    } else {
+      setBeginnerStatus(LANG === 'ja' ? 'もう少し!答えを見てみよう。' : "Let's see the answer.", 'bad');
+      setTimeout(() => showBeginnerAnswer(), 600);
+    }
+  }
+
+  function showBeginnerAnswer() {
+    const p = currentBeginnerPuzzle();
+    const remainingMoves = p.moves.slice(beginnerState.moveIndex);
+    const nextSan = remainingMoves[0];
+    const legalNow = beginnerChess.moves({ verbose: true });
+    const mv = legalNow.find(m => m.san === nextSan);
+    if (mv) {
+      const fromCell = getBeginnerCellEl(mv.from);
+      const toCell = getBeginnerCellEl(mv.to);
+      if (fromCell) fromCell.classList.add('beginner-dot');
+      if (toCell) toCell.classList.add('beginner-dot');
+    }
+    setBeginnerStatus((LANG === 'ja' ? '正解: ' : 'Answer: ') + remainingMoves.join(' '), 'bad');
+    const ansBtn = document.getElementById('btnBeginnerAnswer'); if (ansBtn) ansBtn.style.display = 'none';
+    const nextRow = document.getElementById('beginnerNextRow'); if (nextRow) nextRow.style.display = '';
+    beginnerState.awaitingNext = true;
+  }
+
+  function nextBeginnerPuzzle() { startBeginnerPuzzle(beginnerState.index + 1); }
+
+  document.getElementById('btnBeginnerAnswer').onclick = showBeginnerAnswer;
+  document.getElementById('btnBeginnerNext').onclick = nextBeginnerPuzzle;
+
+  startBeginnerPuzzle(Math.floor(Math.random() * PUZZLES.length));
+  // ===== ここまではじめてモード =====
 </script>
 <script>
   if ('serviceWorker' in navigator) {
