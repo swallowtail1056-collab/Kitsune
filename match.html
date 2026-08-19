@@ -929,6 +929,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           img.style.width = '100%'; img.style.height = '100%'; img.style.pointerEvents = 'none';
           cell.appendChild(img);
         }
+        cell.dataset.sq = sq;
         cell.onclick = aiViewingHistory ? null : () => onAiSquareClick(sq);
         boardEl.appendChild(cell);
       }
@@ -953,6 +954,37 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     renderAiBoard();
   };
 
+  function getAiCellEl(sq) { return document.querySelector('#aiBoard .sq[data-sq="' + sq + '"]'); }
+
+  function animateAiMove(fromSq, toSq, callback) {
+    const fromCell = getAiCellEl(fromSq);
+    const toCell = getAiCellEl(toSq);
+    if (!fromCell || !toCell) { callback(); return; }
+    const pieceEl = fromCell.querySelector('img');
+    if (!pieceEl) { callback(); return; }
+    const fromRect = fromCell.getBoundingClientRect();
+    const toRect = toCell.getBoundingClientRect();
+    const clone = pieceEl.cloneNode(true);
+    clone.style.position = 'fixed';
+    clone.style.zIndex = '9999';
+    clone.style.width = fromRect.width + 'px';
+    clone.style.height = fromRect.height + 'px';
+    clone.style.left = fromRect.left + 'px';
+    clone.style.top = fromRect.top + 'px';
+    clone.style.pointerEvents = 'none';
+    clone.style.margin = '0';
+    document.body.appendChild(clone);
+    pieceEl.style.opacity = '0';
+    requestAnimationFrame(() => {
+      clone.style.transition = 'left 0.3s cubic-bezier(0.25,0.46,0.45,0.94),top 0.3s cubic-bezier(0.25,0.46,0.45,0.94)';
+      requestAnimationFrame(() => {
+        clone.style.left = toRect.left + 'px';
+        clone.style.top = toRect.top + 'px';
+      });
+    });
+    setTimeout(() => { clone.remove(); callback(); }, 340);
+  }
+
   function onAiSquareClick(sq) {
     if (aiBoardPly !== null) return;
     if (!aiChess || aiChess.game_over() || aiChess.turn() !== 'w') return;
@@ -970,24 +1002,30 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         else if (aiChess.in_check()) playCheckSound();
         else if (move.san.startsWith('O-O')) playCastleSound();
         else playMoveSound();
-      }
-      renderAiBoard();
-      if (move && !aiChess.game_over()) {
-        setTimeout(async () => {
-          const aiMove = aiDifficulty === 'hard'
-            ? await stockfishPickMove(aiChess.fen(), 400)
-            : aiPickMove(aiChess, aiDifficulty);
-          if (aiMove) {
-            aiChess.move(aiMove);
-            aiLastMove = { from: aiMove.from, to: aiMove.to };
-            aiMoveHistory.push({ san: aiMove.san, color: aiMove.color, captured: aiMove.captured || null });
-            if (aiChess.in_checkmate()) playCheckmateSound();
-            else if (aiChess.in_check()) playCheckSound();
-            else if (aiMove.san.startsWith('O-O')) playCastleSound();
-            else playMoveSound();
-          }
+        animateAiMove(move.from, move.to, () => {
           renderAiBoard();
-        }, 500);
+          if (!aiChess.game_over()) {
+            setTimeout(async () => {
+              const aiMove = aiDifficulty === 'hard'
+                ? await stockfishPickMove(aiChess.fen(), 400)
+                : aiPickMove(aiChess, aiDifficulty);
+              if (aiMove) {
+                aiChess.move(aiMove);
+                aiLastMove = { from: aiMove.from, to: aiMove.to };
+                aiMoveHistory.push({ san: aiMove.san, color: aiMove.color, captured: aiMove.captured || null });
+                if (aiChess.in_checkmate()) playCheckmateSound();
+                else if (aiChess.in_check()) playCheckSound();
+                else if (aiMove.san.startsWith('O-O')) playCastleSound();
+                else playMoveSound();
+                animateAiMove(aiMove.from, aiMove.to, () => { renderAiBoard(); });
+              } else {
+                renderAiBoard();
+              }
+            }, 500);
+          }
+        });
+      } else {
+        renderAiBoard();
       }
     }
   }
