@@ -399,6 +399,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   </div>
 </div>
 
+<!-- アバター拡大表示用ライトボックス -->
+<div id="avatarLightbox" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:3000;align-items:center;justify-content:center;">
+  <img id="avatarLightboxImg" src="" style="width:168px;height:168px;border-radius:50%;object-fit:cover;">
+</div>
+
 <!-- チャットモーダル(gameBox/profileAreaの外に配置し、ロビー画面でも隠れないようにする) -->
 <div id="chatModalOverlay" class="chat-modal-overlay">
   <div class="chat-modal-box">
@@ -980,6 +985,17 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     if (user) openProfileModal(user, user.uid);
   });
 
+  // アバター画像クリックで拡大表示(モーダル内は毎回innerHTMLで作り直されるためイベント委譲で対応)
+  document.getElementById('profileModalBody').addEventListener('click', (ev) => {
+    if (ev.target.id === 'profileModalAvatarImg' && ev.target.tagName === 'IMG') {
+      document.getElementById('avatarLightboxImg').src = ev.target.src;
+      document.getElementById('avatarLightbox').style.display = 'flex';
+    }
+  });
+  document.getElementById('avatarLightbox').addEventListener('click', () => {
+    document.getElementById('avatarLightbox').style.display = 'none';
+  });
+
   const TC_LABELS = { bullet: 'Bullet', blitz: 'Blitz', rapid: 'Rapid', correspondence: (LANG === 'ja' ? '通信対局' : 'Correspondence') };
 
   async function openProfileModal(user, targetUid) {
@@ -1031,12 +1047,16 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     const bioHtml = isOwn
       ? '<textarea id="profileBioInput" maxlength="100" placeholder="' + (isJa ? '一言メッセージを入力...' : 'Write a short bio...') + '" style="width:100%;background:#2a2a2a;color:#eee;border:1px solid rgba(255,255,255,0.2);border-radius:8px;padding:8px;font-family:\'Crimson Pro\',serif;font-size:0.9rem;resize:none;height:50px;">' + (prof.bio || '') + '</textarea>'
         + '<button id="profileBioSaveBtn" style="margin-top:6px;font-size:0.8rem;padding:4px 12px;">' + (isJa ? '保存' : 'Save') + '</button>'
-      : '<p style="font-style:italic;color:#ccc;">' + (prof.bio ? prof.bio : (isJa ? '(一言メッセージはまだありません)' : '(No bio yet)')) + '</p>';
+      : (prof.bio
+          ? '<p id="profileBioText" style="font-style:italic;color:#ccc;">' + prof.bio + '</p>'
+            + '<button id="profileBioTranslateBtn" style="font-size:0.75rem;padding:3px 10px;background:transparent;border:1px solid rgba(255,255,255,0.3);color:var(--text-muted);border-radius:12px;">🌐 ' + (isJa ? '翻訳' : 'Translate') + '</button>'
+            + '<p id="profileBioTranslated" style="font-size:0.85rem;color:#81b4ff;margin-top:4px;"></p>'
+          : '<p style="font-style:italic;color:#ccc;">' + (isJa ? '(一言メッセージはまだありません)' : '(No bio yet)') + '</p>');
 
     body.innerHTML =
       '<div style="display:flex;gap:12px;align-items:center;margin-bottom:12px;">'
       + '<div style="position:relative;">'
-      + (prof.photoURL ? '<img id="profileModalAvatarImg" src="' + prof.photoURL + '" style="width:56px;height:56px;border-radius:50%;object-fit:cover;">' : '<div id="profileModalAvatarImg" style="width:56px;height:56px;border-radius:50%;background:#444;"></div>')
+      + (prof.photoURL ? '<img id="profileModalAvatarImg" src="' + prof.photoURL + '" style="width:56px;height:56px;border-radius:50%;object-fit:cover;cursor:pointer;">' : '<div id="profileModalAvatarImg" style="width:56px;height:56px;border-radius:50%;background:#444;"></div>')
       + (isOwn ? '<button id="profileAvatarEditBtn" title="' + (isJa ? '画像を変更' : 'Change photo') + '" style="position:absolute;bottom:-4px;right:-4px;width:22px;height:22px;border-radius:50%;background:var(--brown);color:#fff;border:2px solid #1a1a1a;font-size:0.7rem;padding:0;cursor:pointer;">✎</button><input type="file" id="profileAvatarFileInput" accept="image/*" style="display:none;">' : '')
       + '</div>'
       + '<div><div style="font-weight:700;font-size:1.1rem;">' + (prof.username || '?') + '</div>'
@@ -1079,6 +1099,19 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           avatarEditBtn.disabled = false;
           avatarFileInput.value = '';
         }
+      };
+    } else if (prof.bio) {
+      const translateBtn = document.getElementById('profileBioTranslateBtn');
+      translateBtn.onclick = async () => {
+        const bioLang = /[\u3040-\u30ff\u3400-\u9fff]/.test(prof.bio) ? 'ja' : 'en';
+        const targetLang = isJa ? 'ja' : 'en';
+        if (bioLang === targetLang) return;
+        translateBtn.disabled = true;
+        translateBtn.textContent = isJa ? '翻訳中...' : 'Translating...';
+        const translated = await translateText(prof.bio, bioLang, targetLang);
+        document.getElementById('profileBioTranslated').textContent = translated ? ('→ ' + translated) : (isJa ? '翻訳に失敗しました。' : 'Translation failed.');
+        translateBtn.disabled = false;
+        translateBtn.textContent = '🌐 ' + (isJa ? '翻訳' : 'Translate');
       };
     }
   }
