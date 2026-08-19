@@ -757,6 +757,38 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     return null;
   }
 
+  let jeneWinkTimer = null;
+  function showJeneWink(boardSelector, kingSq) {
+    if (!kingSq) return;
+    const cell = document.querySelector(boardSelector + ' .sq[data-sq="' + kingSq + '"]');
+    const boardEl = document.querySelector(boardSelector);
+    if (!cell || !boardEl) return;
+    let wink = document.getElementById('jeneWinkImg');
+    if (!wink) {
+      wink = document.createElement('img');
+      wink.id = 'jeneWinkImg';
+      wink.src = '/jene_wink.png';
+      wink.style.cssText = 'position:fixed;width:34px;height:34px;z-index:1500;pointer-events:none;opacity:0;transition:opacity 0.25s,transform 0.25s;transform:scale(0.6);';
+      document.body.appendChild(wink);
+    }
+    const cellRect = cell.getBoundingClientRect();
+    const boardRect = boardEl.getBoundingClientRect();
+    // 盤の外側、キングの行に合わせて左右どちらか空いている側に配置
+    const spaceRight = window.innerWidth - boardRect.right;
+    const placeRight = spaceRight > 40 || boardRect.left < 40;
+    const left = placeRight ? boardRect.right + 4 : boardRect.left - 38;
+    const top = cellRect.top + cellRect.height / 2 - 17;
+    wink.style.left = left + 'px';
+    wink.style.top = top + 'px';
+    wink.style.opacity = '1';
+    wink.style.transform = 'scale(1)';
+    if (jeneWinkTimer) clearTimeout(jeneWinkTimer);
+    jeneWinkTimer = setTimeout(() => {
+      wink.style.opacity = '0';
+      wink.style.transform = 'scale(0.6)';
+    }, 1600);
+  }
+
   function aiEvaluateBoard(chess) {
     let score = 0;
     chess.board().forEach(row => row.forEach(sq => {
@@ -1018,6 +1050,21 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     const isOwn = targetUid === user.uid;
     document.getElementById('profileModalTitle').textContent = prof.username || '?';
 
+    let openingHtml = '';
+    if (isOwn) {
+      const openingSnap = await get(ref(db, 'privateStats/' + user.uid + '/openings'));
+      const openingData = openingSnap.val() || {};
+      const openingEntries = Object.entries(openingData).sort((a, b) => b[1] - a[1]).slice(0, 5);
+      if (openingEntries.length) {
+        openingEntries.forEach(([name, count]) => {
+          openingHtml += '<div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid rgba(255,255,255,0.08);font-size:0.85rem;">'
+            + '<span>' + name + '</span><span>' + count + (isJa ? '回' : 'x') + '</span></div>';
+        });
+      } else {
+        openingHtml = '<p style="color:#888;font-size:0.85rem;">' + (isJa ? 'まだ記録がありません。' : 'No data yet.') + '</p>';
+      }
+    }
+
     const wld = (prof.wins || 0) + (isJa ? '勝' : 'W') + ' ' + (prof.losses || 0) + (isJa ? '敗' : 'L') + ' ' + (prof.draws || 0) + (isJa ? '分' : 'D');
     const foundedText = prof.foundedAt ? new Date(prof.foundedAt).toLocaleDateString(isJa ? 'ja-JP' : 'en-US') : '-';
 
@@ -1066,7 +1113,15 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       + (prof.photoURL ? '<img id="profileModalAvatarImg" src="' + prof.photoURL + '" style="width:56px;height:56px;border-radius:50%;object-fit:cover;cursor:pointer;">' : '<div id="profileModalAvatarImg" style="width:56px;height:56px;border-radius:50%;background:#444;"></div>')
       + (isOwn ? '<button id="profileAvatarEditBtn" title="' + (isJa ? '画像を変更' : 'Change photo') + '" style="position:absolute;bottom:-4px;right:-4px;width:22px;height:22px;border-radius:50%;background:var(--brown);color:#fff;border:2px solid #1a1a1a;font-size:0.7rem;padding:0;cursor:pointer;">✎</button><input type="file" id="profileAvatarFileInput" accept="image/*" style="display:none;">' : '')
       + '</div>'
-      + '<div><div style="font-weight:700;font-size:1.1rem;">' + (prof.username || '?') + '</div>'
+      + '<div><div style="display:flex;align-items:center;gap:6px;">'
+      + '<span id="profileNameDisplay" style="font-weight:700;font-size:1.1rem;">' + (prof.username || '?') + '</span>'
+      + (isOwn ? '<button id="profileNameEditBtn" title="' + (isJa ? '名前を変更' : 'Edit name') + '" style="background:none;border:none;color:var(--text-muted);font-size:0.85rem;cursor:pointer;padding:0;">✎</button>' : '')
+      + '</div>'
+      + (isOwn ? '<div id="profileNameEditRow" style="display:none;margin-top:4px;gap:6px;align-items:center;">'
+          + '<input type="text" id="profileNameInput" maxlength="20" value="' + (prof.username || '') + '" style="background:#2a2a2a;color:#eee;border:1px solid rgba(255,255,255,0.2);border-radius:6px;padding:4px 8px;font-family:\'Crimson Pro\',serif;font-size:0.9rem;width:140px;">'
+          + '<button id="profileNameSaveBtn" style="font-size:0.75rem;padding:3px 10px;">' + (isJa ? '保存' : 'Save') + '</button>'
+          + '<span id="profileNameMsg" style="font-size:0.75rem;"></span>'
+          + '</div>' : '')
       + (prof.founderMember ? '<span style="font-size:0.75rem;background:#a3692d;color:#fff;padding:2px 8px;border-radius:10px;">🦊 ' + (isJa ? '先行登録者' : 'Founding Member') + '</span>' : '')
       + '</div></div>'
       + '<div id="profileBioBox" style="margin-bottom:14px;">' + bioHtml + '</div>'
@@ -1076,6 +1131,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       + '<p style="font-size:0.85rem;color:#ccc;margin-bottom:12px;">' + wld + '</p>'
       + '<p style="font-weight:700;margin:12px 0 4px;">⏱ ' + (isJa ? '持ち時間別成績' : 'Stats by Time Control') + '</p>'
       + tcHtml
+      + (isOwn
+          ? '<p style="font-weight:700;margin:16px 0 4px;">♟ ' + (isJa ? '得意なオープニング' : 'Favorite Openings') + ' <span style="font-size:0.7rem;color:#888;font-weight:400;">(' + (isJa ? '自分だけに表示されます' : 'visible only to you') + ')</span></p>' + openingHtml
+          : '')
       + '<p style="font-weight:700;margin:16px 0 4px;">📋 ' + (isJa ? '対局履歴' : 'Match History') + '</p>'
       + historyHtml;
 
@@ -1087,6 +1145,24 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       document.getElementById('profileBioSaveBtn').onclick = async () => {
         const newBio = document.getElementById('profileBioInput').value.trim();
         await update(ref(db, 'publicProfiles/' + user.uid), { bio: newBio });
+      };
+      document.getElementById('profileNameEditBtn').onclick = () => {
+        document.getElementById('profileNameEditRow').style.display = 'flex';
+      };
+      document.getElementById('profileNameSaveBtn').onclick = async () => {
+        const newName = document.getElementById('profileNameInput').value.trim();
+        const nameMsgEl = document.getElementById('profileNameMsg');
+        const result = await saveUsername(user, newName);
+        if (!result.ok) {
+          nameMsgEl.style.color = '#e57373';
+          nameMsgEl.textContent = result.msg;
+          return;
+        }
+        document.getElementById('profileNameDisplay').textContent = newName;
+        document.getElementById('profileModalTitle').textContent = newName;
+        nameMsgEl.style.color = '#4caf50';
+        nameMsgEl.textContent = isJa ? '保存しました！' : 'Saved!';
+        setTimeout(() => { document.getElementById('profileNameEditRow').style.display = 'none'; nameMsgEl.textContent = ''; }, 1200);
       };
       const avatarEditBtn = document.getElementById('profileAvatarEditBtn');
       const avatarFileInput = document.getElementById('profileAvatarFileInput');
@@ -1221,6 +1297,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         else playMoveSound();
         animateAiMove(move.from, move.to, () => {
           renderAiBoard();
+          if (aiChess.in_check() || aiChess.in_checkmate()) {
+            showJeneWink('#aiBoard', findKingSquare(aiChess.board(), aiChess.turn()));
+          }
           if (!aiChess.game_over()) {
             setTimeout(async () => {
               const aiMove = aiDifficulty === 'hard'
@@ -1234,7 +1313,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                 else if (aiChess.in_check()) playCheckSound();
                 else if (aiMove.san.startsWith('O-O')) playCastleSound();
                 else playMoveSound();
-                animateAiMove(aiMove.from, aiMove.to, () => { renderAiBoard(); });
+                animateAiMove(aiMove.from, aiMove.to, () => {
+                  renderAiBoard();
+                  if (aiChess.in_check() || aiChess.in_checkmate()) {
+                    showJeneWink('#aiBoard', findKingSquare(aiChess.board(), aiChess.turn()));
+                  }
+                });
               } else {
                 renderAiBoard();
               }
@@ -1492,17 +1576,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
   function normName(name) { return name.trim().toLowerCase(); }
 
-  document.getElementById('saveNameBtn').onclick = async () => {
-    const user = auth.currentUser;
-    if (!user) return;
-    const name = document.getElementById('usernameInput').value.trim();
-    if (!name) return;
+  async function saveUsername(user, name) {
+    if (!name) return { ok: false, msg: LANG === 'ja' ? '名前を入力してください。' : 'Please enter a name.' };
     const key = normName(name);
     const existing = await get(ref(db, 'usernames/' + key));
     if (existing.exists() && existing.val() !== user.uid) {
-      document.getElementById('saveMsg').textContent = LANG === 'ja' ? 'そのユーザー名はすでに使われています。' : 'That username is already taken.';
-      document.getElementById('saveMsg').className = 'err';
-      return;
+      return { ok: false, msg: LANG === 'ja' ? 'そのユーザー名はすでに使われています。' : 'That username is already taken.' };
     }
     // 名前を変更した場合、古いusernamesの記録が残らないよう削除する
     const oldProfileSnap = await get(ref(db, 'users/' + user.uid));
@@ -1517,7 +1596,20 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     await update(ref(db, 'publicProfiles/' + user.uid), { username: name, photoURL: user.photoURL || '' });
     await set(ref(db, 'usernames/' + key), user.uid);
     document.getElementById('profileUsername').textContent = name;
+    return { ok: true };
+  }
+
+  document.getElementById('saveNameBtn').onclick = async () => {
+    const user = auth.currentUser;
+    if (!user) return;
+    const name = document.getElementById('usernameInput').value.trim();
+    const result = await saveUsername(user, name);
     const msg = document.getElementById('saveMsg');
+    if (!result.ok) {
+      msg.className = 'err';
+      msg.textContent = result.msg;
+      return;
+    }
     msg.className = 'msg';
     msg.textContent = LANG === 'ja' ? '保存しました！' : 'Saved!';
     setTimeout(() => { msg.textContent = ''; }, 2000);
@@ -2528,11 +2620,71 @@ const PIECE_IMG = {
       draws: tcEntry.draws + (myResult === 0.5 ? 1 : 0)
     };
 
+  // 得意なオープニング集計用の簡易判定テーブル(自分だけに見える統計のため、大まかな分類で十分)
+  const OPENING_TABLE = [
+    { san: ['e4', 'e5', 'Nf3', 'Nc6', 'Bb5'], name: { ja: 'ルイ・ロペス', en: 'Ruy Lopez' } },
+    { san: ['e4', 'e5', 'Nf3', 'Nc6', 'Bc4'], name: { ja: 'イタリアン・ゲーム', en: 'Italian Game' } },
+    { san: ['e4', 'e5', 'Nf3', 'Nc6', 'd4'], name: { ja: 'スコッチ・ゲーム', en: 'Scotch Game' } },
+    { san: ['e4', 'e5', 'Bc4'], name: { ja: 'ビショップス・オープニング', en: "Bishop's Opening" } },
+    { san: ['e4', 'e5', 'f4'], name: { ja: 'キングス・ギャンビット', en: "King's Gambit" } },
+    { san: ['e4', 'e5', 'Nc3'], name: { ja: 'ヴィエナ・ゲーム', en: 'Vienna Game' } },
+    { san: ['e4', 'c5', 'Nf3', 'd6'], name: { ja: 'シシリアン(ナジドルフ系)', en: 'Sicilian (Najdorf-type)' } },
+    { san: ['e4', 'c5', 'Nc3'], name: { ja: 'シシリアン(クローズド)', en: 'Closed Sicilian' } },
+    { san: ['e4', 'c5', 'c3'], name: { ja: 'アラピン・シシリアン', en: 'Alapin Sicilian' } },
+    { san: ['e4', 'c5'], name: { ja: 'シシリアン・ディフェンス', en: 'Sicilian Defense' } },
+    { san: ['e4', 'e6', 'd4', 'd5'], name: { ja: 'フレンチ・ディフェンス', en: 'French Defense' } },
+    { san: ['e4', 'c6', 'd4', 'd5'], name: { ja: 'カロカン・ディフェンス', en: 'Caro-Kann Defense' } },
+    { san: ['e4', 'd5'], name: { ja: 'スカンジナビアン・ディフェンス', en: 'Scandinavian Defense' } },
+    { san: ['e4', 'Nf6'], name: { ja: 'アレヒン・ディフェンス', en: "Alekhine's Defense" } },
+    { san: ['e4', 'g6'], name: { ja: 'モダン・ディフェンス', en: 'Modern Defense' } },
+    { san: ['e4', 'd6'], name: { ja: 'ピルツ・ディフェンス', en: 'Pirc Defense' } },
+    { san: ['d4', 'd5', 'c4', 'dxc4'], name: { ja: 'クイーンズ・ギャンビット・アクセプテッド', en: 'Queen\'s Gambit Accepted' } },
+    { san: ['d4', 'd5', 'c4', 'e6'], name: { ja: 'クイーンズ・ギャンビット・デクラインド', en: "Queen's Gambit Declined" } },
+    { san: ['d4', 'd5', 'c4', 'c6'], name: { ja: 'スラブ・ディフェンス', en: 'Slav Defense' } },
+    { san: ['d4', 'd5'], name: { ja: 'クイーンズ・ポーン・ゲーム', en: "Queen's Pawn Game" } },
+    { san: ['d4', 'Nf6', 'c4', 'g6'], name: { ja: 'キングス・インディアン・ディフェンス', en: "King's Indian Defense" } },
+    { san: ['d4', 'Nf6', 'c4', 'e6', 'Nc3', 'Bb4'], name: { ja: 'ニムゾ・インディアン', en: 'Nimzo-Indian Defense' } },
+    { san: ['d4', 'Nf6', 'c4', 'e6', 'Nf3', 'b6'], name: { ja: 'クイーンズ・インディアン', en: "Queen's Indian Defense" } },
+    { san: ['d4', 'Nf6', 'c4', 'c5'], name: { ja: 'ベノニ・ディフェンス', en: 'Benoni Defense' } },
+    { san: ['d4', 'Nf6', 'g3'], name: { ja: 'カタロニアン・オープニング', en: 'Catalan Opening' } },
+    { san: ['d4', 'Nf6'], name: { ja: 'インディアン・ディフェンス', en: 'Indian Defense' } },
+    { san: ['d4', 'f5'], name: { ja: 'ダッチ・ディフェンス', en: 'Dutch Defense' } },
+    { san: ['d4'], name: { ja: 'クイーンズ・ポーン・オープニング', en: "Queen's Pawn Opening" } },
+    { san: ['c4', 'e5'], name: { ja: 'イングリッシュ(逆スカラー)', en: 'English (Reversed Sicilian)' } },
+    { san: ['c4'], name: { ja: 'イングリッシュ・オープニング', en: 'English Opening' } },
+    { san: ['Nf3', 'd5', 'g3'], name: { ja: 'キングス・インディアン・アタック', en: "King's Indian Attack" } },
+    { san: ['Nf3'], name: { ja: 'レティ・オープニング', en: 'Reti Opening' } },
+    { san: ['b3'], name: { ja: 'ラーセン・オープニング', en: "Larsen's Opening" } },
+    { san: ['g3'], name: { ja: 'ベノニ・アタック(バードの逆)', en: 'Hungarian Opening' } },
+    { san: ['f4'], name: { ja: "バード・オープニング", en: "Bird's Opening" } },
+    { san: ['e4'], name: { ja: 'キングス・ポーン・オープニング', en: "King's Pawn Opening" } },
+  ];
+
+  function detectOpening(moves) {
+    const sanList = (moves || []).map((m) => m.san);
+    let best = null;
+    OPENING_TABLE.forEach((entry) => {
+      if (entry.san.length > sanList.length) return;
+      const matches = entry.san.every((s, i) => sanList[i] === s);
+      if (matches && (!best || entry.san.length > best.san.length)) best = entry;
+    });
+    if (!best) return null;
+    return LANG === 'ja' ? best.name.ja : best.name.en;
+  }
+
+
     await update(ref(db, 'publicProfiles/' + user.uid), {
       rating: newRating, wins, losses, draws,
       ['vsRecord/' + oppUid]: newOppVs,
       ['tcStats/' + tc]: newTcEntry
     });
+
+    const openingName = detectOpening(m.moves);
+    if (openingName) {
+      const privSnap = await get(ref(db, 'privateStats/' + user.uid + '/openings/' + openingName));
+      await set(ref(db, 'privateStats/' + user.uid + '/openings/' + openingName), (privSnap.val() || 0) + 1);
+    }
+
     await set(ref(db, 'matchHistory/' + user.uid + '/' + matchId), {
       opponentUid: oppUid,
       opponentName: oppProfile.username || '?',
@@ -3028,14 +3180,17 @@ const PIECE_IMG = {
       renderLikeButton(matchId, document.getElementById('matchLikeArea'), user);
     }
 
+    let shouldShowJeneWink = false;
     if (m.lastMove) {
       const moveKey = matchId + '_' + m.lastMove.from + m.lastMove.to + '_' + m.turn;
       if (moveKey !== lastMoveSoundKey) {
         lastMoveSoundKey = moveKey;
         if (gameChess.in_checkmate()) {
           playCheckmateSound();
+          shouldShowJeneWink = true;
         } else if (gameChess.in_check()) {
           playCheckSound();
+          shouldShowJeneWink = true;
         } else if (m.moves && m.moves.length && m.moves[m.moves.length - 1].san && m.moves[m.moves.length - 1].san.startsWith('O-O')) {
           playCastleSound();
         } else {
@@ -3325,6 +3480,7 @@ const PIECE_IMG = {
         const sq = files[c] + (8 - r);
         const cell = document.createElement('div');
         cell.className = 'sq ' + (((r + c) % 2 === 0) ? 'light' : 'dark');
+        cell.dataset.sq = sq;
         if (selectedSquare === sq) cell.classList.add('selected');
         if (legalTargets.has(sq)) cell.classList.add(piece ? 'hint-capture' : 'hint-move');
         if (displayLastMove && (displayLastMove.from === sq || displayLastMove.to === sq)) cell.classList.add('last-move');
@@ -3378,6 +3534,11 @@ const PIECE_IMG = {
           });
         }
       }
+    }
+
+    if (shouldShowJeneWink) {
+      const displayCheckColor = gameChess.turn();
+      showJeneWink('#miniBoard', findKingSquare(gameChess.board(), displayCheckColor));
     }
   }
 
