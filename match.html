@@ -440,6 +440,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
   import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, deleteUser, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
   import { getDatabase, ref, set, get, push, update, remove, onValue, onDisconnect, serverTimestamp, runTransaction } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+  import { getMessaging, getToken, onMessage } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-messaging.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyDR6vsVq2uePiFRUmoqYB4LjdGZJiRM4eE",
@@ -455,6 +456,35 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
   const db = getDatabase(app);
+
+  // ===== プッシュ通知(FCM)設定 =====
+  // 発行したVAPIDキーに置き換えてください(Firebase Console → プロジェクトの設定 → Cloud Messaging → ウェブ設定)
+  const FCM_VAPID_KEY = 'BJM_B6Bask0Jwa1MWX3G6bkWvjSdmMUryQkyM_3pjr4zSQ_qnRPM-x3d8B80PQjUXlzbRr6DYR3so4Y00aDRuqY';
+
+  async function setupPushNotifications(user) {
+    try {
+      if (!('serviceWorker' in navigator) || !('Notification' in window)) return;
+      // firebase-messaging-sw.js を明示的に登録(match-sw.jsと共存させるため個別登録)
+      const swReg = await navigator.serviceWorker.register('/firebase-messaging-sw.js');
+      const permission = await Notification.requestPermission();
+      if (permission !== 'granted') return;
+      const messaging = getMessaging(app);
+      const token = await getToken(messaging, { vapidKey: FCM_VAPID_KEY, serviceWorkerRegistration: swReg });
+      if (token) {
+        await set(ref(db, 'fcmTokens/' + user.uid), token);
+      }
+      // フォアグラウンド(アプリを開いている間)に届いた通知の表示
+      onMessage(messaging, (payload) => {
+        const title = payload.notification && payload.notification.title ? payload.notification.title : (LANG === 'ja' ? '🦊 KitsuneChess' : '🦊 KitsuneChess');
+        const body = payload.notification && payload.notification.body ? payload.notification.body : '';
+        if (Notification.permission === 'granted') {
+          new Notification(title, { body: body, icon: '/jene_welcome.png' });
+        }
+      });
+    } catch (e) {
+      console.error('プッシュ通知の設定に失敗:', e);
+    }
+  }
   const provider = new GoogleAuthProvider();
 
   const FOUNDER_CUTOFF = new Date('2026-10-01T00:00:00+09:00').getTime();
@@ -3092,6 +3122,19 @@ const PIECE_IMG = {
     });
   }
 
+  async function notifyOpponentTurn(matchId, user) {
+    try {
+      const idToken = await user.getIdToken();
+      fetch('https://asia-southeast1-kitsunechess-multiplayer.cloudfunctions.net/notifyTurn', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ matchId: matchId, idToken: idToken })
+      }).catch(() => {}); // 通知の失敗は対局進行に影響させない
+    } catch (e) {
+      console.error('notifyOpponentTurn error:', e);
+    }
+  }
+
   async function onSquareClick(sq, user) {
     if (!gameChess || gameChess.game_over()) return;
     const matchId = myMatchId;
@@ -3128,6 +3171,7 @@ const PIECE_IMG = {
           moves: moveHistory,
           drawOfferBy: null, takebackRequestBy: null
         });
+        notifyOpponentTurn(matchId, user);
       } else {
         renderMiniBoard(m, user, matchId);
       }
@@ -3357,6 +3401,7 @@ const PIECE_IMG = {
       document.getElementById('profileEmail').textContent = user.email;
       document.getElementById('profilePhoto').src = user.photoURL || '';
       setupPresence(user);
+      setupPushNotifications(user);
 
       const snap = await get(ref(db, 'users/' + user.uid));
       let currentName = '';
