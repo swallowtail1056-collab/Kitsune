@@ -274,7 +274,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <p><span data-ja="レーティング: " data-en="Rating: ">レーティング: </span><span id="profileRating">1200</span></p>
     <p><span data-ja="先行登録者特典: " data-en="Founding Member: ">先行登録者特典: </span><span id="profileFounder">-</span></p>
     <div style="position:relative;display:inline-block;">
-      <img id="profilePhoto" src="" alt="avatar">
+      <img id="profilePhoto" src="" alt="avatar" style="cursor:pointer;">
       <span id="profileOnlineDot" style="position:absolute;bottom:2px;right:2px;width:14px;height:14px;border-radius:50%;background:#2d8a3e;border:2px solid var(--card);"></span>
     </div>
   </div>
@@ -385,6 +385,17 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <div id="reportList" style="max-height:260px;overflow-y:auto;background:var(--input-bg);border:1px solid rgba(124,74,30,0.3);border-radius:6px;padding:8px;font-size:0.85rem;"></div>
       <button id="reportCloseBtn" data-ja="レポートを閉じる" data-en="Close Report" style="margin-top:8px;">レポートを閉じる</button>
     </div>
+  </div>
+</div>
+
+<!-- プロフィールモーダル -->
+<div id="profileModalOverlay" class="chat-modal-overlay">
+  <div class="chat-modal-box">
+    <div class="chat-modal-header">
+      <h3>👤 <span id="profileModalTitle">プロフィール</span></h3>
+      <button class="chat-modal-close" id="profileModalCloseBtn">✕</button>
+    </div>
+    <div class="chat-log" id="profileModalBody" style="padding:16px;"></div>
   </div>
 </div>
 
@@ -954,7 +965,97 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     renderAiBoard();
   };
 
-  function getAiCellEl(sq) { return document.querySelector('#aiBoard .sq[data-sq="' + sq + '"]'); }
+  document.getElementById('profileModalCloseBtn').addEventListener('click', () => {
+    document.getElementById('profileModalOverlay').classList.remove('open');
+  });
+  document.getElementById('profileModalOverlay').addEventListener('click', (ev) => {
+    if (ev.target === document.getElementById('profileModalOverlay')) {
+      document.getElementById('profileModalOverlay').classList.remove('open');
+    }
+  });
+  document.getElementById('profilePhoto').addEventListener('click', () => {
+    const user = auth.currentUser;
+    if (user) openProfileModal(user, user.uid);
+  });
+
+  const TC_LABELS = { bullet: 'Bullet', blitz: 'Blitz', rapid: 'Rapid', correspondence: (LANG === 'ja' ? '通信対局' : 'Correspondence') };
+
+  async function openProfileModal(user, targetUid) {
+    const overlay = document.getElementById('profileModalOverlay');
+    const body = document.getElementById('profileModalBody');
+    const isJa = LANG === 'ja';
+    overlay.classList.add('open');
+    body.innerHTML = '<p style="color:#888;">' + (isJa ? '読み込み中...' : 'Loading...') + '</p>';
+
+    const [profSnap, historySnap] = await Promise.all([
+      get(ref(db, 'publicProfiles/' + targetUid)),
+      get(ref(db, 'matchHistory/' + targetUid))
+    ]);
+    if (!profSnap.exists()) {
+      body.innerHTML = '<p>' + (isJa ? 'プロフィールが見つかりません。' : 'Profile not found.') + '</p>';
+      return;
+    }
+    const prof = profSnap.val();
+    const isOwn = targetUid === user.uid;
+    document.getElementById('profileModalTitle').textContent = prof.username || '?';
+
+    const wld = (prof.wins || 0) + (isJa ? '勝' : 'W') + ' ' + (prof.losses || 0) + (isJa ? '敗' : 'L') + ' ' + (prof.draws || 0) + (isJa ? '分' : 'D');
+    const foundedText = prof.foundedAt ? new Date(prof.foundedAt).toLocaleDateString(isJa ? 'ja-JP' : 'en-US') : '-';
+
+    let tcHtml = '';
+    const tcStats = prof.tcStats || {};
+    Object.keys(tcStats).forEach((tc) => {
+      const s = tcStats[tc];
+      tcHtml += '<div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid rgba(255,255,255,0.08);font-size:0.85rem;">'
+        + '<span>' + (TC_LABELS[tc] || tc) + '</span>'
+        + '<span>' + s.wins + (isJa ? '勝' : 'W') + ' ' + s.losses + (isJa ? '敗' : 'L') + ' ' + s.draws + (isJa ? '分' : 'D') + '</span></div>';
+    });
+    if (!tcHtml) tcHtml = '<p style="color:#888;font-size:0.85rem;">' + (isJa ? 'まだ対局記録がありません。' : 'No games played yet.') + '</p>';
+
+    const historyData = historySnap.val() || {};
+    const historyEntries = Object.values(historyData).sort((a, b) => b.endedAt - a.endedAt).slice(0, 20);
+    let historyHtml = '';
+    const resultLabel = { win: isJa ? '勝ち' : 'Win', loss: isJa ? '負け' : 'Loss', draw: isJa ? '引き分け' : 'Draw' };
+    const resultColor = { win: '#4caf50', loss: '#e57373', draw: '#aaa' };
+    historyEntries.forEach((h) => {
+      const dateText = new Date(h.endedAt).toLocaleDateString(isJa ? 'ja-JP' : 'en-US');
+      historyHtml += '<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.08);font-size:0.85rem;">'
+        + '<span>' + (h.opponentName || '?') + '<span style="color:#888;"> (' + (TC_LABELS[h.timeControl] || h.timeControl) + ')</span></span>'
+        + '<span style="color:' + (resultColor[h.result] || '#aaa') + ';font-weight:700;">' + (resultLabel[h.result] || h.result) + '</span>'
+        + '<span style="color:#888;">' + dateText + '</span></div>';
+    });
+    if (!historyHtml) historyHtml = '<p style="color:#888;font-size:0.85rem;">' + (isJa ? 'まだ対局履歴がありません。' : 'No match history yet.') + '</p>';
+
+    const bioHtml = isOwn
+      ? '<textarea id="profileBioInput" maxlength="100" placeholder="' + (isJa ? '一言メッセージを入力...' : 'Write a short bio...') + '" style="width:100%;background:#2a2a2a;color:#eee;border:1px solid rgba(255,255,255,0.2);border-radius:8px;padding:8px;font-family:\'Crimson Pro\',serif;font-size:0.9rem;resize:none;height:50px;">' + (prof.bio || '') + '</textarea>'
+        + '<button id="profileBioSaveBtn" style="margin-top:6px;font-size:0.8rem;padding:4px 12px;">' + (isJa ? '保存' : 'Save') + '</button>'
+      : '<p style="font-style:italic;color:#ccc;">' + (prof.bio ? prof.bio : (isJa ? '(一言メッセージはまだありません)' : '(No bio yet)')) + '</p>';
+
+    body.innerHTML =
+      '<div style="display:flex;gap:12px;align-items:center;margin-bottom:12px;">'
+      + (prof.photoURL ? '<img src="' + prof.photoURL + '" style="width:56px;height:56px;border-radius:50%;object-fit:cover;">' : '')
+      + '<div><div style="font-weight:700;font-size:1.1rem;">' + (prof.username || '?') + '</div>'
+      + (prof.founderMember ? '<span style="font-size:0.75rem;background:#a3692d;color:#fff;padding:2px 8px;border-radius:10px;">🦊 ' + (isJa ? '先行登録者' : 'Founding Member') + '</span>' : '')
+      + '</div></div>'
+      + '<div id="profileBioBox" style="margin-bottom:14px;">' + bioHtml + '</div>'
+      + '<div style="display:flex;justify-content:space-between;font-size:0.85rem;color:#888;margin-bottom:14px;">'
+      + '<span>' + (isJa ? '登録日: ' : 'Joined: ') + foundedText + '</span></div>'
+      + '<p style="font-weight:700;margin:12px 0 4px;">⭐ ' + (isJa ? 'レーティング' : 'Rating') + ': ' + (prof.rating || 1200) + '</p>'
+      + '<p style="font-size:0.85rem;color:#ccc;margin-bottom:12px;">' + wld + '</p>'
+      + '<p style="font-weight:700;margin:12px 0 4px;">⏱ ' + (isJa ? '持ち時間別成績' : 'Stats by Time Control') + '</p>'
+      + tcHtml
+      + '<p style="font-weight:700;margin:16px 0 4px;">📋 ' + (isJa ? '対局履歴' : 'Match History') + '</p>'
+      + historyHtml;
+
+    if (isOwn) {
+      document.getElementById('profileBioSaveBtn').onclick = async () => {
+        const newBio = document.getElementById('profileBioInput').value.trim();
+        await update(ref(db, 'publicProfiles/' + user.uid), { bio: newBio });
+      };
+    }
+  }
+
+
 
   function animateAiMove(fromSq, toSq, callback) {
     const fromCell = getAiCellEl(fromSq);
@@ -1536,6 +1637,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       textSpan.innerHTML = presenceLabel.dot + friendName + '（' + rating + '・' + wld + '）<br><span style="font-size:0.78rem;color:var(--text-muted);">' + vsLabel + '</span><br><span style="font-size:0.75rem;color:var(--text-muted);">' + presenceLabel.text + '</span>';
       label.appendChild(avatarImg);
       label.appendChild(textSpan);
+      label.style.cursor = 'pointer';
+      label.onclick = () => openProfileModal(user, friendUid);
       const challengeBtn = document.createElement('button');
       const pendingInviteSnap = await get(ref(db, 'matchInvites/' + friendUid + '/' + user.uid));
       let hasPendingInvite = pendingInviteSnap.exists();
@@ -2300,9 +2403,26 @@ const PIECE_IMG = {
       draws: oppVs.draws + (myResult === 0.5 ? 1 : 0)
     };
 
+    const tc = m.timeControl || 'rapid';
+    const tcStats = myProfile.tcStats || {};
+    const tcEntry = tcStats[tc] || { wins: 0, losses: 0, draws: 0 };
+    const newTcEntry = {
+      wins: tcEntry.wins + (myResult === 1 ? 1 : 0),
+      losses: tcEntry.losses + (myResult === 0 ? 1 : 0),
+      draws: tcEntry.draws + (myResult === 0.5 ? 1 : 0)
+    };
+
     await update(ref(db, 'publicProfiles/' + user.uid), {
       rating: newRating, wins, losses, draws,
-      ['vsRecord/' + oppUid]: newOppVs
+      ['vsRecord/' + oppUid]: newOppVs,
+      ['tcStats/' + tc]: newTcEntry
+    });
+    await set(ref(db, 'matchHistory/' + user.uid + '/' + matchId), {
+      opponentUid: oppUid,
+      opponentName: oppProfile.username || '?',
+      result: myResult === 1 ? 'win' : (myResult === 0.5 ? 'draw' : 'loss'),
+      timeControl: tc,
+      endedAt: Date.now()
     });
     const deltaField = myColor === 'w' ? 'eloDeltaWhite' : 'eloDeltaBlack';
     await update(ref(db, 'matches/' + matchId), { [flagField]: true, [deltaField]: newRating - myRating });
@@ -3391,11 +3511,21 @@ const PIECE_IMG = {
         log.innerHTML = '<p style="color:var(--text-muted);font-size:0.85rem;">' + (LANG === 'ja' ? 'まだメッセージはありません。' : 'No messages yet.') + '</p>';
         return;
       }
-      Object.values(data).sort((a, b) => a.sentAt - b.sentAt).forEach(msg => {
+      const sorted = Object.entries(data).sort((a, b) => a[1].sentAt - b[1].sentAt);
+      let lastOwnKey = null;
+      sorted.forEach(([key, msg]) => { if (msg.from === user.uid) lastOwnKey = key; });
+      sorted.forEach(([key, msg]) => {
         const div = document.createElement('div');
         div.className = 'chat-log-msg';
         const who = msg.from === user.uid ? (LANG === 'ja' ? '自分' : 'You') : msg.fromName;
         div.innerHTML = '<div class="who">' + who + '</div><div class="body">' + msg.text + '</div>';
+        if (msg.from === user.uid && key === lastOwnKey) {
+          const delBtn = document.createElement('button');
+          delBtn.textContent = LANG === 'ja' ? '削除' : 'Delete';
+          delBtn.style.cssText = 'font-size:0.7rem;padding:2px 8px;margin-top:2px;background:transparent;border:1px solid rgba(255,255,255,0.3);color:var(--text-muted);border-radius:4px;';
+          delBtn.onclick = () => remove(ref(db, chatPath + '/' + key));
+          div.appendChild(delBtn);
+        }
         const msgLang = msg.lang || 'en';
         if (msgLang !== LANG) {
           const transDiv = document.createElement('div');
