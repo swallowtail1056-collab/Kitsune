@@ -4711,11 +4711,54 @@ const PIECE_IMG = {
         if (bubble) bubble.textContent = isJa ? 'これは「' + name + '」の形だね!' : "This is the " + name + '!';
         if (img) img.src = '/jene_sparkle.png';
       }, 400);
+      return true;
     }
+    return false;
+  }
+
+  // 直前に動いた駒が、価値の高い相手の駒を2つ以上同時に狙っているか(フォーク)を調べる
+  function getAttackedEnemySquares(fen, sq, color) {
+    const parts = fen.split(' ');
+    parts[1] = color;
+    let temp;
+    try { temp = new Chess(parts.join(' ')); } catch (e) { return []; }
+    let moves;
+    try { moves = temp.moves({ square: sq, verbose: true }); } catch (e) { return []; }
+    return moves.filter((m) => m.captured).map((m) => m.to);
+  }
+
+  function checkForkPattern() {
+    const sq = beginnerState.lastTo;
+    if (!sq) return false;
+    const piece = beginnerChess.get(sq);
+    if (!piece) return false;
+    const attacked = getAttackedEnemySquares(beginnerChess.fen(), sq, piece.color);
+    const valuableTargets = attacked.filter((s) => {
+      const target = beginnerChess.get(s);
+      if (!target) return false;
+      return target.type === 'k' || (PIECE_VALUE[target.type] || 0) >= 3;
+    });
+    if (valuableTargets.length >= 2) {
+      const isJa = LANG === 'ja';
+      const pieceName = PIECE_NAME[isJa ? 'ja' : 'en'][piece.type.toUpperCase()];
+      setTimeout(() => {
+        showBeginnerJeneSpeech('generic', '');
+        const bubble = document.getElementById('beginnerJeneSpeechBubble');
+        const img = document.getElementById('beginnerJeneSpeechImg');
+        if (bubble) bubble.textContent = isJa
+          ? 'これはフォークだよ!' + pieceName + 'が2つの駒を同時に狙ってる!'
+          : "That's a fork! Your " + pieceName + ' is attacking two pieces at once!';
+        if (img) img.src = '/jene_excited.png';
+      }, 400);
+      return true;
+    }
+    return false;
   }
 
   function afterBeginnerMove() {
-    checkOpeningRecognition();
+    const playerJustMoved = beginnerChess.turn() !== beginnerState.myColor;
+    const announcedOpening = checkOpeningRecognition();
+    if (playerJustMoved && !announcedOpening) checkForkPattern();
     if (beginnerChess.in_checkmate()) {
       playCheckmateSound();
       const iWon = beginnerChess.turn() !== beginnerState.myColor;
