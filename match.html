@@ -344,7 +344,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
   <div class="box">
     <p><strong data-ja="友達一覧" data-en="Friends List">友達一覧</strong></p>
-    <div id="friendsList"></div>
+    <div id="friendsList" style="display:flex;flex-wrap:nowrap;gap:10px;overflow-x:auto;padding-bottom:8px;-webkit-overflow-scrolling:touch;"></div>
   </div>
 
   <div class="box" id="matchInviteBox" style="display:none;">
@@ -1940,33 +1940,54 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       const presenceSnap = await get(ref(db, 'presence/' + friendUid));
       const presenceLabel = formatPresenceLabel(presenceSnap.val());
       const row = document.createElement('div');
-      row.className = 'list-item';
-      row.style.flexWrap = 'wrap';
+      row.className = 'thumb-card';
+      row.style.width = '150px';
+      row.style.flexShrink = '0';
       const label = document.createElement('span');
       label.style.display = 'flex';
-      label.style.alignItems = 'flex-start';
-      label.style.gap = '8px';
+      label.style.flexDirection = 'column';
+      label.style.alignItems = 'center';
+      label.style.gap = '4px';
+      label.style.textAlign = 'center';
       const avatarImg = document.createElement('img');
       avatarImg.src = friendProfile.photoURL || '';
-      avatarImg.style.cssText = 'width:28px;height:28px;border-radius:50%;object-fit:cover;flex-shrink:0;margin-top:2px;background:rgba(90,58,24,0.1);';
+      avatarImg.style.cssText = 'width:40px;height:40px;border-radius:50%;object-fit:cover;flex-shrink:0;background:rgba(90,58,24,0.1);';
       avatarImg.onerror = () => { avatarImg.style.display = 'none'; };
       if (!friendProfile.photoURL) avatarImg.style.display = 'none';
       const textSpan = document.createElement('span');
-      textSpan.innerHTML = presenceLabel.dot + friendName + '（' + rating + '・' + wld + '）<br><span style="font-size:0.78rem;color:var(--text-muted);">' + vsLabel + '</span><br><span style="font-size:0.75rem;color:var(--text-muted);">' + presenceLabel.text + '</span>';
+      textSpan.style.fontSize = '0.85rem';
+      textSpan.innerHTML = presenceLabel.dot + friendName + '<br><span style="font-size:0.72rem;color:var(--text-muted);">' + rating + '・' + wld + '</span>';
       label.appendChild(avatarImg);
       label.appendChild(textSpan);
       label.style.cursor = 'pointer';
       label.onclick = () => openProfileModal(user, friendUid);
       const challengeBtn = document.createElement('button');
+      challengeBtn.style.fontSize = '0.75rem';
+      challengeBtn.style.padding = '4px 10px';
       const pendingInviteSnap = await get(ref(db, 'matchInvites/' + friendUid + '/' + user.uid));
       let hasPendingInvite = pendingInviteSnap.exists();
       const updateChallengeBtnLabel = () => {
-        challengeBtn.textContent = hasPendingInvite ? (LANG === 'ja' ? '申し込みを取り消す' : 'Cancel Challenge') : (LANG === 'ja' ? '対局を申し込む' : 'Challenge');
+        challengeBtn.textContent = hasPendingInvite ? (LANG === 'ja' ? '取り消す' : 'Cancel') : (LANG === 'ja' ? '対局を申し込む' : 'Challenge');
         challengeBtn.style.background = hasPendingInvite ? '#a33' : '';
       };
       updateChallengeBtnLabel();
       const tcPanel = document.createElement('span');
       tcPanel.style.display = 'none';
+      tcPanel.style.width = '100%';
+
+      const ratedRow = document.createElement('div');
+      ratedRow.style.cssText = 'font-size:0.75rem;margin-top:4px;display:flex;align-items:center;gap:6px;';
+      const ratedCheckbox = document.createElement('input');
+      ratedCheckbox.type = 'checkbox';
+      ratedCheckbox.checked = true;
+      ratedCheckbox.id = 'ratedToggle_' + friendUid;
+      const ratedLabel = document.createElement('label');
+      ratedLabel.htmlFor = ratedCheckbox.id;
+      ratedLabel.textContent = LANG === 'ja' ? 'レートあり' : 'Rated';
+      ratedLabel.style.cursor = 'pointer';
+      ratedRow.appendChild(ratedCheckbox);
+      ratedRow.appendChild(ratedLabel);
+      tcPanel.appendChild(ratedRow);
 
       const fixedRowLabel = document.createElement('div');
       fixedRowLabel.style.cssText = 'font-size:0.75rem;color:var(--text-muted);margin-top:4px;';
@@ -1991,7 +2012,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         const myProfile = await get(ref(db, 'users/' + user.uid));
         const myName = myProfile.exists() ? myProfile.val().username : user.displayName;
         await set(ref(db, 'matchInvites/' + friendUid + '/' + user.uid), {
-          username: myName, sentAt: Date.now(), timeControl: opt.key, fixed: fixed
+          username: myName, sentAt: Date.now(), timeControl: opt.key, fixed: fixed, rated: ratedCheckbox.checked
         });
         tcPanel.style.display = 'none';
         hasPendingInvite = true;
@@ -2037,6 +2058,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       const msgBtn = document.createElement('button');
       msgBtn.textContent = LANG === 'ja' ? '✉️ メッセージ' : '✉️ Message';
       msgBtn.style.background = '#a3692d';
+      msgBtn.style.fontSize = '0.75rem';
+      msgBtn.style.padding = '4px 10px';
       msgBtn.onclick = () => openDMModal(user, friendUid, friendName);
       row.appendChild(label);
       row.appendChild(challengeBtn);
@@ -2381,7 +2404,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       const row = document.createElement('div');
       row.className = 'list-item';
       const label = document.createElement('span');
-      label.textContent = info.username;
+      label.textContent = info.username + (info.rated === false ? (LANG === 'ja' ? '(ノーレート)' : ' (unrated)') : '');
       const btnGroup = document.createElement('span');
 
       const acceptBtn = document.createElement('button');
@@ -2413,7 +2436,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           whiteTime: baseMs,
           blackTime: baseMs,
           whiteJoined: false,
-          blackJoined: false
+          blackJoined: false,
+          rated: info.rated !== false
         });
         await set(ref(db, 'currentMatches/' + user.uid + '/' + matchId), true);
         await set(ref(db, 'currentMatches/' + fromUid + '/' + matchId), true);
@@ -2746,6 +2770,12 @@ const PIECE_IMG = {
     const flagField = myColor === 'w' ? 'ratingAppliedWhite' : 'ratingAppliedBlack';
     if (m[flagField]) { appliedRatingsFor.add(dedupeKey); return; }
     appliedRatingsFor.add(dedupeKey);
+
+    if (m.rated === false) {
+      // ノーレート対局:レーティング・勝敗数・対局履歴には一切影響させない
+      await update(ref(db, 'matches/' + matchId), { [flagField]: true });
+      return;
+    }
 
     const oppUid = myColor === 'w' ? m.black : m.white;
     const [myProfileSnap, oppProfileSnap] = await Promise.all([
@@ -3413,7 +3443,8 @@ const PIECE_IMG = {
         }
       }
     } else {
-      statusEl.textContent = (LANG === 'ja' ? '対戦相手: ' : 'Opponent: ') + oppName + ' | ' +
+      statusEl.textContent = (LANG === 'ja' ? '対戦相手: ' : 'Opponent: ') + oppName
+        + (m.rated === false ? (LANG === 'ja' ? '(ノーレート)' : ' (unrated)') : '') + ' | ' +
         (myTurn ? (LANG === 'ja' ? 'あなたの番です' : 'Your turn') : (LANG === 'ja' ? '相手の番です' : "Opponent's turn"));
       document.getElementById('reportToggleBtn').style.display = 'none';
     }
@@ -4524,7 +4555,7 @@ const PIECE_IMG = {
   let beginnerState = {
     myColor: 'w', selected: null, validTargets: [],
     lastFrom: null, lastTo: null, animating: false,
-    hintFrom: null, hintTo: null, lastDetectedOpening: null
+    hintFrom: null, hintTo: null, lastDetectedOpening: null, wentOutOfBook: false
   };
 
   function getBeginnerCellEl(sq) { return document.querySelector('#beginnerBoard .sq[data-sq="' + sq + '"]'); }
@@ -4641,6 +4672,19 @@ const PIECE_IMG = {
       const inCheck = chess.in_check();
       const oppReplies = chess.moves({ verbose: true });
       const recapture = oppReplies.find((r) => r.to === mv.to && r.captured);
+      // この手の直後、盤面のどこかで相手に得な駒取りが生まれていないかも広く確認する
+      let worstOppGain = 0;
+      oppReplies.forEach((r) => {
+        if (!r.captured) return;
+        const gained = PIECE_VALUE[r.captured] || 0;
+        chess.move(r);
+        const myReplies = chess.moves({ verbose: true });
+        const canRecaptureBack = myReplies.some((mr) => mr.to === r.to && mr.captured);
+        chess.undo();
+        const lostBack = canRecaptureBack ? (PIECE_VALUE[r.piece] || 0) : 0;
+        const net = gained - lostBack;
+        if (net > worstOppGain) worstOppGain = net;
+      });
       chess.undo();
 
       if (inCheck) {
@@ -4661,6 +4705,10 @@ const PIECE_IMG = {
       } else if (recapture) {
         // 取ってもいないのに移動先の駒がただで取られてしまう = 何の見返りもなく駒を失う
         score -= movingValue * 2;
+      }
+      // 移動先以外の駒も含め、この手の後に相手が得できる駒取りがあれば減点(間接的に駒を危険にさらす手を避ける)
+      if (worstOppGain > 0 && !(isCapture && recapture)) {
+        score -= worstOppGain * 1.8;
       }
 
       score += Math.random() * 0.5; // 同点の時に毎回同じ手にならないよう少しゆらぎを持たせる
@@ -4699,17 +4747,55 @@ const PIECE_IMG = {
     return aiPickMove(chess, 'hard');
   }
 
+  // OPENING_TABLE(浅いが幅広い)とBEGINNER_OPENINGS(狭いが深い、9手先まで)の両方を見て、
+  // 実際に指された手数と一致するデータの深さ(len)も一緒に返す
+  function detectOpeningDeep(movesSan) {
+    let best = null;
+    OPENING_TABLE.forEach((entry) => {
+      if (entry.san.length > movesSan.length) return;
+      const matches = entry.san.every((s, i) => movesSan[i] === s);
+      if (matches && (!best || entry.san.length > best.len)) {
+        best = { len: entry.san.length, ja: entry.name.ja, en: entry.name.en };
+      }
+    });
+    BEGINNER_OPENINGS.forEach((entry) => {
+      if (entry.moves.length > movesSan.length) return;
+      const matches = entry.moves.every((s, i) => movesSan[i] === s);
+      if (matches && (!best || entry.moves.length > best.len)) {
+        best = { len: entry.moves.length, ja: entry.ja, en: entry.en };
+      }
+    });
+    return best;
+  }
+
   function checkOpeningRecognition() {
-    const name = detectOpening(beginnerChess.history({ verbose: true }));
-    if (name && name !== beginnerState.lastDetectedOpening) {
-      beginnerState.lastDetectedOpening = name;
-      const isJa = LANG === 'ja';
+    const movesSan = beginnerChess.history();
+    const match = detectOpeningDeep(movesSan);
+    const isJa = LANG === 'ja';
+    if (match && match.len === movesSan.length) {
+      // 手順のすべてが、まだ既知のオープニングデータの範囲内
+      const name = isJa ? match.ja : match.en;
+      if (name !== beginnerState.lastDetectedOpening) {
+        beginnerState.lastDetectedOpening = name;
+        beginnerState.wentOutOfBook = false;
+        setTimeout(() => {
+          showBeginnerJeneSpeech('generic', '');
+          const bubble = document.getElementById('beginnerJeneSpeechBubble');
+          const img = document.getElementById('beginnerJeneSpeechImg');
+          if (bubble) bubble.textContent = isJa ? 'これは「' + name + '」の形だね!' : "This is the " + name + '!';
+          if (img) img.src = '/jene_sparkle.png';
+        }, 400);
+        return true;
+      }
+    } else if (beginnerState.lastDetectedOpening && !beginnerState.wentOutOfBook) {
+      // オープニングは始まったが、既知のデータより先に進んだ(定跡を外れた)
+      beginnerState.wentOutOfBook = true;
       setTimeout(() => {
         showBeginnerJeneSpeech('generic', '');
         const bubble = document.getElementById('beginnerJeneSpeechBubble');
         const img = document.getElementById('beginnerJeneSpeechImg');
-        if (bubble) bubble.textContent = isJa ? 'これは「' + name + '」の形だね!' : "This is the " + name + '!';
-        if (img) img.src = '/jene_sparkle.png';
+        if (bubble) bubble.textContent = isJa ? 'ここからは二人の実力勝負だね!' : "From here, it's up to your own skill!";
+        if (img) img.src = '/jene_excited.png';
       }, 400);
       return true;
     }
@@ -4845,7 +4931,7 @@ const PIECE_IMG = {
     beginnerState = {
       myColor: color, selected: null, validTargets: [],
       lastFrom: null, lastTo: null, animating: false,
-      hintFrom: null, hintTo: null, lastDetectedOpening: null
+      hintFrom: null, hintTo: null, lastDetectedOpening: null, wentOutOfBook: false
     };
     beginnerChess = new Chess();
     document.getElementById('beginnerColorPanel').style.display = 'none';
