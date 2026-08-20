@@ -428,8 +428,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   </div>
 
   <div class="app">
-  <div class="box-card">
-    <h3 id="filterTitle">▸ <span class="lang-text" data-ja="オープニングを選択" data-en="SELECT OPENING">オープニングを選択</span></h3>
+  <details class="box-card" id="openingSelectBox">
+    <summary id="filterTitle" style="cursor:pointer;color:var(--brown);font-family:'Cinzel',serif;font-weight:700;font-size:0.9rem;padding:8px 0;list-style:none;">▸ <span class="lang-text" data-ja="オープニングを選択(タップして開く)" data-en="Select Opening (tap to open)">オープニングを選択(タップして開く)</span></summary>
     <div class="filter-area">
       <select class="filter-select" id="filterLevel" onchange="applyFilters()">
         <option value="all" data-ja="レベル：全て" data-en="Level: All">レベル：全て</option>
@@ -451,8 +451,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <option value="both" data-ja="両方" data-en="Both">両方</option>
       </select>
     </div>
-  </div>
       <div class="opening-tabs" id="openingTabs"></div>
+  </details>
   </div>
   <div class="box-card">
     <h3>▸ 説明</h3>

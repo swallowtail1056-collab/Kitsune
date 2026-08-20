@@ -184,7 +184,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
 <details class="box" id="beginnerModeBox" style="padding:8px;">
   <summary data-ja="はじめてモード🦊(ログイン不要)" data-en="Beginner Mode🦊 (no login required)">はじめてモード🦊(ログイン不要)</summary>
-  <p style="font-size:0.85rem;color:var(--text-muted);" data-ja="ジーンが最後の1手前まで一緒に指してくれるよ。最後の決め手だけ、自分で見つけてみよう!" data-en="Jene plays along with you right up to the final move — you find the finishing move yourself!">ジーンが最後の1手前まで一緒に指してくれるよ。最後の決め手だけ、自分で見つけてみよう!</p>
+  <p style="font-size:0.85rem;color:var(--text-muted);" data-ja="初期配置から、ジーンが定跡の手順を一緒に並べてくれるよ。最後の1手だけ、自分で見つけてみよう!" data-en="Starting from the initial position, Jene lays out the opening moves with you — you find the final move yourself!">初期配置から、ジーンが定跡の手順を一緒に並べてくれるよ。最後の1手だけ、自分で見つけてみよう!</p>
   <p id="beginnerStatusMsg" style="text-align:center;font-weight:700;min-height:1.4em;color:var(--brown-dark);"></p>
   <div id="beginnerJeneSpeechRow" style="display:none;align-items:center;gap:8px;justify-content:center;margin-bottom:8px;">
     <img id="beginnerJeneSpeechImg" src="/jene_wink.png" style="width:36px;height:36px;flex-shrink:0;" onerror="this.src='/jene_wink.png';">
@@ -4319,6 +4319,35 @@ const PIECE_IMG = {
   // ===== ここまでパズルストリーク =====
 
   // ===== はじめてモード(単体・ジーンと一緒に) =====
+  // ===== はじめてモード用オープニング一覧(初期配置から並べる) =====
+  const BEGINNER_OPENINGS = [
+    { ja: 'イタリアン・ゲーム', en: 'Italian Game', moves: ['e4','e5','Nf3','Nc6','Bc4','Bc5','c3','Nf6','d4'] },
+    { ja: 'ルイ・ロペス', en: 'Ruy Lopez', moves: ['e4','e5','Nf3','Nc6','Bb5','a6','Ba4','Nf6','O-O'] },
+    { ja: 'スコッチゲーム', en: 'Scotch Game', moves: ['e4','e5','Nf3','Nc6','d4','exd4','Nxd4','Nf6','Nxc6'] },
+    { ja: 'ウィーンゲーム', en: 'Vienna Game', moves: ['e4','e5','Nc3','Nf6','f4','d5','fxe5','Nxe4','Nf3'] },
+    { ja: 'フォー・ナイツ', en: 'Four Knights Game', moves: ['e4','e5','Nf3','Nc6','Nc3','Nf6','Bb5','Nd4','Ba4'] },
+    { ja: 'シシリアン', en: 'Sicilian Defense', moves: ['e4','c5','Nf3','d6','d4','cxd4','Nxd4','Nf6','Nc3'] },
+    { ja: 'フレンチ・ディフェンス', en: 'French Defense', moves: ['e4','e6','d4','d5','Nc3','Nf6','Bg5','Be7','e5'] },
+    { ja: 'カロ・カン', en: 'Caro-Kann', moves: ['e4','c6','d4','d5','Nc3','dxe4','Nxe4','Bf5','Ng3'] },
+    { ja: 'スカンジナビアン', en: 'Scandinavian Defense', moves: ['e4','d5','exd5','Qxd5','Nc3','Qa5','d4','Nf6','Nf3'] },
+    { ja: 'ロシアン・ディフェンス', en: 'Russian Defense', moves: ['e4','e5','Nf3','Nf6','Nxe5','d6','Nf3','Nxe4','d4'] },
+    { ja: 'クイーンズ・ギャンビット', en: "Queen's Gambit", moves: ['d4','d5','c4','e6','Nc3','Nf6','Bg5','Be7','e3'] },
+    { ja: 'スラブ・ディフェンス', en: 'Slav Defense', moves: ['d4','d5','c4','c6','Nf3','Nf6','Nc3','dxc4','a4'] },
+    { ja: 'キングズ・インディアン', en: "King's Indian Defense", moves: ['d4','Nf6','c4','g6','Nc3','Bg7','e4','d6','Nf3'] },
+    { ja: 'ニムゾ・インディアン', en: 'Nimzo-Indian Defense', moves: ['d4','Nf6','c4','e6','Nc3','Bb4','e3','O-O','Bd3'] },
+    { ja: 'ロンドンシステム', en: 'London System', moves: ['d4','d5','Nf3','Nf6','Bf4','e6','e3','Bd6','Bg3'] },
+    { ja: 'カタラン', en: 'Catalan Opening', moves: ['d4','Nf6','c4','e6','g3','d5','Bg2','Be7','Nf3'] },
+    { ja: 'ダッチ・ディフェンス', en: 'Dutch Defense', moves: ['d4','f5','g3','Nf6','Bg2','e6','Nf3','Be7','O-O'] },
+    { ja: 'イングリッシュ・オープニング', en: 'English Opening', moves: ['c4','e5','Nc3','Nf6','Nf3','Nc6','g3','Bb4','Bg2'] },
+    { ja: 'レティ・オープニング', en: 'Reti Opening', moves: ['Nf3','d5','c4','e6','g3','Nf6','Bg2','Be7','O-O'] },
+    { ja: 'ベルリン・ディフェンス', en: 'Berlin Defense', moves: ['e4','e5','Nf3','Nc6','Bb5','Nf6','O-O','Nxe4','d4'] },
+    { ja: 'ピルツ・ディフェンス', en: 'Pirc Defense', moves: ['e4','d6','d4','Nf6','Nc3','g6','Nf3','Bg7','Be2'] },
+    { ja: 'アレヒン・ディフェンス', en: "Alekhine's Defense", moves: ['e4','Nf6','e5','Nd5','d4','d6','Nf3','Bg4','Be2'] },
+    { ja: 'グリュンフェルト・ディフェンス', en: 'Grünfeld Defense', moves: ['d4','Nf6','c4','g6','Nc3','d5','cxd5','Nxd5','e4'] },
+    { ja: 'クイーンズ・インディアン', en: "Queen's Indian Defense", moves: ['d4','Nf6','c4','e6','Nf3','b6','g3','Bb7','Bg2'] },
+    { ja: 'ベノニ・ディフェンス', en: 'Benoni Defense', moves: ['d4','Nf6','c4','c5','d5','e6','Nc3','exd5','cxd5'] }
+  ];
+
   const JENE_PHRASES = {
     ja: [
       { text: 'ナイス!', img: 'jene_happy.png' },
@@ -4390,7 +4419,7 @@ const PIECE_IMG = {
     retryUsed: false, autoPlaying: false
   };
 
-  function currentBeginnerPuzzle() { return PUZZLES[beginnerState.index]; }
+  function currentBeginnerPuzzle() { return BEGINNER_OPENINGS[beginnerState.index]; }
   function expectedBeginnerSAN() { return currentBeginnerPuzzle().moves[beginnerState.moveIndex]; }
   function getBeginnerCellEl(sq) { return document.querySelector('#beginnerBoard .sq[data-sq="' + sq + '"]'); }
 
@@ -4461,7 +4490,7 @@ const PIECE_IMG = {
   }
 
   function startBeginnerPuzzle(idx) {
-    beginnerState.index = ((idx % PUZZLES.length) + PUZZLES.length) % PUZZLES.length;
+    beginnerState.index = ((idx % BEGINNER_OPENINGS.length) + BEGINNER_OPENINGS.length) % BEGINNER_OPENINGS.length;
     beginnerState.moveIndex = 0;
     beginnerState.selected = null; beginnerState.validTargets = [];
     beginnerState.lastFrom = null; beginnerState.lastTo = null;
@@ -4469,17 +4498,14 @@ const PIECE_IMG = {
     beginnerState.retryUsed = false; beginnerState.autoPlaying = false;
     hideBeginnerJeneSpeech();
     const p = currentBeginnerPuzzle();
-    beginnerChess = new Chess(p.fen);
+    beginnerChess = new Chess();
     const nextRow = document.getElementById('beginnerNextRow');
     if (nextRow) nextRow.style.display = 'none';
     const ansBtn = document.getElementById('btnBeginnerAnswer');
     if (ansBtn) ansBtn.style.display = '';
     renderBeginnerBoard();
-    if (p.moves.length <= 1) {
-      setBeginnerStatus(LANG === 'ja' ? '決め手を見つけてみよう!' : 'Find the finishing move!');
-    } else {
-      setBeginnerStatus(LANG === 'ja' ? 'ジーンと一緒に見ていこう…' : "Let's follow along with Jene…");
-    }
+    const openingName = LANG === 'ja' ? p.ja : p.en;
+    setBeginnerStatus(LANG === 'ja' ? openingName + 'を練習しよう!' : "Let's practice the " + openingName + '!');
     runBeginnerGuidedSteps();
   }
 
@@ -4489,7 +4515,7 @@ const PIECE_IMG = {
     if (p.moves.length <= 1 || beginnerState.moveIndex >= p.moves.length - 1) {
       beginnerState.autoPlaying = false;
       hideBeginnerJeneSpeech();
-      setBeginnerStatus(LANG === 'ja' ? 'ここが決め手!自分で指してみよう。' : 'This is the finishing move — find it yourself!');
+      setBeginnerStatus(LANG === 'ja' ? 'ここまでは覚えたね!最後の1手は自分で指してみよう。' : "You've got it so far — find the last move yourself!");
       return;
     }
     beginnerState.autoPlaying = true;
@@ -4557,9 +4583,11 @@ const PIECE_IMG = {
   }
 
   function onBeginnerSolved() {
-    setBeginnerStatus(LANG === 'ja' ? '正解!🎉' : 'Correct! 🎉', 'good');
+    const p = currentBeginnerPuzzle();
+    const openingName = LANG === 'ja' ? p.ja : p.en;
+    setBeginnerStatus(LANG === 'ja' ? openingName + 'をマスターしたよ!🎉' : 'You mastered the ' + openingName + '! 🎉', 'good');
     playPuzzleCorrect();
-    setTimeout(() => { startBeginnerPuzzle(beginnerState.index + 1); }, 900);
+    setTimeout(() => { startBeginnerPuzzle(beginnerState.index + 1); }, 1200);
   }
 
   function doBeginnerWrong(sq) {
@@ -4600,7 +4628,7 @@ const PIECE_IMG = {
   document.getElementById('btnBeginnerAnswer').onclick = showBeginnerAnswer;
   document.getElementById('btnBeginnerNext').onclick = nextBeginnerPuzzle;
 
-  startBeginnerPuzzle(Math.floor(Math.random() * PUZZLES.length));
+  startBeginnerPuzzle(0);
   // ===== ここまではじめてモード =====
 </script>
 <script>
