@@ -184,18 +184,21 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
 <details class="box" id="beginnerModeBox" style="padding:8px;">
   <summary data-ja="はじめてモード🦊(ログイン不要)" data-en="Beginner Mode🦊 (no login required)">はじめてモード🦊(ログイン不要)</summary>
-  <p style="font-size:0.85rem;color:var(--text-muted);" data-ja="初期配置から、ジーンが定跡の手順を一緒に並べてくれるよ。最後の1手だけ、自分で見つけてみよう!" data-en="Starting from the initial position, Jene lays out the opening moves with you — you find the final move yourself!">初期配置から、ジーンが定跡の手順を一緒に並べてくれるよ。最後の1手だけ、自分で見つけてみよう!</p>
-  <p id="beginnerStatusMsg" style="text-align:center;font-weight:700;min-height:1.4em;color:var(--brown-dark);"></p>
-  <div id="beginnerJeneSpeechRow" style="display:none;align-items:center;gap:8px;justify-content:center;margin-bottom:8px;">
-    <img id="beginnerJeneSpeechImg" src="/jene_wink.png" style="width:36px;height:36px;flex-shrink:0;" onerror="this.src='/jene_wink.png';">
-    <div id="beginnerJeneSpeechBubble" style="background:#fff8ee;border:2px solid var(--brown);border-radius:14px;padding:6px 12px;font-size:0.85rem;color:var(--brown-dark);position:relative;max-width:80%;"></div>
+  <p style="font-size:0.85rem;color:var(--text-muted);" data-ja="自分で自由に駒を動かしながら、ジーンが次の一手のヒントを教えてくれるよ。あるオープニングの形になったら、それも教えてくれる!" data-en="Move freely and Jene will suggest a next move — and tell you when your moves match a known opening!">自分で自由に駒を動かしながら、ジーンが次の一手のヒントを教えてくれるよ。あるオープニングの形になったら、それも教えてくれる!</p>
+  <div id="beginnerColorPanel">
+    <button id="beginnerWhiteBtn" data-ja="⚪ 白番で始める" data-en="⚪ Play as White">⚪ 白番で始める</button>
+    <button id="beginnerBlackBtn" data-ja="⚫ 黒番で始める" data-en="⚫ Play as Black">⚫ 黒番で始める</button>
   </div>
-  <div id="beginnerBoard" class="chessboard"></div>
-  <div style="text-align:center;margin-top:8px;">
-    <button id="btnBeginnerAnswer" data-ja="🔍 答えを見る" data-en="🔍 Show Answer">🔍 答えを見る</button>
-  </div>
-  <div id="beginnerNextRow" style="display:none;text-align:center;margin-top:8px;">
-    <button id="btnBeginnerNext" data-ja="次の問題へ →" data-en="Next Puzzle →">次の問題へ →</button>
+  <div id="beginnerGameArea" style="display:none;">
+    <p id="beginnerStatusMsg" style="text-align:center;font-weight:700;min-height:1.4em;color:var(--brown-dark);"></p>
+    <div id="beginnerJeneSpeechRow" style="display:none;align-items:center;gap:8px;justify-content:center;margin-bottom:8px;">
+      <img id="beginnerJeneSpeechImg" src="/jene_wink.png" style="width:36px;height:36px;flex-shrink:0;" onerror="this.src='/jene_wink.png';">
+      <div id="beginnerJeneSpeechBubble" style="background:#fff8ee;border:2px solid var(--brown);border-radius:14px;padding:6px 12px;font-size:0.85rem;color:var(--brown-dark);position:relative;max-width:80%;"></div>
+    </div>
+    <div id="beginnerBoard" class="chessboard"></div>
+    <div style="text-align:center;margin-top:8px;">
+      <button id="btnBeginnerNewGame" data-ja="🔄 新しく始める" data-en="🔄 New Game">🔄 新しく始める</button>
+    </div>
   </div>
 </details>
 
@@ -1024,6 +1027,79 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     aiBoardPly = null;
     renderAiBoard();
   };
+
+  const END_REASON_LABEL = {
+    checkmate: { ja: 'チェックメイト', en: 'Checkmate' },
+    resign: { ja: '相手の投了', en: 'Opponent resigned' },
+    timeout: { ja: '時間切れ', en: 'Timeout' },
+    draw_agreed: { ja: '合意ドロー', en: 'Draw agreed' },
+    stalemate: { ja: 'ステイルメイト', en: 'Stalemate' },
+    threefold_repetition: { ja: '同一局面3回', en: 'Threefold repetition' },
+    insufficient_material: { ja: '駒不足', en: 'Insufficient material' },
+    fifty_move: { ja: '50手ルール', en: 'Fifty-move rule' },
+    unknown: { ja: 'その他', en: 'Other' }
+  };
+  const END_REASON_COLOR = {
+    checkmate: '#e63946', resign: '#f4a259', timeout: '#f7d060', draw_agreed: '#8ecae6',
+    stalemate: '#a3692d', threefold_repetition: '#4caf50', insufficient_material: '#9575cd', fifty_move: '#78909c', unknown: '#666'
+  };
+
+  function renderInsightsHtml(historyData, period, isJa) {
+    const now = Date.now();
+    const cutoff = period === 'week' ? now - 7 * 24 * 60 * 60 * 1000
+      : period === 'month' ? now - 30 * 24 * 60 * 60 * 1000
+      : 0;
+    const all = Object.values(historyData || {}).filter((h) => h.endedAt >= cutoff);
+    const total = all.length;
+    if (total === 0) {
+      return '<p style="color:#888;font-size:0.85rem;">' + (isJa ? 'この期間の対局記録がありません。' : 'No games in this period.') + '</p>';
+    }
+    const wins = all.filter((h) => h.result === 'win');
+    const losses = all.filter((h) => h.result === 'loss');
+    const draws = all.filter((h) => h.result === 'draw');
+    const winPct = Math.round((wins.length / total) * 100);
+    const lossPct = Math.round((losses.length / total) * 100);
+    const drawPct = 100 - winPct - lossPct;
+    const withRating = all.filter((h) => typeof h.opponentRating === 'number');
+    const avgOppRating = withRating.length
+      ? Math.round(withRating.reduce((sum, h) => sum + h.opponentRating, 0) / withRating.length)
+      : null;
+
+    // 勝ちの理由の内訳(円グラフ)
+    const reasonCounts = {};
+    wins.forEach((h) => {
+      const r = h.endReason || 'unknown';
+      reasonCounts[r] = (reasonCounts[r] || 0) + 1;
+    });
+    let pieHtml = '';
+    let legendHtml = '';
+    if (wins.length > 0) {
+      let acc = 0;
+      const stops = [];
+      Object.keys(reasonCounts).forEach((r) => {
+        const count = reasonCounts[r];
+        const pct = (count / wins.length) * 100;
+        const color = END_REASON_COLOR[r] || '#666';
+        stops.push(color + ' ' + acc + '% ' + (acc + pct) + '%');
+        acc += pct;
+        const label = (END_REASON_LABEL[r] || END_REASON_LABEL.unknown)[isJa ? 'ja' : 'en'];
+        legendHtml += '<div style="display:flex;align-items:center;gap:6px;font-size:0.8rem;margin-top:3px;">'
+          + '<span style="width:10px;height:10px;border-radius:50%;background:' + color + ';display:inline-block;flex-shrink:0;"></span>'
+          + '<span>' + label + ': ' + count + (isJa ? '勝' : ' win' + (count > 1 ? 's' : '')) + '</span></div>';
+      });
+      pieHtml = '<div style="width:90px;height:90px;border-radius:50%;background:conic-gradient(' + stops.join(',') + ');flex-shrink:0;"></div>';
+    } else {
+      pieHtml = '<div style="width:90px;height:90px;border-radius:50%;background:#333;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:0.7rem;color:#888;text-align:center;">' + (isJa ? '勝ちなし' : 'No wins') + '</div>';
+    }
+
+    return '<div style="font-size:0.85rem;color:#ccc;margin-bottom:8px;">'
+      + (isJa ? '対局数: ' : 'Games: ') + total + '　'
+      + (isJa ? '勝率: ' : 'Win rate: ') + winPct + '% (' + winPct + '/' + lossPct + '/' + drawPct + (isJa ? ' 勝/敗/分' : ' W/L/D') + ')'
+      + (avgOppRating !== null ? ('　' + (isJa ? '平均相手レート: ' : 'Avg opponent rating: ') + avgOppRating) : '')
+      + '</div>'
+      + '<p style="font-size:0.8rem;color:#888;margin-bottom:6px;">' + (isJa ? '勝ちの理由' : 'How wins were won') + '</p>'
+      + '<div style="display:flex;gap:14px;align-items:center;">' + pieHtml + '<div>' + legendHtml + '</div></div>';
+  }
 
   document.getElementById('profileModalCloseBtn').addEventListener('click', () => {
     document.getElementById('profileModalOverlay').classList.remove('open');
@@ -2597,50 +2673,7 @@ const PIECE_IMG = {
   const K_FACTOR = 32;
   const appliedRatingsFor = new Set();
 
-  async function applyEloIfNeeded(matchId, m, user, myResult) {
-    // myResult: 1 = win, 0.5 = draw, 0 = loss (from my own perspective)
-    const dedupeKey = matchId + '_' + myColor;
-    if (appliedRatingsFor.has(dedupeKey)) return;
-    const flagField = myColor === 'w' ? 'ratingAppliedWhite' : 'ratingAppliedBlack';
-    if (m[flagField]) { appliedRatingsFor.add(dedupeKey); return; }
-    appliedRatingsFor.add(dedupeKey);
-
-    const oppUid = myColor === 'w' ? m.black : m.white;
-    const [myProfileSnap, oppProfileSnap] = await Promise.all([
-      get(ref(db, 'publicProfiles/' + user.uid)),
-      get(ref(db, 'publicProfiles/' + oppUid))
-    ]);
-    const myProfile = myProfileSnap.val() || {};
-    const oppProfile = oppProfileSnap.val() || {};
-    const myRating = myProfile.rating || 1200;
-    const oppRating = oppProfile.rating || 1200;
-
-    const expected = 1 / (1 + Math.pow(10, (oppRating - myRating) / 400));
-    const newRating = Math.round(myRating + K_FACTOR * (myResult - expected));
-
-    const wins = (myProfile.wins || 0) + (myResult === 1 ? 1 : 0);
-    const losses = (myProfile.losses || 0) + (myResult === 0 ? 1 : 0);
-    const draws = (myProfile.draws || 0) + (myResult === 0.5 ? 1 : 0);
-
-    // 相手ごとの対戦成績(head-to-head)も別途記録
-    const vsRecord = myProfile.vsRecord || {};
-    const oppVs = vsRecord[oppUid] || { wins: 0, losses: 0, draws: 0 };
-    const newOppVs = {
-      wins: oppVs.wins + (myResult === 1 ? 1 : 0),
-      losses: oppVs.losses + (myResult === 0 ? 1 : 0),
-      draws: oppVs.draws + (myResult === 0.5 ? 1 : 0)
-    };
-
-    const tc = m.timeControl || 'rapid';
-    const tcStats = myProfile.tcStats || {};
-    const tcEntry = tcStats[tc] || { wins: 0, losses: 0, draws: 0 };
-    const newTcEntry = {
-      wins: tcEntry.wins + (myResult === 1 ? 1 : 0),
-      losses: tcEntry.losses + (myResult === 0 ? 1 : 0),
-      draws: tcEntry.draws + (myResult === 0.5 ? 1 : 0)
-    };
-
-  // 得意なオープニング集計用の簡易判定テーブル(自分だけに見える統計のため、大まかな分類で十分)
+  // 得意なオープニング集計・オープニング判定用の簡易テーブル(大まかな分類で十分)
   const OPENING_TABLE = [
     { san: ['e4', 'e5', 'Nf3', 'Nc6', 'Bb5'], name: { ja: 'ルイ・ロペス', en: 'Ruy Lopez' } },
     { san: ['e4', 'e5', 'Nf3', 'Nc6', 'Bc4'], name: { ja: 'イタリアン・ゲーム', en: 'Italian Game' } },
@@ -2692,6 +2725,48 @@ const PIECE_IMG = {
     return LANG === 'ja' ? best.name.ja : best.name.en;
   }
 
+  async function applyEloIfNeeded(matchId, m, user, myResult, endReason) {
+    // myResult: 1 = win, 0.5 = draw, 0 = loss (from my own perspective)
+    const dedupeKey = matchId + '_' + myColor;
+    if (appliedRatingsFor.has(dedupeKey)) return;
+    const flagField = myColor === 'w' ? 'ratingAppliedWhite' : 'ratingAppliedBlack';
+    if (m[flagField]) { appliedRatingsFor.add(dedupeKey); return; }
+    appliedRatingsFor.add(dedupeKey);
+
+    const oppUid = myColor === 'w' ? m.black : m.white;
+    const [myProfileSnap, oppProfileSnap] = await Promise.all([
+      get(ref(db, 'publicProfiles/' + user.uid)),
+      get(ref(db, 'publicProfiles/' + oppUid))
+    ]);
+    const myProfile = myProfileSnap.val() || {};
+    const oppProfile = oppProfileSnap.val() || {};
+    const myRating = myProfile.rating || 1200;
+    const oppRating = oppProfile.rating || 1200;
+
+    const expected = 1 / (1 + Math.pow(10, (oppRating - myRating) / 400));
+    const newRating = Math.round(myRating + K_FACTOR * (myResult - expected));
+
+    const wins = (myProfile.wins || 0) + (myResult === 1 ? 1 : 0);
+    const losses = (myProfile.losses || 0) + (myResult === 0 ? 1 : 0);
+    const draws = (myProfile.draws || 0) + (myResult === 0.5 ? 1 : 0);
+
+    // 相手ごとの対戦成績(head-to-head)も別途記録
+    const vsRecord = myProfile.vsRecord || {};
+    const oppVs = vsRecord[oppUid] || { wins: 0, losses: 0, draws: 0 };
+    const newOppVs = {
+      wins: oppVs.wins + (myResult === 1 ? 1 : 0),
+      losses: oppVs.losses + (myResult === 0 ? 1 : 0),
+      draws: oppVs.draws + (myResult === 0.5 ? 1 : 0)
+    };
+
+    const tc = m.timeControl || 'rapid';
+    const tcStats = myProfile.tcStats || {};
+    const tcEntry = tcStats[tc] || { wins: 0, losses: 0, draws: 0 };
+    const newTcEntry = {
+      wins: tcEntry.wins + (myResult === 1 ? 1 : 0),
+      losses: tcEntry.losses + (myResult === 0 ? 1 : 0),
+      draws: tcEntry.draws + (myResult === 0.5 ? 1 : 0)
+    };
 
     await update(ref(db, 'publicProfiles/' + user.uid), {
       rating: newRating, wins, losses, draws,
@@ -2708,7 +2783,9 @@ const PIECE_IMG = {
     await set(ref(db, 'matchHistory/' + user.uid + '/' + matchId), {
       opponentUid: oppUid,
       opponentName: oppProfile.username || '?',
+      opponentRating: oppRating,
       result: myResult === 1 ? 'win' : (myResult === 0.5 ? 'draw' : 'loss'),
+      endReason: endReason || 'unknown',
       timeControl: tc,
       endedAt: Date.now()
     });
@@ -3229,7 +3306,7 @@ const PIECE_IMG = {
       statusEl.textContent = wonByTimeout
         ? (LANG === 'ja' ? '時間切れで勝ちました！' : 'You won on time!')
         : (LANG === 'ja' ? '時間切れで負けました。' : 'You lost on time.');
-      applyEloIfNeeded(matchId, m, user, wonByTimeout ? 1 : 0);
+      applyEloIfNeeded(matchId, m, user, wonByTimeout ? 1 : 0, 'timeout');
       applyAnalysisIfNeeded(matchId, m, user, wonByTimeout ? 1 : 0);
       document.getElementById('reportToggleBtn').style.display = 'inline-block';
     } else if (m.status === 'resigned') {
@@ -3237,25 +3314,26 @@ const PIECE_IMG = {
       statusEl.textContent = iWonByResign
         ? (LANG === 'ja' ? '相手が投了しました。あなたの勝ちです！' : 'Your opponent resigned. You won!')
         : (LANG === 'ja' ? '投了しました。負けです。' : 'You resigned. You lost.');
-      applyEloIfNeeded(matchId, m, user, iWonByResign ? 1 : 0);
+      applyEloIfNeeded(matchId, m, user, iWonByResign ? 1 : 0, 'resign');
       applyAnalysisIfNeeded(matchId, m, user, iWonByResign ? 1 : 0);
       document.getElementById('reportToggleBtn').style.display = 'inline-block';
     } else if (m.status === 'draw_agreed') {
       statusEl.textContent = LANG === 'ja' ? '合意によりドローになりました。' : 'Draw agreed by both players.';
-      applyEloIfNeeded(matchId, m, user, 0.5);
-      applyAnalysisIfNeeded(matchId, m, user, 0.5);
-      document.getElementById('reportToggleBtn').style.display = 'inline-block';
-    } else if (gameChess.game_over()) {
+      applyEloIfNeeded(matchId, m, user, 0.5, 'draw_agreed');
       let resultMsg;
       if (gameChess.in_checkmate()) {
         const winnerColor = m.turn === 'w' ? 'b' : 'w';
         const iWon = winnerColor === myColor;
         resultMsg = iWon ? (LANG === 'ja' ? '勝ちました！' : 'You won!') : (LANG === 'ja' ? '負けました。' : 'You lost.');
-        applyEloIfNeeded(matchId, m, user, iWon ? 1 : 0);
+        applyEloIfNeeded(matchId, m, user, iWon ? 1 : 0, 'checkmate');
         applyAnalysisIfNeeded(matchId, m, user, iWon ? 1 : 0);
       } else {
         resultMsg = LANG === 'ja' ? '引き分けです。' : "It's a draw.";
-        applyEloIfNeeded(matchId, m, user, 0.5);
+        const drawReason = gameChess.in_stalemate() ? 'stalemate'
+          : gameChess.in_threefold_repetition() ? 'threefold_repetition'
+          : gameChess.insufficient_material() ? 'insufficient_material'
+          : 'fifty_move';
+        applyEloIfNeeded(matchId, m, user, 0.5, drawReason);
         applyAnalysisIfNeeded(matchId, m, user, 0.5);
       }
       statusEl.textContent = resultMsg;
@@ -4318,8 +4396,7 @@ const PIECE_IMG = {
   startPuzzle(Math.floor(Math.random() * PUZZLES.length));
   // ===== ここまでパズルストリーク =====
 
-  // ===== はじめてモード(単体・ジーンと一緒に) =====
-  // ===== はじめてモード用オープニング一覧(初期配置から並べる) =====
+  // ===== はじめてモード(自由に指しながら、ジーンがヒント&オープニング名を教えてくれる) =====
   const BEGINNER_OPENINGS = [
     { ja: 'イタリアン・ゲーム', en: 'Italian Game', moves: ['e4','e5','Nf3','Nc6','Bc4','Bc5','c3','Nf6','d4'] },
     { ja: 'ルイ・ロペス', en: 'Ruy Lopez', moves: ['e4','e5','Nf3','Nc6','Bb5','a6','Ba4','Nf6','O-O'] },
@@ -4349,61 +4426,70 @@ const PIECE_IMG = {
   ];
 
   const JENE_PHRASES = {
-    ja: [
-      { text: 'ナイス!', img: 'jene_happy.png' },
-      { text: 'その調子!', img: 'jene_excited.png' },
-      { text: 'いいね!', img: 'jene_sparkle.png' },
-      { text: 'ここは相手の{piece}に注目だよ', img: 'jene_normal.png' },
-      { text: '{piece}を動かすとどうなるかな?', img: 'jene_quiz.png' },
-      { text: '相手は何を狙っているか考えてみよう', img: 'jene_confused.png' },
-      { text: 'これは{tactic}の形だね', img: 'jene_sparkle.png' },
-      { text: 'この動き、覚えておくと便利だよ', img: 'jene_normal.png' },
-      { text: 'よく見て!チャンスが近づいてる', img: 'jene_excited.png' },
-      { text: '{piece}の動きに気をつけて', img: 'jene_normal.png' },
-      { text: 'あと少しで決まりそう!', img: 'jene_happy.png' },
-      { text: 'この手順、ゆっくり見ていこう', img: 'jene_welcome.png' }
-    ],
-    en: [
-      { text: 'Nice!', img: 'jene_happy.png' },
-      { text: 'Keep it up!', img: 'jene_excited.png' },
-      { text: 'Great!', img: 'jene_sparkle.png' },
-      { text: 'Watch the {piece} here', img: 'jene_normal.png' },
-      { text: "What happens if the {piece} moves?", img: 'jene_quiz.png' },
-      { text: "Think about what the opponent is planning", img: 'jene_confused.png' },
-      { text: "This looks like a {tactic}!", img: 'jene_sparkle.png' },
-      { text: 'Good move to remember', img: 'jene_normal.png' },
-      { text: "Look closely, something's coming", img: 'jene_excited.png' },
-      { text: 'Keep an eye on the {piece}', img: 'jene_normal.png' },
-      { text: 'Almost there!', img: 'jene_happy.png' },
-      { text: "Let's follow this step by step", img: 'jene_welcome.png' }
-    ]
+    ja: {
+      center: [
+        { text: '中央にコマを進めると、盤面を広く使えるようになるよ!', img: 'jene_happy.png' },
+        { text: 'その場所は盤の中心。強いポジションだね!', img: 'jene_sparkle.png' }
+      ],
+      develop: [
+        { text: 'まだ動いていないコマを表に出すと、動ける場所が増えるよ!', img: 'jene_excited.png' },
+        { text: 'コマを展開すると、後の攻めや守りがしやすくなるよ。', img: 'jene_normal.png' }
+      ],
+      castle: [
+        { text: 'キャスリングでキングを安全な場所へ!', img: 'jene_happy.png' },
+        { text: 'キングを囲って守りを固めよう。', img: 'jene_normal.png' }
+      ],
+      capture: [
+        { text: 'そこのコマ、取れそうだよ!', img: 'jene_sparkle.png' },
+        { text: '相手のコマを取れるチャンスかも?', img: 'jene_quiz.png' }
+      ],
+      generic: [
+        { text: 'この一手、どうかな?', img: 'jene_quiz.png' },
+        { text: 'こんな感じの手もありだよ!', img: 'jene_normal.png' }
+      ]
+    },
+    en: {
+      center: [
+        { text: 'Moving to the center gives you more control of the board!', img: 'jene_happy.png' },
+        { text: "That's a central square — strong spot!", img: 'jene_sparkle.png' }
+      ],
+      develop: [
+        { text: 'Bringing out a piece that hasn\u2019t moved yet gives you more options!', img: 'jene_excited.png' },
+        { text: 'Developing pieces makes it easier to attack or defend later.', img: 'jene_normal.png' }
+      ],
+      castle: [
+        { text: 'Castling tucks your king somewhere safe!', img: 'jene_happy.png' },
+        { text: "Let's get that king safe and sound.", img: 'jene_normal.png' }
+      ],
+      capture: [
+        { text: 'Looks like you could capture something there!', img: 'jene_sparkle.png' },
+        { text: 'A chance to win a piece, maybe?', img: 'jene_quiz.png' }
+      ],
+      generic: [
+        { text: 'How about this move?', img: 'jene_quiz.png' },
+        { text: 'This could be a good idea!', img: 'jene_normal.png' }
+      ]
+    }
   };
   const PIECE_NAME = {
     ja: { N: 'ナイト', B: 'ビショップ', R: 'ルーク', Q: 'クイーン', K: 'キング', P: 'ポーン' },
     en: { N: 'Knight', B: 'Bishop', R: 'Rook', Q: 'Queen', K: 'King', P: 'Pawn' }
   };
-  const TACTIC_NAME = { ja: ['フォーク', 'ピン', '串刺し', '両取り', '見えないチェック'], en: ['fork', 'pin', 'skewer', 'double attack', 'discovered check'] };
 
   function pieceLetterFromSAN(san) {
     const m = san.match(/^[NBRQK]/);
     return m ? m[0] : 'P';
   }
 
-  function showBeginnerJeneSpeech(san) {
+  function showBeginnerJeneSpeech(reasonKey, san) {
     const row = document.getElementById('beginnerJeneSpeechRow');
     const bubble = document.getElementById('beginnerJeneSpeechBubble');
     const img = document.getElementById('beginnerJeneSpeechImg');
     if (!row || !bubble) return;
     const isJa = LANG === 'ja';
-    const phrases = JENE_PHRASES[isJa ? 'ja' : 'en'];
-    const entry = phrases[Math.floor(Math.random() * phrases.length)];
-    let text = entry.text;
-    const pieceLetter = pieceLetterFromSAN(san);
-    const pieceName = PIECE_NAME[isJa ? 'ja' : 'en'][pieceLetter];
-    const tacticList = TACTIC_NAME[isJa ? 'ja' : 'en'];
-    const tacticName = tacticList[Math.floor(Math.random() * tacticList.length)];
-    text = text.replace('{piece}', pieceName).replace('{tactic}', tacticName);
-    bubble.textContent = text;
+    const bank = JENE_PHRASES[isJa ? 'ja' : 'en'][reasonKey] || JENE_PHRASES[isJa ? 'ja' : 'en'].generic;
+    const entry = bank[Math.floor(Math.random() * bank.length)];
+    bubble.textContent = entry.text;
     if (img) img.src = '/' + entry.img;
     row.style.display = 'flex';
   }
@@ -4414,13 +4500,11 @@ const PIECE_IMG = {
 
   let beginnerChess = null;
   let beginnerState = {
-    index: 0, moveIndex: 0, selected: null, validTargets: [],
-    lastFrom: null, lastTo: null, animating: false, awaitingNext: false,
-    retryUsed: false, autoPlaying: false
+    myColor: 'w', selected: null, validTargets: [],
+    lastFrom: null, lastTo: null, animating: false,
+    hintFrom: null, hintTo: null, lastDetectedOpening: null
   };
 
-  function currentBeginnerPuzzle() { return BEGINNER_OPENINGS[beginnerState.index]; }
-  function expectedBeginnerSAN() { return currentBeginnerPuzzle().moves[beginnerState.moveIndex]; }
   function getBeginnerCellEl(sq) { return document.querySelector('#beginnerBoard .sq[data-sq="' + sq + '"]'); }
 
   function setBeginnerStatus(msg, cls) {
@@ -4436,25 +4520,29 @@ const PIECE_IMG = {
     board.innerHTML = '';
     const files = ['a','b','c','d','e','f','g','h'];
     const ranks = [8,7,6,5,4,3,2,1];
-    for (let row = 0; row < 8; row++) {
-      for (let col = 0; col < 8; col++) {
+    const rowOrder = beginnerState.myColor === 'b' ? [...Array(8).keys()].reverse() : [...Array(8).keys()];
+    const colOrder = beginnerState.myColor === 'b' ? [...Array(8).keys()].reverse() : [...Array(8).keys()];
+    for (let vr = 0; vr < 8; vr++) {
+      for (let vc = 0; vc < 8; vc++) {
+        const row = rowOrder[vr], col = colOrder[vc];
         const sq = files[col] + ranks[row];
         const cell = document.createElement('div');
         cell.className = 'sq ' + ((col + row) % 2 === 0 ? 'light' : 'dark');
         cell.dataset.sq = sq;
         if (beginnerState.lastFrom === sq || beginnerState.lastTo === sq) cell.classList.add('last-move');
         if (beginnerState.selected === sq) cell.classList.add('selected');
+        if (beginnerState.hintFrom === sq || beginnerState.hintTo === sq) cell.classList.add('beginner-dot');
         const piece = beginnerChess.get(sq);
         if (beginnerState.validTargets && beginnerState.validTargets.includes(sq)) cell.classList.add(piece ? 'hint-capture' : 'hint-move');
-        if (col === 0) { const l = document.createElement('span'); l.className = 'sq-label rank-label'; l.textContent = ranks[row]; cell.appendChild(l); }
-        if (row === 7) { const l = document.createElement('span'); l.className = 'sq-label file-label'; l.textContent = files[col]; cell.appendChild(l); }
+        if (vc === 0) { const l = document.createElement('span'); l.className = 'sq-label rank-label'; l.textContent = ranks[row]; cell.appendChild(l); }
+        if (vr === 7) { const l = document.createElement('span'); l.className = 'sq-label file-label'; l.textContent = files[col]; cell.appendChild(l); }
         if (piece) {
           const img = document.createElement('img');
           img.src = PIECE_IMG[piece.color + piece.type.toUpperCase()];
           img.style.width = '100%'; img.style.height = '100%'; img.style.pointerEvents = 'none';
           cell.appendChild(img);
         }
-        cell.onclick = (beginnerState.animating || beginnerState.awaitingNext || beginnerState.autoPlaying) ? null : () => onBeginnerCellClick(sq);
+        cell.onclick = beginnerState.animating ? null : () => onBeginnerCellClick(sq);
         board.appendChild(cell);
       }
     }
@@ -4489,88 +4577,168 @@ const PIECE_IMG = {
     setTimeout(() => { clone.remove(); callback(); }, 340);
   }
 
-  function startBeginnerPuzzle(idx) {
-    beginnerState.index = ((idx % BEGINNER_OPENINGS.length) + BEGINNER_OPENINGS.length) % BEGINNER_OPENINGS.length;
-    beginnerState.moveIndex = 0;
-    beginnerState.selected = null; beginnerState.validTargets = [];
-    beginnerState.lastFrom = null; beginnerState.lastTo = null;
-    beginnerState.animating = false; beginnerState.awaitingNext = false;
-    beginnerState.retryUsed = false; beginnerState.autoPlaying = false;
-    hideBeginnerJeneSpeech();
-    const p = currentBeginnerPuzzle();
-    beginnerChess = new Chess();
-    const nextRow = document.getElementById('beginnerNextRow');
-    if (nextRow) nextRow.style.display = 'none';
-    const ansBtn = document.getElementById('btnBeginnerAnswer');
-    if (ansBtn) ansBtn.style.display = '';
-    renderBeginnerBoard();
-    const openingName = LANG === 'ja' ? p.ja : p.en;
-    setBeginnerStatus(LANG === 'ja' ? openingName + 'を練習しよう!' : "Let's practice the " + openingName + '!');
-    runBeginnerGuidedSteps();
+  // ===== 基本原則ベースのヒント計算(超初心者向けの簡単な理由づけ) =====
+  const CENTER_SQUARES = ['d4','d5','e4','e5'];
+  const PIECE_VALUE = { p: 1, n: 3, b: 3, r: 5, q: 9, k: 0 };
+
+  function computeBeginnerHint(chess) {
+    const legal = chess.moves({ verbose: true });
+    if (!legal.length) return null;
+    let best = null;
+    let bestScore = -Infinity;
+    legal.forEach((mv) => {
+      let score = 0;
+      let reason = 'generic';
+      const movedPiece = chess.get(mv.from);
+      const isCapture = !!mv.captured;
+      if (isCapture) {
+        const capturedValue = PIECE_VALUE[mv.captured] || 0;
+        const movingValue = movedPiece ? (PIECE_VALUE[movedPiece.type] || 0) : 0;
+        score += 3 + (capturedValue - movingValue);
+        reason = 'capture';
+      }
+      if (CENTER_SQUARES.includes(mv.to)) {
+        score += 2.5;
+        if (!isCapture) reason = 'center';
+      }
+      if (movedPiece && (movedPiece.type === 'n' || movedPiece.type === 'b')) {
+        const homeRank = movedPiece.color === 'w' ? '1' : '8';
+        if (mv.from[1] === homeRank) {
+          score += 2;
+          if (!isCapture && !CENTER_SQUARES.includes(mv.to)) reason = 'develop';
+        }
+      }
+      if (mv.san.startsWith('O-O')) {
+        score += 3.5;
+        reason = 'castle';
+      }
+      if (movedPiece && movedPiece.type === 'q') {
+        score -= 1.5; // 超初心者向け:序盤のクイーンの早出しは避ける方向に
+      }
+      score += Math.random() * 0.5; // 同点の時に毎回同じ手にならないよう少しゆらぎを持たせる
+      if (score > bestScore) { bestScore = score; best = { ...mv, reason }; }
+    });
+    return best;
   }
 
-  // 最後の1手以外を自動でジーンが指し進める
-  function runBeginnerGuidedSteps() {
-    const p = currentBeginnerPuzzle();
-    if (p.moves.length <= 1 || beginnerState.moveIndex >= p.moves.length - 1) {
-      beginnerState.autoPlaying = false;
+  function showBeginnerHint() {
+    if (beginnerChess.turn() !== beginnerState.myColor || beginnerChess.game_over()) {
+      beginnerState.hintFrom = null; beginnerState.hintTo = null;
       hideBeginnerJeneSpeech();
-      setBeginnerStatus(LANG === 'ja' ? 'ここまでは覚えたね!最後の1手は自分で指してみよう。' : "You've got it so far — find the last move yourself!");
       return;
     }
-    beginnerState.autoPlaying = true;
-    const san = p.moves[beginnerState.moveIndex];
-    setTimeout(() => {
-      const legalNow = beginnerChess.moves({ verbose: true });
-      const mv = legalNow.find(m => m.san === san);
-      if (!mv) { beginnerState.autoPlaying = false; return; }
-      const fromCell = getBeginnerCellEl(mv.from);
-      const toCell = getBeginnerCellEl(mv.to);
-      if (fromCell) fromCell.classList.add('beginner-dot');
-      if (toCell) toCell.classList.add('beginner-dot');
-      showBeginnerJeneSpeech(san);
+    const hint = computeBeginnerHint(beginnerChess);
+    if (!hint) { beginnerState.hintFrom = null; beginnerState.hintTo = null; return; }
+    beginnerState.hintFrom = hint.from;
+    beginnerState.hintTo = hint.to;
+    showBeginnerJeneSpeech(hint.reason, hint.san);
+  }
+
+  // ===== ジーン(AI)の一手:オープニングデータに沿う手があればそれを優先、なければ通常のAIロジック =====
+  function pickBeginnerAiMove(chess) {
+    const historySan = chess.history();
+    let bookMove = null;
+    for (const opening of BEGINNER_OPENINGS) {
+      if (opening.moves.length <= historySan.length) continue;
+      const matches = historySan.every((s, i) => opening.moves[i] === s);
+      if (matches) { bookMove = opening.moves[historySan.length]; break; }
+    }
+    if (bookMove) {
+      const legal = chess.moves({ verbose: true });
+      const mv = legal.find((m) => m.san === bookMove);
+      if (mv) return mv;
+    }
+    return aiPickMove(chess, 'medium');
+  }
+
+  function checkOpeningRecognition() {
+    const name = detectOpening(beginnerChess.history({ verbose: true }));
+    if (name && name !== beginnerState.lastDetectedOpening) {
+      beginnerState.lastDetectedOpening = name;
+      const isJa = LANG === 'ja';
       setTimeout(() => {
-        beginnerChess.move(san);
+        showBeginnerJeneSpeech('generic', '');
+        const bubble = document.getElementById('beginnerJeneSpeechBubble');
+        const img = document.getElementById('beginnerJeneSpeechImg');
+        if (bubble) bubble.textContent = isJa ? 'これは「' + name + '」の形だね!' : "This is the " + name + '!';
+        if (img) img.src = '/jene_sparkle.png';
+      }, 400);
+    }
+  }
+
+  function afterBeginnerMove() {
+    checkOpeningRecognition();
+    if (beginnerChess.in_checkmate()) {
+      playCheckmateSound();
+      const iWon = beginnerChess.turn() !== beginnerState.myColor;
+      beginnerState.hintFrom = null; beginnerState.hintTo = null;
+      renderBeginnerBoard();
+      setBeginnerStatus(iWon ? (LANG === 'ja' ? 'チェックメイト!あなたの勝ちです🎉' : 'Checkmate! You win! 🎉') : (LANG === 'ja' ? 'チェックメイトされました。' : 'Checkmate — you lost.'), iWon ? 'good' : 'bad');
+      hideBeginnerJeneSpeech();
+      return;
+    }
+    if (beginnerChess.in_draw() || beginnerChess.in_stalemate() || beginnerChess.in_threefold_repetition()) {
+      beginnerState.hintFrom = null; beginnerState.hintTo = null;
+      renderBeginnerBoard();
+      setBeginnerStatus(LANG === 'ja' ? '引き分けです。' : "It's a draw.");
+      hideBeginnerJeneSpeech();
+      return;
+    }
+    if (beginnerChess.in_check()) playCheckSound();
+
+    if (beginnerChess.turn() === beginnerState.myColor) {
+      showBeginnerHint();
+      renderBeginnerBoard();
+      setBeginnerStatus(LANG === 'ja' ? 'あなたの番です!' : 'Your move!');
+    } else {
+      beginnerState.hintFrom = null; beginnerState.hintTo = null;
+      renderBeginnerBoard();
+      setBeginnerStatus(LANG === 'ja' ? 'ジーンが考え中…' : 'Jene is thinking…');
+      hideBeginnerJeneSpeech();
+      setTimeout(() => {
+        const aiMove = pickBeginnerAiMove(beginnerChess);
+        if (!aiMove) return;
+        const before = beginnerChess.fen();
+        beginnerChess.move(aiMove.san);
         beginnerState.animating = true;
-        animateBeginnerMove(mv.from, mv.to, () => {
-          beginnerState.lastFrom = mv.from; beginnerState.lastTo = mv.to;
-          beginnerState.moveIndex++;
+        if (aiMove.san.startsWith('O-O')) playCastleSound();
+        animateBeginnerMove(aiMove.from, aiMove.to, () => {
+          beginnerState.lastFrom = aiMove.from; beginnerState.lastTo = aiMove.to;
           beginnerState.animating = false;
-          renderBeginnerBoard();
-          runBeginnerGuidedSteps();
+          afterBeginnerMove();
         });
-      }, 900);
-    }, 500);
+      }, 600);
+    }
   }
 
   function onBeginnerCellClick(sq) {
-    if (beginnerState.animating || beginnerState.awaitingNext || beginnerState.autoPlaying) return;
+    if (beginnerState.animating || beginnerChess.turn() !== beginnerState.myColor || beginnerChess.game_over()) return;
     const piece = beginnerChess.get(sq);
-    const turn = beginnerChess.turn();
     if (beginnerState.selected) {
       if (beginnerState.validTargets.includes(sq)) {
         const fromSq = beginnerState.selected;
         const result = beginnerChess.move({ from: fromSq, to: sq, promotion: 'q' });
-        if (result && result.san === expectedBeginnerSAN()) {
-          beginnerState.animating = true;
+        if (result) {
           beginnerState.selected = null; beginnerState.validTargets = [];
+          beginnerState.hintFrom = null; beginnerState.hintTo = null;
+          hideBeginnerJeneSpeech();
+          beginnerState.animating = true;
           renderBeginnerBoard();
+          if (result.san.startsWith('O-O')) playCastleSound(); else playMoveSound();
           animateBeginnerMove(fromSq, sq, () => {
             beginnerState.lastFrom = result.from; beginnerState.lastTo = result.to;
-            beginnerState.moveIndex++;
             beginnerState.animating = false;
-            renderBeginnerBoard();
-            onBeginnerSolved();
+            afterBeginnerMove();
           });
-        } else {
-          if (result) beginnerChess.undo();
-          doBeginnerWrong(sq);
         }
-      } else if (piece && piece.color === turn) {
+      } else if (piece && piece.color === beginnerChess.turn()) {
         selectBeginnerPiece(sq);
-      } else { doBeginnerWrong(sq); }
+      } else {
+        beginnerState.selected = null; beginnerState.validTargets = [];
+        renderBeginnerBoard();
+      }
     } else {
-      if (!piece || piece.color !== turn) return;
+      if (!piece || piece.color !== beginnerChess.turn()) return;
       selectBeginnerPiece(sq);
     }
   }
@@ -4578,57 +4746,29 @@ const PIECE_IMG = {
   function selectBeginnerPiece(sq) {
     beginnerState.selected = sq;
     const legal = beginnerChess.moves({ square: sq, verbose: true });
-    beginnerState.validTargets = legal.map(m => m.to);
+    beginnerState.validTargets = legal.map((m) => m.to);
     renderBeginnerBoard();
   }
 
-  function onBeginnerSolved() {
-    const p = currentBeginnerPuzzle();
-    const openingName = LANG === 'ja' ? p.ja : p.en;
-    setBeginnerStatus(LANG === 'ja' ? openingName + 'をマスターしたよ!🎉' : 'You mastered the ' + openingName + '! 🎉', 'good');
-    playPuzzleCorrect();
-    setTimeout(() => { startBeginnerPuzzle(beginnerState.index + 1); }, 1200);
+  function startBeginnerGame(color) {
+    beginnerState = {
+      myColor: color, selected: null, validTargets: [],
+      lastFrom: null, lastTo: null, animating: false,
+      hintFrom: null, hintTo: null, lastDetectedOpening: null
+    };
+    beginnerChess = new Chess();
+    document.getElementById('beginnerColorPanel').style.display = 'none';
+    document.getElementById('beginnerGameArea').style.display = 'block';
+    hideBeginnerJeneSpeech();
+    afterBeginnerMove();
   }
 
-  function doBeginnerWrong(sq) {
-    playPuzzleWrong();
-    beginnerState.selected = null; beginnerState.validTargets = [];
-    const cell = getBeginnerCellEl(sq);
-    if (cell) { cell.classList.add('wrong-flash'); setTimeout(() => cell.classList.remove('wrong-flash'), 400); }
-    renderBeginnerBoard();
-    if (!beginnerState.retryUsed) {
-      beginnerState.retryUsed = true;
-      setBeginnerStatus(LANG === 'ja' ? 'おしい!もう一度考えてみよう。' : 'Close! Try once more.', 'bad');
-    } else {
-      setBeginnerStatus(LANG === 'ja' ? 'もう少し!答えを見てみよう。' : "Let's see the answer.", 'bad');
-      setTimeout(() => showBeginnerAnswer(), 600);
-    }
-  }
-
-  function showBeginnerAnswer() {
-    const p = currentBeginnerPuzzle();
-    const remainingMoves = p.moves.slice(beginnerState.moveIndex);
-    const nextSan = remainingMoves[0];
-    const legalNow = beginnerChess.moves({ verbose: true });
-    const mv = legalNow.find(m => m.san === nextSan);
-    if (mv) {
-      const fromCell = getBeginnerCellEl(mv.from);
-      const toCell = getBeginnerCellEl(mv.to);
-      if (fromCell) fromCell.classList.add('beginner-dot');
-      if (toCell) toCell.classList.add('beginner-dot');
-    }
-    setBeginnerStatus((LANG === 'ja' ? '正解: ' : 'Answer: ') + remainingMoves.join(' '), 'bad');
-    const ansBtn = document.getElementById('btnBeginnerAnswer'); if (ansBtn) ansBtn.style.display = 'none';
-    const nextRow = document.getElementById('beginnerNextRow'); if (nextRow) nextRow.style.display = '';
-    beginnerState.awaitingNext = true;
-  }
-
-  function nextBeginnerPuzzle() { startBeginnerPuzzle(beginnerState.index + 1); }
-
-  document.getElementById('btnBeginnerAnswer').onclick = showBeginnerAnswer;
-  document.getElementById('btnBeginnerNext').onclick = nextBeginnerPuzzle;
-
-  startBeginnerPuzzle(0);
+  document.getElementById('beginnerWhiteBtn').onclick = () => startBeginnerGame('w');
+  document.getElementById('beginnerBlackBtn').onclick = () => startBeginnerGame('b');
+  document.getElementById('btnBeginnerNewGame').onclick = () => {
+    document.getElementById('beginnerGameArea').style.display = 'none';
+    document.getElementById('beginnerColorPanel').style.display = 'block';
+  };
   // ===== ここまではじめてモード =====
 </script>
 <script>
