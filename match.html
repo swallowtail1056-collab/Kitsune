@@ -191,7 +191,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   </div>
   <div id="beginnerGameArea" style="display:none;">
     <p id="beginnerStatusMsg" style="text-align:center;font-weight:700;min-height:1.4em;color:var(--brown-dark);"></p>
-    <div id="beginnerJeneSpeechRow" style="display:none;align-items:center;gap:8px;justify-content:center;margin-bottom:8px;">
+    <div id="beginnerJeneSpeechRow" style="display:flex;visibility:hidden;align-items:center;gap:8px;justify-content:center;margin-bottom:8px;min-height:44px;">
       <img id="beginnerJeneSpeechImg" src="/jene_wink.png" style="width:36px;height:36px;flex-shrink:0;" onerror="this.src='/jene_wink.png';">
       <div id="beginnerJeneSpeechBubble" style="background:#fff8ee;border:2px solid var(--brown);border-radius:14px;padding:6px 12px;font-size:0.85rem;color:var(--brown-dark);position:relative;max-width:80%;"></div>
     </div>
@@ -4427,6 +4427,10 @@ const PIECE_IMG = {
 
   const JENE_PHRASES = {
     ja: {
+      check: [
+        { text: '王手をかけられるよ!相手のキングにプレッシャーをかけよう。', img: 'jene_excited.png' },
+        { text: 'ここで王手!相手は防ぐのに精一杯になるよ。', img: 'jene_sparkle.png' }
+      ],
       center: [
         { text: '中央にコマを進めると、盤面を広く使えるようになるよ!', img: 'jene_happy.png' },
         { text: 'その場所は盤の中心。強いポジションだね!', img: 'jene_sparkle.png' }
@@ -4449,6 +4453,10 @@ const PIECE_IMG = {
       ]
     },
     en: {
+      check: [
+        { text: 'You can put the king in check! Put some pressure on.', img: 'jene_excited.png' },
+        { text: 'Check! Your opponent will have to scramble to defend.', img: 'jene_sparkle.png' }
+      ],
       center: [
         { text: 'Moving to the center gives you more control of the board!', img: 'jene_happy.png' },
         { text: "That's a central square — strong spot!", img: 'jene_sparkle.png' }
@@ -4491,11 +4499,11 @@ const PIECE_IMG = {
     const entry = bank[Math.floor(Math.random() * bank.length)];
     bubble.textContent = entry.text;
     if (img) img.src = '/' + entry.img;
-    row.style.display = 'flex';
+    row.style.visibility = 'visible';
   }
   function hideBeginnerJeneSpeech() {
     const row = document.getElementById('beginnerJeneSpeechRow');
-    if (row) row.style.display = 'none';
+    if (row) row.style.visibility = 'hidden';
   }
 
   let beginnerChess = null;
@@ -4591,9 +4599,10 @@ const PIECE_IMG = {
       let reason = 'generic';
       const movedPiece = chess.get(mv.from);
       const isCapture = !!mv.captured;
+      const movingValue = movedPiece ? (PIECE_VALUE[movedPiece.type] || 0) : 0;
+
       if (isCapture) {
         const capturedValue = PIECE_VALUE[mv.captured] || 0;
-        const movingValue = movedPiece ? (PIECE_VALUE[movedPiece.type] || 0) : 0;
         score += 3 + (capturedValue - movingValue);
         reason = 'capture';
       }
@@ -4615,6 +4624,21 @@ const PIECE_IMG = {
       if (movedPiece && movedPiece.type === 'q') {
         score -= 1.5; // 超初心者向け:序盤のクイーンの早出しは避ける方向に
       }
+
+      // この手を指した後、王手になるか/駒を取り返されて損しないかを実際にシミュレーションして確認
+      chess.move(mv.san);
+      if (chess.in_check()) {
+        score += 3;
+        reason = 'check';
+      }
+      const oppReplies = chess.moves({ verbose: true });
+      const canBeRecaptured = oppReplies.some((r) => r.to === mv.to && r.captured);
+      if (canBeRecaptured) {
+        // 取り返された時に損become(タダ取られ、または損な駒交換)なら大きく減点
+        score -= movingValue * 1.5;
+      }
+      chess.undo();
+
       score += Math.random() * 0.5; // 同点の時に毎回同じ手にならないよう少しゆらぎを持たせる
       if (score > bestScore) { bestScore = score; best = { ...mv, reason }; }
     });
