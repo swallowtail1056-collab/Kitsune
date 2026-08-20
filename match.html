@@ -191,7 +191,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   </div>
   <div id="beginnerGameArea" style="display:none;">
     <p id="beginnerStatusMsg" style="text-align:center;font-weight:700;min-height:1.4em;color:var(--brown-dark);"></p>
-    <div id="beginnerJeneSpeechRow" style="display:flex;visibility:hidden;align-items:center;gap:8px;justify-content:center;margin-bottom:8px;min-height:44px;">
+    <div id="beginnerJeneSpeechRow" style="display:flex;visibility:hidden;align-items:center;gap:8px;justify-content:center;margin-bottom:8px;min-height:70px;">
       <img id="beginnerJeneSpeechImg" src="/jene_wink.png" style="width:36px;height:36px;flex-shrink:0;" onerror="this.src='/jene_wink.png';">
       <div id="beginnerJeneSpeechBubble" style="background:#fff8ee;border:2px solid var(--brown);border-radius:14px;padding:6px 12px;font-size:0.85rem;color:var(--brown-dark);position:relative;max-width:80%;"></div>
     </div>
@@ -4603,21 +4603,16 @@ const PIECE_IMG = {
       const isCapture = !!mv.captured;
       const movingValue = movedPiece ? (PIECE_VALUE[movedPiece.type] || 0) : 0;
 
-      if (isCapture) {
-        const capturedValue = PIECE_VALUE[mv.captured] || 0;
-        score += 3 + (capturedValue - movingValue);
-        reason = 'capture';
-      }
-      if (CENTER_SQUARES.includes(mv.to)) {
-        score += 2.5;
-        if (!isCapture) reason = 'center';
-      }
+      if (isCapture) reason = 'capture';
+      if (CENTER_SQUARES.includes(mv.to) && !isCapture) reason = 'center';
       if (movedPiece && (movedPiece.type === 'n' || movedPiece.type === 'b')) {
         const homeRank = movedPiece.color === 'w' ? '1' : '8';
-        if (mv.from[1] === homeRank) {
-          score += 2;
-          if (!isCapture && !CENTER_SQUARES.includes(mv.to)) reason = 'develop';
-        }
+        if (mv.from[1] === homeRank && !isCapture && !CENTER_SQUARES.includes(mv.to)) reason = 'develop';
+      }
+      if (CENTER_SQUARES.includes(mv.to)) score += 2.5;
+      if (movedPiece && (movedPiece.type === 'n' || movedPiece.type === 'b')) {
+        const homeRank = movedPiece.color === 'w' ? '1' : '8';
+        if (mv.from[1] === homeRank) score += 2;
       }
       if (mv.san.startsWith('O-O')) {
         score += 3.5;
@@ -4627,19 +4622,32 @@ const PIECE_IMG = {
         score -= 1.5; // 超初心者向け:序盤のクイーンの早出しは避ける方向に
       }
 
-      // この手を指した後、王手になるか/駒を取り返されて損しないかを実際にシミュレーションして確認
+      // この手を指した後、実際に王手になるか/相手がどう応じられるかをシミュレーションして確認
       chess.move(mv.san);
-      if (chess.in_check()) {
+      const inCheck = chess.in_check();
+      const oppReplies = chess.moves({ verbose: true });
+      const recapture = oppReplies.find((r) => r.to === mv.to && r.captured);
+      chess.undo();
+
+      if (inCheck) {
         score += 3;
         reason = 'check';
       }
-      const oppReplies = chess.moves({ verbose: true });
-      const canBeRecaptured = oppReplies.some((r) => r.to === mv.to && r.captured);
-      if (canBeRecaptured) {
-        // 取り返された時に損become(タダ取られ、または損な駒交換)なら大きく減点
-        score -= movingValue * 1.5;
+
+      if (isCapture) {
+        const capturedValue = PIECE_VALUE[mv.captured] || 0;
+        if (recapture) {
+          // 取り返される場合は、駒交換の純粋な損得(取った駒 - 取られた駒)で評価する
+          // (取り返される=悪い手、ではなく、差し引きで得か損かを見る)
+          score += (capturedValue - movingValue) * 1.5;
+        } else {
+          // 取り返されないなら、そのまま丸得
+          score += capturedValue * 2 + 2;
+        }
+      } else if (recapture) {
+        // 取ってもいないのに移動先の駒がただで取られてしまう = 何の見返りもなく駒を失う
+        score -= movingValue * 2;
       }
-      chess.undo();
 
       score += Math.random() * 0.5; // 同点の時に毎回同じ手にならないよう少しゆらぎを持たせる
       if (score > bestScore) { bestScore = score; best = { ...mv, reason }; }
@@ -4795,6 +4803,15 @@ const PIECE_IMG = {
     document.getElementById('beginnerGameArea').style.display = 'none';
     document.getElementById('beginnerColorPanel').style.display = 'block';
   };
+
+  // トップページの「初めての方はこちら」リンクから来た時、確実に開いてスクロールする
+  if (window.location.hash === '#beginnerModeBox') {
+    const box = document.getElementById('beginnerModeBox');
+    if (box) {
+      box.open = true;
+      setTimeout(() => box.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
+    }
+  }
   // ===== ここまではじめてモード =====
 </script>
 <script>
