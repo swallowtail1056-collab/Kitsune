@@ -1134,6 +1134,15 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     overlay.classList.add('open');
     body.innerHTML = '<p style="color:#888;">' + (isJa ? '読み込み中...' : 'Loading...') + '</p>';
 
+    try {
+      await openProfileModalInner(user, targetUid, overlay, body, isJa);
+    } catch (e) {
+      console.error('プロフィールの読み込みに失敗:', e);
+      body.innerHTML = '<p style="color:#e57373;">' + (isJa ? '読み込みに失敗しました。もう一度開き直してみてください。' : 'Failed to load. Please try reopening.') + '</p>';
+    }
+  }
+
+  async function openProfileModalInner(user, targetUid, overlay, body, isJa) {
     const [profSnap, historySnap] = await Promise.all([
       get(ref(db, 'publicProfiles/' + targetUid)),
       get(ref(db, 'matchHistory/' + targetUid))
@@ -1148,15 +1157,20 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
     let openingHtml = '';
     if (isOwn) {
-      const openingSnap = await get(ref(db, 'privateStats/' + user.uid + '/openings'));
-      const openingData = openingSnap.val() || {};
-      const openingEntries = Object.entries(openingData).sort((a, b) => b[1] - a[1]).slice(0, 5);
-      if (openingEntries.length) {
-        openingEntries.forEach(([name, count]) => {
-          openingHtml += '<div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid rgba(255,255,255,0.08);font-size:0.85rem;">'
-            + '<span>' + name + '</span><span>' + count + (isJa ? '回' : 'x') + '</span></div>';
-        });
-      } else {
+      try {
+        const openingSnap = await get(ref(db, 'privateStats/' + user.uid + '/openings'));
+        const openingData = openingSnap.val() || {};
+        const openingEntries = Object.entries(openingData).sort((a, b) => b[1] - a[1]).slice(0, 5);
+        if (openingEntries.length) {
+          openingEntries.forEach(([name, count]) => {
+            openingHtml += '<div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid rgba(255,255,255,0.08);font-size:0.85rem;">'
+              + '<span>' + name + '</span><span>' + count + (isJa ? '回' : 'x') + '</span></div>';
+          });
+        } else {
+          openingHtml = '<p style="color:#888;font-size:0.85rem;">' + (isJa ? 'まだ記録がありません。' : 'No data yet.') + '</p>';
+        }
+      } catch (e) {
+        console.error('得意なオープニングの読み込みに失敗:', e);
         openingHtml = '<p style="color:#888;font-size:0.85rem;">' + (isJa ? 'まだ記録がありません。' : 'No data yet.') + '</p>';
       }
     }
@@ -4682,7 +4696,7 @@ const PIECE_IMG = {
       const mv = legal.find((m) => m.san === bookMove);
       if (mv) return mv;
     }
-    return aiPickMove(chess, 'medium');
+    return aiPickMove(chess, 'hard');
   }
 
   function checkOpeningRecognition() {
