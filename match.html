@@ -4530,6 +4530,7 @@ const PIECE_IMG = {
     const ranks = [8,7,6,5,4,3,2,1];
     const rowOrder = beginnerState.myColor === 'b' ? [...Array(8).keys()].reverse() : [...Array(8).keys()];
     const colOrder = beginnerState.myColor === 'b' ? [...Array(8).keys()].reverse() : [...Array(8).keys()];
+    const checkmateKingSq = beginnerChess.in_checkmate() ? findKingSquare(beginnerChess.board(), beginnerChess.turn()) : null;
     for (let vr = 0; vr < 8; vr++) {
       for (let vc = 0; vc < 8; vc++) {
         const row = rowOrder[vr], col = colOrder[vc];
@@ -4540,6 +4541,7 @@ const PIECE_IMG = {
         if (beginnerState.lastFrom === sq || beginnerState.lastTo === sq) cell.classList.add('last-move');
         if (beginnerState.selected === sq) cell.classList.add('selected');
         if (beginnerState.hintFrom === sq || beginnerState.hintTo === sq) cell.classList.add('beginner-dot');
+        if (checkmateKingSq === sq) cell.classList.add('checkmate-king');
         const piece = beginnerChess.get(sq);
         if (beginnerState.validTargets && beginnerState.validTargets.includes(sq)) cell.classList.add(piece ? 'hint-capture' : 'hint-move');
         if (vc === 0) { const l = document.createElement('span'); l.className = 'sq-label rank-label'; l.textContent = ranks[row]; cell.appendChild(l); }
