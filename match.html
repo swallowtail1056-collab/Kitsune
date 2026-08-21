@@ -118,7 +118,7 @@ img#profilePhoto { border:2px solid var(--brown); border-radius:50%; width:60px;
 }
 .sq.recommend-move { outline:3px solid #2d8a3e; outline-offset:-3px; }
 .sq.hint-move::after { content:''; position:absolute; width:28%; height:28%; border-radius:50%; background:rgba(80,40,0,0.35); pointer-events:none; }
-.sq.beginner-dot::after { content:''; position:absolute; width:22%; height:22%; border-radius:50%; background:rgba(255,193,7,0.55); pointer-events:none; z-index:3; }
+.sq.beginner-dot::after { content:''; position:absolute; width:22%; height:22%; border-radius:50%; background:rgba(200,150,60,0.4); pointer-events:none; z-index:3; }
 .sq.hint-capture::after { content:''; position:absolute; width:100%; height:100%; border-radius:50%; box-sizing:border-box; border:4px solid rgba(80,40,0,0.35); pointer-events:none; }
 .sq.wrong-flash{animation:pzWrongFlash 0.4s ease;}
 @keyframes pzWrongFlash{0%,100%{filter:none;}50%{filter:brightness(0.4) sepia(1) saturate(5);}}
@@ -193,7 +193,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <p id="beginnerStatusMsg" style="text-align:center;font-weight:700;min-height:1.4em;color:var(--brown-dark);"></p>
     <div id="beginnerJeneSpeechRow" style="display:flex;visibility:hidden;align-items:center;gap:8px;justify-content:center;margin-bottom:8px;min-height:70px;">
       <img id="beginnerJeneSpeechImg" src="/jene_wink.png" style="width:36px;height:36px;flex-shrink:0;" onerror="this.src='/jene_wink.png';">
-      <div id="beginnerJeneSpeechBubble" style="background:#fff8ee;border:2px solid var(--brown);border-radius:14px;padding:6px 12px;font-size:0.85rem;color:var(--brown-dark);position:relative;max-width:80%;"></div>
+      <div id="beginnerJeneSpeechBubble" style="background:#fff8ee;border:2px solid var(--brown);border-radius:14px;padding:6px 12px;font-size:0.85rem;color:#4a2a0e;position:relative;max-width:80%;"></div>
     </div>
     <div id="beginnerBoard" class="chessboard"></div>
     <div style="text-align:center;margin-top:8px;">
@@ -279,7 +279,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <div id="profileArea" style="display:none;">
   <div id="lobbyArea">
   <div class="box" id="activeMatchesBox" style="display:none;">
-    <p><strong data-ja="⚔ 進行中の対局" data-en="⚔ Games in Progress">⚔ 進行中の対局</strong></p>
+    <p><strong data-ja="⚔ 進行中の対局" data-en="⚔ Games in Progress">⚔ 進行中の対局</strong> <span id="matchCountBadge" style="font-size:0.8rem;color:var(--text-muted);"></span></p>
     <div id="activeMatchesList" style="display:flex;flex-wrap:nowrap;gap:10px;margin-top:8px;overflow-x:auto;padding-bottom:8px;-webkit-overflow-scrolling:touch;"></div>
   </div>
 
@@ -343,7 +343,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   </div>
 
   <div class="box">
-    <p><strong data-ja="友達一覧" data-en="Friends List">友達一覧</strong></p>
+    <p><strong data-ja="友達一覧" data-en="Friends List">友達一覧</strong> <span id="friendCountBadge" style="font-size:0.8rem;color:var(--text-muted);"></span></p>
     <div id="friendsList" style="display:flex;flex-wrap:nowrap;gap:10px;overflow-x:auto;padding-bottom:8px;-webkit-overflow-scrolling:touch;"></div>
   </div>
 
@@ -812,13 +812,36 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     }, 1600);
   }
 
+  const AI_CENTER_SQUARES = { d4: 1, d5: 1, e4: 1, e5: 1 };
+  const AI_HOME_RANK = { w: '1', b: '8' };
+
   function aiEvaluateBoard(chess) {
     let score = 0;
-    chess.board().forEach(row => row.forEach(sq => {
-      if (!sq) return;
-      const val = AI_PIECE_VAL[sq.type];
-      score += sq.color === 'b' ? val : -val; // AI is black; positive = good for AI
-    }));
+    const board = chess.board();
+    for (let r = 0; r < 8; r++) {
+      for (let c = 0; c < 8; c++) {
+        const sq = board[r][c];
+        if (!sq) continue;
+        const val = AI_PIECE_VAL[sq.type];
+        const sign = sq.color === 'b' ? 1 : -1; // AI is black; positive = good for AI
+        score += sign * val;
+
+        // ちょっとした駒の展開・中央支配・キングの安全ボーナス(材料以外を一切見ないと、
+        // 静かな局面でどの手も同点になり、展開とは無関係な手を繰り返してしまうため)
+        const fileChar = String.fromCharCode(97 + c);
+        const rankChar = (8 - r).toString();
+        const sqName = fileChar + rankChar;
+        if (AI_CENTER_SQUARES[sqName] && (sq.type === 'p' || sq.type === 'n' || sq.type === 'b')) {
+          score += sign * 0.3;
+        }
+        if ((sq.type === 'n' || sq.type === 'b') && rankChar !== AI_HOME_RANK[sq.color]) {
+          score += sign * 0.25; // ナイト・ビショップが初期位置から出ている
+        }
+        if (sq.type === 'k' && rankChar === AI_HOME_RANK[sq.color] && (fileChar === 'g' || fileChar === 'c')) {
+          score += sign * 0.4; // キャスリング後らしき安全な位置
+        }
+      }
+    }
     return score;
   }
 
@@ -1922,6 +1945,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   async function renderFriendsList(user, data) {
     const container = document.getElementById('friendsList');
     container.innerHTML = '';
+    const countBadge = document.getElementById('friendCountBadge');
+    const friendCount = data ? Object.keys(data).length : 0;
+    if (countBadge) countBadge.textContent = '(' + friendCount + (LANG === 'ja' ? '人' : '') + ')';
     if (!data) {
       container.textContent = LANG === 'ja' ? 'まだ友達がいません。' : 'No friends yet.';
       return;
@@ -2055,16 +2081,32 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         }
         tcPanel.style.display = tcPanel.style.display === 'none' ? 'inline-block' : 'none';
       };
+
+      const menuWrap = document.createElement('span');
+      menuWrap.style.cssText = 'position:relative;display:inline-block;';
+      const menuBtn = document.createElement('button');
+      menuBtn.textContent = '⋮';
+      menuBtn.title = LANG === 'ja' ? 'その他の操作' : 'More actions';
+      menuBtn.style.cssText = 'background:transparent;border:1px solid rgba(124,74,30,0.3);color:var(--text-muted);padding:2px 8px;font-size:0.9rem;line-height:1;';
+      const menuDropdown = document.createElement('div');
+      menuDropdown.style.cssText = 'display:none;position:absolute;right:0;top:100%;background:var(--card);border:1px solid rgba(124,74,30,0.3);border-radius:6px;padding:4px;z-index:10;white-space:nowrap;box-shadow:0 2px 8px rgba(0,0,0,0.15);';
       const msgBtn = document.createElement('button');
       msgBtn.textContent = LANG === 'ja' ? '✉️ メッセージ' : '✉️ Message';
-      msgBtn.style.background = '#a3692d';
-      msgBtn.style.fontSize = '0.75rem';
-      msgBtn.style.padding = '4px 10px';
-      msgBtn.onclick = () => openDMModal(user, friendUid, friendName);
+      msgBtn.style.cssText = 'background:transparent;border:none;color:var(--text);font-size:0.75rem;padding:4px 8px;width:100%;text-align:left;';
+      msgBtn.onclick = () => { menuDropdown.style.display = 'none'; openDMModal(user, friendUid, friendName); };
+      menuDropdown.appendChild(msgBtn);
+      menuBtn.onclick = (ev) => {
+        ev.stopPropagation();
+        menuDropdown.style.display = menuDropdown.style.display === 'none' ? 'block' : 'none';
+      };
+      document.addEventListener('click', () => { menuDropdown.style.display = 'none'; });
+      menuWrap.appendChild(menuBtn);
+      menuWrap.appendChild(menuDropdown);
+
       row.appendChild(label);
       row.appendChild(challengeBtn);
       row.appendChild(tcPanel);
-      row.appendChild(msgBtn);
+      row.appendChild(menuWrap);
       container.appendChild(row);
     }
   }
@@ -2504,6 +2546,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     const box = document.getElementById('activeMatchesBox');
     const list = document.getElementById('activeMatchesList');
     const entries = Object.entries(activeMatchSummaries);
+    const countBadge = document.getElementById('matchCountBadge');
+    if (countBadge) countBadge.textContent = entries.length > 0 ? '(' + entries.length + ')' : '';
     if (entries.length === 0) {
       box.style.display = 'none';
       return;
