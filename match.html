@@ -546,6 +546,15 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       renderUserSearchResults();
       renderAnalysis(latestAnalysisData || {}, latestRatingData);
     }
+    if (typeof beginnerChess !== 'undefined' && beginnerChess && !beginnerChess.game_over()) {
+      if (beginnerChess.turn() === beginnerState.myColor) {
+        setBeginnerStatus(LANG === 'ja' ? 'あなたの番です!' : 'Your move!');
+        showBeginnerHint();
+        renderBeginnerBoard();
+      } else {
+        setBeginnerStatus(LANG === 'ja' ? 'ジーンが考え中…' : 'Jene is thinking…');
+      }
+    }
   };
   applyLang();
 
