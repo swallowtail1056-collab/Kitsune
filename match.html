@@ -2085,24 +2085,23 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       const menuWrap = document.createElement('span');
       menuWrap.style.cssText = 'position:relative;display:inline-block;';
       const menuBtn = document.createElement('button');
-      menuBtn.textContent = '⋮';
-      menuBtn.title = LANG === 'ja' ? 'その他の操作' : 'More actions';
+      menuBtn.textContent = '✉️';
+      menuBtn.title = LANG === 'ja' ? 'メッセージ' : 'Message';
       menuBtn.style.cssText = 'background:transparent;border:1px solid rgba(124,74,30,0.3);color:var(--text-muted);padding:2px 8px;font-size:0.9rem;line-height:1;';
-      const menuDropdown = document.createElement('div');
-      menuDropdown.style.cssText = 'display:none;position:absolute;right:0;top:100%;background:var(--card);border:1px solid rgba(124,74,30,0.3);border-radius:6px;padding:4px;z-index:10;white-space:nowrap;box-shadow:0 2px 8px rgba(0,0,0,0.15);';
-      const msgBtn = document.createElement('button');
-      msgBtn.textContent = LANG === 'ja' ? '✉️ メッセージ' : '✉️ Message';
-      msgBtn.style.cssText = 'background:transparent;border:none;color:var(--text);font-size:0.75rem;padding:4px 8px;width:100%;text-align:left;';
-      msgBtn.onclick = () => { menuDropdown.style.display = 'none'; openDMModal(user, friendUid, friendName); };
-      menuDropdown.appendChild(msgBtn);
-      menuBtn.onclick = (ev) => {
-        ev.stopPropagation();
-        menuDropdown.style.display = menuDropdown.style.display === 'none' ? 'block' : 'none';
-      };
-      document.addEventListener('click', () => { menuDropdown.style.display = 'none'; });
+      menuBtn.onclick = () => openDMModal(user, friendUid, friendName);
+      const unreadDot = document.createElement('span');
+      unreadDot.style.cssText = 'display:none;position:absolute;top:-3px;right:-3px;width:10px;height:10px;border-radius:50%;background:#e63946;border:2px solid var(--card);';
       menuWrap.appendChild(menuBtn);
-      menuWrap.appendChild(menuDropdown);
-
+      menuWrap.appendChild(unreadDot);
+      const dmPairKey = pairKey(user.uid, friendUid);
+      onValue(ref(db, 'directMessages/' + dmPairKey), async (dmSnap) => {
+        const dmData = dmSnap.val();
+        if (!dmData) { unreadDot.style.display = 'none'; return; }
+        const readSnap = await get(ref(db, 'dmReadStatus/' + user.uid + '/' + dmPairKey));
+        const lastRead = readSnap.exists() ? readSnap.val() : 0;
+        const hasUnread = Object.values(dmData).some((m) => m.from === friendUid && m.sentAt > lastRead);
+        unreadDot.style.display = hasUnread ? 'block' : 'none';
+      });
       row.appendChild(label);
       row.appendChild(challengeBtn);
       row.appendChild(tcPanel);
@@ -3943,6 +3942,7 @@ const PIECE_IMG = {
     document.getElementById('chatModalSendBtn').textContent = isJa ? '送信' : 'Send';
     document.getElementById('chatModalInput').placeholder = isJa ? 'メッセージを入力...' : 'Type a message...';
     const path = 'directMessages/' + pairKey(user.uid, friendUid);
+    set(ref(db, 'dmReadStatus/' + user.uid + '/' + pairKey(user.uid, friendUid)), Date.now());
     if (matchChatAttached !== path) {
       matchChatAttached = path;
       attachChatModal(path, user);
