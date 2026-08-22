@@ -196,6 +196,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <div id="beginnerJeneSpeechBubble" style="background:#fff8ee;border:2px solid var(--brown);border-radius:14px;padding:6px 12px;font-size:0.85rem;color:#4a2a0e;position:relative;max-width:80%;"></div>
     </div>
     <div id="beginnerBoard" class="chessboard"></div>
+    <div id="beginnerCapturedArea" style="font-size:0.85rem;margin-top:6px;"></div>
     <div style="text-align:center;margin-top:8px;">
       <button id="btnBeginnerNewGame" data-ja="🔄 新しく始める" data-en="🔄 New Game">🔄 新しく始める</button>
     </div>
@@ -4652,6 +4653,23 @@ const PIECE_IMG = {
         cell.onclick = beginnerState.animating ? null : () => onBeginnerCellClick(sq);
         board.appendChild(cell);
       }
+    }
+
+    const capturedEl = document.getElementById('beginnerCapturedArea');
+    if (capturedEl) {
+      const byMe = {}, byJene = {};
+      let myVal = 0, jeneVal = 0;
+      beginnerChess.history({ verbose: true }).forEach((mv) => {
+        if (!mv.captured) return;
+        const val = PIECE_VALUE[mv.captured] || 0;
+        if (mv.color === beginnerState.myColor) { byMe[mv.captured] = (byMe[mv.captured] || 0) + 1; myVal += val; }
+        else { byJene[mv.captured] = (byJene[mv.captured] || 0) + 1; jeneVal += val; }
+      });
+      const diff = myVal - jeneVal;
+      const oppColor = beginnerState.myColor === 'w' ? 'b' : 'w';
+      capturedEl.innerHTML = '';
+      capturedEl.appendChild(buildCapturedRow(LANG === 'ja' ? '自分が取った駒: ' : 'You captured: ', byMe, oppColor, diff > 0 ? diff : 0));
+      capturedEl.appendChild(buildCapturedRow(LANG === 'ja' ? 'ジーンが取った駒: ' : 'Jene captured: ', byJene, beginnerState.myColor, diff < 0 ? -diff : 0));
     }
   }
 
