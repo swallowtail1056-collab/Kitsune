@@ -292,7 +292,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
   <div class="box">
     <p><strong data-ja="現在のプロフィール" data-en="Current Profile">現在のプロフィール</strong></p>
-    <p><span data-ja="メール: " data-en="Email: ">メール: </span><span id="profileEmail"></span></p>
     <p><span data-ja="ユーザー名: " data-en="Username: ">ユーザー名: </span><span id="profileUsername">-</span></p>
     <p><span data-ja="レーティング: " data-en="Rating: ">レーティング: </span><span id="profileRating">1200</span></p>
     <p><span data-ja="先行登録者特典: " data-en="Founding Member: ">先行登録者特典: </span><span id="profileFounder">-</span></p>
@@ -880,6 +879,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         score = oppMoves.length === 0 ? sign * aiEvaluateBoard(chess) : worstForAI;
       }
       chess.undo();
+      score += Math.random() * 0.15; // 同点の手が続く時に同じ手を無限に繰り返さないよう、ごく僅かにゆらぎを持たせる
       if (score > bestScore) { bestScore = score; bestMove = m; }
     });
     return bestMove;
@@ -2085,7 +2085,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       const menuWrap = document.createElement('span');
       menuWrap.style.cssText = 'position:relative;display:inline-block;';
       const menuBtn = document.createElement('button');
-      menuBtn.textContent = '✉️';
+      menuBtn.innerHTML = '<svg width="14" height="11" viewBox="0 0 16 12" style="vertical-align:middle;"><rect x="0.5" y="0.5" width="15" height="11" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.3"/><path d="M1 1.5 L8 7 L15 1.5" fill="none" stroke="currentColor" stroke-width="1.3"/></svg>';
       menuBtn.title = LANG === 'ja' ? 'メッセージ' : 'Message';
       menuBtn.style.cssText = 'background:transparent;border:1px solid rgba(124,74,30,0.3);color:var(--text-muted);padding:2px 8px;font-size:0.9rem;line-height:1;';
       menuBtn.onclick = () => openDMModal(user, friendUid, friendName);
@@ -4055,7 +4055,6 @@ const PIECE_IMG = {
       logoutBtn.style.display = 'inline-block';
       profileArea.style.display = 'block';
 
-      document.getElementById('profileEmail').textContent = user.email;
       document.getElementById('profilePhoto').src = user.photoURL || '';
       setupPresence(user);
       setupPushNotifications(user);
