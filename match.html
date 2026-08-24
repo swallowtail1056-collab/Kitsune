@@ -313,6 +313,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <p><span data-ja="ユーザー名: " data-en="Username: ">ユーザー名: </span><span id="profileUsername">-</span></p>
     <p><span data-ja="レーティング: " data-en="Rating: ">レーティング: </span><span id="profileRating">1200</span></p>
     <p><span data-ja="先行登録者特典: " data-en="Founding Member: ">先行登録者特典: </span><span id="profileFounder">-</span></p>
+    <p style="font-size:0.8rem;"><span data-ja="通知の状態: " data-en="Notification status: ">通知の状態: </span><span id="pushNotifStatus">-</span></p>
     <div style="position:relative;display:inline-block;">
       <img id="profilePhoto" src="" alt="avatar" style="cursor:pointer;">
       <span id="profileOnlineDot" style="position:absolute;bottom:2px;right:2px;width:14px;height:14px;border-radius:50%;background:#2d8a3e;border:2px solid var(--card);"></span>
@@ -521,16 +522,30 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   const FCM_VAPID_KEY = 'BJM_B6Bask0Jwa1MWX3G6bkWvjSdmMUryQkyM_3pjr4zSQ_qnRPM-x3d8B80PQjUXlzbRr6DYR3so4Y00aDRuqY';
 
   async function setupPushNotifications(user) {
+    const statusEl = document.getElementById('pushNotifStatus');
+    const setStatus = (msg, ok) => { if (statusEl) { statusEl.textContent = msg; statusEl.style.color = ok === false ? '#e63946' : (ok === true ? '#4caf50' : ''); } };
     try {
-      if (!('serviceWorker' in navigator) || !('Notification' in window)) return;
+      if (!('serviceWorker' in navigator) || !('Notification' in window)) {
+        setStatus(LANG === 'ja' ? 'このブラウザは通知に対応していません' : 'Not supported in this browser', false);
+        return;
+      }
+      setStatus(LANG === 'ja' ? 'Service Worker登録中...' : 'Registering service worker...');
       // firebase-messaging-sw.js を明示的に登録(match-sw.jsと共存させるため個別登録)
       const swReg = await navigator.serviceWorker.register('/firebase-messaging-sw.js');
+      setStatus(LANG === 'ja' ? '通知の許可を確認中...' : 'Checking notification permission...');
       const permission = await Notification.requestPermission();
-      if (permission !== 'granted') return;
+      if (permission !== 'granted') {
+        setStatus(LANG === 'ja' ? '通知が許可されていません(ブラウザ設定を確認してください)' : 'Notifications not allowed (check browser settings)', false);
+        return;
+      }
       const messaging = getMessaging(app);
+      setStatus(LANG === 'ja' ? 'トークンを取得中...' : 'Getting token...');
       const token = await getToken(messaging, { vapidKey: FCM_VAPID_KEY, serviceWorkerRegistration: swReg });
       if (token) {
         await set(ref(db, 'fcmTokens/' + user.uid), token);
+        setStatus(LANG === 'ja' ? '✅ 有効です(通知が届きます)' : '✅ Active (notifications enabled)', true);
+      } else {
+        setStatus(LANG === 'ja' ? 'トークンの取得に失敗しました' : 'Failed to get token', false);
       }
       // フォアグラウンド(アプリを開いている間)に届いた通知の表示
       onMessage(messaging, (payload) => {
@@ -542,6 +557,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       });
     } catch (e) {
       console.error('プッシュ通知の設定に失敗:', e);
+      setStatus((LANG === 'ja' ? '❌ エラー: ' : '❌ Error: ') + e.message, false);
     }
   }
   const provider = new GoogleAuthProvider();
