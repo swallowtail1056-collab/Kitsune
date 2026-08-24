@@ -2736,7 +2736,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     document.getElementById('gameBox').style.display = 'block';
     document.getElementById('lobbyArea').style.display = 'none';
     startClockTicker(user);
-    let joinFlagSet = false;
     let oppPresenceAttached = false;
     openedMatchUnsub = onValue(ref(db, 'matches/' + matchId), async (matchSnap) => {
       const m = matchSnap.val();
@@ -2763,11 +2762,25 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         });
       }
 
-      if (!joinFlagSet) {
-        joinFlagSet = true;
-        const joinField = myColor === 'w' ? 'whiteJoined' : 'blackJoined';
-        if (!m[joinField]) {
-          await update(ref(db, 'matches/' + matchId), { [joinField]: true });
+      if (m.status === 'waiting') {
+        const myJoinField = myColor === 'w' ? 'whiteJoined' : 'blackJoined';
+        if (!m[myJoinField]) {
+          let readyBtn = document.getElementById('matchReadyBtn');
+          if (!readyBtn) {
+            readyBtn = document.createElement('button');
+            readyBtn.id = 'matchReadyBtn';
+            readyBtn.style.marginTop = '10px';
+            const statusElForBtn = document.getElementById('gameStatus');
+            if (statusElForBtn) statusElForBtn.parentNode.insertBefore(readyBtn, statusElForBtn.nextSibling);
+          }
+          readyBtn.textContent = LANG === 'ja' ? '▶ 対局を始める(準備ができたら押してください)' : '▶ Start Match (press when ready)';
+          readyBtn.onclick = async () => {
+            await update(ref(db, 'matches/' + matchId), { [myJoinField]: true });
+            readyBtn.remove();
+          };
+        } else {
+          const existingReadyBtn = document.getElementById('matchReadyBtn');
+          if (existingReadyBtn) existingReadyBtn.remove();
         }
       }
       if (m.status === 'waiting' && m.whiteJoined && m.blackJoined) {
