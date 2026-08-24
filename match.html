@@ -217,6 +217,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <span id="beginnerHistoryLabel" style="font-size:0.85rem;color:var(--text-muted);margin:0 8px;"></span>
       <button id="beginnerHistoryNextBtn">▶</button>
     </div>
+    <div style="text-align:center;margin-top:10px;border-top:1px solid var(--brown);padding-top:10px;">
+      <button id="beginnerHistoryTryBtn" data-ja="🔀 この局面から試す" data-en="🔀 Try from here">🔀 この局面から試す</button>
+      <button id="beginnerHistoryResetTryBtn" style="display:none;margin-left:6px;" data-ja="↺ やり直す" data-en="↺ Reset">↺ やり直す</button>
+      <button id="beginnerHistoryStopTryBtn" style="display:none;margin-left:6px;" data-ja="✕ 見返すに戻る" data-en="✕ Back to Review">✕ 見返すに戻る</button>
+      <p id="beginnerHistoryTryHint" style="display:none;font-size:0.8rem;color:var(--text-muted);margin:6px 0 0;" data-ja="実際の対局には影響しません。自由に駒を動かして試せます。" data-en="This won't affect your actual game. Move pieces freely to experiment.">実際の対局には影響しません。自由に駒を動かして試せます。</p>
+    </div>
   </div>
 </div>
 
@@ -5121,6 +5127,149 @@ const PIECE_IMG = {
   document.getElementById('btnBeginnerNewGame').onclick = () => {
     document.getElementById('beginnerGameArea').style.display = 'none';
     document.getElementById('beginnerColorPanel').style.display = 'block';
+  };
+
+  // ===== はじめてモード: 「局面を見返す」機能 =====
+  // beginnerChess の指し手履歴から各手番の局面(FEN)を再現し、
+  // ◀/▶ で行き来できるポップアップとして表示する。対局自体には一切影響しない。
+  let beginnerReviewIndex = 0;
+  let beginnerReviewFens = [];
+  let beginnerTryChess = null;       // 「ここから試す」モード中の仮想盤面(本番には影響しない)
+  let beginnerTrySelected = null;
+  let beginnerTryMode = false;
+
+  function openBeginnerHistoryOverlay() {
+    if (!beginnerChess) return;
+    // 初期局面 + 各手を指した後の局面、を全部並べる
+    const tmp = new Chess();
+    beginnerReviewFens = [{ fen: tmp.fen(), san: null }];
+    beginnerChess.history({ verbose: true }).forEach((mv) => {
+      tmp.move(mv.san);
+      beginnerReviewFens.push({ fen: tmp.fen(), san: mv.san });
+    });
+    beginnerReviewIndex = beginnerReviewFens.length - 1; // 最新局面から表示
+    beginnerTryMode = false;
+    beginnerTryChess = null;
+    document.getElementById('beginnerHistoryOverlay').style.display = 'flex';
+    renderBeginnerHistoryBoard();
+  }
+
+  function closeBeginnerHistoryOverlay() {
+    document.getElementById('beginnerHistoryOverlay').style.display = 'none';
+    beginnerTryMode = false;
+    beginnerTryChess = null;
+  }
+
+  function renderBeginnerHistoryBoard() {
+    const board = document.getElementById('beginnerHistoryBoard');
+    const label = document.getElementById('beginnerHistoryLabel');
+    if (!board || !beginnerReviewFens.length) return;
+
+    // 「試すモード」なら仮想盤面(beginnerTryChess)を、そうでなければ履歴の局面を表示する
+    const chess = beginnerTryMode ? beginnerTryChess : new Chess(beginnerReviewFens[beginnerReviewIndex].fen);
+
+    board.innerHTML = '';
+    const files = ['a','b','c','d','e','f','g','h'];
+    const ranks = [8,7,6,5,4,3,2,1];
+    const rowOrder = beginnerState.myColor === 'b' ? [...Array(8).keys()].reverse() : [...Array(8).keys()];
+    const colOrder = beginnerState.myColor === 'b' ? [...Array(8).keys()].reverse() : [...Array(8).keys()];
+
+    let legalTargets = new Set();
+    if (beginnerTryMode && beginnerTrySelected) {
+      const legalMoves = chess.moves({ square: beginnerTrySelected, verbose: true });
+      legalTargets = new Set(legalMoves.map((mv) => mv.to));
+    }
+
+    for (let vr = 0; vr < 8; vr++) {
+      for (let vc = 0; vc < 8; vc++) {
+        const row = rowOrder[vr], col = colOrder[vc];
+        const sq = files[col] + ranks[row];
+        const cell = document.createElement('div');
+        cell.className = 'sq ' + ((col + row) % 2 === 0 ? 'light' : 'dark');
+        if (vc === 0) { const l = document.createElement('span'); l.className = 'sq-label rank-label'; l.textContent = ranks[row]; cell.appendChild(l); }
+        if (vr === 7) { const l = document.createElement('span'); l.className = 'sq-label file-label'; l.textContent = files[col]; cell.appendChild(l); }
+        const piece = chess.get(sq);
+        if (beginnerTryMode) {
+          if (beginnerTrySelected === sq) cell.classList.add('selected');
+          if (legalTargets.has(sq)) cell.classList.add(piece ? 'hint-capture' : 'hint-move');
+          cell.onclick = () => onBeginnerTrySquareClick(sq);
+        }
+        if (piece) {
+          const img = document.createElement('img');
+          img.src = PIECE_IMG[piece.color + piece.type.toUpperCase()];
+          img.style.width = '100%'; img.style.height = '100%'; img.style.pointerEvents = 'none';
+          cell.appendChild(img);
+        }
+        board.appendChild(cell);
+      }
+    }
+
+    if (label) {
+      if (beginnerTryMode) {
+        label.textContent = LANG === 'ja' ? '試している最中(自由に指せます)' : 'Experimenting (free play)';
+      } else {
+        const total = beginnerReviewFens.length - 1;
+        const entry = beginnerReviewFens[beginnerReviewIndex];
+        label.textContent = beginnerReviewIndex === 0
+          ? (LANG === 'ja' ? '開始局面' : 'Start') + ' (0/' + total + ')'
+          : entry.san + ' (' + beginnerReviewIndex + '/' + total + ')';
+      }
+    }
+    document.getElementById('beginnerHistoryPrevBtn').disabled = beginnerTryMode || beginnerReviewIndex === 0;
+    document.getElementById('beginnerHistoryNextBtn').disabled = beginnerTryMode || beginnerReviewIndex === beginnerReviewFens.length - 1;
+  }
+
+  function onBeginnerTrySquareClick(sq) {
+    if (!beginnerTryChess) return;
+    if (!beginnerTrySelected) {
+      const piece = beginnerTryChess.get(sq);
+      if (piece) beginnerTrySelected = sq;
+    } else {
+      const move = beginnerTryChess.move({ from: beginnerTrySelected, to: sq, promotion: 'q' });
+      beginnerTrySelected = null;
+      if (!move) {
+        // 移動できなければ、選び直しとして扱う(別の駒を選び直せるように)
+        const piece = beginnerTryChess.get(sq);
+        if (piece) beginnerTrySelected = sq;
+      }
+    }
+    renderBeginnerHistoryBoard();
+  }
+
+  document.getElementById('btnBeginnerReviewHistory').onclick = openBeginnerHistoryOverlay;
+  document.getElementById('beginnerHistoryCloseBtn').onclick = closeBeginnerHistoryOverlay;
+  document.getElementById('beginnerHistoryOverlay').onclick = (e) => {
+    if (e.target.id === 'beginnerHistoryOverlay') closeBeginnerHistoryOverlay();
+  };
+  document.getElementById('beginnerHistoryPrevBtn').onclick = () => {
+    if (!beginnerTryMode && beginnerReviewIndex > 0) { beginnerReviewIndex--; renderBeginnerHistoryBoard(); }
+  };
+  document.getElementById('beginnerHistoryNextBtn').onclick = () => {
+    if (!beginnerTryMode && beginnerReviewIndex < beginnerReviewFens.length - 1) { beginnerReviewIndex++; renderBeginnerHistoryBoard(); }
+  };
+  document.getElementById('beginnerHistoryTryBtn').onclick = () => {
+    beginnerTryMode = true;
+    beginnerTryChess = new Chess(beginnerReviewFens[beginnerReviewIndex].fen);
+    beginnerTrySelected = null;
+    document.getElementById('beginnerHistoryTryBtn').style.display = 'none';
+    document.getElementById('beginnerHistoryResetTryBtn').style.display = 'inline-block';
+    document.getElementById('beginnerHistoryStopTryBtn').style.display = 'inline-block';
+    document.getElementById('beginnerHistoryTryHint').style.display = 'block';
+    renderBeginnerHistoryBoard();
+  };
+  document.getElementById('beginnerHistoryResetTryBtn').onclick = () => {
+    beginnerTryChess = new Chess(beginnerReviewFens[beginnerReviewIndex].fen);
+    beginnerTrySelected = null;
+    renderBeginnerHistoryBoard();
+  };
+  document.getElementById('beginnerHistoryStopTryBtn').onclick = () => {
+    beginnerTryMode = false;
+    beginnerTryChess = null;
+    document.getElementById('beginnerHistoryTryBtn').style.display = 'inline-block';
+    document.getElementById('beginnerHistoryResetTryBtn').style.display = 'none';
+    document.getElementById('beginnerHistoryStopTryBtn').style.display = 'none';
+    document.getElementById('beginnerHistoryTryHint').style.display = 'none';
+    renderBeginnerHistoryBoard();
   };
 
   // トップページの「初めての方はこちら」リンクから来た時、確実に開いてスクロールする
