@@ -197,6 +197,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     </div>
     <div id="beginnerBoard" class="chessboard"></div>
     <div id="beginnerCapturedArea" style="font-size:0.85rem;margin-top:6px;"></div>
+    <div style="text-align:center;margin-top:6px;">
+      <button id="beginnerQuickPrevBtn" data-ja="◀" data-en="◀">◀</button>
+      <span id="beginnerQuickLabel" style="font-size:0.8rem;color:var(--text-muted);margin:0 6px;" data-ja="局面を移動" data-en="Browse moves">局面を移動</span>
+      <button id="beginnerQuickNextBtn" data-ja="▶" data-en="▶">▶</button>
+    </div>
     <div style="text-align:center;margin-top:8px;">
       <button id="btnBeginnerNewGame" data-ja="🔄 新しく始める" data-en="🔄 New Game">🔄 新しく始める</button>
       <button id="btnBeginnerReviewHistory" data-ja="📜 局面を見返す" data-en="📜 Review Position" style="margin-left:8px;">📜 局面を見返す</button>
@@ -218,7 +223,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <button id="beginnerHistoryNextBtn">▶</button>
     </div>
     <div style="text-align:center;margin-top:10px;border-top:1px solid var(--brown);padding-top:10px;">
-      <button id="beginnerHistoryTryBtn" data-ja="🔀 この局面から試す" data-en="🔀 Try from here">🔀 この局面から試す</button>
+      <button id="beginnerHistoryTryBtn" data-ja="🔮 先を読む" data-en="🔮 Look Ahead">🔮 先を読む</button>
       <button id="beginnerHistoryResetTryBtn" style="display:none;margin-left:6px;" data-ja="↺ やり直す" data-en="↺ Reset">↺ やり直す</button>
       <button id="beginnerHistoryStopTryBtn" style="display:none;margin-left:6px;" data-ja="✕ 見返すに戻る" data-en="✕ Back to Review">✕ 見返すに戻る</button>
       <p id="beginnerHistoryTryHint" style="display:none;font-size:0.8rem;color:var(--text-muted);margin:6px 0 0;" data-ja="実際の対局には影響しません。自由に駒を動かして試せます。" data-en="This won't affect your actual game. Move pieces freely to experiment.">実際の対局には影響しません。自由に駒を動かして試せます。</p>
@@ -4732,6 +4737,32 @@ const PIECE_IMG = {
     el.style.color = cls === 'bad' ? 'var(--status-bad)' : (cls === 'good' ? 'var(--status-good)' : 'var(--brown-dark)');
   }
 
+  let beginnerQuickViewIndex = null; // null = 現在の(実際の)局面を表示中。数値なら過去の局面を閲覧中(見るだけ、操作不可)
+
+  function computeBeginnerFens() {
+    const tmp = new Chess();
+    const fens = [{ fen: tmp.fen(), san: null }];
+    beginnerChess.history({ verbose: true }).forEach((mv) => {
+      tmp.move(mv.san);
+      fens.push({ fen: tmp.fen(), san: mv.san });
+    });
+    return fens;
+  }
+
+  function updateBeginnerQuickLabel(fens) {
+    const label = document.getElementById('beginnerQuickLabel');
+    if (!label) return;
+    if (beginnerQuickViewIndex === null) {
+      label.textContent = LANG === 'ja' ? '局面を移動' : 'Browse moves';
+    } else {
+      const entry = fens[beginnerQuickViewIndex];
+      const total = fens.length - 1;
+      label.textContent = beginnerQuickViewIndex === 0
+        ? (LANG === 'ja' ? '開始局面' : 'Start') + ' (0/' + total + ')'
+        : entry.san + ' (' + beginnerQuickViewIndex + '/' + total + ')';
+    }
+  }
+
   function renderBeginnerBoard() {
     const board = document.getElementById('beginnerBoard');
     if (!board) return;
@@ -4740,7 +4771,10 @@ const PIECE_IMG = {
     const ranks = [8,7,6,5,4,3,2,1];
     const rowOrder = beginnerState.myColor === 'b' ? [...Array(8).keys()].reverse() : [...Array(8).keys()];
     const colOrder = beginnerState.myColor === 'b' ? [...Array(8).keys()].reverse() : [...Array(8).keys()];
-    const checkmateKingSq = beginnerChess.in_checkmate() ? findKingSquare(beginnerChess.board(), beginnerChess.turn()) : null;
+    // 過去の局面を閲覧中は、そのFENから作った見るだけの盤面を表示する(本当の対局状態=beginnerChessには一切触れない)
+    const viewingPast = beginnerQuickViewIndex !== null;
+    const chess = viewingPast ? new Chess(computeBeginnerFens()[beginnerQuickViewIndex].fen) : beginnerChess;
+    const checkmateKingSq = (!viewingPast && chess.in_checkmate()) ? findKingSquare(chess.board(), chess.turn()) : null;
     for (let vr = 0; vr < 8; vr++) {
       for (let vc = 0; vc < 8; vc++) {
         const row = rowOrder[vr], col = colOrder[vc];
@@ -4748,12 +4782,14 @@ const PIECE_IMG = {
         const cell = document.createElement('div');
         cell.className = 'sq ' + ((col + row) % 2 === 0 ? 'light' : 'dark');
         cell.dataset.sq = sq;
-        if (beginnerState.lastFrom === sq || beginnerState.lastTo === sq) cell.classList.add('last-move');
-        if (beginnerState.selected === sq) cell.classList.add('selected');
-        if (beginnerState.hintFrom === sq || beginnerState.hintTo === sq) cell.classList.add('beginner-dot');
+        if (!viewingPast) {
+          if (beginnerState.lastFrom === sq || beginnerState.lastTo === sq) cell.classList.add('last-move');
+          if (beginnerState.selected === sq) cell.classList.add('selected');
+          if (beginnerState.hintFrom === sq || beginnerState.hintTo === sq) cell.classList.add('beginner-dot');
+        }
         if (checkmateKingSq === sq) cell.classList.add('checkmate-king');
-        const piece = beginnerChess.get(sq);
-        if (beginnerState.validTargets && beginnerState.validTargets.includes(sq)) cell.classList.add(piece ? 'hint-capture' : 'hint-move');
+        const piece = chess.get(sq);
+        if (!viewingPast && beginnerState.validTargets && beginnerState.validTargets.includes(sq)) cell.classList.add(piece ? 'hint-capture' : 'hint-move');
         if (vc === 0) { const l = document.createElement('span'); l.className = 'sq-label rank-label'; l.textContent = ranks[row]; cell.appendChild(l); }
         if (vr === 7) { const l = document.createElement('span'); l.className = 'sq-label file-label'; l.textContent = files[col]; cell.appendChild(l); }
         if (piece) {
@@ -4762,7 +4798,7 @@ const PIECE_IMG = {
           img.style.width = '100%'; img.style.height = '100%'; img.style.pointerEvents = 'none';
           cell.appendChild(img);
         }
-        cell.onclick = beginnerState.animating ? null : () => onBeginnerCellClick(sq);
+        cell.onclick = (viewingPast || beginnerState.animating) ? null : () => onBeginnerCellClick(sq);
         board.appendChild(cell);
       }
     }
@@ -5116,6 +5152,7 @@ const PIECE_IMG = {
       hintFrom: null, hintTo: null, lastDetectedOpening: null, wentOutOfBook: false
     };
     beginnerChess = new Chess();
+    beginnerQuickViewIndex = null;
     document.getElementById('beginnerColorPanel').style.display = 'none';
     document.getElementById('beginnerGameArea').style.display = 'block';
     hideBeginnerJeneSpeech();
@@ -5235,6 +5272,27 @@ const PIECE_IMG = {
     }
     renderBeginnerHistoryBoard();
   }
+
+  document.getElementById('beginnerQuickPrevBtn').onclick = () => {
+    if (!beginnerChess) return;
+    const fens = computeBeginnerFens();
+    if (beginnerQuickViewIndex === null) {
+      if (fens.length < 2) return; // まだ1手も指されていない
+      beginnerQuickViewIndex = fens.length - 2;
+    } else if (beginnerQuickViewIndex > 0) {
+      beginnerQuickViewIndex--;
+    }
+    updateBeginnerQuickLabel(fens);
+    renderBeginnerBoard();
+  };
+  document.getElementById('beginnerQuickNextBtn').onclick = () => {
+    if (!beginnerChess || beginnerQuickViewIndex === null) return;
+    const fens = computeBeginnerFens();
+    beginnerQuickViewIndex++;
+    if (beginnerQuickViewIndex >= fens.length - 1) beginnerQuickViewIndex = null; // 最新まで進んだら通常表示に戻る
+    updateBeginnerQuickLabel(fens);
+    renderBeginnerBoard();
+  };
 
   document.getElementById('btnBeginnerReviewHistory').onclick = openBeginnerHistoryOverlay;
   document.getElementById('beginnerHistoryCloseBtn').onclick = closeBeginnerHistoryOverlay;
