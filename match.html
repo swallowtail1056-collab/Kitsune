@@ -199,9 +199,26 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <div id="beginnerCapturedArea" style="font-size:0.85rem;margin-top:6px;"></div>
     <div style="text-align:center;margin-top:8px;">
       <button id="btnBeginnerNewGame" data-ja="🔄 新しく始める" data-en="🔄 New Game">🔄 新しく始める</button>
+      <button id="btnBeginnerReviewHistory" data-ja="📜 局面を見返す" data-en="📜 Review Position" style="margin-left:8px;">📜 局面を見返す</button>
     </div>
   </div>
 </details>
+
+<!-- はじめてモード用:局面をポップアップで見返す(画面をスクロールせず、現在の対局はそのまま) -->
+<div id="beginnerHistoryOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:2500;align-items:center;justify-content:center;">
+  <div style="background:var(--card);border:2px solid var(--brown);border-radius:12px;padding:16px;max-width:360px;width:90%;max-height:90vh;overflow-y:auto;">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+      <strong data-ja="局面を見返す" data-en="Review Position">局面を見返す</strong>
+      <button id="beginnerHistoryCloseBtn" style="background:none;border:none;font-size:1.3rem;color:var(--text-muted);padding:0 4px;">✕</button>
+    </div>
+    <div id="beginnerHistoryBoard" class="chessboard"></div>
+    <div style="text-align:center;margin-top:8px;">
+      <button id="beginnerHistoryPrevBtn">◀</button>
+      <span id="beginnerHistoryLabel" style="font-size:0.85rem;color:var(--text-muted);margin:0 8px;"></span>
+      <button id="beginnerHistoryNextBtn">▶</button>
+    </div>
+  </div>
+</div>
 
 <details class="box" id="aiModeBox" style="padding:8px;">
   <summary data-ja="🤖 AIと対局する(ログイン不要)" data-en="🤖 Play vs AI (no login required)">🤖 AIと対局する(ログイン不要)</summary>
@@ -2610,6 +2627,38 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     }
   }
 
+  // 対局を実際に開いていなくても、終了した対局のレーティングを確実に反映させるための軽量処理
+  async function handleMatchEndInBackground(matchId, m, user, myColor) {
+    if (m.status === 'timeout') {
+      const wonByTimeout = m.winner === myColor;
+      await applyEloIfNeeded(matchId, m, user, wonByTimeout ? 1 : 0, 'timeout');
+    } else if (m.status === 'resigned') {
+      const iWonByResign = m.winner === myColor;
+      await applyEloIfNeeded(matchId, m, user, iWonByResign ? 1 : 0, 'resign');
+    } else if (m.status === 'draw_agreed') {
+      await applyEloIfNeeded(matchId, m, user, 0.5, 'draw_agreed');
+    } else if (m.status === 'active') {
+      try {
+        const gc = new Chess(m.fen);
+        if (gc.game_over()) {
+          if (gc.in_checkmate()) {
+            const winnerColor = m.turn === 'w' ? 'b' : 'w';
+            const iWon = winnerColor === myColor;
+            await applyEloIfNeeded(matchId, m, user, iWon ? 1 : 0, 'checkmate');
+          } else {
+            const drawReason = gc.in_stalemate() ? 'stalemate'
+              : gc.in_threefold_repetition() ? 'threefold_repetition'
+              : gc.insufficient_material() ? 'insufficient_material'
+              : 'fifty_move';
+            await applyEloIfNeeded(matchId, m, user, 0.5, drawReason);
+          }
+        }
+      } catch (e) { /* FEN解析に失敗した場合は何もしない */ }
+    }
+    // 終局した対局は「進行中の対局」一覧からも取り除く(レーティング反映は既に済んでいる)
+    await remove(ref(db, 'currentMatches/' + user.uid + '/' + matchId));
+  }
+
   function startMatchListener(user) {
     migrateLegacyCurrentMatch(user);
     onValue(ref(db, 'currentMatches/' + user.uid), (snap) => {
@@ -2651,6 +2700,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             status: m.status,
             phase: phase
           };
+          if (phase === 'finished') handleMatchEndInBackground(matchId, m, user, myC);
           renderActiveMatchesList();
         });
       });
