@@ -4727,6 +4727,8 @@ const PIECE_IMG = {
   // デバッグ用:コンソールから beginnerChess.fen() を直接見られないため(モジュールスコープのため)、
   // window 経由で取得できる小さな窓口を用意しておく
   window._debugBeginnerFen = () => (beginnerChess ? beginnerChess.fen() : null);
+  // デバッグ用:各手ごとのFEN一覧(「見返す」の何手目、というのをピンポイントで確認するため)
+  window._debugBeginnerFens = () => (typeof computeBeginnerFens === 'function' && beginnerChess ? JSON.stringify(computeBeginnerFens()) : null);
   let beginnerState = {
     myColor: 'w', selected: null, validTargets: [],
     lastFrom: null, lastTo: null, animating: false,
