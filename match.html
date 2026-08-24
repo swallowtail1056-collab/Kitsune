@@ -4722,6 +4722,9 @@ const PIECE_IMG = {
   }
 
   let beginnerChess = null;
+  // デバッグ用:コンソールから beginnerChess.fen() を直接見られないため(モジュールスコープのため)、
+  // window 経由で取得できる小さな窓口を用意しておく
+  window._debugBeginnerFen = () => (beginnerChess ? beginnerChess.fen() : null);
   let beginnerState = {
     myColor: 'w', selected: null, validTargets: [],
     lastFrom: null, lastTo: null, animating: false,
