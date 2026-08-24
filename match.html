@@ -2950,10 +2950,15 @@ const PIECE_IMG = {
       ['tcStats/' + tc]: newTcEntry
     });
 
-    const openingName = detectOpening(m.moves);
-    if (openingName) {
-      const privSnap = await get(ref(db, 'privateStats/' + user.uid + '/openings/' + openingName));
-      await set(ref(db, 'privateStats/' + user.uid + '/openings/' + openingName), (privSnap.val() || 0) + 1);
+    try {
+      const openingName = detectOpening(m.moves);
+      if (openingName) {
+        const privSnap = await get(ref(db, 'privateStats/' + user.uid + '/openings/' + openingName));
+        await set(ref(db, 'privateStats/' + user.uid + '/openings/' + openingName), (privSnap.val() || 0) + 1);
+      }
+    } catch (e) {
+      // 得意なオープニング統計の保存に失敗しても、履歴・反映フラグの書き込みは必ず続行する
+      console.error('得意なオープニング統計の保存に失敗:', e);
     }
 
     await set(ref(db, 'matchHistory/' + user.uid + '/' + matchId), {
