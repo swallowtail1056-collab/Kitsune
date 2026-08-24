@@ -3579,6 +3579,28 @@ const PIECE_IMG = {
           statusEl.parentNode.insertBefore(acceptArea, statusEl.nextSibling);
         }
       }
+    } else if (m.status === 'active' && gameChess.game_over()) {
+      // 対局データ上は "active" のままだが、盤面(FEN)を見ると実際は既に終局している場合
+      // (通信対局などで、誰もページを開かないまま終局していたケース)。
+      // その場で判定してレーティング・履歴を反映する。
+      if (gameChess.in_checkmate()) {
+        const winnerColor = m.turn === 'w' ? 'b' : 'w';
+        const iWon = winnerColor === myColor;
+        statusEl.textContent = iWon
+          ? (LANG === 'ja' ? 'チェックメイト！あなたの勝ちです。' : 'Checkmate! You won.')
+          : (LANG === 'ja' ? 'チェックメイトされました。負けです。' : 'You were checkmated. You lost.');
+        applyEloIfNeeded(matchId, m, user, iWon ? 1 : 0, 'checkmate');
+        applyAnalysisIfNeeded(matchId, m, user, iWon ? 1 : 0);
+      } else {
+        statusEl.textContent = LANG === 'ja' ? '引き分けです。' : "It's a draw.";
+        const drawReason = gameChess.in_stalemate() ? 'stalemate'
+          : gameChess.in_threefold_repetition() ? 'threefold_repetition'
+          : gameChess.insufficient_material() ? 'insufficient_material'
+          : 'fifty_move';
+        applyEloIfNeeded(matchId, m, user, 0.5, drawReason);
+        applyAnalysisIfNeeded(matchId, m, user, 0.5);
+      }
+      document.getElementById('reportToggleBtn').style.display = 'inline-block';
     } else {
       statusEl.textContent = (LANG === 'ja' ? '対戦相手: ' : 'Opponent: ') + oppName
         + (m.rated === false ? (LANG === 'ja' ? '(ノーレート)' : ' (unrated)') : '') + ' | ' +
