@@ -67,9 +67,14 @@ img#profilePhoto { border:2px solid var(--brown); border-radius:50%; width:60px;
 .sq.dark .sq-label { color:rgba(255,240,200,0.95); }
 .sq-label.rank-label { top:2px; left:3px; }
 .sq-label.file-label { bottom:2px; right:3px; }
-.sq.light { background:#d4b87a; }
-.sq.dark { background:#7a5230; }
+.sq.light { background:var(--sq-light,#d4b87a); }
+.sq.dark { background:var(--sq-dark,#7a5230); }
+:root, [data-board-theme="brown"] { --sq-light:#d4b87a; --sq-dark:#7a5230; }
+[data-board-theme="green"] { --sq-light:#eeeed2; --sq-dark:#769656; }
+[data-board-theme="blue"] { --sq-light:#dee3e6; --sq-dark:#4b7399; }
+[data-board-theme="purple"] { --sq-light:#e8e0f0; --sq-dark:#7a5c99; }
 .thumb-card { display:flex; flex-direction:column; align-items:center; gap:4px; background:var(--card); border:2px solid var(--brown); border-radius:8px; padding:8px; cursor:pointer; width:150px; }
+.thumb-card.waiting { opacity:0.55; filter:grayscale(0.6); }
 .thumb-card:hover { opacity:0.85; }
 .thumb-board { display:grid; grid-template-columns:repeat(8,minmax(0,1fr)); grid-template-rows:repeat(8,minmax(0,1fr)); width:130px; height:130px; border:2px solid var(--board-border,var(--brown)); }
 .thumb-sq { position:relative; }
@@ -153,8 +158,44 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <!-- End Google Tag Manager (noscript) -->
 
 <div class="lang-switch">
-  <button id="themeBtn" style="margin-right:6px;">🌙</button>
-  <button id="langBtn">English</button>
+  <button id="settingsBtn" title="設定" data-ja="⚙️ 設定" data-en="⚙️ Settings">⚙️</button>
+</div>
+<div id="settingsPanel" style="display:none;position:absolute;right:8px;top:40px;z-index:3000;background:var(--card);border:2px solid var(--brown);border-radius:10px;padding:14px;box-shadow:0 4px 12px rgba(0,0,0,0.25);min-width:200px;">
+  <p style="margin:0 0 10px;font-weight:700;" data-ja="⚙️ 設定" data-en="⚙️ Settings">⚙️ 設定</p>
+
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+    <span data-ja="言語" data-en="Language" style="font-size:0.85rem;">言語</span>
+    <button id="langBtn">English</button>
+  </div>
+
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+    <span data-ja="ナイトモード" data-en="Night Mode" style="font-size:0.85rem;">ナイトモード</span>
+    <button id="themeBtn">🌙</button>
+  </div>
+
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+    <span data-ja="メッセージ" data-en="Messages" style="font-size:0.85rem;">メッセージ</span>
+    <button id="settingsMessagesBtn" data-ja="💬 開く" data-en="💬 Open">💬 開く</button>
+  </div>
+
+  <div>
+    <p style="margin:0 0 6px;font-size:0.85rem;" data-ja="盤面の色" data-en="Board color">盤面の色</p>
+    <div style="display:flex;gap:8px;">
+      <button class="board-theme-swatch" data-board-theme="brown" style="width:32px;height:32px;border-radius:50%;border:2px solid var(--brown);background:linear-gradient(135deg,#d4b87a 50%,#7a5230 50%);cursor:pointer;" title="クラシック"></button>
+      <button class="board-theme-swatch" data-board-theme="green" style="width:32px;height:32px;border-radius:50%;border:2px solid var(--brown);background:linear-gradient(135deg,#eeeed2 50%,#769656 50%);cursor:pointer;" title="グリーン"></button>
+      <button class="board-theme-swatch" data-board-theme="blue" style="width:32px;height:32px;border-radius:50%;border:2px solid var(--brown);background:linear-gradient(135deg,#dee3e6 50%,#4b7399 50%);cursor:pointer;" title="ブルー"></button>
+      <button class="board-theme-swatch" data-board-theme="purple" style="width:32px;height:32px;border-radius:50%;border:2px solid var(--brown);background:linear-gradient(135deg,#e8e0f0 50%,#7a5c99 50%);cursor:pointer;" title="パープル"></button>
+    </div>
+  </div>
+</div>
+<div id="messagesPickerOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:3500;align-items:center;justify-content:center;">
+  <div style="background:var(--card);border:2px solid var(--brown);border-radius:12px;padding:16px;max-width:340px;width:90%;max-height:80vh;overflow-y:auto;">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+      <strong data-ja="💬 メッセージを送る相手を選ぶ" data-en="💬 Choose who to message">💬 メッセージを送る相手を選ぶ</strong>
+      <button id="messagesPickerCloseBtn" style="background:none;border:none;font-size:1.3rem;color:var(--text-muted);padding:0 4px;">✕</button>
+    </div>
+    <div id="messagesPickerList" style="display:flex;flex-direction:column;gap:6px;"></div>
+  </div>
 </div>
 <a class="back-link" href="index.html" data-ja="🦊 ゲームに戻る" data-en="🦊 Back to Game">🦊 ゲームに戻る</a>
 <a href="https://kitsunechess.com" target="_blank" rel="noopener" style="display:block;margin:-4px 0 10px;font-size:0.78rem;color:var(--brown-light);text-decoration:none;font-weight:600;">kitsunechess.com</a>
@@ -615,6 +656,85 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     applyTheme();
   };
   applyTheme();
+
+  // ===== 設定パネル(⚙️ 言語・ナイトモード・盤面の色をまとめて管理) =====
+  document.getElementById('settingsBtn').onclick = () => {
+    const panel = document.getElementById('settingsPanel');
+    panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
+  };
+  document.addEventListener('click', (e) => {
+    const panel = document.getElementById('settingsPanel');
+    if (panel.style.display === 'block' && !panel.contains(e.target) && e.target.id !== 'settingsBtn') {
+      panel.style.display = 'none';
+    }
+  });
+
+  // ===== 盤面の色プリセット(全モード共通) =====
+  let BOARD_THEME = localStorage.getItem('boardTheme') || 'brown';
+  function applyBoardTheme() {
+    document.documentElement.setAttribute('data-board-theme', BOARD_THEME);
+    document.querySelectorAll('.board-theme-swatch').forEach((btn) => {
+      btn.style.outline = btn.dataset.boardTheme === BOARD_THEME ? '3px solid var(--accent,#c96)' : 'none';
+    });
+  }
+  document.querySelectorAll('.board-theme-swatch').forEach((btn) => {
+    btn.onclick = () => {
+      BOARD_THEME = btn.dataset.boardTheme;
+      localStorage.setItem('boardTheme', BOARD_THEME);
+      applyBoardTheme();
+    };
+  });
+  applyBoardTheme();
+
+  // ===== 設定パネルからの「メッセージ」ショートカット =====
+  document.getElementById('settingsMessagesBtn').onclick = async () => {
+    const user = auth.currentUser;
+    if (!user) {
+      alert(LANG === 'ja' ? 'ログインしてから使ってください。' : 'Please log in first.');
+      return;
+    }
+    const listEl = document.getElementById('messagesPickerList');
+    listEl.innerHTML = '<p style="font-size:0.85rem;color:var(--text-muted);">' + (LANG === 'ja' ? '読み込み中…' : 'Loading…') + '</p>';
+    document.getElementById('settingsPanel').style.display = 'none';
+    document.getElementById('messagesPickerOverlay').style.display = 'flex';
+
+    const uids = latestFriendsData ? Object.keys(latestFriendsData) : [];
+    if (uids.length === 0) {
+      listEl.innerHTML = '<p style="font-size:0.85rem;color:var(--text-muted);">' + (LANG === 'ja' ? 'まだ友達がいません。' : 'No friends yet.') + '</p>';
+      return;
+    }
+    listEl.innerHTML = '';
+    for (const friendUid of uids) {
+      const snap = await get(ref(db, 'publicProfiles/' + friendUid));
+      const friendProfile = snap.val() || {};
+      const friendName = friendProfile.username || '(unknown)';
+      const row = document.createElement('div');
+      row.style.cssText = 'display:flex;align-items:center;gap:10px;cursor:pointer;padding:6px;border-radius:8px;';
+      row.onmouseenter = () => { row.style.background = 'rgba(124,74,30,0.08)'; };
+      row.onmouseleave = () => { row.style.background = 'none'; };
+      const avatarImg = document.createElement('img');
+      avatarImg.src = friendProfile.photoURL || '';
+      avatarImg.style.cssText = 'width:36px;height:36px;border-radius:50%;object-fit:cover;background:rgba(90,58,24,0.1);';
+      avatarImg.onerror = () => { avatarImg.style.display = 'none'; };
+      if (!friendProfile.photoURL) avatarImg.style.display = 'none';
+      const nameSpan = document.createElement('span');
+      nameSpan.textContent = friendName;
+      nameSpan.style.fontSize = '0.9rem';
+      row.appendChild(avatarImg);
+      row.appendChild(nameSpan);
+      row.onclick = () => {
+        document.getElementById('messagesPickerOverlay').style.display = 'none';
+        openDMModal(user, friendUid, friendName);
+      };
+      listEl.appendChild(row);
+    }
+  };
+  document.getElementById('messagesPickerCloseBtn').onclick = () => {
+    document.getElementById('messagesPickerOverlay').style.display = 'none';
+  };
+  document.getElementById('messagesPickerOverlay').onclick = (e) => {
+    if (e.target.id === 'messagesPickerOverlay') document.getElementById('messagesPickerOverlay').style.display = 'none';
+  };
 
   // 共有AudioContext（毎回newしない）
   let _sharedAudioCtx = null;
@@ -2610,7 +2730,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     list.innerHTML = '';
     entries.forEach(([matchId, s]) => {
       const card = document.createElement('div');
-      card.className = 'thumb-card';
+      card.className = 'thumb-card' + (s.phase === 'waiting' ? ' waiting' : '');
       const boardEl = document.createElement('div');
       boardEl.className = 'thumb-board';
       renderThumbBoard(boardEl, s.fen, s.myColor === 'b');
@@ -4726,6 +4846,7 @@ const PIECE_IMG = {
   // デバッグ用:コンソールから beginnerChess.fen() を直接見られないため(モジュールスコープのため)、
   // window 経由で取得できる小さな窓口を用意しておく
   window._debugBeginnerFen = () => (beginnerChess ? beginnerChess.fen() : null);
+  window._debugAiFen = () => (aiChess ? aiChess.fen() : null);
   // デバッグ用:各手ごとのFEN一覧(「見返す」の何手目、というのをピンポイントで確認するため)
   window._debugBeginnerFens = () => (typeof computeBeginnerFens === 'function' && beginnerChess ? JSON.stringify(computeBeginnerFens()) : null);
   let beginnerState = {
