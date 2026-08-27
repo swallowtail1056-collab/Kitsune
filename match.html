@@ -2257,30 +2257,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         tcPanel.style.display = tcPanel.style.display === 'none' ? 'inline-block' : 'none';
       };
 
-      const menuWrap = document.createElement('span');
-      menuWrap.style.cssText = 'position:relative;display:inline-block;';
-      const menuBtn = document.createElement('button');
-      menuBtn.innerHTML = '<svg width="14" height="11" viewBox="0 0 16 12" style="vertical-align:middle;"><rect x="0.5" y="0.5" width="15" height="11" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.3"/><path d="M1 1.5 L8 7 L15 1.5" fill="none" stroke="currentColor" stroke-width="1.3"/></svg>';
-      menuBtn.title = LANG === 'ja' ? 'メッセージ' : 'Message';
-      menuBtn.style.cssText = 'background:transparent;border:1px solid rgba(124,74,30,0.3);color:var(--text-muted);padding:2px 8px;font-size:0.9rem;line-height:1;';
-      menuBtn.onclick = () => openDMModal(user, friendUid, friendName);
-      const unreadDot = document.createElement('span');
-      unreadDot.style.cssText = 'display:none;position:absolute;top:-3px;right:-3px;width:10px;height:10px;border-radius:50%;background:#e63946;border:2px solid var(--card);';
-      menuWrap.appendChild(menuBtn);
-      menuWrap.appendChild(unreadDot);
-      const dmPairKey = pairKey(user.uid, friendUid);
-      onValue(ref(db, 'directMessages/' + dmPairKey), async (dmSnap) => {
-        const dmData = dmSnap.val();
-        if (!dmData) { unreadDot.style.display = 'none'; return; }
-        const readSnap = await get(ref(db, 'dmReadStatus/' + user.uid + '/' + dmPairKey));
-        const lastRead = readSnap.exists() ? readSnap.val() : 0;
-        const hasUnread = Object.values(dmData).some((m) => m.from === friendUid && m.sentAt > lastRead);
-        unreadDot.style.display = hasUnread ? 'block' : 'none';
-      });
       row.appendChild(label);
       row.appendChild(challengeBtn);
       row.appendChild(tcPanel);
-      row.appendChild(menuWrap);
       container.appendChild(row);
     }
   }
