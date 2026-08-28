@@ -686,6 +686,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   });
   applyBoardTheme();
 
+  // 盤面(駒画像)を長押しした時に、コピー・画像保存メニューが出てしまうのを防ぐ。
+  // CSSの -webkit-touch-callout だけでは不十分な場合があるため、JS側でも確実にブロックする。
+  document.addEventListener('contextmenu', (e) => {
+    if (e.target.closest('.chessboard')) e.preventDefault();
+  });
+
   // ===== 設定パネルからの「メッセージ」ショートカット =====
   document.getElementById('settingsMessagesBtn').onclick = async () => {
     const user = auth.currentUser;
@@ -1198,7 +1204,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         if (piece) {
           const img = document.createElement('img');
           img.src = PIECE_IMG[piece.color + piece.type.toUpperCase()];
-          img.style.width = '100%'; img.style.height = '100%'; img.style.pointerEvents = 'none';
+          img.style.width = '100%'; img.style.height = '100%'; img.style.pointerEvents = 'none'; img.draggable = false;
           cell.appendChild(img);
         }
         cell.dataset.sq = sq;
@@ -1694,7 +1700,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         if (piece) {
           const img = document.createElement('img');
           img.src = PIECE_IMG[piece.color + piece.type.toUpperCase()];
-          img.style.width = '100%'; img.style.height = '100%'; img.style.pointerEvents = 'none';
+          img.style.width = '100%'; img.style.height = '100%'; img.style.pointerEvents = 'none'; img.draggable = false;
           cell.appendChild(img);
         }
         boardEl.appendChild(cell);
@@ -2687,7 +2693,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         if (piece) {
           const img = document.createElement('img');
           img.src = PIECE_IMG[piece.color + piece.type.toUpperCase()];
-          img.style.width = '100%'; img.style.height = '100%'; img.style.pointerEvents = 'none';
+          img.style.width = '100%'; img.style.height = '100%'; img.style.pointerEvents = 'none'; img.draggable = false;
           cell.appendChild(img);
         }
         container.appendChild(cell);
@@ -3184,7 +3190,7 @@ const PIECE_IMG = {
         if (piece) {
           const img = document.createElement('img');
           img.src = PIECE_IMG[piece.color + piece.type.toUpperCase()];
-          img.style.width = '100%'; img.style.height = '100%'; img.style.pointerEvents = 'none';
+          img.style.width = '100%'; img.style.height = '100%'; img.style.pointerEvents = 'none'; img.draggable = false;
           cell.appendChild(img);
         }
         cell.onclick = () => onAnalysisSquareClick(sq);
@@ -3312,7 +3318,7 @@ const PIECE_IMG = {
         if (piece) {
           const img = document.createElement('img');
           img.src = PIECE_IMG[piece.color + piece.type.toUpperCase()];
-          img.style.width = '100%'; img.style.height = '100%'; img.style.pointerEvents = 'none';
+          img.style.width = '100%'; img.style.height = '100%'; img.style.pointerEvents = 'none'; img.draggable = false;
           cell.appendChild(img);
         }
         boardEl.appendChild(cell);
@@ -3915,7 +3921,7 @@ const PIECE_IMG = {
         img.src = PIECE_IMG[piece.color + piece.type.toUpperCase()];
         img.style.width = '100%';
         img.style.height = '100%';
-        img.style.pointerEvents = 'none';
+        img.style.pointerEvents = 'none'; img.draggable = false;
         cell.appendChild(img);
       }
         cell.onclick = viewingHistory ? null : () => onSquareClick(sq, user);
@@ -4422,7 +4428,7 @@ const PIECE_IMG = {
         if (piece) {
           const img = document.createElement('img');
           img.src = PIECE_IMG[piece.color + piece.type.toUpperCase()];
-          img.style.width = '100%'; img.style.height = '100%'; img.style.pointerEvents = 'none';
+          img.style.width = '100%'; img.style.height = '100%'; img.style.pointerEvents = 'none'; img.draggable = false;
           cell.appendChild(img);
         }
         cell.onclick = () => onPuzzleCellClick(sq);
@@ -4901,7 +4907,7 @@ const PIECE_IMG = {
         if (piece) {
           const img = document.createElement('img');
           img.src = PIECE_IMG[piece.color + piece.type.toUpperCase()];
-          img.style.width = '100%'; img.style.height = '100%'; img.style.pointerEvents = 'none';
+          img.style.width = '100%'; img.style.height = '100%'; img.style.pointerEvents = 'none'; img.draggable = false;
           cell.appendChild(img);
         }
         cell.onclick = (viewingPast || beginnerState.animating) ? null : () => onBeginnerCellClick(sq);
@@ -5340,7 +5346,7 @@ const PIECE_IMG = {
         if (piece) {
           const img = document.createElement('img');
           img.src = PIECE_IMG[piece.color + piece.type.toUpperCase()];
-          img.style.width = '100%'; img.style.height = '100%'; img.style.pointerEvents = 'none';
+          img.style.width = '100%'; img.style.height = '100%'; img.style.pointerEvents = 'none'; img.draggable = false;
           cell.appendChild(img);
         }
         board.appendChild(cell);
