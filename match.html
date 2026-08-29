@@ -1571,6 +1571,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     if (!pieceEl) { callback(); return; }
     const fromRect = fromCell.getBoundingClientRect();
     const toRect = toCell.getBoundingClientRect();
+    const dx = toRect.left - fromRect.left;
+    const dy = toRect.top - fromRect.top;
     const clone = pieceEl.cloneNode(true);
     clone.style.position = 'fixed';
     clone.style.zIndex = '9999';
@@ -1578,15 +1580,16 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     clone.style.height = fromRect.height + 'px';
     clone.style.left = fromRect.left + 'px';
     clone.style.top = fromRect.top + 'px';
+    clone.style.transform = 'translate(0,0)';
+    clone.style.willChange = 'transform';
     clone.style.pointerEvents = 'none';
     clone.style.margin = '0';
     document.body.appendChild(clone);
     pieceEl.style.opacity = '0';
     requestAnimationFrame(() => {
-      clone.style.transition = 'left 0.3s cubic-bezier(0.25,0.46,0.45,0.94),top 0.3s cubic-bezier(0.25,0.46,0.45,0.94)';
+      clone.style.transition = 'transform 0.3s cubic-bezier(0.25,0.46,0.45,0.94)';
       requestAnimationFrame(() => {
-        clone.style.left = toRect.left + 'px';
-        clone.style.top = toRect.top + 'px';
+        clone.style.transform = 'translate(' + dx + 'px,' + dy + 'px)';
       });
     });
     setTimeout(() => { clone.remove(); callback(); }, 340);
@@ -4662,6 +4665,8 @@ const PIECE_IMG = {
     if (!pieceEl) { callback(); return; }
     const fromRect = fromCell.getBoundingClientRect();
     const toRect = toCell.getBoundingClientRect();
+    const dx = toRect.left - fromRect.left;
+    const dy = toRect.top - fromRect.top;
     const clone = pieceEl.cloneNode(true);
     clone.style.position = 'fixed';
     clone.style.zIndex = '9999';
@@ -4669,15 +4674,16 @@ const PIECE_IMG = {
     clone.style.height = fromRect.height + 'px';
     clone.style.left = fromRect.left + 'px';
     clone.style.top = fromRect.top + 'px';
+    clone.style.transform = 'translate(0,0)';
+    clone.style.willChange = 'transform';
     clone.style.pointerEvents = 'none';
     clone.style.margin = '0';
     document.body.appendChild(clone);
     pieceEl.style.opacity = '0';
     requestAnimationFrame(() => {
-      clone.style.transition = 'left 0.3s cubic-bezier(0.25,0.46,0.45,0.94),top 0.3s cubic-bezier(0.25,0.46,0.45,0.94)';
+      clone.style.transition = 'transform 0.3s cubic-bezier(0.25,0.46,0.45,0.94)';
       requestAnimationFrame(() => {
-        clone.style.left = toRect.left + 'px';
-        clone.style.top = toRect.top + 'px';
+        clone.style.transform = 'translate(' + dx + 'px,' + dy + 'px)';
       });
     });
     setTimeout(() => { clone.remove(); callback(); }, 340);
@@ -4941,6 +4947,8 @@ const PIECE_IMG = {
     if (!pieceEl) { callback(); return; }
     const fromRect = fromCell.getBoundingClientRect();
     const toRect = toCell.getBoundingClientRect();
+    const dx = toRect.left - fromRect.left;
+    const dy = toRect.top - fromRect.top;
     const clone = pieceEl.cloneNode(true);
     clone.style.position = 'fixed';
     clone.style.zIndex = '9999';
@@ -4948,15 +4956,16 @@ const PIECE_IMG = {
     clone.style.height = fromRect.height + 'px';
     clone.style.left = fromRect.left + 'px';
     clone.style.top = fromRect.top + 'px';
+    clone.style.transform = 'translate(0,0)';
+    clone.style.willChange = 'transform';
     clone.style.pointerEvents = 'none';
     clone.style.margin = '0';
     document.body.appendChild(clone);
     pieceEl.style.opacity = '0';
     requestAnimationFrame(() => {
-      clone.style.transition = 'left 0.3s cubic-bezier(0.25,0.46,0.45,0.94),top 0.3s cubic-bezier(0.25,0.46,0.45,0.94)';
+      clone.style.transition = 'transform 0.3s cubic-bezier(0.25,0.46,0.45,0.94)';
       requestAnimationFrame(() => {
-        clone.style.left = toRect.left + 'px';
-        clone.style.top = toRect.top + 'px';
+        clone.style.transform = 'translate(' + dx + 'px,' + dy + 'px)';
       });
     });
     setTimeout(() => { clone.remove(); callback(); }, 340);
