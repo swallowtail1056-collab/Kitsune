@@ -152,8 +152,40 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <!-- End Google Tag Manager (noscript) -->
 
 <div class="lang-switch">
-  <button id="themeBtn" style="margin-right:6px;">🌙</button>
-  <button id="langBtn">English</button>
+  <button id="settingsBtn" title="設定" data-ja="⚙️ 設定" data-en="⚙️ Settings">⚙️</button>
+</div>
+<div id="settingsPanel" style="display:none;position:absolute;right:8px;top:40px;z-index:3000;background:var(--card);border:2px solid var(--brown);border-radius:10px;padding:14px;box-shadow:0 4px 12px rgba(0,0,0,0.25);min-width:200px;">
+  <p style="margin:0 0 10px;font-weight:700;color:var(--text);" data-ja="⚙️ 設定" data-en="⚙️ Settings">⚙️ 設定</p>
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+    <span data-ja="言語" data-en="Language" style="font-size:0.85rem;color:var(--text);">言語</span>
+    <button id="langBtn">English</button>
+  </div>
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+    <span data-ja="ナイトモード" data-en="Night Mode" style="font-size:0.85rem;color:var(--text);">ナイトモード</span>
+    <button id="themeBtn">🌙</button>
+  </div>
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+    <span data-ja="メッセージ" data-en="Messages" style="font-size:0.85rem;color:var(--text);">メッセージ</span>
+    <button id="settingsMessagesBtn" data-ja="💬 開く" data-en="💬 Open">💬 開く</button>
+  </div>
+  <div>
+    <p style="margin:0 0 6px;font-size:0.85rem;color:var(--text);" data-ja="盤面の色" data-en="Board color">盤面の色</p>
+    <div style="display:flex;gap:8px;">
+      <button class="board-theme-swatch" data-board-theme="brown" style="width:32px;height:32px;border-radius:50%;border:2px solid var(--brown);background:linear-gradient(135deg,#d4b87a 50%,#7a5230 50%);cursor:pointer;" title="クラシック"></button>
+      <button class="board-theme-swatch" data-board-theme="green" style="width:32px;height:32px;border-radius:50%;border:2px solid var(--brown);background:linear-gradient(135deg,#eeeed2 50%,#769656 50%);cursor:pointer;" title="グリーン"></button>
+      <button class="board-theme-swatch" data-board-theme="blue" style="width:32px;height:32px;border-radius:50%;border:2px solid var(--brown);background:linear-gradient(135deg,#dee3e6 50%,#4b7399 50%);cursor:pointer;" title="ブルー"></button>
+      <button class="board-theme-swatch" data-board-theme="purple" style="width:32px;height:32px;border-radius:50%;border:2px solid var(--brown);background:linear-gradient(135deg,#e8e0f0 50%,#7a5c99 50%);cursor:pointer;" title="パープル"></button>
+    </div>
+  </div>
+</div>
+<div id="messagesPickerOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:3500;align-items:center;justify-content:center;">
+  <div style="background:var(--card);border:2px solid var(--brown);border-radius:12px;padding:16px;max-width:340px;width:90%;max-height:80vh;overflow-y:auto;">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+      <strong style="color:var(--text);" data-ja="💬 メッセージを送る相手を選ぶ" data-en="💬 Choose who to message">💬 メッセージを送る相手を選ぶ</strong>
+      <button id="messagesPickerCloseBtn" style="background:none;border:none;font-size:1.3rem;color:var(--text-muted);padding:0 4px;">✕</button>
+    </div>
+    <div id="messagesPickerList" style="display:flex;flex-direction:column;gap:6px;"></div>
+  </div>
 </div>
 <a class="back-link" href="index.html" data-ja="🦊 ゲームに戻る" data-en="🦊 Back to Game">🦊 ゲームに戻る</a>
 <a href="https://kitsunechess.com" target="_blank" rel="noopener" style="display:block;margin:-4px 0 10px;font-size:0.78rem;color:var(--brown-light);text-decoration:none;font-weight:600;">kitsunechess.com</a>
