@@ -45,8 +45,6 @@ button {
 }
 button:hover { background:var(--brown-dark); }
 button:disabled { opacity:0.6; cursor:default; }
-html[data-theme="dark"] button { color:#1a1208; }
-html[data-theme="dark"] button:hover { color:#1a1208; }
 .lang-switch button, .back-link.btn { background:#f7ebd3; color:var(--brown-dark); border:1px solid #c4b193; }
 .lang-switch button:hover { background:var(--brown); color:#fff; }
 input {
@@ -63,20 +61,14 @@ input {
 #status { text-align:center; color:var(--brown); font-style:italic; }
 img#profilePhoto { border:2px solid var(--brown); border-radius:50%; width:60px; height:60px; }
 .sq { position:relative; display:flex; align-items:center; justify-content:center; font-size:1.8rem; user-select:none; cursor:pointer; }
-.sq img { -webkit-user-drag:none; user-drag:none; -webkit-touch-callout:none; user-select:none; }
 .sq-label { position:absolute; font-family:'Crimson Pro', serif; font-weight:800; font-size:0.7rem; line-height:1; pointer-events:none; z-index:2; }
 .sq.light .sq-label { color:rgba(80,40,0,0.85); }
 .sq.dark .sq-label { color:rgba(255,240,200,0.95); }
 .sq-label.rank-label { top:2px; left:3px; }
 .sq-label.file-label { bottom:2px; right:3px; }
-.sq.light { background:var(--sq-light,#d4b87a); }
-.sq.dark { background:var(--sq-dark,#7a5230); }
-:root, [data-board-theme="brown"] { --sq-light:#d4b87a; --sq-dark:#7a5230; }
-[data-board-theme="green"] { --sq-light:#eeeed2; --sq-dark:#769656; }
-[data-board-theme="blue"] { --sq-light:#dee3e6; --sq-dark:#4b7399; }
-[data-board-theme="purple"] { --sq-light:#e8e0f0; --sq-dark:#7a5c99; }
+.sq.light { background:#d4b87a; }
+.sq.dark { background:#7a5230; }
 .thumb-card { display:flex; flex-direction:column; align-items:center; gap:4px; background:var(--card); border:2px solid var(--brown); border-radius:8px; padding:8px; cursor:pointer; width:150px; }
-.thumb-card.waiting { opacity:0.55; filter:grayscale(0.6); }
 .thumb-card:hover { opacity:0.85; }
 .thumb-board { display:grid; grid-template-columns:repeat(8,minmax(0,1fr)); grid-template-rows:repeat(8,minmax(0,1fr)); width:130px; height:130px; border:2px solid var(--board-border,var(--brown)); }
 .thumb-sq { position:relative; }
@@ -160,44 +152,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <!-- End Google Tag Manager (noscript) -->
 
 <div class="lang-switch">
-  <button id="settingsBtn" title="設定" data-ja="⚙️ 設定" data-en="⚙️ Settings">⚙️</button>
-</div>
-<div id="settingsPanel" style="display:none;position:absolute;right:8px;top:40px;z-index:3000;background:var(--card);border:2px solid var(--brown);border-radius:10px;padding:14px;box-shadow:0 4px 12px rgba(0,0,0,0.25);min-width:200px;">
-  <p style="margin:0 0 10px;font-weight:700;" data-ja="⚙️ 設定" data-en="⚙️ Settings">⚙️ 設定</p>
-
-  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
-    <span data-ja="言語" data-en="Language" style="font-size:0.85rem;">言語</span>
-    <button id="langBtn">English</button>
-  </div>
-
-  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
-    <span data-ja="ナイトモード" data-en="Night Mode" style="font-size:0.85rem;">ナイトモード</span>
-    <button id="themeBtn">🌙</button>
-  </div>
-
-  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
-    <span data-ja="メッセージ" data-en="Messages" style="font-size:0.85rem;">メッセージ</span>
-    <button id="settingsMessagesBtn" data-ja="💬 開く" data-en="💬 Open">💬 開く</button>
-  </div>
-
-  <div>
-    <p style="margin:0 0 6px;font-size:0.85rem;" data-ja="盤面の色" data-en="Board color">盤面の色</p>
-    <div style="display:flex;gap:8px;">
-      <button class="board-theme-swatch" data-board-theme="brown" style="width:32px;height:32px;border-radius:50%;border:2px solid var(--brown);background:linear-gradient(135deg,#d4b87a 50%,#7a5230 50%);cursor:pointer;" title="クラシック"></button>
-      <button class="board-theme-swatch" data-board-theme="green" style="width:32px;height:32px;border-radius:50%;border:2px solid var(--brown);background:linear-gradient(135deg,#eeeed2 50%,#769656 50%);cursor:pointer;" title="グリーン"></button>
-      <button class="board-theme-swatch" data-board-theme="blue" style="width:32px;height:32px;border-radius:50%;border:2px solid var(--brown);background:linear-gradient(135deg,#dee3e6 50%,#4b7399 50%);cursor:pointer;" title="ブルー"></button>
-      <button class="board-theme-swatch" data-board-theme="purple" style="width:32px;height:32px;border-radius:50%;border:2px solid var(--brown);background:linear-gradient(135deg,#e8e0f0 50%,#7a5c99 50%);cursor:pointer;" title="パープル"></button>
-    </div>
-  </div>
-</div>
-<div id="messagesPickerOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:3500;align-items:center;justify-content:center;">
-  <div style="background:var(--card);border:2px solid var(--brown);border-radius:12px;padding:16px;max-width:340px;width:90%;max-height:80vh;overflow-y:auto;">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
-      <strong data-ja="💬 メッセージを送る相手を選ぶ" data-en="💬 Choose who to message">💬 メッセージを送る相手を選ぶ</strong>
-      <button id="messagesPickerCloseBtn" style="background:none;border:none;font-size:1.3rem;color:var(--text-muted);padding:0 4px;">✕</button>
-    </div>
-    <div id="messagesPickerList" style="display:flex;flex-direction:column;gap:6px;"></div>
-  </div>
+  <button id="themeBtn" style="margin-right:6px;">🌙</button>
+  <button id="langBtn">English</button>
 </div>
 <a class="back-link" href="index.html" data-ja="🦊 ゲームに戻る" data-en="🦊 Back to Game">🦊 ゲームに戻る</a>
 <a href="https://kitsunechess.com" target="_blank" rel="noopener" style="display:block;margin:-4px 0 10px;font-size:0.78rem;color:var(--brown-light);text-decoration:none;font-weight:600;">kitsunechess.com</a>
@@ -241,14 +197,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     </div>
     <div id="beginnerBoard" class="chessboard"></div>
     <div id="beginnerCapturedArea" style="font-size:0.85rem;margin-top:6px;"></div>
-    <div style="text-align:center;margin-top:6px;">
-      <button id="beginnerQuickPrevBtn" data-ja="◀" data-en="◀">◀</button>
-      <span id="beginnerQuickLabel" style="font-size:0.8rem;color:var(--text-muted);margin:0 6px;" data-ja="局面を移動" data-en="Browse moves">局面を移動</span>
-      <button id="beginnerQuickNextBtn" data-ja="▶" data-en="▶">▶</button>
-    </div>
     <div style="text-align:center;margin-top:8px;">
       <button id="btnBeginnerNewGame" data-ja="🔄 新しく始める" data-en="🔄 New Game">🔄 新しく始める</button>
-      <button id="btnBeginnerReviewHistory" data-ja="🔍 局面を分析する" data-en="🔍 Analyze Position" style="margin-left:8px;">🔍 局面を分析する</button>
+      <button id="btnBeginnerReviewHistory" data-ja="📜 局面を見返す" data-en="📜 Review Position" style="margin-left:8px;">📜 局面を見返す</button>
     </div>
   </div>
 </details>
@@ -257,7 +208,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <div id="beginnerHistoryOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:2500;align-items:center;justify-content:center;">
   <div style="background:var(--card);border:2px solid var(--brown);border-radius:12px;padding:16px;max-width:360px;width:90%;max-height:90vh;overflow-y:auto;">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-      <strong data-ja="局面を分析する" data-en="Analyze Position">局面を分析する</strong>
+      <strong data-ja="局面を見返す" data-en="Review Position">局面を見返す</strong>
       <button id="beginnerHistoryCloseBtn" style="background:none;border:none;font-size:1.3rem;color:var(--text-muted);padding:0 4px;">✕</button>
     </div>
     <div id="beginnerHistoryBoard" class="chessboard"></div>
@@ -265,12 +216,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <button id="beginnerHistoryPrevBtn">◀</button>
       <span id="beginnerHistoryLabel" style="font-size:0.85rem;color:var(--text-muted);margin:0 8px;"></span>
       <button id="beginnerHistoryNextBtn">▶</button>
-    </div>
-    <div style="text-align:center;margin-top:10px;border-top:1px solid var(--brown);padding-top:10px;">
-      <button id="beginnerHistoryTryBtn" data-ja="🔮 先を読む" data-en="🔮 Look Ahead">🔮 先を読む</button>
-      <button id="beginnerHistoryResetTryBtn" style="display:none;margin-left:6px;" data-ja="↺ やり直す" data-en="↺ Reset">↺ やり直す</button>
-      <button id="beginnerHistoryStopTryBtn" style="display:none;margin-left:6px;" data-ja="✕ 見返すに戻る" data-en="✕ Back to Review">✕ 見返すに戻る</button>
-      <p id="beginnerHistoryTryHint" style="display:none;font-size:0.8rem;color:var(--text-muted);margin:6px 0 0;" data-ja="実際の対局には影響しません。自由に駒を動かして試せます。" data-en="This won't affect your actual game. Move pieces freely to experiment.">実際の対局には影響しません。自由に駒を動かして試せます。</p>
     </div>
   </div>
 </div>
@@ -574,7 +519,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
   // ===== プッシュ通知(FCM)設定 =====
   // 発行したVAPIDキーに置き換えてください(Firebase Console → プロジェクトの設定 → Cloud Messaging → ウェブ設定)
-  const FCM_VAPID_KEY = 'BGwVB9qTXi18RFwgXmqXUAIL9nsPsvGKuS98mla74CXTlotu7wOfF5nqy1AYS8zjozqcNN-8qlmxw6wdalMkJpA';
+  const FCM_VAPID_KEY = 'BJM_B6Bask0Jwa1MWX3G6bkWvjSdmMUryQkyM_3pjr4zSQ_qnRPM-x3d8B80PQjUXlzbRr6DYR3so4Y00aDRuqY';
 
   async function setupPushNotifications(user) {
     const statusEl = document.getElementById('pushNotifStatus');
@@ -658,91 +603,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     applyTheme();
   };
   applyTheme();
-
-  // ===== 設定パネル(⚙️ 言語・ナイトモード・盤面の色をまとめて管理) =====
-  document.getElementById('settingsBtn').onclick = () => {
-    const panel = document.getElementById('settingsPanel');
-    panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
-  };
-  document.addEventListener('click', (e) => {
-    const panel = document.getElementById('settingsPanel');
-    if (panel.style.display === 'block' && !panel.contains(e.target) && e.target.id !== 'settingsBtn') {
-      panel.style.display = 'none';
-    }
-  });
-
-  // ===== 盤面の色プリセット(全モード共通) =====
-  let BOARD_THEME = localStorage.getItem('boardTheme') || 'brown';
-  function applyBoardTheme() {
-    document.documentElement.setAttribute('data-board-theme', BOARD_THEME);
-    document.querySelectorAll('.board-theme-swatch').forEach((btn) => {
-      btn.style.outline = btn.dataset.boardTheme === BOARD_THEME ? '3px solid var(--accent,#c96)' : 'none';
-    });
-  }
-  document.querySelectorAll('.board-theme-swatch').forEach((btn) => {
-    btn.onclick = () => {
-      BOARD_THEME = btn.dataset.boardTheme;
-      localStorage.setItem('boardTheme', BOARD_THEME);
-      applyBoardTheme();
-    };
-  });
-  applyBoardTheme();
-
-  // 盤面(駒画像)を長押しした時に、コピー・画像保存メニューが出てしまうのを防ぐ。
-  // CSSの -webkit-touch-callout だけでは不十分な場合があるため、JS側でも確実にブロックする。
-  document.addEventListener('contextmenu', (e) => {
-    if (e.target.closest('.chessboard')) e.preventDefault();
-  });
-
-  // ===== 設定パネルからの「メッセージ」ショートカット =====
-  document.getElementById('settingsMessagesBtn').onclick = async () => {
-    const user = auth.currentUser;
-    if (!user) {
-      alert(LANG === 'ja' ? 'ログインしてから使ってください。' : 'Please log in first.');
-      return;
-    }
-    const listEl = document.getElementById('messagesPickerList');
-    listEl.innerHTML = '<p style="font-size:0.85rem;color:var(--text-muted);">' + (LANG === 'ja' ? '読み込み中…' : 'Loading…') + '</p>';
-    document.getElementById('settingsPanel').style.display = 'none';
-    document.getElementById('messagesPickerOverlay').style.display = 'flex';
-
-    const uids = latestFriendsData ? Object.keys(latestFriendsData) : [];
-    if (uids.length === 0) {
-      listEl.innerHTML = '<p style="font-size:0.85rem;color:var(--text-muted);">' + (LANG === 'ja' ? 'まだ友達がいません。' : 'No friends yet.') + '</p>';
-      return;
-    }
-    listEl.innerHTML = '';
-    for (const friendUid of uids) {
-      const snap = await get(ref(db, 'publicProfiles/' + friendUid));
-      const friendProfile = snap.val() || {};
-      const friendName = friendProfile.username || '(unknown)';
-      const row = document.createElement('div');
-      row.style.cssText = 'display:flex;align-items:center;gap:10px;cursor:pointer;padding:6px;border-radius:8px;';
-      row.onmouseenter = () => { row.style.background = 'rgba(124,74,30,0.08)'; };
-      row.onmouseleave = () => { row.style.background = 'none'; };
-      const avatarImg = document.createElement('img');
-      avatarImg.src = friendProfile.photoURL || '';
-      avatarImg.style.cssText = 'width:36px;height:36px;border-radius:50%;object-fit:cover;background:rgba(90,58,24,0.1);';
-      avatarImg.onerror = () => { avatarImg.style.display = 'none'; };
-      if (!friendProfile.photoURL) avatarImg.style.display = 'none';
-      const nameSpan = document.createElement('span');
-      nameSpan.textContent = friendName;
-      nameSpan.style.fontSize = '0.9rem';
-      row.appendChild(avatarImg);
-      row.appendChild(nameSpan);
-      row.onclick = () => {
-        document.getElementById('messagesPickerOverlay').style.display = 'none';
-        openDMModal(user, friendUid, friendName);
-      };
-      listEl.appendChild(row);
-    }
-  };
-  document.getElementById('messagesPickerCloseBtn').onclick = () => {
-    document.getElementById('messagesPickerOverlay').style.display = 'none';
-  };
-  document.getElementById('messagesPickerOverlay').onclick = (e) => {
-    if (e.target.id === 'messagesPickerOverlay') document.getElementById('messagesPickerOverlay').style.display = 'none';
-  };
 
   // 共有AudioContext（毎回newしない）
   let _sharedAudioCtx = null;
@@ -1206,7 +1066,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         if (piece) {
           const img = document.createElement('img');
           img.src = PIECE_IMG[piece.color + piece.type.toUpperCase()];
-          img.style.width = '100%'; img.style.height = '100%'; img.style.pointerEvents = 'none'; img.draggable = false;
+          img.style.width = '100%'; img.style.height = '100%'; img.style.pointerEvents = 'none';
           cell.appendChild(img);
         }
         cell.dataset.sq = sq;
@@ -1573,8 +1433,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     if (!pieceEl) { callback(); return; }
     const fromRect = fromCell.getBoundingClientRect();
     const toRect = toCell.getBoundingClientRect();
-    const dx = toRect.left - fromRect.left;
-    const dy = toRect.top - fromRect.top;
     const clone = pieceEl.cloneNode(true);
     clone.style.position = 'fixed';
     clone.style.zIndex = '9999';
@@ -1582,16 +1440,15 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     clone.style.height = fromRect.height + 'px';
     clone.style.left = fromRect.left + 'px';
     clone.style.top = fromRect.top + 'px';
-    clone.style.transform = 'translate(0,0)';
-    clone.style.willChange = 'transform';
     clone.style.pointerEvents = 'none';
     clone.style.margin = '0';
     document.body.appendChild(clone);
     pieceEl.style.opacity = '0';
     requestAnimationFrame(() => {
-      clone.style.transition = 'transform 0.3s cubic-bezier(0.25,0.46,0.45,0.94)';
+      clone.style.transition = 'left 0.3s cubic-bezier(0.25,0.46,0.45,0.94),top 0.3s cubic-bezier(0.25,0.46,0.45,0.94)';
       requestAnimationFrame(() => {
-        clone.style.transform = 'translate(' + dx + 'px,' + dy + 'px)';
+        clone.style.left = toRect.left + 'px';
+        clone.style.top = toRect.top + 'px';
       });
     });
     setTimeout(() => { clone.remove(); callback(); }, 340);
@@ -1705,7 +1562,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         if (piece) {
           const img = document.createElement('img');
           img.src = PIECE_IMG[piece.color + piece.type.toUpperCase()];
-          img.style.width = '100%'; img.style.height = '100%'; img.style.pointerEvents = 'none'; img.draggable = false;
+          img.style.width = '100%'; img.style.height = '100%'; img.style.pointerEvents = 'none';
           cell.appendChild(img);
         }
         boardEl.appendChild(cell);
@@ -2268,9 +2125,30 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         tcPanel.style.display = tcPanel.style.display === 'none' ? 'inline-block' : 'none';
       };
 
+      const menuWrap = document.createElement('span');
+      menuWrap.style.cssText = 'position:relative;display:inline-block;';
+      const menuBtn = document.createElement('button');
+      menuBtn.innerHTML = '<svg width="14" height="11" viewBox="0 0 16 12" style="vertical-align:middle;"><rect x="0.5" y="0.5" width="15" height="11" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.3"/><path d="M1 1.5 L8 7 L15 1.5" fill="none" stroke="currentColor" stroke-width="1.3"/></svg>';
+      menuBtn.title = LANG === 'ja' ? 'メッセージ' : 'Message';
+      menuBtn.style.cssText = 'background:transparent;border:1px solid rgba(124,74,30,0.3);color:var(--text-muted);padding:2px 8px;font-size:0.9rem;line-height:1;';
+      menuBtn.onclick = () => openDMModal(user, friendUid, friendName);
+      const unreadDot = document.createElement('span');
+      unreadDot.style.cssText = 'display:none;position:absolute;top:-3px;right:-3px;width:10px;height:10px;border-radius:50%;background:#e63946;border:2px solid var(--card);';
+      menuWrap.appendChild(menuBtn);
+      menuWrap.appendChild(unreadDot);
+      const dmPairKey = pairKey(user.uid, friendUid);
+      onValue(ref(db, 'directMessages/' + dmPairKey), async (dmSnap) => {
+        const dmData = dmSnap.val();
+        if (!dmData) { unreadDot.style.display = 'none'; return; }
+        const readSnap = await get(ref(db, 'dmReadStatus/' + user.uid + '/' + dmPairKey));
+        const lastRead = readSnap.exists() ? readSnap.val() : 0;
+        const hasUnread = Object.values(dmData).some((m) => m.from === friendUid && m.sentAt > lastRead);
+        unreadDot.style.display = hasUnread ? 'block' : 'none';
+      });
       row.appendChild(label);
       row.appendChild(challengeBtn);
       row.appendChild(tcPanel);
+      row.appendChild(menuWrap);
       container.appendChild(row);
     }
   }
@@ -2698,7 +2576,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         if (piece) {
           const img = document.createElement('img');
           img.src = PIECE_IMG[piece.color + piece.type.toUpperCase()];
-          img.style.width = '100%'; img.style.height = '100%'; img.style.pointerEvents = 'none'; img.draggable = false;
+          img.style.width = '100%'; img.style.height = '100%'; img.style.pointerEvents = 'none';
           cell.appendChild(img);
         }
         container.appendChild(cell);
@@ -2720,7 +2598,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     list.innerHTML = '';
     entries.forEach(([matchId, s]) => {
       const card = document.createElement('div');
-      card.className = 'thumb-card' + (s.phase === 'waiting' ? ' waiting' : '');
+      card.className = 'thumb-card';
       const boardEl = document.createElement('div');
       boardEl.className = 'thumb-board';
       renderThumbBoard(boardEl, s.fen, s.myColor === 'b');
@@ -3072,15 +2950,10 @@ const PIECE_IMG = {
       ['tcStats/' + tc]: newTcEntry
     });
 
-    try {
-      const openingName = detectOpening(m.moves);
-      if (openingName) {
-        const privSnap = await get(ref(db, 'privateStats/' + user.uid + '/openings/' + openingName));
-        await set(ref(db, 'privateStats/' + user.uid + '/openings/' + openingName), (privSnap.val() || 0) + 1);
-      }
-    } catch (e) {
-      // 得意なオープニング統計の保存に失敗しても、履歴・反映フラグの書き込みは必ず続行する
-      console.error('得意なオープニング統計の保存に失敗:', e);
+    const openingName = detectOpening(m.moves);
+    if (openingName) {
+      const privSnap = await get(ref(db, 'privateStats/' + user.uid + '/openings/' + openingName));
+      await set(ref(db, 'privateStats/' + user.uid + '/openings/' + openingName), (privSnap.val() || 0) + 1);
     }
 
     await set(ref(db, 'matchHistory/' + user.uid + '/' + matchId), {
@@ -3195,7 +3068,7 @@ const PIECE_IMG = {
         if (piece) {
           const img = document.createElement('img');
           img.src = PIECE_IMG[piece.color + piece.type.toUpperCase()];
-          img.style.width = '100%'; img.style.height = '100%'; img.style.pointerEvents = 'none'; img.draggable = false;
+          img.style.width = '100%'; img.style.height = '100%'; img.style.pointerEvents = 'none';
           cell.appendChild(img);
         }
         cell.onclick = () => onAnalysisSquareClick(sq);
@@ -3323,7 +3196,7 @@ const PIECE_IMG = {
         if (piece) {
           const img = document.createElement('img');
           img.src = PIECE_IMG[piece.color + piece.type.toUpperCase()];
-          img.style.width = '100%'; img.style.height = '100%'; img.style.pointerEvents = 'none'; img.draggable = false;
+          img.style.width = '100%'; img.style.height = '100%'; img.style.pointerEvents = 'none';
           cell.appendChild(img);
         }
         boardEl.appendChild(cell);
@@ -3701,28 +3574,6 @@ const PIECE_IMG = {
           statusEl.parentNode.insertBefore(acceptArea, statusEl.nextSibling);
         }
       }
-    } else if (m.status === 'active' && gameChess.game_over()) {
-      // 対局データ上は "active" のままだが、盤面(FEN)を見ると実際は既に終局している場合
-      // (通信対局などで、誰もページを開かないまま終局していたケース)。
-      // その場で判定してレーティング・履歴を反映する。
-      if (gameChess.in_checkmate()) {
-        const winnerColor = m.turn === 'w' ? 'b' : 'w';
-        const iWon = winnerColor === myColor;
-        statusEl.textContent = iWon
-          ? (LANG === 'ja' ? 'チェックメイト！あなたの勝ちです。' : 'Checkmate! You won.')
-          : (LANG === 'ja' ? 'チェックメイトされました。負けです。' : 'You were checkmated. You lost.');
-        applyEloIfNeeded(matchId, m, user, iWon ? 1 : 0, 'checkmate');
-        applyAnalysisIfNeeded(matchId, m, user, iWon ? 1 : 0);
-      } else {
-        statusEl.textContent = LANG === 'ja' ? '引き分けです。' : "It's a draw.";
-        const drawReason = gameChess.in_stalemate() ? 'stalemate'
-          : gameChess.in_threefold_repetition() ? 'threefold_repetition'
-          : gameChess.insufficient_material() ? 'insufficient_material'
-          : 'fifty_move';
-        applyEloIfNeeded(matchId, m, user, 0.5, drawReason);
-        applyAnalysisIfNeeded(matchId, m, user, 0.5);
-      }
-      document.getElementById('reportToggleBtn').style.display = 'inline-block';
     } else {
       statusEl.textContent = (LANG === 'ja' ? '対戦相手: ' : 'Opponent: ') + oppName
         + (m.rated === false ? (LANG === 'ja' ? '(ノーレート)' : ' (unrated)') : '') + ' | ' +
@@ -3926,7 +3777,7 @@ const PIECE_IMG = {
         img.src = PIECE_IMG[piece.color + piece.type.toUpperCase()];
         img.style.width = '100%';
         img.style.height = '100%';
-        img.style.pointerEvents = 'none'; img.draggable = false;
+        img.style.pointerEvents = 'none';
         cell.appendChild(img);
       }
         cell.onclick = viewingHistory ? null : () => onSquareClick(sq, user);
@@ -4433,7 +4284,7 @@ const PIECE_IMG = {
         if (piece) {
           const img = document.createElement('img');
           img.src = PIECE_IMG[piece.color + piece.type.toUpperCase()];
-          img.style.width = '100%'; img.style.height = '100%'; img.style.pointerEvents = 'none'; img.draggable = false;
+          img.style.width = '100%'; img.style.height = '100%'; img.style.pointerEvents = 'none';
           cell.appendChild(img);
         }
         cell.onclick = () => onPuzzleCellClick(sq);
@@ -4667,8 +4518,6 @@ const PIECE_IMG = {
     if (!pieceEl) { callback(); return; }
     const fromRect = fromCell.getBoundingClientRect();
     const toRect = toCell.getBoundingClientRect();
-    const dx = toRect.left - fromRect.left;
-    const dy = toRect.top - fromRect.top;
     const clone = pieceEl.cloneNode(true);
     clone.style.position = 'fixed';
     clone.style.zIndex = '9999';
@@ -4676,16 +4525,15 @@ const PIECE_IMG = {
     clone.style.height = fromRect.height + 'px';
     clone.style.left = fromRect.left + 'px';
     clone.style.top = fromRect.top + 'px';
-    clone.style.transform = 'translate(0,0)';
-    clone.style.willChange = 'transform';
     clone.style.pointerEvents = 'none';
     clone.style.margin = '0';
     document.body.appendChild(clone);
     pieceEl.style.opacity = '0';
     requestAnimationFrame(() => {
-      clone.style.transition = 'transform 0.3s cubic-bezier(0.25,0.46,0.45,0.94)';
+      clone.style.transition = 'left 0.3s cubic-bezier(0.25,0.46,0.45,0.94),top 0.3s cubic-bezier(0.25,0.46,0.45,0.94)';
       requestAnimationFrame(() => {
-        clone.style.transform = 'translate(' + dx + 'px,' + dy + 'px)';
+        clone.style.left = toRect.left + 'px';
+        clone.style.top = toRect.top + 'px';
       });
     });
     setTimeout(() => { clone.remove(); callback(); }, 340);
@@ -4836,12 +4684,6 @@ const PIECE_IMG = {
   }
 
   let beginnerChess = null;
-  // デバッグ用:コンソールから beginnerChess.fen() を直接見られないため(モジュールスコープのため)、
-  // window 経由で取得できる小さな窓口を用意しておく
-  window._debugBeginnerFen = () => (beginnerChess ? beginnerChess.fen() : null);
-  window._debugAiFen = () => (aiChess ? aiChess.fen() : null);
-  // デバッグ用:各手ごとのFEN一覧(「見返す」の何手目、というのをピンポイントで確認するため)
-  window._debugBeginnerFens = () => (typeof computeBeginnerFens === 'function' && beginnerChess ? JSON.stringify(computeBeginnerFens()) : null);
   let beginnerState = {
     myColor: 'w', selected: null, validTargets: [],
     lastFrom: null, lastTo: null, animating: false,
@@ -4857,32 +4699,6 @@ const PIECE_IMG = {
     el.style.color = cls === 'bad' ? 'var(--status-bad)' : (cls === 'good' ? 'var(--status-good)' : 'var(--brown-dark)');
   }
 
-  let beginnerQuickViewIndex = null; // null = 現在の(実際の)局面を表示中。数値なら過去の局面を閲覧中(見るだけ、操作不可)
-
-  function computeBeginnerFens() {
-    const tmp = new Chess();
-    const fens = [{ fen: tmp.fen(), san: null }];
-    beginnerChess.history({ verbose: true }).forEach((mv) => {
-      tmp.move(mv.san);
-      fens.push({ fen: tmp.fen(), san: mv.san });
-    });
-    return fens;
-  }
-
-  function updateBeginnerQuickLabel(fens) {
-    const label = document.getElementById('beginnerQuickLabel');
-    if (!label) return;
-    if (beginnerQuickViewIndex === null) {
-      label.textContent = LANG === 'ja' ? '局面を移動' : 'Browse moves';
-    } else {
-      const entry = fens[beginnerQuickViewIndex];
-      const total = fens.length - 1;
-      label.textContent = beginnerQuickViewIndex === 0
-        ? (LANG === 'ja' ? '開始局面' : 'Start') + ' (0/' + total + ')'
-        : entry.san + ' (' + beginnerQuickViewIndex + '/' + total + ')';
-    }
-  }
-
   function renderBeginnerBoard() {
     const board = document.getElementById('beginnerBoard');
     if (!board) return;
@@ -4891,10 +4707,7 @@ const PIECE_IMG = {
     const ranks = [8,7,6,5,4,3,2,1];
     const rowOrder = beginnerState.myColor === 'b' ? [...Array(8).keys()].reverse() : [...Array(8).keys()];
     const colOrder = beginnerState.myColor === 'b' ? [...Array(8).keys()].reverse() : [...Array(8).keys()];
-    // 過去の局面を閲覧中は、そのFENから作った見るだけの盤面を表示する(本当の対局状態=beginnerChessには一切触れない)
-    const viewingPast = beginnerQuickViewIndex !== null;
-    const chess = viewingPast ? new Chess(computeBeginnerFens()[beginnerQuickViewIndex].fen) : beginnerChess;
-    const checkmateKingSq = (!viewingPast && chess.in_checkmate()) ? findKingSquare(chess.board(), chess.turn()) : null;
+    const checkmateKingSq = beginnerChess.in_checkmate() ? findKingSquare(beginnerChess.board(), beginnerChess.turn()) : null;
     for (let vr = 0; vr < 8; vr++) {
       for (let vc = 0; vc < 8; vc++) {
         const row = rowOrder[vr], col = colOrder[vc];
@@ -4902,23 +4715,21 @@ const PIECE_IMG = {
         const cell = document.createElement('div');
         cell.className = 'sq ' + ((col + row) % 2 === 0 ? 'light' : 'dark');
         cell.dataset.sq = sq;
-        if (!viewingPast) {
-          if (beginnerState.lastFrom === sq || beginnerState.lastTo === sq) cell.classList.add('last-move');
-          if (beginnerState.selected === sq) cell.classList.add('selected');
-          if (beginnerState.hintFrom === sq || beginnerState.hintTo === sq) cell.classList.add('beginner-dot');
-        }
+        if (beginnerState.lastFrom === sq || beginnerState.lastTo === sq) cell.classList.add('last-move');
+        if (beginnerState.selected === sq) cell.classList.add('selected');
+        if (beginnerState.hintFrom === sq || beginnerState.hintTo === sq) cell.classList.add('beginner-dot');
         if (checkmateKingSq === sq) cell.classList.add('checkmate-king');
-        const piece = chess.get(sq);
-        if (!viewingPast && beginnerState.validTargets && beginnerState.validTargets.includes(sq)) cell.classList.add(piece ? 'hint-capture' : 'hint-move');
+        const piece = beginnerChess.get(sq);
+        if (beginnerState.validTargets && beginnerState.validTargets.includes(sq)) cell.classList.add(piece ? 'hint-capture' : 'hint-move');
         if (vc === 0) { const l = document.createElement('span'); l.className = 'sq-label rank-label'; l.textContent = ranks[row]; cell.appendChild(l); }
         if (vr === 7) { const l = document.createElement('span'); l.className = 'sq-label file-label'; l.textContent = files[col]; cell.appendChild(l); }
         if (piece) {
           const img = document.createElement('img');
           img.src = PIECE_IMG[piece.color + piece.type.toUpperCase()];
-          img.style.width = '100%'; img.style.height = '100%'; img.style.pointerEvents = 'none'; img.draggable = false;
+          img.style.width = '100%'; img.style.height = '100%'; img.style.pointerEvents = 'none';
           cell.appendChild(img);
         }
-        cell.onclick = (viewingPast || beginnerState.animating) ? null : () => onBeginnerCellClick(sq);
+        cell.onclick = beginnerState.animating ? null : () => onBeginnerCellClick(sq);
         board.appendChild(cell);
       }
     }
@@ -4949,8 +4760,6 @@ const PIECE_IMG = {
     if (!pieceEl) { callback(); return; }
     const fromRect = fromCell.getBoundingClientRect();
     const toRect = toCell.getBoundingClientRect();
-    const dx = toRect.left - fromRect.left;
-    const dy = toRect.top - fromRect.top;
     const clone = pieceEl.cloneNode(true);
     clone.style.position = 'fixed';
     clone.style.zIndex = '9999';
@@ -4958,16 +4767,15 @@ const PIECE_IMG = {
     clone.style.height = fromRect.height + 'px';
     clone.style.left = fromRect.left + 'px';
     clone.style.top = fromRect.top + 'px';
-    clone.style.transform = 'translate(0,0)';
-    clone.style.willChange = 'transform';
     clone.style.pointerEvents = 'none';
     clone.style.margin = '0';
     document.body.appendChild(clone);
     pieceEl.style.opacity = '0';
     requestAnimationFrame(() => {
-      clone.style.transition = 'transform 0.3s cubic-bezier(0.25,0.46,0.45,0.94)';
+      clone.style.transition = 'left 0.3s cubic-bezier(0.25,0.46,0.45,0.94),top 0.3s cubic-bezier(0.25,0.46,0.45,0.94)';
       requestAnimationFrame(() => {
-        clone.style.transform = 'translate(' + dx + 'px,' + dy + 'px)';
+        clone.style.left = toRect.left + 'px';
+        clone.style.top = toRect.top + 'px';
       });
     });
     setTimeout(() => { clone.remove(); callback(); }, 340);
@@ -5085,7 +4893,8 @@ const PIECE_IMG = {
       const mv = legal.find((m) => m.san === bookMove);
       if (mv) return mv;
     }
-    return aiPickMove(chess, 'hard');
+    const jeneColor = beginnerState.myColor === 'w' ? 'b' : 'w';
+    return aiPickMove(chess, 'hard', jeneColor);
   }
 
   // OPENING_TABLE(浅いが幅広い)とBEGINNER_OPENINGS(狭いが深い、9手先まで)の両方を見て、
@@ -5275,7 +5084,6 @@ const PIECE_IMG = {
       hintFrom: null, hintTo: null, lastDetectedOpening: null, wentOutOfBook: false
     };
     beginnerChess = new Chess();
-    beginnerQuickViewIndex = null;
     document.getElementById('beginnerColorPanel').style.display = 'none';
     document.getElementById('beginnerGameArea').style.display = 'block';
     hideBeginnerJeneSpeech();
@@ -5287,170 +5095,6 @@ const PIECE_IMG = {
   document.getElementById('btnBeginnerNewGame').onclick = () => {
     document.getElementById('beginnerGameArea').style.display = 'none';
     document.getElementById('beginnerColorPanel').style.display = 'block';
-  };
-
-  // ===== はじめてモード: 「局面を見返す」機能 =====
-  // beginnerChess の指し手履歴から各手番の局面(FEN)を再現し、
-  // ◀/▶ で行き来できるポップアップとして表示する。対局自体には一切影響しない。
-  let beginnerReviewIndex = 0;
-  let beginnerReviewFens = [];
-  let beginnerTryChess = null;       // 「ここから試す」モード中の仮想盤面(本番には影響しない)
-  let beginnerTrySelected = null;
-  let beginnerTryMode = false;
-
-  function openBeginnerHistoryOverlay() {
-    if (!beginnerChess) return;
-    // 初期局面 + 各手を指した後の局面、を全部並べる
-    const tmp = new Chess();
-    beginnerReviewFens = [{ fen: tmp.fen(), san: null }];
-    beginnerChess.history({ verbose: true }).forEach((mv) => {
-      tmp.move(mv.san);
-      beginnerReviewFens.push({ fen: tmp.fen(), san: mv.san });
-    });
-    beginnerReviewIndex = beginnerReviewFens.length - 1; // 最新局面から表示
-    beginnerTryMode = false;
-    beginnerTryChess = null;
-    document.getElementById('beginnerHistoryOverlay').style.display = 'flex';
-    renderBeginnerHistoryBoard();
-  }
-
-  function closeBeginnerHistoryOverlay() {
-    document.getElementById('beginnerHistoryOverlay').style.display = 'none';
-    beginnerTryMode = false;
-    beginnerTryChess = null;
-  }
-
-  function renderBeginnerHistoryBoard() {
-    const board = document.getElementById('beginnerHistoryBoard');
-    const label = document.getElementById('beginnerHistoryLabel');
-    if (!board || !beginnerReviewFens.length) return;
-
-    // 「試すモード」なら仮想盤面(beginnerTryChess)を、そうでなければ履歴の局面を表示する
-    const chess = beginnerTryMode ? beginnerTryChess : new Chess(beginnerReviewFens[beginnerReviewIndex].fen);
-
-    board.innerHTML = '';
-    const files = ['a','b','c','d','e','f','g','h'];
-    const ranks = [8,7,6,5,4,3,2,1];
-    const rowOrder = beginnerState.myColor === 'b' ? [...Array(8).keys()].reverse() : [...Array(8).keys()];
-    const colOrder = beginnerState.myColor === 'b' ? [...Array(8).keys()].reverse() : [...Array(8).keys()];
-
-    let legalTargets = new Set();
-    if (beginnerTryMode && beginnerTrySelected) {
-      const legalMoves = chess.moves({ square: beginnerTrySelected, verbose: true });
-      legalTargets = new Set(legalMoves.map((mv) => mv.to));
-    }
-
-    for (let vr = 0; vr < 8; vr++) {
-      for (let vc = 0; vc < 8; vc++) {
-        const row = rowOrder[vr], col = colOrder[vc];
-        const sq = files[col] + ranks[row];
-        const cell = document.createElement('div');
-        cell.className = 'sq ' + ((col + row) % 2 === 0 ? 'light' : 'dark');
-        if (vc === 0) { const l = document.createElement('span'); l.className = 'sq-label rank-label'; l.textContent = ranks[row]; cell.appendChild(l); }
-        if (vr === 7) { const l = document.createElement('span'); l.className = 'sq-label file-label'; l.textContent = files[col]; cell.appendChild(l); }
-        const piece = chess.get(sq);
-        if (beginnerTryMode) {
-          if (beginnerTrySelected === sq) cell.classList.add('selected');
-          if (legalTargets.has(sq)) cell.classList.add(piece ? 'hint-capture' : 'hint-move');
-          cell.onclick = () => onBeginnerTrySquareClick(sq);
-        }
-        if (piece) {
-          const img = document.createElement('img');
-          img.src = PIECE_IMG[piece.color + piece.type.toUpperCase()];
-          img.style.width = '100%'; img.style.height = '100%'; img.style.pointerEvents = 'none'; img.draggable = false;
-          cell.appendChild(img);
-        }
-        board.appendChild(cell);
-      }
-    }
-
-    if (label) {
-      if (beginnerTryMode) {
-        label.textContent = LANG === 'ja' ? '試している最中(自由に指せます)' : 'Experimenting (free play)';
-      } else {
-        const total = beginnerReviewFens.length - 1;
-        const entry = beginnerReviewFens[beginnerReviewIndex];
-        label.textContent = beginnerReviewIndex === 0
-          ? (LANG === 'ja' ? '開始局面' : 'Start') + ' (0/' + total + ')'
-          : entry.san + ' (' + beginnerReviewIndex + '/' + total + ')';
-      }
-    }
-    document.getElementById('beginnerHistoryPrevBtn').disabled = beginnerTryMode || beginnerReviewIndex === 0;
-    document.getElementById('beginnerHistoryNextBtn').disabled = beginnerTryMode || beginnerReviewIndex === beginnerReviewFens.length - 1;
-  }
-
-  function onBeginnerTrySquareClick(sq) {
-    if (!beginnerTryChess) return;
-    if (!beginnerTrySelected) {
-      const piece = beginnerTryChess.get(sq);
-      if (piece) beginnerTrySelected = sq;
-    } else {
-      const move = beginnerTryChess.move({ from: beginnerTrySelected, to: sq, promotion: 'q' });
-      beginnerTrySelected = null;
-      if (!move) {
-        // 移動できなければ、選び直しとして扱う(別の駒を選び直せるように)
-        const piece = beginnerTryChess.get(sq);
-        if (piece) beginnerTrySelected = sq;
-      }
-    }
-    renderBeginnerHistoryBoard();
-  }
-
-  document.getElementById('beginnerQuickPrevBtn').onclick = () => {
-    if (!beginnerChess) return;
-    const fens = computeBeginnerFens();
-    if (beginnerQuickViewIndex === null) {
-      if (fens.length < 2) return; // まだ1手も指されていない
-      beginnerQuickViewIndex = fens.length - 2;
-    } else if (beginnerQuickViewIndex > 0) {
-      beginnerQuickViewIndex--;
-    }
-    updateBeginnerQuickLabel(fens);
-    renderBeginnerBoard();
-  };
-  document.getElementById('beginnerQuickNextBtn').onclick = () => {
-    if (!beginnerChess || beginnerQuickViewIndex === null) return;
-    const fens = computeBeginnerFens();
-    beginnerQuickViewIndex++;
-    if (beginnerQuickViewIndex >= fens.length - 1) beginnerQuickViewIndex = null; // 最新まで進んだら通常表示に戻る
-    updateBeginnerQuickLabel(fens);
-    renderBeginnerBoard();
-  };
-
-  document.getElementById('btnBeginnerReviewHistory').onclick = openBeginnerHistoryOverlay;
-  document.getElementById('beginnerHistoryCloseBtn').onclick = closeBeginnerHistoryOverlay;
-  document.getElementById('beginnerHistoryOverlay').onclick = (e) => {
-    if (e.target.id === 'beginnerHistoryOverlay') closeBeginnerHistoryOverlay();
-  };
-  document.getElementById('beginnerHistoryPrevBtn').onclick = () => {
-    if (!beginnerTryMode && beginnerReviewIndex > 0) { beginnerReviewIndex--; renderBeginnerHistoryBoard(); }
-  };
-  document.getElementById('beginnerHistoryNextBtn').onclick = () => {
-    if (!beginnerTryMode && beginnerReviewIndex < beginnerReviewFens.length - 1) { beginnerReviewIndex++; renderBeginnerHistoryBoard(); }
-  };
-  document.getElementById('beginnerHistoryTryBtn').onclick = () => {
-    beginnerTryMode = true;
-    beginnerTryChess = new Chess(beginnerReviewFens[beginnerReviewIndex].fen);
-    beginnerTrySelected = null;
-    document.getElementById('beginnerHistoryTryBtn').style.display = 'none';
-    document.getElementById('beginnerHistoryResetTryBtn').style.display = 'inline-block';
-    document.getElementById('beginnerHistoryStopTryBtn').style.display = 'inline-block';
-    document.getElementById('beginnerHistoryTryHint').style.display = 'block';
-    renderBeginnerHistoryBoard();
-  };
-  document.getElementById('beginnerHistoryResetTryBtn').onclick = () => {
-    beginnerTryChess = new Chess(beginnerReviewFens[beginnerReviewIndex].fen);
-    beginnerTrySelected = null;
-    renderBeginnerHistoryBoard();
-  };
-  document.getElementById('beginnerHistoryStopTryBtn').onclick = () => {
-    beginnerTryMode = false;
-    beginnerTryChess = null;
-    document.getElementById('beginnerHistoryTryBtn').style.display = 'inline-block';
-    document.getElementById('beginnerHistoryResetTryBtn').style.display = 'none';
-    document.getElementById('beginnerHistoryStopTryBtn').style.display = 'none';
-    document.getElementById('beginnerHistoryTryHint').style.display = 'none';
-    renderBeginnerHistoryBoard();
   };
 
   // トップページの「初めての方はこちら」リンクから来た時、確実に開いてスクロールする
