@@ -3976,28 +3976,41 @@ const PIECE_IMG = {
   }
 
   let clockInterval = null;
-  function startClockTicker(user) {
-    if (clockInterval) clearInterval(clockInterval);
-    clockInterval = setInterval(async () => {
-      const matchId = myMatchId;
-      if (!matchId) return;
-      const matchSnap = await get(ref(db, 'matches/' + matchId));
-      const m = matchSnap.val();
-      if (!m || m.status !== 'active') return;
-      const turnColor = m.turn;
-      const timeKey = turnColor === 'w' ? 'whiteTime' : 'blackTime';
-      const elapsed = Date.now() - (m.turnStartedAt || Date.now());
-      const remaining = (m[timeKey] || 0) - elapsed;
-      if (remaining <= 0) {
-        // どちらの画面が開いていても時間切れを検知できるようにする
-        await set(ref(db, 'matches/' + matchId), {
-          ...m, [timeKey]: 0, status: 'timeout', winner: turnColor === 'w' ? 'b' : 'w'
-        });
-      } else if (myColor === turnColor) {
-        renderMiniBoard(m, user, matchId);
-      }
-    }, 1000);
-  }
+  function updateClockDisplay(m) {
+  const clockEl = document.getElementById('gameClock');
+  if (!clockEl || !m) return;
+  const elapsed = (m.status === 'active') ? (Date.now() - (m.turnStartedAt || Date.now())) : 0;
+  const wTime = m.whiteTime - (m.turn === 'w' && m.status === 'active' ? elapsed : 0);
+  const bTime = m.blackTime - (m.turn === 'b' && m.status === 'active' ? elapsed : 0);
+  const myTime = myColor === 'w' ? wTime : bTime;
+  const oppTime = myColor === 'w' ? bTime : wTime;
+  const tcLabel = { bullet: 'Bullet', blitz: 'Blitz', rapid: 'Rapid' }[m.timeControl] || '';
+  const incLabel = m.increment ? ('+' + (m.increment / 1000) + 's') : '';
+  clockEl.textContent = tcLabel + incLabel + '　' +
+    (LANG === 'ja' ? '相手 ' : 'Opponent ') + fmtTime(oppTime) + '　|　' +
+    (LANG === 'ja' ? '自分 ' : 'You ') + fmtTime(myTime);
+}
+
+function startClockTicker(user) {
+  if (clockInterval) clearInterval(clockInterval);
+  clockInterval = setInterval(async () => {
+    const matchId = myMatchId;
+    if (!matchId) return;
+    const m = latestMatchData;
+    if (!m || m.status !== 'active') return;
+    const turnColor = m.turn;
+    const timeKey = turnColor === 'w' ? 'whiteTime' : 'blackTime';
+    const elapsed = Date.now() - (m.turnStartedAt || Date.now());
+    const remaining = (m[timeKey] || 0) - elapsed;
+    if (remaining <= 0) {
+      await set(ref(db, 'matches/' + matchId), {
+        ...m, [timeKey]: 0, status: 'timeout', winner: turnColor === 'w' ? 'b' : 'w'
+      });
+    } else {
+      updateClockDisplay(m);
+    }
+  }, 1000);
+}
 
   document.getElementById('backToListBtn').onclick = () => {
     closeOpenedMatch();
