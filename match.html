@@ -639,6 +639,32 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     applyTheme();
   };
   applyTheme();
+  document.getElementById('settingsBtn').onclick = () => {
+  const panel = document.getElementById('settingsPanel');
+  panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
+};
+document.addEventListener('click', (e) => {
+  const panel = document.getElementById('settingsPanel');
+  if (panel.style.display === 'block' && !panel.contains(e.target) && e.target.id !== 'settingsBtn') {
+    panel.style.display = 'none';
+  }
+});
+
+let BOARD_THEME = localStorage.getItem('boardTheme') || 'brown';
+function applyBoardTheme() {
+  document.documentElement.setAttribute('data-board-theme', BOARD_THEME);
+  document.querySelectorAll('.board-theme-swatch').forEach((btn) => {
+    btn.style.outline = btn.dataset.boardTheme === BOARD_THEME ? '3px solid var(--brown-dark)' : 'none';
+  });
+}
+document.querySelectorAll('.board-theme-swatch').forEach((btn) => {
+  btn.onclick = () => {
+    BOARD_THEME = btn.dataset.boardTheme;
+    localStorage.setItem('boardTheme', BOARD_THEME);
+    applyBoardTheme();
+  };
+});
+applyBoardTheme();
 
   // 共有AudioContext（毎回newしない）
   let _sharedAudioCtx = null;
