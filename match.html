@@ -4405,12 +4405,11 @@ function startClockTicker(user) {
       if (puzzleState.validTargets.includes(sq)) {
         const fromSq = puzzleState.selected;
         const result = puzzleChess.move({ from: fromSq, to: sq, promotion: 'q' });
-        if (result && result.san === expectedPuzzleSAN()) {
-          puzzleState.animating = true;
-          puzzleState.selected = null; puzzleState.validTargets = [];
-          renderPuzzleBoard();
-          animatePuzzleMove(fromSq, sq, () => {
-            puzzleState.lastFrom = result.from; puzzleState.lastTo = result.to;
+       if (result && result.san === expectedPuzzleSAN()) {
+  puzzleState.animating = true;
+  puzzleState.selected = null; puzzleState.validTargets = [];
+  animatePuzzleMove(fromSq, sq, () => {
+    puzzleState.lastFrom = result.from; puzzleState.lastTo = result.to;
             puzzleState.moveIndex++;
             puzzleState.animating = false;
             renderPuzzleBoard();
