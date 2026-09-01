@@ -190,75 +190,74 @@ const initialBoard = [
 const LESSON_STEPS = [
   { move:null, moveLabel:{ja:'開始局面', en:'Starting Position'},
     ja:'シシリアン・ディフェンスのレッスンを始めるよ！プロの対局の約4分の1に登場する、黒番で最も勝率が高いとされる定跡なんだ。他のオープニングと違って、黒は「白と同じ形」を目指さない。むしろ非対称な陣形をわざと作り、盤上に不均衡を生み出すことで、勝つチャンスを広げようとする戦略なんだ。',
-    en:"Let's start the Sicilian Defense! It appears in roughly a quarter of all professional games and is statistically Black's best-scoring reply to 1.e4. Unlike most openings, Black isn't trying to mirror White's setup — the whole point is to create imbalance on purpose, because a lopsided position gives both sides real winning chances instead of a level, drawish game.",
+    en:'Let\'s start the Sicilian Defense! It appears in roughly a quarter of all professional games and is statistically Black\'s best-scoring reply to 1.e4. Unlike most openings, Black isn\'t trying to mirror White\'s setup \u2014 the whole point is to create imbalance on purpose, because a lopsided position gives both sides real winning chances instead of a level, drawish game.',
     fox:'welcome' },
 
   { move:{from:[6,4],to:[4,4]}, moveLabel:{ja:'1. e4', en:'1. e4'},
     ja:'白はe4で中央の2マス(d5とf5)に影響力を持ち、ビショップとクイーンの通り道を同時に開くよ。中央支配と駒の展開速度、この2つを同時に狙える効率の良い一手なんだ。',
-    en:'White plays 1.e4, staking a claim on d5 and f5 while opening lines for the bishop and queen in one move. Central control and rapid development — this single move does both jobs at once.',
+    en:'White plays 1.e4, staking a claim on d5 and f5 while opening lines for the bishop and queen in one move. Central control and rapid development \u2014 this single move does both jobs at once.',
     fox:'normal' },
 
   { move:{from:[1,2],to:[3,2]}, moveLabel:{ja:'1...c5（シシリアン！）', en:'1...c5 (Sicilian!)'},
     ja:'ここがシシリアンの核心。1...e5で対称に応じれば、白は先手番の一手のリードを保ったまま同じような戦いになる。でも1...c5なら話が変わる。白がもし2.d4 cxd4と交換すれば、黒は中央のポーンを1つ減らす代わりに、盤の反対側(クイーンサイド)で数的優位を作れる。これが後半、bファイルやcファイルを使った反撃の土台になるんだ。',
-    en:"This is the heart of the Sicilian. Answering symmetrically with 1...e5 lets White keep the natural edge of moving first. 1...c5 changes the fight entirely: if White later plays d4 and trades on d4, Black gives up a central pawn but gains a numbers advantage on the queenside — the foundation for a later counterattack down the b- and c-files.",
+    en:'This is the heart of the Sicilian. Answering symmetrically with 1...e5 lets White keep the natural edge of moving first. 1...c5 changes the fight entirely: if White later plays d4 and trades on d4, Black gives up a central pawn but gains a numbers advantage on the queenside \u2014 the foundation for a later counterattack down the b- and c-files.',
     fox:'happy' },
 
   { move:{from:[7,6],to:[5,5]}, moveLabel:{ja:'2. Nf3', en:'2. Nf3'},
     ja:'白はナイトをf3へ。この一手はd4への中央突破を援護すると同時に、キングサイド・キャスリングへの道も整える、いわば「一石二鳥」の展開手だよ。',
-    en:'White develops the knight to f3. This supports a future d4 break and clears the path to castle kingside — one move doing double duty.',
+    en:'White develops the knight to f3. This supports a future d4 break and clears the path to castle kingside \u2014 one move doing double duty.',
     fox:'normal' },
 
   { move:{from:[1,3],to:[2,3]}, moveLabel:{ja:'2...d6', en:'2...d6'},
     ja:'黒はd6。派手さはないけど、これから来るe5やNf6の展開を陰で支える一手だよ。d6を先に決めておくことで、後でe5を指したときにポーンが取られっぱなしになる心配がなくなるんだ。',
-    en:"Black plays the modest 2...d6. It's quiet, but it underwrites a future ...e5 or ...Nf6 — playing d6 now means the e5 pawn won't simply be captured for free later on.",
+    en:'Black plays the modest 2...d6. It\'s quiet, but it underwrites a future ...e5 or ...Nf6 \u2014 playing d6 now means the e5 pawn won\'t simply be captured for free later on.',
     fox:'normal' },
 
   { move:{from:[6,3],to:[4,3]}, moveLabel:{ja:'3. d4', en:'3. d4'},
     ja:'白はd4で2つ目の中央突破。ここでcxd4と取らせて、後でナイトで取り返せば、白は中央にどっしり構える代わりに、駒の展開スピードで優位に立とうとしているんだ。',
-    en="White strikes again with 3.d4. The point is to trade the c-pawn for the d-pawn, recapture with the knight, and use the resulting lead in development to compensate for the less rigid center.",
+    en:'White strikes again with 3.d4. The point is to trade the c-pawn for the d-pawn, recapture with the knight, and use the resulting lead in development to compensate for the less rigid center.',
     fox:'normal' },
 
   { move:{from:[3,2],to:[4,3]}, moveLabel:{ja:'3...cxd4', en:'3...cxd4'},
     ja:'黒はcxd4で応じる。これで盤面のポーン構造が決まった。白はまだd・eファイルにポーンを持つ「オープン・シシリアン」の形になり、黒はcファイルが半分開いた状態(セミオープン)になる。このcファイルこそ、後半黒がルークを配置して圧力をかける主戦場になるんだ。',
-    en="Black recaptures with 3...cxd4, and the pawn structure for the whole game is now set. White keeps pawns on the d- and e-files (the 'Open Sicilian'), while Black gets a semi-open c-file — the very file Black's rook will later occupy to pile on pressure.",
+    en:'Black recaptures with 3...cxd4, and the pawn structure for the whole game is now set. White keeps pawns on the d- and e-files (the \'Open Sicilian\'), while Black gets a semi-open c-file \u2014 the very file Black\'s rook will later occupy to pile on pressure.',
     fox:'quiz' },
 
   { move:{from:[5,5],to:[4,3]}, moveLabel:{ja:'4. Nxd4', en:'4. Nxd4'},
     ja:'白はナイトで取り返し、盤の中心という一等地に陣取る。ここから白のナイトは、盤全体をにらむ強力な駒になるよ。',
-    en="White recaptures with the knight, taking up residence on the best square on the board. From d4, this knight will influence the whole game.",
+    en:'White recaptures with the knight, taking up residence on the best square on the board. From d4, this knight will influence the whole game.',
     fox:'normal' },
 
   { move:{from:[0,6],to:[2,5]}, moveLabel:{ja:'4...Nf6', en:'4...Nf6'},
     ja:'黒はナイトをf6へ。単なる駒の展開ではなく、e4ポーンに直接圧力をかける実利的な一手だよ。白は次にNc3でこのポーンを守る必要が出てくる。',
-    en="Black develops with 4...Nf6 — not just development for its own sake, but a direct attack on the e4 pawn. White will need to defend it, typically with Nc3.",
+    en:'Black develops with 4...Nf6 \u2014 not just development for its own sake, but a direct attack on the e4 pawn. White will need to defend it, typically with Nc3.',
     fox:'normal' },
 
   { move:{from:[7,1],to:[5,2]}, moveLabel:{ja:'5. Nc3', en:'5. Nc3'},
     ja:'白はナイトをc3で展開し、e4ポーンを一手で守りながら駒組みを進める。効率の良い一手だね。',
-    en='White develops the second knight to c3, defending e4 and developing at the same time.',
+    en:'White develops the second knight to c3, defending e4 and developing at the same time.',
     fox:'normal' },
 
   { move:{from:[1,0],to:[2,0]}, moveLabel:{ja:'5...a6（ナジドルフ）', en:'5...a6 (Najdorf)'},
     ja:'黒はa6。地味だけど、実はここからナジドルフ・シシリアンという最も研究し尽くされた変化の入り口なんだ。狙いは2つ。1つは将来のb5(クイーンサイドの拡張)の準備、もう1つは白のBb5+というチェックを未然に防ぐこと。この一手だけで、黒は将来の攻撃と守りの両方に布石を打っている。',
-    en="Black plays 5...a6 — the move that defines the Najdorf, the most deeply analyzed line in all of chess. It does two jobs: it prepares a future ...b5 pawn push on the queenside, and it rules out a future Bb5+ check. One quiet move, laying groundwork for both attack and defense.",
+    en:'Black plays 5...a6 \u2014 the move that defines the Najdorf, the most deeply analyzed line in all of chess. It does two jobs: it prepares a future ...b5 pawn push on the queenside, and it rules out a future Bb5+ check. One quiet move, laying groundwork for both attack and defense.',
     fox:'wink' },
 
   { move:{from:[7,5],to:[6,4]}, moveLabel:{ja:'6. Be2', en:'6. Be2'},
     ja:'白はビショップをe2へ静かに展開。キングサイドへのキャスリングを急ぎ、王様の安全を優先する落ち着いた方針だよ。',
-    en='White quietly develops the bishop to e2, prioritizing king safety and preparing to castle kingside without delay.',
+    en:'White quietly develops the bishop to e2, prioritizing king safety and preparing to castle kingside without delay.',
     fox:'normal' },
 
   { move:{from:[1,4],to:[3,4]}, moveLabel:{ja:'6...e5', en:'6...e5'},
     ja:'黒はe5！中央のナイトに「そこにはいられないよ」とプレッシャーをかける、シシリアンらしい積極策だよ。ただし代償もある。d5マスに黒のポーンがいなくなるので、白の駒がそこに入り込む隙が生まれる。攻めと引き換えに弱点を作る、これがシシリアンの駆け引きなんだ。',
-    en="Black plays 6...e5, kicking the centralized knight — classic Sicilian aggression. But it comes at a cost: the d5 square is now permanently weakened, giving White a potential outpost there. Trading a structural weakness for active play is the recurring bargain of the Sicilian.",
+    en:'Black plays 6...e5, kicking the centralized knight \u2014 classic Sicilian aggression. But it comes at a cost: the d5 square is now permanently weakened, giving White a potential outpost there. Trading a structural weakness for active play is the recurring bargain of the Sicilian.',
     fox:'happy' },
 
   { move:{from:[4,3],to:[5,1]}, moveLabel:{ja:'7. Nb3', en:'7. Nb3'},
     ja:'白はナイトをb3に引く。d4のマスを空けつつ、c5とd4の両方をにらみ続ける柔軟な位置取りだよ。ここまでで基本の駒組みは完成。この先の中盤では、黒はb5・Nbd7・Be7といった手順でクイーンサイドを盤石にしながらキャスリングを目指し、白はキングサイドで駒を活性化させて相手のキングを狙うという、非対称な戦いが本格化していく。ここから先はナジドルフ、ドラゴン、スヴェシニコフなど数々の名門変化に枝分かれしていくよ。',
-    en="White retreats the knight to b3, vacating d4 while still eyeing both c5 and d4. The opening phase is essentially complete here. From this position, Black's typical middlegame plan is to finish development with ...b5, ...Nbd7 and ...Be7 before castling, while White looks to activate pieces on the kingside and target Black's king — a genuinely asymmetrical fight. From here the game branches into famous systems like the Najdorf, the Dragon, and the Sveshnikov, each with its own middlegame character worth exploring on its own.",
+    en:'White retreats the knight to b3, vacating d4 while still eyeing both c5 and d4. The opening phase is essentially complete here. From this position, Black\'s typical middlegame plan is to finish development with ...b5, ...Nbd7 and ...Be7 before castling, while White looks to activate pieces on the kingside and target Black\'s king \u2014 a genuinely asymmetrical fight. From here the game branches into famous systems like the Najdorf, the Dragon, and the Sveshnikov, each with its own middlegame character worth exploring on its own.',
     fox:'happy' }
 ];
-
 const BUTTON_TEXT = { ja:{prev:'← 前へ', next:'次へ →'}, en:{prev:'← Prev', next:'Next →'} };
 
 let currentLang = 'ja';
