@@ -2062,8 +2062,7 @@ applyBoardTheme();
       const friendProfile = snap.val() || {};
       const friendName = friendProfile.username || '(unknown)';
       const rating = friendProfile.rating || 1200;
-      const wld = (friendProfile.wins || 0) + '勝' + (friendProfile.losses || 0) + '敗' + (friendProfile.draws || 0) + '分';
-      const vsSnap = await get(ref(db, 'publicProfiles/' + user.uid + '/vsRecord/' + friendUid));
+      const wld = (friendProfile.wins || 0) + (LANG === 'ja' ? '勝' : 'W') + (friendProfile.losses || 0) + (LANG === 'ja' ? '敗' : 'L') + (friendProfile.draws || 0) + (LANG === 'ja' ? '分' : 'D');const vsSnap = await get(ref(db, 'publicProfiles/' + user.uid + '/vsRecord/' + friendUid));
       const vs = vsSnap.val() || { wins: 0, losses: 0, draws: 0 };
       const vsLabel = LANG === 'ja'
         ? '対戦成績: ' + vs.wins + '勝' + vs.losses + '敗' + vs.draws + '分'
