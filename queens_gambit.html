@@ -189,63 +189,75 @@ const initialBoard = [
 // ============================================================
 const LESSON_STEPS = [
   { move:null, moveLabel:{ja:'開始局面', en:'Starting Position'},
-    ja:'クイーンズ・ギャンビットのレッスンを始めるよ！ジーンと一緒に、一手ずつ「なぜその手を指すのか」を学んでいこう。',
-    en:"Let's start the Queen's Gambit lesson! Jene will explain why each move is played, one step at a time.",
+    ja:'クイーンズ・ギャンビットのレッスンを始めるよ！19世紀から現代の世界選手権まで指され続けている、チェス史上もっとも息の長いオープニングの一つなんだ。「ギャンビット」と名前が付いているけど、実は駒を犠牲にする戦法ではない。その理由も含めて、一手ずつ見ていこう。',
+    en:"Let's start the Queen's Gambit! It's one of the longest-standing openings in chess history, played from the 19th century all the way to modern World Championship matches. Despite the name, it isn't really about sacrificing material — we'll see exactly why as we go.",
     fox:'welcome' },
+
   { move:{from:[6,3],to:[4,3]}, moveLabel:{ja:'1. d4', en:'1. d4'},
-    ja:'白はd4と突いて中央を制圧するよ。クイーン側のポーンを進めることで、後のc4の動きにもつながっていくんだ。',
-    en:'White plays 1.d4, staking a claim in the center. This sets up the idea of advancing the c-pawn next.',
+    ja:'白はd4で中央を制圧。e4と違って、d4はすぐにはポーンで攻撃されにくく、じっくりとした構築的な展開につながりやすいのが特徴だよ。',
+    en:'White stakes a claim in the center with 1.d4. Unlike 1.e4, the d4 pawn is harder for Black to challenge immediately, which tends to lead to a slower, more strategic type of game.',
     fox:'normal' },
+
   { move:{from:[1,3],to:[3,3]}, moveLabel:{ja:'1...d5', en:'1...d5'},
-    ja:'黒も同じくd5で対抗。中央の取り合いはお互い様、というバランスを保つよ。',
-    en:'Black mirrors with 1...d5, keeping the fight for the center balanced.',
+    ja:'黒も同じくd5で対抗し、中央のバランスを保つよ。ここまでは完全に対称的な局面なんだ。',
+    en:'Black mirrors with 1...d5, keeping the center balanced. So far the position is perfectly symmetrical.',
     fox:'normal' },
+
   { move:{from:[6,2],to:[4,2]}, moveLabel:{ja:'2. c4（クイーンズ・ギャンビット！）', en:"2. c4 (Queen's Gambit!)"},
-    ja:'ここが本題、クイーンズ・ギャンビットの一手！白はc4でポーンをあえて差し出すよ。黒が取れば（dxc4）一時的に中央を握れるけど、白はすぐに取り返しながら展開を進められるんだ。',
-    en:"Here's the Queen's Gambit move! White plays 2.c4, offering the c-pawn. If Black takes it, White can easily regain it later while developing comfortably.",
+    ja:'ここが本題！白はc4でポーンを差し出す…ように見えるけど、実はこれは「本物のギャンビット」じゃないんだ。黒がdxc4と取っても、白はe3やQa4+などですぐに取り返せる。本当の狙いは駒損ではなく、d5ポーンを守っている黒のe6かc6のどちらかを弱めさせて、中央の主導権を握ることなんだ。',
+    en="Here's the key idea! White offers the c-pawn with 2.c4 — but this isn't really a sacrifice. If Black grabs it with dxc4, White can recapture easily with moves like e3 or Qa4+. The real point isn't material at all: it's to provoke Black into playing e6 or c6 to support d5, committing to a structure that gives White more central influence.",
     fox:'happy' },
+
   { move:{from:[1,4],to:[2,4]}, moveLabel:{ja:'2...e6（ディクラインド）', en:'2...e6 (Declined)'},
-    ja:'黒はe6を選んで「ギャンビットを受けない」と決めたよ。ポーンを取らずに中央を固める、堅実で人気の高い選択（クイーンズ・ギャンビット・ディクラインド）なんだ。',
-    en:"Black plays 2...e6, declining the gambit — a solid, popular choice that reinforces the center instead of grabbing the pawn (Queen's Gambit Declined).",
+    ja:'黒はe6で「ギャンビットを受けない」と決めたよ(クイーンズ・ギャンビット・ディクラインド)。ポーンを取りに行かず、中央のd5をしっかり支える手堅い選択。ただし代償もある。c8のビショップの活動場所が一時的に塞がれてしまうんだ。',
+    en="Black plays 2...e6, declining the gambit (the Queen's Gambit Declined). It's a solid choice that reinforces d5 without grabbing material — but it comes at a small cost, temporarily boxing in the c8 bishop.",
     fox:'quiz' },
+
   { move:{from:[7,1],to:[5,2]}, moveLabel:{ja:'3. Nc3', en:'3. Nc3'},
-    ja:'白はナイトをc3に展開。中央のd4・e4をサポートしながら、自然に駒を育てていくよ。',
-    en:'White develops the knight to c3, supporting the center while bringing pieces into play.',
+    ja:'白はナイトをc3に展開。d5への圧力を増やしながら、キングサイドのキャスリングに向けて着実に駒組みを進めるよ。',
+    en='White develops the knight to c3, adding pressure on d5 while steadily preparing to castle kingside.',
     fox:'normal' },
+
   { move:{from:[0,6],to:[2,5]}, moveLabel:{ja:'3...Nf6', en:'3...Nf6'},
-    ja:'黒もナイトをf6へ。e4・d5のマスをにらみながら、キングサイドの準備も進めるよ。',
-    en:'Black develops the knight to f6, eyeing e4 and d5 while preparing to castle.',
+    ja:'黒もナイトをf6へ。e4への牽制と、キャスリングの準備を同時に進める効率的な一手だよ。',
+    en='Black develops the knight to f6, restraining e4 while preparing to castle — an efficient, dual-purpose move.',
     fox:'normal' },
+
   { move:{from:[7,2],to:[3,6]}, moveLabel:{ja:'4. Bg5', en:'4. Bg5'},
-    ja:'白はビショップをg5へ。黒のナイトをピンして、d5ポーンへの間接的なプレッシャーをかけていくよ。',
-    en:'White develops the bishop to g5, pinning the knight and adding indirect pressure on d5.',
+    ja:'白はビショップをg5へ。黒のナイトをピンして身動きを取りにくくし、間接的にd5ポーンへの圧力を強める、クイーンズ・ギャンビット・ディクラインドの象徴的な一手だよ。',
+    en="White develops the bishop to g5, pinning Black's knight and adding indirect pressure to d5 — the signature move of this line.",
     fox:'wink' },
+
   { move:{from:[0,5],to:[1,4]}, moveLabel:{ja:'4...Be7', en:'4...Be7'},
-    ja:'黒はビショップをe7へ。ピンを解消しつつ、キャスリングの準備をする堅実な一手だよ。',
-    en:'Black plays the solid 4...Be7, unpinning the knight and preparing to castle.',
+    ja:'黒はビショップをe7へ。ピンを解消しつつ、キャスリングへの道を整える一手だよ。派手さはないけど、この後の駒組みの土台になる大事な一手なんだ。',
+    en="Black plays 4...Be7, unpinning the knight and clearing the way to castle. Unremarkable on the surface, but it's the move that sets up everything Black does next.",
     fox:'normal' },
+
   { move:{from:[6,4],to:[5,4]}, moveLabel:{ja:'5. e3', en:'5. e3'},
-    ja:'白はe3でd4ポーンを支えつつ、ビショップf1の通り道も用意するよ。地味だけど大事な一手なんだ。',
-    en:'White plays 5.e3, supporting d4 and opening a path for the f1 bishop. Quiet but important.',
+    ja:'白はe3でd4ポーンを支え、同時にf1のビショップの通り道を用意するよ。ただし副作用もある。このビショップはc1にいたときの方が長い対角線を使えたので、e3を突くと少し窮屈になる。それでも中央の安定を優先する、実利的な選択なんだ。',
+    en="White plays 5.e3, supporting d4 and opening a diagonal for the f1 bishop. There's a small trade-off: that bishop had a longer diagonal available from c1, so e3 slightly restricts it. Still, prioritizing central stability is considered the practical choice here.",
     fox:'normal' },
+
   { move:{from:[0,4],to:[0,6],castle:{from:[0,7],to:[0,5]}}, moveLabel:{ja:'5...O-O', en:'5...O-O'},
-    ja:'黒はキャスリングでキングを安全な場所へ。序盤の最優先事項、「キングの安全」が片付いたよ。',
-    en:'Black castles kingside, tucking the king away safely — opening priority number one, done.',
+    ja:'黒はキャスリングでキングを安全な場所へ。序盤で最優先すべき「キングの安全確保」がこれで完了したよ。',
+    en='Black castles kingside, tucking the king away safely — opening priority number one is now taken care of.',
     fox:'happy' },
+
   { move:{from:[7,6],to:[5,5]}, moveLabel:{ja:'6. Nf3', en:'6. Nf3'},
-    ja:'白はナイトをf3へ。マイナーピースの展開が完了して、いつでもキャスリングできる状態になったよ。',
-    en:'White develops the last knight to f3, completing minor-piece development and ready to castle anytime.',
+    ja:'白はナイトをf3へ。これで白のマイナーピース(ナイト・ビショップ)は全て展開完了。あとはいつでもキャスリングできる状態になったよ。',
+    en="White develops the last knight to f3, completing minor-piece development — White can now castle whenever it's convenient.",
     fox:'normal' },
+
   { move:{from:[1,7],to:[2,7]}, moveLabel:{ja:'6...h6', en:'6...h6'},
-    ja:'黒はh6でビショップに「取るか、引くか」を聞いてくるよ。よくあるクラシカルな駆け引きの一手だね。',
-    en:"Black plays 6...h6, asking the bishop a question: trade on f6, or retreat? A classic moment in this line.",
+    ja:'黒はh6でビショップに「取るか、引くか」を問いかけるよ。もし白がBxf6を選べばビショップとナイトの交換になり、黒はビショップペア(2体のビショップ)を失う代わりに、駒組みのテンポを得られる。この駆け引き自体がこのラインの見どころなんだ。',
+    en="Black plays 6...h6, asking the bishop a question: trade on f6, or retreat? If White captures with Bxf6, it's bishop for knight, and Black loses the bishop pair but gains a tempo for development. This little back-and-forth is a defining feature of the whole line.",
     fox:'quiz' },
+
   { move:{from:[3,6],to:[4,7]}, moveLabel:{ja:'7. Bh4', en:'7. Bh4'},
-    ja:'白はBh4と引いて、長い対角線からのプレッシャーをそのまま維持するよ。これで本譜は一段落、続きはぜひ自分で指してみてね！',
-    en:"White retreats with 7.Bh4, keeping the pressure along the diagonal alive. That's the main line — try continuing the game yourself from here!",
+    ja:'白はBh4と引いて、g5-d8の対角線からの圧力をそのまま維持するよ。ここで基本の駒組みは完成。ここから中盤に入ると、白はしばしばcxd5からNf6にかけての細かい駆け引きを経て、Rc1やQc2でcファイルとc7マスに狙いを定めていく。黒はdxc4を狙うか、b6でビショップを展開するかで対応する、というのが典型的な中盤の流れだよ。',
+    en="White retreats with 7.Bh4, keeping the pin and pressure alive. The opening phase is complete here. In the middlegame that follows, White often maneuvers toward Rc1 and Qc2 to target the c-file and the c7 square, sometimes via a well-timed cxd5. Black typically responds by looking for a moment to play ...dxc4, or developing the light bishop with ...b6 — the classic strategic tug-of-war of this line.",
     fox:'wink' }
 ];
-
 const BUTTON_TEXT = { ja:{prev:'← 前へ', next:'次へ →'}, en:{prev:'← Prev', next:'Next →'} };
 
 let currentLang = 'ja';
