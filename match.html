@@ -2503,7 +2503,7 @@ applyBoardTheme();
       row.className = 'list-item';
       const label = document.createElement('span');
       const rating = info.rating || 1200;
-      const wld = (info.wins || 0) + '勝' + (info.losses || 0) + '敗' + (info.draws || 0) + '分';
+      const wld = (info.wins || 0) + (LANG === 'ja' ? '勝' : 'W') + (info.losses || 0) + (LANG === 'ja' ? '敗' : 'L') + (info.draws || 0) + (LANG === 'ja' ? '分' : 'D');
       label.textContent = info.username + '（' + rating + '・' + wld + '）';
       row.appendChild(label);
 
