@@ -2259,19 +2259,22 @@ applyBoardTheme();
     const baseMs = RM_TC_MS[timeControl].base;
     const incMs = fixed ? 0 : RM_TC_MS[timeControl].inc;
     await set(ref(db, 'matches/' + matchId), {
+     const isCorrespondence = timeControl === 'correspondence';
+await set(ref(db, 'matches/' + matchId), {
       white: iAmWhite ? myUid : oppUid,
       black: iAmWhite ? oppUid : myUid,
       whiteName: iAmWhite ? myName : oppData.username,
       blackName: iAmWhite ? oppData.username : myName,
       fen: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1',
       turn: 'w',
-      status: 'waiting',
+      status: isCorrespondence ? 'active' : 'waiting',
       timeControl: timeControl,
       increment: incMs,
       whiteTime: baseMs,
       blackTime: baseMs,
-      whiteJoined: false,
-      blackJoined: false,
+      whiteJoined: isCorrespondence ? true : false,
+      blackJoined: isCorrespondence ? true : false,
+      turnStartedAt: isCorrespondence ? Date.now() : null,
       randomMatch: true
     });
     await set(ref(db, 'currentMatches/' + myUid + '/' + matchId), true);
