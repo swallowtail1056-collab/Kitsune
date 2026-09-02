@@ -555,8 +555,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
   // ===== プッシュ通知(FCM)設定 =====
   // 発行したVAPIDキーに置き換えてください(Firebase Console → プロジェクトの設定 → Cloud Messaging → ウェブ設定)
-  const FCM_VAPID_KEY = 'BJM_B6Bask0Jwa1MWX3G6bkWvjSdmMUryQkyM_3pjr4zSQ_qnRPM-x3d8B80PQjUXlzbRr6DYR3so4Y00aDRuqY';
-
+ const FCM_VAPID_KEY = 'BGwVB9qTXi18RFwgXmqXUAIL9nsPsvGKuS98mla74CXTlotu7wOfF5nqy1AYS8zjozqcNN-8qlmxw6wdalMkJpA';
   async function setupPushNotifications(user) {
     const statusEl = document.getElementById('pushNotifStatus');
     const setStatus = (msg, ok) => { if (statusEl) { statusEl.textContent = msg; statusEl.style.color = ok === false ? '#e63946' : (ok === true ? '#4caf50' : ''); } };
