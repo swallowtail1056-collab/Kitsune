@@ -2258,8 +2258,7 @@ applyBoardTheme();
     const iAmWhite = Math.random() < 0.5;
     const baseMs = RM_TC_MS[timeControl].base;
     const incMs = fixed ? 0 : RM_TC_MS[timeControl].inc;
-    await set(ref(db, 'matches/' + matchId), {
-     const isCorrespondence = timeControl === 'correspondence';
+         const isCorrespondence = timeControl === 'correspondence';
 await set(ref(db, 'matches/' + matchId), {
       white: iAmWhite ? myUid : oppUid,
       black: iAmWhite ? oppUid : myUid,
