@@ -2567,9 +2567,10 @@ await set(ref(db, 'matches/' + matchId), {
           rapid: { base: 10 * 60 * 1000, inc: 5000 },
           correspondence: { base: 3 * 24 * 60 * 60 * 1000, inc: 0 }
         };
-        const timeControl = info.timeControl && TC_MS[info.timeControl] ? info.timeControl : 'rapid';
+       const timeControl = info.timeControl && TC_MS[info.timeControl] ? info.timeControl : 'rapid';
         const baseMs = TC_MS[timeControl].base;
         const incMs = info.fixed ? 0 : TC_MS[timeControl].inc;
+        const isCorrespondence = timeControl === 'correspondence';
         await set(ref(db, 'matches/' + matchId), {
           white: iAmWhite ? user.uid : fromUid,
           black: iAmWhite ? fromUid : user.uid,
@@ -2577,13 +2578,14 @@ await set(ref(db, 'matches/' + matchId), {
           blackName: iAmWhite ? info.username : myName,
           fen: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1',
           turn: 'w',
-          status: 'waiting',
+          status: isCorrespondence ? 'active' : 'waiting',
           timeControl: timeControl,
           increment: incMs,
           whiteTime: baseMs,
           blackTime: baseMs,
-          whiteJoined: false,
-          blackJoined: false,
+          whiteJoined: isCorrespondence ? true : false,
+          blackJoined: isCorrespondence ? true : false,
+          turnStartedAt: isCorrespondence ? Date.now() : null,
           rated: info.rated !== false
         });
         await set(ref(db, 'currentMatches/' + user.uid + '/' + matchId), true);
