@@ -213,9 +213,9 @@ const LESSON_STEPS = [
     en:'Black develops the knight to c6, defending e5 \u2014 a natural, solid response.',
     fox:'normal' },
 
-  { move:{from:[7,5],to:[3,1]}, moveLabel:{ja:'3. Bb5（ルイ・ロペス！）', en:'3. Bb5 (Ruy Lopez!)'},
-    ja:'ここが本題、ルイ・ロペスの一手！白はビショップをb5へ進め、c6のナイトをキング(e8)に対してピンするよ。ただし注意したいのは、ピンされていてもナイト自体はまだe5ポーンを守り続けているということ。白の狙いは今すぐ何かを得ることではなく、この先c3・d4といった手順で中央を強化し、じわじわと圧力を強めていく、長期戦略のオープニングなんだ。',
-    en:'Here\'s the signature move! White plays 3.Bb5, pinning the knight on c6 to the king on e8. It\'s worth noting that even while pinned, the knight still defends e5 for now \u2014 the point isn\'t an immediate gain, but a long-term plan to strengthen the center with moves like c3 and d4 down the road, building pressure gradually rather than seeking anything right away.',
+   { move:{from:[7,5],to:[3,1]}, moveLabel:{ja:'3. Bb5（ルイ・ロペス！）', en:'3. Bb5 (Ruy Lopez!)'},
+    ja:'ここが本題、ルイ・ロペスの一手！白はビショップをb5へ進め、c6のナイトに狙いをつけるよ。よく「キングへのピン」と説明されるけど、実はまだd7にポーンが残っているから、対角線はd7で止まっていて、厳密にはまだ本物のピンじゃないんだ(ナイトを取ってもキングがすぐ晒されるわけではない)。それでも脅威は本物。ナイトがこのまま動かなければBxc6でダブルポーンを強制できるし、将来d7ポーンが動けば本当のピンに変わる。今は「ピンの含みを持った牽制」というのが正確なところだよ。白の狙いは今すぐ何かを得ることではなく、この先c3・d4で中央を強化し、じわじわ圧力を強めていく長期戦略なんだ。',
+    en:'Here\'s the signature move! White plays 3.Bb5, taking aim at the knight on c6. This is often called a "pin" to the king on e8, but technically it isn\'t one yet \u2014 the pawn still sitting on d7 blocks that diagonal, so capturing the knight wouldn\'t immediately expose the king. The pressure is still real, though: if the knight never moves, Bxc6 saddles Black with doubled pawns, and if the d7 pawn later advances, the pin becomes genuine. For now, think of it as a positional squeeze with the threat of a pin, rather than an actual pin. The point isn\'t an immediate gain, but a long-term plan to strengthen the center with moves like c3 and d4 down the road.',
     fox:'happy' },
 
   { move:{from:[1,0],to:[2,0]}, moveLabel:{ja:'3...a6', en:'3...a6'},
@@ -223,14 +223,14 @@ const LESSON_STEPS = [
     en:'Black plays 3...a6, asking the bishop a question: capture on c6, or retreat?',
     fox:'quiz' },
 
-  { move:{from:[3,1],to:[4,0]}, moveLabel:{ja:'4. Ba4', en:'4. Ba4'},
-    ja:'白はBa4と引いてピンを維持するよ。ここでBxc6のような即座の交換に踏み切らない理由は、黒にダブルポーンを与える代わりに得られるものが、この局面ではまだ小さいから。ピンを保ちながらじっくり駒組みを進める「クローズド・ルイ・ロペス」の基本方針なんだ。',
-    en:'White retreats with 4.Ba4, keeping the pin alive. Trading immediately with Bxc6 would double Black\'s pawns, but at this early stage that trade doesn\'t gain White much \u2014 so the plan is to maintain the pin and develop patiently instead. This is the essence of the Closed Ruy Lopez.',
+   { move:{from:[3,1],to:[4,0]}, moveLabel:{ja:'4. Ba4', en:'4. Ba4'},
+    ja:'白はBa4と引いて、c6ナイトへの圧力を維持するよ。ここでBxc6のような即座の交換に踏み切らない理由は、黒にダブルポーンを与える代わりに得られるものが、この局面ではまだ小さいから。将来d7ポーンが動いた瞬間に本物のピンへ変わる可能性を残しつつ、じっくり駒組みを進める「クローズド・ルイ・ロペス」の基本方針なんだ。',
+    en:'White retreats with 4.Ba4, keeping the pressure on c6 alive. Trading immediately with Bxc6 would double Black\'s pawns, but at this early stage that trade doesn\'t gain White much \u2014 so the plan is to maintain the tension (with the pin ready to become real the moment d7 advances) and develop patiently instead. This is the essence of the Closed Ruy Lopez.',
     fox:'wink' },
 
-  { move:{from:[0,6],to:[2,5]}, moveLabel:{ja:'4...Nf6', en:'4...Nf6'},
-    ja:'黒はもう一つのナイトをf6へ進め、e4ポーンに反撃をかけながらキャスリングの準備も進めるよ。一手で二つの仕事をこなす効率の良い手だね。',
-    en:'Black develops the other knight to f6, counterattacking e4 while preparing to castle \u2014 another efficient, dual-purpose move.',
+   { move:{from:[0,6],to:[2,5]}, moveLabel:{ja:'4...Nf6', en:'4...Nf6'},
+    ja:'黒はもう一つのナイトをf6へ進め、e4ポーンに反撃をかけるよ。ちなみにこの段階ではまだf8のビショップが自陣に残っているから、キャスリングにはもう一手必要。ナイトの展開は、まずはe4への圧力を強めるのが主な狙いなんだ。',
+    en:'Black develops the other knight to f6, adding pressure on e4. Note that the bishop on f8 is still at home at this point, so castling isn\'t quite ready yet \u2014 this move is mainly about reinforcing the attack on e4.',
     fox:'normal' },
 
   { move:{from:[7,4],to:[7,6],castle:{from:[7,7],to:[7,5]}}, moveLabel:{ja:'5. O-O', en:'5. O-O'},
