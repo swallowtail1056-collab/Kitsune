@@ -577,7 +577,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       setStatus(LANG === 'ja' ? 'トークンを取得中...' : 'Getting token...');
       const token = await getToken(messaging, { vapidKey: FCM_VAPID_KEY, serviceWorkerRegistration: swReg });
       if (token) {
-        await set(ref(db, 'fcmTokens/' + user.uid), token);
+       await set(ref(db, 'fcmTokens/' + user.uid + '/' + token), true);
         setStatus(LANG === 'ja' ? '✅ 有効です(通知が届きます)' : '✅ Active (notifications enabled)', true);
       } else {
         setStatus(LANG === 'ja' ? 'トークンの取得に失敗しました' : 'Failed to get token', false);
