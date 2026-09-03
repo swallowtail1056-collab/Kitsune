@@ -3928,18 +3928,7 @@ const PIECE_IMG = {
     });
   }
 
-  async function notifyOpponentTurn(matchId, user) {
-    try {
-      const idToken = await user.getIdToken();
-      fetch('https://asia-southeast1-kitsunechess-multiplayer.cloudfunctions.net/notifyTurn', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ matchId: matchId, idToken: idToken })
-      }).catch(() => {}); // 通知の失敗は対局進行に影響させない
-    } catch (e) {
-      console.error('notifyOpponentTurn error:', e);
-    }
-  }
+ 
 
   async function onSquareClick(sq, user) {
     if (!gameChess || gameChess.game_over()) return;
