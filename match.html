@@ -1759,7 +1759,14 @@ applyBoardTheme();
   document.getElementById('loginBtn').onclick = () => {
     signInWithPopup(auth, provider).catch(err => { document.getElementById('status').textContent = 'Error: ' + err.message; });
   };
-  document.getElementById('logoutBtn').onclick = () => signOut(auth);
+ document.getElementById('logoutBtn').onclick = () => {
+  closeOpenedMatch();
+  myColor = null;
+  gameChess = null;
+  selectedSquare = null;
+  oppPresenceAttached = false;
+  signOut(auth);
+};
 
   document.getElementById('deleteAccountBtn').onclick = async (e) => {
     e.preventDefault();
