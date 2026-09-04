@@ -564,9 +564,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         setStatus(LANG === 'ja' ? 'このブラウザは通知に対応していません' : 'Not supported in this browser', false);
         return;
       }
-      setStatus(LANG === 'ja' ? 'Service Worker登録中...' : 'Registering service worker...');
-      // firebase-messaging-sw.js を明示的に登録(match-sw.jsと共存させるため個別登録)
-      const swReg = await navigator.serviceWorker.register('/firebase-messaging-sw.js');
+           setStatus(LANG === 'ja' ? 'Service Workerの準備を待っています...' : 'Waiting for service worker...');
+      // firebase-messaging-sw.js は単独で登録しない(match-sw.jsと同じスコープ'/'で競合するため)。
+      // 代わりに、すでに登録・稼働中のmatch-sw.jsのregistrationをそのままFCM用に再利用する
+      const swReg = await navigator.serviceWorker.ready;
       setStatus(LANG === 'ja' ? '通知の許可を確認中...' : 'Checking notification permission...');
       const permission = await Notification.requestPermission();
       if (permission !== 'granted') {
