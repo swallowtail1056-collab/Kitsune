@@ -1,3 +1,21 @@
+importScripts('https://www.gstatic.com/firebasejs/10.x.x/firebase-app-compat.js');
+importScripts('https://www.gstatic.com/firebasejs/10.x.x/firebase-messaging-compat.js');
+
+firebase.initializeApp({
+  apiKey: "...",
+  projectId: "kitsunechess-multiplayer",
+  messagingSenderId: "1025643200128",
+  appId: "..."
+});
+
+const messaging = firebase.messaging();
+
+messaging.onBackgroundMessage((payload) => {
+  self.registration.showNotification(payload.notification.title, {
+    body: payload.notification.body,
+    icon: '/jene_normal.png' // 適宜パス調整
+  });
+});
 const CACHE_NAME = 'kitsunechess-match-v2';
 const CORE_ASSETS = [
   '/match_icon_192.png',
