@@ -3147,6 +3147,19 @@ const PIECE_IMG = {
     const flagField = myColor === 'w' ? 'analysisAppliedWhite' : 'analysisAppliedBlack';
     if (m[flagField]) { appliedAnalysisFor.add(dedupeKey); return; }
     appliedAnalysisFor.add(dedupeKey);
+      const appliedAnalysisFor = new Set();
+  async function applyAnalysisIfNeeded(matchId, m, user, myResult) {
+    const dedupeKey = matchId + '_' + myColor;
+    if (appliedAnalysisFor.has(dedupeKey)) return;
+    const flagField = myColor === 'w' ? 'analysisAppliedWhite' : 'analysisAppliedBlack';
+    if (m[flagField]) { appliedAnalysisFor.add(dedupeKey); return; }
+    appliedAnalysisFor.add(dedupeKey);
+
+    if (m.rated === false) {
+      // ノーレート対局:対局分析(勝敗数・平均手数など)にも一切影響させない
+      await update(ref(db, 'matches/' + matchId), { [flagField]: true });
+      return;
+    }
 
     const moves = m.moves || [];
     const myMoves = moves.filter(mv => mv.color === myColor);
