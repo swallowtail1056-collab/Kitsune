@@ -3140,13 +3140,7 @@ const PIECE_IMG = {
     await update(ref(db, 'matches/' + matchId), { [flagField]: true, [deltaField]: newRating - myRating });
   }
 
-  const appliedAnalysisFor = new Set();
-  async function applyAnalysisIfNeeded(matchId, m, user, myResult) {
-    const dedupeKey = matchId + '_' + myColor;
-    if (appliedAnalysisFor.has(dedupeKey)) return;
-    const flagField = myColor === 'w' ? 'analysisAppliedWhite' : 'analysisAppliedBlack';
-    if (m[flagField]) { appliedAnalysisFor.add(dedupeKey); return; }
-    appliedAnalysisFor.add(dedupeKey);
+ 
       const appliedAnalysisFor = new Set();
   async function applyAnalysisIfNeeded(matchId, m, user, myResult) {
     const dedupeKey = matchId + '_' + myColor;
