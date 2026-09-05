@@ -1821,7 +1821,23 @@ applyBoardTheme();
 
   function normName(name) { return name.trim().toLowerCase(); }
 
-  async function saveUsername(user, name) {
+ 
+    const USERNAME_ADJ = ['Swift','Silent','Clever','Brave','Lucky','Mighty','Quiet','Bold','Sneaky','Wise','Calm','Sharp'];
+  const USERNAME_NOUN = ['Knight','Bishop','Rook','Fox','Falcon','Wolf','Raven','Tiger','Hawk','Panther'];
+  function generateRandomUsername() {
+    const adj = USERNAME_ADJ[Math.floor(Math.random() * USERNAME_ADJ.length)];
+    const noun = USERNAME_NOUN[Math.floor(Math.random() * USERNAME_NOUN.length)];
+    const num = Math.floor(1000 + Math.random() * 9000);
+    return adj + noun + num;
+  }
+  async function generateUniqueUsername() {
+    for (let i = 0; i < 10; i++) {
+      const candidate = generateRandomUsername();
+      const snap = await get(ref(db, 'usernames/' + normName(candidate)));
+      if (!snap.exists()) return candidate;
+    }
+    return generateRandomUsername() + Date.now();
+  }async function saveUsername(user, name) {
     if (!name) return { ok: false, msg: LANG === 'ja' ? '名前を入力してください。' : 'Please enter a name.' };
     const key = normName(name);
     const existing = await get(ref(db, 'usernames/' + key));
