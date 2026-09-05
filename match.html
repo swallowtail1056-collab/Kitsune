@@ -1453,7 +1453,40 @@ applyBoardTheme();
   }
 
 
-
+  function openAvatarPicker(user) {
+    const overlay = document.getElementById('avatarPickerOverlay');
+    const grid = document.getElementById('avatarPickerGrid');
+    grid.innerHTML = '';
+    AVATAR_OPTIONS.forEach((opt) => {
+      const btn = document.createElement('button');
+      btn.style.cssText = 'padding:6px;background:var(--input-bg);border:1px solid rgba(124,74,30,0.3);border-radius:8px;';
+      const img = document.createElement('img');
+      img.src = avatarOptionUrl(opt);
+      img.style.cssText = 'width:100%;height:100%;';
+      btn.appendChild(img);
+      btn.onclick = async () => {
+        const iconUrl = avatarOptionUrl(opt);
+        await update(ref(db, 'publicProfiles/' + user.uid), { photoURL: iconUrl });
+        await update(ref(db, 'users/' + user.uid), { photoURL: iconUrl });
+        document.getElementById('profilePhoto').src = iconUrl;
+        const avatarEl = document.getElementById('profileModalAvatarImg');
+        if (avatarEl && avatarEl.tagName === 'IMG') avatarEl.src = iconUrl;
+        overlay.style.display = 'none';
+      };
+      grid.appendChild(btn);
+    });
+    overlay.style.display = 'flex';
+  }
+  document.getElementById('avatarPickerCloseBtn').onclick = () => {
+    document.getElementById('avatarPickerOverlay').style.display = 'none';
+  };
+  document.getElementById('avatarPickerOverlay').addEventListener('click', (ev) => {
+    if (ev.target.id === 'avatarPickerOverlay') document.getElementById('avatarPickerOverlay').style.display = 'none';
+  });
+  document.getElementById('avatarPickerUploadBtn').onclick = () => {
+    document.getElementById('avatarPickerOverlay').style.display = 'none';
+    document.getElementById('profileAvatarFileInput').click();
+  };
   function getAiCellEl(sq) { return document.querySelector('#aiBoard .sq[data-sq="' + sq + '"]'); }
 
   function resizeImageFile(file, maxSize) {
