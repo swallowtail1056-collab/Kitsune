@@ -479,6 +479,17 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
 <!-- アバター拡大表示用ライトボックス -->
 <div id="avatarLightbox" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:3000;align-items:center;justify-content:center;">
+ <!-- アバターアイコン選択オーバーレイ -->
+<div id="avatarPickerOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:3200;align-items:center;justify-content:center;">
+  <div style="background:var(--card);border:2px solid var(--brown);border-radius:12px;padding:16px;max-width:320px;width:90%;">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+      <strong style="color:var(--text);" data-ja="アイコンを選ぶ" data-en="Choose an icon">アイコンを選ぶ</strong>
+      <button id="avatarPickerCloseBtn" style="background:none;border:none;font-size:1.3rem;color:var(--text-muted);padding:0 4px;">✕</button>
+    </div>
+    <div id="avatarPickerGrid" style="display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:12px;max-height:280px;overflow-y:auto;"></div>
+    <button id="avatarPickerUploadBtn" style="width:100%;" data-ja="📷 自分の写真をアップロード" data-en="📷 Upload your own photo">📷 自分の写真をアップロード</button>
+  </div>
+</div>
   <img id="avatarLightboxImg" src="" style="width:168px;height:168px;border-radius:50%;object-fit:cover;">
 </div>
 
