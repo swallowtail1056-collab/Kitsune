@@ -1413,9 +1413,9 @@ applyBoardTheme();
         nameMsgEl.textContent = isJa ? '保存しました！' : 'Saved!';
         setTimeout(() => { document.getElementById('profileNameEditRow').style.display = 'none'; nameMsgEl.textContent = ''; }, 1200);
       };
-      const avatarEditBtn = document.getElementById('profileAvatarEditBtn');
+            const avatarEditBtn = document.getElementById('profileAvatarEditBtn');
       const avatarFileInput = document.getElementById('profileAvatarFileInput');
-      avatarEditBtn.onclick = () => avatarFileInput.click();
+      avatarEditBtn.onclick = () => openAvatarPicker(user);
       avatarFileInput.onchange = async () => {
         const file = avatarFileInput.files[0];
         if (!file) return;
