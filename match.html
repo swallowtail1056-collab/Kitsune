@@ -4497,8 +4497,8 @@ function startClockTicker(user) {
     if (nextRow) nextRow.style.display = 'none';
     const ansBtn = document.getElementById('btnPuzzleAnswer');
     if (ansBtn) ansBtn.style.display = '';
-    const banner = document.getElementById('puzzleSuperhardBanner');
-    if (banner) banner.style.display = p.superhard ? 'block' : 'none';
+   const banner = document.getElementById('puzzleSuperhardBanner');
+if (banner) banner.style.visibility = p.superhard ? 'visible' : 'hidden';
     clearPuzzleArrows();
     renderPuzzleBoard();
     setPuzzleStatus(LANG === 'ja'
