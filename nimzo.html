@@ -189,37 +189,43 @@ const initialBoard = [
 // ============================================================
 const LESSON_STEPS = [
   { move:null, moveLabel:{ja:"開始局面", en:"Starting Position"},
-    ja:"ニムゾ・インディアンのレッスンを始めるよ！ビショップで白のナイトをピンして、中央拡大を妨害する革命的なオープニングだよ。ジーンと一緒に、一手ずつ「なぜその手を指すのか」を学んでいこう。",
-    en:"Let's start the Nimzo-Indian Defense lesson! Black pins White's knight with the bishop to prevent central expansion — a truly revolutionary idea. Jene will explain why each move is played, one step at a time.",
+    ja:"ニムゾ・インディアンのレッスンを始めるよ!ビショップで白のナイトをピンして、中央拡大を妨害する革命的なオープニングだよ。20世紀初頭、アーロン・ニムゾウィッチが提唱した「駒の力で中央を間接的に支配する」という考え方(ハイパーモダン理論)を代表する定跡で、カルポフ、カスパロフ、カールセンら歴代の世界チャンピオンが好んで指してきたんだ。ジーンと一緒に、一手ずつ「なぜその手を指すのか」を学んでいこう。",
+    en:"Let's start the Nimzo-Indian Defense lesson! Black pins White's knight with the bishop to hold back central expansion — a truly revolutionary idea. Pioneered by Aron Nimzowitsch in the early 20th century, it embodies the hypermodern philosophy of controlling the center with piece pressure rather than pawns alone. World champions from Karpov to Kasparov to Carlsen have all trusted this opening. Jene will explain why each move is played, one step at a time.",
     fox:'welcome' },
+
   { move:{from:[6,3],to:[4,3]}, moveLabel:{ja:"1. d4", en:"1. d4"},
     ja:"白はd4で中央を制圧するよ。",
     en:"White plays 1.d4, claiming the center.",
     fox:'normal' },
+
   { move:{from:[0,6],to:[2,5]}, moveLabel:{ja:"1...Nf6", en:"1...Nf6"},
-    ja:"黒はナイトをf6へ展開するよ。",
-    en:"Black develops the knight to f6.",
+    ja:"黒はナイトをf6へ展開するよ。まだ何色のインディアン・ディフェンスになるか決めていない、柔軟な一手なんだ。",
+    en:"Black develops the knight to f6 — a flexible move that doesn't yet commit to which Indian Defense this will become.",
     fox:'normal' },
+
   { move:{from:[6,2],to:[4,2]}, moveLabel:{ja:"2. c4", en:"2. c4"},
-    ja:"白はc4でさらに中央を広げるよ。",
-    en:"White expands the center further with 2.c4.",
+    ja:"白はc4でさらに中央を広げるよ。次にNc3、そしてe4と続けば、理想的な大きなポーンセンターが完成することになる。",
+    en:"White expands the center further with 2.c4. If White follows up with Nc3 and then e4, it would complete an ideal, dominant pawn center.",
     fox:'normal' },
+
   { move:{from:[1,4],to:[2,4]}, moveLabel:{ja:"2...e6", en:"2...e6"},
-    ja:"黒はe6で柔軟に展開を準備するよ。",
-    en:"Black plays 2...e6, preparing flexible development.",
+    ja:"黒はe6で柔軟に展開を準備するよ。このマスを選ぶことで、次にBb4と出すビショップの通り道を確保しつつ、まだd5にもb6にも進める余地を残しているんだ。",
+    en:"Black plays 2...e6, keeping development flexible. This opens the path for the bishop to reach b4 next, while still leaving open the option of playing ...d5 or ...b6 later.",
     fox:'normal' },
+
   { move:{from:[7,1],to:[5,2]}, moveLabel:{ja:"3. Nc3", en:"3. Nc3"},
-    ja:"白はナイトをc3へ展開するよ。",
-    en:"White develops the knight to c3.",
+    ja:"白はナイトをc3へ展開するよ。これで次にe4と突けば、d4・e4・c4という理想的な大きなポーンセンターがいよいよ完成してしまう。",
+    en:"White develops the knight to c3. If White gets to play e4 next, the ideal pawn center (d4-e4-c4) would be complete.",
     fox:'normal' },
+
   { move:{from:[0,5],to:[4,1]}, moveLabel:{ja:"3...Bb4（ニムゾ！）", en:"3...Bb4 (Nimzo!)"},
-    ja:"ここが本題、ニムゾ・インディアンの一手！黒はビショップでc3のナイトをピンして、白がe4と突いて中央を広げるのを妨害するよ。",
-    en:"Here's the Nimzo-Indian move! Black pins the knight on c3, preventing White from easily expanding with e4.",
+    ja:"ここが本題、ニムゾ・インディアンの一手!黒はビショップをb4へ出して、c3のナイトを完全にピンするよ。この瞬間、b4からe1までの対角線上に他の駒は何もなく、その先には白キングがいる。だからナイトは今動くとキングが取られてしまう、正真正銘のピンなんだ。これで白は安心してe4と突けなくなり、ハイパーモダンの理念、「駒の力で中央進出を間接的に止める」が体現されるよ。",
+    en:"Here's the Nimzo-Indian move! Black develops the bishop to b4, fully pinning the knight on c3. At this moment, nothing stands between b4 and e1 except the king itself, so the knight genuinely cannot move without exposing the king — a real pin, not just pressure. This makes it awkward for White to simply push e4, which is exactly the hypermodern idea: restrain the center with piece power rather than confront it with pawns.",
     fox:'happy' },
+
   { move:{from:[6,4],to:[5,4]}, moveLabel:{ja:"4. e3", en:"4. e3"},
-    ja:"白はe3で控えめに対応するよ。複雑な交換変化を避けて、じっくり駒を展開していくプランなんだ。",
-    en:"White responds modestly with 4.e3, avoiding complex exchange lines in favor of patient development.",
-    fox:'wink' },
+    ja:"白はe3で控えめに対応するよ。よくあるBxc3+ bxc3のような交換を今すぐ迫られる展開(サミッシュ変化)を避けて、じっくり駒を展開していく現代的なプランなんだ。この一手はまた、次にBd3とビショップを出す通り道も作っているよ。",
+    en:"White responds modestly with 4.e3, sidestepping an immediate ...Bxc3+ bxc3 tr
   { move:{from:[0,4],to:[0,6],castle:{from:[0,7],to:[0,5]}}, moveLabel:{ja:"4...O-O", en:"4...O-O"},
     ja:"黒はキャスリングでキングを安全な場所へ。",
     en:"Black castles kingside, tucking the king away safely.",
