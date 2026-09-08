@@ -68,6 +68,12 @@ img#profilePhoto { border:2px solid var(--brown); border-radius:50%; width:60px;
 .sq-label.file-label { bottom:2px; right:3px; }
 .sq.light { background:var(--sq-light,#d4b87a); }
 .sq.dark { background:var(--sq-dark,#7a5230); }
+  .chessboard, .sq, .sq img {
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
 :root, [data-board-theme="brown"] { --sq-light:#d4b87a; --sq-dark:#7a5230; }
 [data-board-theme="green"] { --sq-light:#eeeed2; --sq-dark:#769656; }
 [data-board-theme="blue"] { --sq-light:#dee3e6; --sq-dark:#4b7399; }
