@@ -137,10 +137,13 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
     <img id="foxAvatar" class="fox-avatar" src="" alt="Jene">
     <p class="commentary-text" id="commentaryText"></p>
   </div>
-  <div class="lesson-controls">
+    <div class="lesson-controls">
     <button id="btnPrev" class="lesson-btn">← 前へ</button>
     <span class="lesson-progress" id="lessonProgress"></span>
     <button id="btnNext" class="lesson-btn">次へ →</button>
+  </div>
+  <div id="shareRow" style="display:none;text-align:center;margin-top:10px;">
+    <button id="shareXBtn" style="background:#000;color:#fff;border:none;border-radius:20px;padding:8px 16px;font-family:'Crimson Pro',serif;font-weight:700;font-size:0.85rem;cursor:pointer;">🦊 𝕏でシェアする</button>
   </div>
 </div>
 
@@ -159,7 +162,10 @@ const PIECE_IMG = {
   bQ: "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0NSA0NSI+PGcgZmlsbC1ydWxlPSJldmVub2RkIiBzdHJva2U9IiMwMDAiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgc3Ryb2tlLXdpZHRoPSIxLjUiPjxnIHN0cm9rZT0ibm9uZSI+PGNpcmNsZSBjeD0iNiIgY3k9IjEyIiByPSIyLjc1Ii8+PGNpcmNsZSBjeD0iMTQiIGN5PSI5IiByPSIyLjc1Ii8+PGNpcmNsZSBjeD0iMjIuNSIgY3k9IjgiIHI9IjIuNzUiLz48Y2lyY2xlIGN4PSIzMSIgY3k9IjkiIHI9IjIuNzUiLz48Y2lyY2xlIGN4PSIzOSIgY3k9IjEyIiByPSIyLjc1Ii8+PC9nPjxwYXRoIHN0cm9rZS1saW5lY2FwPSJidXR0IiBkPSJNOSAyNmM4LjUtMS41IDIxLTEuNSAyNyAwbDIuNS0xMi41TDMxIDI1bC0uMy0xNC4xLTUuMiAxMy42LTMtMTQuNS0zIDE0LjUtNS4yLTEzLjZMMTQgMjUgNi41IDEzLjV6Ii8+PHBhdGggc3Ryb2tlLWxpbmVjYXA9ImJ1dHQiIGQ9Ik05IDI2YzAgMiAxLjUgMiAyLjUgNCAxIDEuNSAxIDEgLjUgMy41LTEuNSAxLTEuNSAyLjUtMS41IDIuNS0xLjUgMS41LjUgMi41LjUgMi41IDYuNSAxIDE2LjUgMSAyMyAwIDAgMCAxLjUtMSAwLTIuNSAwIDAgLjUtMS41LTEtMi41LS41LTIuNS0uNS0yIC41LTMuNSAxLTIgMi41LTIgMi41LTQtOC41LTEuNS0xOC41LTEuNS0yNyAweiIvPjxwYXRoIGZpbGw9Im5vbmUiIHN0cm9rZS1saW5lY2FwPSJidXR0IiBkPSJNMTEgMzguNWEzNSAzNSAxIDAgMCAyMyAwIi8+PHBhdGggZmlsbD0ibm9uZSIgc3Ryb2tlPSIjZWNlY2VjIiBkPSJNMTEgMjlhMzUgMzUgMSAwIDEgMjMgMG0tMjEuNSAyLjVoMjBtLTIxIDNhMzUgMzUgMSAwIDAgMjIgMG0tMjMgM2EzNSAzNSAxIDAgMCAyNCAwIi8+PC9nPjwvc3ZnPg==",
   bK: "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0NSA0NSI+PGcgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIiBzdHJva2U9IiMwMDAiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgc3Ryb2tlLXdpZHRoPSIxLjUiPjxwYXRoIHN0cm9rZS1saW5lam9pbj0ibWl0ZXIiIGQ9Ik0yMi41IDExLjZWNiIvPjxwYXRoIGZpbGw9IiMwMDAiIHN0cm9rZS1saW5lY2FwPSJidXR0IiBzdHJva2UtbGluZWpvaW49Im1pdGVyIiBkPSJNMjIuNSAyNXM0LjUtNy41IDMtMTAuNWMwIDAtMS0yLjUtMy0yLjVzLTMgMi41LTMgMi41Yy0xLjUgMyAzIDEwLjUgMyAxMC41Ii8+PHBhdGggZmlsbD0iIzAwMCIgZD0iTTExLjUgMzdhMjIuMyAyMi4zIDAgMCAwIDIxIDB2LTdzOS00LjUgNi0xMC41Yy00LTYuNS0xMy41LTMuNS0xNiA0VjI3di0zLjVjLTMuNS03LjUtMTMtMTAuNS0xNi00LTMgNiA1IDEwIDUgMTB6Ii8+PHBhdGggc3Ryb2tlLWxpbmVqb2luPSJtaXRlciIgZD0iTTIwIDhoNSIvPjxwYXRoIHN0cm9rZT0iI2VjZWNlYyIgZD0iTTMyIDI5LjVzOC41LTQgNi05LjdDMzQuMSAxNCAyNSAxOCAyMi41IDI0LjZ2Mi4xLTIuMUMyMCAxOCA5LjkgMTQgNyAxOS45Yy0yLjUgNS42IDQuOCA5IDQuOCA5Ii8+PHBhdGggc3Ryb2tlPSIjZWNlY2VjIiBkPSJNMTEuNSAzMGM1LjUtMyAxNS41LTMgMjEgMG0tMjEgMy41YzUuNS0zIDE1LjUtMyAyMSAwbS0yMSAzLjVjNS41LTMgMTUuNS0zIDIxIDAiLz48L2c+PC9zdmc+",
 };
-
+function shareOnX(message) {
+  const shareUrl = 'https://twitter.com/intent/tweet?text=' + encodeURIComponent(message) + '&url=' + encodeURIComponent(window.location.href);
+  window.open(shareUrl, '_blank', 'noopener,noreferrer,width=550,height=420');
+}
 // ============================================================
 // JENE'S FACES
 // ============================================================
@@ -192,9 +198,9 @@ const LESSON_STEPS = [
     ja:"ウィーンゲームのレッスンを始めるよ！どんな黒の応手にも対応できる、柔軟性が魅力のオープニングだよ。ジーンと一緒に、一手ずつ「なぜその手を指すのか」を学んでいこう。",
     en:"Let's start the Vienna Game lesson! Its biggest strength is flexibility — it can respond to almost anything Black plays. Jene will explain why each move is played, one step at a time.",
     fox:'welcome' },
-  { move:{from:[6,4],to:[4,4]}, moveLabel:{ja:"1. e4", en:"1. e4"},
-    ja:"白はe4で中央を制圧するよ。",
-    en:"White plays 1.e4, claiming the center.",
+   { move:{from:[6,4],to:[4,4]}, moveLabel:{ja:"1. e4", en:"1. e4"},
+    ja:"白はe4で中央を制圧するよ。ビショップとクイーンの通り道を同時に開く、効率の良い一手だね。",
+    en:"White claims the center with 1.e4, opening lines for the bishop and queen in the same move.",
     fox:'normal' },
   { move:{from:[1,4],to:[3,4]}, moveLabel:{ja:"1...e5", en:"1...e5"},
     ja:"黒も同じくe5で対抗。中央の取り合いはお互い様、というバランスを保つよ。",
@@ -212,17 +218,17 @@ const LESSON_STEPS = [
     ja:"白はf4で積極的にキングサイドへ攻めるプランを選ぶよ。",
     en:"White chooses the aggressive plan with 3.f4, fighting for kingside space.",
     fox:'wink' },
-  { move:{from:[1,3],to:[2,3]}, moveLabel:{ja:"3...d6", en:"3...d6"},
-    ja:"黒はd6で中央を支えるよ。",
-    en:"Black supports the center with 3...d6.",
+    { move:{from:[1,3],to:[2,3]}, moveLabel:{ja:"3...d6", en:"3...d6"},
+    ja:"黒はd6で中央を支えるよ。これでc8のビショップの逃げ道も確保できるんだ。",
+    en:"Black supports the center with 3...d6, which also opens a path for the bishop on c8.",
     fox:'normal' },
-  { move:{from:[7,6],to:[5,5]}, moveLabel:{ja:"4. Nf3", en:"4. Nf3"},
-    ja:"白はナイトをf3へ展開するよ。",
-    en:"White develops the other knight to f3.",
+   { move:{from:[7,6],to:[5,5]}, moveLabel:{ja:"4. Nf3", en:"4. Nf3"},
+    ja:"白はナイトをf3へ展開するよ。これでキングサイドの守りを固めながら、この先のキャスリングにも備えるんだ。",
+    en:"White develops the other knight to f3, reinforcing the kingside while preparing to castle soon.",
     fox:'normal' },
-  { move:{from:[0,1],to:[2,2]}, moveLabel:{ja:"4...Nc6", en:"4...Nc6"},
-    ja:"黒もナイトをc6へ展開するよ。",
-    en:"Black develops the knight to c6.",
+   { move:{from:[0,1],to:[2,2]}, moveLabel:{ja:"4...Nc6", en:"4...Nc6"},
+    ja:"黒もナイトをc6へ展開するよ。これでe5のポーンをしっかり守りながら、自然に駒を出していくんだ。",
+    en:"Black develops the knight to c6 as well, reinforcing the e5 pawn while continuing natural development.",
     fox:'normal' },
     { move:{from:[7,5],to:[3,1]}, moveLabel:{ja:"5. Bb5", en:"5. Bb5"},
     ja:"白はビショップをb5へ。ルイ・ロペスと同じ「ピン」のアイデアがここでも使えるんだ！これでf1・g1のマスがどちらも空いて、いつでもキャスリングできる態勢が整ったよ。",
@@ -338,6 +344,23 @@ function renderStep(){
   document.getElementById('btnPrev').disabled = currentStep === 0;
   document.getElementById('btnNext').disabled = currentStep === LESSON_STEPS.length - 1;
   adjustBottomPadding();
+
+  const shareRow = document.getElementById('shareRow');
+  if (shareRow) {
+    if (currentStep === LESSON_STEPS.length - 1) {
+      const openingNameEl = document.querySelector('.opening-title.lang-element-' + currentLang);
+      const openingName = openingNameEl ? openingNameEl.textContent : '';
+      const msg = currentLang === 'ja'
+        ? '🦊 ' + openingName + 'をKitsuneChessで学んだよ!一手ずつ「なぜその手か」を教えてくれるよ'
+        : '🦊 Just learned the ' + openingName + ' on KitsuneChess! It explains why each move is played, step by step.';
+      const shareBtn = document.getElementById('shareXBtn');
+      shareBtn.textContent = currentLang === 'ja' ? '🦊 𝕏でシェアする' : '🦊 Share on 𝕏';
+      shareBtn.onclick = function() { shareOnX(msg); };
+      shareRow.style.display = 'block';
+    } else {
+      shareRow.style.display = 'none';
+    }
+  }
 }
 
 function updateLanguageDisplay(lang){
