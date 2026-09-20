@@ -120,8 +120,8 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
   <h1 class="opening-title lang-element-en">Russian Defense (Petrov)</h1>
 
   <div class="opening-intro">
-    <p class="lang-element-ja">💡 ロシアン・ディフェンス、別名ペトロフ・ディフェンスは、黒が2...Nf6と即座に反撃する堅実なオープニングだよ！ルイ・ロペスやイタリアンのように受け身になるのではなく、黒もすぐに白のe4ポーンを攻撃するんだ。3.Nxe5に対して黒はd6と突いてナイトを追い返し、自分もNxe4と取り返して均衡を保つよ。この変化は非常に対称的な局面になりやすく、どちらの側も大きなアドバンテージを得にくい。カルポフやクラムニクといったトップ棋士たちが長年信頼してきた鉄壁の守りで、ドローを許容できる黒のプレイヤーにとって最高の選択肢だよ！</p>
-    <p class="lang-element-en">💡 The Russian Defense, also known as the Petrov Defense, is Black's way of fighting back immediately with 2...Nf6! Instead of defending passively, Black attacks White's e4 pawn right away. After 3.Nxe5, Black plays d6 to chase the knight back and then recaptures with Nxe4 to restore the balance. This leads to very symmetrical positions where it is genuinely difficult for either side to gain a significant advantage. Top players like Karpov and Kramnik have trusted this defense for decades. If you want a reliable, rock-solid defense as Black, the Petrov is one of the best choices!</p>
+    <p class="lang-element-ja">💡 ロシアン・ディフェンス、別名ペトロフ・ディフェンスは、黒が2...Nf6と即座に反撃する堅実なオープニングだよ！ルイ・ロペスやイタリアンのように受け身になるのではなく、黒もすぐに白のe4ポーンを攻撃するんだ。3.Nxe5に対して、実はすぐにNxe4と取り返してはいけないんだ——4.Qe2!という有名なトラップにかかって駒を失ってしまうよ。だから黒はまずd6でナイトを追い返し、白がNf3と引いてから初めてNxe4と安全に取り返すんだ。この変化は非常に対称的な局面になりやすく、どちらの側も大きなアドバンテージを得にくい。カルポフやクラムニクといったトップ棋士たちが長年信頼してきた鉄壁の守りで、ドローを許容できる黒のプレイヤーにとって最高の選択肢だよ！</p>
+    <p class="lang-element-en">💡 The Russian Defense, also known as the Petrov Defense, is Black's way of fighting back immediately with 2...Nf6! Instead of defending passively, Black attacks White's e4 pawn right away. After 3.Nxe5, Black must NOT recapture immediately with Nxe4 — that runs straight into the famous 4.Qe2! trap and loses material. Instead, Black plays d6 first to chase the knight away, and only recaptures with Nxe4 once White has retreated to f3. This leads to very symmetrical positions where it is genuinely difficult for either side to gain a significant advantage. Top players like Karpov and Kramnik have trusted this defense for decades. If you want a reliable, rock-solid defense as Black, the Petrov is one of the best choices!</p>
   </div>
 
   <div class="board-wrap">
@@ -141,6 +141,9 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
     <button id="btnPrev" class="lesson-btn">← 前へ</button>
     <span class="lesson-progress" id="lessonProgress"></span>
     <button id="btnNext" class="lesson-btn">次へ →</button>
+  </div>
+  <div id="shareRow" style="display:none;text-align:center;margin-top:10px;">
+    <button id="shareXBtn" style="background:#000;color:#fff;border:none;border-radius:20px;padding:8px 16px;font-family:'Crimson Pro',serif;font-weight:700;font-size:0.85rem;cursor:pointer;">🦊 𝕏でシェアする</button>
   </div>
 </div>
 
@@ -213,16 +216,16 @@ const LESSON_STEPS = [
     en:"White captures the pawn with 3.Nxe5. How will Black respond?",
     fox:'quiz' },
   { move:{from:[1,3],to:[2,3]}, moveLabel:{ja:"3...d6", en:"3...d6"},
-    ja:"黒はd6でナイトを追い返すよ。",
-    en:"Black plays 3...d6, chasing the knight away.",
+    ja:"黒はd6でナイトを追い返すよ。ここですぐにNxe4と取り返したくなるけど、それは罠なんだ！4.Qe2!とされると黒のナイトは逃げ場を失い、駒を失ってしまう（例えば4...Nf6??には5.Nc6+で王手と同時にクイーンも取られてしまうよ）。だから焦らずd6を先に指すのが正解なんだ。",
+    en:"Black plays 3...d6, chasing the knight away. It's tempting to recapture immediately with Nxe4, but that's a trap! After 4.Qe2!, Black's knight has nowhere safe to go and loses material (for example 4...Nf6?? runs into 5.Nc6+, a discovered check that wins the queen). So Black patiently plays d6 first instead.",
     fox:'wink' },
   { move:{from:[3,4],to:[5,5]}, moveLabel:{ja:"4. Nf3", en:"4. Nf3"},
-    ja:"白はナイトをf3へ引くよ。",
-    en:"White retreats the knight to f3.",
+    ja:"白はナイトをf3へ引くよ。d6で追われたので、これ以上e5に留まれないんだ。",
+    en:"White retreats the knight to f3, since it can no longer stay on e5 after being chased by d6.",
     fox:'normal' },
   { move:{from:[2,5],to:[4,4]}, moveLabel:{ja:"4...Nxe4", en:"4...Nxe4"},
-    ja:"黒もNxe4とポーンを取り返して、均衡を保つよ。",
-    en:"Black recaptures with 4...Nxe4, restoring the balance.",
+    ja:"黒もNxe4とポーンを取り返して、均衡を保つよ。d6を先に指してあったおかげで、今度はQe2の罠にかからず安全に取れるんだ。",
+    en:"Black recaptures with 4...Nxe4, restoring the balance. Because d6 was played first, the Qe2 trick no longer works, so this capture is now safe.",
     fox:'normal' },
   { move:{from:[6,3],to:[4,3]}, moveLabel:{ja:"5. d4", en:"5. d4"},
     ja:"白はd4で中央を強化するよ。",
@@ -233,8 +236,8 @@ const LESSON_STEPS = [
     en:"Black supports the center with 5...d5.",
     fox:'normal' },
   { move:{from:[7,5],to:[5,3]}, moveLabel:{ja:"6. Bd3", en:"6. Bd3"},
-    ja:"白はビショップをd3へ展開するよ。",
-    en:"White develops the bishop to d3.",
+    ja:"白はビショップをd3へ展開するよ。b1-h7の対角線を睨んで、黒キングサイドへの圧力を準備するんだ。",
+    en:"White develops the bishop to d3, eyeing the b1-h7 diagonal and preparing pressure toward Black's kingside.",
     fox:'normal' },
   { move:{from:[0,1],to:[2,2]}, moveLabel:{ja:"6...Nc6", en:"6...Nc6"},
     ja:"黒はもう一つのナイトをc6へ展開するよ。",
@@ -328,6 +331,11 @@ function adjustBottomPadding(){
   }
 }
 
+function shareOnX(message) {
+  const shareUrl = 'https://twitter.com/intent/tweet?text=' + encodeURIComponent(message) + '&url=' + encodeURIComponent(window.location.href);
+  window.open(shareUrl, '_blank', 'noopener,noreferrer,width=550,height=420');
+}
+
 function renderStep(){
   const step = LESSON_STEPS[currentStep];
   renderBoard(boardSnapshots[currentStep]);
@@ -338,6 +346,23 @@ function renderStep(){
   document.getElementById('btnPrev').disabled = currentStep === 0;
   document.getElementById('btnNext').disabled = currentStep === LESSON_STEPS.length - 1;
   adjustBottomPadding();
+
+  const shareRow = document.getElementById('shareRow');
+  if (shareRow) {
+    if (currentStep === LESSON_STEPS.length - 1) {
+      const openingNameEl = document.querySelector('.opening-title.lang-element-' + currentLang);
+      const openingName = openingNameEl ? openingNameEl.textContent : '';
+      const msg = currentLang === 'ja'
+        ? '🦊 ' + openingName + 'をKitsuneChessで学んだよ!一手ずつ「なぜその手か」を教えてくれるよ'
+        : '🦊 Just learned the ' + openingName + ' on KitsuneChess! It explains why each move is played, step by step.';
+      const shareBtn = document.getElementById('shareXBtn');
+      shareBtn.textContent = currentLang === 'ja' ? '🦊 𝕏でシェアする' : '🦊 Share on 𝕏';
+      shareBtn.onclick = function() { shareOnX(msg); };
+      shareRow.style.display = 'block';
+    } else {
+      shareRow.style.display = 'none';
+    }
+  }
 }
 
 function updateLanguageDisplay(lang){
