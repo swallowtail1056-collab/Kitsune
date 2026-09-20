@@ -120,8 +120,8 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
   <h1 class="opening-title lang-element-en">Alekhine's Defense</h1>
 
   <div class="opening-intro">
-    <p class="lang-element-ja">💡 アレヒン・ディフェンスは1...Nf6と突いて白のe4ポーンの前進を挑発する独創的な守りだよ！白がe5と突いてナイトを追い出すと、黒はNd5-Nb6-Nc6と何度もナイトを動かし続けるんだ。これは普通なら序盤のタブー「同じピースを何度も動かすな」を意図的に破っているんだよ。白が積極的にポーンを前進させて巨大なセンターを作れば、後でそのポーンが攻撃の的になるという逆転の発想なんだ。1921年の世界選手権でアレクサンドル・アレヒンが初めて採用して世界を驚かせた革命的なオープニングだよ！</p>
-    <p class="lang-element-en">💡 The Alekhine's Defense provocatively invites White to advance pawns with 1...Nf6! When White pushes e5 to attack the knight, Black keeps moving it — Nd5, then Nb6, then Nc6. This deliberately breaks the opening principle of "don't move the same piece twice" for a strategic reason. If White greedily advances pawns to build a huge center, those very pawns can later become targets. Alexander Alekhine shocked the chess world when he first played this in the 1921 World Championship. Its surprise value is enormous!</p>
+    <p class="lang-element-ja">💡 アレヒン・ディフェンスは1...Nf6と突いて白のe4ポーンの前進を挑発する独創的な守りだよ！白がe5と突いてナイトを追い出すと、黒はNd5へ。同じ駒を連続で動かすのは普通なら序盤のタブーだけど、ここには狙いがあるんだ。白が勢いよくポーンを前進させて大きな中央を作れば、その分ポーンが伸びきって手薄になる——黒はd6やdxe5で、その中央そのものを攻撃対象にしていくんだよ。1921年の世界選手権でアレクサンドル・アレヒンが初めて採用して世界を驚かせた革命的なオープニングだよ！</p>
+    <p class="lang-element-en">💡 The Alekhine's Defense provocatively invites White to advance pawns with 1...Nf6! When White pushes e5 to attack the knight, Black moves it to d5. Moving the same piece again this early usually breaks opening principles, but there's a plan: the more eagerly White pushes pawns to build a big center, the more overextended and vulnerable that center becomes. Black then strikes right at it with moves like d6 and dxe5. Alexander Alekhine shocked the chess world when he first played this in the 1921 World Championship. Its surprise value is enormous!</p>
   </div>
 
   <div class="board-wrap">
@@ -141,6 +141,9 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
     <button id="btnPrev" class="lesson-btn">← 前へ</button>
     <span class="lesson-progress" id="lessonProgress"></span>
     <button id="btnNext" class="lesson-btn">次へ →</button>
+  </div>
+  <div id="shareRow" style="display:none;text-align:center;margin-top:10px;">
+    <button id="shareXBtn" style="background:#000;color:#fff;border:none;border-radius:20px;padding:8px 16px;font-family:'Crimson Pro',serif;font-weight:700;font-size:0.85rem;cursor:pointer;">🦊 𝕏でシェアする</button>
   </div>
 </div>
 
@@ -209,8 +212,8 @@ const LESSON_STEPS = [
     en:"Black moves the knight again to d5. Moving the same piece repeatedly usually breaks principles, but there's a plan here.",
     fox:'wink' },
   { move:{from:[6,3],to:[4,3]}, moveLabel:{ja:"3. d4", en:"3. d4"},
-    ja:"白はd4で中央をさらに強化するよ。",
-    en:"White further strengthens the center with 3.d4.",
+    ja:"白はd4で中央をさらに強化するよ。これでd4・e5という大きなポーンセンターができるけど、これこそ黒が最初から誘っていた「攻撃対象」でもあるんだ。",
+    en:"White further strengthens the center with 3.d4, building a big pawn duo on d4 and e5. But this is exactly what Black has been inviting all along — a large target to attack later.",
     fox:'normal' },
   { move:{from:[1,3],to:[2,3]}, moveLabel:{ja:"3...d6", en:"3...d6"},
     ja:"黒はd6で、白の大きな中央ポーンに狙いをつける準備をするよ。",
@@ -225,20 +228,20 @@ const LESSON_STEPS = [
     en:"Black captures with 4...dxe5 — the counter-attack on the center begins.",
     fox:'quiz' },
   { move:{from:[5,5],to:[3,4]}, moveLabel:{ja:"5. Nxe5", en:"5. Nxe5"},
-    ja:"白はナイトで取り返すよ。",
-    en:"White recaptures with the knight.",
+    ja:"白はナイトで取り返すよ。中央の好マスe5を占めて、d7やf7方向にも利く強いナイトになったよ。",
+    en:"White recaptures with the knight, landing on the strong central square e5 with eyes on both d7 and f7.",
     fox:'normal' },
   { move:{from:[1,6],to:[2,6]}, moveLabel:{ja:"5...g6", en:"5...g6"},
     ja:"黒はg6でフィアンケットを準備するよ。",
     en:"Black prepares a fianchetto with 5...g6.",
     fox:'wink' },
   { move:{from:[7,5],to:[4,2]}, moveLabel:{ja:"6. Bc4", en:"6. Bc4"},
-    ja:"白はビショップをc4へ展開するよ。",
-    en:"White develops the bishop to c4.",
+    ja:"白はビショップをc4へ展開するよ。ここからd5のナイトを直接攻撃しつつ、黒キング周りの弱点f7も睨んでいるんだ。",
+    en:"White develops the bishop to c4, directly attacking the knight on d5 while also eyeing the weak f7 square near Black's king.",
     fox:'normal' },
   { move:{from:[1,2],to:[2,2]}, moveLabel:{ja:"6...c6", en:"6...c6"},
-    ja:"黒はc6で中央のナイトに備えるよ。",
-    en:"Black plays 6...c6, preparing for the central knight.",
+    ja:"黒はc6で、白のビショップに狙われているd5のナイトを守るよ。もしこの手を指さなければ、Bxd5で駒を交換されてしまうところだったんだ。",
+    en:"Black plays 6...c6 to defend the knight on d5, which White's bishop on c4 was attacking. Without this move, White could have traded it off with Bxd5.",
     fox:'normal' },
   { move:{from:[7,4],to:[7,6],castle:{from:[7,7],to:[7,5]}}, moveLabel:{ja:"7. O-O", en:"7. O-O"},
     ja:"白はキャスリングでキングを安全な場所へ。これで本譜は一段落、続きはぜひ自分で指してみてね！",
@@ -328,6 +331,11 @@ function adjustBottomPadding(){
   }
 }
 
+function shareOnX(message) {
+  const shareUrl = 'https://twitter.com/intent/tweet?text=' + encodeURIComponent(message) + '&url=' + encodeURIComponent(window.location.href);
+  window.open(shareUrl, '_blank', 'noopener,noreferrer,width=550,height=420');
+}
+
 function renderStep(){
   const step = LESSON_STEPS[currentStep];
   renderBoard(boardSnapshots[currentStep]);
@@ -338,6 +346,23 @@ function renderStep(){
   document.getElementById('btnPrev').disabled = currentStep === 0;
   document.getElementById('btnNext').disabled = currentStep === LESSON_STEPS.length - 1;
   adjustBottomPadding();
+
+  const shareRow = document.getElementById('shareRow');
+  if (shareRow) {
+    if (currentStep === LESSON_STEPS.length - 1) {
+      const openingNameEl = document.querySelector('.opening-title.lang-element-' + currentLang);
+      const openingName = openingNameEl ? openingNameEl.textContent : '';
+      const msg = currentLang === 'ja'
+        ? '🦊 ' + openingName + 'をKitsuneChessで学んだよ!一手ずつ「なぜその手か」を教えてくれるよ'
+        : '🦊 Just learned the ' + openingName + ' on KitsuneChess! It explains why each move is played, step by step.';
+      const shareBtn = document.getElementById('shareXBtn');
+      shareBtn.textContent = currentLang === 'ja' ? '🦊 𝕏でシェアする' : '🦊 Share on 𝕏';
+      shareBtn.onclick = function() { shareOnX(msg); };
+      shareRow.style.display = 'block';
+    } else {
+      shareRow.style.display = 'none';
+    }
+  }
 }
 
 function updateLanguageDisplay(lang){
