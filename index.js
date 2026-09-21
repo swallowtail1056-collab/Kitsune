@@ -18,7 +18,9 @@ const { onValueCreated, onValueUpdated } = require("firebase-functions/v2/databa
 const { setGlobalOptions } = require("firebase-functions/v2");
 const admin = require("firebase-admin");
 
-admin.initializeApp();
+admin.initializeApp({
+  databaseURL: "https://kitsunechess-multiplayer-default-rtdb.asia-southeast1.firebasedatabase.app"
+});
 
 const DB_INSTANCE = "kitsunechess-multiplayer-default-rtdb";
 const DB_REGION = "asia-southeast1";
