@@ -5341,8 +5341,9 @@ if (banner) banner.style.visibility = p.superhard ? 'visible' : 'hidden';
     }
   }
 
-  function onDragPointerUp(e) {
-    if (!dragCtx) return;
+ function onDragPointerMove(e) {
+  if (!dragCtx) return;
+  e.preventDefault();
     const ctx = dragCtx;
     if (ctx.moved) {
       const el = document.elementFromPoint(e.clientX, e.clientY);
@@ -5386,7 +5387,7 @@ if (banner) banner.style.visibility = p.superhard ? 'visible' : 'hidden';
     document.addEventListener('pointermove', onDragPointerMove);
     document.addEventListener('pointerup', onDragPointerUp);
     document.addEventListener('pointercancel', onDragPointerUp);
-  });
+  }, { passive: false });
   // ===== ここまでドラッグ演出 =====
 </script>
 <script>
