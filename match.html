@@ -68,6 +68,15 @@ img#profilePhoto { border:2px solid var(--brown); border-radius:50%; width:60px;
 .sq-label.file-label { bottom:2px; right:3px; }
 .sq.light { background:var(--sq-light,#d4b87a); }
 .sq.dark { background:var(--sq-dark,#7a5230); }
+ .sq { touch-action: none; }
+.drag-lift-piece {
+  position: fixed;
+  z-index: 9999;
+  pointer-events: none;
+  filter: drop-shadow(0 10px 14px rgba(0,0,0,0.45));
+  transform: scale(1.18);
+  will-change: left, top;
+}
   .chessboard, .sq, .sq img {
   -webkit-user-select: none;
   -webkit-touch-callout: none;
@@ -5294,6 +5303,91 @@ if (banner) banner.style.visibility = p.superhard ? 'visible' : 'hidden';
     }
   }
   // ===== ここまではじめてモード =====
+    // ===== 駒をドラッグで動かす(指に追従して持ち上がる演出) =====
+  const DRAG_BOARD_IDS = ['miniBoard', 'aiBoard', 'beginnerBoard', 'puzzleBoard', 'analysisBoard'];
+  function getSelectedSquareForBoard(boardId) {
+    if (boardId === 'miniBoard') return selectedSquare;
+    if (boardId === 'aiBoard') return aiSelectedSquare;
+    if (boardId === 'beginnerBoard') return beginnerState.selected;
+    if (boardId === 'puzzleBoard') return puzzleState.selected;
+    if (boardId === 'analysisBoard') return analysisSelectedSquare;
+    return null;
+  }
+
+  let dragCtx = null;
+  const DRAG_MOVE_THRESHOLD = 8;
+  const DRAG_LIFT_OFFSET_Y = 46;
+
+  function cleanupDrag() {
+    if (!dragCtx) return;
+    if (dragCtx.cloneEl && dragCtx.cloneEl.parentNode) dragCtx.cloneEl.parentNode.removeChild(dragCtx.cloneEl);
+    if (dragCtx.origImg) dragCtx.origImg.style.opacity = '';
+    document.removeEventListener('pointermove', onDragPointerMove);
+    document.removeEventListener('pointerup', onDragPointerUp);
+    document.removeEventListener('pointercancel', onDragPointerUp);
+    dragCtx = null;
+  }
+
+  function onDragPointerMove(e) {
+    if (!dragCtx) return;
+    const dx = e.clientX - dragCtx.startX;
+    const dy = e.clientY - dragCtx.startY;
+    if (Math.abs(dx) > DRAG_MOVE_THRESHOLD || Math.abs(dy) > DRAG_MOVE_THRESHOLD) dragCtx.moved = true;
+    if (dragCtx.cloneEl) {
+      const w = dragCtx.cloneEl.offsetWidth || 40;
+      const h = dragCtx.cloneEl.offsetHeight || 40;
+      dragCtx.cloneEl.style.left = (e.clientX - w / 2) + 'px';
+      dragCtx.cloneEl.style.top = (e.clientY - h / 2 - DRAG_LIFT_OFFSET_Y) + 'px';
+    }
+  }
+
+  function onDragPointerUp(e) {
+    if (!dragCtx) return;
+    const ctx = dragCtx;
+    if (ctx.moved) {
+      const el = document.elementFromPoint(e.clientX, e.clientY);
+      const targetCell = el ? el.closest('.sq[data-sq]') : null;
+      const boardEl = document.getElementById(ctx.boardId);
+      if (targetCell && boardEl && boardEl.contains(targetCell) && typeof targetCell.onclick === 'function') {
+        targetCell.onclick();
+      }
+    }
+    cleanupDrag();
+  }
+
+  document.addEventListener('pointerdown', (e) => {
+    if (e.pointerType === 'mouse' && e.button !== 0) return;
+    const cell = e.target.closest('.sq[data-sq]');
+    if (!cell) return;
+    let boardEl = null;
+    for (const id of DRAG_BOARD_IDS) {
+      const b = document.getElementById(id);
+      if (b && b.contains(cell)) { boardEl = b; break; }
+    }
+    if (!boardEl) return;
+    if (typeof cell.onclick !== 'function') return;
+    const sq = cell.dataset.sq;
+    cell.onclick();
+    const nowSelected = getSelectedSquareForBoard(boardEl.id);
+    if (nowSelected !== sq) return;
+    const freshCell = document.getElementById(boardEl.id).querySelector('.sq[data-sq="' + sq + '"]');
+    const img = freshCell ? freshCell.querySelector('img') : null;
+    if (!img) return;
+    const rect = img.getBoundingClientRect();
+    const clone = img.cloneNode(true);
+    clone.className = 'drag-lift-piece';
+    clone.style.width = rect.width + 'px';
+    clone.style.height = rect.height + 'px';
+    clone.style.left = rect.left + 'px';
+    clone.style.top = (rect.top - DRAG_LIFT_OFFSET_Y) + 'px';
+    document.body.appendChild(clone);
+    img.style.opacity = '0';
+    dragCtx = { boardId: boardEl.id, fromSq: sq, cloneEl: clone, origImg: img, startX: e.clientX, startY: e.clientY, moved: false };
+    document.addEventListener('pointermove', onDragPointerMove);
+    document.addEventListener('pointerup', onDragPointerUp);
+    document.addEventListener('pointercancel', onDragPointerUp);
+  });
+  // ===== ここまでドラッグ演出 =====
 </script>
 <script>
   if ('serviceWorker' in navigator) {
