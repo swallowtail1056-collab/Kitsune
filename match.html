@@ -2274,9 +2274,9 @@ applyBoardTheme();
         tcPanel.style.display = tcPanel.style.display === 'none' ? 'inline-block' : 'none';
       };
 
-           if (!CHAT_ENABLED) menuWrap.style.display = 'none';
       const menuWrap = document.createElement('span');
       menuWrap.style.cssText = 'position:relative;display:inline-block;';
+                if (!CHAT_ENABLED) menuWrap.style.display = 'none';
       const menuBtn = document.createElement('button');
       menuBtn.innerHTML = '<svg width="14" height="11" viewBox="0 0 16 12" style="vertical-align:middle;"><rect x="0.5" y="0.5" width="15" height="11" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.3"/><path d="M1 1.5 L8 7 L15 1.5" fill="none" stroke="currentColor" stroke-width="1.3"/></svg>';
       menuBtn.title = LANG === 'ja' ? 'メッセージ' : 'Message';
