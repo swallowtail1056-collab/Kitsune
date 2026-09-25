@@ -5328,8 +5328,9 @@ if (banner) banner.style.visibility = p.superhard ? 'visible' : 'hidden';
     dragCtx = null;
   }
 
-  function onDragPointerMove(e) {
+   function onDragPointerMove(e) {
     if (!dragCtx) return;
+    e.preventDefault();
     const dx = e.clientX - dragCtx.startX;
     const dy = e.clientY - dragCtx.startY;
     if (Math.abs(dx) > DRAG_MOVE_THRESHOLD || Math.abs(dy) > DRAG_MOVE_THRESHOLD) dragCtx.moved = true;
@@ -5341,9 +5342,8 @@ if (banner) banner.style.visibility = p.superhard ? 'visible' : 'hidden';
     }
   }
 
- function onDragPointerMove(e) {
-  if (!dragCtx) return;
-  e.preventDefault();
+  function onDragPointerUp(e) {
+    if (!dragCtx) return;
     const ctx = dragCtx;
     if (ctx.moved) {
       const el = document.elementFromPoint(e.clientX, e.clientY);
@@ -5355,7 +5355,7 @@ if (banner) banner.style.visibility = p.superhard ? 'visible' : 'hidden';
     }
     cleanupDrag();
   }
-
+    
   document.addEventListener('pointerdown', (e) => {
     if (e.pointerType === 'mouse' && e.button !== 0) return;
     const cell = e.target.closest('.sq[data-sq]');
