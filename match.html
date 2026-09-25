@@ -583,6 +583,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   // 発行したVAPIDキーに置き換えてください(Firebase Console → プロジェクトの設定 → Cloud Messaging → ウェブ設定)
  const FCM_VAPID_KEY = 'BGwVB9qTXi18RFwgXmqXUAIL9nsPsvGKuS98mla74CXTlotu7wOfF5nqy1AYS8zjozqcNN-8qlmxw6wdalMkJpA';
   async function setupPushNotifications(user) {
+   const CHAT_ENABLED = false; // trueに戻せばチャット機能が復活します
     const statusEl = document.getElementById('pushNotifStatus');
     const setStatus = (msg, ok) => { if (statusEl) { statusEl.textContent = msg; statusEl.style.color = ok === false ? '#e63946' : (ok === true ? '#4caf50' : ''); } };
     try {
