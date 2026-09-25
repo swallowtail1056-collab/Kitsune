@@ -636,6 +636,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     LANG = LANG === 'ja' ? 'en' : 'ja';
     localStorage.setItem('selectedLang', LANG);
     applyLang();
+    if (!CHAT_ENABLED) {
+  const matchChatBtn = document.getElementById('matchChatToggle');
+  if (matchChatBtn) matchChatBtn.style.display = 'none';
+  const settingsMsgBtn = document.getElementById('settingsMessagesBtn');
+  if (settingsMsgBtn) settingsMsgBtn.parentElement.style.display = 'none';
+}
     if (curUser) {
       renderIncomingRequests(curUser, latestIncomingData);
       renderFriendsList(curUser, latestFriendsData);
