@@ -4204,6 +4204,7 @@ function startClockTicker(user) {
   });
 
   function openChatModal() {
+        if (!CHAT_ENABLED) return;
     const overlay = document.getElementById('chatModalOverlay');
     overlay.classList.add('open');
     // 言語設定
@@ -4223,6 +4224,7 @@ function startClockTicker(user) {
   }
 
   function openDMModal(user, friendUid, friendName) {
+        if (!CHAT_ENABLED) return;
     const overlay = document.getElementById('chatModalOverlay');
     overlay.classList.add('open');
     const isJa = LANG === 'ja';
