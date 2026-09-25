@@ -2274,6 +2274,7 @@ applyBoardTheme();
         tcPanel.style.display = tcPanel.style.display === 'none' ? 'inline-block' : 'none';
       };
 
+           if (!CHAT_ENABLED) menuWrap.style.display = 'none';
       const menuWrap = document.createElement('span');
       menuWrap.style.cssText = 'position:relative;display:inline-block;';
       const menuBtn = document.createElement('button');
