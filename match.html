@@ -4556,9 +4556,7 @@ function startClockTicker(user) {
       curUser = user;
             const linkGoogleArea = document.getElementById('linkGoogleArea');
       if (linkGoogleArea) linkGoogleArea.style.display = user.isAnonymous ? 'block' : 'none';
-            const linkGoogleArea = document.getElementById('linkGoogleArea');
-      if (linkGoogleArea) linkGoogleArea.style.display = user.isAnonymous ? 'block' : 'none';
-      onValue(ref(db, 'friendRequests/' + user.uid), (s) => { latestIncomingData = s.val(); renderIncomingRequests(user, latestIncomingData); });
+                 onValue(ref(db, 'friendRequests/' + user.uid), (s) => { latestIncomingData = s.val(); renderIncomingRequests(user, latestIncomingData); });
       onValue(ref(db, 'friends/' + user.uid), (s) => { latestFriendsData = s.val(); renderFriendsList(user, latestFriendsData); });
       onValue(ref(db, 'matchInvites/' + user.uid), (s) => { latestMatchInvitesData = s.val(); renderMatchInvites(user, latestMatchInvitesData); });
       startMatchListener(user);
