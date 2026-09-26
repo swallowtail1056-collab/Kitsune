@@ -2354,10 +2354,11 @@ applyBoardTheme();
         const hasUnread = Object.values(dmData).some((m) => m.from === friendUid && m.sentAt > lastRead);
         unreadDot.style.display = hasUnread ? 'block' : 'none';
       });
-      row.appendChild(label);
+           row.appendChild(label);
       row.appendChild(challengeBtn);
       row.appendChild(tcPanel);
       row.appendChild(menuWrap);
+      row.appendChild(blockFriendBtn);
       container.appendChild(row);
     }
   }
