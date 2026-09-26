@@ -1827,6 +1827,9 @@ applyBoardTheme();
   document.getElementById('loginBtn').onclick = () => {
     signInWithPopup(auth, provider).catch(err => { document.getElementById('status').textContent = 'Error: ' + err.message; });
   };
+    document.getElementById('guestLoginBtn').onclick = () => {
+    signInAnonymously(auth).catch(err => { document.getElementById('status').textContent = 'Error: ' + err.message; });
+  };
  document.getElementById('logoutBtn').onclick = () => {
   closeOpenedMatch();
   myColor = null;
