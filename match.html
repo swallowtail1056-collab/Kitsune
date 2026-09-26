@@ -2321,19 +2321,7 @@ applyBoardTheme();
         }
         tcPanel.style.display = tcPanel.style.display === 'none' ? 'inline-block' : 'none';
       };
-
-     
-            const blockFriendBtn = document.createElement('button');
-      blockFriendBtn.textContent = '🚫';
-      blockFriendBtn.title = LANG === 'ja' ? 'ブロック' : 'Block';
-      blockFriendBtn.style.cssText = 'background:transparent;border:1px solid rgba(124,74,30,0.3);color:var(--text-muted);padding:2px 8px;font-size:0.9rem;';
-      blockFriendBtn.onclick = async () => {
-        const confirmMsg = LANG === 'ja' ? 'このユーザーをブロックしますか？友達関係が解除され、今後申請を送れなくなります。' : 'Block this user? This will remove them as a friend and they will no longer be able to send you requests.';
-        if (!confirm(confirmMsg)) return;
-        await set(ref(db, 'blocks/' + user.uid + '/' + friendUid), true);
-        await remove(ref(db, 'friends/' + user.uid + '/' + friendUid));
-        await remove(ref(db, 'friends/' + friendUid + '/' + user.uid));
-      };const menuWrap = document.createElement('span');
+         const menuWrap = document.createElement('span');
       menuWrap.style.cssText = 'position:relative;display:inline-block;';
                 if (!CHAT_ENABLED) menuWrap.style.display = 'none';
       const menuBtn = document.createElement('button');
