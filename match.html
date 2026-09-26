@@ -1394,7 +1394,8 @@ applyBoardTheme();
           + '<button id="profileNameSaveBtn" style="font-size:0.75rem;padding:3px 10px;">' + (isJa ? '保存' : 'Save') + '</button>'
           + '<span id="profileNameMsg" style="font-size:0.75rem;"></span>'
           + '</div>' : '')
-      + (prof.founderMember ? '<span style="font-size:0.75rem;background:#a3692d;color:#fff;padding:2px 8px;border-radius:10px;">🦊 ' + (isJa ? '先行登録者' : 'Founding Member') + '</span>' : '')
+           + (prof.founderMember ? '<span style="font-size:0.75rem;background:#a3692d;color:#fff;padding:2px 8px;border-radius:10px;">🦊 ' + (isJa ? '先行登録者' : 'Founding Member') + '</span>' : '')
+      + (prof.isAnonymous ? '<span style="font-size:0.75rem;background:#666;color:#fff;padding:2px 8px;border-radius:10px;margin-left:4px;">👤 ' + (isJa ? 'ゲスト' : 'Guest') + '</span>' : '')
       + '</div></div>'
       + '<div id="profileBioBox" style="margin-bottom:14px;">' + bioHtml + '</div>'
       + '<div style="display:flex;justify-content:space-between;font-size:0.85rem;color:#888;margin-bottom:14px;">'
