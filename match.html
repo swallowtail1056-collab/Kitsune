@@ -2354,15 +2354,14 @@ applyBoardTheme();
         const hasUnread = Object.values(dmData).some((m) => m.from === friendUid && m.sentAt > lastRead);
         unreadDot.style.display = hasUnread ? 'block' : 'none';
       });
-           row.appendChild(label);
+            row.appendChild(label);
       row.appendChild(challengeBtn);
       row.appendChild(tcPanel);
       row.appendChild(menuWrap);
-      row.appendChild(blockFriendBtn);
-      container.appendChild(row);
+      container.appendChild(row);  
     }
   }
-
+      
   // ===== ランダム対局(レーティング近似マッチング) =====
   const RM_TC_MS = {
     bullet: { base: 2 * 60 * 1000, inc: 1000 },
