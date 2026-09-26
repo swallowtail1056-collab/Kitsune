@@ -1836,6 +1836,25 @@ applyBoardTheme();
     document.getElementById('guestLoginBtn').onclick = () => {
     signInAnonymously(auth).catch(err => { document.getElementById('status').textContent = 'Error: ' + err.message; });
   };
+    document.getElementById('linkGoogleBtn').onclick = async () => {
+    const msgEl = document.getElementById('linkGoogleMsg');
+    msgEl.className = '';
+    msgEl.textContent = '';
+    try {
+      const result = await linkWithPopup(auth.currentUser, provider);
+      await update(ref(db, 'publicProfiles/' + result.user.uid), { isAnonymous: false });
+      msgEl.className = 'msg';
+      msgEl.textContent = LANG === 'ja' ? '連携が完了しました!' : 'Linked successfully!';
+      document.getElementById('linkGoogleArea').style.display = 'none';
+    } catch (err) {
+      msgEl.className = 'err';
+      if (err.code === 'auth/credential-already-in-use') {
+        msgEl.textContent = LANG === 'ja' ? 'そのGoogleアカウントは既に別のアカウントで使われています。別のGoogleアカウントをお試しください。' : 'That Google account is already linked to a different account. Please try a different one.';
+      } else {
+        msgEl.textContent = (LANG === 'ja' ? 'エラー: ' : 'Error: ') + err.message;
+      }
+    }
+  };
  document.getElementById('logoutBtn').onclick = () => {
   closeOpenedMatch();
   myColor = null;
