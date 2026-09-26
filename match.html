@@ -2146,7 +2146,7 @@ applyBoardTheme();
         await remove(ref(db, 'sentRequests/' + fromUid + '/' + user.uid));
         renderUserSearchResults();
       };
-      const declineBtn = document.createElement('button');
+           const declineBtn = document.createElement('button');
       declineBtn.textContent = LANG === 'ja' ? '拒否' : 'Decline';
       declineBtn.style.background = '#a0785a';
       declineBtn.onclick = async () => {
@@ -2155,8 +2155,21 @@ applyBoardTheme();
         renderUserSearchResults();
       };
 
+      const blockBtn = document.createElement('button');
+      blockBtn.textContent = LANG === 'ja' ? '🚫 ブロック' : '🚫 Block';
+      blockBtn.style.background = '#7a2020';
+      blockBtn.onclick = async () => {
+        const confirmMsg = LANG === 'ja' ? 'このユーザーをブロックしますか？今後、申請を送れなくなります。' : 'Block this user? They will no longer be able to send you requests.';
+        if (!confirm(confirmMsg)) return;
+        await set(ref(db, 'blocks/' + user.uid + '/' + fromUid), true);
+        await remove(ref(db, 'friendRequests/' + user.uid + '/' + fromUid));
+        await remove(ref(db, 'sentRequests/' + fromUid + '/' + user.uid));
+        renderUserSearchResults();
+      };
+
       btnGroup.appendChild(acceptBtn);
       btnGroup.appendChild(declineBtn);
+      btnGroup.appendChild(blockBtn);
       row.appendChild(label);
       row.appendChild(btnGroup);
       container.appendChild(row);
