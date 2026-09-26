@@ -1990,6 +1990,12 @@ applyBoardTheme();
       msgEl.className = 'err';
       return;
     }
+        const blockedBySnap = await get(ref(db, 'blocks/' + targetUid + '/' + user.uid));
+    if (blockedBySnap.exists()) {
+      msgEl.textContent = LANG === 'ja' ? '申請を送信できませんでした。' : 'Could not send the request.';
+      msgEl.className = 'err';
+      return;
+    }
     const myProfile = await get(ref(db, 'users/' + user.uid));
     const myUsername = myProfile.exists() ? myProfile.val().username : user.displayName;
 
