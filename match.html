@@ -4358,16 +4358,17 @@ function startClockTicker(user) {
       const snap = await get(ref(db, 'users/' + user.uid));
       let currentName = '';
       let myPhotoURL = '';
-      if (snap.exists() && snap.val().username) {
+           if (snap.exists() && snap.val().username) {
         currentName = snap.val().username;
         myPhotoURL = snap.val().photoURL || pickRandomDefaultAvatar();
+        await update(ref(db, 'publicProfiles/' + user.uid), { isAnonymous: user.isAnonymous });
       } else {
         // 初回ログイン:Googleの実名・実写真をそのまま使わず、匿名のおすすめIDと
         // チェスの駒シルエットをランダムに割り当てる(プロフィールから後で自由に変更できる)
         currentName = await generateUniqueUsername();
         myPhotoURL = pickRandomDefaultAvatar();
         await set(ref(db, 'users/' + user.uid), { username: currentName, email: user.email, photoURL: myPhotoURL });
-        await set(ref(db, 'publicProfiles/' + user.uid), { username: currentName, photoURL: myPhotoURL, founderMember: Date.now() < FOUNDER_CUTOFF, foundedAt: Date.now() });
+        await set(ref(db, 'publicProfiles/' + user.uid), { username: currentName, photoURL: myPhotoURL, founderMember: Date.now() < FOUNDER_CUTOFF, foundedAt: Date.now(), isAnonymous: user.isAnonymous });
         await set(ref(db, 'usernames/' + normName(currentName)), user.uid);
       }
       document.getElementById('profilePhoto').src = myPhotoURL;
