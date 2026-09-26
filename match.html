@@ -687,6 +687,86 @@ import { getAuth, GoogleAuthProvider, signInWithPopup, signInAnonymously, signOu
   if (settingsMsgBtn) settingsMsgBtn.parentElement.style.display = 'none';
 }
   applyLang();
+  document.getElementById('settingsBlockBtn').onclick = () => {
+  document.getElementById('settingsPanel').style.display = 'none';
+  openBlockManager();
+};
+document.getElementById('blockManagerCloseBtn').onclick = () => {
+  document.getElementById('blockManagerOverlay').style.display = 'none';
+};
+document.getElementById('blockManagerOverlay').addEventListener('click', (ev) => {
+  if (ev.target.id === 'blockManagerOverlay') document.getElementById('blockManagerOverlay').style.display = 'none';
+});
+
+async function openBlockManager() {
+  const overlay = document.getElementById('blockManagerOverlay');
+  overlay.style.display = 'flex';
+  document.getElementById('blockUserInput').value = '';
+  document.getElementById('blockUserMsg').textContent = '';
+  await renderBlockedUsersList();
+}
+
+async function renderBlockedUsersList() {
+  const user = auth.currentUser;
+  if (!user) return;
+  const container = document.getElementById('blockedUsersList');
+  container.innerHTML = '';
+  const snap = await get(ref(db, 'blocks/' + user.uid));
+  const data = snap.val() || {};
+  const uids = Object.keys(data);
+  if (uids.length === 0) {
+    container.textContent = LANG === 'ja' ? 'ブロック中のユーザーはいません。' : 'No blocked users.';
+    return;
+  }
+  for (const blockedUid of uids) {
+    const profSnap = await get(ref(db, 'publicProfiles/' + blockedUid));
+    const name = (profSnap.val() && profSnap.val().username) || '(unknown)';
+    const row = document.createElement('div');
+    row.className = 'list-item';
+    const label = document.createElement('span');
+    label.textContent = name;
+    const unblockBtn = document.createElement('button');
+    unblockBtn.textContent = LANG === 'ja' ? '解除' : 'Unblock';
+    unblockBtn.style.fontSize = '0.8rem';
+    unblockBtn.onclick = async () => {
+      await remove(ref(db, 'blocks/' + user.uid + '/' + blockedUid));
+      renderBlockedUsersList();
+    };
+    row.appendChild(label);
+    row.appendChild(unblockBtn);
+    container.appendChild(row);
+  }
+}
+
+document.getElementById('blockUserBtn').onclick = async () => {
+  const user = auth.currentUser;
+  if (!user) return;
+  const msgEl = document.getElementById('blockUserMsg');
+  const targetName = document.getElementById('blockUserInput').value.trim();
+  if (!targetName) return;
+  const key = normName(targetName);
+  const uidSnap = await get(ref(db, 'usernames/' + key));
+  if (!uidSnap.exists()) {
+    msgEl.className = 'err';
+    msgEl.textContent = LANG === 'ja' ? 'そのユーザー名は見つかりませんでした。' : 'That username was not found.';
+    return;
+  }
+  const targetUid = uidSnap.val();
+  if (targetUid === user.uid) {
+    msgEl.className = 'err';
+    msgEl.textContent = LANG === 'ja' ? '自分自身はブロックできません。' : "You can't block yourself.";
+    return;
+  }
+  await set(ref(db, 'blocks/' + user.uid + '/' + targetUid), true);
+  await remove(ref(db, 'friends/' + user.uid + '/' + targetUid));
+  await remove(ref(db, 'friends/' + targetUid + '/' + user.uid));
+  await remove(ref(db, 'friendRequests/' + user.uid + '/' + targetUid));
+  await remove(ref(db, 'sentRequests/' + targetUid + '/' + user.uid));
+  msgEl.className = 'msg';
+  msgEl.textContent = LANG === 'ja' ? 'ブロックしました。' : 'Blocked.';
+  document.getElementById('blockUserInput').value = '';
+  renderBlockedUsersList();
+};
   let THEME = localStorage.getItem('selectedTheme') === 'dark' ? 'dark' : 'light';
   function applyTheme() {
     document.documentElement.setAttribute('data-theme', THEME);
