@@ -2,7 +2,14 @@
 // KitsuneChess の対局ページ用 Service Worker。
 // 元々あったオフラインキャッシュ機能に加えて、プッシュ通知(FCM)のバックグラウンド受信も
 // この1つのファイルで扱います(スコープの衝突を避けるため、別ファイルに分けず統合しています)。
-const CACHE_NAME = 'kitsunechess-match-v2';
+//
+// 【v3での変更点】
+// ・他サイト宛(Google広告/Firebaseなど)の通信と、GET以外の通信は Service Worker で触らず素通しにする
+//   (Googleのセキュリティ報告通信を横取りして失敗するエラーの対策)
+// ・HTMLのキャッシュ対象を対戦ページ(/match.html, /match)だけにする(練習ページには触らない)
+// ・正常なレスポンス(response.ok)だけをキャッシュする
+// ・キャッシュ名をv3に変更して、古いキャッシュを自動削除する
+const CACHE_NAME = 'kitsunechess-match-v3';
 const CORE_ASSETS = [
   '/match_icon_192.png',
   '/match_icon_512.png'
@@ -22,24 +29,42 @@ self.addEventListener('activate', (event) => {
   self.clients.claim();
 });
 self.addEventListener('fetch', (event) => {
-  const isHTML = event.request.mode === 'navigate' ||
-                 event.request.destination === 'document' ||
-                 event.request.url.endsWith('/match.html');
-  if (isHTML) {
+  const req = event.request;
+
+  // GET以外(POSTなど)は触らない
+  if (req.method !== 'GET') return;
+
+  const url = new URL(req.url);
+
+  // 他サイト宛(Google広告・Firebase・gstaticなど)は触らず、ブラウザにそのまま任せる
+  if (url.origin !== self.location.origin) return;
+
+  // 対戦ページのHTML: ネット優先、失敗したときだけキャッシュを使う
+  const isMatchPage = url.pathname === '/match.html' || url.pathname === '/match';
+  if (isMatchPage) {
     event.respondWith(
-      fetch(event.request)
+      fetch(req)
         .then((response) => {
-          const clone = response.clone();
-          caches.open(CACHE_NAME).then((cache) => cache.put(event.request, clone));
+          if (response.ok) {
+            const clone = response.clone();
+            caches.open(CACHE_NAME).then((cache) => cache.put(req, clone));
+          }
           return response;
         })
-        .catch(() => caches.match(event.request))
+        .catch(() => caches.match(req))
     );
     return;
   }
-  event.respondWith(
-    caches.match(event.request).then((cached) => cached || fetch(event.request))
-  );
+
+  // 事前キャッシュしたアイコン画像だけ、キャッシュ優先で返す
+  if (CORE_ASSETS.includes(url.pathname)) {
+    event.respondWith(
+      caches.match(req).then((cached) => cached || fetch(req))
+    );
+    return;
+  }
+
+  // それ以外(練習ページなど)は何もせず、通常どおりブラウザに任せる
 });
 // ── ここからプッシュ通知(FCM)関連 ──
 importScripts('https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js');
