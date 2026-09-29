@@ -120,8 +120,8 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
   <h1 class="opening-title lang-element-en">Grand Prix Attack</h1>
 
   <div class="opening-intro">
-    <p class="lang-element-ja">💡 グランプリ・アタックはシシリアンに対して2.Nc3から3.f4と突く積極的な攻撃システムだよ！名前の由来はヨーロッパのグランプリ・チェストーナメントでアマチュアプレイヤーたちがこの変化を頻繁に使って結果を出したことからなんだ。f4と突くことでキングサイドへの攻撃スペースを確保して、Nf3-Bc4-O-Oの形から白のナイトとビショップが協力してf7を狙うんだ。複雑なオープン・シシリアンの理論を避けながら積極的な攻撃姿勢を保てるのが最大の魅力だよ！</p>
-    <p class="lang-element-en">💡 The Grand Prix Attack is an aggressive system against the Sicilian starting with 2.Nc3 and 3.f4! The name comes from European Grand Prix chess tournaments where amateur players frequently used this variation with great results. Pushing f4 secures attacking space on the kingside, and White's plan involves Nf3-Bc4-O-O with the knight and bishop targeting f7. The biggest advantage is avoiding all the complex theory of the Open Sicilian while keeping an aggressive attacking stance. A practical and dangerous surprise weapon!</p>
+    <p class="lang-element-ja">💡 グランプリ・アタックはシシリアンに対して2.Nc3から3.f4と突く積極的な攻撃システムだよ！名前の由来は、1970〜80年代のイギリスで週末に開かれていた「グランプリ」という大会シリーズで、この変化が頻繁に使われて結果を出したことなんだ。f4と突くことでキングサイドへの攻撃スペースを確保して、Nf3-Bc4-O-Oの形から白のナイトとビショップが協力してf7を狙うんだ。複雑なオープン・シシリアンの理論を避けながら積極的な攻撃姿勢を保てるのが最大の魅力だよ！</p>
+    <p class="lang-element-en">💡 The Grand Prix Attack is an aggressive system against the Sicilian starting with 2.Nc3 and 3.f4! The name comes from a series of weekend tournaments called the "Grand Prix" held in Britain in the 1970s-80s, where this variation was used frequently with great results. Pushing f4 secures attacking space on the kingside, and White's plan involves Nf3-Bc4-O-O with the knight and bishop targeting f7. The biggest advantage is avoiding all the complex theory of the Open Sicilian while keeping an aggressive attacking stance. A practical and dangerous surprise weapon!</p>
   </div>
 
   <div class="board-wrap">
@@ -141,6 +141,9 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
     <button id="btnPrev" class="lesson-btn">← 前へ</button>
     <span class="lesson-progress" id="lessonProgress"></span>
     <button id="btnNext" class="lesson-btn">次へ →</button>
+  </div>
+  <div id="shareRow" style="display:none;text-align:center;margin-top:10px;">
+    <button id="shareXBtn" style="background:#000;color:#fff;border:none;border-radius:20px;padding:8px 16px;font-family:'Crimson Pro',serif;font-weight:700;font-size:0.85rem;cursor:pointer;">🦊 𝕏でシェアする</button>
   </div>
 </div>
 
@@ -189,60 +192,60 @@ const initialBoard = [
 // ============================================================
 const LESSON_STEPS = [
   { move:null, moveLabel:{ja:"開始局面", en:"Starting Position"},
-    ja:"グランプリ・アタックのレッスンを始めるよ！複雑なシシリアン理論を避けながら、キングサイドへ積極的に攻める実戦的な作戦だよ。ジーンと一緒に、一手ずつ「なぜその手を指すのか」を学んでいこう。",
-    en:"Let's start the Grand Prix Attack lesson! White avoids deep Sicilian theory while attacking the kingside aggressively. Jene will explain why each move is played, one step at a time.",
+    ja:"グランプリ・アタックのレッスンを始めるよ！白があえてd4を突かずに、f4のポーンでキングサイドの攻めを組み立てる、実戦的な変化だよ。一手ずつジーンと一緒に、なぜその手を指すのかを学んでいこう。",
+    en:"Let's start the Grand Prix Attack lesson! Instead of pushing d4, White builds a kingside attack around the f4 pawn — a very practical weapon. Jene will walk you through why each move is played, one step at a time.",
     fox:'welcome' },
   { move:{from:[6,4],to:[4,4]}, moveLabel:{ja:"1. e4", en:"1. e4"},
-    ja:"白はe4で中央を制圧するよ。",
-    en:"White plays 1.e4, claiming the center.",
+    ja:"白はポーンをe4へ進めるよ。中央を制圧して、ビショップとクイーンが動く道も開けるんだ。",
+    en:"White pushes the pawn to e4, claiming the center and opening lines for the bishop and queen.",
     fox:'normal' },
   { move:{from:[1,2],to:[3,2]}, moveLabel:{ja:"1...c5", en:"1...c5"},
-    ja:"黒はc5。シシリアン・ディフェンスで非対称な局面を作るよ。",
-    en:"Black plays 1...c5, the Sicilian Defense.",
+    ja:"黒はポーンをc5へ進めるよ（シシリアン・ディフェンス）。非対称な局面を作り出して、自分なりの反撃を狙うんだ。",
+    en:"Black pushes the pawn to c5 (the Sicilian Defense), creating an asymmetrical position to fight for its own counterplay.",
     fox:'normal' },
   { move:{from:[7,1],to:[5,2]}, moveLabel:{ja:"2. Nc3（グランプリ！）", en:"2. Nc3 (Grand Prix!)"},
-    ja:"ここが本題、グランプリ・アタックの一手！白はNf3-d4のオープン・シシリアンを避けて、まずナイトをc3へ展開するよ。",
-    en:"Here's the Grand Prix move! Instead of the Open Sicilian with Nf3-d4, White first develops the knight to c3.",
+    ja:"ここが本題の入り口！ここで2.Nf3から3.d4と進めるオープン・シシリアンという本筋もあるけれど、白はナイトをc3へ進めて、d4を突かずにキングサイドの攻めを目指す道を選ぶんだ。深い理論を避けながら、実戦で使いやすいのが魅力だよ。",
+    en:"Here's the doorway into the Grand Prix! The standard path here is 2.Nf3 followed by 3.d4, the Open Sicilian, but White instead develops the knight to c3, aiming for a kingside attack without pushing d4. It avoids deep theory while staying very practical to play.",
     fox:'happy' },
   { move:{from:[0,1],to:[2,2]}, moveLabel:{ja:"2...Nc6", en:"2...Nc6"},
-    ja:"黒もナイトをc6へ展開するよ。",
-    en:"Black develops the knight to c6.",
+    ja:"黒はナイトをc6へ進めるよ。柔軟に駒を展開しながら、この先の展開に備えるんだ。",
+    en:"Black develops the knight to c6, a flexible developing move that keeps options open.",
     fox:'normal' },
   { move:{from:[6,5],to:[4,5]}, moveLabel:{ja:"3. f4", en:"3. f4"},
-    ja:"白はf4！キングサイドへの攻撃スペースを確保する、グランプリらしい積極的な一手だよ。",
-    en:"White plays the characteristically aggressive 3.f4, grabbing kingside attacking space.",
-    fox:'wink' },
+    ja:"白はポーンをf4へ進めるよ。これがグランプリ・アタックの核となる一手で、キングサイドで駒を伸ばすためのスペースを作るんだ。",
+    en:"White pushes the pawn to f4 — the defining move of the Grand Prix Attack, creating space for a kingside buildup.",
+    fox:'normal' },
   { move:{from:[1,6],to:[2,6]}, moveLabel:{ja:"3...g6", en:"3...g6"},
-    ja:"黒はg6でフィアンケットを準備するよ。",
-    en:"Black prepares a fianchetto with 3...g6.",
+    ja:"黒はポーンをg6へ進めるよ。ビショップをg7へフィアンケットする準備で、長い対角線から白の中央をにらむ狙いなんだ。",
+    en:"Black pushes the pawn to g6, preparing to fianchetto the bishop to g7 and aim down the long diagonal at White's center.",
     fox:'normal' },
   { move:{from:[7,6],to:[5,5]}, moveLabel:{ja:"4. Nf3", en:"4. Nf3"},
-    ja:"白はナイトをf3へ展開するよ。",
-    en:"White develops the other knight to f3.",
+    ja:"白はナイトをf3へ進めるよ。これでキングサイドのキャスリングに向けて駒の展開を進めるんだ。",
+    en:"White develops the knight to f3, continuing preparations to castle kingside.",
     fox:'normal' },
   { move:{from:[0,5],to:[1,6]}, moveLabel:{ja:"4...Bg7", en:"4...Bg7"},
-    ja:"黒はビショップをg7へ。フィアンケットを完成させるよ。",
-    en:"Black completes the fianchetto with 4...Bg7.",
+    ja:"黒はビショップをg7へ進めるよ。フィアンケットが完成して、この先のキャスリングにも備えるんだ。",
+    en:"Black completes the fianchetto with the bishop on g7, also preparing to castle.",
     fox:'normal' },
   { move:{from:[7,5],to:[4,2]}, moveLabel:{ja:"5. Bc4", en:"5. Bc4"},
-    ja:"白はビショップをc4へ。ナイトと協力してf7を狙うよ。",
-    en:"White develops the bishop to c4, joining the knight in targeting f7.",
+    ja:"白はビショップをc4へ進めるよ。ここで5.Bb5と指してNd4のカウンターを警戒する選び方も知られているけれど、Bc4はf7のポーンを直接ねらう、より積極的な一手なんだ。",
+    en:"White develops the bishop to c4. Playing 5.Bb5 here, guarding against a future ...Nd4 counter, is another known approach, but Bc4 aims straight at the f7 pawn — a more aggressive choice.",
     fox:'normal' },
   { move:{from:[1,4],to:[2,4]}, moveLabel:{ja:"5...e6", en:"5...e6"},
-    ja:"黒はe6で中央を支えるよ。",
-    en:"Black supports the center with 5...e6.",
+    ja:"黒はポーンをe6へ進めるよ。白のc4のビショップがねらうa2-g8の対角線をふさぎながら、この先d5と突く準備もするんだ。",
+    en:"Black pushes the pawn to e6, blocking the a2-g8 diagonal that White's bishop is aiming down, and preparing a future ...d5.",
     fox:'normal' },
-  { move:{from:[4,5],to:[3,5]}, moveLabel:{ja:"6. f5", en:"6. f5"},
-    ja:"白はf5でさらにスペースを広げて、キングサイドへの攻撃を加速するよ。",
-    en:"White pushes further with 6.f5, accelerating the kingside attack.",
-    fox:'happy' },
+  { move:{from:[4,5],to:[3,5]}, moveLabel:{ja:"6. f5!?", en:"6. f5!?"},
+    ja:"白はポーンをf5へ突くよ。このポーンはe4のポーンに守られているので、すぐに取られる心配はないけれど、黒がexf5と取ると、この先の局面がかなり不透明になる、やや強引な仕掛けなんだ。",
+    en:"White pushes the pawn to f5. It's defended by the e4 pawn, so it isn't simply hanging, but if Black takes with exf5, the resulting position becomes quite unclear — a somewhat forceful try.",
+    fox:'wink' },
   { move:{from:[0,6],to:[1,4]}, moveLabel:{ja:"6...Nge7", en:"6...Nge7"},
-    ja:"黒はもう一つのナイトをe7へ展開するよ。",
-    en:"Black develops the other knight to e7.",
+    ja:"黒はもう一つのナイトをe7へ進めるよ。exf5とポーンを受け取る道もあるけれど、それはリスクが大きいとされていて、Ngeはそのポーンをいったん見送って、じっくり駒を育てる一手なんだ。",
+    en:"Black develops the other knight to e7. Taking with exf5 is possible but considered risky, so Nge7 leaves that pawn alone for now and simply continues developing.",
     fox:'normal' },
   { move:{from:[7,4],to:[7,6],castle:{from:[7,7],to:[7,5]}}, moveLabel:{ja:"7. O-O", en:"7. O-O"},
-    ja:"白はキャスリングでキングを安全な場所へ。これで本譜は一段落、続きはぜひ自分で指してみてね！",
-    en:"White castles kingside, tucking the king away safely. That's the main line — try continuing the game yourself from here!",
+    ja:"白はキャスリングでキングを安全な場所へ動かすよ。f5とe6のポーンがにらみ合ったまま、白はこの緊張関係をあわてて解消せずに、まずキングの安全を優先するんだ。これで本譜は一段落、続きはぜひ自分で指してみてね！",
+    en:"White castles kingside, tucking the king away safely. The tension between the f5 and e6 pawns stays on the board for now — White isn't in a hurry to resolve it and prioritizes king safety first. That's the main line — try continuing the game yourself from here!",
     fox:'happy' }
 ];
 
@@ -328,6 +331,11 @@ function adjustBottomPadding(){
   }
 }
 
+function shareOnX(message) {
+  const shareUrl = 'https://twitter.com/intent/tweet?text=' + encodeURIComponent(message) + '&url=' + encodeURIComponent(window.location.href);
+  window.open(shareUrl, '_blank', 'noopener,noreferrer,width=550,height=420');
+}
+
 function renderStep(){
   const step = LESSON_STEPS[currentStep];
   renderBoard(boardSnapshots[currentStep]);
@@ -338,6 +346,23 @@ function renderStep(){
   document.getElementById('btnPrev').disabled = currentStep === 0;
   document.getElementById('btnNext').disabled = currentStep === LESSON_STEPS.length - 1;
   adjustBottomPadding();
+
+  const shareRow = document.getElementById('shareRow');
+  if (shareRow) {
+    if (currentStep === LESSON_STEPS.length - 1) {
+      const openingNameEl = document.querySelector('.opening-title.lang-element-' + currentLang);
+      const openingName = openingNameEl ? openingNameEl.textContent : '';
+      const msg = currentLang === 'ja'
+        ? '🦊 ' + openingName + 'をKitsuneChessで学んだよ!一手ずつ「なぜその手か」を教えてくれるよ'
+        : '🦊 Just learned the ' + openingName + ' on KitsuneChess! It explains why each move is played, step by step.';
+      const shareBtn = document.getElementById('shareXBtn');
+      shareBtn.textContent = currentLang === 'ja' ? '🦊 𝕏でシェアする' : '🦊 Share on 𝕏';
+      shareBtn.onclick = function() { shareOnX(msg); };
+      shareRow.style.display = 'block';
+    } else {
+      shareRow.style.display = 'none';
+    }
+  }
 }
 
 function updateLanguageDisplay(lang){
