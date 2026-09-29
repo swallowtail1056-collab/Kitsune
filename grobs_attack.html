@@ -100,6 +100,8 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
   font-size: 1rem;
   color: var(--text-sub);
 }
+.commentary-text a, .opening-intro a { color:var(--brown); text-decoration:underline; font-weight:700; }
+.commentary-text a:hover, .opening-intro a:hover { color:var(--brown-dark); }
 </style>
   <script src="board-theme.js"></script>
 </head>
@@ -118,8 +120,8 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
   <h1 class="opening-title lang-element-en">Grob's Attack</h1>
 
   <div class="opening-intro">
-    <p class="lang-element-ja">💡 1手目からg4を突く、非常に型破りなオープニング。理論的には評価が低いが、相手を混乱させ独自のペースに持ち込みたい人向け。</p>
-    <p class="lang-element-en">💡 An extremely unorthodox opening starting with 1.g4. Poorly regarded in theory, but great for players who want to confuse opponents and dictate an unusual pace.</p>
+    <p class="lang-element-ja">💡 グロブス・アタックは、白が1手目でポーンをg4へ進める、とても珍しいオープニングだよ。名前はスイスのインターナショナル・マスター、アンリ・グロブに由来していて、グロブはこの手を深く研究し、通信チェスで何百局も指したんだ。1.g4はキングサイドを弱くし、中央の支配にも直接は役立たないので、理論上は最も評価の低い1手目のひとつとされているよ。それでも、見慣れない形に相手が戸惑いやすく、罠も多いので、意表を突く一手として楽しまれているんだ。</p>
+    <p class="lang-element-en">💡 Grob's Attack is a very unusual opening in which White pushes the g-pawn to g4 on move one. It's named after the Swiss International Master Henri Grob, who analyzed it deeply and played hundreds of correspondence games with it. Because 1.g4 weakens the kingside and does little to control the center, theory rates it among the weakest first moves. Still, opponents are often thrown off by the unfamiliar positions, and it's full of traps, so it's enjoyed as a surprise weapon.</p>
   </div>
 
   <div class="board-wrap">
@@ -139,6 +141,9 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
     <button id="btnPrev" class="lesson-btn">← 前へ</button>
     <span class="lesson-progress" id="lessonProgress"></span>
     <button id="btnNext" class="lesson-btn">次へ →</button>
+  </div>
+  <div id="shareRow" style="display:none;text-align:center;margin-top:10px;">
+    <button id="shareXBtn" style="background:#000;color:#fff;border:none;border-radius:20px;padding:8px 16px;font-family:'Crimson Pro',serif;font-weight:700;font-size:0.85rem;cursor:pointer;">🦊 𝕏でシェアする</button>
   </div>
 </div>
 
@@ -178,36 +183,64 @@ const initialBoard = [
 
 const LESSON_STEPS = [
   { move:null, moveLabel:{ja:"開始局面", en:"Starting Position"},
-    ja:'グロブス・アタックのレッスンを始めるよ！一手ずつジーンと一緒に、なぜその手を指すのかを学んでいこう。',
-    en:'Let\'s start the Grob\'s Attack lesson! Jene will walk you through why each move is played, one step at a time.',
+    ja:"グロブス・アタックのレッスンを始めるよ！このページでは、黒が1...d5からg4のポーンを取りに来て、白があえてそのポーンを差し出す「グロブ・ギャンビット」の本筋を見ていくよ。白のねらいは、g2のビショップとクイーンでd5とb7の弱点を攻めることなんだ。一手ずつジーンと一緒に、なぜその手を指すのかを学んでいこう。",
+    en:"Let's start the Grob's Attack lesson! On this page we follow the main line of the Grob Gambit, where Black goes after the g4 pawn with 1...d5 and White deliberately gives it up. White's aim is to attack Black's weak points on d5 and b7 with the g2 bishop and the queen. Jene will walk you through why each move is played, one step at a time.",
     fox:'welcome' },
   { move:{from:[6,6],to:[4,6]}, moveLabel:{ja:"1. g4", en:"1. g4"},
-    ja:'💡 白はポーンをg4へ進めるよ。 1手目からg4を突く、非常に型破りなオープニング。理論的には評価が低いが、相手を混乱させ独自のペースに持ち込みたい人向け。',
-    en:'💡 White develops the pawn to g4. An extremely unorthodox opening starting with 1.g4. Poorly regarded in theory, but great for players who want to confuse opponents and dictate an unusual pace.',
+    ja:"白はポーンをg4へ進めるよ。一般的には1.e4や1.d4で中央を取りに行くけれど、白はここでg2のマスを空けて、ビショップを長い対角線に出す準備をするんだ。その代わり、白はキングの前のポーンを早々に動かすので、キングサイドが薄くなり、g4のポーン自体も狙われやすくなるよ。白が1手目から端のポーンを動かす珍しいオープニングには、1.b4の<a href='polish_opening.html'>ポーリッシュ・オープニング</a>もあるよ。",
+    en:"White pushes the pawn to g4. The usual first moves are 1.e4 or 1.d4, which claim the center, but White instead clears the g2 square to put the bishop on the long diagonal. The cost is that White has moved a pawn in front of the king very early, loosening the kingside and leaving the g4 pawn itself exposed. Another unusual opening where White moves a flank pawn on move one is the <a href='polish_opening.html?lang=en'>Polish Opening</a> with 1.b4.",
     fox:'happy' },
   { move:{from:[1,3],to:[3,3]}, moveLabel:{ja:"1...d5", en:"1...d5"},
-    ja:'黒はポーンをd5へ進めるよ。',
-    en:'Black develops the pawn to d5.',
+    ja:"黒はポーンをd5へ進めるよ。黒は中央を取りながらc8のビショップの道を開き、そのビショップでg4のポーンを直接ねらうんだ。黒にとってはいちばん自然で、よく指される応じ方だよ。",
+    en:"Black pushes the pawn to d5. Black claims the center and opens the path for the c8 bishop, which now attacks the g4 pawn directly. For Black this is the most natural and most common reply.",
     fox:'normal' },
-  { move:{from:[7,5],to:[6,6]}, moveLabel:{ja:"2. Bg2", en:"2. Bg2"},
-    ja:'白はビショップをg2へ進めるよ。',
-    en:'White develops the bishop to g2.',
+  { move:{from:[7,5],to:[6,6]}, moveLabel:{ja:"2. Bg2（グロブ・ギャンビット！）", en:"2. Bg2 (Grob Gambit!)"},
+    ja:"白はビショップをg2へ進めるよ。ここで2.h3とポーンを守る手もあるけれど、黒に2...h5と揺さぶられて受け身になりやすいとされていて、白は守らずにビショップでd5のポーンをにらむ道を選ぶんだ。白はg4のポーンを取られてもかまわない、というギャンビット（ポーンを差し出す作戦）の考え方だよ。",
+    en:"White develops the bishop to g2. Defending the pawn with 2.h3 is possible, but after 2...h5 White tends to end up passive, so White leaves the pawn and aims the bishop at d5 instead. White is willing to let the g4 pawn go — this is a gambit, an opening that offers a pawn.",
     fox:'normal' },
   { move:{from:[0,2],to:[4,6]}, moveLabel:{ja:"2...Bxg4", en:"2...Bxg4"},
-    ja:'黒はビショップでg4の駒を取るよ。',
-    en:'Black captures on g4 with the bishop.',
+    ja:"黒はビショップでg4のポーンを取るよ。黒はこれでポーンを1つ得するけれど、c8にいたビショップがいなくなったので、b7のポーンを守る駒がなくなるんだ。黒には、ポーンを取らずに2...c6と固めて白のねらいを先に消す選択肢もあるよ。",
+    en:"Black captures the g4 pawn with the bishop. Black is now a pawn up, but with the bishop gone from c8, nothing defends the b7 pawn anymore. Black could instead decline the pawn with 2...c6, shutting down White's idea in advance.",
     fox:'normal' },
   { move:{from:[6,2],to:[4,2]}, moveLabel:{ja:"3. c4", en:"3. c4"},
-    ja:'白はポーンをc4へ進めるよ。',
-    en:'White develops the pawn to c4.',
-    fox:'normal' },
+    ja:"白はポーンをc4へ進めるよ。白はこれでd5のポーンをポーンとビショップの2つで攻撃し、黒がd5を守る駒はクイーン1つだけになるんだ。黒がもし3...dxc4と取ると、白は4.Bxb7でb7のポーンを取りながらa8のルークを攻撃できるよ。白が1.c4から始める<a href='english.html'>イングリッシュ・オープニング</a>とは違い、白はここでd5を崩す具体的な狙いのためにc4を突いているんだ。",
+    en:"White pushes the pawn to c4. White now attacks the d5 pawn twice, with the pawn and the bishop, while Black defends it only with the queen. If Black takes with 3...dxc4, White plays 4.Bxb7, grabbing the b7 pawn and attacking the a8 rook. Unlike the <a href='english.html?lang=en'>English Opening</a>, where White starts with 1.c4, White plays c4 here with the concrete aim of breaking down d5.",
+    fox:'happy' },
   { move:{from:[1,2],to:[2,2]}, moveLabel:{ja:"3...c6", en:"3...c6"},
-    ja:'黒はポーンをc6へ進めるよ。',
-    en:'Black develops the pawn to c6.',
+    ja:"黒はポーンをc6へ進めるよ。黒はこれでd5のポーンを守りながら、g2のビショップが通る長い対角線をもう一枚ふさぐんだ。黒には3...Nf6や3...e6という選択肢もあるけれど、3...c6がいちばん多く指されている手だよ。その代わり、黒はナイトの自然な行き先であるc6のマスを自分のポーンでふさぐことになるんだ。",
+    en:"Black pushes the pawn to c6. Black defends the d5 pawn and adds a second blocker on the long diagonal of the g2 bishop. Black also has 3...Nf6 or 3...e6, but 3...c6 is the most frequently played move. The downside is that Black takes away c6, the knight's natural square, with its own pawn.",
     fox:'normal' },
-  { move:{from:[7,1],to:[5,2]}, moveLabel:{ja:"4. Nc3", en:"4. Nc3"},
-    ja:'白はナイトをc3へ進めるよ。',
-    en:'White develops the knight to c3.',
+  { move:{from:[4,2],to:[3,3]}, moveLabel:{ja:"4. cxd5", en:"4. cxd5"},
+    ja:"白はc4のポーンでd5のポーンを取るよ。白はこれでcファイルを開き、黒のd5をもう一度ねらえる形に持ち込むんだ。ここでは4.Qb3とすぐにクイーンを出す手もよく指されるけれど、このページでは白が先にポーンを交換する形を見ていくよ。",
+    en:"White captures on d5 with the c4 pawn. White opens the c-file and sets up another attack on d5. Bringing the queen out at once with 4.Qb3 is also common, but on this page we follow the line where White trades pawns first.",
+    fox:'normal' },
+  { move:{from:[2,2],to:[3,3]}, moveLabel:{ja:"4...cxd5", en:"4...cxd5"},
+    ja:"黒はc6のポーンでd5を取り返すよ。黒は1ポーン得のままだけど、d5を守る駒はクイーンだけに戻るんだ。さらに黒はc6のポーンがいなくなったので、g2のビショップからb7への対角線をふさいでいるのはd5のポーン1つだけになるよ。",
+    en:"Black recaptures on d5 with the c6 pawn. Black is still a pawn up, but d5 is once again defended only by the queen. And with the c6 pawn gone, Black now has only the d5 pawn blocking the g2 bishop's diagonal toward b7.",
+    fox:'normal' },
+  { move:{from:[7,3],to:[5,1]}, moveLabel:{ja:"5. Qb3", en:"5. Qb3"},
+    ja:"白はクイーンをb3へ進めるよ。白のクイーンはbファイルからb7のポーンを、対角線からd5のポーンを同時に攻撃する「両取り」の形なんだ。白はd5をビショップとクイーンの2つで攻撃していて、黒の守りはクイーン1つだけだよ。その代わり、白はクイーンを早く出すので、この先黒の駒に追い回されるリスクも抱えるんだ。",
+    en:"White brings the queen to b3. White's queen attacks the b7 pawn down the b-file and the d5 pawn along the diagonal at the same time — a double attack. White hits d5 twice, with the bishop and queen, while Black defends it only once with the queen. The trade-off is that White develops the queen early and risks having it chased around by Black's pieces.",
+    fox:'happy' },
+  { move:{from:[0,6],to:[2,5]}, moveLabel:{ja:"5...Nf6", en:"5...Nf6"},
+    ja:"黒はナイトをf6へ進めるよ。黒はこれでd5の守りを2つに増やし、同時にg4のビショップも守るんだ。黒がもしここで5...e6と指すと、白は6.Qa4+とチェックをかけ、黒が受けたあとに7.Qxg4で守りのないビショップを取る、よく知られた罠があるよ。黒はNf6と指しておくことで、この罠をあらかじめ防いでいるんだ。",
+    en:"Black develops the knight to f6. Black now defends d5 twice and also protects the g4 bishop. If Black played 5...e6 here, White has a well-known trap: 6.Qa4+ and, after Black blocks the check, 7.Qxg4, winning the undefended bishop. Black's Nf6 prevents this trap in advance.",
+    fox:'wink' },
+  { move:{from:[7,1],to:[5,2]}, moveLabel:{ja:"6. Nc3", en:"6. Nc3"},
+    ja:"白はナイトをc3へ進めるよ。白はこれでd5への攻撃を3つに増やし、黒の守り2つを上回るんだ。ここでは6.Qxb7とすぐにポーンを取り返す手もあるけれど、白は先に駒を展開してd5へのプレッシャーを強める選び方をするよ。その代わり、白のキングはまだ中央に残ったままで、キャスリングの準備はほとんど進んでいないんだ。",
+    en:"White develops the knight to c3. White now attacks d5 three times, outnumbering Black's two defenders. Taking back the pawn immediately with 6.Qxb7 is also possible, but White chooses to develop first and increase the pressure on d5. The drawback is that White's king is still in the center, and White has made little progress toward castling.",
+    fox:'normal' },
+  { move:{from:[1,4],to:[2,4]}, moveLabel:{ja:"6...e6", en:"6...e6"},
+    ja:"黒はポーンをe6へ進めるよ。黒はこれでd5の守りを3つにして、白の攻撃3つと釣り合わせるんだ。同時に黒はf8のビショップの通り道も開けるよ。その代わり、黒はb7のポーンを守るのをあきらめ、白に取らせる道を選んでいるんだ。",
+    en:"Black pushes the pawn to e6. Black now defends d5 three times, matching White's three attackers. At the same time, Black opens a path for the f8 bishop. In return, Black gives up on defending the b7 pawn and lets White take it.",
+    fox:'normal' },
+  { move:{from:[5,1],to:[1,1]}, moveLabel:{ja:"7. Qxb7", en:"7. Qxb7"},
+    ja:"白はクイーンでb7のポーンを取るよ。白はこれで最初に差し出したポーンを取り返し、駒の数は互角に戻るんだ。さらに白のクイーンはa8のルークを攻撃していて、黒のクイーンはb8のナイトにさえぎられてa8を守れていないよ。その代わり、白のクイーンは自陣から遠く離れていて、黒の駒に攻撃されやすい位置でもあるんだ。",
+    en:"White captures the b7 pawn with the queen. White has now won back the pawn it gave up, and material is level again. White's queen also attacks the a8 rook, and Black's queen can't defend a8 because the b8 knight is in the way. The downside is that White's queen is far from home and easy for Black's pieces to target.",
+    fox:'normal' },
+  { move:{from:[0,1],to:[1,3]}, moveLabel:{ja:"7...Nbd7", en:"7...Nbd7"},
+    ja:"黒はb8のナイトをd7へ進めるよ。黒はこれでナイトを展開すると同時に、d8のクイーンからa8のルークへの道を開いて、ルークを守るんだ。黒はこの先Rb8と指して白のクイーンを追い払う狙いがあり、駒の展開では黒がリードしていて、エンジンの評価でも黒が優勢とされているよ。白はポーンを取り返した代わりに、クイーンの安全に気を配りながら指す局面になるんだ。これで本譜は一段落、続きはぜひ自分で指してみてね！",
+    en:"Black develops the b8 knight to d7. Black develops a piece and at the same time opens the d8 queen's line to a8, protecting the rook. Black plans ...Rb8 to chase White's queen away, Black is ahead in development, and engines evaluate the position as better for Black. White has regained the pawn, but now has to play carefully to keep the queen safe. That's the main line — try continuing the game yourself from here!",
     fox:'happy' }
 ];
 
@@ -293,15 +326,38 @@ function adjustBottomPadding(){
   }
 }
 
+function shareOnX(message) {
+  const shareUrl = 'https://twitter.com/intent/tweet?text=' + encodeURIComponent(message) + '&url=' + encodeURIComponent(window.location.href);
+  window.open(shareUrl, '_blank', 'noopener,noreferrer,width=550,height=420');
+}
+
 function renderStep(){
   const step = LESSON_STEPS[currentStep];
   renderBoard(boardSnapshots[currentStep]);
   document.getElementById('moveLabel').textContent = (step.moveLabel && step.moveLabel[currentLang]) || '';
-  document.getElementById('commentaryText').textContent = step[currentLang];
+  document.getElementById('commentaryText').innerHTML = step[currentLang];
   document.getElementById('foxAvatar').src = FOX_BY_MOOD[step.fox] || FOX_BY_MOOD.normal;
   document.getElementById('lessonProgress').textContent = currentStep + ' / ' + (LESSON_STEPS.length - 1);
   document.getElementById('btnPrev').disabled = currentStep === 0;
   document.getElementById('btnNext').disabled = currentStep === LESSON_STEPS.length - 1;
+  adjustBottomPadding();
+
+  const shareRow = document.getElementById('shareRow');
+  if (shareRow) {
+    if (currentStep === LESSON_STEPS.length - 1) {
+      const openingNameEl = document.querySelector('.opening-title.lang-element-' + currentLang);
+      const openingName = openingNameEl ? openingNameEl.textContent : '';
+      const msg = currentLang === 'ja'
+        ? '🦊 ' + openingName + 'をKitsuneChessで学んだよ!一手ずつ「なぜその手か」を教えてくれるよ'
+        : '🦊 Just learned the ' + openingName + ' on KitsuneChess! It explains why each move is played, step by step.';
+      const shareBtn = document.getElementById('shareXBtn');
+      shareBtn.textContent = currentLang === 'ja' ? '🦊 𝕏でシェアする' : '🦊 Share on 𝕏';
+      shareBtn.onclick = function() { shareOnX(msg); };
+      shareRow.style.display = 'block';
+    } else {
+      shareRow.style.display = 'none';
+    }
+  }
   adjustBottomPadding();
 }
 
