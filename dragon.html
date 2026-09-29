@@ -120,8 +120,8 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
   <h1 class="opening-title lang-element-en">Dragon Sicilian</h1>
 
   <div class="opening-intro">
-    <p class="lang-element-ja">💡 ドラゴン・シシリアンはg6-Bg7のフィアンケットが特徴のシシリアンの変化だよ！黒のビショップをg7に配置することで、長い対角線h8-a1を支配する強力な「ドラゴン・ビショップ」が生まれるんだ。白は最も激しい対抗策としてユーゴスラフ・アタックを採用してBe3-Qd2-O-O-Oとクイーンサイドにキャスリングし、h4-h5と突いてキングサイドへの猛攻を仕掛けるよ。黒も負けじとdファイルを開けてdラインからの反撃を狙い、双方が相手のキングに向かって突っ走る超激戦になるんだ。深い理論研究が必要な上級者向けだけど、その迫力は格別だよ！</p>
-    <p class="lang-element-en">💡 The Dragon Sicilian is named after the g6-Bg7 fianchetto formation that resembles a dragon's spine! Placing the bishop on g7 creates the powerful "Dragon Bishop" that controls the long diagonal from h8 to a1. White's sharpest response is the Yugoslav Attack, castling queenside with Be3-Qd2-O-O-O and launching a kingside pawn storm with h4-h5. Black fights back by opening the d-file for queenside counterplay. Both sides race to attack the opposing king. One wrong move can be immediately fatal. The Dragon is for advanced players, but the excitement it offers is absolutely unique!</p>
+    <p class="lang-element-ja">💡 ドラゴン・シシリアンはg6-Bg7のフィアンケットが特徴のシシリアンの変化だよ！名前の由来は、黒のキングサイドのポーン(d6・e7・f7・g6・h7)の並びが、りゅう座(Draco)という星座の形に似ていると言われたことなんだ。黒のビショップをg7に配置することで、長い対角線h8-a1をにらむ強力なビショップが生まれるよ。白の代表的な対抗策はユーゴスラフ・アタックで、Be3-Qd2-O-O-Oとクイーンサイドにキャスリングし、h4-h5と突いてキングサイドへの猛攻を仕掛けるんだ。黒も負けじと半分開いたcファイルからの反撃を狙って、双方が相手のキングに向かって突っ走る超激戦になることが多いよ。深い理論研究が必要な上級者向けだけど、その迫力は格別だよ！</p>
+    <p class="lang-element-en">💡 The Dragon Sicilian is named after the g6-Bg7 fianchetto formation! The name comes from the resemblance between Black's kingside pawn structure (d6, e7, f7, g6, h7) and the constellation Draco. Placing the bishop on g7 creates a powerful bishop that eyes the long diagonal from h8 to a1. White's most common sharp response is the Yugoslav Attack, castling queenside with Be3-Qd2-O-O-O and launching a kingside pawn storm with h4-h5. Black fights back using the half-open c-file for counterplay. Both sides often race to attack the opposing king. The Dragon calls for deep theoretical study, but the excitement it offers is absolutely unique!</p>
   </div>
 
   <div class="board-wrap">
@@ -141,6 +141,9 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
     <button id="btnPrev" class="lesson-btn">← 前へ</button>
     <span class="lesson-progress" id="lessonProgress"></span>
     <button id="btnNext" class="lesson-btn">次へ →</button>
+  </div>
+  <div id="shareRow" style="display:none;text-align:center;margin-top:10px;">
+    <button id="shareXBtn" style="background:#000;color:#fff;border:none;border-radius:20px;padding:8px 16px;font-family:'Crimson Pro',serif;font-weight:700;font-size:0.85rem;cursor:pointer;">🦊 𝕏でシェアする</button>
   </div>
 </div>
 
@@ -189,60 +192,60 @@ const initialBoard = [
 // ============================================================
 const LESSON_STEPS = [
   { move:null, moveLabel:{ja:"開始局面", en:"Starting Position"},
-    ja:"ドラゴン・シシリアンのレッスンを始めるよ！g7にビショップを構えて、双方が相手のキングへ突っ走る、超激戦になりやすいシャープな変化だよ。ジーンと一緒に、一手ずつ「なぜその手を指すのか」を学んでいこう。",
-    en:"Let's start the Dragon Sicilian lesson! With the bishop fianchettoed on g7, both sides often race straight for each other's king in this incredibly sharp variation. Jene will explain why each move is played, one step at a time.",
+    ja:"ドラゴン・シシリアンのレッスンを始めるよ！シシリアンの中でも、黒がg6-Bg7のフィアンケットを選ぶ、特に鋭い変化だよ。一手ずつジーンと一緒に、なぜその手を指すのかを学んでいこう。",
+    en:"Let's start the Sicilian Dragon lesson! Among Sicilian setups, Black chooses the sharp g6-Bg7 fianchetto here. Jene will explain why each move is played, one step at a time.",
     fox:'welcome' },
   { move:{from:[6,4],to:[4,4]}, moveLabel:{ja:"1. e4", en:"1. e4"},
-    ja:"白はe4で中央を制圧するよ。",
-    en:"White plays 1.e4, claiming the center.",
+    ja:"白はポーンをe4へ進めるよ。中央を制圧して、ビショップとクイーンが動く道も開けるんだ。",
+    en:"White pushes the pawn to e4, claiming the center and opening lines for the bishop and queen.",
     fox:'normal' },
   { move:{from:[1,2],to:[3,2]}, moveLabel:{ja:"1...c5", en:"1...c5"},
-    ja:"黒はc5。非対称な局面を作り出して、自分なりの反撃を狙うよ。",
-    en:"Black plays 1...c5, creating an asymmetrical fight.",
+    ja:"黒はポーンをc5へ進めるよ（シシリアン・ディフェンス）。1...e5と違って白と対称な形にはならず、非対称な局面から自分なりの反撃を狙うんだ。",
+    en:"Black pushes the pawn to c5 (the Sicilian Defense). Unlike 1...e5, this creates an asymmetrical position where Black looks for its own counterplay.",
     fox:'normal' },
   { move:{from:[7,6],to:[5,5]}, moveLabel:{ja:"2. Nf3", en:"2. Nf3"},
-    ja:"白はナイトをf3に展開して、d4への中央突破を狙うよ。",
-    en:"White develops the knight to f3, preparing a central break with d4.",
+    ja:"白はナイトをf3へ進めるよ。このナイトはd4のマスに利いていて、次のd4の突き出しを支えるんだ。",
+    en:"White develops the knight to f3, controlling d4 and supporting the coming d4 push.",
     fox:'normal' },
   { move:{from:[1,3],to:[2,3]}, moveLabel:{ja:"2...d6", en:"2...d6"},
-    ja:"黒はd6で将来の展開を支える柔軟な一手を指すよ。",
-    en:"Black plays the flexible 2...d6.",
+    ja:"黒はポーンをd6へ進めるよ。ここでは2...Nc6と指してクラシカル・シシリアンへ向かう選び方もあるけれど、d6はe5・Nf6・g6といった、この先のドラゴンの形を柔軟に選べるようにする一手なんだ。",
+    en:"Black pushes the pawn to d6. Playing 2...Nc6 here and heading toward the Classical Sicilian is another option, but d6 keeps things flexible for the coming e5, Nf6 and g6 setup that leads to the Dragon.",
     fox:'normal' },
   { move:{from:[6,3],to:[4,3]}, moveLabel:{ja:"3. d4", en:"3. d4"},
-    ja:"白はd4で中央に第二の突破を仕掛けるよ。",
-    en:"White strikes again in the center with 3.d4.",
+    ja:"白はポーンをd4へ進めるよ。黒のc5のポーンに挑みかけながら、中央を大きく取りにいくんだ。",
+    en:"White pushes the pawn to d4, challenging Black's c5 pawn and going for a big center.",
     fox:'normal' },
   { move:{from:[3,2],to:[4,3]}, moveLabel:{ja:"3...cxd4", en:"3...cxd4"},
-    ja:"黒はcxd4でポーンを交換。シシリアンの核心となる一手だよ。",
-    en:"Black trades with 3...cxd4, the core idea of the Sicilian.",
+    ja:"黒はc5のポーンでd4のポーンを取るよ。これでシシリアンらしく、cファイルが半分開いて、あとで黒のルークが使えるようになるんだ。",
+    en:"Black captures White's d4 pawn with the c5 pawn. In typical Sicilian fashion, this half-opens the c-file for Black's rook later on.",
     fox:'quiz' },
   { move:{from:[5,5],to:[4,3]}, moveLabel:{ja:"4. Nxd4", en:"4. Nxd4"},
-    ja:"白はナイトで取り返して、中央のいいマスに陣取るよ。",
-    en:"White recaptures with the knight, landing on a strong central square.",
+    ja:"白はナイトでd4のポーンを取り返すよ。このナイトは中央のいいマスに出て、盤の広い範囲に利くんだ。",
+    en:"White recaptures on d4 with the knight, taking up a strong central square with wide influence.",
     fox:'normal' },
   { move:{from:[0,6],to:[2,5]}, moveLabel:{ja:"4...Nf6", en:"4...Nf6"},
-    ja:"黒はナイトをf6へ。e4ポーンに圧力をかけながら展開するよ。",
-    en:"Black develops the knight to f6, pressuring the e4 pawn.",
+    ja:"黒はナイトをf6へ進めるよ。ここですぐに4...g6と指すアクセラレーテッド・ドラゴンという選び方もあるけれど、Nf6はe4のポーンにプレッシャーをかけながら、駒を育てる自然な一手なんだ。",
+    en:"Black develops the knight to f6. Playing 4...g6 right away here, heading for the Accelerated Dragon, is another option, but Nf6 is a natural move that pressures the e4 pawn while developing.",
     fox:'normal' },
   { move:{from:[7,1],to:[5,2]}, moveLabel:{ja:"5. Nc3", en:"5. Nc3"},
-    ja:"白はナイトをc3で展開して、e4ポーンを守りつつ駒を育てるよ。",
-    en:"White develops the knight to c3, defending e4 while developing.",
+    ja:"白はナイトをc3へ進めるよ。このナイトはf6のナイトにねらわれているe4のポーンを守りながら、白の展開も進めるんだ。",
+    en:"White develops the knight to c3, defending the e4 pawn that Black's f6 knight is attacking while continuing development.",
     fox:'normal' },
   { move:{from:[1,6],to:[2,6]}, moveLabel:{ja:"5...g6（ドラゴン！）", en:"5...g6 (Dragon!)"},
-    ja:"ここが本題、ドラゴン・シシリアンの一手！黒はg6でフィアンケットを準備するよ。長い対角線を支配する「ドラゴン・ビショップ」が生まれるんだ。",
-    en:"Here's the Dragon Sicilian move! Black prepares the fianchetto with 5...g6, setting up the powerful long-diagonal \"Dragon Bishop\".",
+    ja:"ここが本題、ドラゴンの一手！ここでは5...a6と指してナジドルフ・シシリアンへ向かう定跡もよく知られているけれど、g6は黒のビショップをg7へ運んで、長い対角線から白の中央をにらむ準備をする、フィアンケットの一手なんだ。",
+    en:"Here's the Dragon move! The well-known 5...a6, heading into the Najdorf Sicilian, is a common alternative here, but g6 prepares to fianchetto the bishop to g7, aiming down the long diagonal at White's center.",
     fox:'happy' },
   { move:{from:[7,2],to:[5,4]}, moveLabel:{ja:"6. Be3", en:"6. Be3"},
-    ja:"白はビショップをe3へ。ユーゴスラフ・アタックの準備を始めるよ。",
-    en:"White develops the bishop to e3, beginning preparations for the Yugoslav Attack.",
-    fox:'normal' },
+    ja:"白はビショップをe3へ進めるよ。ユーゴスラフ・アタックの準備で、このあとQd2やキャスリングへつなげるんだ。実はこの局面で黒がうっかり6...Ng4?とナイトを進めると、7.Bb5+の王手からQxg4でナイトを取られてしまう罠があるから、注意が必要だよ。",
+    en:"White develops the bishop to e3, preparing the Yugoslav Attack with Qd2 and castling soon to follow. Careless play here can backfire for Black: if Black rushes 6...Ng4?, 7.Bb5+ followed by Qxg4 wins the knight, so care is needed.",
+    fox:'wink' },
   { move:{from:[0,5],to:[1,6]}, moveLabel:{ja:"6...Bg7", en:"6...Bg7"},
-    ja:"黒はビショップをg7へ。これがドラゴンの代名詞、長い対角線を支配する一手だよ！",
-    en:"Black completes the fianchetto with 6...Bg7 — the defining move of the Dragon, controlling the long diagonal!",
-    fox:'happy' },
+    ja:"黒はビショップをg7へ進めるよ。これがドラゴンの代名詞となる一手で、このビショップはこの先h8-a1の対角線を通して、白の中央や、キャスリングした先のキングサイドをにらみ続けるんだ。",
+    en:"Black develops the bishop to g7. This is the defining move of the Dragon, and the bishop will continue to eye White's center and, later, the kingside along the h8-a1 diagonal.",
+    fox:'normal' },
   { move:{from:[6,5],to:[5,5]}, moveLabel:{ja:"7. f3", en:"7. f3"},
-    ja:"白はf3でg4へのポーン突きと、キャスリング後のh4-h5の猛攻を準備するよ。これで本譜は一段落、続きはぜひ自分で指してみてね！",
-    en:"White plays 7.f3, preparing g4 and the eventual h4-h5 pawn storm after castling queenside. That's the main line — try continuing the game yourself from here!",
+    ja:"白はポーンをf3へ進めるよ。このポーンはe4のポーンを守りつつ、黒のNg4という飛び出しを防ぐんだ。これで白はキャスリングやQd2に集中でき、この先g4・h4と突いてキングサイドへの攻めを準備できるよ。これで本譜は一段落、続きはぜひ自分で指してみてね！",
+    en:"White pushes the pawn to f3. This pawn both defends e4 and rules out a future ...Ng4 jump for Black. It frees White to focus on castling and Qd2, preparing a later g4-h4 kingside pawn storm. That's the main line — try continuing the game yourself from here!",
     fox:'happy' }
 ];
 
@@ -328,6 +331,11 @@ function adjustBottomPadding(){
   }
 }
 
+function shareOnX(message) {
+  const shareUrl = 'https://twitter.com/intent/tweet?text=' + encodeURIComponent(message) + '&url=' + encodeURIComponent(window.location.href);
+  window.open(shareUrl, '_blank', 'noopener,noreferrer,width=550,height=420');
+}
+
 function renderStep(){
   const step = LESSON_STEPS[currentStep];
   renderBoard(boardSnapshots[currentStep]);
@@ -338,6 +346,23 @@ function renderStep(){
   document.getElementById('btnPrev').disabled = currentStep === 0;
   document.getElementById('btnNext').disabled = currentStep === LESSON_STEPS.length - 1;
   adjustBottomPadding();
+
+  const shareRow = document.getElementById('shareRow');
+  if (shareRow) {
+    if (currentStep === LESSON_STEPS.length - 1) {
+      const openingNameEl = document.querySelector('.opening-title.lang-element-' + currentLang);
+      const openingName = openingNameEl ? openingNameEl.textContent : '';
+      const msg = currentLang === 'ja'
+        ? '🦊 ' + openingName + 'をKitsuneChessで学んだよ!一手ずつ「なぜその手か」を教えてくれるよ'
+        : '🦊 Just learned the ' + openingName + ' on KitsuneChess! It explains why each move is played, step by step.';
+      const shareBtn = document.getElementById('shareXBtn');
+      shareBtn.textContent = currentLang === 'ja' ? '🦊 𝕏でシェアする' : '🦊 Share on 𝕏';
+      shareBtn.onclick = function() { shareOnX(msg); };
+      shareRow.style.display = 'block';
+    } else {
+      shareRow.style.display = 'none';
+    }
+  }
 }
 
 function updateLanguageDisplay(lang){
