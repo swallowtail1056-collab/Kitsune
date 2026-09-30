@@ -102,6 +102,8 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
   font-size: 1rem;
   color: var(--text-sub);
 }
+.commentary-text a, .opening-intro a { color:var(--brown); text-decoration:underline; font-weight:700; }
+.commentary-text a:hover, .opening-intro a:hover { color:var(--brown-dark); }
 </style>
   <script src="board-theme.js"></script>
 </head>
@@ -120,8 +122,8 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
   <h1 class="opening-title lang-element-en">Halloween Gambit</h1>
 
   <div class="opening-intro">
-    <p class="lang-element-ja">💡 ハロウィン・ギャンビットはフォー・ナイツで白が4.Nxe5!?とナイトを犠牲にする超積極的な変化だよ！ポーンではなくピースを犠牲にするという非常に珍しいオープニング・ギャンビットなんだ。Nxe5の後、白はf4-d4と中央を一気に制圧してナイト損の補償を得ようとするよ。コンピューターの分析では白の補償は不十分とされているけど、実戦では相手が驚いて間違えることが多いんだ。名前の通りハロウィンのように相手を驚かせる効果がある奇抜な変化だよ！</p>
-    <p class="lang-element-en">💡 The Halloween Gambit sacrifices a knight with 4.Nxe5!? in the Four Knights Game — an incredibly aggressive surprise! Sacrificing a piece rather than just a pawn is very unusual for an opening gambit. After Nxe5, White tries to compensate for the lost knight by quickly dominating the center with f4-d4. Computer analysis suggests White's compensation is insufficient, but in practical play opponents are often so surprised that they make mistakes. True to its name, the Halloween Gambit is designed to scare and surprise opponents!</p>
+    <p class="lang-element-ja">💡 ハロウィン・ギャンビットは、フォー・ナイツ・ゲームで白が4.Nxe5とナイトを差し出す、とても大胆なオープニングだよ。ミュラー・シュルツェ・ギャンビットやライプツィヒ・ギャンビットとも呼ばれているんだ。オープニングで差し出すのはポーンが普通なので、ナイトを丸ごと差し出すこの変化はかなり珍しいよ。名前は、静かな展開を予想していた相手をびっくりさせることに由来すると言われていて、理論的には白の評価は低いけれど、実戦では相手が慌てて間違えることも多いんだ。</p>
+    <p class="lang-element-en">💡 The Halloween Gambit is a very bold opening in which White gives up a knight with 4.Nxe5 in the Four Knights Game. It's also known as the Müller–Schulze Gambit or the Leipzig Gambit. Opening gambits usually offer a pawn, so giving up a whole knight is quite rare. The name is said to come from the way it frightens opponents who were expecting a quiet game, and while theory rates it poorly for White, opponents often panic and go wrong in practice.</p>
   </div>
 
   <div class="board-wrap">
@@ -141,6 +143,9 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
     <button id="btnPrev" class="lesson-btn">← 前へ</button>
     <span class="lesson-progress" id="lessonProgress"></span>
     <button id="btnNext" class="lesson-btn">次へ →</button>
+  </div>
+  <div id="shareRow" style="display:none;text-align:center;margin-top:10px;">
+    <button id="shareXBtn" style="background:#000;color:#fff;border:none;border-radius:20px;padding:8px 16px;font-family:'Crimson Pro',serif;font-weight:700;font-size:0.85rem;cursor:pointer;">🦊 𝕏でシェアする</button>
   </div>
 </div>
 
@@ -189,60 +194,84 @@ const initialBoard = [
 // ============================================================
 const LESSON_STEPS = [
   { move:null, moveLabel:{ja:"開始局面", en:"Starting Position"},
-    ja:"ハロウィン・ギャンビットのレッスンを始めるよ！ポーンではなくナイトそのものを犠牲にする、名前の通り相手を驚かせる奇抜な変化だよ。ジーンと一緒に、一手ずつ「なぜその手を指すのか」を学んでいこう。",
-    en:"Let's start the Halloween Gambit lesson! White sacrifices an entire knight, not just a pawn — truly living up to its scary name. Jene will explain why each move is played, one step at a time.",
+    ja:"ハロウィン・ギャンビットのレッスンを始めるよ！このページでは、黒がナイトを受け取って5...Ng6と下げる本筋を見ていくよ。白がポーンを一つずつ進めて黒のナイトを追い返し、黒はそれにどう対応するのかがポイントなんだ。一手ずつジーンと一緒に、なぜその手を指すのかを学んでいこう。",
+    en:"Let's start the Halloween Gambit lesson! On this page we follow the main line where Black accepts the knight and retreats with 5...Ng6. The key is how White pushes pawns one by one to chase Black's knights back, and how Black responds. Jene will walk you through why each move is played, one step at a time.",
     fox:'welcome' },
   { move:{from:[6,4],to:[4,4]}, moveLabel:{ja:"1. e4", en:"1. e4"},
-    ja:"白はe4で中央を制圧するよ。",
-    en:"White plays 1.e4, claiming the center.",
+    ja:"白はポーンをe4へ進めるよ。白は中央のマスを押さえながら、ビショップとクイーンが動く道を開けるんだ。",
+    en:"White pushes the pawn to e4. White takes control of central squares and opens lines for the bishop and queen.",
     fox:'normal' },
   { move:{from:[1,4],to:[3,4]}, moveLabel:{ja:"1...e5", en:"1...e5"},
-    ja:"黒も同じくe5で対抗するよ。",
-    en:"Black mirrors with 1...e5.",
+    ja:"黒はポーンをe5へ進めるよ。黒も同じように中央を押さえて、白のポーンと向かい合う形を作るんだ。",
+    en:"Black pushes the pawn to e5. Black also claims the center, setting up a pawn face-off with White.",
     fox:'normal' },
   { move:{from:[7,6],to:[5,5]}, moveLabel:{ja:"2. Nf3", en:"2. Nf3"},
-    ja:"白はナイトをf3に展開するよ。",
-    en:"White develops the knight to f3.",
+    ja:"白はナイトをf3へ進めるよ。白のナイトは展開しながら、黒のe5のポーンを攻撃しているんだ。",
+    en:"White develops the knight to f3. White's knight develops while attacking Black's e5 pawn.",
     fox:'normal' },
   { move:{from:[0,1],to:[2,2]}, moveLabel:{ja:"2...Nc6", en:"2...Nc6"},
-    ja:"黒もナイトをc6へ展開するよ。",
-    en:"Black develops the knight to c6.",
+    ja:"黒はナイトをc6へ進めるよ。黒はナイトを展開しながら、e5のポーンを守るんだ。",
+    en:"Black develops the knight to c6. Black develops a piece and defends the e5 pawn at the same time.",
     fox:'normal' },
   { move:{from:[7,1],to:[5,2]}, moveLabel:{ja:"3. Nc3", en:"3. Nc3"},
-    ja:"白はもう一つのナイトをc3へ展開するよ。",
-    en:"White develops the other knight to c3.",
+    ja:"白はもう一つのナイトをc3へ進めるよ。白はナイトを展開しながら、e4のポーンを守っているんだ。",
+    en:"White develops the other knight to c3. White develops while also defending the e4 pawn.",
     fox:'normal' },
   { move:{from:[0,6],to:[2,5]}, moveLabel:{ja:"3...Nf6", en:"3...Nf6"},
-    ja:"黒もナイトをf6へ展開するよ。フォー・ナイツの形になったよ。",
-    en:"Black develops the knight to f6, reaching the Four Knights setup.",
+    ja:"黒ももう一つのナイトをf6へ進めるよ。黒はこれでe4のポーンを攻撃し、両者のナイトが2つずつ出た<a href='four_knights.html'>フォー・ナイツ・ゲーム</a>の形になるんだ。白はここで4.Bb5と落ち着いて展開するのが一般的だけど、このページでは白が別の道を選ぶよ。",
+    en:"Black develops the other knight to f6. Black now attacks the e4 pawn, and with two knights out on each side, we've reached the <a href='four_knights.html?lang=en'>Four Knights Game</a>. White usually continues calmly with 4.Bb5 here, but on this page White takes a different path.",
     fox:'normal' },
   { move:{from:[5,5],to:[3,4]}, moveLabel:{ja:"4. Nxe5!?（ハロウィン！）", en:"4. Nxe5!? (Halloween!)"},
-    ja:"ここが本題、ハロウィン・ギャンビットの一手！白はナイトを犠牲にして、e5ポーンを取るよ。",
-    en:"Here's the Halloween Gambit move! White sacrifices the knight to grab the e5 pawn.",
-    fox:'happy' },
+    ja:"ここがハロウィン・ギャンビットの一手！白はナイトでe5のポーンを取るけれど、e5はc6のナイトに守られているので、白はナイトをポーン1つと引き換えに差し出すことになるんだ。白のねらいは、この先ポーンを次々に進めて黒のナイトを追い返し、中央の広さと展開の速さで駒損を補うことだよ。その代わり、白はナイト1つ分の駒損を背負うので、黒が正しい順番で指すと白の苦しい展開になりやすいんだ。",
+    en:"Here's the Halloween Gambit! White takes the e5 pawn with the knight, but since e5 is defended by the c6 knight, White is giving up a knight for a single pawn. White's plan is to push pawns one after another, chase Black's knights back, and make up for the material with central space and faster development. The cost is a full knight, so if Black plays accurately, White tends to end up struggling.",
+    fox:'wink' },
   { move:{from:[2,2],to:[3,4]}, moveLabel:{ja:"4...Nxe5", en:"4...Nxe5"},
-    ja:"黒はナイトを受け取るよ。",
-    en:"Black accepts the knight.",
+    ja:"黒はc6のナイトでe5のナイトを取るよ。黒はこれでナイトを1つ得するんだ。黒には4...Nxe4とポーンを取り返す道もあり、4...Bc5と指すと5.Nxc6 dxc6のあとは<a href='stafford_gambit.html'>スタッフォード・ギャンビット</a>と同じ局面になるけれど、黒がナイトを受け取るこの手がいちばん多く指されているよ。",
+    en:"Black captures the e5 knight with the c6 knight. Black is now a knight up. Black could also regain the pawn with 4...Nxe4, and after 4...Bc5 5.Nxc6 dxc6 the game reaches the same position as the <a href='stafford_gambit.html?lang=en'>Stafford Gambit</a>, but accepting the knight like this is by far the most common choice.",
     fox:'quiz' },
   { move:{from:[6,3],to:[4,3]}, moveLabel:{ja:"5. d4", en:"5. d4"},
-    ja:"白はd4！ナイトに「動け」とプレッシャーをかけながら中央を一気に押し上げるよ。",
-    en:"White strikes with 5.d4, pressuring the knight while surging into the center.",
-    fox:'wink' },
-  { move:{from:[3,4],to:[2,2]}, moveLabel:{ja:"5...Nc6", en:"5...Nc6"},
-    ja:"黒はナイトをc6へ引くよ。",
-    en:"Black retreats the knight to c6.",
+    ja:"白はポーンをd4へ進めるよ。白はこれでe5のナイトを攻撃して、黒に下がる手を強いるんだ。白はポーンで駒を追いながら、同時に中央を広げていく、このギャンビットの基本の動きだよ。",
+    en:"White pushes the pawn to d4. White attacks the e5 knight and forces Black to retreat it. White chases pieces with pawns while expanding in the center — the basic pattern of this gambit.",
+    fox:'happy' },
+  { move:{from:[3,4],to:[2,6]}, moveLabel:{ja:"5...Ng6", en:"5...Ng6"},
+    ja:"黒はナイトをg6へ下げるよ。黒のナイトはg6からe5とf4のマスをにらみ、白がポーンをそこへ進めにくくするんだ。黒には5...Nc6と下げる選択肢もあるけれど、白に6.d5とさらに追われやすく、5...Ng6のほうが落ち着いた受け方とされているよ。",
+    en:"Black retreats the knight to g6. From g6, Black's knight watches the e5 and f4 squares, making it harder for White to push pawns there. Black could also retreat with 5...Nc6, but then White can keep chasing with 6.d5, so 5...Ng6 is considered the steadier choice.",
     fox:'normal' },
   { move:{from:[4,4],to:[3,4]}, moveLabel:{ja:"6. e5", en:"6. e5"},
-    ja:"白はe5でさらにスペースを広げ、f6のナイトにも狙いをつけるよ。",
-    en:"White advances further with 6.e5, also eyeing the f6 knight.",
+    ja:"白はポーンをe5へ進めるよ。白はこれでf6のナイトを攻撃するんだ。白のポーンとナイトとクイーンがd5・e4・g4・h5のマスを押さえているので、黒のナイトが安全に逃げられるマスはg8しかないよ。",
+    en:"White pushes the pawn to e5. White now attacks the f6 knight. White's pawn, knight and queen cover d5, e4, g4 and h5, so the only safe square for Black's knight is g8.",
     fox:'happy' },
-  { move:{from:[2,5],to:[4,4]}, moveLabel:{ja:"6...Ne4", en:"6...Ne4"},
-    ja:"黒はナイトをe4へ逃げるよ。",
-    en:"Black retreats the other knight to e4.",
+  { move:{from:[2,5],to:[0,6]}, moveLabel:{ja:"6...Ng8", en:"6...Ng8"},
+    ja:"黒はナイトをg8へ戻すよ。黒はナイトを元のマスへ戻すので展開は遅れるけれど、ナイト1つ分の駒得はそのまま守っているんだ。白は駒損の代わりに中央のスペースと展開のリードを手に入れた、ハロウィン・ギャンビットらしい局面だよ。",
+    en:"Black retreats the knight to g8. Black loses time by returning the knight to its starting square, but keeps the extra knight. White has central space and a development lead in return for the material — a typical Halloween Gambit position.",
     fox:'normal' },
-  { move:{from:[7,3],to:[5,5]}, moveLabel:{ja:"7. Qf3", en:"7. Qf3"},
-    ja:"白はクイーンをf3へ。これで本譜は一段落、続きはぜひ自分で指してみてね！",
-    en:"White develops the queen to f3. That's the main line — try continuing the game yourself from here!",
+  { move:{from:[7,5],to:[4,2]}, moveLabel:{ja:"7. Bc4", en:"7. Bc4"},
+    ja:"白はビショップをc4へ進めるよ。白のビショップはf7のポーンをねらっていて、黒のf7を守っているのはキングだけなんだ。白はこれでキャスリングの準備も進めているよ。",
+    en:"White develops the bishop to c4. White's bishop aims at the f7 pawn, which Black defends only with the king. White is also getting ready to castle.",
+    fox:'normal' },
+  { move:{from:[1,3],to:[3,3]}, moveLabel:{ja:"7...d5", en:"7...d5"},
+    ja:"黒はポーンをd5へ進めるよ。黒のd5のポーンはナイトとビショップの2つに攻撃されていて、黒の守りはクイーン1つだけなので、黒はこのポーンを返すつもりで指しているんだ。黒はポーンを1つ返す代わりに、c8のビショップの道を開いて展開を急ぐよ。黒には7...c6と先に準備する選択肢もあるよ。",
+    en:"Black pushes the pawn to d5. Black's d5 pawn is attacked twice, by the knight and bishop, and defended only by the queen, so Black is intentionally giving this pawn back. In exchange, Black opens the path for the c8 bishop and speeds up development. Black could also prepare first with 7...c6.",
+    fox:'normal' },
+  { move:{from:[4,2],to:[3,3]}, moveLabel:{ja:"8. Bxd5", en:"8. Bxd5"},
+    ja:"白はビショップでd5のポーンを取るよ。白はこれでナイト1つに対してポーン2つを取った形になり、駒損が少し小さくなるんだ。白のビショップはd5からf7とb7の両方をにらんでいるよ。ここで8.Nxd5と取る手もあるけれど、エンジンの評価では白はビショップで取るほうがよいとされているんだ。",
+    en:"White captures the d5 pawn with the bishop. White now has two pawns for the knight, narrowing the material gap a little. From d5, White's bishop eyes both f7 and b7. Taking with 8.Nxd5 is also possible, but engines rate capturing with the bishop as better for White.",
+    fox:'normal' },
+  { move:{from:[1,2],to:[2,2]}, moveLabel:{ja:"8...c6", en:"8...c6"},
+    ja:"黒はポーンをc6へ進めるよ。黒はこれでd5のビショップを攻撃して、白に下がる手を強いるんだ。黒は今度は自分がポーンで駒を追い返して、展開の時間を取り戻そうとしているよ。",
+    en:"Black pushes the pawn to c6. Black attacks the d5 bishop and forces it to retreat. Now it's Black who chases a piece with a pawn to win back time for development.",
+    fox:'normal' },
+  { move:{from:[3,3],to:[5,1]}, moveLabel:{ja:"9. Bb3", en:"9. Bb3"},
+    ja:"白はビショップをb3へ下げるよ。白のビショップはb3からも同じ対角線でf7をねらい続けているんだ。ここで9.Be4と中央に残す手もあるけれど、このページでは白がf7へのねらいを保つ9.Bb3を見ていくよ。",
+    en:"White retreats the bishop to b3. From b3, White's bishop keeps aiming at f7 along the same diagonal. Keeping the bishop in the center with 9.Be4 is another option, but on this page we follow 9.Bb3, which maintains the pressure on f7.",
+    fox:'normal' },
+  { move:{from:[0,5],to:[4,1]}, moveLabel:{ja:"9...Bb4", en:"9...Bb4"},
+    ja:"黒はビショップをb4へ進めるよ。白のd2のポーンがもういないので、黒のビショップはc3のナイトをe1のキングにピンしているんだ。黒はこの先Bxc3+と取って、白のポーンの形を崩すこともねらえるよ。",
+    en:"Black develops the bishop to b4. With White's d2 pawn gone, Black's bishop pins the c3 knight to the king on e1. Black can also aim for ...Bxc3+ later to damage White's pawn structure.",
+    fox:'normal' },
+  { move:{from:[7,4],to:[7,6],castle:{from:[7,7],to:[7,5]}}, moveLabel:{ja:"10. O-O", en:"10. O-O"},
+    ja:"白はキャスリングでキングを安全な場所へ動かすよ。白はこれでキングがe1からいなくなるので、c3のナイトへのピンも解けるんだ。その代わり、黒にBxc3と取られるとbxc3で取り返すことになり、白はcファイルのポーンが2つ並ぶ形を受け入れることになるよ。黒はナイトとポーン2つの交換で駒得を保っていて、エンジンの評価では黒が優勢とされているけれど、白は中央のポーンと速い展開で実戦的なチャンスを探していく局面なんだ。これで本譜は一段落、続きはぜひ自分で指してみてね！",
+    en:"White castles, bringing the king to safety. With the king gone from e1, the pin on the c3 knight is released. The trade-off is that after ...Bxc3, White recaptures with bxc3 and has to accept doubled c-pawns. Black keeps the extra material — a knight for two pawns — and engines rate Black as better, but White looks for practical chances with the central pawns and faster development. That's the main line — try continuing the game yourself from here!",
     fox:'happy' }
 ];
 
@@ -328,15 +357,38 @@ function adjustBottomPadding(){
   }
 }
 
+function shareOnX(message) {
+  const shareUrl = 'https://twitter.com/intent/tweet?text=' + encodeURIComponent(message) + '&url=' + encodeURIComponent(window.location.href);
+  window.open(shareUrl, '_blank', 'noopener,noreferrer,width=550,height=420');
+}
+
 function renderStep(){
   const step = LESSON_STEPS[currentStep];
   renderBoard(boardSnapshots[currentStep]);
   document.getElementById('moveLabel').textContent = (step.moveLabel && step.moveLabel[currentLang]) || '';
-  document.getElementById('commentaryText').textContent = step[currentLang];
+  document.getElementById('commentaryText').innerHTML = step[currentLang];
   document.getElementById('foxAvatar').src = FOX_BY_MOOD[step.fox] || FOX_BY_MOOD.normal;
   document.getElementById('lessonProgress').textContent = currentStep + ' / ' + (LESSON_STEPS.length - 1);
   document.getElementById('btnPrev').disabled = currentStep === 0;
   document.getElementById('btnNext').disabled = currentStep === LESSON_STEPS.length - 1;
+  adjustBottomPadding();
+
+  const shareRow = document.getElementById('shareRow');
+  if (shareRow) {
+    if (currentStep === LESSON_STEPS.length - 1) {
+      const openingNameEl = document.querySelector('.opening-title.lang-element-' + currentLang);
+      const openingName = openingNameEl ? openingNameEl.textContent : '';
+      const msg = currentLang === 'ja'
+        ? '🦊 ' + openingName + 'をKitsuneChessで学んだよ!一手ずつ「なぜその手か」を教えてくれるよ'
+        : '🦊 Just learned the ' + openingName + ' on KitsuneChess! It explains why each move is played, step by step.';
+      const shareBtn = document.getElementById('shareXBtn');
+      shareBtn.textContent = currentLang === 'ja' ? '🦊 𝕏でシェアする' : '🦊 Share on 𝕏';
+      shareBtn.onclick = function() { shareOnX(msg); };
+      shareRow.style.display = 'block';
+    } else {
+      shareRow.style.display = 'none';
+    }
+  }
   adjustBottomPadding();
 }
 
