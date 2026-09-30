@@ -102,6 +102,8 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
   font-size: 1rem;
   color: var(--text-sub);
 }
+.commentary-text a, .opening-intro a { color:var(--brown); text-decoration:underline; font-weight:700; }
+.commentary-text a:hover, .opening-intro a:hover { color:var(--brown-dark); }
 </style>
   <script src="board-theme.js"></script>
 </head>
@@ -120,8 +122,8 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
   <h1 class="opening-title lang-element-en">Hungarian Defense</h1>
 
   <div class="opening-intro">
-    <p class="lang-element-ja">💡 ハンガリアン・ディフェンスは3...Be7と応じる穏やかで堅実な守りだよ！Nf6の代わりにBe7と展開することで複雑な変化を避けて安定した局面を保つんだ。白の攻撃的な変化を回避できるのが最大のメリットで、特に激しいタクティカルな戦いを避けたいプレイヤーに向いているよ。見た目は受け身だけど実際は長期的な反撃を狙っているんだ。Be7の後はNf6-O-Oと素早くキャスリングして安全を確保してから反撃を狙うのが基本プランだよ。19世紀のハンガリーの棋士たちが発展させたこのディフェンスは、現代でも時々トップレベルで登場する実戦的な変化だよ！</p>
-    <p class="lang-element-en">💡 The Hungarian Defense plays 3...Be7 for a calm and solid approach! Developing the bishop to e7 instead of Nf6 avoids complex tactical variations and maintains a stable position. The biggest advantage is avoiding White's aggressive attacking lines. While it looks passive, Black is actually planning long-term counterplay. After Be7, Black's basic plan is to castle quickly with Nf6-O-O before beginning counterplay. Developed by Hungarian players in the 19th century, this defense occasionally appears even at the top level today. Simple to remember and easy to understand!</p>
+    <p class="lang-element-ja">💡 ハンガリアン・ディフェンスは、イタリアン・ゲームの3.Bc4に対して黒が3...Be7と応じる、穏やかで堅実なオープニングだよ。名前は1842〜1845年にパリとハンガリーのペストの間で行われた通信チェスの対局に由来していて、18世紀にはイタリアのコッツィオがすでに研究していたんだ。ペトロシアンやスミスロフといった守りの上手な世界チャンピオンも指したことがあるよ。その代わり、黒は窮屈な形を受け入れることになり、黒から勝ちをねらうのは難しいとも言われているんだ。</p>
+    <p class="lang-element-en">💡 The Hungarian Defense is a calm, solid opening in which Black answers the Italian Game's 3.Bc4 with 3...Be7. Its name comes from a correspondence game played between Paris and Pest, Hungary, from 1842 to 1845, though the Italian player Cozio had already analyzed it in the 18th century. Defensive-minded world champions such as Petrosian and Smyslov have played it. In return, Black accepts a somewhat cramped position, and it's said to be hard for Black to play for a win with it.</p>
   </div>
 
   <div class="board-wrap">
@@ -141,6 +143,9 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
     <button id="btnPrev" class="lesson-btn">← 前へ</button>
     <span class="lesson-progress" id="lessonProgress"></span>
     <button id="btnNext" class="lesson-btn">次へ →</button>
+  </div>
+  <div id="shareRow" style="display:none;text-align:center;margin-top:10px;">
+    <button id="shareXBtn" style="background:#000;color:#fff;border:none;border-radius:20px;padding:8px 16px;font-family:'Crimson Pro',serif;font-weight:700;font-size:0.85rem;cursor:pointer;">🦊 𝕏でシェアする</button>
   </div>
 </div>
 
@@ -189,60 +194,64 @@ const initialBoard = [
 // ============================================================
 const LESSON_STEPS = [
   { move:null, moveLabel:{ja:"開始局面", en:"Starting Position"},
-    ja:"ハンガリアン・ディフェンスのレッスンを始めるよ！激しい変化を避けて、穏やかに安定した局面を保つ堅実な守りだよ。ジーンと一緒に、一手ずつ「なぜその手を指すのか」を学んでいこう。",
-    en:"Let's start the Hungarian Defense lesson! A calm, solid choice that avoids sharp tactical fights. Jene will explain why each move is played, one step at a time.",
+    ja:"ハンガリアン・ディフェンスのレッスンを始めるよ！このページでは、白が4.d4で中央を広げ、5.dxe5からクイーンを交換する変化を見ていくよ。クイーンがいなくなった後、両者がどう駒を展開していくのかがポイントなんだ。一手ずつジーンと一緒に、なぜその手を指すのかを学んでいこう。",
+    en:"Let's start the Hungarian Defense lesson! On this page we follow the line where White expands with 4.d4 and then trades queens starting with 5.dxe5. The key is how both sides develop their pieces once the queens are gone. Jene will walk you through why each move is played, one step at a time.",
     fox:'welcome' },
   { move:{from:[6,4],to:[4,4]}, moveLabel:{ja:"1. e4", en:"1. e4"},
-    ja:"白はe4で中央を制圧するよ。",
-    en:"White plays 1.e4, claiming the center.",
+    ja:"白はポーンをe4へ進めるよ。白は中央のマスを押さえながら、ビショップとクイーンが動く道を開けるんだ。",
+    en:"White pushes the pawn to e4. White takes control of central squares and opens lines for the bishop and queen.",
     fox:'normal' },
   { move:{from:[1,4],to:[3,4]}, moveLabel:{ja:"1...e5", en:"1...e5"},
-    ja:"黒も同じくe5で対抗するよ。",
-    en:"Black mirrors with 1...e5.",
+    ja:"黒はポーンをe5へ進めるよ。黒も同じように中央を押さえて、白のポーンと向かい合う形を作るんだ。",
+    en:"Black pushes the pawn to e5. Black also claims the center, setting up a pawn face-off with White.",
     fox:'normal' },
   { move:{from:[7,6],to:[5,5]}, moveLabel:{ja:"2. Nf3", en:"2. Nf3"},
-    ja:"白はナイトをf3に展開するよ。",
-    en:"White develops the knight to f3.",
+    ja:"白はナイトをf3へ進めるよ。白のナイトは展開しながら、黒のe5のポーンを攻撃しているんだ。",
+    en:"White develops the knight to f3. White's knight develops while attacking Black's e5 pawn.",
     fox:'normal' },
   { move:{from:[0,1],to:[2,2]}, moveLabel:{ja:"2...Nc6", en:"2...Nc6"},
-    ja:"黒もナイトをc6へ。e5ポーンをしっかり守るよ。",
-    en:"Black develops the knight to c6, defending the e5 pawn.",
+    ja:"黒はナイトをc6へ進めるよ。黒はナイトを展開しながら、e5のポーンを守るんだ。",
+    en:"Black develops the knight to c6. Black develops a piece and defends the e5 pawn at the same time.",
     fox:'normal' },
   { move:{from:[7,5],to:[4,2]}, moveLabel:{ja:"3. Bc4", en:"3. Bc4"},
-    ja:"白はビショップをc4へ。f7という黒の弱点に狙いをつけるよ。",
-    en:"White develops the bishop to c4, eyeing the weak f7 square.",
+    ja:"白はビショップをc4へ進めるよ。白のビショップは、キングしか守っていない黒のf7のポーンをねらっているんだ。",
+    en:"White develops the bishop to c4. White's bishop aims at Black's f7 pawn, which only the king defends.",
     fox:'normal' },
   { move:{from:[0,5],to:[1,4]}, moveLabel:{ja:"3...Be7（ハンガリアン！）", en:"3...Be7 (Hungarian!)"},
-    ja:"ここが本題、ハンガリアン・ディフェンスの一手！黒はBc5ではなくBe7で穏やかに応じるよ。激しい変化を避けて安定を選ぶんだ。",
-    en:"Here's the Hungarian Defense move! Instead of Bc5, Black calmly plays 3...Be7, choosing stability over sharp lines.",
+    ja:"ここがハンガリアン・ディフェンスの一手！黒はビショップをe7へ進めて、g5のマスを見張りながらキャスリングの準備をするよ。一般的には3...Bc5の<a href='italian.html'>イタリアン・ゲーム（ジョコ・ピアノ）</a>や3...Nf6の<a href='two_knights.html'>トゥー・ナイツ・ディフェンス</a>が指されるけれど、黒はここで激しい変化を避けて、落ち着いた形を選ぶんだ。その代わり、黒のビショップはe7で控えめな位置にとどまり、白にスペースと自由な展開を許しやすいよ。",
+    en:"Here's the Hungarian Defense! Black develops the bishop to e7, watching the g5 square and preparing to castle. The usual moves here are 3...Bc5, the <a href='italian.html?lang=en'>Italian Game (Giuoco Piano)</a>, or 3...Nf6, the <a href='two_knights.html?lang=en'>Two Knights Defense</a>, but Black avoids sharp lines and chooses a calm setup. The cost is that Black's bishop sits modestly on e7, which tends to give White more space and freer development.",
     fox:'happy' },
   { move:{from:[6,3],to:[4,3]}, moveLabel:{ja:"4. d4", en:"4. d4"},
-    ja:"白はd4で中央をさらに強化するよ。",
-    en:"White further strengthens the center with 4.d4.",
+    ja:"白はポーンをd4へ進めるよ。白はこれでe5のポーンをナイトとポーンの2つで攻撃し、黒の守りはc6のナイト1つだけになるんだ。白は中央を広げて、黒の控えめな構えを試しにいくよ。",
+    en:"White pushes the pawn to d4. White now attacks the e5 pawn twice, with the knight and pawn, while Black defends it only with the c6 knight. White expands in the center to test Black's modest setup.",
     fox:'normal' },
   { move:{from:[1,3],to:[2,3]}, moveLabel:{ja:"4...d6", en:"4...d6"},
-    ja:"黒はd6で中央を支えるよ。",
-    en:"Black supports the center with 4...d6.",
+    ja:"黒はポーンをd6へ進めるよ。黒はこれでe5の守りを2つにして、中央のポーンを保つんだ。黒には4...exd4と取る道もあり、5.Nxd4と取り返されると<a href='scotch.html'>スコッチゲーム</a>に近い形になるよ。その代わり、黒のd6のポーンはe7のビショップの前をふさぐので、黒の駒は少し窮屈になるんだ。",
+    en:"Black pushes the pawn to d6. Black now defends e5 twice and holds on to the central pawn. Black could also take with 4...exd4, and after 5.Nxd4 the game heads toward the <a href='scotch.html?lang=en'>Scotch Game</a>. The downside is that Black's d6 pawn blocks the e7 bishop's diagonal, leaving Black's pieces a bit cramped.",
     fox:'normal' },
-  { move:{from:[7,1],to:[5,2]}, moveLabel:{ja:"5. Nc3", en:"5. Nc3"},
-    ja:"白はもう一つのナイトをc3へ展開するよ。",
-    en:"White develops the other knight to c3.",
+  { move:{from:[4,3],to:[3,4]}, moveLabel:{ja:"5. dxe5", en:"5. dxe5"},
+    ja:"白はd4のポーンで、e5にいた黒のポーンを取るよ。白には5.d5と中央を閉じる手や、5.Nc3と緊張を保つ手もあるけれど、このページでは白が交換して局面を単純にする道を見ていくよ。白はここからクイーン交換を目指すんだ。",
+    en:"White's d4 pawn captures the black pawn that was on e5. White could also close the center with 5.d5 or keep the tension with 5.Nc3, but on this page we follow the line where White trades and simplifies. White is heading for a queen trade.",
     fox:'normal' },
-  { move:{from:[0,6],to:[2,5]}, moveLabel:{ja:"5...Nf6", en:"5...Nf6"},
-    ja:"黒はナイトをf6へ。キャスリングの準備をするよ。",
-    en:"Black develops the knight to f6, preparing to castle.",
+  { move:{from:[2,3],to:[3,4]}, moveLabel:{ja:"5...dxe5", en:"5...dxe5"},
+    ja:"黒はd6のポーンで、e5に入った白のポーンを取り返すよ。黒がもし5...Nxe5と取ると、6.Nxe5 dxe5 7.Qh5で白のクイーンがe5のポーンとf7のポーンを同時にねらい、黒はポーンを1つ失ってしまうんだ。黒はポーンで取り返して、この罠をさけているよ。",
+    en:"Black's d6 pawn takes back the white pawn that landed on e5. If Black took with 5...Nxe5 instead, then after 6.Nxe5 dxe5 7.Qh5 White's queen attacks both the e5 and f7 pawns, and Black loses a pawn. By recapturing with the pawn, Black avoids this trap.",
+    fox:'wink' },
+  { move:{from:[7,3],to:[0,3]}, moveLabel:{ja:"6. Qxd8+", en:"6. Qxd8+"},
+    ja:"白はクイーンで、d8にいた黒のクイーンを取ってチェックをかけるよ。白はクイーンを交換して、スペースと展開のリードが生きる、落ち着いた中盤に持ち込むんだ。その代わり、白はクイーンがいなくなることで、f7への直接の攻めはしにくくなるよ。",
+    en:"White's queen captures the black queen that was on d8, giving check. White trades queens and steers the game into a calm middlegame where White's space and development lead can count. The trade-off is that without queens, White's direct attacking chances against f7 become smaller.",
     fox:'normal' },
-  { move:{from:[7,4],to:[7,6],castle:{from:[7,7],to:[7,5]}}, moveLabel:{ja:"6. O-O", en:"6. O-O"},
-    ja:"白はキャスリングでキングを安全な場所へ。",
-    en:"White castles kingside, tucking the king away safely.",
+  { move:{from:[1,4],to:[0,3]}, moveLabel:{ja:"6...Bxd8", en:"6...Bxd8"},
+    ja:"黒はビショップで、d8に入った白のクイーンを取り返すよ。黒はキングで取り返すとキャスリングができなくなるので、ビショップで取ってキャスリングの権利を残すんだ。その代わり、黒のビショップはd8に下がり、しばらく働きの少ない位置にとどまるよ。",
+    en:"Black's bishop takes back the white queen that landed on d8. Taking back with the king would give up castling, so Black uses the bishop and keeps the right to castle. The downside is that Black's bishop drops back to d8, where it stays fairly inactive for a while.",
     fox:'normal' },
-  { move:{from:[0,4],to:[0,6],castle:{from:[0,7],to:[0,5]}}, moveLabel:{ja:"6...O-O", en:"6...O-O"},
-    ja:"黒も同じくキャスリング。両者ともキングの安全を確保したよ。",
-    en:"Black castles too, and both kings are now safely tucked away.",
+  { move:{from:[7,1],to:[5,2]}, moveLabel:{ja:"7. Nc3", en:"7. Nc3"},
+    ja:"白はナイトをc3へ進めるよ。白はナイトを展開しながらe4のポーンを守り、d5やb5のマスもにらむんだ。白は駒の展開で一歩リードしているよ。",
+    en:"White develops the knight to c3. White develops while defending the e4 pawn, and the knight also eyes the d5 and b5 squares. White is a step ahead in development.",
     fox:'normal' },
-  { move:{from:[7,5],to:[7,4]}, moveLabel:{ja:"7. Re1", en:"7. Re1"},
-    ja:"白はルークをe1へ。これで本譜は一段落、続きはぜひ自分で指してみてね！",
-    en:"White plays 7.Re1. That's the main line — try continuing the game yourself from here!",
+  { move:{from:[0,6],to:[2,5]}, moveLabel:{ja:"7...Nf6", en:"7...Nf6"},
+    ja:"黒はナイトをf6へ進めるよ。黒はナイトを展開しながらe4のポーンを攻撃し、f8とg8のマスが空いたので、キングサイドへのキャスリングの準備もできるんだ。黒には7...f6とe5のポーンを固める手もあるよ。クイーンのない局面では白がややよいとされているけれど、黒の形も堅く、崩されにくい局面なんだ。これで本譜は一段落、続きはぜひ自分で指してみてね！",
+    en:"Black develops the knight to f6. Black develops while attacking the e4 pawn, and with f8 and g8 now clear, Black is ready to castle kingside. Black can also shore up the e5 pawn with 7...f6. In this queenless position White is considered slightly better, but Black's setup is solid and hard to break down. That's the main line — try continuing the game yourself from here!",
     fox:'happy' }
 ];
 
@@ -328,15 +337,38 @@ function adjustBottomPadding(){
   }
 }
 
+function shareOnX(message) {
+  const shareUrl = 'https://twitter.com/intent/tweet?text=' + encodeURIComponent(message) + '&url=' + encodeURIComponent(window.location.href);
+  window.open(shareUrl, '_blank', 'noopener,noreferrer,width=550,height=420');
+}
+
 function renderStep(){
   const step = LESSON_STEPS[currentStep];
   renderBoard(boardSnapshots[currentStep]);
   document.getElementById('moveLabel').textContent = (step.moveLabel && step.moveLabel[currentLang]) || '';
-  document.getElementById('commentaryText').textContent = step[currentLang];
+  document.getElementById('commentaryText').innerHTML = step[currentLang];
   document.getElementById('foxAvatar').src = FOX_BY_MOOD[step.fox] || FOX_BY_MOOD.normal;
   document.getElementById('lessonProgress').textContent = currentStep + ' / ' + (LESSON_STEPS.length - 1);
   document.getElementById('btnPrev').disabled = currentStep === 0;
   document.getElementById('btnNext').disabled = currentStep === LESSON_STEPS.length - 1;
+  adjustBottomPadding();
+
+  const shareRow = document.getElementById('shareRow');
+  if (shareRow) {
+    if (currentStep === LESSON_STEPS.length - 1) {
+      const openingNameEl = document.querySelector('.opening-title.lang-element-' + currentLang);
+      const openingName = openingNameEl ? openingNameEl.textContent : '';
+      const msg = currentLang === 'ja'
+        ? '🦊 ' + openingName + 'をKitsuneChessで学んだよ!一手ずつ「なぜその手か」を教えてくれるよ'
+        : '🦊 Just learned the ' + openingName + ' on KitsuneChess! It explains why each move is played, step by step.';
+      const shareBtn = document.getElementById('shareXBtn');
+      shareBtn.textContent = currentLang === 'ja' ? '🦊 𝕏でシェアする' : '🦊 Share on 𝕏';
+      shareBtn.onclick = function() { shareOnX(msg); };
+      shareRow.style.display = 'block';
+    } else {
+      shareRow.style.display = 'none';
+    }
+  }
   adjustBottomPadding();
 }
 
