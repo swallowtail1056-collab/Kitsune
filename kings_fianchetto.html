@@ -102,6 +102,8 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
   font-size: 1rem;
   color: var(--text-sub);
 }
+.commentary-text a, .opening-intro a { color:var(--brown); text-decoration:underline; font-weight:700; }
+.commentary-text a:hover, .opening-intro a:hover { color:var(--brown-dark); }
 </style>
   <script src="board-theme.js"></script>
 </head>
@@ -120,8 +122,8 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
   <h1 class="opening-title lang-element-en">King's Fianchetto</h1>
 
   <div class="opening-intro">
-    <p class="lang-element-ja">💡 キングズ・フィアンケットはe4の後g3-Bg2とキングサイドにフィアンケットを組む白のシステムだよ！ロバート・フィッシャーが好んで使ったことで有名で、Bg2のビショップが長い対角線を支配する強力な武器になるんだ。シシリアンやフレンチ、カロカンなど様々な黒の応手に対して同じフィアンケット形を作れる柔軟性が魅力だよ。序盤から中盤にかけてビショップが長期的に強力で、エンドゲームでも大きな力を発揮するんだ。キングズ・インディアン・アタックと似ているけど、より直接的にe4から組み立てるスタイルだよ！</p>
-    <p class="lang-element-en">💡 The King's Fianchetto sets up g3-Bg2 after e4 to create a powerful kingside fianchetto system! Made famous by Robert Fischer, the Bg2 bishop dominates the long diagonal throughout the game. The flexibility to use the same fianchetto setup against various Black responses is its greatest strength. The bishop is a strong long-term piece from the opening through to the endgame. Similar to the King's Indian Attack but built more directly from e4. A fun and practical system for players who love the power of the fianchettoed bishop!</p>
+    <p class="lang-element-ja">💡 キングズ・フィアンケット・オープニングは、白が1手目でポーンをg3へ進める、落ち着いたオープニングだよ。ハンガリアン・オープニングやベンコー・オープニングとも呼ばれているんだ。1962年の世界チャンピオン挑戦者決定戦で、パル・ベンコーがこのオープニングを使ってフィッシャーとタルに勝ったことで注目を集めたよ。ほかの多くのオープニングに合流できる柔軟さが特徴で、相手の出方に合わせて形を選べるんだ。</p>
+    <p class="lang-element-en">💡 The King's Fianchetto Opening is a calm opening in which White pushes the g-pawn to g3 on move one. It's also called the Hungarian Opening or Benko's Opening. It drew attention when Pal Benko used it to beat Fischer and Tal at the 1962 Candidates Tournament. Its strength is flexibility: it can transpose into many other openings, letting White choose a setup based on what Black does.</p>
   </div>
 
   <div class="board-wrap">
@@ -141,6 +143,9 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
     <button id="btnPrev" class="lesson-btn">← 前へ</button>
     <span class="lesson-progress" id="lessonProgress"></span>
     <button id="btnNext" class="lesson-btn">次へ →</button>
+  </div>
+  <div id="shareRow" style="display:none;text-align:center;margin-top:10px;">
+    <button id="shareXBtn" style="background:#000;color:#fff;border:none;border-radius:20px;padding:8px 16px;font-family:'Crimson Pro',serif;font-weight:700;font-size:0.85rem;cursor:pointer;">🦊 𝕏でシェアする</button>
   </div>
 </div>
 
@@ -189,60 +194,60 @@ const initialBoard = [
 // ============================================================
 const LESSON_STEPS = [
   { move:null, moveLabel:{ja:"開始局面", en:"Starting Position"},
-    ja:"キングズ・フィアンケットのレッスンを始めるよ！e4から直接組み立てる、フィッシャーも愛用したフィアンケット・システムだよ。ジーンと一緒に、一手ずつ「なぜその手を指すのか」を学んでいこう。",
-    en:"Let's start the King's Fianchetto lesson! Built directly from e4, a fianchetto system Fischer loved using. Jene will explain why each move is played, one step at a time.",
+    ja:"キングズ・フィアンケットのレッスンを始めるよ！このページでは、白がg3・Bg2・Nf3・O-Oと守りの形を先に作り、そのあとd3・Nbd2・e4と中央に働きかけていく流れを見ていくよ。黒がd5とe5で中央を広く取り、白がそれにどう対抗するのかがポイントなんだ。一手ずつジーンと一緒に、なぜその手を指すのかを学んでいこう。",
+    en:"Let's start the King's Fianchetto lesson! On this page we follow how White first builds a solid setup with g3, Bg2, Nf3 and O-O, then turns to the center with d3, Nbd2 and e4. The key is how White responds when Black grabs a broad center with ...d5 and ...e5. Jene will walk you through why each move is played, one step at a time.",
     fox:'welcome' },
-  { move:{from:[6,4],to:[4,4]}, moveLabel:{ja:"1. e4", en:"1. e4"},
-    ja:"白はe4で中央を制圧するよ。",
-    en:"White plays 1.e4, claiming the center.",
-    fox:'normal' },
-  { move:{from:[1,4],to:[2,4]}, moveLabel:{ja:"1...e6", en:"1...e6"},
-    ja:"黒はe6でフレンチ・ディフェンスを選ぶよ。",
-    en:"Black plays 1...e6, the French Defense.",
-    fox:'normal' },
-  { move:{from:[6,6],to:[5,6]}, moveLabel:{ja:"2. g3（キングズ・フィアンケット！）", en:"2. g3 (King's Fianchetto!)"},
-    ja:"ここが本題、キングズ・フィアンケットの一手！白はg3で長い対角線からの支配を準備するよ。",
-    en:"Here's the King's Fianchetto move! White prepares to dominate the long diagonal with 2.g3.",
+  { move:{from:[6,6],to:[5,6]}, moveLabel:{ja:"1. g3（キングズ・フィアンケット！）", en:"1. g3 (King's Fianchetto!)"},
+    ja:"ここがキングズ・フィアンケットの一手！白はポーンをg3へ進めて、g2のマスを空け、ビショップを長い対角線に出す準備をするよ。一般的には1.e4や1.d4で中央を直接取りに行くけれど、白はまずキングサイドの形を整えて、中央へは後から働きかける道を選ぶんだ。同じgのポーンでも、2マス進める<a href='grobs_attack.html'>グロブス・アタック</a>と違い、白はキングの守りを大きく崩さずに済むよ。その代わり、白は1手目で中央のマスを直接押さえないので、黒に中央を広く取られやすいんだ。",
+    en:"Here's the King's Fianchetto! White pushes the pawn to g3, clearing g2 so the bishop can go to the long diagonal. The usual first moves are 1.e4 or 1.d4, which claim the center directly, but White first sets up the kingside and plans to influence the center later. Unlike <a href='grobs_attack.html?lang=en'>Grob's Attack</a>, which pushes the same g-pawn two squares, White keeps the king's shelter largely intact. The cost is that White doesn't control central squares directly on move one, so Black can easily grab a big center.",
     fox:'happy' },
-  { move:{from:[1,3],to:[3,3]}, moveLabel:{ja:"2...d5", en:"2...d5"},
-    ja:"黒はd5で中央に踏み込むよ。",
-    en:"Black stakes a claim in the center with 2...d5.",
+  { move:{from:[1,3],to:[3,3]}, moveLabel:{ja:"1...d5", en:"1...d5"},
+    ja:"黒はポーンをd5へ進めるよ。黒は中央のマスを押さえながら、c8のビショップの道も開けるんだ。",
+    en:"Black pushes the pawn to d5. Black takes control of central squares and opens the path for the c8 bishop.",
     fox:'normal' },
-  { move:{from:[7,5],to:[6,6]}, moveLabel:{ja:"3. Bg2", en:"3. Bg2"},
-    ja:"白はビショップをg2へ。フィアンケットが完成するよ。",
-    en:"White completes the fianchetto with 3.Bg2.",
+  { move:{from:[7,5],to:[6,6]}, moveLabel:{ja:"2. Bg2", en:"2. Bg2"},
+    ja:"白はビショップをg2へ進めるよ。白のビショップは長い対角線からd5のポーンをにらみ、e4のマスも支えているんだ。",
+    en:"White develops the bishop to g2. From the long diagonal, White's bishop eyes the d5 pawn and supports the e4 square.",
     fox:'normal' },
-  { move:{from:[0,6],to:[2,5]}, moveLabel:{ja:"3...Nf6", en:"3...Nf6"},
-    ja:"黒はナイトをf6へ展開するよ。",
-    en:"Black develops the knight to f6.",
+  { move:{from:[0,6],to:[2,5]}, moveLabel:{ja:"2...Nf6", en:"2...Nf6"},
+    ja:"黒はナイトをf6へ進めるよ。黒はナイトを展開しながら、d5のポーンを守り、e4のマスも押さえるんだ。",
+    en:"Black develops the knight to f6. Black develops while defending the d5 pawn and controlling the e4 square.",
     fox:'normal' },
-  { move:{from:[7,6],to:[5,5]}, moveLabel:{ja:"4. Nf3", en:"4. Nf3"},
-    ja:"白はナイトをf3へ展開するよ。",
-    en:"White develops the knight to f3.",
+  { move:{from:[7,6],to:[5,5]}, moveLabel:{ja:"3. Nf3", en:"3. Nf3"},
+    ja:"白はナイトをf3へ進めるよ。白はナイトを展開しながら、キャスリングの準備を整えるんだ。",
+    en:"White develops the knight to f3. White develops a piece and gets ready to castle.",
     fox:'normal' },
-  { move:{from:[1,2],to:[3,2]}, moveLabel:{ja:"4...c5", en:"4...c5"},
-    ja:"黒はc5で中央に圧力をかけるよ。",
-    en:"Black challenges the center with 4...c5.",
+  { move:{from:[1,2],to:[2,2]}, moveLabel:{ja:"3...c6", en:"3...c6"},
+    ja:"黒はポーンをc6へ進めるよ。黒はこれでd5のポーンをもう一度守り、g2のビショップが通る長い対角線をかためるんだ。その代わり、黒はナイトの自然な行き先であるc6のマスを自分のポーンでふさぐことになるよ。",
+    en:"Black pushes the pawn to c6. Black adds another defender to the d5 pawn and firms up against the g2 bishop's long diagonal. The downside is that Black takes away c6, the knight's natural square, with its own pawn.",
     fox:'normal' },
-  { move:{from:[7,4],to:[7,6],castle:{from:[7,7],to:[7,5]}}, moveLabel:{ja:"5. O-O", en:"5. O-O"},
-    ja:"白はキャスリングでキングを安全な場所へ。",
-    en:"White castles kingside, tucking the king away safely.",
+  { move:{from:[7,4],to:[7,6],castle:{from:[7,7],to:[7,5]}}, moveLabel:{ja:"4. O-O", en:"4. O-O"},
+    ja:"白はキャスリングでキングを安全な場所へ動かすよ。白のキングは、g2のビショップとポーンに囲まれた守りの堅い形に入るんだ。",
+    en:"White castles, bringing the king to safety. White's king now sits in a solid shelter surrounded by the g2 bishop and pawns.",
     fox:'normal' },
-  { move:{from:[0,1],to:[2,2]}, moveLabel:{ja:"5...Nc6", en:"5...Nc6"},
-    ja:"黒はもう一つのナイトをc6へ展開するよ。",
-    en:"Black develops the other knight to c6.",
+  { move:{from:[0,2],to:[4,6]}, moveLabel:{ja:"4...Bg4", en:"4...Bg4"},
+    ja:"黒はビショップをg4へ進めるよ。黒のビショップはf3のナイトを攻撃して、白の駒の働きをけん制するんだ。黒はビショップをポーンの外に出してから、e6やe5と突く順番を選んでいるよ。",
+    en:"Black develops the bishop to g4. Black's bishop attacks the f3 knight, putting pressure on White's pieces. Black gets the bishop outside the pawn chain before pushing ...e6 or ...e5.",
     fox:'normal' },
-  { move:{from:[6,3],to:[5,3]}, moveLabel:{ja:"6. d3", en:"6. d3"},
-    ja:"白はd3で控えめに中央を支えるよ。",
-    en:"White modestly supports the center with 6.d3.",
+  { move:{from:[6,3],to:[5,3]}, moveLabel:{ja:"5. d3", en:"5. d3"},
+    ja:"白はポーンをd3へ進めるよ。白はこれでc1のビショップの道を開き、次にe4と突く準備もするんだ。白はd4と2マス進めずに、ポーンを後ろに控えさせて柔軟な形を保つよ。",
+    en:"White pushes the pawn to d3. White opens the path for the c1 bishop and prepares to push e4 next. Instead of going d4, White keeps the pawn back and maintains a flexible structure.",
     fox:'normal' },
-  { move:{from:[0,5],to:[1,4]}, moveLabel:{ja:"6...Be7", en:"6...Be7"},
-    ja:"黒はビショップをe7へ。キャスリングの準備をするよ。",
-    en:"Black plays 6...Be7, preparing to castle.",
+  { move:{from:[0,1],to:[1,3]}, moveLabel:{ja:"5...Nbd7", en:"5...Nbd7"},
+    ja:"黒はナイトをd7へ進めるよ。黒はナイトを展開しながら、次にe5と突いたときにそのポーンを守れるように準備するんだ。黒はd5とe5の2つのポーンで中央を広く取ろうとしているよ。",
+    en:"Black develops the knight to d7. Black develops while preparing to support the pawn when it goes to e5. Black aims to take a broad center with pawns on d5 and e5.",
     fox:'normal' },
-  { move:{from:[7,1],to:[6,3]}, moveLabel:{ja:"7. Nbd2", en:"7. Nbd2"},
-    ja:"白はナイトをd2へ展開するよ。これで本譜は一段落、続きはぜひ自分で指してみてね！",
-    en:"White develops the knight to d2. That's the main line — try continuing the game yourself from here!",
+  { move:{from:[7,1],to:[6,3]}, moveLabel:{ja:"6. Nbd2", en:"6. Nbd2"},
+    ja:"白はナイトをd2へ進めるよ。白はナイトを展開しながら、d3のポーンと一緒にe4のマスを支えるんだ。白はこの形から<a href='kings_indian_attack.html'>キングズ・インディアン・アタック</a>に近い組み方を目指しているよ。",
+    en:"White develops the knight to d2. White develops while supporting the e4 square together with the d3 pawn. From here, White is heading for a setup close to the <a href='kings_indian_attack.html?lang=en'>King's Indian Attack</a>.",
+    fox:'normal' },
+  { move:{from:[1,4],to:[3,4]}, moveLabel:{ja:"6...e5", en:"6...e5"},
+    ja:"黒はポーンをe5へ進めるよ。黒はこれでd5とe5に2つのポーンを並べ、中央を広く押さえるんだ。その代わり、黒のポーンが前に出るほど、白にとって攻撃の目標も増えていくよ。",
+    en:"Black pushes the pawn to e5. Black now has two pawns side by side on d5 and e5, taking a broad grip on the center. The trade-off is that the further Black's pawns advance, the more targets they offer White.",
+    fox:'normal' },
+  { move:{from:[6,4],to:[4,4]}, moveLabel:{ja:"7. e4", en:"7. e4"},
+    ja:"白はポーンをe4へ進めるよ。白はこれで黒のd5のポーンに働きかけ、ここから中央での本格的な戦いが始まるんだ。黒はd5を守り続けるか、dxe4と交換するかを選ぶことになり、白はg2のビショップで長い対角線を生かしていくよ。これで本譜は一段落、続きはぜひ自分で指してみてね！",
+    en:"White pushes the pawn to e4. White challenges Black's d5 pawn, and the real fight for the center begins here. Black must choose whether to keep defending d5 or trade with ...dxe4, while White looks to make use of the g2 bishop's long diagonal. That's the main line — try continuing the game yourself from here!",
     fox:'happy' }
 ];
 
@@ -328,15 +333,38 @@ function adjustBottomPadding(){
   }
 }
 
+function shareOnX(message) {
+  const shareUrl = 'https://twitter.com/intent/tweet?text=' + encodeURIComponent(message) + '&url=' + encodeURIComponent(window.location.href);
+  window.open(shareUrl, '_blank', 'noopener,noreferrer,width=550,height=420');
+}
+
 function renderStep(){
   const step = LESSON_STEPS[currentStep];
   renderBoard(boardSnapshots[currentStep]);
   document.getElementById('moveLabel').textContent = (step.moveLabel && step.moveLabel[currentLang]) || '';
-  document.getElementById('commentaryText').textContent = step[currentLang];
+  document.getElementById('commentaryText').innerHTML = step[currentLang];
   document.getElementById('foxAvatar').src = FOX_BY_MOOD[step.fox] || FOX_BY_MOOD.normal;
   document.getElementById('lessonProgress').textContent = currentStep + ' / ' + (LESSON_STEPS.length - 1);
   document.getElementById('btnPrev').disabled = currentStep === 0;
   document.getElementById('btnNext').disabled = currentStep === LESSON_STEPS.length - 1;
+  adjustBottomPadding();
+
+  const shareRow = document.getElementById('shareRow');
+  if (shareRow) {
+    if (currentStep === LESSON_STEPS.length - 1) {
+      const openingNameEl = document.querySelector('.opening-title.lang-element-' + currentLang);
+      const openingName = openingNameEl ? openingNameEl.textContent : '';
+      const msg = currentLang === 'ja'
+        ? '🦊 ' + openingName + 'をKitsuneChessで学んだよ!一手ずつ「なぜその手か」を教えてくれるよ'
+        : '🦊 Just learned the ' + openingName + ' on KitsuneChess! It explains why each move is played, step by step.';
+      const shareBtn = document.getElementById('shareXBtn');
+      shareBtn.textContent = currentLang === 'ja' ? '🦊 𝕏でシェアする' : '🦊 Share on 𝕏';
+      shareBtn.onclick = function() { shareOnX(msg); };
+      shareRow.style.display = 'block';
+    } else {
+      shareRow.style.display = 'none';
+    }
+  }
   adjustBottomPadding();
 }
 
