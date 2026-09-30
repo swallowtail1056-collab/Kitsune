@@ -102,6 +102,8 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
   font-size: 1rem;
   color: var(--text-sub);
 }
+.commentary-text a, .opening-intro a { color:var(--brown); text-decoration:underline; font-weight:700; }
+.commentary-text a:hover, .opening-intro a:hover { color:var(--brown-dark); }
 </style>
   <script src="board-theme.js"></script>
 </head>
@@ -120,8 +122,8 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
   <h1 class="opening-title lang-element-en">Kan Sicilian</h1>
 
   <div class="opening-intro">
-    <p class="lang-element-ja">💡 カン・シシリアンは5...a6と突いてb5の展開オプションを確保する柔軟なシシリアンの変化だよ！ナイドルフと同じa6の手だけど、その後6...e6と突いてb5-Bb7の展開を目指すのがカンの特徴なんだ。e6と突くことでキングへの安全を高めながら、b5-Bb7のビショップで白の中央を牽制する形を作れるよ。ナイドルフほど激しい理論的変化にならず、複雑だけどバランスの取れた局面になりやすいんだ。状況に応じてb5-Bb7、d5の突き、f5の展開など複数の計画が選べる自由度の高さが魅力だよ！</p>
-    <p class="lang-element-en">💡 The Kan Sicilian plays 5...a6 to secure the b5 expansion option! Like the Najdorf, it uses the move a6, but the Kan's distinctive follow-up is 6...e6, aiming for b5-Bb7 development. Playing e6 improves king safety while preparing to develop the bishop via b5-Bb7. Unlike the sharp Najdorf, the Kan leads to complex but more balanced positions. Black's freedom to choose between multiple plans is its greatest strength. A very practical and effective Sicilian variation!</p>
+    <p class="lang-element-ja">💡 カン・シシリアンは、シシリアン・ディフェンスで黒がe6とa6を組み合わせる、とても柔軟な作戦だよ。名前はソ連のマスター、イリヤ・カンに由来していて、19世紀にこの形を指したルイス・パウルセンの名前からパウルセン・バリエーションと呼ばれることもあるんだ。カルポフなどのトップ選手にも指されてきたよ。黒は駒をすぐには出さず、白の出方を見てから配置を決めるのが特徴だよ。ナイドルフやドラゴンのような膨大な定跡を覚えなくても指しやすい一方で、白に展開で先を行かれやすいという面もあるんだ。</p>
+    <p class="lang-element-en">💡 The Kan Sicilian is a very flexible Sicilian setup in which Black combines ...e6 and ...a6. It's named after the Soviet master Ilya Kan, and it's also called the Paulsen Variation after Louis Paulsen, who played it in the 19th century. Top players such as Karpov have used it. Black holds back piece development and decides where to put the pieces after seeing what White does. It's easier to play without memorizing the huge theory of lines like the Najdorf or Dragon, but White can more easily get ahead in development.</p>
   </div>
 
   <div class="board-wrap">
@@ -141,6 +143,9 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
     <button id="btnPrev" class="lesson-btn">← 前へ</button>
     <span class="lesson-progress" id="lessonProgress"></span>
     <button id="btnNext" class="lesson-btn">次へ →</button>
+  </div>
+  <div id="shareRow" style="display:none;text-align:center;margin-top:10px;">
+    <button id="shareXBtn" style="background:#000;color:#fff;border:none;border-radius:20px;padding:8px 16px;font-family:'Crimson Pro',serif;font-weight:700;font-size:0.85rem;cursor:pointer;">🦊 𝕏でシェアする</button>
   </div>
 </div>
 
@@ -189,60 +194,64 @@ const initialBoard = [
 // ============================================================
 const LESSON_STEPS = [
   { move:null, moveLabel:{ja:"開始局面", en:"Starting Position"},
-    ja:"カン・シシリアンのレッスンを始めるよ！複数の計画から選べる自由度の高さが魅力の、柔軟なシシリアンの変化だよ。ジーンと一緒に、一手ずつ「なぜその手を指すのか」を学んでいこう。",
-    en:"Let's start the Kan Sicilian lesson! Its biggest strength is the freedom to choose between several plans. Jene will explain why each move is played, one step at a time.",
+    ja:"カン・シシリアンのレッスンを始めるよ！このページでは、白が5.Bd3で落ち着いて構え、黒が5...Bc5で白のナイトに働きかける変化を見ていくよ。お互いの駒の置き場所をめぐる細かな駆け引きがポイントなんだ。一手ずつジーンと一緒に、なぜその手を指すのかを学んでいこう。",
+    en:"Let's start the Kan Sicilian lesson! On this page we follow the line where White sets up calmly with 5.Bd3 and Black challenges White's knight with 5...Bc5. The key is the subtle battle over where each side's pieces belong. Jene will walk you through why each move is played, one step at a time.",
     fox:'welcome' },
   { move:{from:[6,4],to:[4,4]}, moveLabel:{ja:"1. e4", en:"1. e4"},
-    ja:"白はe4で中央を制圧するよ。",
-    en:"White plays 1.e4, claiming the center.",
+    ja:"白はポーンをe4へ進めるよ。白は中央のマスを押さえながら、ビショップとクイーンが動く道を開けるんだ。",
+    en:"White pushes the pawn to e4. White takes control of central squares and opens lines for the bishop and queen.",
     fox:'normal' },
   { move:{from:[1,2],to:[3,2]}, moveLabel:{ja:"1...c5", en:"1...c5"},
-    ja:"黒はc5。シシリアン・ディフェンスで非対称な局面を作るよ。",
-    en:"Black plays 1...c5, the Sicilian Defense.",
+    ja:"黒はポーンをc5へ進めるよ。黒はこれで<a href='sicilian.html'>シシリアン・ディフェンス</a>の形に入り、横からd4のマスを押さえるんだ。",
+    en:"Black pushes the pawn to c5. Black enters the <a href='sicilian.html?lang=en'>Sicilian Defense</a> and controls the d4 square from the side.",
     fox:'normal' },
   { move:{from:[7,6],to:[5,5]}, moveLabel:{ja:"2. Nf3", en:"2. Nf3"},
-    ja:"白はナイトをf3に展開して、d4への中央突破を狙うよ。",
-    en:"White develops the knight to f3, preparing a central break with d4.",
+    ja:"白はナイトをf3へ進めるよ。白は駒を展開しながら、次にd4と突く準備をしているんだ。",
+    en:"White develops the knight to f3. White develops a piece while preparing to push d4 next.",
     fox:'normal' },
-  { move:{from:[1,4],to:[2,4]}, moveLabel:{ja:"2...e6（カン！）", en:"2...e6 (Kan!)"},
-    ja:"ここが本題、カンの一手！黒は早めにe6を突いて、キングの安全と柔軟な展開を両立するよ。",
-    en:"Here's the Kan move! Black plays e6 early, balancing king safety with flexible development.",
-    fox:'happy' },
+  { move:{from:[1,4],to:[2,4]}, moveLabel:{ja:"2...e6", en:"2...e6"},
+    ja:"黒はポーンをe6へ進めるよ。黒はこれでd5のマスをもう一度押さえ、f8のビショップの通り道も開けるんだ。黒は2...d6や2...Nc6の代わりにこの手を選ぶことで、どの形に進むかを後から決められる柔軟さを残しているよ。",
+    en:"Black pushes the pawn to e6. Black adds control of the d5 square and opens a path for the f8 bishop. By choosing this instead of 2...d6 or 2...Nc6, Black keeps the flexibility to decide on a setup later.",
+    fox:'normal' },
   { move:{from:[6,3],to:[4,3]}, moveLabel:{ja:"3. d4", en:"3. d4"},
-    ja:"白はd4で中央に第二の突破を仕掛けるよ。",
-    en:"White strikes again in the center with 3.d4.",
+    ja:"白はポーンをd4へ進めるよ。白は中央でポーンを交換して、駒が動きやすい開いた局面をねらうんだ。",
+    en:"White pushes the pawn to d4. White aims to trade pawns in the center and open the position for the pieces.",
     fox:'normal' },
   { move:{from:[3,2],to:[4,3]}, moveLabel:{ja:"3...cxd4", en:"3...cxd4"},
-    ja:"黒はcxd4でポーンを交換するよ。",
-    en:"Black trades with 3...cxd4.",
-    fox:'quiz' },
+    ja:"黒はc5のポーンで、d4に来た白のポーンを取るよ。黒はこれで中央の白のポーンを減らし、cファイルを半分開くんだ。",
+    en:"Black's c5 pawn captures the white pawn that came to d4. Black removes one of White's central pawns and half-opens the c-file.",
+    fox:'normal' },
   { move:{from:[5,5],to:[4,3]}, moveLabel:{ja:"4. Nxd4", en:"4. Nxd4"},
-    ja:"白はナイトで取り返して、中央のいいマスに陣取るよ。",
-    en:"White recaptures with the knight, landing on a strong central square.",
+    ja:"白はナイトで、d4にいた黒のポーンを取り返すよ。白のナイトは中央の強いマスに入り、白はビショップ2つもすぐに展開できる形になったんだ。",
+    en:"White's knight takes back the black pawn that was on d4. White's knight lands on a strong central square, and both of White's bishops are now free to develop.",
     fox:'normal' },
-  { move:{from:[1,0],to:[2,0]}, moveLabel:{ja:"4...a6", en:"4...a6"},
-    ja:"黒はa6でb5の展開オプションを確保するよ。",
-    en:"Black plays 4...a6, securing the b5 expansion option.",
+  { move:{from:[1,0],to:[2,0]}, moveLabel:{ja:"4...a6（カン！）", en:"4...a6 (Kan!)"},
+    ja:"ここがカン・シシリアンの一手！黒はポーンをa6へ進めて、白の駒がb5のマスに入るのを防ぎ、この先...b5と突く準備もするよ。黒には4...Nc6の<a href='taimanov_sicilian.html'>タイマノフ・シシリアン</a>という選択肢もあるけれど、黒はナイトを出す前にa6を突いて、駒の置き場所を後から決める道を選ぶんだ。<a href='najdorf.html'>ナイドルフ・シシリアン</a>でも黒はa6を突くけれど、黒はここでd6ではなくe6を先に突いている点が違うよ。その代わり、黒はまだ駒を1つも展開していないので、白に展開のリードを許しやすいんだ。",
+    en:"Here's the Kan Sicilian! Black pushes the pawn to a6, keeping White's pieces off b5 and preparing ...b5 later. Black could also play 4...Nc6, the <a href='taimanov_sicilian.html?lang=en'>Taimanov Sicilian</a>, but Black plays ...a6 before developing a knight, choosing to decide where the pieces go later. Black also plays ...a6 in the <a href='najdorf.html?lang=en'>Najdorf Sicilian</a>, but here Black has played ...e6 instead of ...d6. The cost is that Black hasn't developed a single piece yet, which tends to hand White a lead in development.",
+    fox:'happy' },
+  { move:{from:[7,5],to:[5,3]}, moveLabel:{ja:"5. Bd3", en:"5. Bd3"},
+    ja:"白はビショップをd3へ進めるよ。白のビショップはe4のポーンを守りながら、白はこの先c4と突いて中央を固める準備をするんだ。白はここで5.Nc3と展開することのほうが多いけれど、このページでは5.Bd3を見ていくよ。",
+    en:"White develops the bishop to d3. White's bishop defends the e4 pawn, and White prepares to push c4 later to strengthen the center. White more often develops with 5.Nc3 here, but on this page we follow 5.Bd3.",
     fox:'normal' },
-  { move:{from:[7,1],to:[5,2]}, moveLabel:{ja:"5. Nc3", en:"5. Nc3"},
-    ja:"白はナイトをc3で展開して、e4ポーンを守りつつ駒を育てるよ。",
-    en:"White develops the knight to c3, defending e4 while developing.",
+  { move:{from:[0,5],to:[3,2]}, moveLabel:{ja:"5...Bc5", en:"5...Bc5"},
+    ja:"黒はビショップをc5へ進めるよ。白のd3のビショップがクイーンの前をふさいでいるので、黒のビショップはd4のナイトを守りのない状態で攻撃しているんだ。黒はこれで白に駒の置き場所を早く決めさせようとしているよ。",
+    en:"Black develops the bishop to c5. Since White's d3 bishop blocks the queen's line, Black's bishop attacks the d4 knight, which is now undefended. Black is forcing White to commit its pieces early.",
+    fox:'happy' },
+  { move:{from:[4,3],to:[5,1]}, moveLabel:{ja:"6. Nb3", en:"6. Nb3"},
+    ja:"白はナイトをb3へ下げるよ。白のナイトは攻撃をかわしながら、今度はc5のビショップを攻撃し返すんだ。白は5...Bc5に対して、この手がいちばん多く指される応じ方とされているよ。その代わり、白のナイトは中央から少し離れることになるんだ。",
+    en:"White retreats the knight to b3. White's knight escapes the attack and hits back at the c5 bishop. White's 6.Nb3 is considered the main reply to 5...Bc5. The trade-off is that White's knight moves a bit away from the center.",
     fox:'normal' },
-  { move:{from:[1,1],to:[3,1]}, moveLabel:{ja:"5...b5", en:"5...b5"},
-    ja:"黒はb5！これがカンらしい一手、ビショップをb7へ展開する準備をするよ。",
-    en:"Black plays the characteristic 5...b5, preparing to develop the bishop to b7.",
-    fox:'wink' },
-  { move:{from:[7,5],to:[5,3]}, moveLabel:{ja:"6. Bd3", en:"6. Bd3"},
-    ja:"白はビショップをd3へ展開するよ。",
-    en:"White develops the bishop to d3.",
+  { move:{from:[3,2],to:[1,4]}, moveLabel:{ja:"6...Be7", en:"6...Be7"},
+    ja:"黒はビショップをe7へ下げるよ。黒のビショップはe7でキングを守りやすい位置に戻るんだ。黒には6...Ba7とa7-g1の対角線に残す選択肢もあるよ。その代わり、黒のビショップがf8からいなくなったので、g7のポーンを守る駒がなくなるんだ。",
+    en:"Black retreats the bishop to e7. Black's bishop returns to e7, where it helps guard the king. Black could also keep the bishop on the a7–g1 diagonal with 6...Ba7. The downside is that with the bishop gone from f8, nothing defends the g7 pawn anymore.",
     fox:'normal' },
-  { move:{from:[0,2],to:[1,1]}, moveLabel:{ja:"6...Bb7", en:"6...Bb7"},
-    ja:"黒はビショップをb7へ。長い対角線から白の中央を牽制するよ。",
-    en:"Black develops the bishop to b7, pressuring White's center from a distance.",
+  { move:{from:[7,3],to:[4,6]}, moveLabel:{ja:"7. Qg4", en:"7. Qg4"},
+    ja:"白はクイーンをg4へ進めるよ。白のクイーンは守りのないg7のポーンを攻撃しているんだ。白はクイーンを早く出して、黒のキングサイドを揺さぶりにいくよ。その代わり、白はクイーンを動かすことでほかの駒の展開が遅れるんだ。",
+    en:"White brings the queen to g4. White's queen attacks the undefended g7 pawn. White brings the queen out early to stir things up on Black's kingside. The trade-off is that moving the queen delays the development of White's other pieces.",
     fox:'normal' },
-  { move:{from:[7,4],to:[7,6],castle:{from:[7,7],to:[7,5]}}, moveLabel:{ja:"7. O-O", en:"7. O-O"},
-    ja:"白はキャスリングでキングを安全な場所へ。これで本譜は一段落、続きはぜひ自分で指してみてね！",
-    en:"White castles kingside, tucking the king away safely. That's the main line — try continuing the game yourself from here!",
+  { move:{from:[1,6],to:[2,6]}, moveLabel:{ja:"7...g6", en:"7...g6"},
+    ja:"黒はポーンをg6へ進めるよ。黒はこれでg7のポーンをクイーンの攻撃からよけ、g6のポーンはf7とh7のポーンに守られているんだ。その代わり、黒はf6やh6のマスが弱くなり、白のビショップに使われやすくなるよ。この後は白がクイーンをe2へ戻し、黒は...d6や...Nd7で駒を展開していくのがよくある流れなんだ。これで本譜は一段落、続きはぜひ自分で指してみてね！",
+    en:"Black pushes the pawn to g6. Black moves the pawn out of the queen's attack, and the g6 pawn is protected by the f7 and h7 pawns. The downside is that the f6 and h6 squares become weak and easier for White's dark-squared bishop to use. A typical continuation is for White to bring the queen back to e2 while Black develops with ...d6 and ...Nd7. That's the main line — try continuing the game yourself from here!",
     fox:'happy' }
 ];
 
@@ -328,15 +337,38 @@ function adjustBottomPadding(){
   }
 }
 
+function shareOnX(message) {
+  const shareUrl = 'https://twitter.com/intent/tweet?text=' + encodeURIComponent(message) + '&url=' + encodeURIComponent(window.location.href);
+  window.open(shareUrl, '_blank', 'noopener,noreferrer,width=550,height=420');
+}
+
 function renderStep(){
   const step = LESSON_STEPS[currentStep];
   renderBoard(boardSnapshots[currentStep]);
   document.getElementById('moveLabel').textContent = (step.moveLabel && step.moveLabel[currentLang]) || '';
-  document.getElementById('commentaryText').textContent = step[currentLang];
+  document.getElementById('commentaryText').innerHTML = step[currentLang];
   document.getElementById('foxAvatar').src = FOX_BY_MOOD[step.fox] || FOX_BY_MOOD.normal;
   document.getElementById('lessonProgress').textContent = currentStep + ' / ' + (LESSON_STEPS.length - 1);
   document.getElementById('btnPrev').disabled = currentStep === 0;
   document.getElementById('btnNext').disabled = currentStep === LESSON_STEPS.length - 1;
+  adjustBottomPadding();
+
+  const shareRow = document.getElementById('shareRow');
+  if (shareRow) {
+    if (currentStep === LESSON_STEPS.length - 1) {
+      const openingNameEl = document.querySelector('.opening-title.lang-element-' + currentLang);
+      const openingName = openingNameEl ? openingNameEl.textContent : '';
+      const msg = currentLang === 'ja'
+        ? '🦊 ' + openingName + 'をKitsuneChessで学んだよ!一手ずつ「なぜその手か」を教えてくれるよ'
+        : '🦊 Just learned the ' + openingName + ' on KitsuneChess! It explains why each move is played, step by step.';
+      const shareBtn = document.getElementById('shareXBtn');
+      shareBtn.textContent = currentLang === 'ja' ? '🦊 𝕏でシェアする' : '🦊 Share on 𝕏';
+      shareBtn.onclick = function() { shareOnX(msg); };
+      shareRow.style.display = 'block';
+    } else {
+      shareRow.style.display = 'none';
+    }
+  }
   adjustBottomPadding();
 }
 
