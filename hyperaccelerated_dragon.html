@@ -100,6 +100,8 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
   font-size: 1rem;
   color: var(--text-sub);
 }
+.commentary-text a, .opening-intro a { color:var(--brown); text-decoration:underline; font-weight:700; }
+.commentary-text a:hover, .opening-intro a:hover { color:var(--brown-dark); }
 </style>
   <script src="board-theme.js"></script>
 </head>
@@ -118,8 +120,8 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
   <h1 class="opening-title lang-element-en">Hyperaccelerated Dragon</h1>
 
   <div class="opening-intro">
-    <p class="lang-element-ja">💡 通常のドラゴンより早くg6でフィアンケットを行う変化。柔軟性が高く、白の攻撃態勢を早めに見極められる反面、独自の対策も必要になる玄人向けの選択肢。</p>
-    <p class="lang-element-en">💡 Black fianchettoes with g6 earlier than the standard Dragon. This offers extra flexibility and early insight into White\'s plans, though it requires its own specific knowledge.</p>
+    <p class="lang-element-ja">💡 ハイパーアクセラレーテッド・ドラゴンは、シシリアン・ディフェンスで黒が2手目からg6と突き、ビショップをg7に出す作戦だよ。黒のポーンの並びがりゅう座（Draco）という星座に似ていると言われたことから名付けられた<a href='dragon.html'>ドラゴン</a>の仲間なんだ。「ハイパーアクセラレーテッド」は「超加速」という意味で、普通のドラゴンよりずっと早くg6を突くことを表しているよ。白が4.Nxd4と取れば、よく知られた形に合流することも多いんだ。</p>
+    <p class="lang-element-en">💡 The Hyperaccelerated Dragon is a Sicilian setup in which Black plays ...g6 on move two to put the bishop on g7. It belongs to the <a href='dragon.html?lang=en'>Dragon</a> family, which got its name because Black's pawn formation was said to resemble the constellation Draco. "Hyperaccelerated" means Black pushes ...g6 much earlier than in the regular Dragon. If White recaptures with 4.Nxd4, the game often merges into well-known lines.</p>
   </div>
 
   <div class="board-wrap">
@@ -139,6 +141,9 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
     <button id="btnPrev" class="lesson-btn">← 前へ</button>
     <span class="lesson-progress" id="lessonProgress"></span>
     <button id="btnNext" class="lesson-btn">次へ →</button>
+  </div>
+  <div id="shareRow" style="display:none;text-align:center;margin-top:10px;">
+    <button id="shareXBtn" style="background:#000;color:#fff;border:none;border-radius:20px;padding:8px 16px;font-family:'Crimson Pro',serif;font-weight:700;font-size:0.85rem;cursor:pointer;">🦊 𝕏でシェアする</button>
   </div>
 </div>
 
@@ -178,56 +183,64 @@ const initialBoard = [
 
 const LESSON_STEPS = [
   { move:null, moveLabel:{ja:"開始局面", en:"Starting Position"},
-    ja:'ハイパーアクセラレーテッド・ドラゴンのレッスンを始めるよ！一手ずつジーンと一緒に、なぜその手を指すのかを学んでいこう。',
-    en:'Let\'s start the Hyperaccelerated Dragon lesson! Jene will walk you through why each move is played, one step at a time.',
+    ja:"ハイパーアクセラレーテッド・ドラゴンのレッスンを始めるよ！このページでは、この手順でしか起こらない白の4.Qxd4に対して、黒がどう応じるかを見ていくよ。白のクイーンと黒のナイトが追いかけっこをするような、少し変わった展開がポイントなんだ。一手ずつジーンと一緒に、なぜその手を指すのかを学んでいこう。",
+    en:"Let's start the Hyperaccelerated Dragon lesson! On this page we look at how Black handles White's 4.Qxd4, a try that only exists in this move order. The key is the unusual chase between White's queen and Black's knights. Jene will walk you through why each move is played, one step at a time.",
     fox:'welcome' },
   { move:{from:[6,4],to:[4,4]}, moveLabel:{ja:"1. e4", en:"1. e4"},
-    ja:'白はポーンをe4へ進めるよ。',
-    en:'White develops the pawn to e4.',
+    ja:"白はポーンをe4へ進めるよ。白は中央のマスを押さえながら、ビショップとクイーンが動く道を開けるんだ。",
+    en:"White pushes the pawn to e4. White takes control of central squares and opens lines for the bishop and queen.",
     fox:'normal' },
   { move:{from:[1,2],to:[3,2]}, moveLabel:{ja:"1...c5", en:"1...c5"},
-    ja:'黒はポーンをc5へ進めるよ。',
-    en:'Black develops the pawn to c5.',
+    ja:"黒はポーンをc5へ進めるよ。黒はこれで<a href='sicilian.html'>シシリアン・ディフェンス</a>の形に入り、横からd4のマスを押さえるんだ。",
+    en:"Black pushes the pawn to c5. Black enters the <a href='sicilian.html?lang=en'>Sicilian Defense</a> and controls the d4 square from the side.",
     fox:'normal' },
   { move:{from:[7,6],to:[5,5]}, moveLabel:{ja:"2. Nf3", en:"2. Nf3"},
-    ja:'白はナイトをf3へ進めるよ。',
-    en:'White develops the knight to f3.',
+    ja:"白はナイトをf3へ進めるよ。白は駒を展開しながら、次にd4と突く準備をしているんだ。",
+    en:"White develops the knight to f3. White develops a piece while preparing to push d4 next.",
     fox:'normal' },
-  { move:{from:[1,6],to:[2,6]}, moveLabel:{ja:"2...g6", en:"2...g6"},
-    ja:'💡 黒はポーンをg6へ進めるよ。 通常のドラゴンより早くg6でフィアンケットを行う変化。柔軟性が高く、白の攻撃態勢を早めに見極められる反面、独自の対策も必要になる玄人向けの選択肢。',
-    en:'💡 Black develops the pawn to g6. Black fianchettoes with g6 earlier than the standard Dragon. This offers extra flexibility and early insight into White\'s plans, though it requires its own specific knowledge.',
+  { move:{from:[1,6],to:[2,6]}, moveLabel:{ja:"2...g6（ハイパー！）", en:"2...g6 (Hyper!)"},
+    ja:"ここがハイパーアクセラレーテッド・ドラゴンの一手！黒はポーンをg6へ進めて、2手目からビショップをg7に出す準備をするよ。一般的には2...d6や2...Nc6が指されるけれど、黒は2...Nc6を後回しにすることで、白の3.Bb5の<a href='rossolimo_attack.html'>ロッソリモ・アタック</a>を避けられるんだ。その代わり、黒はd4のマスを押さえる駒が少ないので、白に次の手で別の道を選ばれる余地が生まれるよ。",
+    en:"Here's the Hyperaccelerated Dragon! Black pushes the pawn to g6, preparing to put the bishop on g7 as early as move two. The usual moves are 2...d6 or 2...Nc6, but by delaying ...Nc6, Black sidesteps the <a href='rossolimo_attack.html?lang=en'>Rossolimo Attack</a> with 3.Bb5. The cost is that Black has fewer pieces watching d4, which gives White an extra option on the next moves.",
     fox:'happy' },
   { move:{from:[6,3],to:[4,3]}, moveLabel:{ja:"3. d4", en:"3. d4"},
-    ja:'白はポーンをd4へ進めるよ。',
-    en:'White develops the pawn to d4.',
+    ja:"白はポーンをd4へ進めるよ。白は中央でポーンを交換して、駒が動きやすい開いた局面をねらうんだ。",
+    en:"White pushes the pawn to d4. White aims to trade pawns in the center and open the position for the pieces.",
     fox:'normal' },
   { move:{from:[3,2],to:[4,3]}, moveLabel:{ja:"3...cxd4", en:"3...cxd4"},
-    ja:'黒はポーンでd4の駒を取るよ。',
-    en:'Black captures on d4 with the pawn.',
+    ja:"黒はc5のポーンで、d4に来た白のポーンを取るよ。黒はこれで中央の白のポーンを減らし、cファイルを半分開くんだ。",
+    en:"Black's c5 pawn captures the white pawn that came to d4. Black removes one of White's central pawns and half-opens the c-file.",
     fox:'normal' },
-  { move:{from:[5,5],to:[4,3]}, moveLabel:{ja:"4. Nxd4", en:"4. Nxd4"},
-    ja:'白はナイトでd4の駒を取るよ。',
-    en:'White captures on d4 with the knight.',
+  { move:{from:[7,3],to:[4,3]}, moveLabel:{ja:"4. Qxd4!?", en:"4. Qxd4!?"},
+    ja:"白はクイーンで、d4にいた黒のポーンを取り返すよ。白は一般的には4.Nxd4と取り、4...Nc6で<a href='accelerated_dragon.html'>アクセラレイテッド・ドラゴン</a>と同じ局面になるけれど、このページではハイパーならではの4.Qxd4を見ていくよ。白のクイーンはd4から長い対角線でh8のルークをねらっていて、黒はc6にナイトがいないので、すぐにクイーンを追い払えないんだ。その代わり、白はクイーンを早く中央に出すので、この先黒の駒に追い回されやすくなるよ。",
+    en:"White's queen takes back the black pawn that was on d4. White usually recaptures with 4.Nxd4, and after 4...Nc6 the game reaches the same position as the <a href='accelerated_dragon.html?lang=en'>Accelerated Dragon</a>, but on this page we look at 4.Qxd4, a try unique to the Hyperaccelerated move order. From d4, White's queen targets the h8 rook down the long diagonal, and with no knight on c6, Black can't chase the queen away right now. The downside is that White brings the queen to the center early, where Black's pieces can harass it later.",
+    fox:'wink' },
+  { move:{from:[0,6],to:[2,5]}, moveLabel:{ja:"4...Nf6", en:"4...Nf6"},
+    ja:"黒はナイトをf6へ進めるよ。黒はナイトで対角線をふさいで、h8のルークを守るんだ。黒はここでほぼこの一手しかないとされていて、ほかの手ではルークを守りにくいよ。",
+    en:"Black develops the knight to f6. Black blocks the diagonal with the knight, shielding the h8 rook. This is considered practically the only move here, since other moves struggle to protect the rook.",
     fox:'normal' },
-  { move:{from:[0,5],to:[1,6]}, moveLabel:{ja:"4...Bg7", en:"4...Bg7"},
-    ja:'黒はビショップをg7へ進めるよ。',
-    en:'Black develops the bishop to g7.',
-    fox:'normal' },
-  { move:{from:[7,1],to:[5,2]}, moveLabel:{ja:"5. Nc3", en:"5. Nc3"},
-    ja:'白はナイトをc3へ進めるよ。',
-    en:'White develops the knight to c3.',
+  { move:{from:[4,4],to:[3,4]}, moveLabel:{ja:"5. e5", en:"5. e5"},
+    ja:"白はポーンをe5へ進めるよ。白はこれでf6のナイトを攻撃して、黒に下がる手を強いようとするんだ。白はテンポを稼ぎながら、中央のスペースも広げているよ。",
+    en:"White pushes the pawn to e5. White attacks the f6 knight, trying to force it back. White gains time while also grabbing central space.",
     fox:'normal' },
   { move:{from:[0,1],to:[2,2]}, moveLabel:{ja:"5...Nc6", en:"5...Nc6"},
-    ja:'黒はナイトをc6へ進めるよ。',
-    en:'Black develops the knight to c6.',
+    ja:"黒はナイトをc6へ進めて、d4のクイーンを攻撃するよ。黒はf6のナイトをすぐに逃がさず、先にクイーンを攻撃してやり返すんだ。白がもし6.exf6と取ると、黒は6...Nxd4とクイーンを取れるので、白はまずクイーンを動かさなければならないよ。",
+    en:"Black develops the knight to c6, attacking the queen on d4. Instead of moving the f6 knight right away, Black counterattacks the queen first. If White took with 6.exf6, Black would answer 6...Nxd4 and win the queen, so White has to move the queen first.",
+    fox:'happy' },
+  { move:{from:[4,3],to:[4,0]}, moveLabel:{ja:"6. Qa4", en:"6. Qa4"},
+    ja:"白はクイーンをa4へ動かすよ。白のクイーンは安全な場所に逃げながら、c6のナイトをにらんでいるんだ。白のe5のポーンはまだf6のナイトを攻撃しているので、黒は次にナイトを動かす必要があるよ。",
+    en:"White moves the queen to a4. White's queen escapes to safety while eyeing the c6 knight. White's e5 pawn is still attacking the f6 knight, so Black now needs to move it.",
     fox:'normal' },
-  { move:{from:[7,2],to:[5,4]}, moveLabel:{ja:"6. Be3", en:"6. Be3"},
-    ja:'白はビショップをe3へ進めるよ。',
-    en:'White develops the bishop to e3.',
+  { move:{from:[2,5],to:[3,3]}, moveLabel:{ja:"6...Nd5", en:"6...Nd5"},
+    ja:"黒はナイトをd5へ進めるよ。黒のナイトは攻撃をかわしながら中央の強いマスに入るんだ。黒のd5のナイトは、今のところ白のどの駒にも攻撃されていないよ。",
+    en:"Black moves the knight to d5. Black's knight escapes the attack and lands on a strong central square. Right now, Black's d5 knight isn't attacked by any white piece.",
     fox:'normal' },
-  { move:{from:[0,6],to:[2,5]}, moveLabel:{ja:"6...Nf6", en:"6...Nf6"},
-    ja:'黒はナイトをf6へ進めるよ。',
-    en:'Black develops the knight to f6.',
+  { move:{from:[4,0],to:[4,4]}, moveLabel:{ja:"7. Qe4", en:"7. Qe4"},
+    ja:"白はクイーンをe4へ動かすよ。白のクイーンはd5のナイトを攻撃しながら、f3のナイトと一緒にe5のポーンも守るんだ。黒のd5のナイトを守る駒はないので、黒はまたナイトを動かすことになるよ。その代わり、白はクイーンを何度も動かしていて、ほかの駒の展開はまだ進んでいないんだ。",
+    en:"White moves the queen to e4. White's queen attacks the d5 knight and, together with the f3 knight, defends the e5 pawn. Nothing defends Black's d5 knight, so Black has to move it again. The trade-off is that White has moved the queen several times while the other pieces are still undeveloped.",
+    fox:'normal' },
+  { move:{from:[3,3],to:[2,1]}, moveLabel:{ja:"7...Nb6", en:"7...Nb6"},
+    ja:"黒はナイトをb6へ下げるよ。黒はこの先...d6や...d5と突いて、白のe5のポーンやe4のクイーンに揺さぶりをかける準備をするんだ。黒には7...Ndb4と攻めに出る選択肢もあるけれど、エンジンの評価では7...Nb6のほうがやや高いんだ。黒もナイトを何度も動かしているけれど、白のクイーンが目標になりやすく、エンジンの評価ではほぼ互角なんだ。これで本譜は一段落、続きはぜひ自分で指してみてね！",
+    en:"Black retreats the knight to b6. Black is getting ready to play ...d6 or ...d5 next, putting pressure on White's e5 pawn and the queen on e4. Black could also go for 7...Ndb4, but engines rate 7...Nb6 slightly higher. Black has also moved the knights several times, but White's queen is an easy target, and engines rate the position as roughly equal. That's the main line — try continuing the game yourself from here!",
     fox:'happy' }
 ];
 
@@ -313,15 +326,38 @@ function adjustBottomPadding(){
   }
 }
 
+function shareOnX(message) {
+  const shareUrl = 'https://twitter.com/intent/tweet?text=' + encodeURIComponent(message) + '&url=' + encodeURIComponent(window.location.href);
+  window.open(shareUrl, '_blank', 'noopener,noreferrer,width=550,height=420');
+}
+
 function renderStep(){
   const step = LESSON_STEPS[currentStep];
   renderBoard(boardSnapshots[currentStep]);
   document.getElementById('moveLabel').textContent = (step.moveLabel && step.moveLabel[currentLang]) || '';
-  document.getElementById('commentaryText').textContent = step[currentLang];
+  document.getElementById('commentaryText').innerHTML = step[currentLang];
   document.getElementById('foxAvatar').src = FOX_BY_MOOD[step.fox] || FOX_BY_MOOD.normal;
   document.getElementById('lessonProgress').textContent = currentStep + ' / ' + (LESSON_STEPS.length - 1);
   document.getElementById('btnPrev').disabled = currentStep === 0;
   document.getElementById('btnNext').disabled = currentStep === LESSON_STEPS.length - 1;
+  adjustBottomPadding();
+
+  const shareRow = document.getElementById('shareRow');
+  if (shareRow) {
+    if (currentStep === LESSON_STEPS.length - 1) {
+      const openingNameEl = document.querySelector('.opening-title.lang-element-' + currentLang);
+      const openingName = openingNameEl ? openingNameEl.textContent : '';
+      const msg = currentLang === 'ja'
+        ? '🦊 ' + openingName + 'をKitsuneChessで学んだよ!一手ずつ「なぜその手か」を教えてくれるよ'
+        : '🦊 Just learned the ' + openingName + ' on KitsuneChess! It explains why each move is played, step by step.';
+      const shareBtn = document.getElementById('shareXBtn');
+      shareBtn.textContent = currentLang === 'ja' ? '🦊 𝕏でシェアする' : '🦊 Share on 𝕏';
+      shareBtn.onclick = function() { shareOnX(msg); };
+      shareRow.style.display = 'block';
+    } else {
+      shareRow.style.display = 'none';
+    }
+  }
   adjustBottomPadding();
 }
 
