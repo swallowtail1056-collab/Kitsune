@@ -102,6 +102,11 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
   font-size: 1rem;
   color: var(--text-sub);
 }
+.commentary-text a, .opening-intro a { color:var(--brown); text-decoration:underline; font-weight:700; }
+.commentary-text a:hover, .opening-intro a:hover { color:var(--brown-dark); }
+.more-detail { margin-top:8px; border-top:1px dashed var(--brown-light); padding-top:6px; }
+.more-detail summary { cursor:pointer; font-weight:700; color:var(--brown); font-size:0.92rem; list-style-position:inside; }
+.more-detail .more-body { margin-top:6px; font-size:0.94rem; }
 </style>
   <script src="board-theme.js"></script>
 </head>
@@ -120,8 +125,8 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
   <h1 class="opening-title lang-element-en">King's Indian Classical Variation</h1>
 
   <div class="opening-intro">
-    <p class="lang-element-ja">💡 キングズ・インディアン・クラシカル変化は白が5.Be2-6.O-Oと穏やかに展開する変化だよ！白がBe2と構えた後、黒は5...O-O-6...e5と突いて中央に反撃するのが基本プランなんだ。白はクイーンサイドでの攻め、黒はキングサイドでの攻めという典型的なキングズ・インディアンの相互攻撃が生まれるんだ。フィッシャーとカスパロフが両方愛用したこの変化は現代チェスの最重要変化のひとつで、深い理論と豊富な実戦例を持つ上級者向けの変化だよ！</p>
-    <p class="lang-element-en">💡 The King's Indian Classical Variation has White developing quietly with 5.Be2 and 6.O-O! After White sets up with Be2, Black's basic plan is to play O-O followed by e5 to counter in the center. This creates the classic King's Indian mutual attack — White pushes on the queenside while Black attacks on the kingside. Both Fischer and Kasparov used this variation as their main weapon, making it one of the most important theoretical lines in modern chess!</p>
+    <p class="lang-element-ja">💡 キングズ・インディアン・クラシカル変化は、キングズ・インディアン・ディフェンスで白がNf3とBe2で自然に展開する、最もよく指される本筋だよ。黒がe5で中央に反撃し、白がd5で中央を閉じると、白はクイーンサイド、黒はキングサイドで攻め合う激しい展開になりやすいんだ。マル・デル・プラタ変化の名前は、1953年にアルゼンチンのマル・デル・プラタで行われた大会に由来していて、フィッシャーやカスパロフなど多くの強豪が黒で指してきたよ。その代わり、定跡がとても深く、覚えることの多い上級者向けの変化とも言われているんだ。</p>
+    <p class="lang-element-en">💡 The King's Indian Classical is the most popular main line of the King's Indian Defense, with White developing naturally with Nf3 and Be2. When Black counterattacks with ...e5 and White closes the center with d5, the game often becomes a sharp race, with White attacking on the queenside and Black on the kingside. The Mar del Plata Variation is named after a 1953 tournament in Mar del Plata, Argentina, and many top players such as Fischer and Kasparov have played it as Black. On the other hand, its theory runs very deep, and it's considered a line for advanced players with a lot to learn.</p>
   </div>
 
   <div class="board-wrap">
@@ -141,6 +146,9 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
     <button id="btnPrev" class="lesson-btn">← 前へ</button>
     <span class="lesson-progress" id="lessonProgress"></span>
     <button id="btnNext" class="lesson-btn">次へ →</button>
+  </div>
+  <div id="shareRow" style="display:none;text-align:center;margin-top:10px;">
+    <button id="shareXBtn" style="background:#000;color:#fff;border:none;border-radius:20px;padding:8px 16px;font-family:'Crimson Pro',serif;font-weight:700;font-size:0.85rem;cursor:pointer;">🦊 𝕏でシェアする</button>
   </div>
 </div>
 
@@ -189,60 +197,86 @@ const initialBoard = [
 // ============================================================
 const LESSON_STEPS = [
   { move:null, moveLabel:{ja:"開始局面", en:"Starting Position"},
-    ja:"キングズ・インディアン・クラシカル変化のレッスンを始めるよ！白がBe2で穏やかに構え、黒がe5を準備していく、現代チェス最重要の変化だよ。ジーンと一緒に、一手ずつ「なぜその手を指すのか」を学んでいこう。",
-    en:"Let's start the King's Indian Classical Variation lesson! White sets up quietly with Be2 while Black prepares e5 — one of the most important lines in modern chess. Jene will explain why each move is played, one step at a time.",
+    ja:"キングズ・インディアン・クラシカル変化のレッスンを始めるよ！このページでは、黒が7...Nc6で白に決断を迫り、白が8.d5で中央を閉じる「マル・デル・プラタ変化」までを見ていくよ。中央が閉じたあと、両者が反対側で攻め合う形に入っていく流れがポイントなんだ。一手ずつジーンと一緒に、なぜその手を指すのかを学んでいこう。",
+    en:"Let's start the King's Indian Classical lesson! On this page we follow the line where Black forces a decision with 7...Nc6 and White closes the center with 8.d5, reaching the Mar del Plata Variation. The key is how, once the center closes, both sides head into attacks on opposite wings. Jene will walk you through why each move is played, one step at a time.",
     fox:'welcome' },
   { move:{from:[6,3],to:[4,3]}, moveLabel:{ja:"1. d4", en:"1. d4"},
-    ja:"白はd4で中央を制圧するよ。",
-    en:"White plays 1.d4, claiming the center.",
+    ja:"白はポーンをd4へ進めるよ。白は中央のマスを押さえながら、c1のビショップの道を開けるんだ。",
+    en:"White pushes the pawn to d4. White takes control of central squares and opens the path for the c1 bishop.",
     fox:'normal' },
   { move:{from:[0,6],to:[2,5]}, moveLabel:{ja:"1...Nf6", en:"1...Nf6"},
-    ja:"黒はナイトをf6へ展開するよ。",
-    en:"Black develops the knight to f6.",
+    ja:"黒はナイトをf6へ進めるよ。黒はナイトを展開しながら、白がe4と突くのをけん制するんだ。",
+    en:"Black develops the knight to f6. Black develops while discouraging White from pushing e4.",
     fox:'normal' },
   { move:{from:[6,2],to:[4,2]}, moveLabel:{ja:"2. c4", en:"2. c4"},
-    ja:"白はc4でさらに中央を広げるよ。",
-    en:"White expands the center with 2.c4.",
+    ja:"白はポーンをc4へ進めるよ。白はこれでd5のマスにも利かせて、中央をさらに広げるんだ。",
+    en:"White pushes the pawn to c4. White adds control of d5 and expands further in the center.",
     fox:'normal' },
   { move:{from:[1,6],to:[2,6]}, moveLabel:{ja:"2...g6", en:"2...g6"},
-    ja:"黒はg6でフィアンケットを準備するよ。",
-    en:"Black prepares a fianchetto with 2...g6.",
+    ja:"黒はポーンをg6へ進めるよ。黒はg7のマスを空けて、ビショップを長い対角線に出す準備をするんだ。黒はこの形から<a href='kings_indian.html'>キングズ・インディアン・ディフェンス</a>に入っていくんだ。",
+    en:"Black pushes the pawn to g6. Black clears g7 to put the bishop on the long diagonal. This is how the <a href='kings_indian.html?lang=en'>King's Indian Defense</a> begins.",
     fox:'normal' },
   { move:{from:[7,1],to:[5,2]}, moveLabel:{ja:"3. Nc3", en:"3. Nc3"},
-    ja:"白はナイトをc3へ展開するよ。",
-    en:"White develops the knight to c3.",
+    ja:"白はナイトをc3へ進めるよ。白はナイトを展開しながら、次にe4と突く準備をするんだ。",
+    en:"White develops the knight to c3. White develops while preparing to push e4 next.",
     fox:'normal' },
   { move:{from:[0,5],to:[1,6]}, moveLabel:{ja:"3...Bg7", en:"3...Bg7"},
-    ja:"黒はビショップをg7へ。フィアンケットを完成させるよ。",
-    en:"Black completes the fianchetto with 3...Bg7.",
+    ja:"黒はビショップをg7へ進めるよ。黒のビショップは今はf6のナイトの後ろにいるけれど、ナイトが動いたあとは長い対角線で中央をにらむんだ。",
+    en:"Black develops the bishop to g7. Black's bishop sits behind the f6 knight for now, but once the knight moves it will eye the center along the long diagonal.",
+    jaMore:"黒はこの手の代わりに3...d5と突いて<a href='grunfeld.html'>グリュンフェルト・ディフェンス</a>に進むこともできるよ。",
+    enMore:"Instead of this move, Black could also play 3...d5 and head into the <a href='grunfeld.html?lang=en'>Grünfeld Defense</a>.",
     fox:'normal' },
   { move:{from:[6,4],to:[4,4]}, moveLabel:{ja:"4. e4", en:"4. e4"},
-    ja:"白はe4で大きな中央のポーンセンターを完成させるよ。",
-    en:"White completes the big pawn center with 4.e4.",
-    fox:'happy' },
+    ja:"白はポーンをe4へ進めるよ。白はd4・c4・e4の3つのポーンで、中央を大きく押さえるんだ。黒はこの中央を取らせておいて、あとから反撃するのがキングズ・インディアンの考え方だよ。",
+    en:"White pushes the pawn to e4. With pawns on d4, c4 and e4, White takes a big grip on the center. The King's Indian idea is to let White have this center and counterattack it later.",
+    fox:'normal' },
   { move:{from:[1,3],to:[2,3]}, moveLabel:{ja:"4...d6", en:"4...d6"},
-    ja:"黒はd6で柔軟に展開を準備するよ。",
-    en:"Black plays 4...d6, preparing flexible development.",
+    ja:"黒はポーンをd6へ進めるよ。黒はこれでe5のマスを支え、白がe5と突いてくるのを防ぐんだ。同時に黒はc8のビショップの道も開けるよ。",
+    en:"Black pushes the pawn to d6. Black supports the e5 square, stopping White from pushing e5. At the same time, Black opens the path for the c8 bishop.",
     fox:'normal' },
   { move:{from:[7,6],to:[5,5]}, moveLabel:{ja:"5. Nf3", en:"5. Nf3"},
-    ja:"白はナイトをf3へ展開するよ。",
-    en:"White develops the other knight to f3.",
+    ja:"白はナイトをf3へ進めるよ。白はナイトを展開しながら、キングサイドにキャスリングする準備をするんだ。",
+    en:"White develops the knight to f3. White develops a piece and prepares to castle kingside.",
     fox:'normal' },
-  { move:{from:[0,4],to:[0,6],castle:{from:[0,7],to:[0,5]}}, moveLabel:{ja:"5...O-O（クラシカル！）", en:"5...O-O (Classical!)"},
-    ja:"黒はキャスリング！この後すぐにe5への反撃を見据えているよ。",
-    en:"Black castles — already eyeing the e5 counter-strike to come.",
+  { move:{from:[0,4],to:[0,6],castle:{from:[0,7],to:[0,5]}}, moveLabel:{ja:"5...O-O", en:"5...O-O"},
+    ja:"黒はキャスリングでキングを安全な場所へ動かすよ。黒はキングの安全を先に確保してから、中央への反撃にとりかかるんだ。",
+    en:"Black castles, bringing the king to safety. Black secures the king first before starting the counterattack in the center.",
+    fox:'normal' },
+  { move:{from:[7,5],to:[6,4]}, moveLabel:{ja:"6. Be2（クラシカル！）", en:"6. Be2 (Classical!)"},
+    ja:"ここがクラシカル変化の一手！白はビショップをe2へ進めて、落ち着いて展開を終える準備をするよ。その代わり、白のビショップはe2で控えめな位置にとどまるよ。",
+    en:"Here's the Classical Variation! White develops the bishop to e2, getting ready to finish development calmly. The trade-off is that White's bishop stays in a modest position on e2.",
+    jaMore:"白は5手目で5.f3や5.f4と指して激しく攻めることもできるけれど、Nf3とBe2で自然に展開するこの形がいちばんよく指されるんだ。",
+    enMore:"White could also choose sharper attacking setups on move five with 5.f3 or 5.f4, but developing naturally with Nf3 and Be2 is the most popular choice.",
     fox:'happy' },
-  { move:{from:[7,5],to:[6,4]}, moveLabel:{ja:"6. Be2", en:"6. Be2"},
-    ja:"ここが本題、クラシカル変化の一手！白はビショップをe2へ。複雑な変化を避けて穏やかに展開するよ。",
-    en:"Here's the Classical move! White develops the bishop to e2, choosing a calm setup over sharper lines.",
-    fox:'wink' },
-  { move:{from:[0,1],to:[1,3]}, moveLabel:{ja:"6...Nbd7", en:"6...Nbd7"},
-    ja:"黒はもう一つのナイトをd7へ。e5への反撃をじっくり準備するよ。",
-    en:"Black develops the other knight to d7, carefully preparing the e5 counter.",
+  { move:{from:[1,4],to:[3,4]}, moveLabel:{ja:"6...e5", en:"6...e5"},
+    ja:"黒はポーンをe5へ進めるよ。黒はこれで白のd4のポーンを攻撃し、白の大きな中央に反撃を始めるんだ。白のd4はクイーンとf3のナイトに守られているよ。",
+    en:"Black pushes the pawn to e5. Black attacks White's d4 pawn and begins the counterattack against White's big center. White's d4 is defended by the queen and the f3 knight.",
     fox:'normal' },
   { move:{from:[7,4],to:[7,6],castle:{from:[7,7],to:[7,5]}}, moveLabel:{ja:"7. O-O", en:"7. O-O"},
-    ja:"白も同じくキャスリング。これで本譜は一段落、続きはぜひ自分で指してみてね！",
-    en:"White castles too. That's the main line — try continuing the game yourself from here!",
+    ja:"白はキャスリングでキングを安全な場所へ動かすよ。白もキングの安全を確保して、中央でどう応じるかを次に決めるんだ。",
+    en:"White castles, bringing the king to safety. White also secures the king and will decide next how to handle the center.",
+    fox:'normal' },
+  { move:{from:[0,1],to:[2,2]}, moveLabel:{ja:"7...Nc6", en:"7...Nc6"},
+    ja:"黒はナイトをc6へ進めるよ。黒はこれでd4のポーンへの攻撃を2つにして、白に決断を迫るんだ。白のd4はクイーンとナイトの2つで守られているので、白はこのまま守るか、d5と突いて中央を閉じるかを選ぶことになるよ。",
+    en:"Black develops the knight to c6. Black now attacks the d4 pawn twice, forcing White to make a decision. White's d4 is defended twice, by the queen and knight, so White must choose between keeping the tension or closing the center with d5.",
+    fox:'normal' },
+  { move:{from:[4,3],to:[3,3]}, moveLabel:{ja:"8. d5", en:"8. d5"},
+    ja:"白はポーンをd5へ進めるよ。白は中央を閉じながら、黒のc6のナイトを攻撃して追い払うんだ。白はこの先、クイーンサイドでc5と突いて攻める作戦を目指すよ。その代わり、中央が閉じることで、黒もキングサイドで攻めやすくなるんだ。",
+    en:"White pushes the pawn to d5. White closes the center while attacking and chasing away Black's c6 knight. From here, White aims to attack on the queenside by pushing c5. The trade-off is that closing the center also makes it easier for Black to attack on the kingside.",
+    fox:'normal' },
+  { move:{from:[2,2],to:[1,4]}, moveLabel:{ja:"8...Ne7", en:"8...Ne7"},
+    ja:"黒はナイトをe7へ下げるよ。黒はこれで、マル・デル・プラタ変化と呼ばれる形に入るんだ。黒のナイトはe7からf5やg6のマスに利いていて、この先のキングサイドでの攻めを支えるよ。黒はこれから、白とは反対側のキングサイドで攻める作戦を目指すんだ。",
+    en:"Black retreats the knight to e7. With this, Black reaches what is known as the Mar del Plata Variation. From e7, Black's knight covers f5 and g6, supporting the coming kingside attack. Black now aims to attack on the kingside, the opposite wing from White.",
+    fox:'happy' },
+  { move:{from:[5,5],to:[7,4]}, moveLabel:{ja:"9. Ne1", en:"9. Ne1"},
+    ja:"白はナイトをe1へ下げるよ。白のナイトはこの先d3へ移って、c5と突く攻めを支えるんだ。同時に白はf3のマスを空けて、fのポーンを使ってキングサイドの守りを固めることもできるようになるよ。",
+    en:"White retreats the knight to e1. White's knight plans to go to d3 to support the c5 push. At the same time, White clears f3 so the f-pawn can help shore up the kingside.",
+    jaMore:"白はこの手の代わりに9.b4と、すぐにクイーンサイドで攻め始めることもできるんだ。",
+    enMore:"Instead of this move, White could start the queenside attack right away with 9.b4.",
+    fox:'normal' },
+  { move:{from:[2,5],to:[1,3]}, moveLabel:{ja:"9...Nd7", en:"9...Nd7"},
+    ja:"黒はナイトをd7へ動かすよ。黒はf6のマスを空けて、次にfのポーンをf5へ突く準備をするんだ。黒のd7のナイトは、白がc5と突こうとするc5のマスも見張っているよ。この後は白がクイーンサイドでc5、黒がキングサイドでf5・f4・g5と攻め、どちらが先に相手のキングに届くかの競争になるんだ。これで本譜は一段落、続きはぜひ自分で指してみてね！",
+    en:"Black moves the knight to d7. Black clears the f6 square to prepare pushing the f-pawn to f5 next. Black's d7 knight also watches c5, the square White wants to push to. From here, White attacks on the queenside with c5 while Black storms the kingside with ...f5, ...f4 and ...g5 — a race to see who reaches the enemy king first. That's the main line — try continuing the game yourself from here!",
     fox:'happy' }
 ];
 
@@ -328,15 +362,50 @@ function adjustBottomPadding(){
   }
 }
 
+function shareOnX(message) {
+  const shareUrl = 'https://twitter.com/intent/tweet?text=' + encodeURIComponent(message) + '&url=' + encodeURIComponent(window.location.href);
+  window.open(shareUrl, '_blank', 'noopener,noreferrer,width=550,height=420');
+}
+
 function renderStep(){
   const step = LESSON_STEPS[currentStep];
   renderBoard(boardSnapshots[currentStep]);
   document.getElementById('moveLabel').textContent = (step.moveLabel && step.moveLabel[currentLang]) || '';
-  document.getElementById('commentaryText').textContent = step[currentLang];
+  const ctEl = document.getElementById('commentaryText');
+  const moreText = step[currentLang + 'More'];
+  ctEl.innerHTML = step[currentLang] + (moreText
+    ? '<details class="more-detail"><summary>' + (currentLang === 'ja' ? '💡 もっと詳しく知りたい方へ' : '💡 Want to know more?') + '</summary><div class="more-body">' + moreText + '</div></details>'
+    : '');
+  ctEl.scrollTop = 0;
+  const moreEl = ctEl.querySelector('details.more-detail');
+  if (moreEl) {
+    moreEl.addEventListener('toggle', function(){
+      if (moreEl.open) { ctEl.scrollTop = moreEl.offsetTop - ctEl.offsetTop; }
+      adjustBottomPadding();
+    });
+  }
   document.getElementById('foxAvatar').src = FOX_BY_MOOD[step.fox] || FOX_BY_MOOD.normal;
   document.getElementById('lessonProgress').textContent = currentStep + ' / ' + (LESSON_STEPS.length - 1);
   document.getElementById('btnPrev').disabled = currentStep === 0;
   document.getElementById('btnNext').disabled = currentStep === LESSON_STEPS.length - 1;
+  adjustBottomPadding();
+
+  const shareRow = document.getElementById('shareRow');
+  if (shareRow) {
+    if (currentStep === LESSON_STEPS.length - 1) {
+      const openingNameEl = document.querySelector('.opening-title.lang-element-' + currentLang);
+      const openingName = openingNameEl ? openingNameEl.textContent : '';
+      const msg = currentLang === 'ja'
+        ? '🦊 ' + openingName + 'をKitsuneChessで学んだよ!一手ずつ「なぜその手か」を教えてくれるよ'
+        : '🦊 Just learned the ' + openingName + ' on KitsuneChess! It explains why each move is played, step by step.';
+      const shareBtn = document.getElementById('shareXBtn');
+      shareBtn.textContent = currentLang === 'ja' ? '🦊 𝕏でシェアする' : '🦊 Share on 𝕏';
+      shareBtn.onclick = function() { shareOnX(msg); };
+      shareRow.style.display = 'block';
+    } else {
+      shareRow.style.display = 'none';
+    }
+  }
   adjustBottomPadding();
 }
 
