@@ -100,6 +100,11 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
   font-size: 1rem;
   color: var(--text-sub);
 }
+.commentary-text a, .opening-intro a { color:var(--brown); text-decoration:underline; font-weight:700; }
+.commentary-text a:hover, .opening-intro a:hover { color:var(--brown-dark); }
+.more-detail { margin-top:8px; border-top:1px dashed var(--brown-light); padding-top:6px; }
+.more-detail summary { cursor:pointer; font-weight:700; color:var(--brown); font-size:0.92rem; list-style-position:inside; }
+.more-detail .more-body { margin-top:6px; font-size:0.94rem; }
 </style>
   <script src="board-theme.js"></script>
 </head>
@@ -118,8 +123,8 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
   <h1 class="opening-title lang-element-en">Légal's Trap</h1>
 
   <div class="opening-intro">
-    <p class="lang-element-ja">💡 クイーンを囮にして詰みまで一直線に持っていく、有名な罠。黒がうっかりピンに気付かず駒を取ると、あっという間にチェックメイトになる。</p>
-    <p class="lang-element-en">💡 A famous trap where White sacrifices the queen as bait to force checkmate. If Black carelessly captures without noticing the pin, the game ends in a swift mate.</p>
+    <p class="lang-element-ja">💡 レガールのトラップは、白がクイーンを差し出し、小さな駒3つでチェックメイトする有名なオープニングの罠だよ。名前は18世紀のフランスの強豪、レガール卿に由来していて、ブラックバーンのトラップとも呼ばれているんだ。このページの手順は、1929年にフランスのシェロンが実戦で決めた形として知られているよ。ピンされた駒は動けないと思い込んで、目の前のクイーンにすぐ飛びつくと、あっという間に詰まされてしまうんだ。</p>
+    <p class="lang-element-en">💡 The Légal Trap is a famous opening trap in which White offers the queen and then checkmates with three minor pieces. It's named after Sire de Légal, a leading 18th-century French player, and is also called the Blackburne Trap. The move order on this page is known from a 1929 game won by the French player Chéron. If you assume a pinned piece can't move and grab the queen right away, you can get mated in a flash.</p>
   </div>
 
   <div class="board-wrap">
@@ -139,6 +144,9 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
     <button id="btnPrev" class="lesson-btn">← 前へ</button>
     <span class="lesson-progress" id="lessonProgress"></span>
     <button id="btnNext" class="lesson-btn">次へ →</button>
+  </div>
+  <div id="shareRow" style="display:none;text-align:center;margin-top:10px;">
+    <button id="shareXBtn" style="background:#000;color:#fff;border:none;border-radius:20px;padding:8px 16px;font-family:'Crimson Pro',serif;font-weight:700;font-size:0.85rem;cursor:pointer;">🦊 𝕏でシェアする</button>
   </div>
 </div>
 
@@ -178,60 +186,74 @@ const initialBoard = [
 
 const LESSON_STEPS = [
   { move:null, moveLabel:{ja:"開始局面", en:"Starting Position"},
-    ja:'レガールのトラップのレッスンを始めるよ！一手ずつジーンと一緒に、なぜその手を指すのかを学んでいこう。',
-    en:'Let\'s start the Légal\'s Trap lesson! Jene will walk you through why each move is played, one step at a time.',
+    ja:"レガールのトラップのレッスンを始めるよ！このページでは、黒のビショップがh5へ下がったすきに、白がクイーンを差し出して一気に詰ませる流れを見ていくよ。なぜクイーンを取らせても大丈夫なのか、どの駒がどのマスを押さえているのかがポイントなんだ。一手ずつジーンと一緒に、なぜその手を指すのかを学んでいこう。",
+    en:"Let's start the Légal Trap lesson! On this page we follow how White offers the queen and delivers a quick checkmate once Black's bishop retreats to h5. The key is why it's fine to let the queen go, and which piece covers which square. Jene will walk you through why each move is played, one step at a time.",
     fox:'welcome' },
   { move:{from:[6,4],to:[4,4]}, moveLabel:{ja:"1. e4", en:"1. e4"},
-    ja:'白はポーンをe4へ進めるよ。',
-    en:'White develops the pawn to e4.',
+    ja:"白はポーンをe4へ進めるよ。白は中央のマスを押さえながら、ビショップとクイーンが動く道を開けるんだ。",
+    en:"White pushes the pawn to e4. White takes control of central squares and opens lines for the bishop and queen.",
     fox:'normal' },
   { move:{from:[1,4],to:[3,4]}, moveLabel:{ja:"1...e5", en:"1...e5"},
-    ja:'黒はポーンをe5へ進めるよ。',
-    en:'Black develops the pawn to e5.',
+    ja:"黒はポーンをe5へ進めるよ。黒も同じように中央を押さえて、白のポーンと向かい合う形を作るんだ。",
+    en:"Black pushes the pawn to e5. Black also claims the center, setting up a pawn face-off with White.",
     fox:'normal' },
   { move:{from:[7,6],to:[5,5]}, moveLabel:{ja:"2. Nf3", en:"2. Nf3"},
-    ja:'白はナイトをf3へ進めるよ。',
-    en:'White develops the knight to f3.',
+    ja:"白はナイトをf3へ進めるよ。白のナイトは展開しながら、黒のe5のポーンを攻撃しているんだ。",
+    en:"White develops the knight to f3. White's knight develops while attacking Black's e5 pawn.",
     fox:'normal' },
   { move:{from:[0,1],to:[2,2]}, moveLabel:{ja:"2...Nc6", en:"2...Nc6"},
-    ja:'黒はナイトをc6へ進めるよ。',
-    en:'Black develops the knight to c6.',
+    ja:"黒はナイトをc6へ進めるよ。黒はナイトを展開しながら、e5のポーンを守るんだ。",
+    en:"Black develops the knight to c6. Black develops a piece and defends the e5 pawn at the same time.",
     fox:'normal' },
   { move:{from:[7,5],to:[4,2]}, moveLabel:{ja:"3. Bc4", en:"3. Bc4"},
-    ja:'白はビショップをc4へ進めるよ。',
-    en:'White develops the bishop to c4.',
+    ja:"白はビショップをc4へ進めるよ。白のビショップは、キングしか守っていない黒のf7のポーンをねらっているんだ。白はこの形から<a href='italian.html'>イタリアン・ゲーム</a>に入っていくんだ。",
+    en:"White develops the bishop to c4. White's bishop aims at Black's f7 pawn, which only the king defends. This is how the <a href='italian.html?lang=en'>Italian Game</a> begins.",
     fox:'normal' },
   { move:{from:[1,3],to:[2,3]}, moveLabel:{ja:"3...d6", en:"3...d6"},
-    ja:'黒はポーンをd6へ進めるよ。',
-    en:'Black develops the pawn to d6.',
+    ja:"黒はポーンをd6へ進めるよ。黒はこれでe5のポーンを固め、c8のビショップの道も開けるんだ。その代わり、黒のd6のポーンはf8のビショップの道をふさぐので、黒の展開は少し窮屈になるよ。",
+    en:"Black pushes the pawn to d6. Black firms up the e5 pawn and opens the path for the c8 bishop. The downside is that the d6 pawn blocks the f8 bishop, making Black's development a bit cramped.",
+    jaMore:"黒はこの手の代わりに3...Bc5や3...Nf6と、駒を積極的に展開することのほうが一般的だよ。",
+    enMore:"Instead of this move, Black more commonly develops actively with 3...Bc5 or 3...Nf6.",
     fox:'normal' },
   { move:{from:[7,1],to:[5,2]}, moveLabel:{ja:"4. Nc3", en:"4. Nc3"},
-    ja:'白はナイトをc3へ進めるよ。',
-    en:'White develops the knight to c3.',
+    ja:"白はナイトをc3へ進めるよ。白はナイトを展開しながら、e4のポーンを守り、d5のマスにも利かせるんだ。",
+    en:"White develops the knight to c3. White develops while defending the e4 pawn and covering the d5 square.",
     fox:'normal' },
   { move:{from:[0,2],to:[4,6]}, moveLabel:{ja:"4...Bg4", en:"4...Bg4"},
-    ja:'黒はビショップをg4へ進めるよ。',
-    en:'Black develops the bishop to g4.',
+    ja:"黒はビショップをg4へ進めるよ。黒のビショップはf3のナイトを攻撃していて、ナイトが動くとd1の白のクイーンが取られる形（クイーンへのピン）になっているんだ。黒は白のナイトを動けなくして、e5への攻撃を防いだつもりでいるよ。",
+    en:"Black develops the bishop to g4. Black's bishop attacks the f3 knight, and if the knight moved, White's queen on d1 would be captured — a pin against the queen. Black believes this freezes White's knight and stops any attack on e5.",
     fox:'normal' },
-  { move:{from:[5,5],to:[3,4]}, moveLabel:{ja:"5. Nxe5", en:"5. Nxe5"},
-    ja:'白はナイトでe5の駒を取るよ。',
-    en:'White captures on e5 with the knight.',
+  { move:{from:[6,7],to:[5,7]}, moveLabel:{ja:"5. h3", en:"5. h3"},
+    ja:"白はポーンをh3へ進めるよ。白はg4のビショップを攻撃して、黒に下がるか交換するかを迫るんだ。ここで黒がどこへビショップを動かすかが、罠に落ちるかどうかの分かれ目になるよ。",
+    en:"White pushes the pawn to h3. White attacks the g4 bishop, asking Black to either retreat or trade. Where Black moves the bishop now decides whether Black falls into the trap.",
     fox:'normal' },
-  { move:{from:[4,6],to:[7,3]}, moveLabel:{ja:"5...Bxd1", en:"5...Bxd1"},
-    ja:'黒はビショップでd1の駒を取るよ。',
-    en:'Black captures on d1 with the bishop.',
+  { move:{from:[4,6],to:[3,7]}, moveLabel:{ja:"5...Bh5?", en:"5...Bh5?"},
+    ja:"黒はビショップをh5へ下げるよ。黒はピンを続けようとしているけれど、h5のビショップを守る黒の駒は1つもないんだ。この「守られていないビショップ」が、次の白の一手を可能にしてしまうよ。",
+    en:"Black retreats the bishop to h5. Black is trying to keep the pin, but no black piece defends the bishop on h5. This undefended bishop is what makes White's next move possible.",
+    jaMore:"黒はこの手の代わりに5...Bxf3とナイトを取ったり、5...Be6と下げたりすれば、罠を避けられるよ。",
+    enMore:"Instead of this move, Black avoids the trap with 5...Bxf3, taking the knight, or by retreating with 5...Be6.",
     fox:'normal' },
-  { move:{from:[4,2],to:[1,5]}, moveLabel:{ja:"6. Bxf7+", en:"6. Bxf7+"},
-    ja:'白はビショップをf7へ進めて王手をかけるよ。',
-    en:'White moves the bishop to f7, giving check.',
+  { move:{from:[5,5],to:[3,4]}, moveLabel:{ja:"6. Nxe5!!（レガール！）", en:"6. Nxe5!! (L\u00e9gal!)"},
+    ja:"ここがレガールのトラップの一手！白はピンを無視して、ナイトでe5にいた黒のポーンを取るよ。白はd1のクイーンを取られてもかまわないという、驚きの一手なんだ。もし黒がクイーンを取らずに6...Nxe5とナイトを取り返すと、白は7.Qxh5と守りのないビショップを取り返して、ポーン1つ得した形になるよ。",
+    en:"Here's the Légal Trap! White ignores the pin and captures the black pawn that was on e5 with the knight. It's a surprising move that leaves White's queen on d1 to be taken. If Black recaptures the knight with 6...Nxe5 instead of taking the queen, White plays 7.Qxh5, winning back the undefended bishop and ending up a pawn ahead.",
+    jaMore:"白がもしh3を突かずに、5手目ですぐNxe5と取ると、黒は5...Nxe5と取り返せるよ。このときはe5のナイトがg4のビショップを守っているので、白はビショップを取り返せず、駒を損してしまうんだ。h3でビショップをh5へ動かしておくことが、この罠には欠かせないよ。",
+    enMore:"If White took on e5 right away on move five without playing h3, Black could recapture with 5...Nxe5. Then the knight on e5 would protect the bishop on g4, so White couldn't win it back and would simply lose material. Getting the bishop to h5 with h3 first is essential for this trap.",
+    fox:'wink' },
+  { move:{from:[3,7],to:[7,3]}, moveLabel:{ja:"6...Bxd1??", en:"6...Bxd1??"},
+    ja:"黒はビショップで、d1にいた白のクイーンを取るよ。黒はクイーンを取れて大喜びだけど、これが決定的な間違いなんだ。黒はこの手の代わりに6...dxe5や6...Nxe5と取り返していれば、ポーンを1つ損する程度で済んだよ。",
+    en:"Black's bishop captures the white queen that was on d1. Black is delighted to win the queen, but this is the decisive mistake. If Black had recaptured with 6...dxe5 or 6...Nxe5 instead, Black would have lost only about a pawn.",
     fox:'normal' },
-  { move:{from:[0,4],to:[1,4]}, moveLabel:{ja:"6...Ke7", en:"6...Ke7"},
-    ja:'黒はキングをe7へ進めるよ。',
-    en:'Black develops the king to e7.',
+  { move:{from:[4,2],to:[1,5]}, moveLabel:{ja:"7. Bxf7+", en:"7. Bxf7+"},
+    ja:"白はビショップで、f7にいた黒のポーンを取ってチェックをかけるよ。白のビショップはe5のナイトに守られているので、黒のキングはビショップを取れないんだ。黒のキングが逃げられるマスはe7しかないよ。",
+    en:"White's bishop captures the black pawn that was on f7, giving check. White's bishop is protected by the e5 knight, so Black's king can't take it. The only square Black's king can escape to is e7.",
+    fox:'happy' },
+  { move:{from:[0,4],to:[1,4]}, moveLabel:{ja:"7...Ke7", en:"7...Ke7"},
+    ja:"黒はキングをe7へ動かすよ。黒はこの手以外に指せる手がないんだ。",
+    en:"Black moves the king to e7. Black has no other legal move.",
     fox:'normal' },
-  { move:{from:[5,2],to:[3,3]}, moveLabel:{ja:"7. Nd5#", en:"7. Nd5#"},
-    ja:'💡 白がNd5#でチェックメイト！ここでゲーム終了だよ。 クイーンを囮にして詰みまで一直線に持っていく、有名な罠。黒がうっかりピンに気付かず駒を取ると、あっという間にチェックメイトになる。',
-    en:'💡 White delivers checkmate with Nd5#! Game over. A famous trap where White sacrifices the queen as bait to force checkmate. If Black carelessly captures without noticing the pin, the game ends in a swift mate.',
+  { move:{from:[5,2],to:[3,3]}, moveLabel:{ja:"8. Nd5#", en:"8. Nd5#"},
+    ja:"白はナイトをd5へ進めて、チェックメイト！白のd5のナイトがe7のキングにチェックをかけていて、キングが逃げられるマスはすべて白の駒に押さえられているんだ。d7はe5のナイト、e6とe8はf7のビショップ、f6はd5のナイトが見張っていて、d8とf8には黒の駒がいるので動けないよ。白はクイーンを差し出したのに、ナイト2つとビショップ1つの小さな駒3つで詰ませたんだ。これでゲーム終了！自分でも盤に並べて、詰みの形を確かめてみてね！",
+    en:"White moves the knight to d5 — checkmate! White's d5 knight gives check to the king on e7, and every escape square is covered by White's pieces. d7 is covered by the e5 knight, e6 and e8 by the f7 bishop, and f6 by the d5 knight, while d8 and f8 are blocked by Black's own pieces. White gave up the queen, yet delivered mate with just three minor pieces — two knights and a bishop. Game over! Set it up on a board yourself and check the mating pattern.",
     fox:'happy' }
 ];
 
@@ -317,15 +339,50 @@ function adjustBottomPadding(){
   }
 }
 
+function shareOnX(message) {
+  const shareUrl = 'https://twitter.com/intent/tweet?text=' + encodeURIComponent(message) + '&url=' + encodeURIComponent(window.location.href);
+  window.open(shareUrl, '_blank', 'noopener,noreferrer,width=550,height=420');
+}
+
 function renderStep(){
   const step = LESSON_STEPS[currentStep];
   renderBoard(boardSnapshots[currentStep]);
   document.getElementById('moveLabel').textContent = (step.moveLabel && step.moveLabel[currentLang]) || '';
-  document.getElementById('commentaryText').textContent = step[currentLang];
+  const ctEl = document.getElementById('commentaryText');
+  const moreText = step[currentLang + 'More'];
+  ctEl.innerHTML = step[currentLang] + (moreText
+    ? '<details class="more-detail"><summary>' + (currentLang === 'ja' ? '💡 もっと詳しく知りたい方へ' : '💡 Want to know more?') + '</summary><div class="more-body">' + moreText + '</div></details>'
+    : '');
+  ctEl.scrollTop = 0;
+  const moreEl = ctEl.querySelector('details.more-detail');
+  if (moreEl) {
+    moreEl.addEventListener('toggle', function(){
+      if (moreEl.open) { ctEl.scrollTop = moreEl.offsetTop - ctEl.offsetTop; }
+      adjustBottomPadding();
+    });
+  }
   document.getElementById('foxAvatar').src = FOX_BY_MOOD[step.fox] || FOX_BY_MOOD.normal;
   document.getElementById('lessonProgress').textContent = currentStep + ' / ' + (LESSON_STEPS.length - 1);
   document.getElementById('btnPrev').disabled = currentStep === 0;
   document.getElementById('btnNext').disabled = currentStep === LESSON_STEPS.length - 1;
+  adjustBottomPadding();
+
+  const shareRow = document.getElementById('shareRow');
+  if (shareRow) {
+    if (currentStep === LESSON_STEPS.length - 1) {
+      const openingNameEl = document.querySelector('.opening-title.lang-element-' + currentLang);
+      const openingName = openingNameEl ? openingNameEl.textContent : '';
+      const msg = currentLang === 'ja'
+        ? '🦊 ' + openingName + 'をKitsuneChessで学んだよ!一手ずつ「なぜその手か」を教えてくれるよ'
+        : '🦊 Just learned the ' + openingName + ' on KitsuneChess! It explains why each move is played, step by step.';
+      const shareBtn = document.getElementById('shareXBtn');
+      shareBtn.textContent = currentLang === 'ja' ? '🦊 𝕏でシェアする' : '🦊 Share on 𝕏';
+      shareBtn.onclick = function() { shareOnX(msg); };
+      shareRow.style.display = 'block';
+    } else {
+      shareRow.style.display = 'none';
+    }
+  }
   adjustBottomPadding();
 }
 
