@@ -103,6 +103,11 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
   font-size: 1rem;
   color: var(--text-sub);
 }
+.commentary-text a, .opening-intro a { color:var(--brown); text-decoration:underline; font-weight:700; }
+.commentary-text a:hover, .opening-intro a:hover { color:var(--brown-dark); }
+.more-detail { margin-top:8px; border-top:1px dashed var(--brown-light); padding-top:6px; }
+.more-detail summary { cursor:pointer; font-weight:700; color:var(--brown); font-size:0.92rem; list-style-position:inside; }
+.more-detail .more-body { margin-top:6px; font-size:0.94rem; }
 </style>
   <script src="board-theme.js"></script>
 </head>
@@ -121,8 +126,8 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
   <h1 class="opening-title lang-element-en">Berlin Defense</h1>
 
   <div class="opening-intro">
-    <p class="lang-element-ja">💡 ベルリン・ディフェンスはルイ・ロペスへの3...Nf6という応手だよ！クイーンが早期に交換されてエンドゲーム志向の局面になるのが特徴なんだ。クイーンのない局面で黒はダブルポーンを持つけど、両サイドのビショップとアクティブなナイトで十分な補償を持つよ。2000年の世界選手権でウラジーミル・クラムニクがガルリ・カスパロフに対してこの変化を使って「ベルリンの壁」として一躍有名になったんだ。現代トップレベルで最も信頼される防御システムのひとつで、エンドゲームの技術を深く学べるオープニングだよ！</p>
-    <p class="lang-element-en">💡 The Berlin Defense answers 3...Nf6 against the Ruy Lopez! The game steers toward an early queen exchange and an endgame-oriented position. Without queens on the board, Black has doubled pawns but gains two bishops and active pieces as compensation. Vladimir Kramnik made this variation world-famous in the 2000 World Championship match against Kasparov, earning the nickname "the Berlin Wall" for its incredible solidity. Today it remains one of the most trusted defensive systems at the top level. Wonderful to study if you want to develop your endgame technique!</p>
+    <p class="lang-element-ja">💡 ベルリン・ディフェンスは、ルイ・ロペスの3.Bb5に対して黒が3...Nf6と応じる、とても堅いオープニングだよ。2000年の世界選手権でクラムニクがカスパロフを相手にこの守りを使い、一度も負けなかったことから「ベルリンの壁」と呼ばれるようになったんだ。それ以来、トップレベルで最も信頼される守りのひとつになっているよ。派手な攻め合いよりも、終盤の細かい技術が勝負を分けることが多い、上級者向けの面もあるオープニングなんだ。</p>
+    <p class="lang-element-en">💡 The Berlin Defense is a very solid opening in which Black answers the Ruy Lopez's 3.Bb5 with 3...Nf6. It became known as the "Berlin Wall" after Kramnik used it against Kasparov in the 2000 World Championship without losing a game. Since then, it has become one of the most trusted defenses at the top level. It often comes down to fine endgame technique rather than sharp attacks, which gives it an advanced side.</p>
   </div>
 
   <div class="board-wrap">
@@ -193,60 +198,76 @@ const initialBoard = [
 // ============================================================
 const LESSON_STEPS = [
   { move:null, moveLabel:{ja:"開始局面", en:"Starting Position"},
-    ja:"ベルリン・ディフェンスのレッスンを始めるよ！クラムニクが「ベルリンの壁」として世界に知らしめた、エンドゲーム志向の鉄壁の守りだよ。ジーンと一緒に、一手ずつ「なぜその手を指すのか」を学んでいこう。",
-    en:"Let's start the Berlin Defense lesson! Made world-famous by Kramnik as \"the Berlin Wall,\" it's an incredibly solid, endgame-oriented defense. Jene will explain why each move is played, one step at a time.",
+    ja:"ベルリン・ディフェンスのレッスンを始めるよ！このページでは、黒が4...Nxe4でポーンを取り、最後は8手目でクイーンを交換する「ベルリンの終盤」までを見ていくよ。クイーンがいなくなったあと、両者がどんな長所と短所を持つのかがポイントなんだ。一手ずつジーンと一緒に、なぜその手を指すのかを学んでいこう。",
+    en:"Let's start the Berlin Defense lesson! On this page we follow the line where Black grabs a pawn with 4...Nxe4 and the queens come off on move eight, reaching the Berlin endgame. The key is what strengths and weaknesses each side has once the queens are gone. Jene will walk you through why each move is played, one step at a time.",
     fox:'welcome' },
   { move:{from:[6,4],to:[4,4]}, moveLabel:{ja:"1. e4", en:"1. e4"},
-    ja:"白はe4で中央を制圧するよ。",
-    en:"White plays 1.e4, claiming the center.",
+    ja:"白はポーンをe4へ進めるよ。白は中央のマスを押さえながら、ビショップとクイーンが動く道を開けるんだ。",
+    en:"White pushes the pawn to e4. White takes control of central squares and opens lines for the bishop and queen.",
     fox:'normal' },
   { move:{from:[1,4],to:[3,4]}, moveLabel:{ja:"1...e5", en:"1...e5"},
-    ja:"黒も同じくe5で対抗するよ。中央の取り合いはお互い様、というバランスを保つんだ。",
-    en:"Black mirrors with 1...e5, keeping the fight for the center balanced.",
+    ja:"黒はポーンをe5へ進めるよ。黒も同じように中央を押さえて、白のポーンと向かい合う形を作るんだ。",
+    en:"Black pushes the pawn to e5. Black also claims the center, setting up a pawn face-off with White.",
     fox:'normal' },
   { move:{from:[7,6],to:[5,5]}, moveLabel:{ja:"2. Nf3", en:"2. Nf3"},
-    ja:"白はナイトをf3に展開するよ。展開しながら、さっそくe5ポーンに狙いをつけているんだ。",
-    en:"White develops the knight to f3, developing while immediately eyeing the e5 pawn.",
+    ja:"白はナイトをf3へ進めるよ。白のナイトは展開しながら、黒のe5のポーンを攻撃しているんだ。",
+    en:"White develops the knight to f3. White's knight develops while attacking Black's e5 pawn.",
     fox:'normal' },
   { move:{from:[0,1],to:[2,2]}, moveLabel:{ja:"2...Nc6", en:"2...Nc6"},
-    ja:"黒もナイトをc6へ。e5ポーンをしっかり守るよ。",
-    en:"Black develops the knight to c6, defending the e5 pawn.",
+    ja:"黒はナイトをc6へ進めるよ。黒はナイトを展開しながら、e5のポーンを守るんだ。",
+    en:"Black develops the knight to c6. Black develops a piece and defends the e5 pawn at the same time.",
     fox:'normal' },
   { move:{from:[7,5],to:[3,1]}, moveLabel:{ja:"3. Bb5（ルイ・ロペス）", en:"3. Bb5 (Ruy Lopez)"},
-    ja:"白はビショップをb5に出してc6のナイトをピンするよ。",
-    en:"White pins the knight with 3.Bb5, the Ruy Lopez.",
+    ja:"白はビショップをb5へ進めて、<a href='ruy_lopez.html'>ルイ・ロペス</a>に入るよ。白のビショップは、e5のポーンを守っているc6のナイトを攻撃しているんだ。白はこのナイトを取り除いて、e5のポーンを弱らせることをねらっているよ。",
+    en:"White develops the bishop to b5, entering the <a href='ruy_lopez.html?lang=en'>Ruy Lopez</a>. White's bishop attacks the c6 knight, which is defending the e5 pawn. White aims to remove that knight and weaken the e5 pawn.",
     fox:'normal' },
   { move:{from:[0,6],to:[2,5]}, moveLabel:{ja:"3...Nf6（ベルリン！）", en:"3...Nf6 (Berlin!)"},
-    ja:"ここが本題、ベルリン・ディフェンスの一手！黒はa6で聞き返さず、すぐにナイトを展開するよ。これがクイーン交換とエンドゲーム志向の局面への入り口なんだ。",
-    en:"Here's the Berlin Defense move! Instead of asking the bishop a question with a6, Black develops the knight immediately — the gateway to an early queen trade and endgame-style play.",
+    ja:"ここがベルリン・ディフェンスの一手！黒はナイトをf6へ進めて、白のe4のポーンを攻撃するよ。一般的には3...a6とビショップに聞き返す手が多いけれど、黒はここで先に白のe4に反撃する道を選ぶんだ。その代わり、黒はc6のナイトを守る手を後回しにしているので、白にこのナイトを取られる形を受け入れることになるよ。",
+    en:"Here's the Berlin Defense! Black develops the knight to f6, attacking White's e4 pawn. The more common move is 3...a6, questioning the bishop, but Black chooses to strike back at e4 first. The trade-off is that Black isn't protecting the c6 knight, so Black accepts that White may capture it.",
     fox:'happy' },
   { move:{from:[7,4],to:[7,6],castle:{from:[7,7],to:[7,5]}}, moveLabel:{ja:"4. O-O", en:"4. O-O"},
-    ja:"白はキャスリングでキングを安全な場所へ。これで序盤の最優先事項、キングの安全確保が済んだよ。",
-    en:"White castles kingside, tucking the king away safely — opening priority number one is now taken care of.",
+    ja:"白はキャスリングでキングを安全な場所へ動かすよ。白はe4のポーンを守らずにキャスリングしていて、黒に取らせてもすぐに取り返せると考えているんだ。",
+    en:"White castles, bringing the king to safety. White castles without defending the e4 pawn, expecting to win it back quickly even if Black takes it.",
     fox:'normal' },
   { move:{from:[2,5],to:[4,4]}, moveLabel:{ja:"4...Nxe4", en:"4...Nxe4"},
-    ja:"黒はNxe4とポーンを取るよ。少し危険に見えるけど、白がすぐに得を出そうとしても上手くいかないことが知られていて、理論的にしっかり裏付けされている一手なんだ。",
-    en:"Black captures with 4...Nxe4. It looks risky, but theory shows White can't easily punish it — the tactics simply don't work out in White's favor.",
-    fox:'quiz' },
+    ja:"黒はナイトで、e4にいた白のポーンを取るよ。黒はこれでポーンを1つ得するけれど、白は駒の展開で先に進んでいて、すぐに取り返す手段を持っているんだ。",
+    en:"Black's knight captures the white pawn that was on e4. Black wins a pawn, but White is ahead in development and has ways to win it back right away.",
+    fox:'normal' },
   { move:{from:[6,3],to:[4,3]}, moveLabel:{ja:"5. d4", en:"5. d4"},
-    ja:"白はd4で中央を強化するよ。ただの中央突破に見えるけど、実は隠れた脅威があるんだ。もし黒がこのままdxd4とポーンを取ってしまうと、次に白がRe1と指した時、まだe8にいる黒キングに対してe4のナイトがピンされてしまう。だから黒はポーンに手を出さず、ナイトを安全な場所へ引くことになるんだよ。",
-    en:"White strengthens the center with 5.d4. It looks like a simple central strike, but there's a hidden threat: if Black grabs the pawn with ...exd4, White follows up with Re1, pinning the knight on e4 to Black's king (still on e8) along the open e-file. That's why Black avoids the pawn and retreats the knight instead.",
+    ja:"白はポーンをd4へ進めるよ。白はこれで黒のe5のポーンを攻撃し、中央を開いていくんだ。黒がもしこの手の代わりに5...exd4と取ると、白は6.Re1と指して、e4のナイトをe8の黒のキングにピンできるよ。",
+    en:"White pushes the pawn to d4. White attacks Black's e5 pawn and opens up the center. If Black took with 5...exd4 instead of this move, White would play 6.Re1, pinning the e4 knight against Black's king on e8.",
+    jaMore:"白はこの手の代わりに5.Re1とすぐにeファイルに圧力をかける手もあって、エンジンの評価ではそちらのほうがやや高いんだ。",
+    enMore:"Instead of this move, White can apply pressure on the e-file right away with 5.Re1, which engines rate slightly higher.",
     fox:'normal' },
   { move:{from:[4,4],to:[2,3]}, moveLabel:{ja:"5...Nd6", en:"5...Nd6"},
-    ja:"黒はナイトをd6へ引くよ。白のビショップを狙う一手でもあるんだ。",
-    en:"Black retreats the knight to d6, also eyeing the white bishop.",
-    fox:'wink' },
+    ja:"黒はナイトをd6へ下げるよ。黒のナイトは攻撃をかわしながら、b5の白のビショップを攻撃し返しているんだ。",
+    en:"Black retreats the knight to d6. Black's knight escapes the attack and hits back at White's bishop on b5.",
+    jaMore:"黒はこの手の代わりに5...Be7と、キングサイドの展開を進めることもできるよ。",
+    enMore:"Instead of this move, Black can also continue kingside development with 5...Be7.",
+    fox:'normal' },
   { move:{from:[3,1],to:[2,2]}, moveLabel:{ja:"6. Bxc6", en:"6. Bxc6"},
-    ja:"白はビショップでc6のナイトを取るよ。直前のNd6でビショップが狙われているので、逃げるよりも先に交換してしまう一手なんだ。",
-    en:"White captures on c6 with the bishop. Since the bishop was just attacked by the knight on d6, trading it off now makes more sense than retreating.",
+    ja:"白はビショップで、c6にいた黒のナイトを取るよ。白のビショップはd6のナイトに攻撃されているので、逃げるのではなく先に交換するんだ。",
+    en:"White's bishop captures the black knight that was on c6. Since White's bishop is attacked by the d6 knight, White trades it off instead of retreating.",
     fox:'normal' },
   { move:{from:[1,3],to:[2,2]}, moveLabel:{ja:"6...dxc6", en:"6...dxc6"},
-    ja:"黒はポーンで取り返すよ。これでダブルポーンになるけど、ビショップ2枚とアクティブな駒で十分な補償があるんだ。",
-    en:"Black recaptures with the pawn, accepting doubled pawns in exchange for the bishop pair and active pieces.",
+    ja:"黒はdのポーンで、c6に入った白のビショップを取り返すよ。黒はdファイルを開いて、c8のビショップの道も通すんだ。その代わり、黒はcのポーンが2つ縦に並ぶ形（ダブルポーン）を受け入れることになるよ。",
+    en:"Black's d-pawn takes back the white bishop that landed on c6. Black opens the d-file and clears the path for the c8 bishop. The trade-off is that Black accepts doubled c-pawns.",
     fox:'normal' },
   { move:{from:[4,3],to:[3,4]}, moveLabel:{ja:"7. dxe5", en:"7. dxe5"},
-    ja:"白はdxe5とポーンを取るよ。これでd6のナイトが直接狙われるので、黒は近いうちにナイトを動かしてクイーンに当てる展開になり、そこからクイーン交換・エンドゲーム志向の局面に入っていくんだ。これで本譜は一段落、続きはぜひ自分で指してみてね！",
-    en:"White captures with 7.dxe5, directly attacking the knight on d6. This sets up the knight hopping to attack the queen soon after, leading toward the queen trade and the famous endgame-style Berlin position. That's the main line — try continuing the game yourself from here!",
+    ja:"白はd4のポーンで、e5にいた黒のポーンを取るよ。白のe5のポーンは、黒のd6のナイトを攻撃しているんだ。黒のナイトはまた動かなければならないよ。",
+    en:"White's d4 pawn captures the black pawn that was on e5. White's e5 pawn now attacks Black's knight on d6. Black's knight has to move again.",
+    fox:'normal' },
+  { move:{from:[2,3],to:[3,5]}, moveLabel:{ja:"7...Nf5", en:"7...Nf5"},
+    ja:"黒はナイトをf5へ動かすよ。黒のナイトがd6からいなくなったので、dファイルが開いて、d1の白のクイーンとd8の黒のクイーンが向かい合うんだ。黒はクイーン交換に進むことを受け入れているよ。",
+    en:"Black moves the knight to f5. With the knight gone from d6, the d-file opens and White's queen on d1 faces Black's queen on d8. Black is willing to go into a queen trade.",
+    fox:'normal' },
+  { move:{from:[7,3],to:[0,3]}, moveLabel:{ja:"8. Qxd8+", en:"8. Qxd8+"},
+    ja:"白はクイーンで、d8にいた黒のクイーンを取ってチェックをかけるよ。白はクイーンを交換して、e5のポーンを生かした落ち着いた終盤に持ち込むんだ。",
+    en:"White's queen captures the black queen that was on d8, giving check. White trades queens and heads for a calm endgame where the e5 pawn can be useful.",
+    fox:'normal' },
+  { move:{from:[0,4],to:[0,3]}, moveLabel:{ja:"8...Kxd8", en:"8...Kxd8"},
+    ja:"黒はキングで、d8に入った白のクイーンを取り返すよ。黒はこの手しか指せず、キングが動いたのでキャスリングもできなくなるんだ。黒は2つのビショップを持っている一方、白はキングサイドでポーンが1つ多い形になったよ。黒のキングは中央に残るけれど、クイーンがいないので攻められる心配は少なく、とても崩れにくい形なんだ。これで本譜は一段落、続きはぜひ自分で指してみてね！",
+    en:"Black's king takes back the white queen that landed on d8. This is Black's only move, and since the king has moved, Black can no longer castle. Black has the bishop pair, while White has an extra pawn on the kingside. Black's king stays in the center, but with the queens gone there's little danger, and the position is very hard to break down. That's the main line — try continuing the game yourself from here!",
     fox:'happy' }
 ];
 
@@ -341,7 +362,19 @@ function renderStep(){
   const step = LESSON_STEPS[currentStep];
   renderBoard(boardSnapshots[currentStep]);
   document.getElementById('moveLabel').textContent = (step.moveLabel && step.moveLabel[currentLang]) || '';
-  document.getElementById('commentaryText').textContent = step[currentLang];
+  const ctEl = document.getElementById('commentaryText');
+  const moreText = step[currentLang + 'More'];
+  ctEl.innerHTML = step[currentLang] + (moreText
+    ? '<details class="more-detail"><summary>' + (currentLang === 'ja' ? '💡 もっと詳しく知りたい方へ' : '💡 Want to know more?') + '</summary><div class="more-body">' + moreText + '</div></details>'
+    : '');
+  ctEl.scrollTop = 0;
+  const moreEl = ctEl.querySelector('details.more-detail');
+  if (moreEl) {
+    moreEl.addEventListener('toggle', function(){
+      if (moreEl.open) { ctEl.scrollTop = moreEl.offsetTop - ctEl.offsetTop; }
+      adjustBottomPadding();
+    });
+  }
   document.getElementById('foxAvatar').src = FOX_BY_MOOD[step.fox] || FOX_BY_MOOD.normal;
   document.getElementById('lessonProgress').textContent = currentStep + ' / ' + (LESSON_STEPS.length - 1);
   document.getElementById('btnPrev').disabled = currentStep === 0;
