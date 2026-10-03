@@ -103,6 +103,11 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
   font-size: 1rem;
   color: var(--text-sub);
 }
+.commentary-text a, .opening-intro a { color:var(--brown); text-decoration:underline; font-weight:700; }
+.commentary-text a:hover, .opening-intro a:hover { color:var(--brown-dark); }
+.more-detail { margin-top:8px; border-top:1px dashed var(--brown-light); padding-top:6px; }
+.more-detail summary { cursor:pointer; font-weight:700; color:var(--brown); font-size:0.92rem; list-style-position:inside; }
+.more-detail .more-body { margin-top:6px; font-size:0.94rem; }
 </style>
   <script src="board-theme.js"></script>
 </head>
@@ -121,8 +126,8 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
   <h1 class="opening-title lang-element-en">Accelerated Dragon</h1>
 
   <div class="opening-intro">
-    <p class="lang-element-ja">💡 アクセラレイテッド・ドラゴンはシシリアンで5手目までにg6-Bg7のフィアンケットを完成させる変化だよ！通常のドラゴン・シシリアンと違ってd6を突かないため、黒はより早くフィアンケットを完成できるんだ。d6を省いた分、黒はd5の突きを直接的に準備できるという大きなメリットがあるよ。白がマロッツィ・バインドのe4-c4と突いてくる変化が最大の挑戦なんだ。ドラゴン・ビショップの長期的な力を早めに活かせる実戦的な変化だよ！</p>
-    <p class="lang-element-en">💡 The Accelerated Dragon completes the g6-Bg7 fianchetto within the first 5 moves of the Sicilian! Unlike the regular Dragon, Black skips d6 and completes the fianchetto faster. By omitting d6, Black gains the important option of pushing d5 directly later. White's biggest challenge is the Maróczy Bind with e4-c4. This practical variation lets you enjoy the power of the Dragon Bishop earlier without entering the deeply theoretical regular Dragon lines!</p>
+    <p class="lang-element-ja">💡 アクセラレイテッド・ドラゴンは、シシリアン・ディフェンスで黒がd6を突く前にg6と突き、ビショップを早くg7に出す作戦だよ。「アクセラレイテッド」は「加速した」という意味で、普通のドラゴンよりも早くビショップを出すことを表しているんだ。普通のドラゴンでよく見られる、白がキングサイドに激しく攻めてくる形（ユーゴスラフ・アタック）を避けやすいのが長所だよ。一方で、白にc4と突かれてスペースを取られる形には、じっくり耐える力が必要なんだ。</p>
+    <p class="lang-element-en">💡 The Accelerated Dragon is a Sicilian setup in which Black plays ...g6 before ...d6 and gets the bishop to g7 early. "Accelerated" means Black develops the bishop sooner than in the regular Dragon. Its advantage is that it makes it easier to avoid the fierce kingside attack often seen against the regular Dragon, the Yugoslav Attack. On the other hand, when White grabs space with c4, Black needs patience to hold the position.</p>
   </div>
 
   <div class="board-wrap">
@@ -193,60 +198,72 @@ const initialBoard = [
 // ============================================================
 const LESSON_STEPS = [
   { move:null, moveLabel:{ja:"開始局面", en:"Starting Position"},
-    ja:"アクセラレイテッド・ドラゴンのレッスンを始めるよ！d6を省くことで、より早く、より直接的にドラゴン・ビショップの力を発揮できる変化だよ。ジーンと一緒に、一手ずつ「なぜその手を指すのか」を学んでいこう。",
-    en:"Let's start the Accelerated Dragon lesson! By skipping d6, Black unleashes the Dragon Bishop's power even faster and more directly. Jene will explain why each move is played, one step at a time.",
+    ja:"アクセラレイテッド・ドラゴンのレッスンを始めるよ！このページでは、黒がd6を突かずにg6とBg7を急ぎ、白がBe3とBc4で受ける本筋を見ていくよ。黒がいつd5と突いて反撃できるのか、白がそれをどう防ぐのかがポイントなんだ。一手ずつジーンと一緒に、なぜその手を指すのかを学んでいこう。",
+    en:"Let's start the Accelerated Dragon lesson! On this page we follow the main line where Black hurries ...g6 and ...Bg7 without playing ...d6, and White responds with Be3 and Bc4. The key is when Black can strike back with ...d5, and how White prevents it. Jene will walk you through why each move is played, one step at a time.",
     fox:'welcome' },
   { move:{from:[6,4],to:[4,4]}, moveLabel:{ja:"1. e4", en:"1. e4"},
-    ja:"白はe4を指すよ。中央に足がかりを作りながら、ビショップとクイーンの通り道も同時に開く、序盤で最も自然な一手の一つだよ。",
-    en:"White plays 1.e4, staking a claim in the center while opening lines for both the bishop and the queen in a single move.",
+    ja:"白はポーンをe4へ進めるよ。白は中央のマスを押さえながら、ビショップとクイーンが動く道を開けるんだ。",
+    en:"White pushes the pawn to e4. White takes control of central squares and opens lines for the bishop and queen.",
     fox:'normal' },
   { move:{from:[1,2],to:[3,2]}, moveLabel:{ja:"1...c5", en:"1...c5"},
-    ja:"黒はc5。シシリアン・ディフェンスで非対称な局面を作るよ。",
-    en:"Black plays 1...c5, the Sicilian Defense.",
+    ja:"黒はポーンをc5へ進めるよ。黒はこれで<a href='sicilian.html'>シシリアン・ディフェンス</a>の形に入り、横からd4のマスを押さえるんだ。",
+    en:"Black pushes the pawn to c5. Black enters the <a href='sicilian.html?lang=en'>Sicilian Defense</a> and controls the d4 square from the side.",
     fox:'normal' },
   { move:{from:[7,6],to:[5,5]}, moveLabel:{ja:"2. Nf3", en:"2. Nf3"},
-    ja:"白はナイトをf3に展開して、d4への中央突破を狙うよ。",
-    en:"White develops the knight to f3, preparing a central break with d4.",
+    ja:"白はナイトをf3へ進めるよ。白は駒を展開しながら、次にd4と突く準備をしているんだ。",
+    en:"White develops the knight to f3. White develops a piece while preparing to push d4 next.",
     fox:'normal' },
   { move:{from:[0,1],to:[2,2]}, moveLabel:{ja:"2...Nc6", en:"2...Nc6"},
-    ja:"黒もナイトをc6へ展開するよ。まだ他の駒に道を塞がれていない今のうちに、身軽に動けるナイトから先に出しておく、というのは序盤のセオリー通りの考え方なんだ。中央のd4・e5マスをにらむ効果もあるよ。",
-    en:"Black develops the knight to c6. Bringing out a knight early, before it gets boxed in by other pieces, is a basic opening principle — and this one also keeps an eye on the central d4 and e5 squares.",
+    ja:"黒はナイトをc6へ進めるよ。黒はナイトを展開しながら、d4のマスへの利きを強めるんだ。",
+    en:"Black develops the knight to c6. Black develops while strengthening control of the d4 square.",
     fox:'normal' },
   { move:{from:[6,3],to:[4,3]}, moveLabel:{ja:"3. d4", en:"3. d4"},
-    ja:"白はd4で中央に第二の突破を仕掛けるよ。",
-    en:"White strikes again in the center with 3.d4.",
+    ja:"白はポーンをd4へ進めるよ。白は中央でポーンを交換して、駒が動きやすい開いた局面をねらうんだ。",
+    en:"White pushes the pawn to d4. White aims to trade pawns in the center and open the position for the pieces.",
     fox:'normal' },
   { move:{from:[3,2],to:[4,3]}, moveLabel:{ja:"3...cxd4", en:"3...cxd4"},
-    ja:"黒はcxd4でポーンを交換するよ。ここで取らずに放っておくと、白からdxc5とされて逆に黒の駒組みを乱されてしまうので、先手を取って自分から交換しておくのが自然な流れなんだ。",
-    en:"Black captures with 3...cxd4. Leaving the tension alone would let White play dxc5 instead, disrupting Black's structure — so taking first, on Black's own terms, is the natural choice here.",
-    fox:'quiz' },
+    ja:"黒はc5のポーンで、d4に来た白のポーンを取るよ。黒はこれで中央の白のポーンを減らし、cファイルを半分開くんだ。",
+    en:"Black's c5 pawn captures the white pawn that came to d4. Black removes one of White's central pawns and half-opens the c-file.",
+    fox:'normal' },
   { move:{from:[5,5],to:[4,3]}, moveLabel:{ja:"4. Nxd4", en:"4. Nxd4"},
-    ja:"白はナイトで取り返して、中央のいいマスに陣取るよ。",
-    en:"White recaptures with the knight, landing on a strong central square.",
+    ja:"白はナイトで、d4にいた黒のポーンを取り返すよ。白のナイトは中央の強いマスに入るんだ。",
+    en:"White's knight takes back the black pawn that was on d4. White's knight lands on a strong central square.",
     fox:'normal' },
   { move:{from:[1,6],to:[2,6]}, moveLabel:{ja:"4...g6（アクセラレイテッド！）", en:"4...g6 (Accelerated!)"},
-    ja:"ここが本題、アクセラレイテッドの一手！黒はd6を省いて、すぐにg6でフィアンケットを準備するよ。これでドラゴンよりも早く、d5を直接突く柔軟性が手に入るんだ。",
-    en:"Here's the Accelerated move! Black skips d6 and immediately prepares the fianchetto with 4...g6, gaining the flexibility to push d5 directly later.",
+    ja:"ここがアクセラレイテッド・ドラゴンの一手！黒はポーンをg6へ進めて、ビショップをg7に出す準備をするよ。普通の<a href='dragon.html'>ドラゴン</a>ではd6を突いてからg6と進めるけれど、黒はここでd6を後回しにして、あとでd5と一気に2マス突けるようにしているんだ。その代わり、黒は白に5.c4と突かれて、d5のマスを押さえられる形（マロツィ・バインド）を許すことになるよ。",
+    en:"Here's the Accelerated Dragon! Black pushes the pawn to g6, preparing to put the bishop on g7. In the regular <a href='dragon.html?lang=en'>Dragon</a> Black plays ...d6 before ...g6, but here Black delays ...d6 so that the d-pawn can later jump straight to d5. The trade-off is that White can play 5.c4 and clamp down on d5, a setup called the Maróczy Bind.",
+    jaMore:"黒が2手目でNc6を指さずにg6と突く形は、<a href='hyperaccelerated_dragon.html'>ハイパーアクセラレーテッド・ドラゴン</a>と呼ばれているよ。マロツィ・バインドがどんな作戦かは、<a href='moscow_sicilian.html'>モスクワ・バリエーション</a>のページでも紹介しているんだ。",
+    enMore:"If Black plays ...g6 on move two instead of ...Nc6, it's called the <a href='hyperaccelerated_dragon.html?lang=en'>Hyperaccelerated Dragon</a>. The <a href='moscow_sicilian.html?lang=en'>Moscow Variation</a> page also explains how the Maróczy Bind works.",
     fox:'happy' },
   { move:{from:[7,1],to:[5,2]}, moveLabel:{ja:"5. Nc3", en:"5. Nc3"},
-    ja:"白はナイトをc3で展開して、e4ポーンを守りつつ駒を育てるよ。",
-    en:"White develops the knight to c3, defending e4 while developing.",
+    ja:"白はナイトをc3へ進めるよ。白はナイトを展開しながら、e4のポーンを守り、d5のマスにも利かせるんだ。",
+    en:"White develops the knight to c3. White develops while defending the e4 pawn and covering the d5 square.",
+    jaMore:"白はこの手の代わりに5.c4と突いて、マロツィ・バインドを作ることもできるよ。黒にとっては、これがいちばん手ごわい応じ方とされているんだ。",
+    enMore:"Instead of this move, White can push 5.c4 and set up the Maróczy Bind. This is considered the most challenging reply for Black.",
     fox:'normal' },
   { move:{from:[0,5],to:[1,6]}, moveLabel:{ja:"5...Bg7", en:"5...Bg7"},
-    ja:"黒はビショップをg7へ。フィアンケットが完成し、長い対角線を支配するよ。",
-    en:"Black completes the fianchetto with 5...Bg7, dominating the long diagonal.",
+    ja:"黒はビショップをg7へ進めるよ。黒のビショップは長い対角線から、白のd4のナイトをにらんでいるんだ。白のd4のナイトは、黒のc6のナイトとg7のビショップの2つに攻撃されていて、白の守りはクイーン1つだけだよ。",
+    en:"Black develops the bishop to g7. From the long diagonal, Black's bishop eyes White's knight on d4. That knight is now attacked twice, by the c6 knight and the g7 bishop, while White defends it only once with the queen.",
     fox:'normal' },
   { move:{from:[7,2],to:[5,4]}, moveLabel:{ja:"6. Be3", en:"6. Be3"},
-    ja:"白はビショップをe3へ展開するよ。d4のナイトに逃げ場を用意しつつ、この後Qd2と合わせて、黒のg7ビショップとの交換やキングサイドへの圧力を狙う、実戦でよく見る布陣の第一歩なんだ。",
-    en:"White develops the bishop to e3. This gives the d4 knight a retreat square and sets up a common plan: following up with Qd2 to either trade off Black's g7 bishop or build pressure toward the kingside.",
+    ja:"白はビショップをe3へ進めるよ。白はこれでd4のナイトの守りを2つにするんだ。",
+    en:"White develops the bishop to e3. White now defends the d4 knight twice.",
     fox:'normal' },
   { move:{from:[0,6],to:[2,5]}, moveLabel:{ja:"6...Nf6", en:"6...Nf6"},
-    ja:"黒はナイトをf6へ。e4ポーンに圧力をかけながら展開するよ。",
-    en:"Black develops the knight to f6, pressuring the e4 pawn.",
+    ja:"黒はナイトをf6へ進めるよ。黒はナイトを展開しながら、白のe4のポーンを攻撃するんだ。白のe4はc3のナイトに守られているよ。",
+    en:"Black develops the knight to f6. Black develops while attacking White's e4 pawn. White's e4 is defended by the c3 knight.",
     fox:'normal' },
   { move:{from:[7,5],to:[4,2]}, moveLabel:{ja:"7. Bc4", en:"7. Bc4"},
-    ja:"白はビショップをc4へ展開するよ。a2-g8の対角線を使ってf7の弱点をにらむ、シシリアンの白番でよく出てくる狙いの一つだよ。これで本譜は一段落、続きはぜひ自分で指してみてね！",
-    en:"White develops the bishop to c4, eyeing the weak f7 square along the a2-g8 diagonal — a common idea for White in the Sicilian. That's the main line — try continuing the game yourself from here!",
+    ja:"白はビショップをc4へ進めるよ。白のビショップはd5のマスに利いていて、黒がd5と突いて反撃するのを防ぐんだ。同時に白は、黒のf7のポーンもにらんでいるよ。",
+    en:"White develops the bishop to c4. White's bishop covers d5, stopping Black from striking back with ...d5. At the same time, White eyes Black's f7 pawn.",
+    fox:'normal' },
+  { move:{from:[0,4],to:[0,6],castle:{from:[0,7],to:[0,5]}}, moveLabel:{ja:"7...O-O", en:"7...O-O"},
+    ja:"黒はキャスリングでキングを安全な場所へ動かすよ。黒はキングの安全を確保して、中央への反撃の準備を進めるんだ。",
+    en:"Black castles, bringing the king to safety. Black secures the king and prepares a counterattack in the center.",
+    fox:'normal' },
+  { move:{from:[4,2],to:[5,1]}, moveLabel:{ja:"8. Bb3", en:"8. Bb3"},
+    ja:"白はビショップをb3へ下げるよ。白はここで先にビショップを下げておくことで、黒の...Nxe4からd5と突いて、c4のビショップとe4のナイトを同時にねらう手筋を防いでいるんだ。白がもしこの手の代わりに8.O-Oとキャスリングすると、黒はこの手筋で互角に戻せてしまうよ。これで本譜は一段落、続きはぜひ自分で指してみてね！",
+    en:"White retreats the bishop to b3. By pulling the bishop back now, White prevents Black's tactic of ...Nxe4 followed by ...d5, which would hit the c4 bishop and the e4 knight at the same time. If White castled with 8.O-O instead of this move, Black could use this tactic to equalize. That's the main line — try continuing the game yourself from here!",
     fox:'happy' }
 ];
 
@@ -341,7 +358,19 @@ function renderStep(){
   const step = LESSON_STEPS[currentStep];
   renderBoard(boardSnapshots[currentStep]);
   document.getElementById('moveLabel').textContent = (step.moveLabel && step.moveLabel[currentLang]) || '';
-  document.getElementById('commentaryText').textContent = step[currentLang];
+  const ctEl = document.getElementById('commentaryText');
+  const moreText = step[currentLang + 'More'];
+  ctEl.innerHTML = step[currentLang] + (moreText
+    ? '<details class="more-detail"><summary>' + (currentLang === 'ja' ? '💡 もっと詳しく知りたい方へ' : '💡 Want to know more?') + '</summary><div class="more-body">' + moreText + '</div></details>'
+    : '');
+  ctEl.scrollTop = 0;
+  const moreEl = ctEl.querySelector('details.more-detail');
+  if (moreEl) {
+    moreEl.addEventListener('toggle', function(){
+      if (moreEl.open) { ctEl.scrollTop = moreEl.offsetTop - ctEl.offsetTop; }
+      adjustBottomPadding();
+    });
+  }
   document.getElementById('foxAvatar').src = FOX_BY_MOOD[step.fox] || FOX_BY_MOOD.normal;
   document.getElementById('lessonProgress').textContent = currentStep + ' / ' + (LESSON_STEPS.length - 1);
   document.getElementById('btnPrev').disabled = currentStep === 0;

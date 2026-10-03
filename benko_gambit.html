@@ -103,6 +103,11 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
   font-size: 1rem;
   color: var(--text-sub);
 }
+.commentary-text a, .opening-intro a { color:var(--brown); text-decoration:underline; font-weight:700; }
+.commentary-text a:hover, .opening-intro a:hover { color:var(--brown-dark); }
+.more-detail { margin-top:8px; border-top:1px dashed var(--brown-light); padding-top:6px; }
+.more-detail summary { cursor:pointer; font-weight:700; color:var(--brown); font-size:0.92rem; list-style-position:inside; }
+.more-detail .more-body { margin-top:6px; font-size:0.94rem; }
 </style>
   <script src="board-theme.js"></script>
 </head>
@@ -121,8 +126,8 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
   <h1 class="opening-title lang-element-en">Benko Gambit</h1>
 
   <div class="opening-intro">
-    <p class="lang-element-ja">💡 ベンコー・ギャンビットは5...b5と突いてポーンを犠牲にするギャンビットだよ！黒が6.cxb5 a6 7.bxa6 Bxa6とポーンを捨てることで、aファイルとbファイルを開通させて長期的なプレッシャーをかけるんだ。ポーン損でも黒は両ビショップの活性化とオープンファイルを使った持続的なイニシアチブを得られるよ。通常のギャンビットと違って即座の攻撃ではなく、長期的なポジション的補償を追求する独創的なコンセプトが面白い。パル・ベンコーが1960年代に発展させたこの変化は今でも実戦で効果的だよ！</p>
-    <p class="lang-element-en">💡 The Benko Gambit sacrifices a pawn with 3...b5 to open the a and b files for long-term pressure! After 4.cxb5 a6 5.bxa6 Bxa6, Black gives up a pawn to activate both bishops and create permanent pressure along the open files. Even down a pawn, Black gains a lasting initiative with active pieces. Unlike typical gambits that seek immediate tactical attacks, the Benko Gambit pursues long-term positional compensation. Developed by Pal Benko in the 1960s, this gambit remains effective in modern chess!</p>
+    <p class="lang-element-ja">💡 ベンコー・ギャンビットは、1.d4に対して黒がクイーンサイドのポーンを差し出す、珍しいタイプのギャンビットだよ。名前は、この作戦を広めたパル・ベンコーに由来していて、旧ソ連ではヴォルガ・ギャンビットとも呼ばれていたんだ。多くのギャンビットはすぐに攻めをねらうけれど、ベンコー・ギャンビットは開いたファイルを使って、時間をかけて圧力をかけるのが特徴だよ。白は1ポーン得を守り切れるかどうか、黒は圧力を保ち続けられるかどうかの勝負になるんだ。</p>
+    <p class="lang-element-en">💡 The Benko Gambit is an unusual gambit in which Black sacrifices a queenside pawn against 1.d4. It's named after Pal Benko, who popularized it, and it was also known as the Volga Gambit in the former Soviet Union. Most gambits aim for a quick attack, but the Benko is different: it builds pressure slowly using the open files. The battle is about whether White can hold on to the extra pawn and whether Black can keep up the pressure.</p>
   </div>
 
   <div class="board-wrap">
@@ -193,60 +198,78 @@ const initialBoard = [
 // ============================================================
 const LESSON_STEPS = [
   { move:null, moveLabel:{ja:"開始局面", en:"Starting Position"},
-    ja:"ベンコー・ギャンビットのレッスンを始めるよ！即座の攻撃ではなく、長期的なポジション的補償を追求する、独創的なギャンビットだよ。ジーンと一緒に、一手ずつ「なぜその手を指すのか」を学んでいこう。",
-    en:"Let's start the Benko Gambit lesson! Instead of an immediate attack, Black pursues long-term positional compensation — a wonderfully original concept. Jene will explain why each move is played, one step at a time.",
+    ja:"ベンコー・ギャンビットのレッスンを始めるよ！このページでは、黒がクイーンサイドのポーンを差し出し、白がg3とBg2でキングを固める本筋を見ていくよ。ポーンを損した黒が、どうやって駒の働きで取り返していくのかがポイントなんだ。一手ずつジーンと一緒に、なぜその手を指すのかを学んでいこう。",
+    en:"Let's start the Benko Gambit lesson! On this page we follow the main line where Black sacrifices a queenside pawn and White secures the king with g3 and Bg2. The key is how Black, a pawn down, makes up for it with active pieces. Jene will walk you through why each move is played, one step at a time.",
     fox:'welcome' },
   { move:{from:[6,3],to:[4,3]}, moveLabel:{ja:"1. d4", en:"1. d4"},
-    ja:"白はd4で中央を制圧するよ。",
-    en:"White plays 1.d4, claiming the center.",
+    ja:"白はポーンをd4へ進めるよ。白は中央のマスを押さえながら、c1のビショップの道を開けるんだ。",
+    en:"White pushes the pawn to d4. White takes control of central squares and opens the path for the c1 bishop.",
     fox:'normal' },
   { move:{from:[0,6],to:[2,5]}, moveLabel:{ja:"1...Nf6", en:"1...Nf6"},
-    ja:"黒はナイトをf6へ展開するよ。まだ柔軟に構えつつ、中央のe4・d5マスに関与しておく一手だね。",
-    en:"Black develops the knight to f6, staying flexible while keeping an eye on the central e4 and d5 squares.",
+    ja:"黒はナイトをf6へ進めるよ。黒はナイトを展開しながら、白がe4と突くのをけん制するんだ。",
+    en:"Black develops the knight to f6. Black develops while discouraging White from pushing e4.",
     fox:'normal' },
   { move:{from:[6,2],to:[4,2]}, moveLabel:{ja:"2. c4", en:"2. c4"},
-    ja:"白はc4でさらに中央を広げるよ。",
-    en:"White expands the center with 2.c4.",
+    ja:"白はポーンをc4へ進めるよ。白はこれでd5のマスにも利かせて、中央を広げるんだ。",
+    en:"White pushes the pawn to c4. White adds control of d5 and expands in the center.",
     fox:'normal' },
   { move:{from:[1,2],to:[3,2]}, moveLabel:{ja:"2...c5", en:"2...c5"},
-    ja:"黒はc5で非対称な局面を目指すよ。",
-    en:"Black aims for an asymmetrical fight with 2...c5.",
+    ja:"黒はポーンをc5へ進めるよ。黒は横から白のd4のポーンに働きかけて、中央を争うんだ。",
+    en:"Black pushes the pawn to c5. Black challenges White's d4 pawn from the side and fights for the center.",
     fox:'normal' },
   { move:{from:[4,3],to:[3,3]}, moveLabel:{ja:"3. d5", en:"3. d5"},
-    ja:"白はd5でポーンを伸ばし、中央を固定するよ。これでベンコー・ギャンビットの土台が整うんだ。中央が動かなくなった分、黒はここからクイーンサイドで積極的に反撃する計画に切り替えていくんだよ。",
-    en:"White pushes 3.d5, locking the center in place. This sets the stage for the whole Benko idea: with the center fixed, Black now shifts plans toward active counterplay on the queenside.",
+    ja:"白はポーンをd5へ進めるよ。白はc5のポーンと交換せずに前へ進めて、黒の陣地に食い込むんだ。白はこれで中央のスペースを広く取るよ。",
+    en:"White pushes the pawn to d5. Instead of trading with the c5 pawn, White advances it into Black's camp. White gains a lot of central space.",
+    jaMore:"黒がこの局面で3...e6と突く形は、<a href='benoni.html'>ベノニ・ディフェンス</a>と呼ばれるよ。",
+    enMore:"If Black plays 3...e6 in this position instead, it's called the <a href='benoni.html?lang=en'>Benoni Defense</a>.",
     fox:'normal' },
   { move:{from:[1,1],to:[3,1]}, moveLabel:{ja:"3...b5（ベンコー！）", en:"3...b5 (Benko!)"},
-    ja:"ここが本題、ベンコー・ギャンビットの一手！黒はポーンを犠牲にして、aファイルとbファイルでの長期的な活動を狙うよ。",
-    en:"Here's the Benko Gambit move! Black sacrifices a pawn for lasting activity along the a and b files.",
+    ja:"ここがベンコー・ギャンビットの一手！黒はポーンをb5へ進めて、白のc4のポーンに取らせるよ。黒はポーンを1つ差し出す代わりに、クイーンサイドのaファイルとbファイルを開いて、長く続く圧力をかけることをねらうんだ。その代わり、黒はポーンを1つ損した状態で戦い続けることになるよ。",
+    en:"Here's the Benko Gambit! Black pushes the pawn to b5, offering it to White's c4 pawn. In return for a pawn, Black aims to open the a- and b-files on the queenside and apply long-lasting pressure. The cost is that Black has to keep playing a pawn down.",
     fox:'happy' },
   { move:{from:[4,2],to:[3,1]}, moveLabel:{ja:"4. cxb5", en:"4. cxb5"},
-    ja:"白はポーンを受け取るよ。素直にポーンをもらっておいて、黒の狙う「見返り」が本当にあるのか、この先で試していく形になるんだ。",
-    en:"White accepts the pawn, taking the material and putting Black's compensation to the test as the game continues.",
-    fox:'quiz' },
+    ja:"白はc4のポーンで、b5に来た黒のポーンを取るよ。白はこれでポーンを1つ得するんだ。",
+    en:"White's c4 pawn captures the black pawn that came to b5. White wins a pawn.",
+    fox:'normal' },
   { move:{from:[1,0],to:[2,0]}, moveLabel:{ja:"4...a6", en:"4...a6"},
-    ja:"黒はa6でb5のポーンに狙いをつけて、さらにファイルを開けようとするよ。",
-    en:"Black plays 4...a6, attacking the pawn on b5 and continuing to open the files.",
-    fox:'wink' },
+    ja:"黒はポーンをa6へ進めて、もう1つポーンを差し出すよ。黒はaファイルも開いて、クイーンサイドの駒が働きやすい形を急いで作るんだ。",
+    en:"Black pushes the pawn to a6, offering another pawn. Black hurries to open the a-file as well, making it easier for the queenside pieces to become active.",
+    fox:'normal' },
   { move:{from:[3,1],to:[2,0]}, moveLabel:{ja:"5. bxa6", en:"5. bxa6"},
-    ja:"白はbxa6とポーンを取るよ。ここでb6と突いてポーンを返す選択肢もあるけど、このラインでは素直に取ってポーンを維持するんだ。",
-    en:"White captures with 5.bxa6. White could instead play b6 to give the pawn back, but here White simply keeps the extra material.",
+    ja:"白はb5のポーンで、a6に来た黒のポーンを取るよ。白はポーンを2つ取った形になり、ギャンビットをすべて受け入れるんだ。",
+    en:"White's b5 pawn captures the black pawn that came to a6. White has now taken two pawns, fully accepting the gambit.",
+    jaMore:"白はこの手の代わりに5.b6や5.e3などで、ギャンビットを一部だけ受け取る道を選ぶこともできるよ。",
+    enMore:"Instead of this move, White can accept only part of the gambit with moves like 5.b6 or 5.e3.",
     fox:'normal' },
   { move:{from:[0,2],to:[2,0]}, moveLabel:{ja:"5...Bxa6", en:"5...Bxa6"},
-    ja:"黒はビショップで取り返すよ。これでビショップが活発になり、aファイルとbファイルが開通したんだ。",
-    en:"Black recaptures with the bishop, activating it while opening the a and b files.",
-    fox:'happy' },
+    ja:"黒はビショップで、a6に入った白のポーンを取り返すよ。黒はこれで差し出したポーンの1つを取り返し、損はポーン1つになるんだ。黒のa6のビショップはe2までの斜めの線を押さえていて、白がeのポーンを動かすと、f1の白のビショップと向かい合う形になるんだ。",
+    en:"Black's bishop takes back the white pawn that landed on a6. Black wins back one of the pawns, so Black is now just one pawn down. Black's a6 bishop controls the diagonal up to e2, and if White moves the e-pawn, it will face White's bishop on f1.",
+    fox:'normal' },
   { move:{from:[7,1],to:[5,2]}, moveLabel:{ja:"6. Nc3", en:"6. Nc3"},
-    ja:"白はナイトをc3へ展開するよ。駒を育てながら、この先のe4進出にも備える一手だね。",
-    en:"White develops the knight to c3, bringing a piece into play while preparing a possible e4 push later.",
+    ja:"白はナイトをc3へ進めるよ。白はナイトを展開しながら、b5やe4のマスにも利かせるんだ。",
+    en:"White develops the knight to c3. White develops while also covering the b5 and e4 squares.",
     fox:'normal' },
   { move:{from:[1,3],to:[2,3]}, moveLabel:{ja:"6...d6", en:"6...d6"},
-    ja:"黒はd6で柔軟に陣形を整えるよ。e5マスを抑えつつ、この後g6・Bg7とフィアンケットする準備なんだ。",
-    en:"Black plays 6...d6, restraining e5 while preparing to fianchetto with g6 and Bg7.",
+    ja:"黒はポーンをd6へ進めるよ。黒は中央を固めて、白のd5のポーンがこれ以上前に進まないようにするんだ。",
+    en:"Black pushes the pawn to d6. Black firms up the center, stopping White's d5 pawn from advancing further.",
     fox:'normal' },
   { move:{from:[6,6],to:[5,6]}, moveLabel:{ja:"7. g3", en:"7. g3"},
-    ja:"白はg3でフィアンケットを準備するよ。e4と伸ばしてBxf1を許すより、先にf1のビショップをg2へ安全に逃がしておくことで、キャスリングの権利も守れるんだ。これで本譜は一段落、続きはぜひ自分で指してみてね！",
-    en:"White prepares a fianchetto with 7.g3. Rather than push e4 and risk losing the right to castle to ...Bxf1, White tucks the f1 bishop safely to g2 first. That's the main line — try continuing the game yourself from here!",
+    ja:"白はポーンをg3へ進めるよ。白はビショップをg2に出して、a6の黒のビショップとの交換を避ける準備をするんだ。",
+    en:"White pushes the pawn to g3. White prepares to put the bishop on g2, avoiding a trade with Black's bishop on a6.",
+    jaMore:"白はこの手の代わりに7.e4と突くこともできるよ。ただしこの場合は、黒が7...Bxf1と取り、白はキングで取り返すことになるので、キャスリングができなくなるんだ。",
+    enMore:"Instead of this move, White can also push 7.e4. In that case, though, Black plays 7...Bxf1 and White must recapture with the king, giving up the right to castle.",
+    fox:'normal' },
+  { move:{from:[1,6],to:[2,6]}, moveLabel:{ja:"7...g6", en:"7...g6"},
+    ja:"黒はポーンをg6へ進めるよ。黒はg7のマスを空けて、ビショップを長い対角線に出す準備をするんだ。",
+    en:"Black pushes the pawn to g6. Black clears g7 to put the bishop on the long diagonal.",
+    fox:'normal' },
+  { move:{from:[7,5],to:[6,6]}, moveLabel:{ja:"8. Bg2", en:"8. Bg2"},
+    ja:"白はビショップをg2へ進めるよ。白のビショップは長い対角線から中央をにらみ、キャスリングしたあとのキングも守るんだ。",
+    en:"White develops the bishop to g2. From the long diagonal, White's bishop eyes the center and will guard the king after castling.",
+    fox:'normal' },
+  { move:{from:[0,5],to:[1,6]}, moveLabel:{ja:"8...Bg7", en:"8...Bg7"},
+    ja:"黒はビショップをg7へ進めるよ。黒のビショップは今はf6のナイトの後ろにいるけれど、ナイトが動いたあとは長い対角線で白のクイーンサイドをにらむんだ。黒はこの後、キャスリングしてからaファイルとbファイルにルークを並べ、白のクイーンサイドに長く圧力をかけていくよ。ポーンを1つ損していても、黒は駒の働きで十分に戦える形なんだ。これで本譜は一段落、続きはぜひ自分で指してみてね！",
+    en:"Black develops the bishop to g7. Black's bishop sits behind the f6 knight for now, but once the knight moves, it will eye White's queenside along the long diagonal. Next, Black castles and lines up the rooks on the a- and b-files to keep up long-term pressure on White's queenside. Even a pawn down, Black's active pieces give enough play. That's the main line — try continuing the game yourself from here!",
     fox:'happy' }
 ];
 
@@ -341,7 +364,19 @@ function renderStep(){
   const step = LESSON_STEPS[currentStep];
   renderBoard(boardSnapshots[currentStep]);
   document.getElementById('moveLabel').textContent = (step.moveLabel && step.moveLabel[currentLang]) || '';
-  document.getElementById('commentaryText').textContent = step[currentLang];
+  const ctEl = document.getElementById('commentaryText');
+  const moreText = step[currentLang + 'More'];
+  ctEl.innerHTML = step[currentLang] + (moreText
+    ? '<details class="more-detail"><summary>' + (currentLang === 'ja' ? '💡 もっと詳しく知りたい方へ' : '💡 Want to know more?') + '</summary><div class="more-body">' + moreText + '</div></details>'
+    : '');
+  ctEl.scrollTop = 0;
+  const moreEl = ctEl.querySelector('details.more-detail');
+  if (moreEl) {
+    moreEl.addEventListener('toggle', function(){
+      if (moreEl.open) { ctEl.scrollTop = moreEl.offsetTop - ctEl.offsetTop; }
+      adjustBottomPadding();
+    });
+  }
   document.getElementById('foxAvatar').src = FOX_BY_MOOD[step.fox] || FOX_BY_MOOD.normal;
   document.getElementById('lessonProgress').textContent = currentStep + ' / ' + (LESSON_STEPS.length - 1);
   document.getElementById('btnPrev').disabled = currentStep === 0;

@@ -103,6 +103,11 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
   font-size: 1rem;
   color: var(--text-sub);
 }
+.commentary-text a, .opening-intro a { color:var(--brown); text-decoration:underline; font-weight:700; }
+.commentary-text a:hover, .opening-intro a:hover { color:var(--brown-dark); }
+.more-detail { margin-top:8px; border-top:1px dashed var(--brown-light); padding-top:6px; }
+.more-detail summary { cursor:pointer; font-weight:700; color:var(--brown); font-size:0.92rem; list-style-position:inside; }
+.more-detail .more-body { margin-top:6px; font-size:0.94rem; }
 </style>
   <script src="board-theme.js"></script>
 </head>
@@ -121,8 +126,8 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
   <h1 class="opening-title lang-element-en">Bogo-Indian Defense</h1>
 
   <div class="opening-intro">
-    <p class="lang-element-ja">💡 ボゴ・インディアンは3...Bb4+と早期にビショップをb4に出してチェックをかける変化だよ！ニムゾ・インディアンと似た発想で、白のc3ナイトではなくビショップかナイトにピンをかけるんだ。白がBd2と受ければ黒はBxd2+ Qxd2と交換してクイーンをd2に強制できるよ。ニムゾ・インディアンの理論を回避しながら似たようなポジションを作れる実戦的な変化で、エフィム・ボゴリュボフが1920年代に発展させたことが名前の由来なんだ。コンパクトで覚えやすい良質な変化だよ！</p>
-    <p class="lang-element-en">💡 The Bogo-Indian Defense plays the early check 3...Bb4+, developing the bishop to b4! Similar in concept to the Nimzo-Indian, Black puts pressure on White — but targeting a bishop or knight rather than the c3 knight. If White blocks with Bd2, Black can exchange with Bxd2+ Qxd2, forcing the queen to d2. This practical variation allows Black to create Nimzo-Indian-like positions while avoiding the deeply studied Nimzo theory. Named after Efim Bogoljubov who developed it in the 1920s!</p>
+    <p class="lang-element-ja">💡 ボゴ・インディアン・ディフェンスは、1.d4 Nf6 2.c4 e6 3.Nf3のあとに、黒が3...Bb4+とチェックをかける守りだよ。名前は、ロシア生まれでドイツで活躍したエフィム・ボゴリュボフに由来しているんだ。白が3.Nf3でニムゾ・インディアンを避けたときに、似た発想で戦えるのが特徴だよ。派手さは少ないけれど堅実で、トップレベルでも指され続けているオープニングなんだ。</p>
+    <p class="lang-element-en">💡 The Bogo-Indian Defense is a defense in which Black answers 1.d4 Nf6 2.c4 e6 3.Nf3 with the check 3...Bb4+. It's named after Efim Bogoljubow, a Russian-born master who made his career in Germany. Its appeal is that Black can use Nimzo-Indian-like ideas when White sidesteps the Nimzo with 3.Nf3. It isn't flashy, but it's solid and is still played at the top level.</p>
   </div>
 
   <div class="board-wrap">
@@ -193,60 +198,76 @@ const initialBoard = [
 // ============================================================
 const LESSON_STEPS = [
   { move:null, moveLabel:{ja:"開始局面", en:"Starting Position"},
-    ja:"ボゴ・インディアンのレッスンを始めるよ！ニムゾ・インディアンの理論を避けながら似たような局面を作れる、コンパクトで実戦的な変化だよ。ジーンと一緒に、一手ずつ「なぜその手を指すのか」を学んでいこう。",
-    en:"Let's start the Bogo-Indian Defense lesson! It creates Nimzo-Indian-like positions while avoiding the deep Nimzo theory — compact and practical. Jene will explain why each move is played, one step at a time.",
+    ja:"ボゴ・インディアンのレッスンを始めるよ！このページでは、黒が3...Bb4+でチェックをかけ、4...Qe7でビショップを守ってから、ビショップを交換して落ち着いた形を作る流れを見ていくよ。駒を交換したあと、両者がどう中央で向かい合うのかがポイントなんだ。一手ずつジーンと一緒に、なぜその手を指すのかを学んでいこう。",
+    en:"Let's start the Bogo-Indian lesson! On this page we follow how Black checks with 3...Bb4+, defends the bishop with 4...Qe7, and then trades bishops to reach a calm setup. The key is how both sides face off in the center after the trade. Jene will walk you through why each move is played, one step at a time.",
     fox:'welcome' },
   { move:{from:[6,3],to:[4,3]}, moveLabel:{ja:"1. d4", en:"1. d4"},
-    ja:"白はd4で中央を制圧するよ。",
-    en:"White plays 1.d4, claiming the center.",
+    ja:"白はポーンをd4へ進めるよ。白は中央のマスを押さえながら、c1のビショップの道を開けるんだ。",
+    en:"White pushes the pawn to d4. White takes control of central squares and opens the path for the c1 bishop.",
     fox:'normal' },
   { move:{from:[0,6],to:[2,5]}, moveLabel:{ja:"1...Nf6", en:"1...Nf6"},
-    ja:"黒はナイトをf6へ展開するよ。中央のe4・d5マスに関与しつつ、柔軟に構えるんだ。",
-    en:"Black develops the knight to f6, staying flexible while keeping a foothold in the center.",
+    ja:"黒はナイトをf6へ進めるよ。黒はナイトを展開しながら、白がe4と突くのをけん制するんだ。",
+    en:"Black develops the knight to f6. Black develops while discouraging White from pushing e4.",
     fox:'normal' },
   { move:{from:[6,2],to:[4,2]}, moveLabel:{ja:"2. c4", en:"2. c4"},
-    ja:"白はc4でさらに中央を広げるよ。",
-    en:"White expands the center with 2.c4.",
+    ja:"白はポーンをc4へ進めるよ。白はこれでd5のマスにも利かせて、中央を広げるんだ。",
+    en:"White pushes the pawn to c4. White adds control of d5 and expands in the center.",
     fox:'normal' },
   { move:{from:[1,4],to:[2,4]}, moveLabel:{ja:"2...e6", en:"2...e6"},
-    ja:"黒はe6で柔軟に展開を準備するよ。すぐに何かのシステムに決めず、白の出方を見てから対応できるようにしておくんだ。",
-    en:"Black plays 2...e6, staying flexible rather than committing to a specific setup right away, so Black can react to White's next move.",
+    ja:"黒はポーンをe6へ進めるよ。黒はd5のマスを押さえながら、f8のビショップの道を開けるんだ。",
+    en:"Black pushes the pawn to e6. Black controls the d5 square and opens the path for the f8 bishop.",
     fox:'normal' },
   { move:{from:[7,6],to:[5,5]}, moveLabel:{ja:"3. Nf3", en:"3. Nf3"},
-    ja:"白はナイトをf3へ展開するよ。c3ではないため、c3ナイトへのピンは使えないんだ。",
-    en:"White develops the knight to f3 instead of c3, so the usual Nimzo pin isn't available.",
+    ja:"白はナイトをf3へ進めるよ。白はナイトを展開しながら、3.Nc3と指したときに黒が3...Bb4と出てくる<a href='nimzo.html'>ニムゾ・インディアン・ディフェンス</a>を避けているんだ。",
+    en:"White develops the knight to f3. By developing this way, White avoids the <a href='nimzo.html?lang=en'>Nimzo-Indian Defense</a>, which arises after 3.Nc3 Bb4.",
     fox:'normal' },
   { move:{from:[0,5],to:[4,1]}, moveLabel:{ja:"3...Bb4+（ボゴ！）", en:"3...Bb4+ (Bogo!)"},
-    ja:"ここが本題、ボゴ・インディアンの一手！黒はチェックをかけて、ニムゾと似た発想でプレッシャーをかけるよ。",
-    en:"Here's the Bogo-Indian move! Black checks, applying Nimzo-style pressure in a different way.",
+    ja:"ここがボゴ・インディアンの一手！黒はビショップをb4へ進めて、チェックをかけるよ。黒はこの手の代わりに3...b6の<a href='queens_indian.html'>クイーンズ・インディアン・ディフェンス</a>を選ぶことのほうが多いけれど、ここではビショップを積極的に出して、白にすぐ応じ方を決めさせるんだ。その代わり、黒はこのビショップを交換することが多く、2つのビショップを持つ利点を手放しやすいよ。",
+    en:"Here's the Bogo-Indian! Black develops the bishop to b4 with check. Black more often chooses 3...b6, the <a href='queens_indian.html?lang=en'>Queen's Indian Defense</a>, but here Black brings the bishop out actively and makes White decide how to respond right away. The trade-off is that Black often ends up trading this bishop, giving up the advantage of the bishop pair.",
     fox:'happy' },
   { move:{from:[7,2],to:[6,3]}, moveLabel:{ja:"4. Bd2", en:"4. Bd2"},
-    ja:"白はビショップでチェックをブロックするよ。実はこれで黒のビショップ(b4)を狙っているんだ。今のb4のビショップは何にも守られていないから、次にBxb4と取られてしまう危険があるんだよ。",
-    en:"White blocks the check with the bishop — and this also threatens the bishop on b4, which isn't defended by anything yet. If Black ignores it, White simply plays Bxb4 next.",
+    ja:"白はビショップをd2へ進めて、チェックをさえぎるよ。白はこれで、黒のb4のビショップと自分のビショップを交換する形を作るんだ。",
+    en:"White blocks the check by moving the bishop to d2. White sets up a possible trade of its bishop for Black's bishop on b4.",
+    jaMore:"白はこの手の代わりに4.Nbd2でチェックをさえぎることもできるよ。4.Nc3と受けるとニムゾ・インディアンと同じ形になるので、ボゴ・インディアンらしい形になるのは4.Bd2と4.Nbd2なんだ。",
+    enMore:"Instead of this move, White can also block with 4.Nbd2. Blocking with 4.Nc3 leads to the Nimzo-Indian, so the true Bogo-Indian lines are 4.Bd2 and 4.Nbd2.",
     fox:'normal' },
   { move:{from:[0,3],to:[1,4]}, moveLabel:{ja:"4...Qe7", en:"4...Qe7"},
-    ja:"黒はクイーンをe7へ。これでb4のビショップをしっかり守れたよ。もしこの先白がBxb4と取ってきても、Qxb4と取り返せるから安心なんだ。",
-    en:"Black defends with 4...Qe7, protecting the bishop on b4. Now if White ever plays Bxb4, Black simply recaptures with Qxb4.",
+    ja:"黒はクイーンをe7へ進めるよ。黒のクイーンはb4のビショップを守っているんだ。白がもし5.Bxb4と交換すると、黒は5...Qxb4+とチェックをかけながら取り返し、白のb2とc4のポーンを同時にねらえるよ。",
+    en:"Black brings the queen to e7. Black's queen defends the bishop on b4. If White traded with 5.Bxb4, Black would recapture 5...Qxb4+ with check, attacking White's b2 and c4 pawns at the same time.",
     fox:'normal' },
-  { move:{from:[7,1],to:[5,2]}, moveLabel:{ja:"5. Nc3", en:"5. Nc3"},
-    ja:"白はナイトをc3へ展開するよ。駒を育てながら、中央のe4マスへの影響力を強めるんだ。",
-    en:"White develops the other knight to c3, adding pressure on the e4 square while continuing to develop.",
+  { move:{from:[6,6],to:[5,6]}, moveLabel:{ja:"5. g3", en:"5. g3"},
+    ja:"白はポーンをg3へ進めるよ。白はg2のマスを空けて、ビショップを長い対角線に出す準備をするんだ。",
+    en:"White pushes the pawn to g3. White clears g2 so the bishop can go to the long diagonal.",
     fox:'normal' },
-  { move:{from:[1,1],to:[2,1]}, moveLabel:{ja:"5...b6", en:"5...b6"},
-    ja:"黒はb6でクイーンサイドのフィアンケットを準備するよ。",
-    en:"Black prepares a queenside fianchetto with 5...b6.",
-    fox:'wink' },
-  { move:{from:[6,4],to:[5,4]}, moveLabel:{ja:"6. e3", en:"6. e3"},
-    ja:"白はe3で展開を進めるよ。f1のビショップの通り道を開きつつ、この先のキャスリングに備えるんだ。",
-    en:"White continues developing with 6.e3, opening a diagonal for the f1 bishop while preparing to castle.",
+  { move:{from:[0,1],to:[2,2]}, moveLabel:{ja:"5...Nc6", en:"5...Nc6"},
+    ja:"黒はナイトをc6へ進めるよ。黒はナイトを展開しながら、この先e5と突いて中央に反撃する準備をするんだ。",
+    en:"Black develops the knight to c6. Black develops while preparing to push ...e5 and strike back in the center.",
     fox:'normal' },
-  { move:{from:[0,2],to:[1,1]}, moveLabel:{ja:"6...Bb7", en:"6...Bb7"},
-    ja:"黒はビショップをb7へ展開するよ。a8-h1の長い対角線を使って、中央のe4マスに圧力をかけるんだ。",
-    en:"Black develops the bishop to b7, aiming down the long a8-h1 diagonal to pressure the e4 square.",
+  { move:{from:[7,5],to:[6,6]}, moveLabel:{ja:"6. Bg2", en:"6. Bg2"},
+    ja:"白はビショップをg2へ進めるよ。白のビショップは長い対角線から中央をにらみ、キャスリングしたあとのキングも守るんだ。",
+    en:"White develops the bishop to g2. From the long diagonal, White's bishop eyes the center and will guard the king after castling.",
     fox:'normal' },
-  { move:{from:[7,5],to:[6,4]}, moveLabel:{ja:"7. Be2", en:"7. Be2"},
-    ja:"白はビショップをe2へ展開するよ。これでキャスリングの準備が整うんだ。これで本譜は一段落、続きはぜひ自分で指してみてね！",
-    en:"White develops the bishop to e2, clearing the way to castle. That's the main line — try continuing the game yourself from here!",
+  { move:{from:[4,1],to:[6,3]}, moveLabel:{ja:"6...Bxd2+", en:"6...Bxd2+"},
+    ja:"黒はビショップで、d2にいた白のビショップを取ってチェックをかけるよ。黒はここでビショップ同士を交換して、駒の数を減らすんだ。",
+    en:"Black's bishop captures the white bishop that was on d2, giving check. Black trades bishops here, reducing the number of pieces.",
+    fox:'normal' },
+  { move:{from:[7,1],to:[6,3]}, moveLabel:{ja:"7. Nbxd2", en:"7. Nbxd2"},
+    ja:"白はb1のナイトで、d2に入った黒のビショップを取り返すよ。白のナイトはd2からe4のマスを支え、この先e4と突く準備に役立つんだ。",
+    en:"White's b1 knight takes back the black bishop that landed on d2. From d2, White's knight supports the e4 square and helps prepare a future e4 push.",
+    jaMore:"白はこの手の代わりに7.Qxd2とクイーンで取り返すこともできるよ。",
+    enMore:"Instead of this move, White can also recapture with the queen, 7.Qxd2.",
+    fox:'normal' },
+  { move:{from:[1,3],to:[2,3]}, moveLabel:{ja:"7...d6", en:"7...d6"},
+    ja:"黒はポーンをd6へ進めるよ。黒はe5のマスをc6のナイトと一緒に押さえて、次にe5と突く準備を整えるんだ。",
+    en:"Black pushes the pawn to d6. Together with the c6 knight, Black controls the e5 square and gets ready to push ...e5.",
+    fox:'normal' },
+  { move:{from:[7,4],to:[7,6],castle:{from:[7,7],to:[7,5]}}, moveLabel:{ja:"8. O-O", en:"8. O-O"},
+    ja:"白はキャスリングでキングを安全な場所へ動かすよ。白のキングは、g2のビショップとポーンに守られた堅い形に入るんだ。",
+    en:"White castles, bringing the king to safety. White's king settles into a solid shelter guarded by the g2 bishop and pawns.",
+    fox:'normal' },
+  { move:{from:[0,4],to:[0,6],castle:{from:[0,7],to:[0,5]}}, moveLabel:{ja:"8...O-O", en:"8...O-O"},
+    ja:"黒もキャスリングでキングを安全な場所へ動かすよ。この後は、白がe4、黒がe5と突いて中央で向かい合う流れがよく見られるんだ。黒は駒を交換して落ち着いた形を作っていて、両者とも崩れにくい局面だよ。これで本譜は一段落、続きはぜひ自分で指してみてね！",
+    en:"Black also castles, bringing the king to safety. A common continuation is for White to push e4 and Black to push ...e5, facing off in the center. Black has traded pieces to reach a calm setup, and the position is solid for both sides. That's the main line — try continuing the game yourself from here!",
     fox:'happy' }
 ];
 
@@ -341,7 +362,19 @@ function renderStep(){
   const step = LESSON_STEPS[currentStep];
   renderBoard(boardSnapshots[currentStep]);
   document.getElementById('moveLabel').textContent = (step.moveLabel && step.moveLabel[currentLang]) || '';
-  document.getElementById('commentaryText').textContent = step[currentLang];
+  const ctEl = document.getElementById('commentaryText');
+  const moreText = step[currentLang + 'More'];
+  ctEl.innerHTML = step[currentLang] + (moreText
+    ? '<details class="more-detail"><summary>' + (currentLang === 'ja' ? '💡 もっと詳しく知りたい方へ' : '💡 Want to know more?') + '</summary><div class="more-body">' + moreText + '</div></details>'
+    : '');
+  ctEl.scrollTop = 0;
+  const moreEl = ctEl.querySelector('details.more-detail');
+  if (moreEl) {
+    moreEl.addEventListener('toggle', function(){
+      if (moreEl.open) { ctEl.scrollTop = moreEl.offsetTop - ctEl.offsetTop; }
+      adjustBottomPadding();
+    });
+  }
   document.getElementById('foxAvatar').src = FOX_BY_MOOD[step.fox] || FOX_BY_MOOD.normal;
   document.getElementById('lessonProgress').textContent = currentStep + ' / ' + (LESSON_STEPS.length - 1);
   document.getElementById('btnPrev').disabled = currentStep === 0;

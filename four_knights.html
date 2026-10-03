@@ -103,6 +103,11 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
   font-size: 1rem;
   color: var(--text-sub);
 }
+.commentary-text a, .opening-intro a { color:var(--brown); text-decoration:underline; font-weight:700; }
+.commentary-text a:hover, .opening-intro a:hover { color:var(--brown-dark); }
+.more-detail { margin-top:8px; border-top:1px dashed var(--brown-light); padding-top:6px; }
+.more-detail summary { cursor:pointer; font-weight:700; color:var(--brown); font-size:0.92rem; list-style-position:inside; }
+.more-detail .more-body { margin-top:6px; font-size:0.94rem; }
 </style>
   <script src="board-theme.js"></script>
 </head>
@@ -121,8 +126,8 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
   <h1 class="opening-title lang-element-en">Four Knights Game</h1>
 
   <div class="opening-intro">
-    <p class="lang-element-ja">💡 フォー・ナイツは両サイドが素早くナイトを4枚すべて展開する対称的なオープニングだよ！1.e4 e5 2.Nf3 Nc6 3.Nc3 Nf6という手順でお互いが鏡のようにナイトを出し合うんだ。チェスの基本原則である「序盤はナイトとビショップを素早く展開せよ」をそのまま体現した教科書的なオープニング。均衡した局面になりやすいけど、白がBb5とスペイン風に展開したり、d4と中央を突いたりして変化を作ることができるよ。初心者がピースの展開原則とセンターコントロールを学ぶ最適な教材として古くから使われてきたんだ！</p>
-    <p class="lang-element-en">💡 The Four Knights Game is a symmetrical opening where both sides rapidly develop all four knights! 1.e4 e5 2.Nf3 Nc6 3.Nc3 Nf6, mirroring each other perfectly. This opening is a living textbook of chess principles, demonstrating the fundamental rule of developing your knights and bishops quickly. It naturally leads to balanced positions, but White can create interesting play with Bb5 or d4. The Four Knights has been used as a teaching tool for beginners for generations. Don't be fooled by its simple appearance — accurate play is required and there is plenty of depth to explore!</p>
+    <p class="lang-element-ja">💡 フォー・ナイツ・ゲームは、1.e4 e5 2.Nf3 Nc6 3.Nc3 Nf6と、両者がナイトを2つずつ出し合うオープニングだよ。「序盤は駒を早く展開する」というチェスの基本どおりに進むので、初心者にも分かりやすいんだ。19世紀から20世紀初めにかけて大人気で、そのあと一度は少なくなったけれど、今でもトップレベルで指されることがあるよ。落ち着いた展開になりやすい一方で、正確に指さないと形の差がじわじわ響いてくるオープニングなんだ。</p>
+    <p class="lang-element-en">💡 The Four Knights Game is an opening in which both sides bring out two knights each with 1.e4 e5 2.Nf3 Nc6 3.Nc3 Nf6. It follows the basic principle of developing pieces quickly, which makes it easy for beginners to understand. It was very popular from the 19th century into the early 20th century, faded for a while, and is still played at the top level today. The games tend to be calm, but small differences in the position can slowly add up if you don't play accurately.</p>
   </div>
 
   <div class="board-wrap">
@@ -142,6 +147,9 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
     <button id="btnPrev" class="lesson-btn">← 前へ</button>
     <span class="lesson-progress" id="lessonProgress"></span>
     <button id="btnNext" class="lesson-btn">次へ →</button>
+  </div>
+  <div id="shareRow" style="display:none;text-align:center;margin-top:10px;">
+    <button id="shareXBtn" style="background:#000;color:#fff;border:none;border-radius:20px;padding:8px 16px;font-family:'Crimson Pro',serif;font-weight:700;font-size:0.85rem;cursor:pointer;">🦊 𝕏でシェアする</button>
   </div>
 </div>
 
@@ -190,60 +198,76 @@ const initialBoard = [
 // ============================================================
 const LESSON_STEPS = [
   { move:null, moveLabel:{ja:"開始局面", en:"Starting Position"},
-    ja:"フォー・ナイツのレッスンを始めるよ！両サイドが鏡のようにナイトを4枚展開する、チェスの基本を学べる教科書的なオープニングだよ。ジーンと一緒に、一手ずつ「なぜその手を指すのか」を学んでいこう。",
-    en:"Let's start the Four Knights Game lesson! Both sides mirror each other by developing all four knights — a true textbook lesson in chess fundamentals. Jene will explain why each move is played, one step at a time.",
+    ja:"フォー・ナイツのレッスンを始めるよ！このページでは、両者が鏡のように同じ形で駒を並べるシンメトリカル・バリエーションから、白が7.Bg5で先に動き出す流れを見ていくよ。同じ形のとき、どちらが先にどう形を崩すのかがポイントなんだ。一手ずつジーンと一緒に、なぜその手を指すのかを学んでいこう。",
+    en:"Let's start the Four Knights lesson! On this page we follow the Symmetrical Variation, where both sides set up in a mirror image, and see how White breaks the symmetry with 7.Bg5. The key is who changes the identical setup first, and how. Jene will walk you through why each move is played, one step at a time.",
     fox:'welcome' },
   { move:{from:[6,4],to:[4,4]}, moveLabel:{ja:"1. e4", en:"1. e4"},
-    ja:"白はe4で中央を制圧するよ。",
-    en:"White plays 1.e4, claiming the center.",
+    ja:"白はポーンをe4へ進めるよ。白は中央のマスを押さえながら、ビショップとクイーンが動く道を開けるんだ。",
+    en:"White pushes the pawn to e4. White takes control of central squares and opens lines for the bishop and queen.",
     fox:'normal' },
   { move:{from:[1,4],to:[3,4]}, moveLabel:{ja:"1...e5", en:"1...e5"},
-    ja:"黒も同じくe5で対抗。中央の取り合いはお互い様、というバランスを保つよ。",
-    en:"Black mirrors with 1...e5, keeping the fight for the center balanced.",
+    ja:"黒はポーンをe5へ進めるよ。黒も同じように中央を押さえて、白のポーンと向かい合う形を作るんだ。",
+    en:"Black pushes the pawn to e5. Black also claims the center, setting up a pawn face-off with White.",
     fox:'normal' },
   { move:{from:[7,6],to:[5,5]}, moveLabel:{ja:"2. Nf3", en:"2. Nf3"},
-    ja:"白はナイトをf3に展開。e5ポーンに狙いをつけながら、キングサイドの守りも整えていくよ。",
-    en:"White develops the knight to f3, eyeing the e5 pawn while preparing kingside safety.",
+    ja:"白はナイトをf3へ進めるよ。白のナイトは展開しながら、黒のe5のポーンを攻撃しているんだ。",
+    en:"White develops the knight to f3. White's knight develops while attacking Black's e5 pawn.",
     fox:'normal' },
   { move:{from:[0,1],to:[2,2]}, moveLabel:{ja:"2...Nc6", en:"2...Nc6"},
-    ja:"黒もナイトをc6へ。e5ポーンをしっかり守る、自然な一手だよ。",
-    en:"Black develops the knight to c6, defending the e5 pawn.",
+    ja:"黒はナイトをc6へ進めるよ。黒はナイトを展開しながら、e5のポーンを守るんだ。",
+    en:"Black develops the knight to c6. Black develops a piece and defends the e5 pawn at the same time.",
     fox:'normal' },
   { move:{from:[7,1],to:[5,2]}, moveLabel:{ja:"3. Nc3（フォー・ナイツ！）", en:"3. Nc3 (Four Knights!)"},
-    ja:"ここが本題、フォー・ナイツの一手！白もナイトをc3に出して、お互いが鏡のように駒を展開していくよ。",
-    en:"Here's the Four Knights move! White develops the other knight to c3, mirroring the symmetrical development.",
+    ja:"ここがフォー・ナイツの一手！白はもう一つのナイトをc3へ進めて、e4のポーンを守るよ。一般的には3.Bb5や3.Bc4とビショップを先に出すけれど、白はここでナイトを先に展開する、落ち着いた道を選ぶんだ。その代わり、白は序盤から黒にプレッシャーをかける力は弱めになるよ。",
+    en:"Here's the Four Knights! White develops the other knight to c3, defending the e4 pawn. White usually brings a bishop out first with 3.Bb5 or 3.Bc4, but here White chooses the calm path of developing the knight first. The trade-off is that White puts less early pressure on Black.",
     fox:'happy' },
   { move:{from:[0,6],to:[2,5]}, moveLabel:{ja:"3...Nf6", en:"3...Nf6"},
-    ja:"黒もナイトをf6へ。これで両サイドとも4枚のナイトが揃ったよ！",
-    en:"Black develops the knight to f6 — now both sides have all four knights out!",
-    fox:'quiz' },
+    ja:"黒ももう一つのナイトをf6へ進めるよ。黒はナイトを展開しながら、白のe4のポーンを攻撃するんだ。白も黒もナイトを2つずつ出して、鏡に映したような形になったよ。",
+    en:"Black also develops the other knight to f6. Black develops while attacking White's e4 pawn. With two knights out on each side, the position looks like a mirror image.",
+    fox:'normal' },
   { move:{from:[7,5],to:[3,1]}, moveLabel:{ja:"4. Bb5", en:"4. Bb5"},
-    ja:"白はビショップをb5へ。スペイン風にピンを仕掛けて、対称な局面に変化をつけるよ。",
-    en:"White breaks the symmetry with 4.Bb5, a Spanish-style pin.",
-    fox:'wink' },
+    ja:"白はビショップをb5へ進めるよ。白のビショップは、e5のポーンを守っているc6のナイトを攻撃しているんだ。白のこの形は<a href='ruy_lopez.html'>ルイ・ロペス</a>と同じ考え方なので、スパニッシュ・フォー・ナイツと呼ばれているよ。",
+    en:"White develops the bishop to b5. White's bishop attacks the c6 knight, which is defending the e5 pawn. It follows the same idea as the <a href='ruy_lopez.html?lang=en'>Ruy Lopez</a>, so this is called the Spanish Four Knights.",
+    jaMore:"白はこの手の代わりに4.d4と中央を開くこともできて、この形はスコッチ・フォー・ナイツと呼ばれるよ。ほかに4.Bc4の<a href='italian.html'>イタリアン</a>風の形もあるんだ。",
+    enMore:"Instead of this move, White can open the center with 4.d4, known as the Scotch Four Knights. There's also 4.Bc4, an <a href='italian.html?lang=en'>Italian</a>-style setup.",
+    fox:'normal' },
   { move:{from:[0,5],to:[4,1]}, moveLabel:{ja:"4...Bb4", en:"4...Bb4"},
-    ja:"黒も同じくビショップをb4へ。ここでも鏡のような展開が続くよ。",
-    en:"Black mirrors again with 4...Bb4.",
+    ja:"黒もビショップをb4へ進めるよ。黒のビショップは、e4のポーンを守っているc3のナイトを攻撃して、白と同じ形でやり返すんだ。",
+    en:"Black also develops the bishop to b4. Black's bishop attacks the c3 knight, which is defending the e4 pawn, answering White in the same way.",
     fox:'normal' },
   { move:{from:[7,4],to:[7,6],castle:{from:[7,7],to:[7,5]}}, moveLabel:{ja:"5. O-O", en:"5. O-O"},
-    ja:"白はキャスリングでキングを安全な場所へ。",
-    en:"White castles kingside, tucking the king away safely.",
-    fox:'happy' },
+    ja:"白はキャスリングでキングを安全な場所へ動かすよ。白はキングの安全を先に確保して、中央での駆け引きに備えるんだ。",
+    en:"White castles, bringing the king to safety. White secures the king first and prepares for the maneuvering in the center.",
+    fox:'normal' },
   { move:{from:[0,4],to:[0,6],castle:{from:[0,7],to:[0,5]}}, moveLabel:{ja:"5...O-O", en:"5...O-O"},
-    ja:"黒も同じくキャスリング。両者ともキングの安全を確保したよ。",
-    en:"Black castles too, and both kings are now safely tucked away.",
+    ja:"黒もキャスリングでキングを安全な場所へ動かすよ。白も黒もキングを守り、まだ鏡のような形が続いているんだ。",
+    en:"Black also castles, bringing the king to safety. Both kings are safe, and the mirror-image position continues.",
     fox:'normal' },
   { move:{from:[6,3],to:[5,3]}, moveLabel:{ja:"6. d3", en:"6. d3"},
-    ja:"白はd3で中央を支えるよ。",
-    en:"White supports the center with 6.d3.",
+    ja:"白はポーンをd3へ進めるよ。白はこれでe4のポーンを守り、c1のビショップの道も開けるんだ。",
+    en:"White pushes the pawn to d3. White defends the e4 pawn and opens the path for the c1 bishop.",
     fox:'normal' },
   { move:{from:[1,3],to:[2,3]}, moveLabel:{ja:"6...d6", en:"6...d6"},
-    ja:"黒もd6で中央を支えるよ。",
-    en:"Black supports the center in turn with 6...d6.",
+    ja:"黒もポーンをd6へ進めるよ。黒はこれでe5のポーンを守り、c8のビショップの道も開けるんだ。白と黒がまったく同じ形になったこの局面は、シンメトリカル・バリエーションと呼ばれているよ。",
+    en:"Black also pushes the pawn to d6. Black defends the e5 pawn and opens the path for the c8 bishop. This is called the Symmetrical Variation, with both sides in exactly the same setup.",
     fox:'normal' },
   { move:{from:[7,2],to:[3,6]}, moveLabel:{ja:"7. Bg5", en:"7. Bg5"},
-    ja:"白はビショップをg5へ。これで本譜は一段落、続きはぜひ自分で指してみてね！",
-    en:"White develops the bishop to g5. That's the main line — try continuing the game yourself from here!",
+    ja:"白はビショップをg5へ進めるよ。白のビショップはf6のナイトをねらっていて、ナイトが動くとd8の黒のクイーンが取られる形（クイーンへのピン）になっているんだ。白はここで、鏡のような形をくずして先に動き出すよ。",
+    en:"White develops the bishop to g5. White's bishop targets the f6 knight, and if the knight moved, Black's queen on d8 would be captured — a pin against the queen. White breaks the symmetry here and makes the first move to take the initiative.",
+    fox:'normal' },
+  { move:{from:[4,1],to:[5,2]}, moveLabel:{ja:"7...Bxc3", en:"7...Bxc3"},
+    ja:"黒はビショップで、c3にいた白のナイトを取るよ。黒はここでビショップとナイトを交換して、白のポーンの形を崩しにいくんだ。その代わり、黒は2つのビショップを持つ利点を白に渡すことになるよ。",
+    en:"Black's bishop captures the white knight that was on c3. Black trades bishop for knight here to damage White's pawn structure. The downside is that Black hands White the advantage of the bishop pair.",
+    jaMore:"黒はこの手の代わりに7...Ne7と、ナイトをg6の方へ回してピンを外しにいく手もあるよ。この形はピルズベリー・バリエーションと呼ばれているんだ。",
+    enMore:"Instead of this move, Black can also play 7...Ne7, rerouting the knight toward g6 to escape the pin. This is called the Pillsbury Variation.",
+    fox:'normal' },
+  { move:{from:[6,1],to:[5,2]}, moveLabel:{ja:"8. bxc3", en:"8. bxc3"},
+    ja:"白はbのポーンで、c3に入った黒のビショップを取り返すよ。白はcのポーンが2つ縦に並ぶ形になるけれど、bファイルが開いて、中央にもポーンが1つ増えるんだ。",
+    en:"White's b-pawn takes back the black bishop that landed on c3. White ends up with doubled c-pawns, but the b-file opens and White gains another central pawn.",
+    fox:'normal' },
+  { move:{from:[0,3],to:[1,4]}, moveLabel:{ja:"8...Qe7", en:"8...Qe7"},
+    ja:"黒はクイーンをe7へ動かすよ。黒はd8のマスを空けて、この先ナイトをc6からd8、e6へと回し、g5のビショップを追い払ってピンを外す準備をするんだ。黒のこの作戦はメッガーのアンピンと呼ばれていて、この形の本筋として知られているよ。この後は白がRe1とd4で中央を固め、黒はNd8からNe6と回す流れがよく見られるんだ。これで本譜は一段落、続きはぜひ自分で指してみてね！",
+    en:"Black moves the queen to e7. Black clears d8 so the knight can travel from c6 to d8 and then e6, chasing away the g5 bishop and escaping the pin. This plan is called the Metger Unpin and is known as the main line of this setup. A common continuation is for White to reinforce the center with Re1 and d4 while Black reroutes the knight via d8 to e6. That's the main line — try continuing the game yourself from here!",
     fox:'happy' }
 ];
 
@@ -329,15 +353,50 @@ function adjustBottomPadding(){
   }
 }
 
+function shareOnX(message) {
+  const shareUrl = 'https://twitter.com/intent/tweet?text=' + encodeURIComponent(message) + '&url=' + encodeURIComponent(window.location.href);
+  window.open(shareUrl, '_blank', 'noopener,noreferrer,width=550,height=420');
+}
+
 function renderStep(){
   const step = LESSON_STEPS[currentStep];
   renderBoard(boardSnapshots[currentStep]);
   document.getElementById('moveLabel').textContent = (step.moveLabel && step.moveLabel[currentLang]) || '';
-  document.getElementById('commentaryText').textContent = step[currentLang];
+  const ctEl = document.getElementById('commentaryText');
+  const moreText = step[currentLang + 'More'];
+  ctEl.innerHTML = step[currentLang] + (moreText
+    ? '<details class="more-detail"><summary>' + (currentLang === 'ja' ? '💡 もっと詳しく知りたい方へ' : '💡 Want to know more?') + '</summary><div class="more-body">' + moreText + '</div></details>'
+    : '');
+  ctEl.scrollTop = 0;
+  const moreEl = ctEl.querySelector('details.more-detail');
+  if (moreEl) {
+    moreEl.addEventListener('toggle', function(){
+      if (moreEl.open) { ctEl.scrollTop = moreEl.offsetTop - ctEl.offsetTop; }
+      adjustBottomPadding();
+    });
+  }
   document.getElementById('foxAvatar').src = FOX_BY_MOOD[step.fox] || FOX_BY_MOOD.normal;
   document.getElementById('lessonProgress').textContent = currentStep + ' / ' + (LESSON_STEPS.length - 1);
   document.getElementById('btnPrev').disabled = currentStep === 0;
   document.getElementById('btnNext').disabled = currentStep === LESSON_STEPS.length - 1;
+  adjustBottomPadding();
+
+  const shareRow = document.getElementById('shareRow');
+  if (shareRow) {
+    if (currentStep === LESSON_STEPS.length - 1) {
+      const openingNameEl = document.querySelector('.opening-title.lang-element-' + currentLang);
+      const openingName = openingNameEl ? openingNameEl.textContent : '';
+      const msg = currentLang === 'ja'
+        ? '🦊 ' + openingName + 'をKitsuneChessで学んだよ!一手ずつ「なぜその手か」を教えてくれるよ'
+        : '🦊 Just learned the ' + openingName + ' on KitsuneChess! It explains why each move is played, step by step.';
+      const shareBtn = document.getElementById('shareXBtn');
+      shareBtn.textContent = currentLang === 'ja' ? '🦊 𝕏でシェアする' : '🦊 Share on 𝕏';
+      shareBtn.onclick = function() { shareOnX(msg); };
+      shareRow.style.display = 'block';
+    } else {
+      shareRow.style.display = 'none';
+    }
+  }
   adjustBottomPadding();
 }
 
