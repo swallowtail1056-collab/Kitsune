@@ -103,6 +103,11 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
   font-size: 1rem;
   color: var(--text-sub);
 }
+.commentary-text a, .opening-intro a { color:var(--brown); text-decoration:underline; font-weight:700; }
+.commentary-text a:hover, .opening-intro a:hover { color:var(--brown-dark); }
+.more-detail { margin-top:8px; border-top:1px dashed var(--brown-light); padding-top:6px; }
+.more-detail summary { cursor:pointer; font-weight:700; color:var(--brown); font-size:0.92rem; list-style-position:inside; }
+.more-detail .more-body { margin-top:6px; font-size:0.94rem; }
 </style>
   <script src="board-theme.js"></script>
 </head>
@@ -121,8 +126,8 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
   <h1 class="opening-title lang-element-en">Bird's Opening</h1>
 
   <div class="opening-intro">
-    <p class="lang-element-ja">💡 バード・オープニングは1.f4と突くユニークなオープニングだよ！ヘンリー・バードが19世紀に好んで使ったことが名前の由来なんだ。f4の手はe5のマスをコントロールしてキングサイドへの攻撃を準備するけど、f2-f4とポーンを前進させることでe1-h4の対角線が弱くなるというリスクもあるよ。黒が1...e5と応じるフロム・ギャンビットは特に危険で、正確に対応しないと白が苦しくなるんだ。主流のオープニングから大きく外れているため相手の研究を崩しやすいよ！</p>
-    <p class="lang-element-en">💡 Bird's Opening starts with the unique 1.f4, named after Henry Bird who loved playing it in the 19th century! The f4 pawn controls the e5 square and prepares for kingside attacking formations. However, advancing the f-pawn also weakens the e1-h4 diagonal. Black's most dangerous response is the From's Gambit with 1...e5, which can be very challenging if White doesn't know the correct response. Since Bird's Opening is far outside mainstream theory, it's excellent for disrupting opponents who have carefully prepared standard openings!</p>
+    <p class="lang-element-ja">💡 バード・オープニングは、白が1手目でfのポーンをf4へ進めるオープニングだよ。19世紀のイギリスの棋士、ヘンリー・バードがよく指したことから、この名前が付いたんだ。黒のダッチ・ディフェンスを白番で、しかも1手多く指すような形になるのが特徴だよ。トップレベルではあまり見かけないけれど、相手が慣れていない形に持ち込めるので、実戦では十分に戦えるオープニングなんだ。</p>
+    <p class="lang-element-en">💡 Bird's Opening is an opening in which White pushes the f-pawn to f4 on move one. It's named after the 19th-century English player Henry Bird, who played it often. It's like playing Black's Dutch Defense with the white pieces and an extra move. It's rare at the top level, but it leads to positions your opponent may not know well, so it's perfectly playable in practice.</p>
   </div>
 
   <div class="board-wrap">
@@ -193,60 +198,64 @@ const initialBoard = [
 // ============================================================
 const LESSON_STEPS = [
   { move:null, moveLabel:{ja:"開始局面", en:"Starting Position"},
-    ja:"バード・オープニングのレッスンを始めるよ！主流から大きく外れて、相手の研究を崩しやすいユニークな戦法だよ。ジーンと一緒に、一手ずつ「なぜその手を指すのか」を学んでいこう。",
-    en:"Let's start Bird's Opening lesson! Far outside mainstream theory, excellent for disrupting prepared opponents. Jene will explain why each move is played, one step at a time.",
+    ja:"バード・オープニングのレッスンを始めるよ！このページでは、白がNf3・e3・Be2・O-O・d3と駒を並べ、最後にQe1からキングサイドの攻めを目指す流れを見ていくよ。白がどうやってキングを守りながら攻めの準備をするのかがポイントなんだ。一手ずつジーンと一緒に、なぜその手を指すのかを学んでいこう。",
+    en:"Let's start the Bird's Opening lesson! On this page we follow how White sets up with Nf3, e3, Be2, O-O and d3, then heads for a kingside attack with Qe1. The key is how White prepares to attack while keeping the king safe. Jene will walk you through why each move is played, one step at a time.",
     fox:'welcome' },
-  { move:{from:[6,5],to:[4,5]}, moveLabel:{ja:"1. f4（バード！）", en:"1. f4 (Bird's!)"},
-    ja:"ここが本題、バード・オープニングの一手！白はf4でe5のマスをコントロールし、キングサイドへの攻撃を準備するよ。",
-    en:"Here's Bird's Opening move! White controls e5 and prepares kingside attacking formations.",
+  { move:{from:[6,5],to:[4,5]}, moveLabel:{ja:"1. f4（バード！）", en:"1. f4 (Bird!)"},
+    ja:"ここがバード・オープニングの一手！白はポーンをf4へ進めて、e5のマスを押さえるよ。一般的には1.e4や1.d4で中央を直接取りに行くけれど、白はここで<a href='dutch.html'>ダッチ・ディフェンス</a>を白番で指すような形を選ぶんだ。その代わり、白はキングのそばのfのポーンを動かすので、e1からh4への斜めの線が開いて、キングの周りが少し弱くなるよ。",
+    en:"Here's Bird's Opening! White pushes the pawn to f4, controlling the e5 square. The usual first moves 1.e4 or 1.d4 claim the center directly, but White chooses a setup like the <a href='dutch.html?lang=en'>Dutch Defense</a> with the white pieces. The cost is that moving the f-pawn next to the king opens the e1–h4 diagonal, slightly weakening the king's surroundings.",
+    jaMore:"黒がこの手に1...e5と応じてポーンを差し出す作戦は、フロム・ギャンビットと呼ばれる鋭い変化だよ。白が正確に応じないと、すぐに危険な局面になるんだ。",
+    enMore:"If Black answers with 1...e5, offering a pawn, it's a sharp line called From's Gambit. If White doesn't respond accurately, things can get dangerous quickly.",
     fox:'happy' },
   { move:{from:[1,3],to:[3,3]}, moveLabel:{ja:"1...d5", en:"1...d5"},
-    ja:"黒はd5で中央を取るよ。",
-    en:"Black takes the center with 1...d5.",
+    ja:"黒はポーンをd5へ進めるよ。黒は中央のマスを押さえながら、c8のビショップの道も開けるんだ。黒はこの局面で、たいていこの手を選ぶんだ。",
+    en:"Black pushes the pawn to d5. Black takes control of central squares and opens the path for the c8 bishop. This is Black's most common reply.",
     fox:'normal' },
   { move:{from:[7,6],to:[5,5]}, moveLabel:{ja:"2. Nf3", en:"2. Nf3"},
-    ja:"白はナイトをf3へ展開するよ。f4ポーンを支えつつ、この先のキャスリングに向けて駒を出していくんだ。",
-    en:"White develops the knight to f3, supporting the f4 pawn while continuing to develop toward castling.",
+    ja:"白はナイトをf3へ進めるよ。白のナイトはe5のマスをもう一度押さえ、同時にh4のマスも見張って、黒のクイーンがh4へ出てくるのを防ぐんだ。",
+    en:"White develops the knight to f3. White's knight adds control of e5 and also watches the h4 square, stopping Black's queen from coming to h4.",
     fox:'normal' },
-  { move:{from:[0,6],to:[2,5]}, moveLabel:{ja:"2...Nf6", en:"2...Nf6"},
-    ja:"黒もナイトをf6へ展開するよ。中央への関与を保ちつつ、柔軟に構えるんだ。",
-    en:"Black develops the knight to f6, staying flexible while keeping a foothold in the center.",
+  { move:{from:[1,6],to:[2,6]}, moveLabel:{ja:"2...g6", en:"2...g6"},
+    ja:"黒はポーンをg6へ進めるよ。黒はg7のマスを空けて、ビショップを長い対角線に出す準備をするんだ。",
+    en:"Black pushes the pawn to g6. Black clears g7 to put the bishop on the long diagonal.",
     fox:'normal' },
   { move:{from:[6,4],to:[5,4]}, moveLabel:{ja:"3. e3", en:"3. e3"},
-    ja:"白はe3で展開を進めるよ。f1のビショップの通り道を開きつつ、d4への進出も見据えているんだ。",
-    en:"White continues developing with 3.e3, opening a diagonal for the f1 bishop while keeping the option of a later d4 push.",
+    ja:"白はポーンをe3へ進めるよ。白はf1のビショップの道を開けて、f4のポーンも支えるんだ。白はこの先、Be2とキャスリングでキングを守る形を作るよ。",
+    en:"White pushes the pawn to e3. White opens the path for the f1 bishop and supports the f4 pawn. Next, White will set up a safe position for the king with Be2 and castling.",
     fox:'normal' },
-  { move:{from:[1,6],to:[2,6]}, moveLabel:{ja:"3...g6", en:"3...g6"},
-    ja:"黒はg6でフィアンケットを準備するよ。",
-    en:"Black prepares a fianchetto with 3...g6.",
+  { move:{from:[0,5],to:[1,6]}, moveLabel:{ja:"3...Bg7", en:"3...Bg7"},
+    ja:"黒はビショップをg7へ進めるよ。黒のビショップは長い対角線から中央を通って、白のb2のポーンまでにらんでいるんだ。",
+    en:"Black develops the bishop to g7. From the long diagonal, Black's bishop looks through the center all the way to White's b2 pawn.",
     fox:'normal' },
   { move:{from:[7,5],to:[6,4]}, moveLabel:{ja:"4. Be2", en:"4. Be2"},
-    ja:"白はビショップをe2へ展開するよ。控えめな配置だけど、これでキャスリングの準備が整うんだ。",
-    en:"White develops the bishop to e2 — a modest square, but it's enough to clear the way for castling.",
+    ja:"白はビショップをe2へ進めるよ。白はキングサイドの駒を出し終えて、キャスリングの準備をするんだ。",
+    en:"White develops the bishop to e2. White finishes developing the kingside pieces and gets ready to castle.",
     fox:'normal' },
-  { move:{from:[0,5],to:[1,6]}, moveLabel:{ja:"4...Bg7", en:"4...Bg7"},
-    ja:"黒はビショップをg7へ。フィアンケットを完成させるよ。",
-    en:"Black completes the fianchetto with 4...Bg7.",
+  { move:{from:[0,6],to:[2,5]}, moveLabel:{ja:"4...Nf6", en:"4...Nf6"},
+    ja:"黒はナイトをf6へ進めるよ。黒はナイトを展開しながら、e4のマスを押さえて、白がe4と突くのをけん制するんだ。",
+    en:"Black develops the knight to f6. Black develops while controlling the e4 square, discouraging White from pushing e4.",
     fox:'normal' },
   { move:{from:[7,4],to:[7,6],castle:{from:[7,7],to:[7,5]}}, moveLabel:{ja:"5. O-O", en:"5. O-O"},
-    ja:"白はキャスリングでキングを安全な場所へ。",
-    en:"White castles kingside, tucking the king away safely.",
+    ja:"白はキャスリングでキングを安全な場所へ動かすよ。白はこれで、弱くなっていたe1からh4への斜めの線からキングを遠ざけるんだ。",
+    en:"White castles, bringing the king to safety. White moves the king away from the weakened e1–h4 diagonal.",
     fox:'normal' },
   { move:{from:[0,4],to:[0,6],castle:{from:[0,7],to:[0,5]}}, moveLabel:{ja:"5...O-O", en:"5...O-O"},
-    ja:"黒も同じくキャスリング。両者ともキングの安全を確保したよ。",
-    en:"Black castles too, and both kings are now safely tucked away.",
+    ja:"黒もキャスリングでキングを安全な場所へ動かすよ。黒はキングの安全を確保して、中央での戦いに備えるんだ。",
+    en:"Black also castles, bringing the king to safety. Black secures the king and prepares for the fight in the center.",
     fox:'normal' },
   { move:{from:[6,3],to:[5,3]}, moveLabel:{ja:"6. d3", en:"6. d3"},
-    ja:"白はd3で控えめに中央を支えるよ。",
-    en:"White modestly supports the center with 6.d3.",
+    ja:"白はポーンをd3へ進めるよ。白はこれでe4のマスを支えて、この先e4と突いて中央を広げる準備をするんだ。",
+    en:"White pushes the pawn to d3. White supports the e4 square and prepares to expand in the center with e4 later.",
     fox:'normal' },
   { move:{from:[1,2],to:[3,2]}, moveLabel:{ja:"6...c5", en:"6...c5"},
-    ja:"黒はc5で中央に圧力をかけるよ。",
-    en:"Black challenges the center with 6...c5.",
+    ja:"黒はポーンをc5へ進めるよ。黒はクイーンサイドでスペースを広げ、d4のマスも押さえるんだ。黒はこれで、白が中央でポーンを進めにくくしているよ。",
+    en:"Black pushes the pawn to c5. Black gains space on the queenside and controls the d4 square. This makes it harder for White to advance pawns in the center.",
     fox:'normal' },
   { move:{from:[7,3],to:[7,4]}, moveLabel:{ja:"7. Qe1", en:"7. Qe1"},
-    ja:"白はクイーンをe1へ。ここからQh4へ回ってキングサイドを直接狙う、バード・オープニングらしい攻撃プランの始まりなんだ。これで本譜は一段落、続きはぜひ自分で指してみてね！",
-    en:"White develops the queen to e1, the start of the classic Bird's Opening attacking plan of swinging the queen to h4 to target the kingside directly. That's the main line — try continuing the game yourself from here!",
+    ja:"白はクイーンをe1へ動かすよ。白のクイーンはe1からh4のマスまで利いていて、この先Qh4と出てキングサイドで攻める準備をしているんだ。白のクイーンはe4と突く手も後ろから支えるよ。その代わり、白はクイーンサイドの駒の展開がまだ遅れているんだ。これで本譜は一段落、続きはぜひ自分で指してみてね！",
+    en:"White moves the queen to e1. From e1, White's queen reaches h4, preparing to come to h4 and attack on the kingside. The queen also supports a future e4 push from behind. The trade-off is that White's queenside pieces are still undeveloped. That's the main line — try continuing the game yourself from here!",
+    jaMore:"白はこの手の代わりに7.Nc3と先に駒を展開することもできて、エンジンの評価ではそちらのほうがやや高いんだ。",
+    enMore:"Instead of this move, White can develop first with 7.Nc3, which engines rate slightly higher.",
     fox:'happy' }
 ];
 
@@ -341,7 +350,19 @@ function renderStep(){
   const step = LESSON_STEPS[currentStep];
   renderBoard(boardSnapshots[currentStep]);
   document.getElementById('moveLabel').textContent = (step.moveLabel && step.moveLabel[currentLang]) || '';
-  document.getElementById('commentaryText').textContent = step[currentLang];
+  const ctEl = document.getElementById('commentaryText');
+  const moreText = step[currentLang + 'More'];
+  ctEl.innerHTML = step[currentLang] + (moreText
+    ? '<details class="more-detail"><summary>' + (currentLang === 'ja' ? '💡 もっと詳しく知りたい方へ' : '💡 Want to know more?') + '</summary><div class="more-body">' + moreText + '</div></details>'
+    : '');
+  ctEl.scrollTop = 0;
+  const moreEl = ctEl.querySelector('details.more-detail');
+  if (moreEl) {
+    moreEl.addEventListener('toggle', function(){
+      if (moreEl.open) { ctEl.scrollTop = moreEl.offsetTop - ctEl.offsetTop; }
+      adjustBottomPadding();
+    });
+  }
   document.getElementById('foxAvatar').src = FOX_BY_MOOD[step.fox] || FOX_BY_MOOD.normal;
   document.getElementById('lessonProgress').textContent = currentStep + ' / ' + (LESSON_STEPS.length - 1);
   document.getElementById('btnPrev').disabled = currentStep === 0;
