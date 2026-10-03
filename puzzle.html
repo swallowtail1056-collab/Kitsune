@@ -121,6 +121,17 @@ nav h1{font-family:'Crimson Pro',serif;font-size:clamp(0.9rem,3vw,1.4rem);font-w
 @media(min-width:680px){
   #puzzleBoard{width:min(48vw,400px);height:min(48vw,400px);}
 }
+/* 盤面を画面いっぱいに（スマホ：画面の横幅いっぱい／PC：画面の高さに合わせて大きく） */
+#puzzlePage-boardHolder{position:relative;display:block;}
+@media(max-width:679px){
+  #puzzleBoard{width:100vw;height:100vw;border-left:none;border-right:none;}
+  #puzzlePage-boardHolder{margin-left:-16px;margin-right:-16px;}
+  #page-puzzle .board-wrap{width:100%;}
+}
+@media(min-width:680px){
+  #puzzleBoard{width:min(calc(100vh - 140px),calc(100vw - 420px),720px);height:min(calc(100vh - 140px),calc(100vw - 420px),720px);min-width:360px;min-height:360px;}
+}
+.p-cell.refute-from,.p-cell.refute-to{background-color:rgba(230,57,70,0.45)!important;}
 .p-cell{aspect-ratio:1;display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative;overflow:hidden;-webkit-tap-highlight-color:transparent;}
 .p-cell.light{background:var(--board-light);}
 .p-cell.dark{background:var(--board-dark);}
@@ -462,7 +473,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <div class="board-wrap">
       <div class="board-row">
         <div class="rank-col" id="puzzleRankCol"></div>
-        <div style="position:relative;display:inline-block;">
+        <div id="puzzlePage-boardHolder">
           <div id="puzzleBoard"></div>
           <svg id="puzzleArrowSvg" viewBox="0 0 8 8" style="position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:5;"></svg>
         </div>
@@ -477,6 +488,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <div class="btn-row">
         <button class="btn btn-secondary" id="btnPuzzleAnswer" onclick="showPuzzleAnswer()">
           <span class="lang-text" data-ja="🔍 答えを見る" data-en="🔍 Show Answer">🔍 答えを見る</span>
+        </button>
+      </div>
+      <div class="btn-row" id="puzzleRetryRow" style="display:none;">
+        <button class="btn btn-primary" onclick="revertPuzzleRefutation()">
+          <span class="lang-text" data-ja="↩ 元の局面に戻ってもう一度" data-en="↩ Back to the puzzle position">↩ 元の局面に戻ってもう一度</span>
         </button>
       </div>
       <div class="btn-row" id="puzzleNextRow" style="display:none;">
@@ -2750,6 +2766,8 @@ function startPuzzle(idx) {
   puzzleChess = new Chess(p.fen);
   document.getElementById('puzzleNextRow').style.display = 'none';
   document.getElementById('btnPuzzleAnswer').style.display = '';
+  puzzleState.refuting = false; puzzleState.refuteFrom = null; puzzleState.refuteTo = null;
+  const _rr = document.getElementById('puzzleRetryRow'); if (_rr) _rr.style.display = 'none';
   const banner = document.getElementById('puzzleSuperhardBanner');
   if (banner) banner.style.display = p.superhard ? 'block' : 'none';
   setFoxImg('normal');   // ← この行を追加
@@ -2778,7 +2796,8 @@ function renderPuzzleBoard() {
       if (puzzleState.lastFrom === sq) cell.classList.add('last-from');
       if (puzzleState.lastTo === sq) cell.classList.add('last-to');
       if (puzzleState.selected === sq) cell.classList.add('selected');
-    
+      if (puzzleState.refuteFrom === sq) cell.classList.add('refute-from');
+      if (puzzleState.refuteTo === sq) cell.classList.add('refute-to');
       if (col === 0) { const l = document.createElement('span'); l.className = 'cell-label-puzzle'; l.style.bottom = '2px'; l.style.left = '3px'; l.textContent = RANKS[row]; cell.appendChild(l); }
       if (row === 7) { const l = document.createElement('span'); l.className = 'cell-label-puzzle'; l.style.bottom = '2px'; l.style.right = '3px'; l.textContent = FILES[col]; cell.appendChild(l); }
       const p = puzzleChess.get(sq);
@@ -2799,7 +2818,7 @@ function setPuzzleStatus(msg, cls) {
 }
 
 function onPuzzleCellClick(sq) {
-  if (puzzleState.animating || puzzleState.awaitingNext) return;
+  if (puzzleState.animating || puzzleState.awaitingNext || puzzleState.refuting) return;
   const piece = puzzleChess.get(sq);
   const turn = puzzleChess.turn();
   if (puzzleState.selected) {
@@ -2817,8 +2836,10 @@ function onPuzzleCellClick(sq) {
           renderPuzzleBoard();
           advancePuzzleAfterPlayerMove();
         });
+      } else if (result) {
+        // 間違えた手を実際に盤に指して、相手の一番いい応手を見せる
+        showPuzzleRefutation(fromSq, result);
       } else {
-        if (result) puzzleChess.undo();
         doPuzzleWrong(sq);
       }
     } else if (piece && piece.color === turn) {
@@ -2898,6 +2919,118 @@ function doPuzzleWrong(sq) {
   renderPuzzleBoard();
 }
 
+// ===== 間違えた手の「そこに指すとどうなるか」表示 =====
+let pzSfWorker = null, pzSfFailed = false, pzSfResolver = null;
+function getPuzzleStockfish() {
+  if (pzSfWorker || pzSfFailed) return pzSfWorker;
+  try { pzSfWorker = new Worker('stockfish/stockfish-18-lite-single.js'); }
+  catch (e) { pzSfFailed = true; return null; }
+  pzSfWorker.onerror = () => { pzSfFailed = true; if (pzSfResolver) { const r = pzSfResolver; pzSfResolver = null; r(null); } };
+  pzSfWorker.onmessage = (e) => {
+    const line = typeof e.data === 'string' ? e.data : '';
+    if (line.indexOf('bestmove') === 0 && pzSfResolver) {
+      const r = pzSfResolver; pzSfResolver = null;
+      const uci = line.split(' ')[1];
+      r(uci && uci !== '(none)' ? uci : null);
+    }
+  };
+  pzSfWorker.postMessage('uci');
+  pzSfWorker.postMessage('isready');
+  return pzSfWorker;
+}
+function puzzleBestReplyUci(fen) {
+  return new Promise((resolve) => {
+    const w = getPuzzleStockfish();
+    if (!w) { resolve(null); return; }
+    let done = false;
+    pzSfResolver = (u) => { if (!done) { done = true; resolve(u); } };
+    w.postMessage('position fen ' + fen);
+    w.postMessage('go movetime 600');
+    setTimeout(() => { if (!done) { done = true; pzSfResolver = null; resolve(null); } }, 4000);
+  });
+}
+// エンジンが使えないときの簡易版：詰み→いちばん価値の高い駒を取る手
+function puzzleSimpleReply(chess) {
+  const moves = chess.moves({ verbose: true });
+  if (!moves.length) return null;
+  const val = { p:1, n:3, b:3, r:5, q:9, k:0 };
+  for (const m of moves) { chess.move(m.san); const mate = chess.in_checkmate(); chess.undo(); if (mate) return m; }
+  let best = null, bv = 0;
+  for (const m of moves) { if (m.captured && val[m.captured] > bv) { bv = val[m.captured]; best = m; } }
+  return best;
+}
+const PZ_PIECE_JA = { p:'ポーン', n:'ナイト', b:'ビショップ', r:'ルーク', q:'クイーン', k:'キング' };
+const PZ_PIECE_EN = { p:'pawn', n:'knight', b:'bishop', r:'rook', q:'queen', k:'king' };
+function showPuzzleRefutation(fromSq, wrongMove) {
+  puzzleState.streak = 0;
+  document.getElementById('puzzleStreakVal').textContent = 0;
+  addWrongPuzzle(currentPuzzle().order);
+  setFoxImg('confused');
+  playWrong();
+  puzzleState.selected = null; puzzleState.validTargets = [];
+  puzzleState.animating = true; puzzleState.refuting = true;
+  puzzleState.wrongMoveCount = 1;
+  clearPuzzleArrows();
+  renderPuzzleBoard();
+  setPuzzleStatus(LANG === 'ja' ? '不正解。そこに指すとどうなるか見てみよう…' : 'Wrong. Let\'s see what happens after that move…', 'bad');
+  animatePuzzleMove(fromSq, wrongMove.to, async () => {
+    puzzleState.refuteFrom = wrongMove.from; puzzleState.refuteTo = wrongMove.to;
+    puzzleState.lastFrom = null; puzzleState.lastTo = null;
+    renderPuzzleBoard();
+    // 相手の応手を探す
+    let reply = null;
+    if (!puzzleChess.game_over()) {
+      const uci = await puzzleBestReplyUci(puzzleChess.fen());
+      if (uci) {
+        reply = puzzleChess.move({ from: uci.slice(0,2), to: uci.slice(2,4), promotion: uci.length > 4 ? uci[4] : 'q' });
+        if (reply) puzzleChess.undo();
+      }
+      if (!reply) reply = puzzleSimpleReply(puzzleChess);
+    }
+    if (!reply) {
+      puzzleState.animating = false;
+      setPuzzleStatus(LANG === 'ja' ? '不正解。この手では相手にうまく逃げられてしまいます。元の局面に戻って、もう一度考えてみよう。' : 'Wrong. This move lets your opponent off the hook. Go back and try again.', 'bad');
+      document.getElementById('puzzleRetryRow').style.display = '';
+      return;
+    }
+    setTimeout(() => {
+      const mv = puzzleChess.move(reply.san);
+      if (!mv) { puzzleState.animating = false; document.getElementById('puzzleRetryRow').style.display = ''; return; }
+      puzzleState.wrongMoveCount = 2;
+      animatePuzzleMove(mv.from, mv.to, () => {
+        puzzleState.animating = false;
+        renderPuzzleBoard();
+        drawPuzzleArrow(mv.from, mv.to, '#e63946');
+        let msg;
+        if (LANG === 'ja') {
+          msg = '不正解。そこに指すと、相手に ' + mv.san + ' と返されてしまいます。';
+          if (puzzleChess.in_checkmate()) msg += 'チェックメイトされてしまいます！';
+          else if (mv.captured) msg += '（' + PZ_PIECE_JA[mv.captured] + 'を取られてしまいます）';
+          else if (puzzleChess.in_check()) msg += '（チェックをかけられてしまいます）';
+        } else {
+          msg = 'Wrong. After that, your opponent replies ' + mv.san + '.';
+          if (puzzleChess.in_checkmate()) msg += ' That\'s checkmate!';
+          else if (mv.captured) msg += ' (You lose your ' + PZ_PIECE_EN[mv.captured] + '.)';
+          else if (puzzleChess.in_check()) msg += ' (That\'s check.)';
+        }
+        setPuzzleStatus(msg, 'bad');
+        document.getElementById('puzzleRetryRow').style.display = '';
+      });
+    }, 350);
+  });
+}
+function revertPuzzleRefutation(silent) {
+  if (!puzzleState.refuting || puzzleState.animating) return;
+  for (let i = 0; i < (puzzleState.wrongMoveCount || 0); i++) puzzleChess.undo();
+  puzzleState.refuting = false; puzzleState.wrongMoveCount = 0;
+  puzzleState.refuteFrom = null; puzzleState.refuteTo = null;
+  clearPuzzleArrows();
+  document.getElementById('puzzleRetryRow').style.display = 'none';
+  setFoxImg('normal');
+  renderPuzzleBoard();
+  if (!silent) setPuzzleStatus(LANG === 'ja' ? '元の局面に戻りました。もう一度、正解の手を探してみよう。' : 'Back to the puzzle position. Find the right move!');
+}
+
 function squareToXY(sq) {
   const file = sq.charCodeAt(0) - 97;
   const rank = parseInt(sq[1], 10);
@@ -2969,6 +3102,8 @@ function drawPuzzleArrow(fromSq, toSq, color) {
 }
   
 function showPuzzleAnswer() {
+  if (puzzleState.animating) return;
+  if (puzzleState.refuting) revertPuzzleRefutation(true);
   puzzleState.streak = 0; // 答えを見たらストリークはリセット
   document.getElementById('puzzleStreakVal').textContent = 0;
   const p = currentPuzzle();
