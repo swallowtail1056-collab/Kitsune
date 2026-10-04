@@ -101,6 +101,11 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
   font-size: 1rem;
   color: var(--text-sub);
 }
+.commentary-text a, .opening-intro a { color:var(--brown); text-decoration:underline; font-weight:700; }
+.commentary-text a:hover, .opening-intro a:hover { color:var(--brown-dark); }
+.more-detail { margin-top:8px; border-top:1px dashed var(--brown-light); padding-top:6px; }
+.more-detail summary { cursor:pointer; font-weight:700; color:var(--brown); font-size:0.92rem; list-style-position:inside; }
+.more-detail .more-body { margin-top:6px; font-size:0.94rem; }
 </style>
   <script src="board-theme.js"></script>
 </head>
@@ -119,8 +124,8 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
   <h1 class="opening-title lang-element-en">Bishop's Opening</h1>
 
   <div class="opening-intro">
-    <p class="lang-element-ja">💡 ナイトより先にビショップを展開する、古典的で柔軟なオープニング。イタリアン・ゲームに似た局面に合流しやすく、多くの移行形を持つ。</p>
-    <p class="lang-element-en">💡 White develops the bishop before the knight in this classical, flexible opening. It often transposes into Italian Game-like positions and offers many transpositional options.</p>
+    <p class="lang-element-ja">💡 ビショップス・オープニングは、1.e4 e5のあとに白が2.Bc4とビショップを出す、とても古いオープニングだよ。15世紀末のルセナの本にも登場していて、最も古くから研究されてきたオープニングのひとつなんだ。19世紀半ばに黒の良い応じ方が見つかって一度は人気が下がったけれど、今でもいろいろなオープニングに合流できる柔軟さから指され続けているよ。相手の得意な形を外しやすい一方で、序盤から強い圧力をかけるのは難しいオープニングなんだ。</p>
+    <p class="lang-element-en">💡 The Bishop's Opening is a very old opening in which White plays 2.Bc4 after 1.e4 e5. It appears in Lucena's late-15th-century book and is one of the earliest openings to be studied. It lost popularity in the mid-19th century after good replies for Black were found, but it's still played today for its flexibility in transposing into many other openings. It's good for steering away from an opponent's favorite lines, but it's hard to put strong pressure on Black early.</p>
   </div>
 
   <div class="board-wrap">
@@ -182,40 +187,50 @@ const initialBoard = [
 
 const LESSON_STEPS = [
   { move:null, moveLabel:{ja:"開始局面", en:"Starting Position"},
-    ja:'ビショップス・オープニングのレッスンを始めるよ！ナイトより先にビショップを展開する、古典的で柔軟な戦法だよ。一手ずつジーンと一緒に、なぜその手を指すのかを学んでいこう。',
-    en:'Let\'s start the Bishop\'s Opening lesson! A classical, flexible approach that develops the bishop before the knight. Jene will walk you through why each move is played, one step at a time.',
+    ja:"ビショップス・オープニングのレッスンを始めるよ！このページでは、黒が2...Nf6と3...c6で中央を大きく取りにいく、パウルセン・ディフェンスの本筋を見ていくよ。白のビショップが追い返されながらも、どうf7をねらい続けるのかがポイントなんだ。一手ずつジーンと一緒に、なぜその手を指すのかを学んでいこう。",
+    en:"Let's start the Bishop's Opening lesson! On this page we follow the main line of the Paulsen Defense, where Black takes a big center with 2...Nf6 and 3...c6. The key is how White's bishop keeps aiming at f7 even while being pushed back. Jene will walk you through why each move is played, one step at a time.",
     fox:'welcome' },
   { move:{from:[6,4],to:[4,4]}, moveLabel:{ja:"1. e4", en:"1. e4"},
-    ja:'白はe4で中央を制圧するよ。ビショップとクイーンの通り道も同時に開く一手だね。',
-    en:'White claims the center with 1.e4, opening lines for the bishop and queen at the same time.',
+    ja:"白はポーンをe4へ進めるよ。白は中央のマスを押さえながら、ビショップとクイーンが動く道を開けるんだ。",
+    en:"White pushes the pawn to e4. White takes control of central squares and opens lines for the bishop and queen.",
     fox:'normal' },
   { move:{from:[1,4],to:[3,4]}, moveLabel:{ja:"1...e5", en:"1...e5"},
-    ja:'黒も同じくe5で対抗し、中央のバランスを保つよ。',
-    en:'Black mirrors with 1...e5, keeping the center balanced.',
+    ja:"黒はポーンをe5へ進めるよ。黒も同じように中央を押さえて、白のポーンと向かい合う形を作るんだ。",
+    en:"Black pushes the pawn to e5. Black also claims the center, setting up a pawn face-off with White.",
     fox:'normal' },
   { move:{from:[7,5],to:[4,2]}, moveLabel:{ja:"2. Bc4（ビショップス！）", en:"2. Bc4 (Bishop's!)"},
-    ja:'ここが本題、ビショップス・オープニングの一手！白はナイトより先にビショップをc4へ出すよ。a2-g8の対角線を使ってf7の弱点を早くから狙いつつ、駒組みの手順をあえて柔軟にしておくんだ。',
-    en:'Here\'s the Bishop\'s Opening move! White develops the bishop to c4 before the knight, eyeing the weak f7 square along the a2-g8 diagonal while keeping the move order flexible.',
+    ja:"ここがビショップス・オープニングの一手！白はビショップをc4へ進めて、キングしか守っていない黒のf7のポーンをねらうよ。一般的には2.Nf3とナイトを先に出すけれど、白はここでビショップを先に出して、ナイトの置き場所やfのポーンの使い方を後から決められるようにするんだ。その代わり、白は黒のe5のポーンに圧力をかけないので、黒は落ち着いて駒を展開しやすいよ。",
+    en:"Here's the Bishop's Opening! White develops the bishop to c4, aiming at Black's f7 pawn, which only the king defends. White usually develops the knight first with 2.Nf3, but by bringing the bishop out first, White keeps options open for where the knight goes and how to use the f-pawn. The trade-off is that White puts no pressure on Black's e5 pawn, so Black can develop calmly.",
     fox:'happy' },
   { move:{from:[0,6],to:[2,5]}, moveLabel:{ja:"2...Nf6", en:"2...Nf6"},
-    ja:'黒はナイトをf6へ進めるよ。展開しながら、さっそくe4ポーンに狙いをつけているんだ。',
-    en:'Black develops the knight to f6, developing while immediately eyeing the e4 pawn.',
+    ja:"黒はナイトをf6へ進めるよ。黒はナイトを展開しながら、守りのない白のe4のポーンを攻撃するんだ。この形はベルリン・ディフェンスと呼ばれていて、黒のいちばん積極的な応じ方だよ。",
+    en:"Black develops the knight to f6. Black develops while attacking White's undefended e4 pawn. This setup is called the Berlin Defense, and it's Black's most active reply.",
     fox:'normal' },
   { move:{from:[6,3],to:[5,3]}, moveLabel:{ja:"3. d3", en:"3. d3"},
-    ja:'白はd3でe4ポーンをしっかり支えるよ。まだナイトがc3にいないので、ポーンで守っておく必要があるんだ。',
-    en:'White solidly defends the e4 pawn with 3.d3. Since the knight isn\'t on c3 yet, the pawn needs to hold the fort.',
+    ja:"白はポーンをd3へ進めるよ。白はこれでe4のポーンを守り、c1のビショップの道も開けるんだ。",
+    en:"White pushes the pawn to d3. White defends the e4 pawn and opens the path for the c1 bishop.",
     fox:'normal' },
-  { move:{from:[0,5],to:[3,2]}, moveLabel:{ja:"3...Bc5", en:"3...Bc5"},
-    ja:'黒はビショップをc5へ。白と同じくa7-g1の対角線を使って、f2の弱点に狙いをつける、鏡写しのような一手だね。',
-    en:'Black develops the bishop to c5, mirroring White\'s idea by eyeing the weak f2 square along the a7-g1 diagonal.',
-    fox:'wink' },
+  { move:{from:[1,2],to:[2,2]}, moveLabel:{ja:"3...c6", en:"3...c6"},
+    ja:"黒はポーンをc6へ進めるよ。黒は次にd5と突いて中央を広く取る準備をするんだ。黒のこの形はパウルセン・ディフェンスと呼ばれていて、評価の高い応じ方だよ。その代わり、黒はナイトの自然な行き先であるc6のマスを自分のポーンでふさぐことになるよ。",
+    en:"Black pushes the pawn to c6. Black prepares to push ...d5 next and take a broad center. This setup is called the Paulsen Defense and is a highly regarded reply. The downside is that Black takes away c6, the knight's natural square, with its own pawn.",
+    jaMore:"黒はこの手の代わりに3...Nc6や3...Bc5と指すこともできるよ。その場合、白が4.Nf3と出ると、<a href='two_knights.html'>トゥー・ナイツ・ディフェンス</a>や<a href='italian.html'>イタリアン・ゲーム</a>と同じ形になることが多いんだ。",
+    enMore:"Instead of this move, Black can also play 3...Nc6 or 3...Bc5. Then, after White's 4.Nf3, the game often reaches the same positions as the <a href='two_knights.html?lang=en'>Two Knights Defense</a> or the <a href='italian.html?lang=en'>Italian Game</a>.",
+    fox:'normal' },
   { move:{from:[7,6],to:[5,5]}, moveLabel:{ja:"4. Nf3", en:"4. Nf3"},
-    ja:'白はナイトをf3へ展開するよ。e5ポーンに狙いをつけながら、この先のキャスリングへ向けて駒を出していくんだ。',
-    en:'White develops the knight to f3, eyeing the e5 pawn while continuing to develop toward castling.',
+    ja:"白はナイトをf3へ進めるよ。白はナイトを展開しながら、黒のe5のポーンを攻撃するんだ。",
+    en:"White develops the knight to f3. White develops while attacking Black's e5 pawn.",
     fox:'normal' },
-  { move:{from:[0,1],to:[2,2]}, moveLabel:{ja:"4...Nc6", en:"4...Nc6"},
-    ja:'黒はナイトをc6へ。e5ポーンをしっかり守りつつ、対称的な駒組みを完成させるよ。ここからはイタリアン・ゲームに似た局面に合流していくことも多いんだ。続きはぜひ自分で指してみてね！',
-    en:'Black develops the knight to c6, defending the e5 pawn and completing a symmetrical setup. From here the game often transposes into Italian Game-like positions — try continuing the game yourself from here!',
+  { move:{from:[1,3],to:[3,3]}, moveLabel:{ja:"4...d5", en:"4...d5"},
+    ja:"黒はポーンをd5へ進めるよ。黒はこれで中央を大きく取り、白のc4のビショップとe4のポーンを同時に攻撃するんだ。",
+    en:"Black pushes the pawn to d5. Black takes a big center and attacks White's c4 bishop and e4 pawn at the same time.",
+    fox:'happy' },
+  { move:{from:[4,2],to:[5,1]}, moveLabel:{ja:"5. Bb3", en:"5. Bb3"},
+    ja:"白はビショップをb3へ下げるよ。白のビショップはb3からも同じ斜めの線で、f7のマスをねらい続けているんだ。",
+    en:"White retreats the bishop to b3. From b3, White's bishop keeps aiming at f7 along the same diagonal.",
+    fox:'normal' },
+  { move:{from:[0,5],to:[2,3]}, moveLabel:{ja:"5...Bd6", en:"5...Bd6"},
+    ja:"黒はビショップをd6へ進めるよ。黒のビショップはe5のポーンを守り、黒は中央のd5とe5の2つのポーンを保つんだ。その代わり、黒のd6のビショップはdのポーンの前に立つので、黒の駒の動きが少し窮屈になるよ。この後は白がO-O、Re1、Nbd2と組み、黒もキャスリングして、中央でじっくり戦う流れが多いんだ。これで本譜は一段落、続きはぜひ自分で指してみてね！",
+    en:"Black develops the bishop to d6. Black's bishop defends the e5 pawn, so Black keeps both central pawns on d5 and e5. The downside is that the d6 bishop sits in front of the d-pawn, making Black's pieces a little cramped. Typically, White continues with O-O, Re1 and Nbd2 while Black castles, leading to a slow fight in the center. That's the main line — try continuing the game yourself from here!",
     fox:'happy' }
 ];
 
@@ -310,7 +325,19 @@ function renderStep(){
   const step = LESSON_STEPS[currentStep];
   renderBoard(boardSnapshots[currentStep]);
   document.getElementById('moveLabel').textContent = (step.moveLabel && step.moveLabel[currentLang]) || '';
-  document.getElementById('commentaryText').textContent = step[currentLang];
+  const ctEl = document.getElementById('commentaryText');
+  const moreText = step[currentLang + 'More'];
+  ctEl.innerHTML = step[currentLang] + (moreText
+    ? '<details class="more-detail"><summary>' + (currentLang === 'ja' ? '💡 もっと詳しく知りたい方へ' : '💡 Want to know more?') + '</summary><div class="more-body">' + moreText + '</div></details>'
+    : '');
+  ctEl.scrollTop = 0;
+  const moreEl = ctEl.querySelector('details.more-detail');
+  if (moreEl) {
+    moreEl.addEventListener('toggle', function(){
+      if (moreEl.open) { ctEl.scrollTop = moreEl.offsetTop - ctEl.offsetTop; }
+      adjustBottomPadding();
+    });
+  }
   document.getElementById('foxAvatar').src = FOX_BY_MOOD[step.fox] || FOX_BY_MOOD.normal;
   document.getElementById('lessonProgress').textContent = currentStep + ' / ' + (LESSON_STEPS.length - 1);
   document.getElementById('btnPrev').disabled = currentStep === 0;

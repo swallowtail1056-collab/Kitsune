@@ -101,6 +101,11 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
   font-size: 1rem;
   color: var(--text-sub);
 }
+.commentary-text a, .opening-intro a { color:var(--brown); text-decoration:underline; font-weight:700; }
+.commentary-text a:hover, .opening-intro a:hover { color:var(--brown-dark); }
+.more-detail { margin-top:8px; border-top:1px dashed var(--brown-light); padding-top:6px; }
+.more-detail summary { cursor:pointer; font-weight:700; color:var(--brown); font-size:0.92rem; list-style-position:inside; }
+.more-detail .more-body { margin-top:6px; font-size:0.94rem; }
 </style>
   <script src="board-theme.js"></script>
 </head>
@@ -119,8 +124,8 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
   <h1 class="opening-title lang-element-en">Blackburne Shilling Gambit</h1>
 
   <div class="opening-intro">
-    <p class="lang-element-ja">💡 一見悪手に見える罠だが、白がうっかり誘いに乗ると一瞬でチェックメイトされてしまう。カフェチェスで対戦相手を驚かせるのにぴったりの一手。</p>
-    <p class="lang-element-en">💡 A gambit that looks dubious at first glance, but if White falls for the bait, Black delivers a shockingly fast checkmate. A fun way to surprise casual opponents.</p>
+    <p class="lang-element-ja">💡 ブラックバーン・シリング・ギャンビットは、イタリアン・ゲームの形から黒が3...Nd4と指して、白を罠にかけるオープニングだよ。19世紀のイギリスの強豪ブラックバーンが、1シリングを賭けた早指しでこの罠を使ったと言われていて、それが名前の由来なんだ。白が欲張らずに正しく応じれば黒が不利になるので、本格的な対局向きの作戦ではないよ。それでも、知っておくと自分が引っかからずに済む、大事な罠のひとつなんだ。</p>
+    <p class="lang-element-en">💡 The Blackburne Shilling Gambit is a trap in which Black plays 3...Nd4 from an Italian Game setup. The name comes from the story that the 19th-century English master Blackburne used it in quick games played for a shilling a game. If White responds correctly instead of getting greedy, Black ends up worse, so it isn't a serious opening. Still, it's an important trap to know so you don't fall for it yourself.</p>
   </div>
 
   <div class="board-wrap">
@@ -182,64 +187,66 @@ const initialBoard = [
 
 const LESSON_STEPS = [
   { move:null, moveLabel:{ja:"開始局面", en:"Starting Position"},
-    ja:'ブラックバーン・シリング・ギャンビットのレッスンを始めるよ！一見おかしな手に見えるけど、白が誘いに乗ると一瞬で詰まされてしまう有名な罠だよ。一手ずつジーンと一緒に、なぜその手を指すのかを学んでいこう。',
-    en:'Let\'s start the Blackburne Shilling Gambit lesson! It looks like a dubious move, but if White takes the bait, a shockingly fast checkmate follows. Jene will walk you through why each move is played, one step at a time.',
+    ja:"ブラックバーン・シリング・ギャンビットのレッスンを始めるよ！このページでは、黒が3...Nd4でわざとe5のポーンを取らせ、白が欲張って駒を取り続けたときに、7手で詰まされてしまう流れを見ていくよ。白がどこで間違えたのか、どの手なら罠を避けられたのかがポイントなんだ。一手ずつジーンと一緒に、なぜその手を指すのかを学んでいこう。",
+    en:"Let's start the Blackburne Shilling Gambit lesson! On this page we follow how Black deliberately gives up the e5 pawn with 3...Nd4, and how White gets mated in seven moves after greedily grabbing material. The key is where White went wrong and which moves would have avoided the trap. Jene will walk you through why each move is played, one step at a time.",
     fox:'welcome' },
   { move:{from:[6,4],to:[4,4]}, moveLabel:{ja:"1. e4", en:"1. e4"},
-    ja:'白はe4で中央を制圧するよ。',
-    en:'White claims the center with 1.e4.',
+    ja:"白はポーンをe4へ進めるよ。白は中央のマスを押さえながら、ビショップとクイーンが動く道を開けるんだ。",
+    en:"White pushes the pawn to e4. White takes control of central squares and opens lines for the bishop and queen.",
     fox:'normal' },
   { move:{from:[1,4],to:[3,4]}, moveLabel:{ja:"1...e5", en:"1...e5"},
-    ja:'黒も同じくe5で対抗するよ。',
-    en:'Black mirrors with 1...e5.',
+    ja:"黒はポーンをe5へ進めるよ。黒も同じように中央を押さえて、白のポーンと向かい合う形を作るんだ。",
+    en:"Black pushes the pawn to e5. Black also claims the center, setting up a pawn face-off with White.",
     fox:'normal' },
   { move:{from:[7,6],to:[5,5]}, moveLabel:{ja:"2. Nf3", en:"2. Nf3"},
-    ja:'白はナイトをf3へ。e5ポーンに狙いをつけるよ。',
-    en:'White develops the knight to f3, eyeing the e5 pawn.',
+    ja:"白はナイトをf3へ進めるよ。白のナイトは展開しながら、黒のe5のポーンを攻撃しているんだ。",
+    en:"White develops the knight to f3. White's knight develops while attacking Black's e5 pawn.",
     fox:'normal' },
   { move:{from:[0,1],to:[2,2]}, moveLabel:{ja:"2...Nc6", en:"2...Nc6"},
-    ja:'黒もナイトをc6へ。e5ポーンを守りつつ展開するよ。',
-    en:'Black develops the knight to c6, defending the e5 pawn.',
+    ja:"黒はナイトをc6へ進めるよ。黒はナイトを展開しながら、e5のポーンを守るんだ。",
+    en:"Black develops the knight to c6. Black develops a piece and defends the e5 pawn at the same time.",
     fox:'normal' },
   { move:{from:[7,5],to:[4,2]}, moveLabel:{ja:"3. Bc4", en:"3. Bc4"},
-    ja:'白はビショップをc4へ。ごく普通のイタリアン・ゲーム風の一手だよ。',
-    en:'White develops the bishop to c4, a perfectly normal Italian Game-style move.',
+    ja:"白はビショップをc4へ進めるよ。白のビショップは、キングしか守っていない黒のf7のポーンをねらっているんだ。白はこの形から<a href='italian.html'>イタリアン・ゲーム</a>に入っていくよ。",
+    en:"White develops the bishop to c4. White's bishop aims at Black's f7 pawn, which only the king defends. From here, White heads into the <a href='italian.html?lang=en'>Italian Game</a>.",
     fox:'normal' },
-  { move:{from:[2,2],to:[4,3]}, moveLabel:{ja:"3...Nd4（罠の始まり！）", en:"3...Nd4 (The trap begins!)"},
-    ja:'ここが本題、ブラックバーン・シリング・ギャンビットの一手！一見、同じ駒を無駄に動かすだけの悪手に見えるよね。でもこれが罠の仕掛けなんだ。この手のせいでe5ポーンの守りが手薄になり、白に「タダのポーンが取れる」と誤解させることを狙っているんだよ。',
-    en:'Here\'s the Blackburne Shilling Gambit move! It looks like a pointless move that just shuffles the same piece around — but that\'s exactly the trick. It leaves the e5 pawn looking undefended, tempting White into thinking there\'s a free pawn to grab.',
-    fox:'quiz' },
-  { move:{from:[5,5],to:[3,4]}, moveLabel:{ja:"4. Nxe5", en:"4. Nxe5"},
-    ja:'白は罠にかかって、e5のポーンを取ってしまうよ。ここまでは自然な手に見えるんだ。',
-    en:'White takes the bait and captures on e5. Up to this point, it still looks like a perfectly natural move.',
-    fox:'normal' },
-  { move:{from:[0,3],to:[3,6]}, moveLabel:{ja:"4...Qg5！", en:"4...Qg5!"},
-    ja:'黒はクイーンをg5へ。これがこの罠の核心の一手だよ！e5のナイトと、g2のポーンを同時に狙う二重攻撃になっているんだ。',
-    en:'Black plays the key move of the whole trap: 4...Qg5! It attacks the knight on e5 and the g2 pawn at the same time — a double attack.',
+  { move:{from:[2,2],to:[4,3]}, moveLabel:{ja:"3...Nd4?!（罠の始まり！）", en:"3...Nd4?! (The trap begins!)"},
+    ja:"ここがブラックバーン・シリング・ギャンビットの一手！黒はナイトをd4へ進めて、白のf3のナイトを攻撃するよ。この手でc6のナイトがいなくなるので、黒のe5のポーンを守る駒はなくなるんだ。黒はわざとe5を取らせて、白を罠に誘っているよ。その代わり、白が正しく応じると、黒は駒の展開で遅れて不利になってしまうんだ。",
+    en:"Here's the Blackburne Shilling Gambit! Black moves the knight to d4, attacking White's f3 knight. With the knight gone from c6, nothing defends Black's e5 pawn anymore. Black deliberately lets White take e5 to lure White into a trap. The downside is that if White responds correctly, Black falls behind in development and ends up worse.",
     fox:'wink' },
-  { move:{from:[3,4],to:[1,5]}, moveLabel:{ja:"5. Nxf7？！", en:"5. Nxf7?!"},
-    ja:'白はナイトでf7のポーンも取るよ。これはクイーンとルークをフォークしているように見えて、一見反撃が成功したかのように錯覚してしまうんだ。',
-    en:'White captures on f7 with the knight, seemingly forking the queen and rook — it looks like White has turned the tables with a brilliant counter-fork.',
+  { move:{from:[5,5],to:[3,4]}, moveLabel:{ja:"4. Nxe5?", en:"4. Nxe5?"},
+    ja:"白はナイトで、e5にいた黒のポーンを取るよ。白はポーンを1つ得して、f7のポーンもねらっているんだ。白は得をしたつもりでいるけれど、これが罠への入り口なんだ。",
+    en:"White's knight takes the black pawn that was on e5. White wins a pawn and also eyes the f7 pawn. White thinks it's gaining something, but this is the entrance to the trap.",
+    jaMore:"白はこの手の代わりに4.Nxd4と黒のナイトを取ったり、4.O-Oとキャスリングしたりすれば、罠を避けて有利に進められるよ。",
+    enMore:"Instead of this move, White avoids the trap and keeps an edge with 4.Nxd4, capturing Black's knight, or by castling with 4.O-O.",
     fox:'normal' },
-  { move:{from:[3,6],to:[6,6]}, moveLabel:{ja:"5...Qxg2！", en:"5...Qxg2!"},
-    ja:'でも黒はナイトのフォークを気にせず、g2のポーンを取るよ。クイーンはg2に移動することで攻撃から逃れつつ、h1のルークに狙いをつける、一石二鳥の一手なんだ。',
-    en:'Ignoring the knight\'s apparent fork, Black grabs the g2 pawn instead. The queen escapes the attack while landing on g2 and simultaneously threatening the rook on h1 — two birds, one move.',
-    fox:'wink' },
+  { move:{from:[0,3],to:[3,6]}, moveLabel:{ja:"4...Qg5!", en:"4...Qg5!"},
+    ja:"黒はクイーンをg5へ進めるよ。黒のクイーンはe5の白のナイトと、守りのない白のg2のポーンを同時にねらっているんだ。白がここで落ち着いて応じれば問題はないけれど、白は欲張ってしまうよ。",
+    en:"Black brings the queen to g5. Black's queen attacks White's knight on e5 and the undefended g2 pawn at the same time. If White stays calm here, there's no problem, but White gets greedy.",
+    fox:'normal' },
+  { move:{from:[3,4],to:[1,5]}, moveLabel:{ja:"5. Nxf7??", en:"5. Nxf7??"},
+    ja:"白はナイトで、f7にいた黒のポーンを取るよ。白のナイトはg5の黒のクイーンとh8のルークを同時にねらっているけれど、白はg2のポーンの守りを忘れているんだ。",
+    en:"White's knight captures the black pawn that was on f7. White's knight now forks Black's queen on g5 and rook on h8, but White has forgotten about defending the g2 pawn.",
+    fox:'normal' },
+  { move:{from:[3,6],to:[6,6]}, moveLabel:{ja:"5...Qxg2!", en:"5...Qxg2!"},
+    ja:"黒はクイーンで、g2にいた白のポーンを取るよ。黒のクイーンはh1の白のルークを攻撃していて、白の陣地に深く入り込んだんだ。",
+    en:"Black's queen captures the white pawn that was on g2. Black's queen now attacks White's rook on h1 and has broken deep into White's camp.",
+    fox:'happy' },
   { move:{from:[7,7],to:[7,5]}, moveLabel:{ja:"6. Rf1", en:"6. Rf1"},
-    ja:'白はルークが取られそうなので、f1へ逃がすよ。',
-    en:'White retreats the attacked rook to f1.',
+    ja:"白はルークをf1へ逃がすよ。白はルークを守ったつもりだけど、白のキングのまわりはルークやビショップ、クイーンで囲まれていて、動けるマスがほとんどないんだ。",
+    en:"White moves the rook to f1 to save it. White thinks the rook is safe, but White's king is now boxed in by its own rook, bishop and queen, with almost no squares to move to.",
     fox:'normal' },
   { move:{from:[6,6],to:[4,4]}, moveLabel:{ja:"6...Qxe4+", en:"6...Qxe4+"},
-    ja:'黒はクイーンでe4のポーンも取りながら王手をかけるよ。白のキングはこれ以上ポーンで守られなくなってしまうんだ。',
-    en:'Black grabs the e4 pawn with check, further stripping away the pawns that were shielding White\'s king.',
+    ja:"黒はクイーンで、e4にいた白のポーンを取ってチェックをかけるよ。白がこのチェックを受ける方法は、Be2かQe2の2つしかないんだ。",
+    en:"Black's queen captures the white pawn that was on e4, giving check. White has only two ways to answer this check: Be2 or Qe2.",
     fox:'normal' },
-  { move:{from:[4,2],to:[6,4]}, moveLabel:{ja:"7. Be2", en:"7. Be2"},
-    ja:'白はビショップでe2に割り込んで王手を防ぐよ。これが唯一の対応なんだ。',
-    en:'White blocks the check by interposing the bishop on e2 — the only way to deal with it.',
+  { move:{from:[4,2],to:[6,4]}, moveLabel:{ja:"7. Be2??", en:"7. Be2??"},
+    ja:"白はビショップをe2へ動かして、チェックをさえぎるよ。白のe2のビショップはe4の黒のクイーンにピンされていて、動くとキングが取られてしまうので、もう動けないんだ。白はこの手の代わりに7.Qe2と受ければ、すぐに詰まされることは避けられたよ。",
+    en:"White blocks the check by moving the bishop to e2. White's e2 bishop is now pinned by Black's queen on e4, so it can't move without exposing the king. If White had played 7.Qe2 instead of this move, the immediate mate could have been avoided.",
     fox:'normal' },
   { move:{from:[4,3],to:[5,5]}, moveLabel:{ja:"7...Nf3#", en:"7...Nf3#"},
-    ja:'💡 黒がNf3#でチェックメイト！d4に置いていたナイトが、ついに主役として登場するよ。キングはf1のルークとe2のビショップに退路を塞がれていて、逃げ場がないんだ。これでゲーム終了だよ。カフェチェスで対戦相手を驚かせるのにぴったりの一手だね。',
-    en:'💡 Black delivers checkmate with Nf3#! The knight that sat quietly on d4 the whole time finally takes center stage. The king has nowhere to run — its own rook on f1 and bishop on e2 block every escape square. Game over — a fun way to surprise casual opponents!',
+    ja:"黒はナイトをf3へ進めて、チェックメイト！黒のf3のナイトがe1の白のキングにチェックをかけているんだ。白のキングのまわりのd1・d2・e2・f1・f2のマスは、すべて白自身の駒でふさがれていて、キングは逃げられないよ。白のe2のビショップはf3のナイトを取れる位置にいるけれど、黒のクイーンにピンされているので取れないんだ。これでゲーム終了！自分でも盤に並べて、詰みの形を確かめてみてね！",
+    en:"Black moves the knight to f3 — checkmate! Black's knight on f3 gives check to White's king on e1. The squares around White's king — d1, d2, e2, f1 and f2 — are all blocked by White's own pieces, so the king can't escape. White's e2 bishop could capture the f3 knight, but it's pinned by Black's queen, so it can't. Game over! Set it up on a board yourself and check the mating pattern.",
     fox:'happy' }
 ];
 
@@ -334,7 +341,19 @@ function renderStep(){
   const step = LESSON_STEPS[currentStep];
   renderBoard(boardSnapshots[currentStep]);
   document.getElementById('moveLabel').textContent = (step.moveLabel && step.moveLabel[currentLang]) || '';
-  document.getElementById('commentaryText').textContent = step[currentLang];
+  const ctEl = document.getElementById('commentaryText');
+  const moreText = step[currentLang + 'More'];
+  ctEl.innerHTML = step[currentLang] + (moreText
+    ? '<details class="more-detail"><summary>' + (currentLang === 'ja' ? '💡 もっと詳しく知りたい方へ' : '💡 Want to know more?') + '</summary><div class="more-body">' + moreText + '</div></details>'
+    : '');
+  ctEl.scrollTop = 0;
+  const moreEl = ctEl.querySelector('details.more-detail');
+  if (moreEl) {
+    moreEl.addEventListener('toggle', function(){
+      if (moreEl.open) { ctEl.scrollTop = moreEl.offsetTop - ctEl.offsetTop; }
+      adjustBottomPadding();
+    });
+  }
   document.getElementById('foxAvatar').src = FOX_BY_MOOD[step.fox] || FOX_BY_MOOD.normal;
   document.getElementById('lessonProgress').textContent = currentStep + ' / ' + (LESSON_STEPS.length - 1);
   document.getElementById('btnPrev').disabled = currentStep === 0;

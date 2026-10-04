@@ -103,6 +103,11 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
   font-size: 1rem;
   color: var(--text-sub);
 }
+.commentary-text a, .opening-intro a { color:var(--brown); text-decoration:underline; font-weight:700; }
+.commentary-text a:hover, .opening-intro a:hover { color:var(--brown-dark); }
+.more-detail { margin-top:8px; border-top:1px dashed var(--brown-light); padding-top:6px; }
+.more-detail summary { cursor:pointer; font-weight:700; color:var(--brown); font-size:0.92rem; list-style-position:inside; }
+.more-detail .more-body { margin-top:6px; font-size:0.94rem; }
 </style>
   <script src="board-theme.js"></script>
 </head>
@@ -121,8 +126,8 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
   <h1 class="opening-title lang-element-en">Nimzo-Larsen Attack</h1>
 
   <div class="opening-intro">
-    <p class="lang-element-ja">💡 ニムゾ・ラーセン・アタックは1.b3と突いてビショップをb2にフィアンケットする独創的なオープニングだよ！Bb2のビショップは長い対角線h1-a8を支配して、白のピース展開と中央支配を遠距離からサポートするんだ。ニムゾヴィッチとラーセンが発展させたこのシステムは、どんな黒の応手にも対応できる柔軟性が魅力なんだ。1.e4や1.d4の主流オープニングとは全く異なる局面を作り出して相手の研究を崩せるんだ。穏やかに見えるけど長期的に強力なポジションを構築できる奥深いオープニングだよ！</p>
-    <p class="lang-element-en">💡 The Nimzo-Larsen Attack starts with 1.b3, fianchettoing the bishop to b2 in a creative and original setup! The Bb2 bishop dominates the long h1-a8 diagonal, supporting piece development and central control from a long distance. Developed by Nimzowitsch and Larsen, this system can respond to virtually any Black setup. It creates positions completely unlike mainstream openings, destroying opponents' theoretical preparation. What looks like a quiet opening actually builds powerful long-term positional advantages!</p>
+    <p class="lang-element-ja">💡 ニムゾ・ラーセン・アタックは、白が1手目でbのポーンをb3へ進め、ビショップをb2に置くオープニングだよ。超モダンの考え方を広めたニムゾヴィッチと、1960〜70年代にこのオープニングを得意としたデンマークのベント・ラーセンにちなんで名付けられたんだ。ラーセンズ・オープニングやクイーンズ・フィアンケット・オープニングとも呼ばれているよ。相手が慣れていない形に持ち込みやすく、今でもナカムラなどのトップ選手がときどき指しているんだ。</p>
+    <p class="lang-element-en">💡 The Nimzo-Larsen Attack is an opening in which White pushes the b-pawn to b3 on move one and places the bishop on b2. It's named after Nimzowitsch, who championed hypermodern ideas, and the Danish grandmaster Bent Larsen, who made it his specialty in the 1960s and '70s. It's also called Larsen's Opening or the Queen's Fianchetto Opening. It leads to positions your opponent may not know well, and top players such as Nakamura still use it from time to time.</p>
   </div>
 
   <div class="board-wrap">
@@ -142,6 +147,9 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
     <button id="btnPrev" class="lesson-btn">← 前へ</button>
     <span class="lesson-progress" id="lessonProgress"></span>
     <button id="btnNext" class="lesson-btn">次へ →</button>
+  </div>
+  <div id="shareRow" style="display:none;text-align:center;margin-top:10px;">
+    <button id="shareXBtn" style="background:#000;color:#fff;border:none;border-radius:20px;padding:8px 16px;font-family:'Crimson Pro',serif;font-weight:700;font-size:0.85rem;cursor:pointer;">🦊 𝕏でシェアする</button>
   </div>
 </div>
 
@@ -190,60 +198,52 @@ const initialBoard = [
 // ============================================================
 const LESSON_STEPS = [
   { move:null, moveLabel:{ja:"開始局面", en:"Starting Position"},
-    ja:"ニムゾ・ラーセン・アタックのレッスンを始めるよ！どんな黒の応手にも対応できる柔軟性が魅力の、独創的なオープニングだよ。ジーンと一緒に、一手ずつ「なぜその手を指すのか」を学んでいこう。",
-    en:"Let's start the Nimzo-Larsen Attack lesson! Its biggest strength is flexibility against almost any Black setup. Jene will explain why each move is played, one step at a time.",
+    ja:"ニムゾ・ラーセン・アタックのレッスンを始めるよ！このページでは、白がb2とb5の2つのビショップで黒のe5のポーンをねらい、黒がそれを守り切ろうとする流れを見ていくよ。遠くから中央をにらむ白の作戦と、黒の守り方がポイントなんだ。一手ずつジーンと一緒に、なぜその手を指すのかを学んでいこう。",
+    en:"Let's start the Nimzo-Larsen Attack lesson! On this page we follow how White targets Black's e5 pawn with two bishops on b2 and b5, while Black tries to hold it. The key is White's long-range plan and how Black defends. Jene will walk you through why each move is played, one step at a time.",
     fox:'welcome' },
   { move:{from:[6,1],to:[5,1]}, moveLabel:{ja:"1. b3（ニムゾ・ラーセン！）", en:"1. b3 (Nimzo-Larsen!)"},
-    ja:"ここが本題、ニムゾ・ラーセン・アタックの一手！白はb3でビショップのフィアンケットを準備するよ。",
-    en:"Here's the Nimzo-Larsen move! White prepares to fianchetto the bishop with 1.b3.",
+    ja:"ここがニムゾ・ラーセン・アタックの一手！白はポーンをb3へ進めて、b2のマスを空け、ビショップを長い対角線に出す準備をするよ。一般的には1.e4や1.d4で中央を直接取りに行くけれど、白はここで中央を遠くからビショップでにらむ、超モダンな考え方を選ぶんだ。その代わり、白は1手目で中央のマスを押さえないので、黒に中央を広く取られやすいよ。",
+    en:"Here's the Nimzo-Larsen Attack! White pushes the pawn to b3, clearing b2 so the bishop can go to the long diagonal. The usual first moves 1.e4 or 1.d4 claim the center directly, but White chooses the hypermodern idea of eyeing the center from a distance with the bishop. The cost is that White doesn't control central squares on move one, so Black can easily grab a big center.",
+    jaMore:"同じように端のポーンを1手目に動かすオープニングには、1.b4の<a href='polish_opening.html'>ポーリッシュ・オープニング</a>もあるよ。",
+    enMore:"Another opening that moves a flank pawn on move one is the <a href='polish_opening.html?lang=en'>Polish Opening</a> with 1.b4.",
     fox:'happy' },
   { move:{from:[1,4],to:[3,4]}, moveLabel:{ja:"1...e5", en:"1...e5"},
-    ja:"黒はe5で中央を取るよ。",
-    en:"Black takes the center with 1...e5.",
+    ja:"黒はポーンをe5へ進めるよ。黒は中央のマスを押さえるんだ。黒の応じ方としては、これがいちばん多く指されるよ。",
+    en:"Black pushes the pawn to e5. Black takes control of central squares. This is Black's most common reply.",
     fox:'normal' },
   { move:{from:[7,2],to:[6,1]}, moveLabel:{ja:"2. Bb2", en:"2. Bb2"},
-    ja:"白はビショップをb2へ。長い対角線h1-a8を支配するよ。",
-    en:"White completes the fianchetto with 2.Bb2, dominating the h1-a8 diagonal.",
+    ja:"白はビショップをb2へ進めるよ。白のビショップは長い対角線から、黒のe5のポーンを攻撃しているんだ。",
+    en:"White develops the bishop to b2. From the long diagonal, White's bishop attacks Black's e5 pawn.",
     fox:'normal' },
-  { move:{from:[1,3],to:[2,3]}, moveLabel:{ja:"2...d6", en:"2...d6"},
-    ja:"黒はd6でe5ポーンを支えるよ。",
-    en:"Black supports the e5 pawn with 2...d6.",
+  { move:{from:[0,1],to:[2,2]}, moveLabel:{ja:"2...Nc6", en:"2...Nc6"},
+    ja:"黒はナイトをc6へ進めるよ。黒はナイトを展開しながら、e5のポーンを守るんだ。",
+    en:"Black develops the knight to c6. Black develops while defending the e5 pawn.",
     fox:'normal' },
   { move:{from:[6,4],to:[5,4]}, moveLabel:{ja:"3. e3", en:"3. e3"},
-    ja:"白はe3で展開を進めるよ。",
-    en:"White continues developing with 3.e3.",
+    ja:"白はポーンをe3へ進めるよ。白はf1のビショップの道を開けて、次にBb5と出る準備をするんだ。",
+    en:"White pushes the pawn to e3. White opens the path for the f1 bishop and prepares to bring it to b5 next.",
     fox:'normal' },
   { move:{from:[0,6],to:[2,5]}, moveLabel:{ja:"3...Nf6", en:"3...Nf6"},
-    ja:"黒はナイトをf6へ展開するよ。",
-    en:"Black develops the knight to f6.",
+    ja:"黒はナイトをf6へ進めるよ。黒はナイトを展開しながら、キングサイドの準備を進めるんだ。",
+    en:"Black develops the knight to f6. Black develops while preparing the kingside.",
+    jaMore:"黒はこの手の代わりに3...d5と、中央をさらに広く取ることもできるよ。",
+    enMore:"Instead of this move, Black can also take more of the center with 3...d5.",
     fox:'normal' },
-  { move:{from:[7,6],to:[5,5]}, moveLabel:{ja:"4. Nf3", en:"4. Nf3"},
-    ja:"白はナイトをf3へ展開するよ。",
-    en:"White develops the knight to f3.",
+  { move:{from:[7,5],to:[3,1]}, moveLabel:{ja:"4. Bb5", en:"4. Bb5"},
+    ja:"白はビショップをb5へ進めるよ。白のビショップは、e5のポーンを守っているc6のナイトを攻撃しているんだ。白はこのナイトを取り除いて、b2のビショップでe5のポーンを取ることをねらっているよ。",
+    en:"White develops the bishop to b5. White's bishop attacks the c6 knight, which is defending the e5 pawn. White aims to remove that knight and then win the e5 pawn with the b2 bishop.",
     fox:'normal' },
-  { move:{from:[0,1],to:[2,2]}, moveLabel:{ja:"4...Nc6", en:"4...Nc6"},
-    ja:"黒もナイトをc6へ展開するよ。",
-    en:"Black develops the other knight to c6.",
+  { move:{from:[0,5],to:[2,3]}, moveLabel:{ja:"4...Bd6", en:"4...Bd6"},
+    ja:"黒はビショップをd6へ進めるよ。黒のビショップはe5のポーンをもう一度守るんだ。黒のビショップはdのポーンの前をふさいでしまうけれど、e5を守るためにいちばんよく指される手だよ。",
+    en:"Black develops the bishop to d6. Black's bishop adds another defender to the e5 pawn. It blocks Black's own d-pawn, but it's by far the most popular way to defend e5.",
     fox:'normal' },
-  { move:{from:[6,2],to:[4,2]}, moveLabel:{ja:"5. c4", en:"5. c4"},
-    ja:"白はc4でさらに中央へ圧力をかけるよ。",
-    en:"White adds more central pressure with 5.c4.",
-    fox:'wink' },
-  { move:{from:[0,5],to:[1,4]}, moveLabel:{ja:"5...Be7", en:"5...Be7"},
-    ja:"黒はビショップをe7へ。キャスリングの準備をするよ。",
-    en:"Black plays 5...Be7, preparing to castle.",
+  { move:{from:[7,1],to:[5,0]}, moveLabel:{ja:"5. Na3", en:"5. Na3"},
+    ja:"白はナイトをa3へ進めるよ。白のナイトは、この先c4のマスへ跳んで、d6のビショップとe5のポーンに圧力をかける準備をしているんだ。その代わり、白のナイトは盤の端に置かれるので、しばらくは働きが限られるよ。",
+    en:"White develops the knight to a3. White's knight is preparing to jump to c4 and put pressure on the d6 bishop and the e5 pawn. The trade-off is that the knight sits on the edge of the board, so its activity is limited for a while.",
     fox:'normal' },
-  { move:{from:[7,5],to:[6,4]}, moveLabel:{ja:"6. Be2", en:"6. Be2"},
-    ja:"白はビショップをe2へ展開するよ。",
-    en:"White develops the bishop to e2.",
-    fox:'normal' },
-  { move:{from:[0,4],to:[0,6],castle:{from:[0,7],to:[0,5]}}, moveLabel:{ja:"6...O-O", en:"6...O-O"},
-    ja:"黒はキャスリングでキングを安全な場所へ。",
-    en:"Black castles kingside, tucking the king away safely.",
-    fox:'normal' },
-  { move:{from:[7,4],to:[7,6],castle:{from:[7,7],to:[7,5]}}, moveLabel:{ja:"7. O-O", en:"7. O-O"},
-    ja:"白も同じくキャスリング。これで本譜は一段落、続きはぜひ自分で指してみてね！",
-    en:"White castles too. That's the main line — try continuing the game yourself from here!",
+  { move:{from:[2,2],to:[3,0]}, moveLabel:{ja:"5...Na5", en:"5...Na5"},
+    ja:"黒はナイトをa5へ動かすよ。黒のナイトはb5のビショップに取られる前に逃げて、白のナイトが行きたいc4のマスを押さえるんだ。この後は白がBe2とc4で形を整え、黒はa6やキャスリングで準備する流れが知られているよ。白は遠くからの圧力、黒は中央のポーンを生かして戦う局面なんだ。これで本譜は一段落、続きはぜひ自分で指してみてね！",
+    en:"Black moves the knight to a5. Black's knight escapes before the b5 bishop can take it, and it covers c4, the square White's knight wants. A known continuation is for White to reorganize with Be2 and c4 while Black prepares with ...a6 and castling. White plays on long-range pressure, while Black relies on its central pawns. That's the main line — try continuing the game yourself from here!",
     fox:'happy' }
 ];
 
@@ -329,15 +329,50 @@ function adjustBottomPadding(){
   }
 }
 
+function shareOnX(message) {
+  const shareUrl = 'https://twitter.com/intent/tweet?text=' + encodeURIComponent(message) + '&url=' + encodeURIComponent(window.location.href);
+  window.open(shareUrl, '_blank', 'noopener,noreferrer,width=550,height=420');
+}
+
 function renderStep(){
   const step = LESSON_STEPS[currentStep];
   renderBoard(boardSnapshots[currentStep]);
   document.getElementById('moveLabel').textContent = (step.moveLabel && step.moveLabel[currentLang]) || '';
-  document.getElementById('commentaryText').textContent = step[currentLang];
+  const ctEl = document.getElementById('commentaryText');
+  const moreText = step[currentLang + 'More'];
+  ctEl.innerHTML = step[currentLang] + (moreText
+    ? '<details class="more-detail"><summary>' + (currentLang === 'ja' ? '💡 もっと詳しく知りたい方へ' : '💡 Want to know more?') + '</summary><div class="more-body">' + moreText + '</div></details>'
+    : '');
+  ctEl.scrollTop = 0;
+  const moreEl = ctEl.querySelector('details.more-detail');
+  if (moreEl) {
+    moreEl.addEventListener('toggle', function(){
+      if (moreEl.open) { ctEl.scrollTop = moreEl.offsetTop - ctEl.offsetTop; }
+      adjustBottomPadding();
+    });
+  }
   document.getElementById('foxAvatar').src = FOX_BY_MOOD[step.fox] || FOX_BY_MOOD.normal;
   document.getElementById('lessonProgress').textContent = currentStep + ' / ' + (LESSON_STEPS.length - 1);
   document.getElementById('btnPrev').disabled = currentStep === 0;
   document.getElementById('btnNext').disabled = currentStep === LESSON_STEPS.length - 1;
+  adjustBottomPadding();
+
+  const shareRow = document.getElementById('shareRow');
+  if (shareRow) {
+    if (currentStep === LESSON_STEPS.length - 1) {
+      const openingNameEl = document.querySelector('.opening-title.lang-element-' + currentLang);
+      const openingName = openingNameEl ? openingNameEl.textContent : '';
+      const msg = currentLang === 'ja'
+        ? '🦊 ' + openingName + 'をKitsuneChessで学んだよ!一手ずつ「なぜその手か」を教えてくれるよ'
+        : '🦊 Just learned the ' + openingName + ' on KitsuneChess! It explains why each move is played, step by step.';
+      const shareBtn = document.getElementById('shareXBtn');
+      shareBtn.textContent = currentLang === 'ja' ? '🦊 𝕏でシェアする' : '🦊 Share on 𝕏';
+      shareBtn.onclick = function() { shareOnX(msg); };
+      shareRow.style.display = 'block';
+    } else {
+      shareRow.style.display = 'none';
+    }
+  }
   adjustBottomPadding();
 }
 
