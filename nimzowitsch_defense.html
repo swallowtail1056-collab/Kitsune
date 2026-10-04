@@ -103,6 +103,11 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
   font-size: 1rem;
   color: var(--text-sub);
 }
+.commentary-text a, .opening-intro a { color:var(--brown); text-decoration:underline; font-weight:700; }
+.commentary-text a:hover, .opening-intro a:hover { color:var(--brown-dark); }
+.more-detail { margin-top:8px; border-top:1px dashed var(--brown-light); padding-top:6px; }
+.more-detail summary { cursor:pointer; font-weight:700; color:var(--brown); font-size:0.92rem; list-style-position:inside; }
+.more-detail .more-body { margin-top:6px; font-size:0.94rem; }
 </style>
   <script src="board-theme.js"></script>
 </head>
@@ -121,8 +126,8 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
   <h1 class="opening-title lang-element-en">Nimzowitsch Defense</h1>
 
   <div class="opening-intro">
-    <p class="lang-element-ja">💡 ニムゾヴィッチ・ディフェンスは1...Nc6と応じる珍しい守りだよ！通常e5やc5、d5と突くのが普通なのに、最初にナイトを出すという独創的な発想なんだ。アーロン・ニムゾヴィッチが好んで使ったことが名前の由来で、相手の中央ポーンを間接的にコントロールするという超モダン的なアイデアを体現しているんだよ。黒はe5かd5と突いてカウンターアタックを準備するか、b6-Bb7のフィアンケットも選べる柔軟性があるよ。マイナーだから相手の研究を外れやすい個性的なオープニングだよ！</p>
-    <p class="lang-element-en">💡 The Nimzowitsch Defense plays the unusual 1...Nc6, developing the knight before pushing any pawns! Instead of the normal e5, c5, or d5, Black makes this original knight move. Named after Aaron Nimzowitsch who favored it, this defense embodies hypermodern ideas of controlling the center with pieces indirectly. Black prepares to counter with e5 or d5, or can also choose the b6-Bb7 fianchetto. Since it's a rare choice, opponents often don't know the theory. A quirky and original opening loved by players who value unconventional ideas!</p>
+    <p class="lang-element-ja">💡 ニムゾヴィッチ・ディフェンスは、1.e4に対して黒が1...Nc6とナイトを出す、珍しいオープニングだよ。超モダンの考え方を広めたアロン・ニムゾヴィッチが好んで指したことから、この名前が付いたんだ。黒はポーンよりも駒で中央に働きかけ、白の出方に合わせてほかのオープニングに合流することも多いよ。トップレベルではあまり指されないけれど、相手の準備を外しやすいオープニングなんだ。</p>
+    <p class="lang-element-en">💡 The Nimzowitsch Defense is an unusual opening in which Black answers 1.e4 with 1...Nc6. It's named after Aron Nimzowitsch, who championed hypermodern ideas and liked to play it. Black influences the center with pieces rather than pawns and often transposes into other openings depending on White's setup. It's rare at the top level, but it's a good way to steer opponents away from their preparation.</p>
   </div>
 
   <div class="board-wrap">
@@ -142,6 +147,9 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
     <button id="btnPrev" class="lesson-btn">← 前へ</button>
     <span class="lesson-progress" id="lessonProgress"></span>
     <button id="btnNext" class="lesson-btn">次へ →</button>
+  </div>
+  <div id="shareRow" style="display:none;text-align:center;margin-top:10px;">
+    <button id="shareXBtn" style="background:#000;color:#fff;border:none;border-radius:20px;padding:8px 16px;font-family:'Crimson Pro',serif;font-weight:700;font-size:0.85rem;cursor:pointer;">🦊 𝕏でシェアする</button>
   </div>
 </div>
 
@@ -190,60 +198,46 @@ const initialBoard = [
 // ============================================================
 const LESSON_STEPS = [
   { move:null, moveLabel:{ja:"開始局面", en:"Starting Position"},
-    ja:"ニムゾヴィッチ・ディフェンスのレッスンを始めるよ！ポーンより先にナイトを出す、独創的で珍しい守りだよ。ジーンと一緒に、一手ずつ「なぜその手を指すのか」を学んでいこう。",
-    en:"Let's start the Nimzowitsch Defense lesson! Black develops the knight before any pawns — a quirky, original idea. Jene will explain why each move is played, one step at a time.",
+    ja:"ニムゾヴィッチ・ディフェンスのレッスンを始めるよ！このページでは、黒が2...d5で中央に反撃し、白が3.e5でポーンを前に進める、スカンジナビアン・バリエーションを見ていくよ。黒がどうやってビショップを外に出し、フレンチ・ディフェンスに似た形を有利に作るのかがポイントなんだ。一手ずつジーンと一緒に、なぜその手を指すのかを学んでいこう。",
+    en:"Let's start the Nimzowitsch Defense lesson! On this page we follow the Scandinavian Variation, where Black strikes back with 2...d5 and White advances with 3.e5. The key is how Black gets the bishop out and builds a favorable French-like structure. Jene will walk you through why each move is played, one step at a time.",
     fox:'welcome' },
   { move:{from:[6,4],to:[4,4]}, moveLabel:{ja:"1. e4", en:"1. e4"},
-    ja:"白はe4で中央を制圧するよ。",
-    en:"White plays 1.e4, claiming the center.",
+    ja:"白はポーンをe4へ進めるよ。白は中央のマスを押さえながら、ビショップとクイーンが動く道を開けるんだ。",
+    en:"White pushes the pawn to e4. White takes control of central squares and opens lines for the bishop and queen.",
     fox:'normal' },
   { move:{from:[0,1],to:[2,2]}, moveLabel:{ja:"1...Nc6（ニムゾヴィッチ！）", en:"1...Nc6 (Nimzowitsch!)"},
-    ja:"ここが本題、ニムゾヴィッチの一手！黒はポーンを突かず、まずナイトを展開するよ。",
-    en:"Here's the Nimzowitsch move! Instead of a pawn move, Black develops the knight first.",
+    ja:"ここがニムゾヴィッチ・ディフェンスの一手！黒はナイトをc6へ進めて、ポーンより先に駒を展開するよ。一般的には1...e5や1...c5でポーンを使って中央を争うけれど、黒はここで白の出方を見てから、どのポーンを使うかを決める道を選ぶんだ。その代わり、黒はcのポーンの前にナイトを置くので、c5やc6と突いて中央を支える手が使いにくくなるよ。",
+    en:"Here's the Nimzowitsch Defense! Black develops the knight to c6, bringing out a piece before any pawn. The usual replies 1...e5 or 1...c5 fight for the center with pawns, but Black waits to see what White does before deciding which pawns to use. The trade-off is that the knight sits in front of the c-pawn, making it harder to support the center with ...c5 or ...c6.",
     fox:'happy' },
   { move:{from:[6,3],to:[4,3]}, moveLabel:{ja:"2. d4", en:"2. d4"},
-    ja:"白はd4でさらに中央を広げるよ。",
-    en:"White further expands the center with 2.d4.",
+    ja:"白はポーンをd4へ進めるよ。白はe4とd4の2つのポーンで中央を大きく押さえるんだ。白は次にd5と突いて、c6のナイトを追い払うこともねらっているよ。",
+    en:"White pushes the pawn to d4. With pawns on e4 and d4, White takes a big grip on the center. White also threatens to push d5 next and chase away the c6 knight.",
+    jaMore:"白はこの手の代わりに2.Nf3と指すこともできるよ。この場合、黒が2...e5と応じると、ふつうのオープン・ゲーム（1.e4 e5の形）に合流するんだ。",
+    enMore:"Instead of this move, White can also play 2.Nf3. If Black then answers 2...e5, the game transposes into a normal open game with 1.e4 e5.",
     fox:'normal' },
   { move:{from:[1,3],to:[3,3]}, moveLabel:{ja:"2...d5", en:"2...d5"},
-    ja:"黒はd5で中央に挑むよ。",
-    en:"Black challenges the center with 2...d5.",
+    ja:"黒はポーンをd5へ進めるよ。黒は白のe4のポーンを攻撃して、中央で反撃するんだ。白のe4のポーンを守っている駒は、今はひとつもないよ。この形はスカンジナビアン・バリエーションと呼ばれていて、黒のいちばん多い応じ方なんだ。",
+    en:"Black pushes the pawn to d5. Black attacks White's e4 pawn and strikes back in the center. Right now, no white piece is defending the e4 pawn. This setup is called the Scandinavian Variation, and it's Black's most common reply.",
+    jaMore:"黒はこの手の代わりに2...e5と突くこともできて、これはケネディ・バリエーションと呼ばれるよ。",
+    enMore:"Instead of this move, Black can also play 2...e5, which is called the Kennedy Variation.",
     fox:'normal' },
-  { move:{from:[4,4],to:[3,3]}, moveLabel:{ja:"3. exd5", en:"3. exd5"},
-    ja:"白はexd5とポーンを取るよ。",
-    en:"White captures with 3.exd5.",
+  { move:{from:[4,4],to:[3,4]}, moveLabel:{ja:"3. e5", en:"3. e5"},
+    ja:"白はポーンをe5へ進めるよ。白はポーンを交換せずに前に進めて、黒の陣地に食い込み、キングサイドのスペースを広げるんだ。その代わり、白はd5のマスを黒に明け渡すので、黒のc8のビショップが外に出やすくなるよ。",
+    en:"White pushes the pawn to e5. Instead of trading pawns, White advances into Black's camp and gains kingside space. The trade-off is that White gives up the d5 square, making it easier for Black's c8 bishop to come out.",
+    jaMore:"白はこの手の代わりに3.exd5と取ったり、3.Nc3とナイトでe4を守ったりすることもできるよ。3.exd5 Qxd5の形は、<a href='scandinavian.html'>スカンジナビアン・ディフェンス</a>によく似た形になるんだ。",
+    enMore:"Instead of this move, White can capture with 3.exd5 or defend e4 with 3.Nc3. After 3.exd5 Qxd5, the position looks a lot like the <a href='scandinavian.html?lang=en'>Scandinavian Defense</a>.",
     fox:'normal' },
-  { move:{from:[0,3],to:[3,3]}, moveLabel:{ja:"3...Qxd5", en:"3...Qxd5"},
-    ja:"黒はクイーンで取り返すよ。",
-    en:"Black recaptures with the queen.",
-    fox:'quiz' },
-  { move:{from:[7,6],to:[5,5]}, moveLabel:{ja:"4. Nf3", en:"4. Nf3"},
-    ja:"白はナイトをf3へ展開して、クイーンへのプレッシャーを将来に持ち越すよ。",
-    en:"White develops the knight to f3, setting up future pressure on the queen.",
+  { move:{from:[0,2],to:[3,5]}, moveLabel:{ja:"3...Bf5", en:"3...Bf5"},
+    ja:"黒はビショップをf5へ進めるよ。黒はe6と突く前にビショップをポーンの外に出しておくことで、ビショップがe6のポーンに閉じ込められないようにするんだ。黒のビショップはf5から、白のd3やe4のマスもにらんでいるよ。",
+    en:"Black develops the bishop to f5. By getting the bishop out before pushing ...e6, Black makes sure the bishop won't be locked in behind the e6 pawn. From f5, Black's bishop also eyes the d3 and e4 squares.",
     fox:'normal' },
-  { move:{from:[0,2],to:[4,6]}, moveLabel:{ja:"4...Bg4", en:"4...Bg4"},
-    ja:"黒はビショップをg4へ。白のナイトに「動け」とプレッシャーをかけながら展開するよ。",
-    en:"Black develops the bishop to g4, pressuring White's knight.",
-    fox:'wink' },
-  { move:{from:[7,5],to:[6,4]}, moveLabel:{ja:"5. Be2", en:"5. Be2"},
-    ja:"白はビショップをe2へ展開して、ナイトへのピンを解消するよ。",
-    en:"White develops the bishop to e2, unpinning the knight.",
+  { move:{from:[6,2],to:[5,2]}, moveLabel:{ja:"4. c3", en:"4. c3"},
+    ja:"白はポーンをc3へ進めるよ。白はd4のポーンを支えて、中央のポーンの鎖を固めるんだ。",
+    en:"White pushes the pawn to c3. White supports the d4 pawn and strengthens the central pawn chain.",
     fox:'normal' },
-  { move:{from:[0,6],to:[2,5]}, moveLabel:{ja:"5...Nf6", en:"5...Nf6"},
-    ja:"黒はもう一つのナイトをf6へ展開するよ。",
-    en:"Black develops the other knight to f6.",
-    fox:'normal' },
-  { move:{from:[7,4],to:[7,6],castle:{from:[7,7],to:[7,5]}}, moveLabel:{ja:"6. O-O", en:"6. O-O"},
-    ja:"白はキャスリングでキングを安全な場所へ。",
-    en:"White castles kingside, tucking the king away safely.",
-    fox:'normal' },
-  { move:{from:[1,4],to:[2,4]}, moveLabel:{ja:"6...e6", en:"6...e6"},
-    ja:"黒はe6で柔軟に展開を進めるよ。",
-    en:"Black continues developing with 6...e6.",
-    fox:'normal' },
-  { move:{from:[6,2],to:[4,2]}, moveLabel:{ja:"7. c4", en:"7. c4"},
-    ja:"白はc4で、黒のクイーンに「またどいてね」とプレッシャーをかけるよ。早く出したクイーンを何度も追い回す、白の典型的なプランだよ。これで本譜は一段落、続きはぜひ自分で指してみてね！",
-    en:"White plays 7.c4, pressuring Black's queen yet again — a typical plan of repeatedly chasing the queen that came out early. That's the main line — try continuing the game yourself from here!",
+  { move:{from:[1,4],to:[2,4]}, moveLabel:{ja:"4...e6", en:"4...e6"},
+    ja:"黒はポーンをe6へ進めるよ。黒はd5のポーンを支えて、f8のビショップの道も開けるんだ。黒のポーンの形は<a href='french_advance.html'>フレンチ・ディフェンスのアドバンス・バリエーション</a>に似ているけれど、黒のc8のビショップがすでにポーンの外に出ている点が、黒にとって良いところなんだ。その代わり、黒のc6のナイトがcのポーンの前をふさいでいるので、黒はc5と突いて白の中央を攻める手が使いにくいよ。これで本譜は一段落、続きはぜひ自分で指してみてね！",
+    en:"Black pushes the pawn to e6. Black supports the d5 pawn and opens the path for the f8 bishop. Black's pawn structure resembles the <a href='french_advance.html?lang=en'>Advance Variation of the French Defense</a>, but it's a plus for Black that the c8 bishop is already outside the pawn chain. The trade-off is that Black's c6 knight blocks the c-pawn, so it's harder for Black to attack White's center with ...c5. That's the main line — try continuing the game yourself from here!",
     fox:'happy' }
 ];
 
@@ -329,15 +323,50 @@ function adjustBottomPadding(){
   }
 }
 
+function shareOnX(message) {
+  const shareUrl = 'https://twitter.com/intent/tweet?text=' + encodeURIComponent(message) + '&url=' + encodeURIComponent(window.location.href);
+  window.open(shareUrl, '_blank', 'noopener,noreferrer,width=550,height=420');
+}
+
 function renderStep(){
   const step = LESSON_STEPS[currentStep];
   renderBoard(boardSnapshots[currentStep]);
   document.getElementById('moveLabel').textContent = (step.moveLabel && step.moveLabel[currentLang]) || '';
-  document.getElementById('commentaryText').textContent = step[currentLang];
+  const ctEl = document.getElementById('commentaryText');
+  const moreText = step[currentLang + 'More'];
+  ctEl.innerHTML = step[currentLang] + (moreText
+    ? '<details class="more-detail"><summary>' + (currentLang === 'ja' ? '💡 もっと詳しく知りたい方へ' : '💡 Want to know more?') + '</summary><div class="more-body">' + moreText + '</div></details>'
+    : '');
+  ctEl.scrollTop = 0;
+  const moreEl = ctEl.querySelector('details.more-detail');
+  if (moreEl) {
+    moreEl.addEventListener('toggle', function(){
+      if (moreEl.open) { ctEl.scrollTop = moreEl.offsetTop - ctEl.offsetTop; }
+      adjustBottomPadding();
+    });
+  }
   document.getElementById('foxAvatar').src = FOX_BY_MOOD[step.fox] || FOX_BY_MOOD.normal;
   document.getElementById('lessonProgress').textContent = currentStep + ' / ' + (LESSON_STEPS.length - 1);
   document.getElementById('btnPrev').disabled = currentStep === 0;
   document.getElementById('btnNext').disabled = currentStep === LESSON_STEPS.length - 1;
+  adjustBottomPadding();
+
+  const shareRow = document.getElementById('shareRow');
+  if (shareRow) {
+    if (currentStep === LESSON_STEPS.length - 1) {
+      const openingNameEl = document.querySelector('.opening-title.lang-element-' + currentLang);
+      const openingName = openingNameEl ? openingNameEl.textContent : '';
+      const msg = currentLang === 'ja'
+        ? '🦊 ' + openingName + 'をKitsuneChessで学んだよ!一手ずつ「なぜその手か」を教えてくれるよ'
+        : '🦊 Just learned the ' + openingName + ' on KitsuneChess! It explains why each move is played, step by step.';
+      const shareBtn = document.getElementById('shareXBtn');
+      shareBtn.textContent = currentLang === 'ja' ? '🦊 𝕏でシェアする' : '🦊 Share on 𝕏';
+      shareBtn.onclick = function() { shareOnX(msg); };
+      shareRow.style.display = 'block';
+    } else {
+      shareRow.style.display = 'none';
+    }
+  }
   adjustBottomPadding();
 }
 

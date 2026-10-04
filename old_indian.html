@@ -103,6 +103,11 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
   font-size: 1rem;
   color: var(--text-sub);
 }
+.commentary-text a, .opening-intro a { color:var(--brown); text-decoration:underline; font-weight:700; }
+.commentary-text a:hover, .opening-intro a:hover { color:var(--brown-dark); }
+.more-detail { margin-top:8px; border-top:1px dashed var(--brown-light); padding-top:6px; }
+.more-detail summary { cursor:pointer; font-weight:700; color:var(--brown); font-size:0.92rem; list-style-position:inside; }
+.more-detail .more-body { margin-top:6px; font-size:0.94rem; }
 </style>
   <script src="board-theme.js"></script>
 </head>
@@ -121,8 +126,8 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
   <h1 class="opening-title lang-element-en">Old Indian Defense</h1>
 
   <div class="opening-intro">
-    <p class="lang-element-ja">💡 オールド・インディアンは1.d4 Nf6 2.c4 d6と展開する堅実なオープニングだよ！キングズ・インディアンと同じように見えるけど、黒がg6へのフィアンケットを選ばずにNc6やNbd7とナイトを展開してe5の反撃を準備するんだ。黒の基本プランはe5と突いてd6-e5のポーン構造を作り、中央での反撃を狙うこと。キングズ・インディアンほど激しい変化にはならないけど、堅実で戦えるポジションが保てるんだよ。ベント・ラーセンやウィクター・コルチノイが使ってきた歴史があって、じっくりした戦いが好きな人にぴったりだよ！</p>
-    <p class="lang-element-en">💡 The Old Indian Defense develops with 1.d4 Nf6 2.c4 d6, a solid and straightforward approach! Instead of the g6 fianchetto, Black develops the knight to c6 or bd7 and prepares the e5 counter. Black's basic plan is to push e5 to create a d6-e5 pawn structure. While less sharp than the King's Indian, the Old Indian gives Black solid and playable positions. Players like Bent Larsen and Viktor Korchnoi gave this defense a rich history. A great choice for players who prefer patient, solid chess!</p>
+    <p class="lang-element-ja">💡 オールド・インディアン・ディフェンスは、1.d4 Nf6 2.c4のあとに黒が2...d6と突く、堅実なオープニングだよ。19世紀の終わりにチゴーリンが指し始めたオープニングで、キングズ・インディアンが広まるより前から使われていたことから「オールド（古い）」と呼ばれていると言われているんだ。黒がビショップをg7に出さず、ポーンとナイトで中央を支えるのが特徴だよ。キングズ・インディアンほど激しい展開にはなりにくいけれど、そのぶん落ち着いて戦えるオープニングなんだ。</p>
+    <p class="lang-element-en">💡 The Old Indian Defense is a solid opening in which Black plays 2...d6 after 1.d4 Nf6 2.c4. Chigorin began playing it in the late 19th century, and it's said to be called "Old" because it was used before the King's Indian became popular. Instead of putting the bishop on g7, Black supports the center with pawns and knights. It's less sharp than the King's Indian, which makes it a calmer opening to play.</p>
   </div>
 
   <div class="board-wrap">
@@ -142,6 +147,9 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
     <button id="btnPrev" class="lesson-btn">← 前へ</button>
     <span class="lesson-progress" id="lessonProgress"></span>
     <button id="btnNext" class="lesson-btn">次へ →</button>
+  </div>
+  <div id="shareRow" style="display:none;text-align:center;margin-top:10px;">
+    <button id="shareXBtn" style="background:#000;color:#fff;border:none;border-radius:20px;padding:8px 16px;font-family:'Crimson Pro',serif;font-weight:700;font-size:0.85rem;cursor:pointer;">🦊 𝕏でシェアする</button>
   </div>
 </div>
 
@@ -190,60 +198,64 @@ const initialBoard = [
 // ============================================================
 const LESSON_STEPS = [
   { move:null, moveLabel:{ja:"開始局面", en:"Starting Position"},
-    ja:"オールド・インディアンのレッスンを始めるよ！キングズ・インディアンに似ているけど、フィアンケットを選ばずに堅実に中央反撃を準備する定跡だよ。ジーンと一緒に、一手ずつ「なぜその手を指すのか」を学んでいこう。",
-    en:"Let's start the Old Indian Defense lesson! Similar in spirit to the King's Indian, but without the fianchetto, preparing a solid central counter instead. Jene will explain why each move is played, one step at a time.",
+    ja:"オールド・インディアンのレッスンを始めるよ！このページでは、黒がd6とe5で中央にポーンで反撃し、白がc4・d4・e4の大きな中央で応じる本筋を見ていくよ。黒がどうやってe5のポーンを中心に堅く守るのかがポイントなんだ。一手ずつジーンと一緒に、なぜその手を指すのかを学んでいこう。",
+    en:"Let's start the Old Indian lesson! On this page we follow the main line where Black strikes at the center with ...d6 and ...e5, and White responds with a big c4-d4-e4 center. The key is how Black builds a solid defense around the e5 pawn. Jene will walk you through why each move is played, one step at a time.",
     fox:'welcome' },
   { move:{from:[6,3],to:[4,3]}, moveLabel:{ja:"1. d4", en:"1. d4"},
-    ja:"白はd4で中央を制圧するよ。",
-    en:"White plays 1.d4, claiming the center.",
+    ja:"白はポーンをd4へ進めるよ。白は中央のマスを押さえながら、c1のビショップの道を開けるんだ。",
+    en:"White pushes the pawn to d4. White takes control of central squares and opens the path for the c1 bishop.",
     fox:'normal' },
   { move:{from:[0,6],to:[2,5]}, moveLabel:{ja:"1...Nf6", en:"1...Nf6"},
-    ja:"黒はナイトをf6へ展開するよ。",
-    en:"Black develops the knight to f6.",
+    ja:"黒はナイトをf6へ進めるよ。黒はナイトを展開しながら、白がe4と突くのをけん制するんだ。",
+    en:"Black develops the knight to f6. Black develops while discouraging White from pushing e4.",
     fox:'normal' },
   { move:{from:[6,2],to:[4,2]}, moveLabel:{ja:"2. c4", en:"2. c4"},
-    ja:"白はc4でさらに中央を広げるよ。",
-    en:"White expands the center with 2.c4.",
+    ja:"白はポーンをc4へ進めるよ。白はこれでd5のマスにも利かせて、中央を広げるんだ。",
+    en:"White pushes the pawn to c4. White adds control of d5 and expands in the center.",
     fox:'normal' },
   { move:{from:[1,3],to:[2,3]}, moveLabel:{ja:"2...d6（オールド・インディアン！）", en:"2...d6 (Old Indian!)"},
-    ja:"ここが本題、オールド・インディアンの一手！黒はフィアンケットを選ばず、d6で堅実に中央反撃を準備するよ。",
-    en:"Here's the Old Indian move! Instead of a fianchetto, Black solidly prepares a central counter with 2...d6.",
+    ja:"ここがオールド・インディアンの一手！黒はポーンをd6へ進めて、次にe5と突く準備をするよ。一般的には2...g6の<a href='kings_indian.html'>キングズ・インディアン</a>や2...e6が指されるけれど、黒はここでビショップをg7に出さずに、すぐ中央にポーンで反撃する形を選ぶんだ。その代わり、黒のビショップは長い対角線に出ないので、キングズ・インディアンほど白の中央に強い圧力はかけられないよ。",
+    en:"Here's the Old Indian! Black pushes the pawn to d6, preparing ...e5. The usual moves are 2...g6, the <a href='kings_indian.html?lang=en'>King's Indian</a>, or 2...e6, but here Black chooses to strike at the center with pawns right away instead of putting the bishop on g7. The trade-off is that without the long-diagonal bishop, Black can't pressure White's center as strongly as in the King's Indian.",
     fox:'happy' },
   { move:{from:[7,1],to:[5,2]}, moveLabel:{ja:"3. Nc3", en:"3. Nc3"},
-    ja:"白はナイトをc3へ展開するよ。",
-    en:"White develops the knight to c3.",
+    ja:"白はナイトをc3へ進めるよ。白はナイトを展開しながら、次にe4と突く準備をするんだ。",
+    en:"White develops the knight to c3. White develops while preparing to push e4 next.",
     fox:'normal' },
   { move:{from:[1,4],to:[3,4]}, moveLabel:{ja:"3...e5", en:"3...e5"},
-    ja:"黒はe5！これが基本プラン、中央での反撃を仕掛けるよ。",
-    en:"Black strikes with the basic plan 3...e5.",
-    fox:'wink' },
+    ja:"黒はポーンをe5へ進めるよ。黒は白のd4のポーンを攻撃して、中央に反撃するんだ。白のd4はクイーンに守られているよ。",
+    en:"Black pushes the pawn to e5. Black attacks White's d4 pawn and strikes back in the center. White's d4 is defended by the queen.",
+    fox:'normal' },
   { move:{from:[7,6],to:[5,5]}, moveLabel:{ja:"4. Nf3", en:"4. Nf3"},
-    ja:"白はもう一つのナイトをf3へ展開するよ。",
-    en:"White develops the other knight to f3.",
+    ja:"白はナイトをf3へ進めるよ。白はナイトを展開しながら、d4のポーンの守りを増やし、黒のe5のポーンにも圧力をかけるんだ。",
+    en:"White develops the knight to f3. White develops while adding a defender to the d4 pawn and putting pressure on Black's e5 pawn.",
+    jaMore:"白はこの手の代わりに4.dxe5 dxe5 5.Qxd8+とクイーンを交換することもできるけれど、黒のキングが少し動かされるだけで、白がはっきり有利になるわけではないとされているよ。",
+    enMore:"Instead of this move, White can trade queens with 4.dxe5 dxe5 5.Qxd8+, but even though Black's king gets displaced, this isn't considered to give White a real advantage.",
     fox:'normal' },
   { move:{from:[0,1],to:[1,3]}, moveLabel:{ja:"4...Nbd7", en:"4...Nbd7"},
-    ja:"黒はもう一つのナイトをd7へ展開するよ。e5ポーンを支えるよ。",
-    en:"Black develops the other knight to d7, supporting the e5 pawn.",
+    ja:"黒はナイトをd7へ進めるよ。黒のナイトはe5のポーンを守り、黒は中央のポーンをしっかり支えるんだ。その代わり、黒のd7のナイトはc8のビショップの道をふさいでしまうよ。",
+    en:"Black develops the knight to d7. Black's knight defends the e5 pawn, firmly supporting Black's central pawn. The trade-off is that the d7 knight blocks the c8 bishop's path.",
     fox:'normal' },
   { move:{from:[6,4],to:[4,4]}, moveLabel:{ja:"5. e4", en:"5. e4"},
-    ja:"白はe4で中央をさらに強化するよ。",
-    en:"White further strengthens the center with 5.e4.",
+    ja:"白はポーンをe4へ進めるよ。白はc4・d4・e4の3つのポーンで、中央を大きく押さえるんだ。白と黒のこの形はオールド・インディアンの本筋で、ウクライナ・バリエーションとも呼ばれているよ。",
+    en:"White pushes the pawn to e4. With pawns on c4, d4 and e4, White takes a big grip on the center. This is the main line of the Old Indian, also called the Ukrainian Variation.",
     fox:'normal' },
   { move:{from:[0,5],to:[1,4]}, moveLabel:{ja:"5...Be7", en:"5...Be7"},
-    ja:"黒はビショップをe7へ。キャスリングの準備をするよ。",
-    en:"Black plays 5...Be7, preparing to castle.",
+    ja:"黒はビショップをe7へ進めるよ。黒はキングサイドの駒を出し終えて、キャスリングの準備をするんだ。黒のビショップはe7でキングを守りやすい位置にいるよ。",
+    en:"Black develops the bishop to e7. Black finishes developing the kingside pieces and gets ready to castle. On e7, the bishop helps protect the king.",
+    jaMore:"黒はこの手の代わりに5...g6とビショップをg7に出すこともできて、その場合はキングズ・インディアンに近い形になるよ。",
+    enMore:"Instead of this move, Black can also play 5...g6 and put the bishop on g7, reaching a position close to the King's Indian.",
     fox:'normal' },
   { move:{from:[7,5],to:[6,4]}, moveLabel:{ja:"6. Be2", en:"6. Be2"},
-    ja:"白はビショップをe2へ展開するよ。",
-    en:"White develops the bishop to e2.",
+    ja:"白はビショップをe2へ進めるよ。白はキングサイドの駒を出し終えて、キャスリングの準備をするんだ。",
+    en:"White develops the bishop to e2. White finishes developing the kingside pieces and gets ready to castle.",
     fox:'normal' },
   { move:{from:[0,4],to:[0,6],castle:{from:[0,7],to:[0,5]}}, moveLabel:{ja:"6...O-O", en:"6...O-O"},
-    ja:"黒はキャスリングでキングを安全な場所へ。",
-    en:"Black castles kingside, tucking the king away safely.",
+    ja:"黒はキャスリングでキングを安全な場所へ動かすよ。黒はキングの安全を確保して、中央での戦いに備えるんだ。",
+    en:"Black castles, bringing the king to safety. Black secures the king and prepares for the fight in the center.",
     fox:'normal' },
   { move:{from:[7,4],to:[7,6],castle:{from:[7,7],to:[7,5]}}, moveLabel:{ja:"7. O-O", en:"7. O-O"},
-    ja:"白も同じくキャスリング。これで本譜は一段落、続きはぜひ自分で指してみてね！",
-    en:"White castles too. That's the main line — try continuing the game yourself from here!",
+    ja:"白もキャスリングでキングを安全な場所へ動かすよ。白は中央で大きなスペースを持ち、黒はe5のポーンを中心に堅く守る形になったんだ。この後は黒がc6やa6で、クイーンサイドから少しずつ反撃の準備をする流れがよく見られるよ。これで本譜は一段落、続きはぜひ自分で指してみてね！",
+    en:"White also castles, bringing the king to safety. White has plenty of central space, while Black holds a solid position built around the e5 pawn. A common continuation is for Black to prepare queenside counterplay with moves like ...c6 or ...a6. That's the main line — try continuing the game yourself from here!",
     fox:'happy' }
 ];
 
@@ -329,15 +341,50 @@ function adjustBottomPadding(){
   }
 }
 
+function shareOnX(message) {
+  const shareUrl = 'https://twitter.com/intent/tweet?text=' + encodeURIComponent(message) + '&url=' + encodeURIComponent(window.location.href);
+  window.open(shareUrl, '_blank', 'noopener,noreferrer,width=550,height=420');
+}
+
 function renderStep(){
   const step = LESSON_STEPS[currentStep];
   renderBoard(boardSnapshots[currentStep]);
   document.getElementById('moveLabel').textContent = (step.moveLabel && step.moveLabel[currentLang]) || '';
-  document.getElementById('commentaryText').textContent = step[currentLang];
+  const ctEl = document.getElementById('commentaryText');
+  const moreText = step[currentLang + 'More'];
+  ctEl.innerHTML = step[currentLang] + (moreText
+    ? '<details class="more-detail"><summary>' + (currentLang === 'ja' ? '💡 もっと詳しく知りたい方へ' : '💡 Want to know more?') + '</summary><div class="more-body">' + moreText + '</div></details>'
+    : '');
+  ctEl.scrollTop = 0;
+  const moreEl = ctEl.querySelector('details.more-detail');
+  if (moreEl) {
+    moreEl.addEventListener('toggle', function(){
+      if (moreEl.open) { ctEl.scrollTop = moreEl.offsetTop - ctEl.offsetTop; }
+      adjustBottomPadding();
+    });
+  }
   document.getElementById('foxAvatar').src = FOX_BY_MOOD[step.fox] || FOX_BY_MOOD.normal;
   document.getElementById('lessonProgress').textContent = currentStep + ' / ' + (LESSON_STEPS.length - 1);
   document.getElementById('btnPrev').disabled = currentStep === 0;
   document.getElementById('btnNext').disabled = currentStep === LESSON_STEPS.length - 1;
+  adjustBottomPadding();
+
+  const shareRow = document.getElementById('shareRow');
+  if (shareRow) {
+    if (currentStep === LESSON_STEPS.length - 1) {
+      const openingNameEl = document.querySelector('.opening-title.lang-element-' + currentLang);
+      const openingName = openingNameEl ? openingNameEl.textContent : '';
+      const msg = currentLang === 'ja'
+        ? '🦊 ' + openingName + 'をKitsuneChessで学んだよ!一手ずつ「なぜその手か」を教えてくれるよ'
+        : '🦊 Just learned the ' + openingName + ' on KitsuneChess! It explains why each move is played, step by step.';
+      const shareBtn = document.getElementById('shareXBtn');
+      shareBtn.textContent = currentLang === 'ja' ? '🦊 𝕏でシェアする' : '🦊 Share on 𝕏';
+      shareBtn.onclick = function() { shareOnX(msg); };
+      shareRow.style.display = 'block';
+    } else {
+      shareRow.style.display = 'none';
+    }
+  }
   adjustBottomPadding();
 }
 

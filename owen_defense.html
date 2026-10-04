@@ -103,6 +103,11 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
   font-size: 1rem;
   color: var(--text-sub);
 }
+.commentary-text a, .opening-intro a { color:var(--brown); text-decoration:underline; font-weight:700; }
+.commentary-text a:hover, .opening-intro a:hover { color:var(--brown-dark); }
+.more-detail { margin-top:8px; border-top:1px dashed var(--brown-light); padding-top:6px; }
+.more-detail summary { cursor:pointer; font-weight:700; color:var(--brown); font-size:0.92rem; list-style-position:inside; }
+.more-detail .more-body { margin-top:6px; font-size:0.94rem; }
 </style>
   <script src="board-theme.js"></script>
 </head>
@@ -121,8 +126,8 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
   <h1 class="opening-title lang-element-en">Owen's Defense</h1>
 
   <div class="opening-intro">
-    <p class="lang-element-ja">💡 オーウェン・ディフェンスは1...b6と即座にフィアンケットを準備する珍しい守りだよ！ジョン・オウエンが19世紀に使ったことが名前の由来なんだ。Bb7のビショップで白の中央を長い対角線から牽制するというアイデアは理論的には正しいけど、c5やd5と中央に挑戦しないため白に広大な中央スペースを渡すリスクがあるんだ。e6-d5とフレンチ風に展開したり、g6-Bg7とモダン風に構える変化もあるよ。マイナーな変化だから相手の研究外になりやすく、驚かせるのが好きなプレイヤーにおすすめだよ！</p>
-    <p class="lang-element-en">💡 Owen's Defense immediately prepares a fianchetto with 1...b6, named after John Owen who used it in the 19th century! The idea of pressuring White's center from a distance with the Bb7 bishop is theoretically sound, but without challenging the center with c5 or d5, Black risks giving White a huge amount of central space. Black can develop in a French style with e6-d5, or set up a Modern-style formation with g6-Bg7. Since it's a rare variation, most opponents won't know the theory. A fun and unusual choice for players who love surprising their opponents!</p>
+    <p class="lang-element-ja">💡 オーウェン・ディフェンスは、1.e4に対して黒が1...b6と突き、ビショップをb7に出す珍しいオープニングだよ。17世紀のグレコの本にもすでに登場していて、19世紀のイギリスの牧師ジョン・オーウェンが得意としたことから、この名前が付いたんだ。オーウェンは、あの名手モーフィーとの対局でもこの守りを使って勝ったことがあるよ。白に中央を広く取られやすい一方で、相手を見慣れない形に引き込める、個性的なオープニングなんだ。</p>
+    <p class="lang-element-en">💡 Owen's Defense is an unusual opening in which Black answers 1.e4 with 1...b6 and puts the bishop on b7. It already appears in Greco's 17th-century writings, and it's named after John Owen, a 19th-century English vicar who played it regularly. Owen even won a game with it against the great Paul Morphy. It lets White take a big center, but it's a distinctive opening that pulls opponents into unfamiliar positions.</p>
   </div>
 
   <div class="board-wrap">
@@ -142,6 +147,9 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
     <button id="btnPrev" class="lesson-btn">← 前へ</button>
     <span class="lesson-progress" id="lessonProgress"></span>
     <button id="btnNext" class="lesson-btn">次へ →</button>
+  </div>
+  <div id="shareRow" style="display:none;text-align:center;margin-top:10px;">
+    <button id="shareXBtn" style="background:#000;color:#fff;border:none;border-radius:20px;padding:8px 16px;font-family:'Crimson Pro',serif;font-weight:700;font-size:0.85rem;cursor:pointer;">🦊 𝕏でシェアする</button>
   </div>
 </div>
 
@@ -190,60 +198,52 @@ const initialBoard = [
 // ============================================================
 const LESSON_STEPS = [
   { move:null, moveLabel:{ja:"開始局面", en:"Starting Position"},
-    ja:"オーウェン・ディフェンスのレッスンを始めるよ！1手目から即座にフィアンケットを準備する、珍しくて意表を突く守りだよ。ジーンと一緒に、一手ずつ「なぜその手を指すのか」を学んでいこう。",
-    en:"Let's start Owen's Defense lesson! Black prepares a fianchetto immediately on move one — rare and surprising. Jene will explain why each move is played, one step at a time.",
+    ja:"オーウェン・ディフェンスのレッスンを始めるよ！このページでは、黒がb7のビショップで白のe4のポーンをねらい、白がBd3とc3で中央を守る代表的な流れを見ていくよ。黒の遠くからのねらいと、白の大きな中央がどうぶつかるのかがポイントなんだ。一手ずつジーンと一緒に、なぜその手を指すのかを学んでいこう。",
+    en:"Let's start the Owen's Defense lesson! On this page we follow the typical line where Black targets White's e4 pawn with the b7 bishop, and White defends the center with Bd3 and c3. The key is how Black's long-range pressure meets White's big center. Jene will walk you through why each move is played, one step at a time.",
     fox:'welcome' },
   { move:{from:[6,4],to:[4,4]}, moveLabel:{ja:"1. e4", en:"1. e4"},
-    ja:"白はe4で中央を制圧するよ。",
-    en:"White plays 1.e4, claiming the center.",
+    ja:"白はポーンをe4へ進めるよ。白は中央のマスを押さえながら、ビショップとクイーンが動く道を開けるんだ。",
+    en:"White pushes the pawn to e4. White takes control of central squares and opens lines for the bishop and queen.",
     fox:'normal' },
-  { move:{from:[1,1],to:[2,1]}, moveLabel:{ja:"1...b6（オーウェン！）", en:"1...b6 (Owen's!)"},
-    ja:"ここが本題、オーウェン・ディフェンスの一手！黒はすぐにフィアンケットを準備するよ。",
-    en:"Here's Owen's Defense move! Black immediately prepares a fianchetto.",
+  { move:{from:[1,1],to:[2,1]}, moveLabel:{ja:"1...b6（オーウェン！）", en:"1...b6 (Owen!)"},
+    ja:"ここがオーウェン・ディフェンスの一手！黒はポーンをb6へ進めて、ビショップをb7の長い対角線に出す準備をするよ。一般的には1...e5や1...c5で中央を直接争うけれど、黒はここでビショップを使って遠くから白のe4のポーンをねらう道を選ぶんだ。その代わり、黒はキングサイドの準備が遅れるうえ、白に中央を広く取られやすいよ。",
+    en:"Here's Owen's Defense! Black pushes the pawn to b6, preparing to put the bishop on the long diagonal at b7. The usual replies 1...e5 or 1...c5 fight for the center directly, but Black chooses to target White's e4 pawn from a distance with the bishop. The cost is that Black falls behind in kingside development and lets White take a big center.",
+    jaMore:"同じように、黒が1手目でgのポーンを突いてビショップをg7に出す作戦は、<a href='modern_defense.html'>モダン・ディフェンス</a>と呼ばれているよ。",
+    enMore:"A similar idea on the other side, where Black pushes the g-pawn and puts the bishop on g7, is called the <a href='modern_defense.html?lang=en'>Modern Defense</a>.",
     fox:'happy' },
   { move:{from:[6,3],to:[4,3]}, moveLabel:{ja:"2. d4", en:"2. d4"},
-    ja:"白はd4でさらに中央を広げるよ。",
-    en:"White further expands the center with 2.d4.",
+    ja:"白はポーンをd4へ進めるよ。白はe4とd4の2つのポーンで、中央を大きく押さえるんだ。",
+    en:"White pushes the pawn to d4. With pawns on e4 and d4, White takes a big grip on the center.",
     fox:'normal' },
   { move:{from:[0,2],to:[1,1]}, moveLabel:{ja:"2...Bb7", en:"2...Bb7"},
-    ja:"黒はビショップをb7へ。長い対角線から白の中央を牽制するよ。",
-    en:"Black completes the fianchetto with 2...Bb7, pressuring White's center from a distance.",
+    ja:"黒はビショップをb7へ進めるよ。黒のビショップは長い対角線から、白のe4のポーンを攻撃しているんだ。今、白のe4のポーンを守っている駒はないよ。",
+    en:"Black develops the bishop to b7. From the long diagonal, Black's bishop attacks White's e4 pawn. Right now, no white piece is defending the e4 pawn.",
     fox:'normal' },
-  { move:{from:[7,6],to:[5,5]}, moveLabel:{ja:"3. Nf3", en:"3. Nf3"},
-    ja:"白はナイトをf3へ展開するよ。",
-    en:"White develops the knight to f3.",
+  { move:{from:[7,5],to:[5,3]}, moveLabel:{ja:"3. Bd3", en:"3. Bd3"},
+    ja:"白はビショップをd3へ進めるよ。白のビショップはe4のポーンを守りながら、黒のキングサイドもにらんでいるんだ。",
+    en:"White develops the bishop to d3. White's bishop defends the e4 pawn while also eyeing Black's kingside.",
+    jaMore:"白はこの手の代わりに3.Nc3でe4を守ることもできて、こちらもよく指されているよ。",
+    enMore:"Instead of this move, White can also defend e4 with 3.Nc3, which is another popular choice.",
     fox:'normal' },
   { move:{from:[1,4],to:[2,4]}, moveLabel:{ja:"3...e6", en:"3...e6"},
-    ja:"黒はe6でフレンチ風に展開を進めるよ。",
-    en:"Black develops in a French style with 3...e6.",
+    ja:"黒はポーンをe6へ進めるよ。黒はf8のビショップの道を開けて、キングサイドの展開を進めるんだ。黒がもしこの手の代わりに3...f5と突いてe4のポーンを取りにいくと、白は4.exf5 Bxg2 5.Qh5+と攻めて、黒のキングがとても危ない罠になるよ。",
+    en:"Black pushes the pawn to e6. Black opens the path for the f8 bishop and continues kingside development. If Black played 3...f5 instead of this move to go after the e4 pawn, White would attack with 4.exf5 Bxg2 5.Qh5+, a trap that leaves Black's king in serious danger.",
+    fox:'wink' },
+  { move:{from:[7,6],to:[5,5]}, moveLabel:{ja:"4. Nf3", en:"4. Nf3"},
+    ja:"白はナイトをf3へ進めるよ。白はナイトを展開しながら、キングサイドにキャスリングする準備をするんだ。",
+    en:"White develops the knight to f3. White develops a piece and prepares to castle kingside.",
     fox:'normal' },
-  { move:{from:[7,5],to:[5,3]}, moveLabel:{ja:"4. Bd3", en:"4. Bd3"},
-    ja:"白はビショップをd3へ展開するよ。",
-    en:"White develops the bishop to d3.",
+  { move:{from:[1,2],to:[3,2]}, moveLabel:{ja:"4...c5", en:"4...c5"},
+    ja:"黒はポーンをc5へ進めるよ。黒は白のd4のポーンに横から働きかけて、中央を争うんだ。",
+    en:"Black pushes the pawn to c5. Black challenges White's d4 pawn from the side and fights for the center.",
     fox:'normal' },
-  { move:{from:[0,6],to:[2,5]}, moveLabel:{ja:"4...Nf6", en:"4...Nf6"},
-    ja:"黒はナイトをf6へ展開するよ。",
-    en:"Black develops the knight to f6.",
+  { move:{from:[6,2],to:[5,2]}, moveLabel:{ja:"5. c3", en:"5. c3"},
+    ja:"白はポーンをc3へ進めるよ。白はd4のポーンを支えて、中央の2つのポーンを保つんだ。",
+    en:"White pushes the pawn to c3. White supports the d4 pawn and keeps both central pawns.",
     fox:'normal' },
-  { move:{from:[7,4],to:[7,6],castle:{from:[7,7],to:[7,5]}}, moveLabel:{ja:"5. O-O", en:"5. O-O"},
-    ja:"白はキャスリングでキングを安全な場所へ。",
-    en:"White castles kingside, tucking the king away safely.",
-    fox:'normal' },
-  { move:{from:[0,5],to:[1,4]}, moveLabel:{ja:"5...Be7", en:"5...Be7"},
-    ja:"黒はビショップをe7へ。キャスリングの準備をするよ。",
-    en:"Black plays 5...Be7, preparing to castle.",
-    fox:'normal' },
-  { move:{from:[7,1],to:[5,2]}, moveLabel:{ja:"6. Nc3", en:"6. Nc3"},
-    ja:"白はナイトをc3へ展開するよ。",
-    en:"White develops the knight to c3.",
-    fox:'normal' },
-  { move:{from:[0,4],to:[0,6],castle:{from:[0,7],to:[0,5]}}, moveLabel:{ja:"6...O-O", en:"6...O-O"},
-    ja:"黒はキャスリングでキングを安全な場所へ。",
-    en:"Black castles kingside, tucking the king away safely.",
-    fox:'normal' },
-  { move:{from:[7,3],to:[6,4]}, moveLabel:{ja:"7. Qe2", en:"7. Qe2"},
-    ja:"白はクイーンをe2へ。これで本譜は一段落、続きはぜひ自分で指してみてね！",
-    en:"White develops the queen to e2. That's the main line — try continuing the game yourself from here!",
+  { move:{from:[0,6],to:[2,5]}, moveLabel:{ja:"5...Nf6", en:"5...Nf6"},
+    ja:"黒はナイトをf6へ進めるよ。黒はナイトを展開しながら、白のe4のポーンをb7のビショップと一緒に攻撃するんだ。白のe4はd3のビショップ1つにしか守られていないので、白はもう一度e4を守る手を考えなければならないよ。この局面はオーウェン・ディフェンスの代表的な形で、白はQe2などでe4を守りながら、広い中央を生かして戦うことが多いんだ。これで本譜は一段落、続きはぜひ自分で指してみてね！",
+    en:"Black develops the knight to f6. Together with the b7 bishop, Black's knight attacks White's e4 pawn. White's e4 is defended only by the d3 bishop, so White has to find another way to protect it. This is a typical Owen's Defense position, and White often defends e4 with moves like Qe2 while making use of the big center. That's the main line — try continuing the game yourself from here!",
     fox:'happy' }
 ];
 
@@ -329,15 +329,50 @@ function adjustBottomPadding(){
   }
 }
 
+function shareOnX(message) {
+  const shareUrl = 'https://twitter.com/intent/tweet?text=' + encodeURIComponent(message) + '&url=' + encodeURIComponent(window.location.href);
+  window.open(shareUrl, '_blank', 'noopener,noreferrer,width=550,height=420');
+}
+
 function renderStep(){
   const step = LESSON_STEPS[currentStep];
   renderBoard(boardSnapshots[currentStep]);
   document.getElementById('moveLabel').textContent = (step.moveLabel && step.moveLabel[currentLang]) || '';
-  document.getElementById('commentaryText').textContent = step[currentLang];
+  const ctEl = document.getElementById('commentaryText');
+  const moreText = step[currentLang + 'More'];
+  ctEl.innerHTML = step[currentLang] + (moreText
+    ? '<details class="more-detail"><summary>' + (currentLang === 'ja' ? '💡 もっと詳しく知りたい方へ' : '💡 Want to know more?') + '</summary><div class="more-body">' + moreText + '</div></details>'
+    : '');
+  ctEl.scrollTop = 0;
+  const moreEl = ctEl.querySelector('details.more-detail');
+  if (moreEl) {
+    moreEl.addEventListener('toggle', function(){
+      if (moreEl.open) { ctEl.scrollTop = moreEl.offsetTop - ctEl.offsetTop; }
+      adjustBottomPadding();
+    });
+  }
   document.getElementById('foxAvatar').src = FOX_BY_MOOD[step.fox] || FOX_BY_MOOD.normal;
   document.getElementById('lessonProgress').textContent = currentStep + ' / ' + (LESSON_STEPS.length - 1);
   document.getElementById('btnPrev').disabled = currentStep === 0;
   document.getElementById('btnNext').disabled = currentStep === LESSON_STEPS.length - 1;
+  adjustBottomPadding();
+
+  const shareRow = document.getElementById('shareRow');
+  if (shareRow) {
+    if (currentStep === LESSON_STEPS.length - 1) {
+      const openingNameEl = document.querySelector('.opening-title.lang-element-' + currentLang);
+      const openingName = openingNameEl ? openingNameEl.textContent : '';
+      const msg = currentLang === 'ja'
+        ? '🦊 ' + openingName + 'をKitsuneChessで学んだよ!一手ずつ「なぜその手か」を教えてくれるよ'
+        : '🦊 Just learned the ' + openingName + ' on KitsuneChess! It explains why each move is played, step by step.';
+      const shareBtn = document.getElementById('shareXBtn');
+      shareBtn.textContent = currentLang === 'ja' ? '🦊 𝕏でシェアする' : '🦊 Share on 𝕏';
+      shareBtn.onclick = function() { shareOnX(msg); };
+      shareRow.style.display = 'block';
+    } else {
+      shareRow.style.display = 'none';
+    }
+  }
   adjustBottomPadding();
 }
 

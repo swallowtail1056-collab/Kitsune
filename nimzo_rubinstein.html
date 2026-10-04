@@ -103,6 +103,11 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
   font-size: 1rem;
   color: var(--text-sub);
 }
+.commentary-text a, .opening-intro a { color:var(--brown); text-decoration:underline; font-weight:700; }
+.commentary-text a:hover, .opening-intro a:hover { color:var(--brown-dark); }
+.more-detail { margin-top:8px; border-top:1px dashed var(--brown-light); padding-top:6px; }
+.more-detail summary { cursor:pointer; font-weight:700; color:var(--brown); font-size:0.92rem; list-style-position:inside; }
+.more-detail .more-body { margin-top:6px; font-size:0.94rem; }
 </style>
   <script src="board-theme.js"></script>
 </head>
@@ -121,8 +126,8 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
   <h1 class="opening-title lang-element-en">Nimzo-Indian Rubinstein Variation</h1>
 
   <div class="opening-intro">
-    <p class="lang-element-ja">💡 ニムゾ・ルビンシュタイン変化はニムゾ・インディアンへの4.e3の穏やかな変化だよ！複雑な理論変化を避けて確実なポジションを目指す白の戦略的なアプローチなんだ。e3と突くことでd4のポーンをしっかり支援しながら、Bd3-Nge2という堅固な形を作るよ。アカバ・ルビンシュタインが得意とした戦略的なシステムで、白は少しずつポジション的優位を積み上げていくんだ。長期的な戦いを好む戦略家に向いたシステムだよ！</p>
-    <p class="lang-element-en">💡 The Nimzo-Indian Rubinstein Variation plays 4.e3 for a quiet and solid approach! This is White's strategic choice to avoid complex theoretical variations while aiming for a reliable positional advantage. Playing e3 firmly supports the d4 pawn while preparing the Bd3-Nge2 setup. Mastered by Akiba Rubinstein, White gradually accumulates small positional advantages. A system for patient, strategic players who prefer long-term positional battles!</p>
+    <p class="lang-element-ja">💡 ルビンシュタイン・バリエーションは、ニムゾ・インディアン・ディフェンスで白が4.e3と応じる、最もよく指される変化だよ。名前は、20世紀前半に活躍したポーランドの名手アキバ・ルビンシュタインに由来しているんだ。白は激しい変化を避けて、自然な駒の展開を優先するのが特徴だよ。派手さは少ないけれど、白も黒も多くの作戦を選べる、奥の深い本格的な変化なんだ。</p>
+    <p class="lang-element-en">💡 The Rubinstein Variation is the most popular way for White to meet the Nimzo-Indian Defense, with 4.e3. It's named after Akiba Rubinstein, the great Polish master of the early 20th century. White avoids sharp lines and puts natural development first. It isn't flashy, but it's a deep, serious line with many plans for both sides.</p>
   </div>
 
   <div class="board-wrap">
@@ -142,6 +147,9 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
     <button id="btnPrev" class="lesson-btn">← 前へ</button>
     <span class="lesson-progress" id="lessonProgress"></span>
     <button id="btnNext" class="lesson-btn">次へ →</button>
+  </div>
+  <div id="shareRow" style="display:none;text-align:center;margin-top:10px;">
+    <button id="shareXBtn" style="background:#000;color:#fff;border:none;border-radius:20px;padding:8px 16px;font-family:'Crimson Pro',serif;font-weight:700;font-size:0.85rem;cursor:pointer;">🦊 𝕏でシェアする</button>
   </div>
 </div>
 
@@ -190,60 +198,62 @@ const initialBoard = [
 // ============================================================
 const LESSON_STEPS = [
   { move:null, moveLabel:{ja:"開始局面", en:"Starting Position"},
-    ja:"ニムゾ・ルビンシュタイン変化のレッスンを始めるよ！複雑な理論を避けて、少しずつポジション的優位を積み上げる、ルビンシュタインが得意とした戦略的な変化だよ。ジーンと一緒に、一手ずつ「なぜその手を指すのか」を学んでいこう。",
-    en:"Let's start the Nimzo-Indian Rubinstein Variation lesson! White avoids sharp theory, gradually building small positional advantages — Rubinstein's specialty. Jene will explain why each move is played, one step at a time.",
+    ja:"ニムゾ・インディアンのルビンシュタイン・バリエーションのレッスンを始めるよ！このページでは、白が4.e3で落ち着いて駒を並べ、黒がd5とc5で中央に働きかける本筋を見ていくよ。両者がキャスリングを済ませて、中央の戦いに入っていくまでの流れがポイントなんだ。一手ずつジーンと一緒に、なぜその手を指すのかを学んでいこう。",
+    en:"Let's start the lesson on the Rubinstein Variation of the Nimzo-Indian! On this page we follow the main line where White calmly develops with 4.e3 and Black challenges the center with ...d5 and ...c5. The key is how both sides castle and head into the central battle. Jene will walk you through why each move is played, one step at a time.",
     fox:'welcome' },
   { move:{from:[6,3],to:[4,3]}, moveLabel:{ja:"1. d4", en:"1. d4"},
-    ja:"白はd4で中央を制圧するよ。",
-    en:"White plays 1.d4, claiming the center.",
+    ja:"白はポーンをd4へ進めるよ。白は中央のマスを押さえながら、c1のビショップの道を開けるんだ。",
+    en:"White pushes the pawn to d4. White takes control of central squares and opens the path for the c1 bishop.",
     fox:'normal' },
   { move:{from:[0,6],to:[2,5]}, moveLabel:{ja:"1...Nf6", en:"1...Nf6"},
-    ja:"黒はナイトをf6へ展開するよ。",
-    en:"Black develops the knight to f6.",
+    ja:"黒はナイトをf6へ進めるよ。黒はナイトを展開しながら、白がe4と突くのをけん制するんだ。",
+    en:"Black develops the knight to f6. Black develops while discouraging White from pushing e4.",
     fox:'normal' },
   { move:{from:[6,2],to:[4,2]}, moveLabel:{ja:"2. c4", en:"2. c4"},
-    ja:"白はc4でさらに中央を広げるよ。",
-    en:"White expands the center with 2.c4.",
+    ja:"白はポーンをc4へ進めるよ。白はこれでd5のマスにも利かせて、中央を広げるんだ。",
+    en:"White pushes the pawn to c4. White adds control of d5 and expands in the center.",
     fox:'normal' },
   { move:{from:[1,4],to:[2,4]}, moveLabel:{ja:"2...e6", en:"2...e6"},
-    ja:"黒はe6で柔軟に展開を準備するよ。",
-    en:"Black plays 2...e6, preparing flexible development.",
+    ja:"黒はポーンをe6へ進めるよ。黒はd5のマスを押さえながら、f8のビショップの道を開けるんだ。",
+    en:"Black pushes the pawn to e6. Black controls the d5 square and opens the path for the f8 bishop.",
     fox:'normal' },
   { move:{from:[7,1],to:[5,2]}, moveLabel:{ja:"3. Nc3", en:"3. Nc3"},
-    ja:"白はナイトをc3へ展開するよ。",
-    en:"White develops the knight to c3.",
+    ja:"白はナイトをc3へ進めるよ。白はナイトを展開しながら、次にe4と突いて中央を大きく取る準備をするんだ。",
+    en:"White develops the knight to c3. White develops while preparing to push e4 and take a big center.",
     fox:'normal' },
   { move:{from:[0,5],to:[4,1]}, moveLabel:{ja:"3...Bb4", en:"3...Bb4"},
-    ja:"黒はビショップでc3のナイトをピンするよ（ニムゾ・インディアン）。",
-    en:"Black pins the knight with 3...Bb4, the Nimzo-Indian.",
+    ja:"黒はビショップをb4へ進めて、<a href='nimzo.html'>ニムゾ・インディアン・ディフェンス</a>に入るよ。黒のビショップはc3のナイトをe1の白のキングにピンして、白がe4と突くのを防いでいるんだ。",
+    en:"Black develops the bishop to b4, entering the <a href='nimzo.html?lang=en'>Nimzo-Indian Defense</a>. Black's bishop pins the c3 knight against White's king on e1, stopping White from pushing e4.",
     fox:'normal' },
   { move:{from:[6,4],to:[5,4]}, moveLabel:{ja:"4. e3（ルビンシュタイン！）", en:"4. e3 (Rubinstein!)"},
-    ja:"ここが本題、ルビンシュタイン変化の一手！白は複雑な交換変化を避けて、e3で静かに対応するよ。",
-    en:"Here's the Rubinstein move! White avoids complex exchange lines, responding quietly with 4.e3.",
+    ja:"ここがルビンシュタイン・バリエーションの一手！白はポーンをe3へ進めて、d4のポーンを支えながら、f1のビショップの道を開けるよ。その代わり、白はc1のビショップの通り道をe3のポーンでふさいでしまうよ。",
+    en:"Here's the Rubinstein Variation! White pushes the pawn to e3, supporting the d4 pawn and opening the path for the f1 bishop. The trade-off is that the e3 pawn blocks the c1 bishop's path.",
+    jaMore:"白はこの手の代わりに4.Qc2や4.a3でピンにすぐ対応することもできるけれど、白はここで落ち着いて駒の展開を先に進めるんだ。",
+    enMore:"Instead of this move, White could deal with the pin right away with 4.Qc2 or 4.a3, but here White calmly prioritizes development.",
     fox:'happy' },
-  { move:{from:[1,1],to:[2,1]}, moveLabel:{ja:"4...b6", en:"4...b6"},
-    ja:"黒はb6でクイーンサイドのフィアンケットも準備するよ。",
-    en:"Black prepares a queenside fianchetto with 4...b6.",
-    fox:'wink' },
+  { move:{from:[0,4],to:[0,6],castle:{from:[0,7],to:[0,5]}}, moveLabel:{ja:"4...O-O", en:"4...O-O"},
+    ja:"黒はキャスリングでキングを安全な場所へ動かすよ。黒はキングの安全を先に確保して、どの形で中央を争うかは後から決めるんだ。",
+    en:"Black castles, bringing the king to safety. Black secures the king first and decides later how to fight for the center.",
+    fox:'normal' },
   { move:{from:[7,5],to:[5,3]}, moveLabel:{ja:"5. Bd3", en:"5. Bd3"},
-    ja:"白はビショップをd3へ展開するよ。",
-    en:"White develops the bishop to d3.",
+    ja:"白はビショップをd3へ進めるよ。白のビショップはe4のマスを支え、キングサイドもにらんでいるんだ。",
+    en:"White develops the bishop to d3. White's bishop supports the e4 square and also eyes the kingside.",
     fox:'normal' },
-  { move:{from:[0,2],to:[1,1]}, moveLabel:{ja:"5...Bb7", en:"5...Bb7"},
-    ja:"黒はビショップをb7へ展開するよ。",
-    en:"Black develops the bishop to b7.",
+  { move:{from:[1,3],to:[3,3]}, moveLabel:{ja:"5...d5", en:"5...d5"},
+    ja:"黒はポーンをd5へ進めるよ。黒は中央に自分のポーンを置いて、白のc4のポーンに働きかけるんだ。黒のd5のポーンは、e6のポーンとf6のナイトとクイーンの3つに守られているよ。",
+    en:"Black pushes the pawn to d5. Black plants a pawn in the center and challenges White's c4 pawn. Black's d5 pawn is defended three times, by the e6 pawn, the f6 knight and the queen.",
     fox:'normal' },
-  { move:{from:[7,6],to:[6,4]}, moveLabel:{ja:"6. Nge2", en:"6. Nge2"},
-    ja:"白はナイトをe2へ。複雑な変化を避けながら堅固な形を作るルビンシュタインらしい一手だよ。",
-    en:"White develops the knight to e2 — the characteristic Rubinstein setup, solid and avoiding complications.",
+  { move:{from:[7,6],to:[5,5]}, moveLabel:{ja:"6. Nf3", en:"6. Nf3"},
+    ja:"白はナイトをf3へ進めるよ。白はナイトを展開しながら、キャスリングの準備を整えるんだ。",
+    en:"White develops the knight to f3. White develops a piece and gets ready to castle.",
     fox:'normal' },
-  { move:{from:[0,4],to:[0,6],castle:{from:[0,7],to:[0,5]}}, moveLabel:{ja:"6...O-O", en:"6...O-O"},
-    ja:"黒はキャスリングでキングを安全な場所へ。",
-    en:"Black castles kingside, tucking the king away safely.",
+  { move:{from:[1,2],to:[3,2]}, moveLabel:{ja:"6...c5", en:"6...c5"},
+    ja:"黒はポーンをc5へ進めるよ。黒は白のd4のポーンに横から働きかけて、中央での主導権を争うんだ。白のd4はe3のポーンとf3のナイトに守られているよ。",
+    en:"Black pushes the pawn to c5. Black challenges White's d4 pawn from the side and fights for the initiative in the center. White's d4 is defended by the e3 pawn and the f3 knight.",
     fox:'normal' },
   { move:{from:[7,4],to:[7,6],castle:{from:[7,7],to:[7,5]}}, moveLabel:{ja:"7. O-O", en:"7. O-O"},
-    ja:"白も同じくキャスリング。これで本譜は一段落、続きはぜひ自分で指してみてね！",
-    en:"White castles too. That's the main line — try continuing the game yourself from here!",
+    ja:"白はキャスリングでキングを安全な場所へ動かすよ。白は駒の展開を終えて、ここから中央での本格的な戦いが始まるんだ。この局面はニムゾ・インディアンの本筋として知られていて、この後は黒が7...dxc4や7...Nc6で、白が中央のポーンをどう扱うかを試していくよ。これで本譜は一段落、続きはぜひ自分で指してみてね！",
+    en:"White castles, bringing the king to safety. White has finished development, and the real fight in the center begins here. This position is known as the main line of the Nimzo-Indian, and Black usually continues with 7...dxc4 or 7...Nc6 to test how White handles the central pawns. That's the main line — try continuing the game yourself from here!",
     fox:'happy' }
 ];
 
@@ -329,15 +339,50 @@ function adjustBottomPadding(){
   }
 }
 
+function shareOnX(message) {
+  const shareUrl = 'https://twitter.com/intent/tweet?text=' + encodeURIComponent(message) + '&url=' + encodeURIComponent(window.location.href);
+  window.open(shareUrl, '_blank', 'noopener,noreferrer,width=550,height=420');
+}
+
 function renderStep(){
   const step = LESSON_STEPS[currentStep];
   renderBoard(boardSnapshots[currentStep]);
   document.getElementById('moveLabel').textContent = (step.moveLabel && step.moveLabel[currentLang]) || '';
-  document.getElementById('commentaryText').textContent = step[currentLang];
+  const ctEl = document.getElementById('commentaryText');
+  const moreText = step[currentLang + 'More'];
+  ctEl.innerHTML = step[currentLang] + (moreText
+    ? '<details class="more-detail"><summary>' + (currentLang === 'ja' ? '💡 もっと詳しく知りたい方へ' : '💡 Want to know more?') + '</summary><div class="more-body">' + moreText + '</div></details>'
+    : '');
+  ctEl.scrollTop = 0;
+  const moreEl = ctEl.querySelector('details.more-detail');
+  if (moreEl) {
+    moreEl.addEventListener('toggle', function(){
+      if (moreEl.open) { ctEl.scrollTop = moreEl.offsetTop - ctEl.offsetTop; }
+      adjustBottomPadding();
+    });
+  }
   document.getElementById('foxAvatar').src = FOX_BY_MOOD[step.fox] || FOX_BY_MOOD.normal;
   document.getElementById('lessonProgress').textContent = currentStep + ' / ' + (LESSON_STEPS.length - 1);
   document.getElementById('btnPrev').disabled = currentStep === 0;
   document.getElementById('btnNext').disabled = currentStep === LESSON_STEPS.length - 1;
+  adjustBottomPadding();
+
+  const shareRow = document.getElementById('shareRow');
+  if (shareRow) {
+    if (currentStep === LESSON_STEPS.length - 1) {
+      const openingNameEl = document.querySelector('.opening-title.lang-element-' + currentLang);
+      const openingName = openingNameEl ? openingNameEl.textContent : '';
+      const msg = currentLang === 'ja'
+        ? '🦊 ' + openingName + 'をKitsuneChessで学んだよ!一手ずつ「なぜその手か」を教えてくれるよ'
+        : '🦊 Just learned the ' + openingName + ' on KitsuneChess! It explains why each move is played, step by step.';
+      const shareBtn = document.getElementById('shareXBtn');
+      shareBtn.textContent = currentLang === 'ja' ? '🦊 𝕏でシェアする' : '🦊 Share on 𝕏';
+      shareBtn.onclick = function() { shareOnX(msg); };
+      shareRow.style.display = 'block';
+    } else {
+      shareRow.style.display = 'none';
+    }
+  }
   adjustBottomPadding();
 }
 

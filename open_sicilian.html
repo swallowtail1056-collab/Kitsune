@@ -103,6 +103,11 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
   font-size: 1rem;
   color: var(--text-sub);
 }
+.commentary-text a, .opening-intro a { color:var(--brown); text-decoration:underline; font-weight:700; }
+.commentary-text a:hover, .opening-intro a:hover { color:var(--brown-dark); }
+.more-detail { margin-top:8px; border-top:1px dashed var(--brown-light); padding-top:6px; }
+.more-detail summary { cursor:pointer; font-weight:700; color:var(--brown); font-size:0.92rem; list-style-position:inside; }
+.more-detail .more-body { margin-top:6px; font-size:0.94rem; }
 </style>
   <script src="board-theme.js"></script>
 </head>
@@ -121,8 +126,8 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
   <h1 class="opening-title lang-element-en">Open Sicilian</h1>
 
   <div class="opening-intro">
-    <p class="lang-element-ja">💡 オープン・シシリアンは白が2.Nf3から3.d4とd4を突いてシシリアンを開放形に導く最もスタンダードな変化だよ！黒がcxd4と取れば白はNxd4と取り返してオープンな中央が生まれるんだ。白はe4-d4の強力なポーンセンターと展開のリードを持ち、黒はdファイルとcファイルを使ったカウンターアタックのチャンスを持つという非対称な戦いが続くよ。ナイドルフ、ドラゴン、シェベニンゲン、クラシカルなど無数の変化に分岐するチェス理論の宝庫だよ！</p>
-    <p class="lang-element-en">💡 The Open Sicilian occurs when White plays 2.Nf3 followed by 3.d4, opening up the Sicilian Defense in the most standard way! After Black takes with cxd4 and White recaptures with Nxd4, an open central battle begins. White has the strong e4-d4 pawn center while Black gets counterplay using the d-file and c-file. The Open Sicilian branches into countless variations — Najdorf, Dragon, Scheveningen, Classical, and many more — making it the greatest treasure trove of chess theory. One of the most played and most deeply studied openings in all of modern chess!</p>
+    <p class="lang-element-ja">💡 オープン・シシリアンは、シシリアン・ディフェンスで白が2.Nf3と3.d4で中央を開く、最も本格的な戦い方だよ。白は駒の展開で先に進み、黒はcファイルと中央の2つのポーンを生かして反撃するという、左右のバランスが違う激しい戦いになりやすいんだ。ナイドルフやドラゴンなど、チェスの中でも特に研究の進んだ変化の多くが、ここから始まるよ。覚えることは多いけれど、そのぶん両者に勝つチャンスがある、魅力的な戦い方なんだ。</p>
+    <p class="lang-element-en">💡 The Open Sicilian is the most ambitious way to fight the Sicilian Defense, with White opening the center through 2.Nf3 and 3.d4. White gets ahead in development, while Black counterattacks using the c-file and two central pawns, which tends to lead to sharp, unbalanced games. Many of the most deeply studied lines in chess, such as the Najdorf and Dragon, start from here. There's a lot to learn, but both sides get real winning chances, which is what makes it so appealing.</p>
   </div>
 
   <div class="board-wrap">
@@ -142,6 +147,9 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
     <button id="btnPrev" class="lesson-btn">← 前へ</button>
     <span class="lesson-progress" id="lessonProgress"></span>
     <button id="btnNext" class="lesson-btn">次へ →</button>
+  </div>
+  <div id="shareRow" style="display:none;text-align:center;margin-top:10px;">
+    <button id="shareXBtn" style="background:#000;color:#fff;border:none;border-radius:20px;padding:8px 16px;font-family:'Crimson Pro',serif;font-weight:700;font-size:0.85rem;cursor:pointer;">🦊 𝕏でシェアする</button>
   </div>
 </div>
 
@@ -190,60 +198,48 @@ const initialBoard = [
 // ============================================================
 const LESSON_STEPS = [
   { move:null, moveLabel:{ja:"開始局面", en:"Starting Position"},
-    ja:"オープン・シシリアンのレッスンを始めるよ！ナイドルフやドラゴンなど、数え切れない名門変化に分岐していく、チェス理論最大の宝庫だよ。ジーンと一緒に、一手ずつ「なぜその手を指すのか」を学んでいこう。",
-    en:"Let's start the Open Sicilian lesson! It branches into countless famous systems like the Najdorf and Dragon — the greatest treasure trove in chess theory. Jene will explain why each move is played, one step at a time.",
+    ja:"オープン・シシリアンのレッスンを始めるよ！このページでは、白が3.d4で中央を開き、5手目で多くの有名な変化に分かれていくまでの基本の流れを見ていくよ。どの手でどんな変化に進むのか、全体の地図をつかむことがポイントなんだ。一手ずつジーンと一緒に、なぜその手を指すのかを学んでいこう。",
+    en:"Let's start the Open Sicilian lesson! On this page we follow the basic flow where White opens the center with 3.d4, up to the point on move five where many famous variations branch off. The key is to get an overall map of which moves lead to which lines. Jene will walk you through why each move is played, one step at a time.",
     fox:'welcome' },
   { move:{from:[6,4],to:[4,4]}, moveLabel:{ja:"1. e4", en:"1. e4"},
-    ja:"白はe4で中央を制圧するよ。",
-    en:"White plays 1.e4, claiming the center.",
+    ja:"白はポーンをe4へ進めるよ。白は中央のマスを押さえながら、ビショップとクイーンが動く道を開けるんだ。",
+    en:"White pushes the pawn to e4. White takes control of central squares and opens lines for the bishop and queen.",
     fox:'normal' },
   { move:{from:[1,2],to:[3,2]}, moveLabel:{ja:"1...c5", en:"1...c5"},
-    ja:"黒はc5。シシリアン・ディフェンスで非対称な局面を作るよ。",
-    en:"Black plays 1...c5, the Sicilian Defense.",
+    ja:"黒はポーンをc5へ進めるよ。黒はこれで<a href='sicilian.html'>シシリアン・ディフェンス</a>の形に入り、横からd4のマスを押さえるんだ。",
+    en:"Black pushes the pawn to c5. Black enters the <a href='sicilian.html?lang=en'>Sicilian Defense</a> and controls the d4 square from the side.",
     fox:'normal' },
   { move:{from:[7,6],to:[5,5]}, moveLabel:{ja:"2. Nf3", en:"2. Nf3"},
-    ja:"白はナイトをf3に展開して、d4への中央突破を狙うよ。",
-    en:"White develops the knight to f3, preparing a central break with d4.",
+    ja:"白はナイトをf3へ進めるよ。白は駒を展開しながら、次にd4と突く準備をしているんだ。",
+    en:"White develops the knight to f3. White develops a piece while preparing to push d4 next.",
+    jaMore:"白はこの手の代わりに2.c3の<a href='alapin_sicilian.html'>アラピン・バリエーション</a>などで、オープン・シシリアンを避けることもできるよ。",
+    enMore:"Instead of this move, White can avoid the Open Sicilian with lines such as 2.c3, the <a href='alapin_sicilian.html?lang=en'>Alapin Variation</a>.",
     fox:'normal' },
-  { move:{from:[1,4],to:[2,4]}, moveLabel:{ja:"2...e6", en:"2...e6"},
-    ja:"黒はe6で柔軟に展開を準備するよ。",
-    en:"Black plays 2...e6, preparing flexible development.",
+  { move:{from:[1,3],to:[2,3]}, moveLabel:{ja:"2...d6", en:"2...d6"},
+    ja:"黒はポーンをd6へ進めるよ。黒はe5のマスを押さえ、c8のビショップの道も開けるんだ。",
+    en:"Black pushes the pawn to d6. Black controls the e5 square and opens the path for the c8 bishop.",
+    jaMore:"黒はこの手の代わりに2...Nc6や2...e6と指すこともできるよ。2...Nc6からは<a href='sveshnikov_sicilian.html'>スヴェシニコフ</a>、2...e6からは<a href='taimanov_sicilian.html'>タイマノフ</a>や<a href='kan_sicilian.html'>カン</a>などの変化に進むんだ。",
+    enMore:"Instead of this move, Black can also play 2...Nc6 or 2...e6. 2...Nc6 leads to lines such as the <a href='sveshnikov_sicilian.html?lang=en'>Sveshnikov</a>, while 2...e6 leads to lines such as the <a href='taimanov_sicilian.html?lang=en'>Taimanov</a> or the <a href='kan_sicilian.html?lang=en'>Kan</a>.",
     fox:'normal' },
   { move:{from:[6,3],to:[4,3]}, moveLabel:{ja:"3. d4（オープン！）", en:"3. d4 (Open!)"},
-    ja:"ここが本題、オープン・シシリアンの一手！白はd4を突いて、局面を一気に開放するよ。",
-    en:"Here's the Open Sicilian move! White pushes d4, immediately opening up the position.",
+    ja:"ここがオープン・シシリアンの一手！白はポーンをd4へ進めて、中央を開いていくよ。白はd4のポーンを黒のc5のポーンと交換して、駒が自由に動ける開いた局面を作るんだ。その代わり、白は中央のポーンを1つ黒のcのポーンと交換するので、黒は中央にdとeの2つのポーンを残せることになるよ。",
+    en:"Here's the Open Sicilian! White pushes the pawn to d4 and opens up the center. White trades the d-pawn for Black's c-pawn, creating an open position where the pieces can move freely. The trade-off is that White gives up a central pawn for Black's c-pawn, so Black keeps two central pawns on the d- and e-files.",
     fox:'happy' },
   { move:{from:[3,2],to:[4,3]}, moveLabel:{ja:"3...cxd4", en:"3...cxd4"},
-    ja:"黒はcxd4とポーンを交換するよ。",
-    en:"Black trades with 3...cxd4.",
-    fox:'quiz' },
-  { move:{from:[5,5],to:[4,3]}, moveLabel:{ja:"4. Nxd4", en:"4. Nxd4"},
-    ja:"白はナイトで取り返して、中央のいいマスに陣取るよ。",
-    en:"White recaptures with the knight, landing on a strong central square.",
+    ja:"黒はc5のポーンで、d4に来た白のポーンを取るよ。黒は白の中央のポーンを減らし、cファイルを半分開くんだ。",
+    en:"Black's c5 pawn captures the white pawn that came to d4. Black reduces White's central pawns and half-opens the c-file.",
     fox:'normal' },
-  { move:{from:[1,0],to:[2,0]}, moveLabel:{ja:"4...a6", en:"4...a6"},
-    ja:"黒はa6でb5の展開オプションを確保するよ。",
-    en:"Black plays 4...a6, securing the b5 expansion option.",
+  { move:{from:[5,5],to:[4,3]}, moveLabel:{ja:"4. Nxd4", en:"4. Nxd4"},
+    ja:"白はナイトで、d4にいた黒のポーンを取り返すよ。白のナイトは中央の強いマスに入り、白は駒の展開でリードするんだ。",
+    en:"White's knight takes back the black pawn that was on d4. White's knight lands on a strong central square, and White takes the lead in development.",
+    fox:'normal' },
+  { move:{from:[0,6],to:[2,5]}, moveLabel:{ja:"4...Nf6", en:"4...Nf6"},
+    ja:"黒はナイトをf6へ進めるよ。黒はナイトを展開しながら、守りのない白のe4のポーンを攻撃するんだ。",
+    en:"Black develops the knight to f6. Black develops while attacking White's undefended e4 pawn.",
     fox:'normal' },
   { move:{from:[7,1],to:[5,2]}, moveLabel:{ja:"5. Nc3", en:"5. Nc3"},
-    ja:"白はナイトをc3で展開して、e4ポーンを守りつつ駒を育てるよ。",
-    en:"White develops the knight to c3, defending e4 while developing.",
-    fox:'normal' },
-  { move:{from:[0,3],to:[1,2]}, moveLabel:{ja:"5...Qc7", en:"5...Qc7"},
-    ja:"黒はクイーンをc7へ。cファイルからの反撃を見据えた一手だよ。",
-    en:"Black develops the queen to c7, eyeing counterplay on the c-file.",
-    fox:'wink' },
-  { move:{from:[6,6],to:[5,6]}, moveLabel:{ja:"6. g3", en:"6. g3"},
-    ja:"白はg3でフィアンケットを準備するよ。",
-    en:"White prepares a fianchetto with 6.g3.",
-    fox:'normal' },
-  { move:{from:[0,6],to:[2,5]}, moveLabel:{ja:"6...Nf6", en:"6...Nf6"},
-    ja:"黒はナイトをf6へ。e4ポーンに圧力をかけながら展開するよ。",
-    en:"Black develops the knight to f6, pressuring the e4 pawn.",
-    fox:'normal' },
-  { move:{from:[7,5],to:[6,6]}, moveLabel:{ja:"7. Bg2", en:"7. Bg2"},
-    ja:"白はビショップをg2へ展開するよ。これで本譜は一段落、続きはぜひ自分で指してみてね！",
-    en:"White completes the fianchetto with 7.Bg2. That's the main line — try continuing the game yourself from here!",
+    ja:"白はナイトをc3へ進めるよ。白はナイトを展開しながら、e4のポーンを守るんだ。白と黒のこの局面は、シシリアン・ディフェンスの多くの有名な変化が始まる大事な分かれ道だよ。黒が次に5...a6なら<a href='najdorf.html'>ナイドルフ</a>、5...g6なら<a href='dragon.html'>ドラゴン</a>、5...e6なら<a href='scheveningen.html'>シェベニンゲン</a>、5...Nc6なら<a href='classical_sicilian.html'>クラシカル</a>に進むんだ。黒がどの変化を選ぶかで、まったく違う戦いになるよ。これで本譜は一段落、続きはぜひそれぞれのページで学んでみてね！",
+    en:"White develops the knight to c3. White develops while defending the e4 pawn. This position is an important crossroads where many famous Sicilian lines begin. If Black plays 5...a6 it's the <a href='najdorf.html?lang=en'>Najdorf</a>, 5...g6 the <a href='dragon.html?lang=en'>Dragon</a>, 5...e6 the <a href='scheveningen.html?lang=en'>Scheveningen</a>, and 5...Nc6 the <a href='classical_sicilian.html?lang=en'>Classical</a>. Each choice leads to a completely different kind of game. That's the main line — keep learning on each variation's page!",
     fox:'happy' }
 ];
 
@@ -329,15 +325,50 @@ function adjustBottomPadding(){
   }
 }
 
+function shareOnX(message) {
+  const shareUrl = 'https://twitter.com/intent/tweet?text=' + encodeURIComponent(message) + '&url=' + encodeURIComponent(window.location.href);
+  window.open(shareUrl, '_blank', 'noopener,noreferrer,width=550,height=420');
+}
+
 function renderStep(){
   const step = LESSON_STEPS[currentStep];
   renderBoard(boardSnapshots[currentStep]);
   document.getElementById('moveLabel').textContent = (step.moveLabel && step.moveLabel[currentLang]) || '';
-  document.getElementById('commentaryText').textContent = step[currentLang];
+  const ctEl = document.getElementById('commentaryText');
+  const moreText = step[currentLang + 'More'];
+  ctEl.innerHTML = step[currentLang] + (moreText
+    ? '<details class="more-detail"><summary>' + (currentLang === 'ja' ? '💡 もっと詳しく知りたい方へ' : '💡 Want to know more?') + '</summary><div class="more-body">' + moreText + '</div></details>'
+    : '');
+  ctEl.scrollTop = 0;
+  const moreEl = ctEl.querySelector('details.more-detail');
+  if (moreEl) {
+    moreEl.addEventListener('toggle', function(){
+      if (moreEl.open) { ctEl.scrollTop = moreEl.offsetTop - ctEl.offsetTop; }
+      adjustBottomPadding();
+    });
+  }
   document.getElementById('foxAvatar').src = FOX_BY_MOOD[step.fox] || FOX_BY_MOOD.normal;
   document.getElementById('lessonProgress').textContent = currentStep + ' / ' + (LESSON_STEPS.length - 1);
   document.getElementById('btnPrev').disabled = currentStep === 0;
   document.getElementById('btnNext').disabled = currentStep === LESSON_STEPS.length - 1;
+  adjustBottomPadding();
+
+  const shareRow = document.getElementById('shareRow');
+  if (shareRow) {
+    if (currentStep === LESSON_STEPS.length - 1) {
+      const openingNameEl = document.querySelector('.opening-title.lang-element-' + currentLang);
+      const openingName = openingNameEl ? openingNameEl.textContent : '';
+      const msg = currentLang === 'ja'
+        ? '🦊 ' + openingName + 'をKitsuneChessで学んだよ!一手ずつ「なぜその手か」を教えてくれるよ'
+        : '🦊 Just learned the ' + openingName + ' on KitsuneChess! It explains why each move is played, step by step.';
+      const shareBtn = document.getElementById('shareXBtn');
+      shareBtn.textContent = currentLang === 'ja' ? '🦊 𝕏でシェアする' : '🦊 Share on 𝕏';
+      shareBtn.onclick = function() { shareOnX(msg); };
+      shareRow.style.display = 'block';
+    } else {
+      shareRow.style.display = 'none';
+    }
+  }
   adjustBottomPadding();
 }
 
