@@ -103,6 +103,11 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
   font-size: 1rem;
   color: var(--text-sub);
 }
+.commentary-text a, .opening-intro a { color:var(--brown); text-decoration:underline; font-weight:700; }
+.commentary-text a:hover, .opening-intro a:hover { color:var(--brown-dark); }
+.more-detail { margin-top:8px; border-top:1px dashed var(--brown-light); padding-top:6px; }
+.more-detail summary { cursor:pointer; font-weight:700; color:var(--brown); font-size:0.92rem; list-style-position:inside; }
+.more-detail .more-body { margin-top:6px; font-size:0.94rem; }
 </style>
   <script src="board-theme.js"></script>
 </head>
@@ -121,8 +126,8 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
   <h1 class="opening-title lang-element-en">Smith-Morra Gambit</h1>
 
   <div class="opening-intro">
-    <p class="lang-element-ja">💡 スミス＝モラ・ギャンビットはシシリアンに対して白が2.d4 cxd4 3.c3と突くギャンビットだよ！黒がdxc3と取れば白は4.Nxc3とナイトで取り返して素早い展開と中央支配を手に入れるんだ。ポーン損でも白はリードした展開と積極的なピース活動で十分な補償を得られるよ。黒がシシリアンを好む場合、このギャンビットで通常の理論から外れた局面に引き込めるんだ。アマチュアレベルで非常に人気の実戦的なオープニングだよ！</p>
-    <p class="lang-element-en">💡 The Smith-Morra Gambit plays 2.d4 cxd4 3.c3 against the Sicilian Defense! If Black takes with dxc3, White recaptures with 4.Nxc3 to gain rapid development and central control. Even down a pawn, White gets excellent compensation through the development lead and active piece play. For Black players who love the Sicilian, this gambit drags them into unfamiliar positions far from normal theory. A very popular gambit at the amateur level because the attacking positions are exciting and easy to play!</p>
+    <p class="lang-element-ja">💡 スミス＝モラ・ギャンビットは、シシリアン・ディフェンスに対して白が2.d4 cxd4 3.c3とポーンを差し出す作戦だよ。名前は、アメリカのケン・スミスとフランスのピエール・モラという2人の棋士に由来しているんだ。白はポーン1つの代わりに、駒の展開と開いたファイルで素早く攻めることをねらうよ。トップレベルではあまり指されないけれど、初心者から中級者の対局では攻めがよく決まる、人気のギャンビットなんだ。</p>
+    <p class="lang-element-en">💡 The Smith-Morra Gambit is a plan in which White offers a pawn against the Sicilian Defense with 2.d4 cxd4 3.c3. It's named after two players, Ken Smith of the United States and Pierre Morra of France. In return for a pawn, White aims for a quick attack using fast development and open files. It's rare at the top level, but it's a popular gambit that often scores well in beginner and intermediate games.</p>
   </div>
 
   <div class="board-wrap">
@@ -142,6 +147,9 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
     <button id="btnPrev" class="lesson-btn">← 前へ</button>
     <span class="lesson-progress" id="lessonProgress"></span>
     <button id="btnNext" class="lesson-btn">次へ →</button>
+  </div>
+  <div id="shareRow" style="display:none;text-align:center;margin-top:10px;">
+    <button id="shareXBtn" style="background:#000;color:#fff;border:none;border-radius:20px;padding:8px 16px;font-family:'Crimson Pro',serif;font-weight:700;font-size:0.85rem;cursor:pointer;">🦊 𝕏でシェアする</button>
   </div>
 </div>
 
@@ -190,60 +198,74 @@ const initialBoard = [
 // ============================================================
 const LESSON_STEPS = [
   { move:null, moveLabel:{ja:"開始局面", en:"Starting Position"},
-    ja:"スミス＝モラ・ギャンビットのレッスンを始めるよ！シシリアン好きを通常の理論から引き離す、アマチュアレベルで大人気のギャンビットだよ。ジーンと一緒に、一手ずつ「なぜその手を指すのか」を学んでいこう。",
-    en:"Let's start the Smith-Morra Gambit lesson! A hugely popular weapon that drags Sicilian fans away from their normal theory. Jene will explain why each move is played, one step at a time.",
+    ja:"スミス＝モラ・ギャンビットのレッスンを始めるよ！このページでは、白がポーンを差し出して、Nc3・Nf3・Bc4・O-O・Qe2と素早く展開していく本筋を見ていくよ。ポーンを損した白が、展開のリードと開いたファイルでどう攻めるのかがポイントなんだ。一手ずつジーンと一緒に、なぜその手を指すのかを学んでいこう。",
+    en:"Let's start the Smith-Morra Gambit lesson! On this page we follow the main line where White gives up a pawn and develops quickly with Nc3, Nf3, Bc4, O-O and Qe2. The key is how White, a pawn down, attacks using the development lead and open files. Jene will walk you through why each move is played, one step at a time.",
     fox:'welcome' },
   { move:{from:[6,4],to:[4,4]}, moveLabel:{ja:"1. e4", en:"1. e4"},
-    ja:"白はe4で中央を制圧するよ。",
-    en:"White plays 1.e4, claiming the center.",
+    ja:"白はポーンをe4へ進めるよ。白は中央のマスを押さえながら、ビショップとクイーンが動く道を開けるんだ。",
+    en:"White pushes the pawn to e4. White takes control of central squares and opens lines for the bishop and queen.",
     fox:'normal' },
   { move:{from:[1,2],to:[3,2]}, moveLabel:{ja:"1...c5", en:"1...c5"},
-    ja:"黒はc5。シシリアン・ディフェンスで非対称な局面を作るよ。",
-    en:"Black plays 1...c5, the Sicilian Defense.",
+    ja:"黒はポーンをc5へ進めるよ。黒はこれで<a href='sicilian.html'>シシリアン・ディフェンス</a>の形に入り、c5のポーンで斜めにd4のマスを押さえるんだ。",
+    en:"Black pushes the pawn to c5. Black enters the <a href='sicilian.html?lang=en'>Sicilian Defense</a> and uses the c5 pawn to control the d4 square diagonally.",
     fox:'normal' },
   { move:{from:[6,3],to:[4,3]}, moveLabel:{ja:"2. d4", en:"2. d4"},
-    ja:"白はd4で中央にすぐ踏み込むよ。",
-    en:"White strikes immediately in the center with 2.d4.",
+    ja:"白はポーンをd4へ進めるよ。白はすぐに中央でポーンをぶつけて、黒のc5のポーンと交換しようとするんだ。",
+    en:"White pushes the pawn to d4. White immediately strikes in the center, offering to trade with Black's c5 pawn.",
     fox:'normal' },
   { move:{from:[3,2],to:[4,3]}, moveLabel:{ja:"2...cxd4", en:"2...cxd4"},
-    ja:"黒はcxd4とポーンを交換するよ。",
-    en:"Black trades with 2...cxd4.",
+    ja:"黒はc5のポーンで、d4に来た白のポーンを取るよ。黒は中央の白のポーンを減らすんだ。",
+    en:"Black's c5 pawn captures the white pawn that came to d4. Black reduces White's central pawns.",
     fox:'normal' },
   { move:{from:[6,2],to:[5,2]}, moveLabel:{ja:"3. c3（スミス＝モラ！）", en:"3. c3 (Smith-Morra!)"},
-    ja:"ここが本題、スミス＝モラの一手！白はもう一つポーンを差し出して、素早い展開を目指すよ。",
-    en:"Here's the Smith-Morra move! White offers another pawn, aiming for rapid development.",
+    ja:"ここがスミス＝モラ・ギャンビットの一手！白はポーンをc3へ進めて、もう1つポーンを差し出すよ。一般的には2.Nf3から3.d4と進めて<a href='open_sicilian.html'>オープン・シシリアン</a>に入るけれど、白はここでポーンを差し出す代わりに、駒の展開で大きくリードすることをねらうんだ。その代わり、黒が正しく受ければ、白はポーン1つ損したまま戦うことになるよ。",
+    en:"Here's the Smith-Morra Gambit! White pushes the pawn to c3, offering another pawn. White usually heads into the <a href='open_sicilian.html?lang=en'>Open Sicilian</a> with 2.Nf3 and 3.d4, but here White offers a pawn in return for a big lead in development. The trade-off is that if Black defends correctly, White has to play a pawn down.",
     fox:'happy' },
   { move:{from:[4,3],to:[5,2]}, moveLabel:{ja:"3...dxc3", en:"3...dxc3"},
-    ja:"黒はポーンを受け取るよ。",
-    en:"Black accepts the pawn.",
-    fox:'quiz' },
+    ja:"黒はd4のポーンで、c3に来た白のポーンを取るよ。黒はこれでポーンを1つ得するんだ。",
+    en:"Black's d4 pawn captures the white pawn that came to c3. Black wins a pawn.",
+    jaMore:"黒はこの手の代わりに3...Nf6や3...d3と指して、ギャンビットを受け取らない道を選ぶこともできるよ。",
+    enMore:"Instead of this move, Black can decline the gambit with moves like 3...Nf6 or 3...d3.",
+    fox:'normal' },
   { move:{from:[7,1],to:[5,2]}, moveLabel:{ja:"4. Nxc3", en:"4. Nxc3"},
-    ja:"白はナイトで取り返して、展開のリードと中央支配を手に入れるよ。",
-    en:"White recaptures with the knight, gaining a development lead and central control.",
+    ja:"白はナイトで、c3にいた黒のポーンを取り返すよ。白はポーンを1つ損したけれど、ナイトを展開しながら、cファイルとdファイルを開いたんだ。",
+    en:"White's knight takes back the black pawn that was on c3. White is a pawn down, but White develops the knight and has opened the c- and d-files.",
     fox:'normal' },
   { move:{from:[0,1],to:[2,2]}, moveLabel:{ja:"4...Nc6", en:"4...Nc6"},
-    ja:"黒はナイトをc6へ展開するよ。",
-    en:"Black develops the knight to c6.",
+    ja:"黒はナイトをc6へ進めるよ。黒はナイトを展開しながら、d4やe5のマスに利かせるんだ。",
+    en:"Black develops the knight to c6. Black develops while covering the d4 and e5 squares.",
     fox:'normal' },
   { move:{from:[7,6],to:[5,5]}, moveLabel:{ja:"5. Nf3", en:"5. Nf3"},
-    ja:"白はもう一つのナイトをf3へ展開するよ。",
-    en:"White develops the other knight to f3.",
+    ja:"白はナイトをf3へ進めるよ。白はナイトを展開しながら、キャスリングの準備を進めるんだ。",
+    en:"White develops the knight to f3. White develops a piece and prepares to castle.",
     fox:'normal' },
   { move:{from:[1,3],to:[2,3]}, moveLabel:{ja:"5...d6", en:"5...d6"},
-    ja:"黒はd6で中央を支えるよ。",
-    en:"Black supports the center with 5...d6.",
+    ja:"黒はポーンをd6へ進めるよ。黒はe5のマスを押さえ、c8のビショップの道も開けるんだ。",
+    en:"Black pushes the pawn to d6. Black controls the e5 square and opens the path for the c8 bishop.",
     fox:'normal' },
   { move:{from:[7,5],to:[4,2]}, moveLabel:{ja:"6. Bc4", en:"6. Bc4"},
-    ja:"白はビショップをc4へ。f7という黒の弱点に狙いをつけるよ。",
-    en:"White develops the bishop to c4, eyeing the weak f7 square.",
+    ja:"白はビショップをc4へ進めるよ。白のビショップは、キングしか守っていない黒のf7のポーンをねらっているんだ。",
+    en:"White develops the bishop to c4. White's bishop aims at Black's f7 pawn, which only the king defends.",
     fox:'normal' },
   { move:{from:[1,4],to:[2,4]}, moveLabel:{ja:"6...e6", en:"6...e6"},
-    ja:"黒はe6でキングの安全を高めるよ。",
-    en:"Black plays 6...e6, improving king safety.",
+    ja:"黒はポーンをe6へ進めるよ。黒はc4のビショップからf7への斜めの線をふさいで、f8のビショップの道も開けるんだ。",
+    en:"Black pushes the pawn to e6. Black blocks the c4 bishop's diagonal toward f7 and opens the path for the f8 bishop.",
     fox:'normal' },
   { move:{from:[7,4],to:[7,6],castle:{from:[7,7],to:[7,5]}}, moveLabel:{ja:"7. O-O", en:"7. O-O"},
-    ja:"白はキャスリングでキングを安全な場所へ。これで本譜は一段落、続きはぜひ自分で指してみてね！",
-    en:"White castles kingside, tucking the king away safely. That's the main line — try continuing the game yourself from here!",
+    ja:"白はキャスリングでキングを安全な場所へ動かすよ。白は展開でリードしていて、この先ルークを開いたファイルに置いて攻める準備をするんだ。",
+    en:"White castles, bringing the king to safety. White is ahead in development and prepares to put the rooks on the open files.",
+    fox:'normal' },
+  { move:{from:[0,6],to:[2,5]}, moveLabel:{ja:"7...Nf6", en:"7...Nf6"},
+    ja:"黒はナイトをf6へ進めるよ。黒はナイトを展開しながら、白のe4のポーンを攻撃するんだ。",
+    en:"Black develops the knight to f6. Black develops while attacking White's e4 pawn.",
+    fox:'normal' },
+  { move:{from:[7,3],to:[6,4]}, moveLabel:{ja:"8. Qe2", en:"8. Qe2"},
+    ja:"白はクイーンをe2へ進めるよ。白のクイーンはe4のポーンを守りながら、この先Rd1とルークをdファイルに置いて、黒のd6のポーンをねらう準備をするんだ。",
+    en:"White brings the queen to e2. White's queen defends the e4 pawn and prepares Rd1, putting a rook on the d-file to target Black's d6 pawn.",
+    fox:'normal' },
+  { move:{from:[0,5],to:[1,4]}, moveLabel:{ja:"8...Be7", en:"8...Be7"},
+    ja:"黒はビショップをe7へ進めるよ。黒はキングサイドの駒を出し終えて、キャスリングの準備をするんだ。黒はポーンを1つ多く持っていて、白は展開のリードと開いたファイルを生かして攻める形になったよ。この後は白が9.Rd1、黒がキャスリングやe5で守りを固める流れがよく見られるんだ。これで本譜は一段落、続きはぜひ自分で指してみてね！",
+    en:"Black develops the bishop to e7. Black finishes developing the kingside pieces and gets ready to castle. Black is a pawn up, while White plays on the development lead and the open files. A common continuation is 9.Rd1, with Black shoring up the position by castling or pushing ...e5. That's the main line — try continuing the game yourself from here!",
     fox:'happy' }
 ];
 
@@ -329,15 +351,50 @@ function adjustBottomPadding(){
   }
 }
 
+function shareOnX(message) {
+  const shareUrl = 'https://twitter.com/intent/tweet?text=' + encodeURIComponent(message) + '&url=' + encodeURIComponent(window.location.href);
+  window.open(shareUrl, '_blank', 'noopener,noreferrer,width=550,height=420');
+}
+
 function renderStep(){
   const step = LESSON_STEPS[currentStep];
   renderBoard(boardSnapshots[currentStep]);
   document.getElementById('moveLabel').textContent = (step.moveLabel && step.moveLabel[currentLang]) || '';
-  document.getElementById('commentaryText').textContent = step[currentLang];
+  const ctEl = document.getElementById('commentaryText');
+  const moreText = step[currentLang + 'More'];
+  ctEl.innerHTML = step[currentLang] + (moreText
+    ? '<details class="more-detail"><summary>' + (currentLang === 'ja' ? '💡 もっと詳しく知りたい方へ' : '💡 Want to know more?') + '</summary><div class="more-body">' + moreText + '</div></details>'
+    : '');
+  ctEl.scrollTop = 0;
+  const moreEl = ctEl.querySelector('details.more-detail');
+  if (moreEl) {
+    moreEl.addEventListener('toggle', function(){
+      if (moreEl.open) { ctEl.scrollTop = moreEl.offsetTop - ctEl.offsetTop; }
+      adjustBottomPadding();
+    });
+  }
   document.getElementById('foxAvatar').src = FOX_BY_MOOD[step.fox] || FOX_BY_MOOD.normal;
   document.getElementById('lessonProgress').textContent = currentStep + ' / ' + (LESSON_STEPS.length - 1);
   document.getElementById('btnPrev').disabled = currentStep === 0;
   document.getElementById('btnNext').disabled = currentStep === LESSON_STEPS.length - 1;
+  adjustBottomPadding();
+
+  const shareRow = document.getElementById('shareRow');
+  if (shareRow) {
+    if (currentStep === LESSON_STEPS.length - 1) {
+      const openingNameEl = document.querySelector('.opening-title.lang-element-' + currentLang);
+      const openingName = openingNameEl ? openingNameEl.textContent : '';
+      const msg = currentLang === 'ja'
+        ? '🦊 ' + openingName + 'をKitsuneChessで学んだよ!一手ずつ「なぜその手か」を教えてくれるよ'
+        : '🦊 Just learned the ' + openingName + ' on KitsuneChess! It explains why each move is played, step by step.';
+      const shareBtn = document.getElementById('shareXBtn');
+      shareBtn.textContent = currentLang === 'ja' ? '🦊 𝕏でシェアする' : '🦊 Share on 𝕏';
+      shareBtn.onclick = function() { shareOnX(msg); };
+      shareRow.style.display = 'block';
+    } else {
+      shareRow.style.display = 'none';
+    }
+  }
   adjustBottomPadding();
 }
 

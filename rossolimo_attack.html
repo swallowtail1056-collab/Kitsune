@@ -101,6 +101,11 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
   font-size: 1rem;
   color: var(--text-sub);
 }
+.commentary-text a, .opening-intro a { color:var(--brown); text-decoration:underline; font-weight:700; }
+.commentary-text a:hover, .opening-intro a:hover { color:var(--brown-dark); }
+.more-detail { margin-top:8px; border-top:1px dashed var(--brown-light); padding-top:6px; }
+.more-detail summary { cursor:pointer; font-weight:700; color:var(--brown); font-size:0.92rem; list-style-position:inside; }
+.more-detail .more-body { margin-top:6px; font-size:0.94rem; }
 </style>
   <script src="board-theme.js"></script>
 </head>
@@ -119,8 +124,8 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
   <h1 class="opening-title lang-element-en">Rossolimo Attack</h1>
 
   <div class="opening-intro">
-    <p class="lang-element-ja">💡 シシリアンに対して白がBb5でナイトを直接狙う、シャープながら理論負担の軽い作戦。駒組みが単純で覚えやすく、シシリアン対策の入門として人気が高い。</p>
-    <p class="lang-element-en">💡 White targets Black\'s knight directly with Bb5 against the Sicilian, a sharp yet theory-light approach. Simple to learn, making it a popular entry point for facing the Sicilian.</p>
+    <p class="lang-element-ja">💡 ロッソリモ・アタックは、シシリアン・ディフェンスの1.e4 c5 2.Nf3 Nc6のあとに、白が3.Bb5と出る作戦だよ。名前は、フランスやアメリカで活躍したニコラス・ロッソリモに由来しているんだ。オープン・シシリアンの激しい乱戦を避けながら、白が少しの有利をねらえるので、トップレベルでも人気のある作戦だよ。派手さは少ないけれど、ポーンの形や駒の配置をじっくり考える力が身につくオープニングなんだ。</p>
+    <p class="lang-element-en">💡 The Rossolimo Attack is a plan in which White plays 3.Bb5 after the Sicilian's 1.e4 c5 2.Nf3 Nc6. It's named after Nicolas Rossolimo, who played in France and the United States. It lets White avoid the wild tactics of the Open Sicilian while still aiming for a small edge, which makes it popular even at the top level. It isn't flashy, but it builds your understanding of pawn structures and piece placement.</p>
   </div>
 
   <div class="board-wrap">
@@ -140,6 +145,9 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
     <button id="btnPrev" class="lesson-btn">← 前へ</button>
     <span class="lesson-progress" id="lessonProgress"></span>
     <button id="btnNext" class="lesson-btn">次へ →</button>
+  </div>
+  <div id="shareRow" style="display:none;text-align:center;margin-top:10px;">
+    <button id="shareXBtn" style="background:#000;color:#fff;border:none;border-radius:20px;padding:8px 16px;font-family:'Crimson Pro',serif;font-weight:700;font-size:0.85rem;cursor:pointer;">🦊 𝕏でシェアする</button>
   </div>
 </div>
 
@@ -179,56 +187,66 @@ const initialBoard = [
 
 const LESSON_STEPS = [
   { move:null, moveLabel:{ja:"開始局面", en:"Starting Position"},
-    ja:'ロッソリモ・アタックのレッスンを始めるよ！シシリアン対策の中でも覚えることが少なく、実戦的な作戦なんだ。一手ずつジーンと一緒に、なぜその手を指すのかを学んでいこう。',
-    en:'Let\'s start the Rossolimo Attack lesson! It\'s one of the easiest ways to meet the Sicilian, with very little theory to memorize. Jene will walk you through why each move is played, one step at a time.',
+    ja:"ロッソリモ・アタックのレッスンを始めるよ！このページでは、白が4.Bxc6ですぐにビショップとナイトを交換し、黒のポーンの形を崩す本筋を見ていくよ。白のポーンの形のよさと、黒の2つのビショップがどう対立するのかがポイントなんだ。一手ずつジーンと一緒に、なぜその手を指すのかを学んでいこう。",
+    en:"Let's start the Rossolimo Attack lesson! On this page we follow the main line where White immediately trades bishop for knight with 4.Bxc6 to damage Black's pawn structure. The key is how White's healthier pawns compete with Black's bishop pair. Jene will walk you through why each move is played, one step at a time.",
     fox:'welcome' },
   { move:{from:[6,4],to:[4,4]}, moveLabel:{ja:"1. e4", en:"1. e4"},
-    ja:'白はまずe4と突いて中央を制圧するよ。ビショップとクイーンの動く道を同時に開く、序盤の定番の一手だね。',
-    en:'White opens with e4, grabbing the center right away. It\'s a classic first move that also clears the diagonals for the bishop and queen.',
+    ja:"白はポーンをe4へ進めるよ。白は中央のマスを押さえながら、ビショップとクイーンが動く道を開けるんだ。",
+    en:"White pushes the pawn to e4. White takes control of central squares and opens lines for the bishop and queen.",
     fox:'normal' },
   { move:{from:[1,2],to:[3,2]}, moveLabel:{ja:"1...c5", en:"1...c5"},
-    ja:'黒はc5で対抗、シシリアン・ディフェンスだよ。e5で対称に応じるより積極的に、自分だけの陣形を目指す人気の作戦なんだ。',
-    en:'Black replies with c5 — the Sicilian Defense. Instead of mirroring with e5, Black fights for the center asymmetrically and heads for unbalanced, fighting positions.',
+    ja:"黒はポーンをc5へ進めるよ。黒はこれで<a href='sicilian.html'>シシリアン・ディフェンス</a>の形に入り、c5のポーンで斜めにd4のマスを押さえるんだ。",
+    en:"Black pushes the pawn to c5. Black enters the <a href='sicilian.html?lang=en'>Sicilian Defense</a> and uses the c5 pawn to control the d4 square diagonally.",
     fox:'normal' },
   { move:{from:[7,6],to:[5,5]}, moveLabel:{ja:"2. Nf3", en:"2. Nf3"},
-    ja:'白はナイトをf3へ。d4を突いてシシリアンの本筋に入る準備をしながら、キングサイドの駒組みも進めるよ。',
-    en:'White develops the knight to f3, preparing the central break d4 while also getting the kingside ready to castle.',
+    ja:"白はナイトをf3へ進めるよ。白は駒を展開しながら、次にd4と突く準備をしているんだ。",
+    en:"White develops the knight to f3. White develops a piece while preparing to push d4 next.",
     fox:'normal' },
   { move:{from:[0,1],to:[2,2]}, moveLabel:{ja:"2...Nc6", en:"2...Nc6"},
-    ja:'黒もナイトをc6へ展開。中央のd4マスをにらみつつ、白のd4進出にプレッシャーをかけるよ。',
-    en:'Black develops the knight to c6, eyeing the d4 square and putting pressure on White\'s plan to push d4.',
+    ja:"黒はナイトをc6へ進めるよ。黒はナイトを展開しながら、d4とe5のマスに利かせるんだ。",
+    en:"Black develops the knight to c6. Black develops while covering the d4 and e5 squares.",
     fox:'normal' },
-  { move:{from:[7,5],to:[3,1]}, moveLabel:{ja:"3. Bb5", en:"3. Bb5"},
-    ja:'💡 ここがロッソリモ・アタックの本手！白はビショップをb5に出してc6のナイトを直接狙うよ。ルイ・ロペスと違ってピンではなく単純な狙い撃ちで、この後Bxc6で黒のポーンをダブルポーンに崩すのが狙いなんだ。シシリアンの複雑な定跡を避けられる、理論負担の軽い作戦だよ。',
-    en:'💡 This is the key idea of the Rossolimo Attack! White develops the bishop to b5, aiming straight at the knight on c6. Unlike the Ruy Lopez, this isn\'t a pin — it\'s a direct threat, with the plan to trade on c6 and saddle Black with doubled pawns. It lets White sidestep the deep main-line Sicilian theory.',
+  { move:{from:[7,5],to:[3,1]}, moveLabel:{ja:"3. Bb5（ロッソリモ！）", en:"3. Bb5 (Rossolimo!)"},
+    ja:"ここがロッソリモ・アタックの一手！白はビショップをb5へ進めて、d4とe5に利いているc6のナイトを攻撃するよ。一般的には3.d4と中央を開くけれど、白はここでオープン・シシリアンの膨大な定跡を避けて、黒のポーンの形を崩すことをねらうんだ。その代わり、白はこのビショップをナイトと交換することが多く、2つのビショップを持つ利点を黒に渡しやすいよ。",
+    en:"Here's the Rossolimo Attack! White develops the bishop to b5, attacking the c6 knight, which covers d4 and e5. White usually opens the center with 3.d4, but here White avoids the huge theory of the Open Sicilian and aims to damage Black's pawn structure. The trade-off is that White often trades this bishop for the knight, handing Black the bishop pair.",
+    jaMore:"白がこの手の代わりに3.d4と中央を開くと、<a href='open_sicilian.html'>オープン・シシリアン</a>になるよ。黒が2手目で2...d6と指したときに白が3.Bb5+と出る形は、<a href='moscow_sicilian.html'>モスクワ・バリエーション</a>と呼ばれているんだ。",
+    enMore:"If White opens the center with 3.d4 instead of this move, the game becomes an <a href='open_sicilian.html?lang=en'>Open Sicilian</a>. When Black plays 2...d6 instead and White answers 3.Bb5+, it's called the <a href='moscow_sicilian.html?lang=en'>Moscow Variation</a>.",
     fox:'happy' },
   { move:{from:[1,6],to:[2,6]}, moveLabel:{ja:"3...g6", en:"3...g6"},
-    ja:'黒はg6でビショップをg7に展開する準備をするよ。Bxc6でダブルポーンになるのは承知の上で、代わりにビショップの好形と中央のポーン数で勝負するんだ。',
-    en:'Black plays g6, preparing to fianchetto the bishop to g7. Black accepts that Bxc6 will double the pawns, but gets the bishop pair and a strong central pawn mass in return.',
+    ja:"黒はポーンをg6へ進めるよ。黒はビショップをg7に出す準備をして、長い対角線から中央をにらむ形を目指すんだ。黒の応じ方の中で、これがいちばん多く指される手だよ。",
+    en:"Black pushes the pawn to g6. Black prepares to put the bishop on g7 and aims to eye the center along the long diagonal. This is Black's most popular reply.",
+    jaMore:"黒はこの手の代わりに3...e6や3...d6と指すこともできるよ。",
+    enMore:"Instead of this move, Black can also play 3...e6 or 3...d6.",
     fox:'normal' },
   { move:{from:[3,1],to:[2,2]}, moveLabel:{ja:"4. Bxc6", en:"4. Bxc6"},
-    ja:'白はビショップでナイトを取るよ。これで黒のポーン構造にダブルポーン(c6とc7)を作り、長期的な弱点を残すのが狙いだね。',
-    en:'White captures the knight on c6. This saddles Black with doubled c-pawns — a small but lasting structural weakness White can target later in the game.',
+    ja:"白はビショップで、c6にいた黒のナイトを取るよ。白はすぐに交換して、黒のポーンの形を崩しにいくんだ。",
+    en:"White's bishop captures the black knight that was on c6. White trades right away to damage Black's pawn structure.",
     fox:'normal' },
   { move:{from:[1,3],to:[2,2]}, moveLabel:{ja:"4...dxc6", en:"4...dxc6"},
-    ja:'黒はポーンでc6を取り返すよ。b7ではなくd7のポーンで取ることで、後のe5進出やc8のビショップの活用がしやすくなるんだ。',
-    en:'Black recaptures with the d-pawn rather than the b-pawn. This keeps options open for a future e5 push and makes it easier to develop the light-squared bishop from c8.',
+    ja:"黒はdのポーンで、c6に入った白のビショップを取り返すよ。黒はcのポーンが2つ縦に並ぶ形になるけれど、dファイルが開いて、c8のビショップの道も通るんだ。",
+    en:"Black's d-pawn takes back the white bishop that landed on c6. Black ends up with doubled c-pawns, but the d-file opens and the c8 bishop's path is cleared.",
+    jaMore:"黒はこの手の代わりに4...bxc6と取り返すこともできるよ。こちらは中央にポーンが残る代わりに、黒の展開が少し遅れやすいんだ。",
+    enMore:"Instead of this move, Black can also recapture with 4...bxc6. That keeps more pawns in the center but tends to slow Black's development a little.",
     fox:'normal' },
-  { move:{from:[7,4],to:[7,6]}, moveLabel:{ja:"5. O-O", en:"5. O-O"},
-    ja:'白はキャスリングでキングを安全な位置へ。序盤の最優先事項、「キングの安全」をここで済ませておくよ。',
-    en:'White castles, tucking the king away to safety — getting this top opening priority out of the way early.',
+  { move:{from:[6,3],to:[5,3]}, moveLabel:{ja:"5. d3", en:"5. d3"},
+    ja:"白はポーンをd3へ進めるよ。白はe4のポーンを守り、c1のビショップの道も開けるんだ。",
+    en:"White pushes the pawn to d3. White defends the e4 pawn and opens the path for the c1 bishop.",
     fox:'normal' },
   { move:{from:[0,5],to:[1,6]}, moveLabel:{ja:"5...Bg7", en:"5...Bg7"},
-    ja:'黒はビショップをg7へ、フィアンケットの完成だよ。長い対角線でd4方向をにらみ、盤面全体に影響力を持つよ。',
-    en:'Black completes the fianchetto with Bg7. The bishop now commands the long diagonal, exerting influence all the way toward d4 and beyond.',
+    ja:"黒はビショップをg7へ進めるよ。黒のビショップは長い対角線から中央をにらみ、2つのビショップの力を生かす準備をするんだ。",
+    en:"Black develops the bishop to g7. From the long diagonal, Black's bishop eyes the center, getting ready to make use of the bishop pair.",
     fox:'normal' },
-  { move:{from:[7,5],to:[7,4]}, moveLabel:{ja:"6. Re1", en:"6. Re1"},
-    ja:'白はルークをe1へ。中央のe4ポーンを支え、将来のe5への前進をにらんだ一手だよ。',
-    en:'White brings the rook to e1, supporting the e4 pawn and eyeing a future e5 advance to open the position.',
+  { move:{from:[6,7],to:[5,7]}, moveLabel:{ja:"6. h3", en:"6. h3"},
+    ja:"白はポーンをh3へ進めるよ。白はg4のマスを押さえて、黒のc8のビショップがg4へ出て、f3のナイトにピンをかけるのを防ぐんだ。",
+    en:"White pushes the pawn to h3. White controls the g4 square, stopping Black's c8 bishop from coming to g4 and pinning the f3 knight.",
     fox:'normal' },
   { move:{from:[0,6],to:[2,5]}, moveLabel:{ja:"6...Nf6", en:"6...Nf6"},
-    ja:'黒はナイトをf6へ展開。e4ポーンにプレッシャーをかけながら、キングサイドの駒組みも仕上げていくよ。',
-    en:'Black develops the knight to f6, pressuring the e4 pawn while rounding out the kingside development.',
+    ja:"黒はナイトをf6へ進めるよ。黒はナイトを展開しながら、白のe4のポーンを攻撃するんだ。",
+    en:"Black develops the knight to f6. Black develops while attacking White's e4 pawn.",
+    fox:'normal' },
+  { move:{from:[7,1],to:[5,2]}, moveLabel:{ja:"7. Nc3", en:"7. Nc3"},
+    ja:"白はナイトをc3へ進めるよ。白はナイトを展開しながら、e4のポーンの守りを2つにするんだ。白はビショップを手放した代わりに、黒のポーンの形の弱さと、e5のマスを使える展開をねらっているよ。黒は2つのビショップとdファイルを生かして戦う、じっくりした展開になるんだ。これで本譜は一段落、続きはぜひ自分で指してみてね！",
+    en:"White develops the knight to c3. White develops while defending the e4 pawn a second time. Having given up a bishop, White aims to exploit Black's weakened pawn structure and the e5 square. Black plays on the bishop pair and the d-file, leading to a slow, strategic game. That's the main line — try continuing the game yourself from here!",
     fox:'happy' }
 ];
 
@@ -314,15 +332,50 @@ function adjustBottomPadding(){
   }
 }
 
+function shareOnX(message) {
+  const shareUrl = 'https://twitter.com/intent/tweet?text=' + encodeURIComponent(message) + '&url=' + encodeURIComponent(window.location.href);
+  window.open(shareUrl, '_blank', 'noopener,noreferrer,width=550,height=420');
+}
+
 function renderStep(){
   const step = LESSON_STEPS[currentStep];
   renderBoard(boardSnapshots[currentStep]);
   document.getElementById('moveLabel').textContent = (step.moveLabel && step.moveLabel[currentLang]) || '';
-  document.getElementById('commentaryText').textContent = step[currentLang];
+  const ctEl = document.getElementById('commentaryText');
+  const moreText = step[currentLang + 'More'];
+  ctEl.innerHTML = step[currentLang] + (moreText
+    ? '<details class="more-detail"><summary>' + (currentLang === 'ja' ? '💡 もっと詳しく知りたい方へ' : '💡 Want to know more?') + '</summary><div class="more-body">' + moreText + '</div></details>'
+    : '');
+  ctEl.scrollTop = 0;
+  const moreEl = ctEl.querySelector('details.more-detail');
+  if (moreEl) {
+    moreEl.addEventListener('toggle', function(){
+      if (moreEl.open) { ctEl.scrollTop = moreEl.offsetTop - ctEl.offsetTop; }
+      adjustBottomPadding();
+    });
+  }
   document.getElementById('foxAvatar').src = FOX_BY_MOOD[step.fox] || FOX_BY_MOOD.normal;
   document.getElementById('lessonProgress').textContent = currentStep + ' / ' + (LESSON_STEPS.length - 1);
   document.getElementById('btnPrev').disabled = currentStep === 0;
   document.getElementById('btnNext').disabled = currentStep === LESSON_STEPS.length - 1;
+  adjustBottomPadding();
+
+  const shareRow = document.getElementById('shareRow');
+  if (shareRow) {
+    if (currentStep === LESSON_STEPS.length - 1) {
+      const openingNameEl = document.querySelector('.opening-title.lang-element-' + currentLang);
+      const openingName = openingNameEl ? openingNameEl.textContent : '';
+      const msg = currentLang === 'ja'
+        ? '🦊 ' + openingName + 'をKitsuneChessで学んだよ!一手ずつ「なぜその手か」を教えてくれるよ'
+        : '🦊 Just learned the ' + openingName + ' on KitsuneChess! It explains why each move is played, step by step.';
+      const shareBtn = document.getElementById('shareXBtn');
+      shareBtn.textContent = currentLang === 'ja' ? '🦊 𝕏でシェアする' : '🦊 Share on 𝕏';
+      shareBtn.onclick = function() { shareOnX(msg); };
+      shareRow.style.display = 'block';
+    } else {
+      shareRow.style.display = 'none';
+    }
+  }
   adjustBottomPadding();
 }
 

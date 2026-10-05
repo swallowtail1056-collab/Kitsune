@@ -103,6 +103,11 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
   font-size: 1rem;
   color: var(--text-sub);
 }
+.commentary-text a, .opening-intro a { color:var(--brown); text-decoration:underline; font-weight:700; }
+.commentary-text a:hover, .opening-intro a:hover { color:var(--brown-dark); }
+.more-detail { margin-top:8px; border-top:1px dashed var(--brown-light); padding-top:6px; }
+.more-detail summary { cursor:pointer; font-weight:700; color:var(--brown); font-size:0.92rem; list-style-position:inside; }
+.more-detail .more-body { margin-top:6px; font-size:0.94rem; }
 </style>
   <script src="board-theme.js"></script>
 </head>
@@ -121,8 +126,8 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
   <h1 class="opening-title lang-element-en">Semi-Slav Defense</h1>
 
   <div class="opening-intro">
-    <p class="lang-element-ja">💡 セミ・スラブはスラブ・ディフェンスとクイーンズ・ギャンビット・ディクラインドを組み合わせた変化で、c6とe6の両方を突く形だよ！この陣形は非常に堅固でバランスが取れているけど、同時にカウンターアタックの機会も豊富なんだ。主な変化にはメラン変化、アンチ・メラン変化、ボトヴィニク変化があって、特にボトヴィニク変化は現代最高峰の理論変化のひとつとして知られているよ。ガルリ・カスパロフが好んで採用した攻撃的な可能性を秘めた黒のシステムだよ！</p>
-    <p class="lang-element-en">💡 The Semi-Slav combines the Slav Defense and Queen's Gambit Declined by playing both c6 and e6! This formation is extremely solid and balanced while offering rich counterattacking opportunities. The main variations include the Meran, Anti-Meran, and the famous Botvinnik Variation. Garry Kasparov frequently used the Semi-Slav as Black, demonstrating its hidden attacking potential. A sophisticated and deeply theoretical system that rewards extensive study!</p>
+    <p class="lang-element-ja">💡 セミ・スラブ・ディフェンスは、クイーンズ・ギャンビットに対して黒がc6とe6の両方を突く、とても堅いオープニングだよ。スラブ・ディフェンスとクイーンズ・ギャンビット・ディクラインドの形を組み合わせているので、セミ・スラブ（半分スラブ）と呼ばれているんだ。堅いだけでなく、メラン・バリエーションやボトヴィニク・バリエーションのような鋭い変化も多く、トップレベルでもよく指されているよ。定跡はとても深いけれど、黒が反撃のチャンスも持てる、人気のオープニングなんだ。</p>
+    <p class="lang-element-en">💡 The Semi-Slav Defense is a very solid opening in which Black plays both ...c6 and ...e6 against the Queen's Gambit. Because it combines the Slav and the Queen's Gambit Declined, it's called the "Semi-Slav." It's not just solid: it also includes sharp lines like the Meran and the Botvinnik Variation, and it's widely played at the top level. The theory is very deep, but it's a popular opening that gives Black real counterplay.</p>
   </div>
 
   <div class="board-wrap">
@@ -142,6 +147,9 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
     <button id="btnPrev" class="lesson-btn">← 前へ</button>
     <span class="lesson-progress" id="lessonProgress"></span>
     <button id="btnNext" class="lesson-btn">次へ →</button>
+  </div>
+  <div id="shareRow" style="display:none;text-align:center;margin-top:10px;">
+    <button id="shareXBtn" style="background:#000;color:#fff;border:none;border-radius:20px;padding:8px 16px;font-family:'Crimson Pro',serif;font-weight:700;font-size:0.85rem;cursor:pointer;">🦊 𝕏でシェアする</button>
   </div>
 </div>
 
@@ -190,60 +198,74 @@ const initialBoard = [
 // ============================================================
 const LESSON_STEPS = [
   { move:null, moveLabel:{ja:"開始局面", en:"Starting Position"},
-    ja:"セミ・スラブのレッスンを始めるよ！c6とe6の両方を突く、堅固でありながら反撃の機会も豊富な、カスパロフも愛用したシステムだよ。ジーンと一緒に、一手ずつ「なぜその手を指すのか」を学んでいこう。",
-    en:"Let's start the Semi-Slav lesson! Playing both c6 and e6 creates a solid yet counterattack-rich system, a favorite of Kasparov. Jene will explain why each move is played, one step at a time.",
+    ja:"セミ・スラブのレッスンを始めるよ！このページでは、黒がc6とe6でd5を固め、6...dxc4と7...b5でクイーンサイドから動き出すメラン・バリエーションを見ていくよ。黒が閉じ込められやすいc8のビショップを、どうやって外に出すのかがポイントなんだ。一手ずつジーンと一緒に、なぜその手を指すのかを学んでいこう。",
+    en:"Let's start the Semi-Slav lesson! On this page we follow the Meran Variation, where Black firms up d5 with ...c6 and ...e6, then gets moving on the queenside with 6...dxc4 and 7...b5. The key is how Black frees the c8 bishop, which tends to get shut in. Jene will walk you through why each move is played, one step at a time.",
     fox:'welcome' },
   { move:{from:[6,3],to:[4,3]}, moveLabel:{ja:"1. d4", en:"1. d4"},
-    ja:"白はd4で中央を制圧するよ。",
-    en:"White plays 1.d4, claiming the center.",
+    ja:"白はポーンをd4へ進めるよ。白は中央のマスを押さえながら、c1のビショップの道を開けるんだ。",
+    en:"White pushes the pawn to d4. White takes control of central squares and opens the path for the c1 bishop.",
     fox:'normal' },
   { move:{from:[1,3],to:[3,3]}, moveLabel:{ja:"1...d5", en:"1...d5"},
-    ja:"黒も同じくd5で対抗するよ。",
-    en:"Black mirrors with 1...d5.",
+    ja:"黒はポーンをd5へ進めるよ。黒も同じように中央を押さえて、白のポーンと向かい合う形を作るんだ。",
+    en:"Black pushes the pawn to d5. Black also claims the center, setting up a pawn face-off with White.",
     fox:'normal' },
   { move:{from:[6,2],to:[4,2]}, moveLabel:{ja:"2. c4", en:"2. c4"},
-    ja:"白はc4でポーンをあえて差し出すよ。",
-    en:"White offers the c-pawn with 2.c4.",
+    ja:"白はポーンをc4へ進めて、クイーンズ・ギャンビットに入るよ。白はc4のポーンで、黒のd5のポーンに働きかけるんだ。",
+    en:"White pushes the pawn to c4, entering the Queen's Gambit. White uses the c4 pawn to challenge Black's d5 pawn.",
     fox:'normal' },
   { move:{from:[1,2],to:[2,2]}, moveLabel:{ja:"2...c6", en:"2...c6"},
-    ja:"黒はc6でスラブらしく受けるよ。",
-    en:"Black responds with the Slav move 2...c6.",
+    ja:"黒はポーンをc6へ進めて、<a href='slav.html'>スラブ・ディフェンス</a>の形に入るよ。黒はd5のポーンを支えながら、c8のビショップの道をふさがずに残すんだ。",
+    en:"Black pushes the pawn to c6, entering the <a href='slav.html?lang=en'>Slav Defense</a> setup. Black supports the d5 pawn while keeping the c8 bishop's path open.",
     fox:'normal' },
   { move:{from:[7,1],to:[5,2]}, moveLabel:{ja:"3. Nc3", en:"3. Nc3"},
-    ja:"白はナイトをc3へ展開するよ。",
-    en:"White develops the knight to c3.",
+    ja:"白はナイトをc3へ進めるよ。白はナイトを展開しながら、黒のd5のポーンへの圧力を強めるんだ。",
+    en:"White develops the knight to c3. White develops while increasing the pressure on Black's d5 pawn.",
     fox:'normal' },
   { move:{from:[0,6],to:[2,5]}, moveLabel:{ja:"3...Nf6", en:"3...Nf6"},
-    ja:"黒もナイトをf6へ展開するよ。",
-    en:"Black develops the knight to f6.",
+    ja:"黒はナイトをf6へ進めるよ。黒はナイトを展開しながら、d5のポーンの守りを増やすんだ。",
+    en:"Black develops the knight to f6. Black develops while adding another defender to the d5 pawn.",
     fox:'normal' },
   { move:{from:[7,6],to:[5,5]}, moveLabel:{ja:"4. Nf3", en:"4. Nf3"},
-    ja:"白はもう一つのナイトをf3へ展開するよ。",
-    en:"White develops the other knight to f3.",
+    ja:"白はナイトをf3へ進めるよ。白はナイトを展開しながら、キングサイドの準備を進めるんだ。",
+    en:"White develops the knight to f3. White develops while preparing the kingside.",
     fox:'normal' },
   { move:{from:[1,4],to:[2,4]}, moveLabel:{ja:"4...e6（セミ・スラブ！）", en:"4...e6 (Semi-Slav!)"},
-    ja:"ここが本題、セミ・スラブの一手！黒はc6に加えてe6も突くよ。これでスラブとQGディクラインドの長所を組み合わせた、堅固な形になるんだ。",
-    en:"Here's the Semi-Slav move! Black plays e6 in addition to c6, combining the strengths of the Slav and the Queen's Gambit Declined.",
+    ja:"ここがセミ・スラブの一手！黒はポーンをe6へ進めて、c6とe6の2つのポーンでd5を支えるよ。黒は4...dxc4のスラブの本筋の代わりに、スラブと<a href='queens_gambit.html'>クイーンズ・ギャンビット・ディクラインド</a>の形を合わせた、とても堅い形を選ぶんだ。その代わり、黒のc8のビショップはe6のポーンの内側に入り、出口が少なくなるよ。",
+    en:"Here's the Semi-Slav! Black pushes the pawn to e6, supporting d5 with pawns on both c6 and e6. Instead of the main Slav move 4...dxc4, Black chooses a very solid setup that combines the Slav and the <a href='queens_gambit.html?lang=en'>Queen's Gambit Declined</a>. The trade-off is that Black's c8 bishop ends up behind the e6 pawn with fewer ways out.",
     fox:'happy' },
   { move:{from:[6,4],to:[5,4]}, moveLabel:{ja:"5. e3", en:"5. e3"},
-    ja:"白はe3で展開を進めるよ。",
-    en:"White continues developing with 5.e3.",
+    ja:"白はポーンをe3へ進めるよ。白はd4のポーンを支えて、f1のビショップの道を開けるんだ。",
+    en:"White pushes the pawn to e3. White supports the d4 pawn and opens the path for the f1 bishop.",
+    jaMore:"白はこの手の代わりに5.Bg5と指すこともできて、この場合は鋭いボトヴィニク・バリエーションなどに進むよ。",
+    enMore:"Instead of this move, White can also play 5.Bg5, which can lead to sharp lines such as the Botvinnik Variation.",
     fox:'normal' },
   { move:{from:[0,1],to:[1,3]}, moveLabel:{ja:"5...Nbd7", en:"5...Nbd7"},
-    ja:"黒はもう一つのナイトをd7へ展開するよ。",
-    en:"Black develops the other knight to d7.",
+    ja:"黒はナイトをd7へ進めるよ。黒はナイトを展開しながら、この先e5やc5と突いて中央に反撃する準備をするんだ。",
+    en:"Black develops the knight to d7. Black develops while preparing to strike back in the center with ...e5 or ...c5.",
     fox:'normal' },
   { move:{from:[7,5],to:[5,3]}, moveLabel:{ja:"6. Bd3", en:"6. Bd3"},
-    ja:"白はビショップをd3へ展開するよ。",
-    en:"White develops the bishop to d3.",
+    ja:"白はビショップをd3へ進めるよ。白はキングサイドの駒を出し終えて、キャスリングの準備をするんだ。",
+    en:"White develops the bishop to d3. White finishes developing the kingside pieces and prepares to castle.",
     fox:'normal' },
   { move:{from:[3,3],to:[4,2]}, moveLabel:{ja:"6...dxc4", en:"6...dxc4"},
-    ja:"黒はdxc4とポーンを取るよ。これがメラン変化の始まりなんだ。",
-    en:"Black captures with 6...dxc4, the start of the Meran Variation.",
-    fox:'quiz' },
+    ja:"黒はd5のポーンで、c4にいた白のポーンを取るよ。黒は白のビショップがd3から動き直すことになる瞬間をねらって、ここでポーンを取るんだ。黒のこの形はメラン・バリエーションと呼ばれていて、セミ・スラブの代表的な変化だよ。",
+    en:"Black's d5 pawn captures the white pawn that was on c4. Black takes at the moment when White's bishop, having just gone to d3, will have to move again. This is called the Meran Variation, a key line of the Semi-Slav.",
+    fox:'normal' },
   { move:{from:[5,3],to:[4,2]}, moveLabel:{ja:"7. Bxc4", en:"7. Bxc4"},
-    ja:"白はビショップで取り返すよ。これで本譜は一段落、続きはぜひ自分で指してみてね！",
-    en:"White recaptures with the bishop. That's the main line — try continuing the game yourself from here!",
+    ja:"白はビショップで、c4にいた黒のポーンを取り返すよ。白はこれでポーンの数を互角に戻すんだ。",
+    en:"White's bishop takes back the black pawn that was on c4. White restores material equality.",
+    fox:'normal' },
+  { move:{from:[1,1],to:[3,1]}, moveLabel:{ja:"7...b5", en:"7...b5"},
+    ja:"黒はポーンをb5へ進めるよ。黒はc4の白のビショップを攻撃して、クイーンサイドでスペースを広げるんだ。",
+    en:"Black pushes the pawn to b5. Black attacks White's bishop on c4 and gains space on the queenside.",
+    fox:'normal' },
+  { move:{from:[4,2],to:[5,3]}, moveLabel:{ja:"8. Bd3", en:"8. Bd3"},
+    ja:"白はビショップをd3へ下げるよ。白のビショップはd3から、黒のキングサイドをにらむ位置に戻るんだ。",
+    en:"White retreats the bishop to d3. From d3, White's bishop returns to a square where it eyes Black's kingside.",
+    fox:'normal' },
+  { move:{from:[0,2],to:[1,1]}, moveLabel:{ja:"8...Bb7", en:"8...Bb7"},
+    ja:"黒はビショップをb7へ進めるよ。黒のビショップは今はc6のポーンにさえぎられているけれど、この先黒がc5と突くと、長い対角線が開いて中央をにらめるようになるんだ。黒は4...e6のときに心配だった「ビショップがポーンの内側に閉じ込められる」問題を、これで解消する道を作ったんだ。この後は白がO-O、黒がa6やc5で、クイーンサイドから中央に反撃する流れがよく見られるんだ。これで本譜は一段落、続きはぜひ自分で指してみてね！",
+    en:"Black develops the bishop to b7. Black's bishop is blocked by the c6 pawn for now, but once Black pushes ...c5, the long diagonal will open and it can eye the center. This gives Black a way to solve the problem from 4...e6, when the bishop risked being shut in behind its own pawns. Typically, White castles while Black strikes back from the queenside with ...a6 or ...c5. That's the main line — try continuing the game yourself from here!",
     fox:'happy' }
 ];
 
@@ -329,15 +351,50 @@ function adjustBottomPadding(){
   }
 }
 
+function shareOnX(message) {
+  const shareUrl = 'https://twitter.com/intent/tweet?text=' + encodeURIComponent(message) + '&url=' + encodeURIComponent(window.location.href);
+  window.open(shareUrl, '_blank', 'noopener,noreferrer,width=550,height=420');
+}
+
 function renderStep(){
   const step = LESSON_STEPS[currentStep];
   renderBoard(boardSnapshots[currentStep]);
   document.getElementById('moveLabel').textContent = (step.moveLabel && step.moveLabel[currentLang]) || '';
-  document.getElementById('commentaryText').textContent = step[currentLang];
+  const ctEl = document.getElementById('commentaryText');
+  const moreText = step[currentLang + 'More'];
+  ctEl.innerHTML = step[currentLang] + (moreText
+    ? '<details class="more-detail"><summary>' + (currentLang === 'ja' ? '💡 もっと詳しく知りたい方へ' : '💡 Want to know more?') + '</summary><div class="more-body">' + moreText + '</div></details>'
+    : '');
+  ctEl.scrollTop = 0;
+  const moreEl = ctEl.querySelector('details.more-detail');
+  if (moreEl) {
+    moreEl.addEventListener('toggle', function(){
+      if (moreEl.open) { ctEl.scrollTop = moreEl.offsetTop - ctEl.offsetTop; }
+      adjustBottomPadding();
+    });
+  }
   document.getElementById('foxAvatar').src = FOX_BY_MOOD[step.fox] || FOX_BY_MOOD.normal;
   document.getElementById('lessonProgress').textContent = currentStep + ' / ' + (LESSON_STEPS.length - 1);
   document.getElementById('btnPrev').disabled = currentStep === 0;
   document.getElementById('btnNext').disabled = currentStep === LESSON_STEPS.length - 1;
+  adjustBottomPadding();
+
+  const shareRow = document.getElementById('shareRow');
+  if (shareRow) {
+    if (currentStep === LESSON_STEPS.length - 1) {
+      const openingNameEl = document.querySelector('.opening-title.lang-element-' + currentLang);
+      const openingName = openingNameEl ? openingNameEl.textContent : '';
+      const msg = currentLang === 'ja'
+        ? '🦊 ' + openingName + 'をKitsuneChessで学んだよ!一手ずつ「なぜその手か」を教えてくれるよ'
+        : '🦊 Just learned the ' + openingName + ' on KitsuneChess! It explains why each move is played, step by step.';
+      const shareBtn = document.getElementById('shareXBtn');
+      shareBtn.textContent = currentLang === 'ja' ? '🦊 𝕏でシェアする' : '🦊 Share on 𝕏';
+      shareBtn.onclick = function() { shareOnX(msg); };
+      shareRow.style.display = 'block';
+    } else {
+      shareRow.style.display = 'none';
+    }
+  }
   adjustBottomPadding();
 }
 
