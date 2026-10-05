@@ -103,6 +103,11 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
   font-size: 1rem;
   color: var(--text-sub);
 }
+.commentary-text a, .opening-intro a { color:var(--brown); text-decoration:underline; font-weight:700; }
+.commentary-text a:hover, .opening-intro a:hover { color:var(--brown-dark); }
+.more-detail { margin-top:8px; border-top:1px dashed var(--brown-light); padding-top:6px; }
+.more-detail summary { cursor:pointer; font-weight:700; color:var(--brown); font-size:0.92rem; list-style-position:inside; }
+.more-detail .more-body { margin-top:6px; font-size:0.94rem; }
 </style>
   <script src="board-theme.js"></script>
 </head>
@@ -121,8 +126,8 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
   <h1 class="opening-title lang-element-en">Polish Opening (Sokolsky)</h1>
 
   <div class="opening-intro">
-    <p class="lang-element-ja">💡 ポーリッシュ・オープニング（ソコルスキー）は1.b4と突く非常に個性的な戦法だよ！サイドポーンを1手目から前進させるのはチェスの原則から大きく外れているように見えるけど、実際にはb4のポーンがc5とd5のマスをコントロールする役割を持つんだよ。アレクセイ・ソコルスキーが1950年代に研究して広めたこの変化は、主流から大きく外れているため事前研究がほぼ役に立たなくなるんだ。奇抜な手で相手を心理的に動揺させたい時に最高の選択肢だよ！</p>
-    <p class="lang-element-en">💡 The Polish Opening (Sokolsky) starts with the highly original 1.b4! Moving a side pawn on the very first move looks like a complete break from chess principles, but the b4 pawn actually serves to control the important c5 and d5 squares. Developed and popularized by Alexey Sokolsky in the 1950s, this opening is so far off the beaten path that virtually all of your opponent's theoretical preparation becomes completely useless. For players who want to psychologically unsettle their opponent or enjoy completely fresh, original positions!</p>
+    <p class="lang-element-ja">💡 ポーリッシュ・オープニングは、白が1手目でbのポーンをb4へ進める、珍しいオープニングだよ。ソコルスキー・オープニングやオランウータン・オープニングとも呼ばれていて、1960年代にソコルスキーがこのオープニングの本を書いて広めたんだ。オランウータンという名前は、タルタコワーが動物園のオランウータンにちなんで、この手を指したという逸話から来ているよ。トップレベルではあまり指されないけれど、相手の準備を外しやすい個性的なオープニングなんだ。</p>
+    <p class="lang-element-en">💡 The Polish Opening is an unusual opening in which White pushes the b-pawn to b4 on move one. It's also called the Sokolsky Opening or the Orangutan Opening, and Sokolsky popularized it with a book in the 1960s. The name "Orangutan" comes from the story that Tartakower played it after a visit to the zoo, inspired by an orangutan. It's rare at the top level, but it's a distinctive opening that can steer opponents away from their preparation.</p>
   </div>
 
   <div class="board-wrap">
@@ -142,6 +147,9 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
     <button id="btnPrev" class="lesson-btn">← 前へ</button>
     <span class="lesson-progress" id="lessonProgress"></span>
     <button id="btnNext" class="lesson-btn">次へ →</button>
+  </div>
+  <div id="shareRow" style="display:none;text-align:center;margin-top:10px;">
+    <button id="shareXBtn" style="background:#000;color:#fff;border:none;border-radius:20px;padding:8px 16px;font-family:'Crimson Pro',serif;font-weight:700;font-size:0.85rem;cursor:pointer;">🦊 𝕏でシェアする</button>
   </div>
 </div>
 
@@ -190,60 +198,50 @@ const initialBoard = [
 // ============================================================
 const LESSON_STEPS = [
   { move:null, moveLabel:{ja:"開始局面", en:"Starting Position"},
-    ja:"ポーリッシュ・オープニングのレッスンを始めるよ！1手目からサイドポーンを進める、相手の事前研究をほぼ無効化する個性的な戦法だよ。ジーンと一緒に、一手ずつ「なぜその手を指すのか」を学んでいこう。",
-    en:"Let's start the Polish Opening lesson! Advancing a side pawn on move one makes almost all opponent preparation useless. Jene will explain why each move is played, one step at a time.",
+    ja:"ポーリッシュ・オープニングのレッスンを始めるよ！このページでは、黒が1...e5で中央を取り、白のb4のポーンとe5のポーンを交換する、いちばん多く指される形を見ていくよ。白が中央のポーンを手に入れる代わりに、黒が展開でどう先に進むのかがポイントなんだ。一手ずつジーンと一緒に、なぜその手を指すのかを学んでいこう。",
+    en:"Let's start the Polish Opening lesson! On this page we follow the most common line, where Black claims the center with 1...e5 and White's b4 pawn is traded for Black's e5 pawn. The key is how Black gets ahead in development while White gains a central pawn. Jene will walk you through why each move is played, one step at a time.",
     fox:'welcome' },
   { move:{from:[6,1],to:[4,1]}, moveLabel:{ja:"1. b4（ポーリッシュ！）", en:"1. b4 (Polish!)"},
-    ja:"ここが本題、ポーリッシュ・オープニングの一手！白はサイドポーンを進めて、c5とd5のマスをコントロールするよ。",
-    en:"Here's the Polish Opening move! White advances the side pawn, controlling the c5 and d5 squares.",
+    ja:"ここがポーリッシュ・オープニングの一手！白はポーンをb4へ進めて、クイーンサイドでスペースを取り、b2のマスを空けるよ。一般的には1.e4や1.d4で中央を直接取りに行くけれど、白はここで端のポーンから動かして、ビショップを長い対角線に出す道を選ぶんだ。その代わり、白のb4のポーンは守られていないので、黒にすぐねらわれやすいよ。",
+    en:"Here's the Polish Opening! White pushes the pawn to b4, grabbing space on the queenside and clearing b2. The usual first moves 1.e4 or 1.d4 claim the center directly, but White starts with a flank pawn and aims to put the bishop on the long diagonal. The trade-off is that the b4 pawn is undefended and can quickly become a target.",
+    jaMore:"同じように端のポーンを使う1.b3は、<a href='nimzo_larsen.html'>ニムゾ・ラーセン・アタック</a>と呼ばれているよ。",
+    enMore:"The similar flank move 1.b3 is called the <a href='nimzo_larsen.html?lang=en'>Nimzo-Larsen Attack</a>.",
     fox:'happy' },
   { move:{from:[1,4],to:[3,4]}, moveLabel:{ja:"1...e5", en:"1...e5"},
-    ja:"黒はe5で中央を取るよ。",
-    en:"Black takes the center with 1...e5.",
+    ja:"黒はポーンをe5へ進めるよ。黒は中央を押さえながら、f8のビショップの道を開けて、白のb4のポーンをねらうんだ。",
+    en:"Black pushes the pawn to e5. Black claims the center and opens the f8 bishop's path, targeting White's b4 pawn.",
     fox:'normal' },
   { move:{from:[7,2],to:[6,1]}, moveLabel:{ja:"2. Bb2", en:"2. Bb2"},
-    ja:"白はビショップをb2へ。長い対角線を支配するよ。",
-    en:"White fianchettos the bishop to b2, dominating the long diagonal.",
+    ja:"白はビショップをb2へ進めるよ。白はb4のポーンを守らずに、ビショップで黒のe5のポーンを攻撃し返すんだ。",
+    en:"White develops the bishop to b2. Instead of defending the b4 pawn, White counterattacks Black's e5 pawn with the bishop.",
     fox:'normal' },
-  { move:{from:[0,1],to:[2,2]}, moveLabel:{ja:"2...Nc6", en:"2...Nc6"},
-    ja:"黒はナイトをc6へ展開するよ。",
-    en:"Black develops the knight to c6.",
+  { move:{from:[0,5],to:[4,1]}, moveLabel:{ja:"2...Bxb4", en:"2...Bxb4"},
+    ja:"黒はビショップで、b4にいた白のポーンを取るよ。黒はe5のポーンを取られることを受け入れて、白のb4のポーンと交換するんだ。",
+    en:"Black's bishop captures the white pawn that was on b4. Black accepts losing the e5 pawn in exchange for White's b4 pawn.",
+    jaMore:"黒はこの手の代わりに2...d6や2...f6でe5を守ることもできるよ。",
+    enMore:"Instead of this move, Black can also defend e5 with 2...d6 or 2...f6.",
     fox:'normal' },
-  { move:{from:[6,4],to:[5,4]}, moveLabel:{ja:"3. e3", en:"3. e3"},
-    ja:"白はe3で展開を進めるよ。",
-    en:"White continues developing with 3.e3.",
+  { move:{from:[6,1],to:[3,4]}, moveLabel:{ja:"3. Bxe5", en:"3. Bxe5"},
+    ja:"白はビショップで、e5にいた黒のポーンを取るよ。白は端のポーンと引き換えに、中央のポーンを手に入れたんだ。白のe5のビショップは、守りのない黒のg7のポーンもねらっているよ。",
+    en:"White's bishop captures the black pawn that was on e5. White has traded a flank pawn for a central one. White's bishop on e5 also eyes Black's undefended g7 pawn.",
     fox:'normal' },
-  { move:{from:[1,3],to:[3,3]}, moveLabel:{ja:"3...d5", en:"3...d5"},
-    ja:"黒はd5で中央にしっかり踏み込むよ。",
-    en:"Black firmly claims the center with 3...d5.",
+  { move:{from:[0,6],to:[2,5]}, moveLabel:{ja:"3...Nf6", en:"3...Nf6"},
+    ja:"黒はナイトをf6へ進めるよ。黒はナイトを展開しながら、e5のビショップとg7のポーンの間に入って、g7を守るんだ。",
+    en:"Black develops the knight to f6. Black develops while stepping between the e5 bishop and the g7 pawn, protecting g7.",
     fox:'normal' },
-  { move:{from:[7,6],to:[5,5]}, moveLabel:{ja:"4. Nf3", en:"4. Nf3"},
-    ja:"白はナイトをf3へ展開するよ。",
-    en:"White develops the knight to f3.",
+  { move:{from:[6,2],to:[4,2]}, moveLabel:{ja:"4. c4", en:"4. c4"},
+    ja:"白はポーンをc4へ進めるよ。白はこれでd5のマスを押さえて、黒がd5と突いて中央に出てくるのを防ぐんだ。",
+    en:"White pushes the pawn to c4. White controls the d5 square and stops Black from pushing ...d5 into the center.",
+    jaMore:"白はこの手の代わりに4.e3や4.Nf3と展開を急ぐこともできるけれど、黒にd5と突かれて中央を取られやすくなるよ。",
+    enMore:"Instead of this move, White can also hurry development with 4.e3 or 4.Nf3, but then Black can more easily take the center with ...d5.",
     fox:'normal' },
-  { move:{from:[0,5],to:[2,3]}, moveLabel:{ja:"4...Bd6", en:"4...Bd6"},
-    ja:"黒はビショップをd6へ展開するよ。",
-    en:"Black develops the bishop to d6.",
+  { move:{from:[0,4],to:[0,6],castle:{from:[0,7],to:[0,5]}}, moveLabel:{ja:"4...O-O", en:"4...O-O"},
+    ja:"黒はキャスリングでキングを安全な場所へ動かすよ。黒は展開で先に進んでいて、この先Re8でeファイルから白のビショップをねらう準備をしているんだ。",
+    en:"Black castles, bringing the king to safety. Black is ahead in development and is preparing ...Re8 to target White's bishop on the e-file.",
     fox:'normal' },
-  { move:{from:[6,2],to:[4,2]}, moveLabel:{ja:"5. c4", en:"5. c4"},
-    ja:"白はc4でさらに中央へ圧力をかけるよ。",
-    en:"White adds more central pressure with 5.c4.",
-    fox:'wink' },
-  { move:{from:[0,6],to:[2,5]}, moveLabel:{ja:"5...Nf6", en:"5...Nf6"},
-    ja:"黒はもう一つのナイトをf6へ展開するよ。",
-    en:"Black develops the other knight to f6.",
-    fox:'normal' },
-  { move:{from:[7,5],to:[6,4]}, moveLabel:{ja:"6. Be2", en:"6. Be2"},
-    ja:"白はビショップをe2へ展開するよ。",
-    en:"White develops the bishop to e2.",
-    fox:'normal' },
-  { move:{from:[0,4],to:[0,6],castle:{from:[0,7],to:[0,5]}}, moveLabel:{ja:"6...O-O", en:"6...O-O"},
-    ja:"黒はキャスリングでキングを安全な場所へ。",
-    en:"Black castles kingside, tucking the king away safely.",
-    fox:'normal' },
-  { move:{from:[7,4],to:[7,6],castle:{from:[7,7],to:[7,5]}}, moveLabel:{ja:"7. O-O", en:"7. O-O"},
-    ja:"白も同じくキャスリング。これで本譜は一段落、続きはぜひ自分で指してみてね！",
-    en:"White castles too. That's the main line — try continuing the game yourself from here!",
+  { move:{from:[7,6],to:[5,5]}, moveLabel:{ja:"5. Nf3", en:"5. Nf3"},
+    ja:"白はナイトをf3へ進めるよ。白はナイトを展開しながら、e5のビショップを守り、キャスリングの準備も進めるんだ。白は中央のポーンを1つ多く持っていて、黒は展開のリードを生かして戦う形になったよ。これで本譜は一段落、続きはぜひ自分で指してみてね！",
+    en:"White develops the knight to f3. White develops while protecting the e5 bishop and preparing to castle. White has an extra central pawn, while Black plays on its lead in development. That's the main line — try continuing the game yourself from here!",
     fox:'happy' }
 ];
 
@@ -329,15 +327,50 @@ function adjustBottomPadding(){
   }
 }
 
+function shareOnX(message) {
+  const shareUrl = 'https://twitter.com/intent/tweet?text=' + encodeURIComponent(message) + '&url=' + encodeURIComponent(window.location.href);
+  window.open(shareUrl, '_blank', 'noopener,noreferrer,width=550,height=420');
+}
+
 function renderStep(){
   const step = LESSON_STEPS[currentStep];
   renderBoard(boardSnapshots[currentStep]);
   document.getElementById('moveLabel').textContent = (step.moveLabel && step.moveLabel[currentLang]) || '';
-  document.getElementById('commentaryText').textContent = step[currentLang];
+  const ctEl = document.getElementById('commentaryText');
+  const moreText = step[currentLang + 'More'];
+  ctEl.innerHTML = step[currentLang] + (moreText
+    ? '<details class="more-detail"><summary>' + (currentLang === 'ja' ? '💡 もっと詳しく知りたい方へ' : '💡 Want to know more?') + '</summary><div class="more-body">' + moreText + '</div></details>'
+    : '');
+  ctEl.scrollTop = 0;
+  const moreEl = ctEl.querySelector('details.more-detail');
+  if (moreEl) {
+    moreEl.addEventListener('toggle', function(){
+      if (moreEl.open) { ctEl.scrollTop = moreEl.offsetTop - ctEl.offsetTop; }
+      adjustBottomPadding();
+    });
+  }
   document.getElementById('foxAvatar').src = FOX_BY_MOOD[step.fox] || FOX_BY_MOOD.normal;
   document.getElementById('lessonProgress').textContent = currentStep + ' / ' + (LESSON_STEPS.length - 1);
   document.getElementById('btnPrev').disabled = currentStep === 0;
   document.getElementById('btnNext').disabled = currentStep === LESSON_STEPS.length - 1;
+  adjustBottomPadding();
+
+  const shareRow = document.getElementById('shareRow');
+  if (shareRow) {
+    if (currentStep === LESSON_STEPS.length - 1) {
+      const openingNameEl = document.querySelector('.opening-title.lang-element-' + currentLang);
+      const openingName = openingNameEl ? openingNameEl.textContent : '';
+      const msg = currentLang === 'ja'
+        ? '🦊 ' + openingName + 'をKitsuneChessで学んだよ!一手ずつ「なぜその手か」を教えてくれるよ'
+        : '🦊 Just learned the ' + openingName + ' on KitsuneChess! It explains why each move is played, step by step.';
+      const shareBtn = document.getElementById('shareXBtn');
+      shareBtn.textContent = currentLang === 'ja' ? '🦊 𝕏でシェアする' : '🦊 Share on 𝕏';
+      shareBtn.onclick = function() { shareOnX(msg); };
+      shareRow.style.display = 'block';
+    } else {
+      shareRow.style.display = 'none';
+    }
+  }
   adjustBottomPadding();
 }
 

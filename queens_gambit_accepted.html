@@ -103,6 +103,11 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
   font-size: 1rem;
   color: var(--text-sub);
 }
+.commentary-text a, .opening-intro a { color:var(--brown); text-decoration:underline; font-weight:700; }
+.commentary-text a:hover, .opening-intro a:hover { color:var(--brown-dark); }
+.more-detail { margin-top:8px; border-top:1px dashed var(--brown-light); padding-top:6px; }
+.more-detail summary { cursor:pointer; font-weight:700; color:var(--brown); font-size:0.92rem; list-style-position:inside; }
+.more-detail .more-body { margin-top:6px; font-size:0.94rem; }
 </style>
   <script src="board-theme.js"></script>
 </head>
@@ -121,8 +126,8 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
   <h1 class="opening-title lang-element-en">Queen's Gambit Accepted</h1>
 
   <div class="opening-intro">
-    <p class="lang-element-ja">💡 クイーンズ・ギャンビット・アクセプテッドは2...dxc4とポーンを受け取る変化だよ！黒はポーンを取ることでd5のポーンを放棄する代わりに、素早い展開と活発なピース配置を得ようとするんだ。白はすぐにc4のポーンを取り戻せるけど、黒はその間に素早くNf6-e6-c5と展開してポーンを渡した分の遅れを取り戻すよ。黒のメインプランはe5かc5を突いて白のd4ポーンに反撃すること。歴史的に多くの世界チャンピオンが採用してきた伝統ある変化で、積極的に戦いたい黒のプレイヤーに人気だよ！</p>
-    <p class="lang-element-en">💡 The Queen's Gambit Accepted captures 2...dxc4, accepting the offered pawn! Black gives up the d5 pawn but aims to gain quick development and active piece placement in return. While White can almost always recapture, Black uses that time to develop rapidly with Nf6-e6-c5. Black's main plan is to counter-attack White's d4 pawn with e5 or c5. One of the most historically important variations in chess, used by many World Champions. A great choice for Black players who want to fight aggressively against d4!</p>
+    <p class="lang-element-ja">💡 クイーンズ・ギャンビット・アクセプテッドは、1.d4 d5 2.c4に対して黒が2...dxc4とポーンを受け取るオープニングだよ。ポーンを取っても長く持ち続けるのは難しいので、黒はポーンを返す代わりに、駒を自由に動かせる形を手に入れることをねらうんだ。古くから研究されていて、今でもトップレベルの対局で指され続けているよ。黒が中央を手放す代わりに、すっきりした形で戦える、堅実なオープニングなんだ。</p>
+    <p class="lang-element-en">💡 The Queen's Gambit Accepted is an opening in which Black answers 1.d4 d5 2.c4 by taking the pawn with 2...dxc4. Since it's hard to hold on to the extra pawn for long, Black aims to give it back in return for free piece play. It has been studied for a long time and is still played in top-level games today. It's a solid opening where Black gives up the center in exchange for a clear, comfortable position.</p>
   </div>
 
   <div class="board-wrap">
@@ -142,6 +147,9 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
     <button id="btnPrev" class="lesson-btn">← 前へ</button>
     <span class="lesson-progress" id="lessonProgress"></span>
     <button id="btnNext" class="lesson-btn">次へ →</button>
+  </div>
+  <div id="shareRow" style="display:none;text-align:center;margin-top:10px;">
+    <button id="shareXBtn" style="background:#000;color:#fff;border:none;border-radius:20px;padding:8px 16px;font-family:'Crimson Pro',serif;font-weight:700;font-size:0.85rem;cursor:pointer;">🦊 𝕏でシェアする</button>
   </div>
 </div>
 
@@ -190,60 +198,74 @@ const initialBoard = [
 // ============================================================
 const LESSON_STEPS = [
   { move:null, moveLabel:{ja:"開始局面", en:"Starting Position"},
-    ja:"クイーンズ・ギャンビット・アクセプテッドのレッスンを始めるよ！ポーンを受け取って素早い展開を目指す、歴史ある積極的な変化だよ。ジーンと一緒に、一手ずつ「なぜその手を指すのか」を学んでいこう。",
-    en:"Let's start the Queen's Gambit Accepted lesson! Black takes the pawn and aims for rapid development in return — a historically important, active choice. Jene will explain why each move is played, one step at a time.",
+    ja:"クイーンズ・ギャンビット・アクセプテッドのレッスンを始めるよ！このページでは、黒がc4のポーンを受け取り、白がそれを取り返してから、両者が展開を進めるクラシカル・バリエーションを見ていくよ。黒がc5とb5で白の中央とビショップにどう働きかけるのかがポイントなんだ。一手ずつジーンと一緒に、なぜその手を指すのかを学んでいこう。",
+    en:"Let's start the Queen's Gambit Accepted lesson! On this page we follow the Classical Variation, where Black accepts the c4 pawn, White wins it back, and both sides develop. The key is how Black challenges White's center and bishop with ...c5 and ...b5. Jene will walk you through why each move is played, one step at a time.",
     fox:'welcome' },
   { move:{from:[6,3],to:[4,3]}, moveLabel:{ja:"1. d4", en:"1. d4"},
-    ja:"白はd4で中央を制圧するよ。",
-    en:"White plays 1.d4, claiming the center.",
+    ja:"白はポーンをd4へ進めるよ。白は中央のマスを押さえながら、c1のビショップの道を開けるんだ。",
+    en:"White pushes the pawn to d4. White takes control of central squares and opens the path for the c1 bishop.",
     fox:'normal' },
   { move:{from:[1,3],to:[3,3]}, moveLabel:{ja:"1...d5", en:"1...d5"},
-    ja:"黒も同じくd5で対抗するよ。",
-    en:"Black mirrors with 1...d5.",
+    ja:"黒はポーンをd5へ進めるよ。黒も同じように中央を押さえて、白のポーンと向かい合う形を作るんだ。",
+    en:"Black pushes the pawn to d5. Black also claims the center, setting up a pawn face-off with White.",
     fox:'normal' },
   { move:{from:[6,2],to:[4,2]}, moveLabel:{ja:"2. c4", en:"2. c4"},
-    ja:"白はc4でポーンをあえて差し出すよ。",
-    en:"White offers the c-pawn with 2.c4.",
+    ja:"白はポーンをc4へ進めて、クイーンズ・ギャンビットに入るよ。白はc4のポーンを差し出して、黒のd5のポーンを中央からどかすことをねらっているんだ。",
+    en:"White pushes the pawn to c4, entering the Queen's Gambit. White offers the c4 pawn, aiming to lure Black's d5 pawn away from the center.",
     fox:'normal' },
   { move:{from:[3,3],to:[4,2]}, moveLabel:{ja:"2...dxc4（アクセプテッド！）", en:"2...dxc4 (Accepted!)"},
-    ja:"ここが本題、アクセプテッドの一手！黒はポーンを受け取るよ。すぐに取り返されるけど、その間に素早く展開できるんだ。",
-    en:"Here's the Accepted move! Black takes the pawn. White can recapture soon, but Black uses the time to develop rapidly.",
+    ja:"ここがクイーンズ・ギャンビット・アクセプテッドの一手！黒はd5のポーンで、c4に来た白のポーンを取るよ。黒はここでポーンを受け取って、駒を自由に動かせる形を選ぶんだ。その代わり、黒は中央のd5のポーンを手放すので、白に中央を広く取られやすくなるよ。",
+    en:"Here's the Queen's Gambit Accepted! Black's d5 pawn captures the white pawn that came to c4. Here Black accepts the pawn and aims for free piece play. The trade-off is that Black gives up the central d5 pawn, making it easier for White to take a big center.",
+    jaMore:"黒はこの手の代わりに2...e6の<a href='queens_gambit.html'>クイーンズ・ギャンビット・ディクラインド</a>や、2...c6の<a href='slav.html'>スラブ・ディフェンス</a>でd5を守ることのほうが多いよ。",
+    enMore:"Instead of this move, Black more often defends d5 with 2...e6, the <a href='queens_gambit.html?lang=en'>Queen's Gambit Declined</a>, or with 2...c6, the <a href='slav.html?lang=en'>Slav Defense</a>.",
     fox:'happy' },
   { move:{from:[7,6],to:[5,5]}, moveLabel:{ja:"3. Nf3", en:"3. Nf3"},
-    ja:"白はナイトをf3へ展開するよ。",
-    en:"White develops the knight to f3.",
+    ja:"白はナイトをf3へ進めるよ。白はナイトを展開しながら、黒がe5と突いて中央で反撃するのを防ぐんだ。",
+    en:"White develops the knight to f3. White develops while stopping Black from striking back in the center with ...e5.",
     fox:'normal' },
   { move:{from:[0,6],to:[2,5]}, moveLabel:{ja:"3...Nf6", en:"3...Nf6"},
-    ja:"黒もナイトをf6へ展開するよ。",
-    en:"Black develops the knight to f6.",
+    ja:"黒はナイトをf6へ進めるよ。黒はナイトを展開しながら、白がe4と突くのをけん制するんだ。",
+    en:"Black develops the knight to f6. Black develops while discouraging White from pushing e4.",
     fox:'normal' },
   { move:{from:[6,4],to:[5,4]}, moveLabel:{ja:"4. e3", en:"4. e3"},
-    ja:"白はe3で、ビショップの展開ルートを準備するよ。",
-    en:"White plays 4.e3, preparing a route for the bishop.",
+    ja:"白はポーンをe3へ進めるよ。白はf1のビショップの道を開けて、次にc4のポーンを取り返す準備をするんだ。",
+    en:"White pushes the pawn to e3. White opens the f1 bishop's path and prepares to win back the c4 pawn.",
     fox:'normal' },
   { move:{from:[1,4],to:[2,4]}, moveLabel:{ja:"4...e6", en:"4...e6"},
-    ja:"黒はe6で柔軟に展開を進めるよ。",
-    en:"Black continues developing with 4...e6.",
+    ja:"黒はポーンをe6へ進めるよ。黒はf8のビショップの道を開けて、キングサイドの展開を進めるんだ。その代わり、黒のc8のビショップはe6のポーンの内側に入り、出口が少なくなるよ。",
+    en:"Black pushes the pawn to e6. Black opens the f8 bishop's path and continues kingside development. The trade-off is that the c8 bishop ends up behind the e6 pawn with fewer ways out.",
     fox:'normal' },
   { move:{from:[7,5],to:[4,2]}, moveLabel:{ja:"5. Bxc4", en:"5. Bxc4"},
-    ja:"白はビショップでc4のポーンを取り返すよ。",
-    en:"White recaptures the pawn with 5.Bxc4.",
+    ja:"白はビショップで、c4にいた黒のポーンを取り返すよ。白はこれで差し出したポーンを取り返し、ポーンの数は互角に戻るんだ。",
+    en:"White's bishop takes back the black pawn that was on c4. White wins back the pawn it offered, and material is level again.",
     fox:'normal' },
   { move:{from:[1,2],to:[3,2]}, moveLabel:{ja:"5...c5", en:"5...c5"},
-    ja:"黒はc5！これがアクセプテッドの本当の狙い、白のd4ポーンに反撃するよ。",
-    en:"Black strikes with 5...c5 — the real point of the Accepted, counter-attacking White's d4 pawn.",
-    fox:'wink' },
+    ja:"黒はポーンをc5へ進めるよ。黒はc5のポーンとd8のクイーンで、白のd4のポーンを攻撃するんだ。黒はこの手で、白の中央に反撃を始めるよ。",
+    en:"Black pushes the pawn to c5. Black attacks White's d4 pawn with the c5 pawn and the queen on d8. With this move, Black starts counterattacking White's center.",
+    fox:'normal' },
   { move:{from:[7,4],to:[7,6],castle:{from:[7,7],to:[7,5]}}, moveLabel:{ja:"6. O-O", en:"6. O-O"},
-    ja:"白はキャスリングでキングを安全な場所へ。",
-    en:"White castles kingside, tucking the king away safely.",
+    ja:"白はキャスリングでキングを安全な場所へ動かすよ。白のd4はd1のクイーン、e3のポーン、f3のナイトの3つに守られているので、白は落ち着いてキャスリングできるんだ。",
+    en:"White castles, bringing the king to safety. White's d4 is defended three times, by the queen on d1, the e3 pawn and the f3 knight, so White can calmly castle.",
     fox:'normal' },
   { move:{from:[1,0],to:[2,0]}, moveLabel:{ja:"6...a6", en:"6...a6"},
-    ja:"黒はa6でb5の展開オプションを確保するよ。",
-    en:"Black plays 6...a6, securing the b5 expansion option.",
+    ja:"黒はポーンをa6へ進めるよ。黒はb5のマスを押さえて、次にb5と突いてc4のビショップを追い払う準備をするんだ。",
+    en:"Black pushes the pawn to a6. Black controls the b5 square and prepares to push ...b5 next to chase away the c4 bishop.",
     fox:'normal' },
   { move:{from:[7,3],to:[6,4]}, moveLabel:{ja:"7. Qe2", en:"7. Qe2"},
-    ja:"白はクイーンをe2へ。これで本譜は一段落、続きはぜひ自分で指してみてね！",
-    en:"White develops the queen to e2. That's the main line — try continuing the game yourself from here!",
+    ja:"白はクイーンをe2へ進めるよ。白のクイーンはc4のビショップを守りながら、この先Rd1とdファイルにルークを並べる準備をするんだ。この形はクラシカル・バリエーションと呼ばれていて、白のいちばん代表的な組み方だよ。",
+    en:"White brings the queen to e2. White's queen protects the c4 bishop and prepares to line up a rook on the d-file with Rd1. This setup is called the Classical Variation and is White's most typical approach.",
+    fox:'normal' },
+  { move:{from:[1,1],to:[3,1]}, moveLabel:{ja:"7...b5", en:"7...b5"},
+    ja:"黒はポーンをb5へ進めるよ。黒はc4の白のビショップを攻撃して、クイーンサイドでスペースを広げるんだ。",
+    en:"Black pushes the pawn to b5. Black attacks White's bishop on c4 and gains space on the queenside.",
+    fox:'normal' },
+  { move:{from:[4,2],to:[5,1]}, moveLabel:{ja:"8. Bb3", en:"8. Bb3"},
+    ja:"白はビショップをb3へ下げるよ。白のビショップはb3から、黒のe6のポーンとその先をにらみ続けるんだ。",
+    en:"White retreats the bishop to b3. From b3, White's bishop keeps eyeing Black's e6 pawn and beyond.",
+    fox:'normal' },
+  { move:{from:[0,2],to:[1,1]}, moveLabel:{ja:"8...Bb7", en:"8...Bb7"},
+    ja:"黒はビショップをb7へ進めるよ。黒のビショップは長い対角線から、白のf3のナイトと中央をにらんでいるんだ。黒はc8のビショップの出口をb7に作って、e6のポーンの内側に閉じ込められないようにしたよ。この後は白がRd1やNc3で中央を固め、黒はNbd7やQc7で展開を終える流れが多いんだ。これで本譜は一段落、続きはぜひ自分で指してみてね！",
+    en:"Black develops the bishop to b7. From the long diagonal, Black's bishop eyes White's f3 knight and the center. Black has found a way out for the c8 bishop via b7, so it isn't stuck behind the e6 pawn. Typically, White strengthens the center with Rd1 and Nc3 while Black completes development with ...Nbd7 and ...Qc7. That's the main line — try continuing the game yourself from here!",
     fox:'happy' }
 ];
 
@@ -329,15 +351,50 @@ function adjustBottomPadding(){
   }
 }
 
+function shareOnX(message) {
+  const shareUrl = 'https://twitter.com/intent/tweet?text=' + encodeURIComponent(message) + '&url=' + encodeURIComponent(window.location.href);
+  window.open(shareUrl, '_blank', 'noopener,noreferrer,width=550,height=420');
+}
+
 function renderStep(){
   const step = LESSON_STEPS[currentStep];
   renderBoard(boardSnapshots[currentStep]);
   document.getElementById('moveLabel').textContent = (step.moveLabel && step.moveLabel[currentLang]) || '';
-  document.getElementById('commentaryText').textContent = step[currentLang];
+  const ctEl = document.getElementById('commentaryText');
+  const moreText = step[currentLang + 'More'];
+  ctEl.innerHTML = step[currentLang] + (moreText
+    ? '<details class="more-detail"><summary>' + (currentLang === 'ja' ? '💡 もっと詳しく知りたい方へ' : '💡 Want to know more?') + '</summary><div class="more-body">' + moreText + '</div></details>'
+    : '');
+  ctEl.scrollTop = 0;
+  const moreEl = ctEl.querySelector('details.more-detail');
+  if (moreEl) {
+    moreEl.addEventListener('toggle', function(){
+      if (moreEl.open) { ctEl.scrollTop = moreEl.offsetTop - ctEl.offsetTop; }
+      adjustBottomPadding();
+    });
+  }
   document.getElementById('foxAvatar').src = FOX_BY_MOOD[step.fox] || FOX_BY_MOOD.normal;
   document.getElementById('lessonProgress').textContent = currentStep + ' / ' + (LESSON_STEPS.length - 1);
   document.getElementById('btnPrev').disabled = currentStep === 0;
   document.getElementById('btnNext').disabled = currentStep === LESSON_STEPS.length - 1;
+  adjustBottomPadding();
+
+  const shareRow = document.getElementById('shareRow');
+  if (shareRow) {
+    if (currentStep === LESSON_STEPS.length - 1) {
+      const openingNameEl = document.querySelector('.opening-title.lang-element-' + currentLang);
+      const openingName = openingNameEl ? openingNameEl.textContent : '';
+      const msg = currentLang === 'ja'
+        ? '🦊 ' + openingName + 'をKitsuneChessで学んだよ!一手ずつ「なぜその手か」を教えてくれるよ'
+        : '🦊 Just learned the ' + openingName + ' on KitsuneChess! It explains why each move is played, step by step.';
+      const shareBtn = document.getElementById('shareXBtn');
+      shareBtn.textContent = currentLang === 'ja' ? '🦊 𝕏でシェアする' : '🦊 Share on 𝕏';
+      shareBtn.onclick = function() { shareOnX(msg); };
+      shareRow.style.display = 'block';
+    } else {
+      shareRow.style.display = 'none';
+    }
+  }
   adjustBottomPadding();
 }
 

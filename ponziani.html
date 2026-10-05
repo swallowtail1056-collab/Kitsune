@@ -103,6 +103,11 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
   font-size: 1rem;
   color: var(--text-sub);
 }
+.commentary-text a, .opening-intro a { color:var(--brown); text-decoration:underline; font-weight:700; }
+.commentary-text a:hover, .opening-intro a:hover { color:var(--brown-dark); }
+.more-detail { margin-top:8px; border-top:1px dashed var(--brown-light); padding-top:6px; }
+.more-detail summary { cursor:pointer; font-weight:700; color:var(--brown); font-size:0.92rem; list-style-position:inside; }
+.more-detail .more-body { margin-top:6px; font-size:0.94rem; }
 </style>
   <script src="board-theme.js"></script>
 </head>
@@ -121,8 +126,8 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
   <h1 class="opening-title lang-element-en">Ponziani Opening</h1>
 
   <div class="opening-intro">
-    <p class="lang-element-ja">💡 ポンジアーニ・オープニングは3.c3と突いてd4を準備しながら中央を強化するユニークなオープニングだよ！スコッチゲームのように3.d4と即座に突かずにc3でd4を準備することで、より堅固な中央を作ろうとするんだ。黒が3...Nf6と応じれば白は4.d4とすぐに中央を突いてスペース優位を得るよ。18世紀のイタリアの司祭ドメニコ・ポンジアーニが考案したと言われる歴史ある変化で、深い理論知識がなくても扱いやすく、意表を突く効果があるよ！</p>
-    <p class="lang-element-en">💡 The Ponziani Opening plays 3.c3, reinforcing the center and preparing d4 in a unique way! Instead of immediately pushing 3.d4 like in the Scotch Game, White first prepares d4 with c3 to build a more solid central foundation. If Black responds with 3...Nf6, White plays 4.d4 right away. Attributed to the 18th century Italian priest Domenico Ponziani, this is a historically significant opening that is perfectly logical and sound. Easy to handle without deep theoretical knowledge and provides excellent surprise value!</p>
+    <p class="lang-element-ja">💡 ポンジアーニ・オープニングは、1.e4 e5 2.Nf3 Nc6のあとに白が3.c3と突く、古いオープニングだよ。名前は18世紀のイタリアの司祭で棋士のドメニコ・ポンジアーニに由来しているんだ。19世紀には人気があったけれど、黒の良い応じ方が知られて、今では指されることが少なくなったよ。相手が慣れていないことが多いので、意表を突く作戦として使われることがあるんだ。</p>
+    <p class="lang-element-en">💡 The Ponziani Opening is an old opening in which White plays 3.c3 after 1.e4 e5 2.Nf3 Nc6. It's named after Domenico Ponziani, an 18th-century Italian priest and chess player. It was popular in the 19th century, but after good replies for Black became known, it's rarely seen today. Opponents are often unfamiliar with it, so it's sometimes used as a surprise weapon.</p>
   </div>
 
   <div class="board-wrap">
@@ -142,6 +147,9 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
     <button id="btnPrev" class="lesson-btn">← 前へ</button>
     <span class="lesson-progress" id="lessonProgress"></span>
     <button id="btnNext" class="lesson-btn">次へ →</button>
+  </div>
+  <div id="shareRow" style="display:none;text-align:center;margin-top:10px;">
+    <button id="shareXBtn" style="background:#000;color:#fff;border:none;border-radius:20px;padding:8px 16px;font-family:'Crimson Pro',serif;font-weight:700;font-size:0.85rem;cursor:pointer;">🦊 𝕏でシェアする</button>
   </div>
 </div>
 
@@ -190,60 +198,64 @@ const initialBoard = [
 // ============================================================
 const LESSON_STEPS = [
   { move:null, moveLabel:{ja:"開始局面", en:"Starting Position"},
-    ja:"ポンジアーニ・オープニングのレッスンを始めるよ！スコッチゲームより一手準備を加えて、より堅固な中央を目指す18世紀の歴史ある定跡だよ。ジーンと一緒に、一手ずつ「なぜその手を指すのか」を学んでいこう。",
-    en:"Let's start the Ponziani Opening lesson! It adds one extra preparatory move compared to the Scotch Game, aiming for a sturdier center. Jene will explain why each move is played, one step at a time.",
+    ja:"ポンジアーニ・オープニングのレッスンを始めるよ！このページでは、黒が4...Nxe4でポーンを取り、白がd5とNxe5で取り返す、ヤーニッシュ・バリエーションを見ていくよ。白と黒がお互いに駒を攻め合う、鋭い展開の流れがポイントなんだ。一手ずつジーンと一緒に、なぜその手を指すのかを学んでいこう。",
+    en:"Let's start the Ponziani Opening lesson! On this page we follow the Jaenisch Variation, where Black grabs a pawn with 4...Nxe4 and White wins it back with d5 and Nxe5. The key is the sharp sequence where both sides attack each other's pieces. Jene will walk you through why each move is played, one step at a time.",
     fox:'welcome' },
   { move:{from:[6,4],to:[4,4]}, moveLabel:{ja:"1. e4", en:"1. e4"},
-    ja:"白はe4で中央を制圧するよ。",
-    en:"White plays 1.e4, claiming the center.",
+    ja:"白はポーンをe4へ進めるよ。白は中央のマスを押さえながら、ビショップとクイーンが動く道を開けるんだ。",
+    en:"White pushes the pawn to e4. White takes control of central squares and opens lines for the bishop and queen.",
     fox:'normal' },
   { move:{from:[1,4],to:[3,4]}, moveLabel:{ja:"1...e5", en:"1...e5"},
-    ja:"黒も同じくe5で対抗するよ。",
-    en:"Black mirrors with 1...e5.",
+    ja:"黒はポーンをe5へ進めるよ。黒も同じように中央を押さえて、白のポーンと向かい合う形を作るんだ。",
+    en:"Black pushes the pawn to e5. Black also claims the center, setting up a pawn face-off with White.",
     fox:'normal' },
   { move:{from:[7,6],to:[5,5]}, moveLabel:{ja:"2. Nf3", en:"2. Nf3"},
-    ja:"白はナイトをf3に展開するよ。",
-    en:"White develops the knight to f3.",
+    ja:"白はナイトをf3へ進めるよ。白のナイトは展開しながら、黒のe5のポーンを攻撃しているんだ。",
+    en:"White develops the knight to f3. White's knight develops while attacking Black's e5 pawn.",
     fox:'normal' },
   { move:{from:[0,1],to:[2,2]}, moveLabel:{ja:"2...Nc6", en:"2...Nc6"},
-    ja:"黒もナイトをc6へ。e5ポーンをしっかり守るよ。",
-    en:"Black develops the knight to c6, defending the e5 pawn.",
+    ja:"黒はナイトをc6へ進めるよ。黒はナイトを展開しながら、e5のポーンを守るんだ。",
+    en:"Black develops the knight to c6. Black develops a piece and defends the e5 pawn at the same time.",
     fox:'normal' },
   { move:{from:[6,2],to:[5,2]}, moveLabel:{ja:"3. c3（ポンジアーニ！）", en:"3. c3 (Ponziani!)"},
-    ja:"ここが本題、ポンジアーニの一手！白はすぐにd4を突かず、c3でまず準備するよ。",
-    en:"Here's the Ponziani move! Instead of an immediate d4, White first prepares it with c3.",
+    ja:"ここがポンジアーニ・オープニングの一手！白はポーンをc3へ進めて、次にd4と突いたときにポーンで支えられるように準備するよ。一般的には3.Bb5や3.Bc4でビショップを出すけれど、白はここで中央に大きなポーンの形を作る道を選ぶんだ。その代わり、白はナイトの自然な行き先であるc3のマスを自分のポーンでふさぎ、展開も1手遅れることになるよ。",
+    en:"Here's the Ponziani Opening! White pushes the pawn to c3, preparing to support a d4 push with a pawn. White usually develops a bishop with 3.Bb5 or 3.Bc4, but here White aims to build a big pawn center. The trade-off is that White takes away c3, the knight's natural square, with its own pawn and falls a move behind in development.",
     fox:'happy' },
   { move:{from:[0,6],to:[2,5]}, moveLabel:{ja:"3...Nf6", en:"3...Nf6"},
-    ja:"黒はナイトをf6へ。e4ポーンに圧力をかけるよ。",
-    en:"Black develops the knight to f6, pressuring the e4 pawn.",
+    ja:"黒はナイトをf6へ進めるよ。黒はナイトを展開しながら、守りのない白のe4のポーンを攻撃するんだ。白がc3と突いたので、e4を守るためにナイトをc3に出すことはもうできないよ。",
+    en:"Black develops the knight to f6. Black develops while attacking White's undefended e4 pawn. Since White has played c3, the knight can no longer go to c3 to defend e4.",
+    jaMore:"黒はこの手の代わりに3...d5と、すぐに中央で反撃することもできるよ。",
+    enMore:"Instead of this move, Black can also strike back in the center right away with 3...d5.",
     fox:'normal' },
   { move:{from:[6,3],to:[4,3]}, moveLabel:{ja:"4. d4", en:"4. d4"},
-    ja:"白はd4！しっかり準備した上で中央に踏み込み、スペース優位を得るよ。",
-    en:"White strikes with the well-prepared 4.d4, gaining a space advantage.",
-    fox:'wink' },
-  { move:{from:[3,4],to:[4,3]}, moveLabel:{ja:"4...exd4", en:"4...exd4"},
-    ja:"黒はexd4とポーンを取るよ。",
-    en:"Black captures with 4...exd4.",
-    fox:'quiz' },
-  { move:{from:[5,2],to:[4,3]}, moveLabel:{ja:"5. cxd4", en:"5. cxd4"},
-    ja:"白はcxd4と取り返して、しっかりした中央のポーンセンターを作るよ。",
-    en:"White recaptures with 5.cxd4, building a solid pawn center.",
+    ja:"白はポーンをd4へ進めるよ。白はe4を守らずに中央へポーンを進めて、黒のe5のポーンに働きかけるんだ。",
+    en:"White pushes the pawn to d4. Instead of defending e4, White pushes into the center and challenges Black's e5 pawn.",
     fox:'normal' },
-  { move:{from:[1,3],to:[3,3]}, moveLabel:{ja:"5...d5", en:"5...d5"},
-    ja:"黒はd5で白の中央に真っ向から挑むよ。",
-    en:"Black directly challenges White's center with 5...d5.",
+  { move:{from:[2,5],to:[4,4]}, moveLabel:{ja:"4...Nxe4", en:"4...Nxe4"},
+    ja:"黒はナイトで、e4にいた白のポーンを取るよ。黒はポーンを1つ得して、黒のe4のナイトは白のf2とc3のポーンもねらっているんだ。この形はヤーニッシュ・バリエーションと呼ばれていて、黒のいちばん人気のある応じ方だよ。",
+    en:"Black's knight captures the white pawn that was on e4. Black wins a pawn, and Black's e4 knight also eyes White's f2 and c3 pawns. This line is called the Jaenisch Variation, and it's Black's most popular reply.",
+    jaMore:"黒はこの手の代わりに4...exd4と中央のポーンを交換することもできて、こちらも互角に戦える形になるよ。",
+    enMore:"Instead of this move, Black can also trade in the center with 4...exd4, which also gives Black a fair game.",
     fox:'normal' },
-  { move:{from:[4,4],to:[3,4]}, moveLabel:{ja:"6. e5", en:"6. e5"},
-    ja:"白はe5でナイトを追い払いながらスペースを確保するよ。",
-    en:"White pushes 6.e5, chasing the knight while gaining space.",
+  { move:{from:[4,3],to:[3,3]}, moveLabel:{ja:"5. d5", en:"5. d5"},
+    ja:"白はポーンをd5へ進めるよ。白はc6のナイトを攻撃して追い払い、黒の陣地に食い込むんだ。",
+    en:"White pushes the pawn to d5. White attacks and chases away the c6 knight, pushing into Black's camp.",
     fox:'normal' },
-  { move:{from:[2,5],to:[4,4]}, moveLabel:{ja:"6...Ne4", en:"6...Ne4"},
-    ja:"黒はナイトをe4へ。中央に食い込む一手だよ。",
-    en:"Black plants the knight on e4.",
+  { move:{from:[2,2],to:[1,4]}, moveLabel:{ja:"5...Ne7", en:"5...Ne7"},
+    ja:"黒はナイトをe7へ下げるよ。黒のナイトは攻撃をかわしながら、この先g6へ回ってキングサイドを守る準備をするんだ。",
+    en:"Black retreats the knight to e7. Black's knight escapes the attack and prepares to reroute to g6 to guard the kingside.",
     fox:'normal' },
-  { move:{from:[7,5],to:[5,3]}, moveLabel:{ja:"7. Bd3", en:"7. Bd3"},
-    ja:"白はビショップをd3へ展開するよ。これで本譜は一段落、続きはぜひ自分で指してみてね！",
-    en:"White develops the bishop to d3. That's the main line — try continuing the game yourself from here!",
+  { move:{from:[5,5],to:[3,4]}, moveLabel:{ja:"6. Nxe5", en:"6. Nxe5"},
+    ja:"白はナイトで、e5にいた黒のポーンを取るよ。白はこれで取られたポーンを取り返し、ポーンの数は互角に戻るんだ。",
+    en:"White's knight takes the black pawn that was on e5. White wins back the pawn, and material is level again.",
+    fox:'normal' },
+  { move:{from:[1,4],to:[2,6]}, moveLabel:{ja:"6...Ng6", en:"6...Ng6"},
+    ja:"黒はナイトをg6へ動かすよ。黒のナイトは白のe5のナイトを攻撃して、白に下がる手か交換する手を迫るんだ。",
+    en:"Black moves the knight to g6. Black's knight attacks White's e5 knight, asking White to retreat or trade.",
+    fox:'normal' },
+  { move:{from:[7,3],to:[4,3]}, moveLabel:{ja:"7. Qd4", en:"7. Qd4"},
+    ja:"白はクイーンをd4へ進めるよ。白のクイーンはe5のナイトを守りながら、守りのない黒のe4のナイトとa7のポーンも同時にねらっているんだ。その代わり、白はクイーンを早く中央に出すので、黒の駒に攻撃されやすくなるよ。この後は黒が7...Qf6などでe4のナイトを守りながら反撃し、激しい駆け引きが続くんだ。これで本譜は一段落、続きはぜひ自分で指してみてね！",
+    en:"White brings the queen to d4. White's queen defends the e5 knight while also attacking Black's undefended e4 knight and the a7 pawn at the same time. The trade-off is that bringing the queen to the center early makes it a target for Black's pieces. From here, Black often defends the e4 knight while counterattacking with moves like 7...Qf6, and a sharp battle follows. That's the main line — try continuing the game yourself from here!",
     fox:'happy' }
 ];
 
@@ -329,15 +341,50 @@ function adjustBottomPadding(){
   }
 }
 
+function shareOnX(message) {
+  const shareUrl = 'https://twitter.com/intent/tweet?text=' + encodeURIComponent(message) + '&url=' + encodeURIComponent(window.location.href);
+  window.open(shareUrl, '_blank', 'noopener,noreferrer,width=550,height=420');
+}
+
 function renderStep(){
   const step = LESSON_STEPS[currentStep];
   renderBoard(boardSnapshots[currentStep]);
   document.getElementById('moveLabel').textContent = (step.moveLabel && step.moveLabel[currentLang]) || '';
-  document.getElementById('commentaryText').textContent = step[currentLang];
+  const ctEl = document.getElementById('commentaryText');
+  const moreText = step[currentLang + 'More'];
+  ctEl.innerHTML = step[currentLang] + (moreText
+    ? '<details class="more-detail"><summary>' + (currentLang === 'ja' ? '💡 もっと詳しく知りたい方へ' : '💡 Want to know more?') + '</summary><div class="more-body">' + moreText + '</div></details>'
+    : '');
+  ctEl.scrollTop = 0;
+  const moreEl = ctEl.querySelector('details.more-detail');
+  if (moreEl) {
+    moreEl.addEventListener('toggle', function(){
+      if (moreEl.open) { ctEl.scrollTop = moreEl.offsetTop - ctEl.offsetTop; }
+      adjustBottomPadding();
+    });
+  }
   document.getElementById('foxAvatar').src = FOX_BY_MOOD[step.fox] || FOX_BY_MOOD.normal;
   document.getElementById('lessonProgress').textContent = currentStep + ' / ' + (LESSON_STEPS.length - 1);
   document.getElementById('btnPrev').disabled = currentStep === 0;
   document.getElementById('btnNext').disabled = currentStep === LESSON_STEPS.length - 1;
+  adjustBottomPadding();
+
+  const shareRow = document.getElementById('shareRow');
+  if (shareRow) {
+    if (currentStep === LESSON_STEPS.length - 1) {
+      const openingNameEl = document.querySelector('.opening-title.lang-element-' + currentLang);
+      const openingName = openingNameEl ? openingNameEl.textContent : '';
+      const msg = currentLang === 'ja'
+        ? '🦊 ' + openingName + 'をKitsuneChessで学んだよ!一手ずつ「なぜその手か」を教えてくれるよ'
+        : '🦊 Just learned the ' + openingName + ' on KitsuneChess! It explains why each move is played, step by step.';
+      const shareBtn = document.getElementById('shareXBtn');
+      shareBtn.textContent = currentLang === 'ja' ? '🦊 𝕏でシェアする' : '🦊 Share on 𝕏';
+      shareBtn.onclick = function() { shareOnX(msg); };
+      shareRow.style.display = 'block';
+    } else {
+      shareRow.style.display = 'none';
+    }
+  }
   adjustBottomPadding();
 }
 

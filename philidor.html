@@ -103,6 +103,11 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
   font-size: 1rem;
   color: var(--text-sub);
 }
+.commentary-text a, .opening-intro a { color:var(--brown); text-decoration:underline; font-weight:700; }
+.commentary-text a:hover, .opening-intro a:hover { color:var(--brown-dark); }
+.more-detail { margin-top:8px; border-top:1px dashed var(--brown-light); padding-top:6px; }
+.more-detail summary { cursor:pointer; font-weight:700; color:var(--brown); font-size:0.92rem; list-style-position:inside; }
+.more-detail .more-body { margin-top:6px; font-size:0.94rem; }
 </style>
   <script src="board-theme.js"></script>
 </head>
@@ -121,8 +126,8 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
   <h1 class="opening-title lang-element-en">Philidor Defense</h1>
 
   <div class="opening-intro">
-    <p class="lang-element-ja">💡 フィリドール・ディフェンスは2...d6と突いてe5ポーンを守る古典的な守りだよ！18世紀の天才棋士フランソワ・フィリドールが考案したオープニングで、チェス理論の礎となったんだ。e5を守ることで堅固な構造を作れるけど、d6のポーンがビショップの展開を制限するという短所もあるよ。現代では3...Nf6と反撃してから展開するハンドム変化が人気なんだ。フィリドールは「ポーンはチェスの魂」という有名な言葉を残した偉大な棋士で、このオープニングを通じてチェスの戦略的思考を学べるよ！</p>
-    <p class="lang-element-en">💡 The Philidor Defense plays 2...d6 to protect the e5 pawn — a classical and historic defense! Invented by the 18th century chess genius François-André Philidor, this opening laid the groundwork for modern chess theory. Protecting e5 creates a solid structure, but the d6 pawn can restrict the bishop's development. The modern Hanham Variation with 3...Nf6 counterattack is currently popular. Philidor famously said "pawns are the soul of chess," and studying this opening helps you understand the fundamental importance of pawn structure in chess strategy!</p>
+    <p class="lang-element-ja">💡 フィリドール・ディフェンスは、1.e4 e5 2.Nf3のあとに黒が2...d6と突いてe5のポーンを守る、古典的なオープニングだよ。名前は18世紀フランスの名手フランソワ＝アンドレ・ダニカン・フィリドールに由来していて、彼は「ポーンはチェスの魂」という言葉でも知られているんだ。黒は堅い形を作れる一方、駒の動きが窮屈になりやすく、現代のトップレベルではあまり主流ではないよ。それでも、作戦がはっきりしていて覚えやすい、実戦向きのオープニングなんだ。</p>
+    <p class="lang-element-en">💡 The Philidor Defense is a classical opening in which Black defends the e5 pawn with 2...d6 after 1.e4 e5 2.Nf3. It's named after the 18th-century French master François-André Danican Philidor, who is also known for saying that pawns are the soul of chess. Black gets a solid setup, but the pieces tend to be cramped, so it isn't a main choice at the top level today. Still, its plans are clear and easy to learn, making it practical for real games.</p>
   </div>
 
   <div class="board-wrap">
@@ -142,6 +147,9 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
     <button id="btnPrev" class="lesson-btn">← 前へ</button>
     <span class="lesson-progress" id="lessonProgress"></span>
     <button id="btnNext" class="lesson-btn">次へ →</button>
+  </div>
+  <div id="shareRow" style="display:none;text-align:center;margin-top:10px;">
+    <button id="shareXBtn" style="background:#000;color:#fff;border:none;border-radius:20px;padding:8px 16px;font-family:'Crimson Pro',serif;font-weight:700;font-size:0.85rem;cursor:pointer;">🦊 𝕏でシェアする</button>
   </div>
 </div>
 
@@ -190,60 +198,62 @@ const initialBoard = [
 // ============================================================
 const LESSON_STEPS = [
   { move:null, moveLabel:{ja:"開始局面", en:"Starting Position"},
-    ja:"フィリドール・ディフェンスのレッスンを始めるよ！18世紀のフィリドールが考案した、チェス理論の礎となった歴史ある守りだよ。ジーンと一緒に、一手ずつ「なぜその手を指すのか」を学んでいこう。",
-    en:"Let's start the Philidor Defense lesson! Invented in the 18th century by Philidor, it laid the foundation for modern chess theory. Jene will explain why each move is played, one step at a time.",
+    ja:"フィリドール・ディフェンスのレッスンを始めるよ！このページでは、黒がd6・Nf6・Nbd7でe5のポーンを守る、ハンハム・バリエーションの形を見ていくよ。黒がどうやって堅い守りの形を作るのかがポイントなんだ。一手ずつジーンと一緒に、なぜその手を指すのかを学んでいこう。",
+    en:"Let's start the Philidor Defense lesson! On this page we follow the Hanham Variation, where Black defends the e5 pawn with ...d6, ...Nf6 and ...Nbd7. The key is how Black builds a solid defensive setup. Jene will walk you through why each move is played, one step at a time.",
     fox:'welcome' },
   { move:{from:[6,4],to:[4,4]}, moveLabel:{ja:"1. e4", en:"1. e4"},
-    ja:"白はe4で中央を制圧するよ。",
-    en:"White plays 1.e4, claiming the center.",
+    ja:"白はポーンをe4へ進めるよ。白は中央のマスを押さえながら、ビショップとクイーンが動く道を開けるんだ。",
+    en:"White pushes the pawn to e4. White takes control of central squares and opens lines for the bishop and queen.",
     fox:'normal' },
   { move:{from:[1,4],to:[3,4]}, moveLabel:{ja:"1...e5", en:"1...e5"},
-    ja:"黒も同じくe5で対抗するよ。",
-    en:"Black mirrors with 1...e5.",
+    ja:"黒はポーンをe5へ進めるよ。黒も同じように中央を押さえて、白のポーンと向かい合う形を作るんだ。",
+    en:"Black pushes the pawn to e5. Black also claims the center, setting up a pawn face-off with White.",
     fox:'normal' },
   { move:{from:[7,6],to:[5,5]}, moveLabel:{ja:"2. Nf3", en:"2. Nf3"},
-    ja:"白はナイトをf3に展開して、e5ポーンに狙いをつけるよ。",
-    en:"White develops the knight to f3, eyeing the e5 pawn.",
+    ja:"白はナイトをf3へ進めるよ。白のナイトは展開しながら、黒のe5のポーンを攻撃しているんだ。",
+    en:"White develops the knight to f3. White's knight develops while attacking Black's e5 pawn.",
     fox:'normal' },
   { move:{from:[1,3],to:[2,3]}, moveLabel:{ja:"2...d6（フィリドール！）", en:"2...d6 (Philidor!)"},
-    ja:"ここが本題、フィリドール・ディフェンスの一手！黒はNc6ではなくd6でe5ポーンを守るよ。",
-    en:"Here's the Philidor Defense move! Instead of Nc6, Black defends the e5 pawn with 2...d6.",
+    ja:"ここがフィリドール・ディフェンスの一手！黒はポーンをd6へ進めて、e5のポーンを守るよ。一般的には2...Nc6でナイトを展開しながら守るけれど、黒はここでポーンで守って、堅い形を作る道を選ぶんだ。その代わり、黒のd6のポーンはf8のビショップの道をふさぐので、黒の駒の動きは少し窮屈になるよ。",
+    en:"Here's the Philidor Defense! Black pushes the pawn to d6, defending the e5 pawn. Black usually defends with 2...Nc6 while developing a knight, but here Black uses a pawn to build a solid structure. The trade-off is that the d6 pawn blocks the f8 bishop's path, leaving Black's pieces a bit cramped.",
     fox:'happy' },
   { move:{from:[6,3],to:[4,3]}, moveLabel:{ja:"3. d4", en:"3. d4"},
-    ja:"白はd4で中央にさらに踏み込むよ。",
-    en:"White strikes further in the center with 3.d4.",
+    ja:"白はポーンをd4へ進めるよ。白はこれでe5のポーンをd4のポーンとf3のナイトの2つで攻撃し、中央を広げるんだ。",
+    en:"White pushes the pawn to d4. White now attacks the e5 pawn twice, with the d4 pawn and the f3 knight, and expands in the center.",
     fox:'normal' },
   { move:{from:[0,6],to:[2,5]}, moveLabel:{ja:"3...Nf6", en:"3...Nf6"},
-    ja:"黒はナイトをf6へ。これが現代的な「ハンハム変化」の一手で、ただ受け身になるんじゃなく反撃を準備するよ。",
-    en:"Black plays the modern Hanham Variation move 3...Nf6, preparing counterplay instead of staying purely passive.",
-    fox:'quiz' },
+    ja:"黒はナイトをf6へ進めるよ。黒はe5を守る代わりに、守りのない白のe4のポーンを攻撃し返すんだ。",
+    en:"Black develops the knight to f6. Instead of defending e5 again, Black counterattacks White's undefended e4 pawn.",
+    jaMore:"黒はこの手の代わりに3...exd4と中央のポーンを交換することもできるよ。",
+    enMore:"Instead of this move, Black can also trade in the center with 3...exd4.",
+    fox:'normal' },
   { move:{from:[7,1],to:[5,2]}, moveLabel:{ja:"4. Nc3", en:"4. Nc3"},
-    ja:"白はナイトをc3へ展開するよ。",
-    en:"White develops the knight to c3.",
+    ja:"白はナイトをc3へ進めるよ。白はナイトを展開しながら、e4のポーンを守るんだ。",
+    en:"White develops the knight to c3. White develops while defending the e4 pawn.",
     fox:'normal' },
   { move:{from:[0,1],to:[1,3]}, moveLabel:{ja:"4...Nbd7", en:"4...Nbd7"},
-    ja:"黒はもう一つのナイトをd7へ。e5ポーンをさらに支えるよ。",
-    en:"Black develops the other knight to d7, further supporting e5.",
+    ja:"黒はナイトをd7へ進めるよ。黒のd7のナイトはe5のポーンを守っていて、黒はe5をd6のポーンとd7のナイトの2つで守る形になるんだ。黒のこの形はハンハム・バリエーションと呼ばれているよ。その代わり、黒のd7のナイトはc8のビショップの道をふさいでしまうんだ。",
+    en:"Black develops the knight to d7. Black's d7 knight defends the e5 pawn, so Black now guards e5 twice, with the d6 pawn and the d7 knight. This setup is called the Hanham Variation. The downside is that the d7 knight blocks the c8 bishop's path.",
     fox:'normal' },
   { move:{from:[7,5],to:[4,2]}, moveLabel:{ja:"5. Bc4", en:"5. Bc4"},
-    ja:"白はビショップをc4へ。f7という黒の弱点に狙いをつけるよ。",
-    en:"White develops the bishop to c4, eyeing the weak f7 square.",
+    ja:"白はビショップをc4へ進めるよ。白のビショップは、キングしか守っていない黒のf7のポーンをねらっているんだ。",
+    en:"White develops the bishop to c4. White's bishop aims at Black's f7 pawn, which only the king defends.",
     fox:'normal' },
   { move:{from:[0,5],to:[1,4]}, moveLabel:{ja:"5...Be7", en:"5...Be7"},
-    ja:"黒はビショップをe7へ。キャスリングの準備をするよ。",
-    en:"Black plays 5...Be7, preparing to castle.",
+    ja:"黒はビショップをe7へ進めるよ。黒はキングサイドの駒を出し終えて、キャスリングでf7の弱さをカバーする準備をするんだ。",
+    en:"Black develops the bishop to e7. Black finishes developing the kingside pieces and prepares to castle, covering the weakness on f7.",
     fox:'normal' },
   { move:{from:[7,4],to:[7,6],castle:{from:[7,7],to:[7,5]}}, moveLabel:{ja:"6. O-O", en:"6. O-O"},
-    ja:"白はキャスリングでキングを安全な場所へ。",
-    en:"White castles kingside, tucking the king away safely.",
+    ja:"白はキャスリングでキングを安全な場所へ動かすよ。白はキングの安全を確保して、ルークを中央へ動かす準備をするんだ。",
+    en:"White castles, bringing the king to safety. White secures the king and gets ready to bring the rook to the center.",
     fox:'normal' },
   { move:{from:[0,4],to:[0,6],castle:{from:[0,7],to:[0,5]}}, moveLabel:{ja:"6...O-O", en:"6...O-O"},
-    ja:"黒も同じくキャスリング。両者ともキングの安全を確保したよ。",
-    en:"Black castles too, and both kings are now safely tucked away.",
+    ja:"黒もキャスリングでキングを安全な場所へ動かすよ。黒のf8のルークがf7のポーンを守るようになり、f7の弱さが少しやわらぐんだ。",
+    en:"Black also castles, bringing the king to safety. Black's rook on f8 now guards the f7 pawn, easing the weakness there.",
     fox:'normal' },
   { move:{from:[7,5],to:[7,4]}, moveLabel:{ja:"7. Re1", en:"7. Re1"},
-    ja:"白はルークをe1へ。e4ポーンを後ろから支えるよ。これで本譜は一段落、続きはぜひ自分で指してみてね！",
-    en:"White plays 7.Re1, supporting the e4 pawn from behind. That's the main line — try continuing the game yourself from here!",
+    ja:"白はルークをe1へ動かすよ。白のルークはeファイルでe4のポーンを守り、中央での戦いに備えるんだ。白はスペースで少しリードしていて、黒は堅い守りから反撃のチャンスを待つ形だよ。この後は黒がc6やa5、白がa4などで、少しずつ形を整えていく流れがよく見られるんだ。これで本譜は一段落、続きはぜひ自分で指してみてね！",
+    en:"White moves the rook to e1. White's rook defends the e4 pawn along the e-file and prepares for the central fight. White has a small space advantage, while Black waits for counterplay from a solid position. A common continuation is for Black to play ...c6 or ...a5 and White a4, gradually improving their setups. That's the main line — try continuing the game yourself from here!",
     fox:'happy' }
 ];
 
@@ -329,15 +339,50 @@ function adjustBottomPadding(){
   }
 }
 
+function shareOnX(message) {
+  const shareUrl = 'https://twitter.com/intent/tweet?text=' + encodeURIComponent(message) + '&url=' + encodeURIComponent(window.location.href);
+  window.open(shareUrl, '_blank', 'noopener,noreferrer,width=550,height=420');
+}
+
 function renderStep(){
   const step = LESSON_STEPS[currentStep];
   renderBoard(boardSnapshots[currentStep]);
   document.getElementById('moveLabel').textContent = (step.moveLabel && step.moveLabel[currentLang]) || '';
-  document.getElementById('commentaryText').textContent = step[currentLang];
+  const ctEl = document.getElementById('commentaryText');
+  const moreText = step[currentLang + 'More'];
+  ctEl.innerHTML = step[currentLang] + (moreText
+    ? '<details class="more-detail"><summary>' + (currentLang === 'ja' ? '💡 もっと詳しく知りたい方へ' : '💡 Want to know more?') + '</summary><div class="more-body">' + moreText + '</div></details>'
+    : '');
+  ctEl.scrollTop = 0;
+  const moreEl = ctEl.querySelector('details.more-detail');
+  if (moreEl) {
+    moreEl.addEventListener('toggle', function(){
+      if (moreEl.open) { ctEl.scrollTop = moreEl.offsetTop - ctEl.offsetTop; }
+      adjustBottomPadding();
+    });
+  }
   document.getElementById('foxAvatar').src = FOX_BY_MOOD[step.fox] || FOX_BY_MOOD.normal;
   document.getElementById('lessonProgress').textContent = currentStep + ' / ' + (LESSON_STEPS.length - 1);
   document.getElementById('btnPrev').disabled = currentStep === 0;
   document.getElementById('btnNext').disabled = currentStep === LESSON_STEPS.length - 1;
+  adjustBottomPadding();
+
+  const shareRow = document.getElementById('shareRow');
+  if (shareRow) {
+    if (currentStep === LESSON_STEPS.length - 1) {
+      const openingNameEl = document.querySelector('.opening-title.lang-element-' + currentLang);
+      const openingName = openingNameEl ? openingNameEl.textContent : '';
+      const msg = currentLang === 'ja'
+        ? '🦊 ' + openingName + 'をKitsuneChessで学んだよ!一手ずつ「なぜその手か」を教えてくれるよ'
+        : '🦊 Just learned the ' + openingName + ' on KitsuneChess! It explains why each move is played, step by step.';
+      const shareBtn = document.getElementById('shareXBtn');
+      shareBtn.textContent = currentLang === 'ja' ? '🦊 𝕏でシェアする' : '🦊 Share on 𝕏';
+      shareBtn.onclick = function() { shareOnX(msg); };
+      shareRow.style.display = 'block';
+    } else {
+      shareRow.style.display = 'none';
+    }
+  }
   adjustBottomPadding();
 }
 
