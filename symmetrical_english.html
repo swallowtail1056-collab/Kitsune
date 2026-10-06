@@ -103,6 +103,11 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
   font-size: 1rem;
   color: var(--text-sub);
 }
+.commentary-text a, .opening-intro a { color:var(--brown); text-decoration:underline; font-weight:700; }
+.commentary-text a:hover, .opening-intro a:hover { color:var(--brown-dark); }
+.more-detail { margin-top:8px; border-top:1px dashed var(--brown-light); padding-top:6px; }
+.more-detail summary { cursor:pointer; font-weight:700; color:var(--brown); font-size:0.92rem; list-style-position:inside; }
+.more-detail .more-body { margin-top:6px; font-size:0.94rem; }
 </style>
   <script src="board-theme.js"></script>
 </head>
@@ -121,8 +126,8 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
   <h1 class="opening-title lang-element-en">Symmetrical English</h1>
 
   <div class="opening-intro">
-    <p class="lang-element-ja">💡 イングリッシュ・シンメトリカルはイングリッシュ・オープニングに対して黒が1...c5と対称的に応じるシステムだよ！白のc4に対して同じくc5と応じることで均衡した局面を作り出すんだ。両サイドが同じポーン構造を持つため一見退屈に見えるけど、実は非常に複雑な戦略的戦いが生まれるよ。どちらかが先に対称性を崩してイニシアチブを取るタイミングが勝負の鍵になるよ。現代のトップレベルで広く採用されている実戦的なシステムだよ！</p>
-    <p class="lang-element-en">💡 The Symmetrical English has Black mirroring White's 1.c4 with the response 1...c5! This creates a symmetrical position where both sides have the same pawn structure. While it looks simple on the surface, the resulting positions are actually very complex strategically. The key question is who breaks the symmetry first to seize the initiative. The Symmetrical English is a flexible and practical system widely used at the top level!</p>
+    <p class="lang-element-ja">💡 シンメトリカル・イングリッシュは、イングリッシュ・オープニングの1.c4に対して、黒が1...c5と同じ形で応じるオープニングだよ。両者が同じようにポーンや駒を並べるので、一見おだやかに見えるけれど、どちらが先に形を崩すかで、細かい駆け引きが生まれるんだ。黒はこのページのヘッジホッグのように、堅く構えて反撃を待つ作戦も選べるよ。トップレベルでもよく指されている、奥の深いオープニングなんだ。</p>
+    <p class="lang-element-en">💡 The Symmetrical English is an opening in which Black answers the English Opening's 1.c4 with the mirror move 1...c5. Since both sides set up pawns and pieces in similar ways, it can look quiet, but subtle maneuvering arises over who breaks the symmetry first. Black can also choose a solid, waiting setup like the Hedgehog on this page. It's a deep opening that's frequently played at the top level.</p>
   </div>
 
   <div class="board-wrap">
@@ -142,6 +147,9 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
     <button id="btnPrev" class="lesson-btn">← 前へ</button>
     <span class="lesson-progress" id="lessonProgress"></span>
     <button id="btnNext" class="lesson-btn">次へ →</button>
+  </div>
+  <div id="shareRow" style="display:none;text-align:center;margin-top:10px;">
+    <button id="shareXBtn" style="background:#000;color:#fff;border:none;border-radius:20px;padding:8px 16px;font-family:'Crimson Pro',serif;font-weight:700;font-size:0.85rem;cursor:pointer;">🦊 𝕏でシェアする</button>
   </div>
 </div>
 
@@ -190,60 +198,74 @@ const initialBoard = [
 // ============================================================
 const LESSON_STEPS = [
   { move:null, moveLabel:{ja:"開始局面", en:"Starting Position"},
-    ja:"イングリッシュ・シンメトリカルのレッスンを始めるよ！対称的な局面の裏に複雑な戦略が隠れている、トップレベルでも人気の変化だよ。ジーンと一緒に、一手ずつ「なぜその手を指すのか」を学んでいこう。",
-    en:"Let's start the Symmetrical English lesson! A symmetrical surface hides complex strategy underneath — popular even at the top level. Jene will explain why each move is played, one step at a time.",
+    ja:"シンメトリカル・イングリッシュのレッスンを始めるよ！このページでは、黒が1...c5で白と同じ形を作り、その後b6とBb7で自分の作戦を選んで、最後はヘッジホッグと呼ばれる形に入っていく流れを見ていくよ。同じ形から、どこで違いが生まれるのかがポイントなんだ。一手ずつジーンと一緒に、なぜその手を指すのかを学んでいこう。",
+    en:"Let's start the Symmetrical English lesson! On this page we follow how Black mirrors White with 1...c5, then picks its own plan with ...b6 and ...Bb7, finally reaching a setup called the Hedgehog. The key is where the two sides start to differ from a symmetrical position. Jene will walk you through why each move is played, one step at a time.",
     fox:'welcome' },
   { move:{from:[6,2],to:[4,2]}, moveLabel:{ja:"1. c4", en:"1. c4"},
-    ja:"白はc4で間接的に中央へ圧力をかけるよ。",
-    en:"White indirectly pressures the center with 1.c4.",
+    ja:"白はポーンをc4へ進めて、<a href='english.html'>イングリッシュ・オープニング</a>に入るよ。白はc4のポーンで斜めにd5のマスを押さえて、中央に働きかけるんだ。",
+    en:"White pushes the pawn to c4, entering the <a href='english.html?lang=en'>English Opening</a>. White's c4 pawn controls the d5 square diagonally, starting to influence the center.",
     fox:'normal' },
   { move:{from:[1,2],to:[3,2]}, moveLabel:{ja:"1...c5（シンメトリカル！）", en:"1...c5 (Symmetrical!)"},
-    ja:"ここが本題、シンメトリカルの一手！黒は同じくc5と応じて、対称的な局面を作るよ。",
-    en:"Here's the Symmetrical move! Black mirrors with 1...c5, creating a symmetrical position.",
+    ja:"ここがシンメトリカル・イングリッシュの一手！黒はポーンをc5へ進めて、白とまったく同じ形で応じるよ。黒はc5のポーンで、白がd4と突いて中央を広げるのをけん制するんだ。その代わり、同じ形のままでは白が1手先に動いている分、白が主導権を持ちやすいよ。",
+    en:"Here's the Symmetrical English! Black pushes the pawn to c5, mirroring White exactly. Black's c5 pawn discourages White from expanding in the center with d4. The trade-off is that while the position stays symmetrical, White's extra move tends to give White the initiative.",
     fox:'happy' },
   { move:{from:[7,6],to:[5,5]}, moveLabel:{ja:"2. Nf3", en:"2. Nf3"},
-    ja:"白はナイトをf3へ展開するよ。",
-    en:"White develops the knight to f3.",
+    ja:"白はナイトをf3へ進めるよ。白はナイトを展開しながら、d4とe5のマスに利かせるんだ。",
+    en:"White develops the knight to f3. White develops while covering the d4 and e5 squares.",
     fox:'normal' },
   { move:{from:[0,6],to:[2,5]}, moveLabel:{ja:"2...Nf6", en:"2...Nf6"},
-    ja:"黒も同じくナイトをf6へ展開するよ。",
-    en:"Black mirrors, developing the knight to f6.",
+    ja:"黒はナイトをf6へ進めるよ。黒はナイトを展開しながら、白がe4と突くのをけん制するんだ。",
+    en:"Black develops the knight to f6. Black develops while discouraging White from pushing e4.",
     fox:'normal' },
   { move:{from:[6,6],to:[5,6]}, moveLabel:{ja:"3. g3", en:"3. g3"},
-    ja:"白はg3でフィアンケットを準備するよ。",
-    en:"White prepares a fianchetto with 3.g3.",
+    ja:"白はポーンをg3へ進めるよ。白はg2のマスを空けて、ビショップを長い対角線に出す準備をするんだ。",
+    en:"White pushes the pawn to g3. White clears g2 so the bishop can go to the long diagonal.",
     fox:'normal' },
   { move:{from:[1,1],to:[2,1]}, moveLabel:{ja:"3...b6", en:"3...b6"},
-    ja:"黒はb6でクイーンサイドのフィアンケットを選ぶよ。ここで初めて対称性が崩れるんだ。",
-    en:"Black chooses a queenside fianchetto with 3...b6 — the first break in symmetry.",
-    fox:'wink' },
+    ja:"黒はポーンをb6へ進めるよ。黒はb7のマスを空けて、ビショップを反対側の長い対角線に出す準備をするんだ。黒はここで白と同じ形をやめて、自分の作戦を選び始めるよ。",
+    en:"Black pushes the pawn to b6. Black clears b7 so the bishop can go to the other long diagonal. Here Black stops copying White and starts choosing its own plan.",
+    jaMore:"黒はこの手の代わりに3...g6や3...Nc6と指して、白と同じ形をさらに続けることもできるよ。",
+    enMore:"Instead of this move, Black can keep mirroring White with 3...g6 or 3...Nc6.",
+    fox:'normal' },
   { move:{from:[7,5],to:[6,6]}, moveLabel:{ja:"4. Bg2", en:"4. Bg2"},
-    ja:"白はビショップをg2へ展開するよ。",
-    en:"White completes the fianchetto with 4.Bg2.",
+    ja:"白はビショップをg2へ進めるよ。白のビショップは長い対角線から、中央とクイーンサイドをにらんでいるんだ。",
+    en:"White develops the bishop to g2. From the long diagonal, White's bishop eyes the center and the queenside.",
     fox:'normal' },
   { move:{from:[0,2],to:[1,1]}, moveLabel:{ja:"4...Bb7", en:"4...Bb7"},
-    ja:"黒はビショップをb7へ展開するよ。",
-    en:"Black develops the bishop to b7.",
+    ja:"黒はビショップをb7へ進めるよ。黒のビショップは長い対角線から、白のf3のナイトとe4のマスをにらんでいて、白のg2のビショップと向かい合っているんだ。",
+    en:"Black develops the bishop to b7. From the long diagonal, Black's bishop eyes White's f3 knight and the e4 square, facing White's bishop on g2.",
     fox:'normal' },
   { move:{from:[7,4],to:[7,6],castle:{from:[7,7],to:[7,5]}}, moveLabel:{ja:"5. O-O", en:"5. O-O"},
-    ja:"白はキャスリングでキングを安全な場所へ。",
-    en:"White castles kingside, tucking the king away safely.",
+    ja:"白はキャスリングでキングを安全な場所へ動かすよ。白のキングは、g2のビショップとポーンに守られた堅い形に入るんだ。",
+    en:"White castles, bringing the king to safety. White's king settles into a solid shelter guarded by the g2 bishop and pawns.",
     fox:'normal' },
   { move:{from:[1,4],to:[2,4]}, moveLabel:{ja:"5...e6", en:"5...e6"},
-    ja:"黒はe6で柔軟に展開を進めるよ。",
-    en:"Black continues developing with 5...e6.",
+    ja:"黒はポーンをe6へ進めるよ。黒はd5のマスを押さえながら、f8のビショップの道を開けるんだ。",
+    en:"Black pushes the pawn to e6. Black controls the d5 square and opens the path for the f8 bishop.",
     fox:'normal' },
   { move:{from:[7,1],to:[5,2]}, moveLabel:{ja:"6. Nc3", en:"6. Nc3"},
-    ja:"白はナイトをc3へ展開するよ。",
-    en:"White develops the other knight to c3.",
+    ja:"白はナイトをc3へ進めるよ。白はナイトを展開しながら、d5とe4のマスに利かせるんだ。",
+    en:"White develops the knight to c3. White develops while covering the d5 and e4 squares.",
     fox:'normal' },
   { move:{from:[0,5],to:[1,4]}, moveLabel:{ja:"6...Be7", en:"6...Be7"},
-    ja:"黒はビショップをe7へ。キャスリングの準備をするよ。",
-    en:"Black plays 6...Be7, preparing to castle.",
+    ja:"黒はビショップをe7へ進めるよ。黒はキングサイドの駒を出し終えて、キャスリングの準備をするんだ。",
+    en:"Black develops the bishop to e7. Black finishes developing the kingside pieces and gets ready to castle.",
     fox:'normal' },
   { move:{from:[6,3],to:[4,3]}, moveLabel:{ja:"7. d4", en:"7. d4"},
-    ja:"白はd4で中央に踏み込んで、対称性を破るよ。これで本譜は一段落、続きはぜひ自分で指してみてね！",
-    en:"White breaks the symmetry with 7.d4. That's the main line — try continuing the game yourself from here!",
+    ja:"白はポーンをd4へ進めるよ。白は中央でポーンをぶつけて、黒のc5のポーンとの交換を迫るんだ。",
+    en:"White pushes the pawn to d4. White strikes in the center, offering to trade with Black's c5 pawn.",
+    fox:'normal' },
+  { move:{from:[3,2],to:[4,3]}, moveLabel:{ja:"7...cxd4", en:"7...cxd4"},
+    ja:"黒はc5のポーンで、d4に来た白のポーンを取るよ。黒はこれで中央の白のポーンを減らすんだ。",
+    en:"Black's c5 pawn captures the white pawn that came to d4. Black reduces White's central pawns.",
+    fox:'normal' },
+  { move:{from:[7,3],to:[4,3]}, moveLabel:{ja:"8. Qxd4", en:"8. Qxd4"},
+    ja:"白はクイーンで、d4にいた黒のポーンを取り返すよ。白のクイーンは中央の強いマスに入って、黒のf6のナイトやb6のポーンにも利いているんだ。",
+    en:"White's queen takes back the black pawn that was on d4. White's queen lands on a strong central square, reaching Black's f6 knight and b6 pawn.",
+    fox:'normal' },
+  { move:{from:[1,3],to:[2,3]}, moveLabel:{ja:"8...d6", en:"8...d6"},
+    ja:"黒はポーンをd6へ進めるよ。黒はb6・d6・e6のポーンを3段目に並べて、白の駒が入りこむマスを減らすんだ。黒のこの形は、身を守るハリネズミにたとえて「ヘッジホッグ」と呼ばれているよ。その代わり、黒は自分の陣地が狭くなるので、駒を動かせる場所が少なくなるんだ。白はスペースを生かして攻め、黒はじっと構えてb5やd5で反撃するチャンスを待つ、我慢比べの戦いになるよ。これで本譜は一段落、続きはぜひ自分で指してみてね！",
+    en:"Black pushes the pawn to d6. Black lines up pawns on b6, d6 and e6 along the sixth rank, reducing the squares where White's pieces can invade. This setup is called the Hedgehog, after the animal that curls up to protect itself. The trade-off is that Black's position is cramped, leaving little room for the pieces. White uses the extra space to press, while Black waits patiently for a chance to strike back with ...b5 or ...d5 — a real battle of patience. That's the main line — try continuing the game yourself from here!",
     fox:'happy' }
 ];
 
@@ -329,15 +351,50 @@ function adjustBottomPadding(){
   }
 }
 
+function shareOnX(message) {
+  const shareUrl = 'https://twitter.com/intent/tweet?text=' + encodeURIComponent(message) + '&url=' + encodeURIComponent(window.location.href);
+  window.open(shareUrl, '_blank', 'noopener,noreferrer,width=550,height=420');
+}
+
 function renderStep(){
   const step = LESSON_STEPS[currentStep];
   renderBoard(boardSnapshots[currentStep]);
   document.getElementById('moveLabel').textContent = (step.moveLabel && step.moveLabel[currentLang]) || '';
-  document.getElementById('commentaryText').textContent = step[currentLang];
+  const ctEl = document.getElementById('commentaryText');
+  const moreText = step[currentLang + 'More'];
+  ctEl.innerHTML = step[currentLang] + (moreText
+    ? '<details class="more-detail"><summary>' + (currentLang === 'ja' ? '💡 もっと詳しく知りたい方へ' : '💡 Want to know more?') + '</summary><div class="more-body">' + moreText + '</div></details>'
+    : '');
+  ctEl.scrollTop = 0;
+  const moreEl = ctEl.querySelector('details.more-detail');
+  if (moreEl) {
+    moreEl.addEventListener('toggle', function(){
+      if (moreEl.open) { ctEl.scrollTop = moreEl.offsetTop - ctEl.offsetTop; }
+      adjustBottomPadding();
+    });
+  }
   document.getElementById('foxAvatar').src = FOX_BY_MOOD[step.fox] || FOX_BY_MOOD.normal;
   document.getElementById('lessonProgress').textContent = currentStep + ' / ' + (LESSON_STEPS.length - 1);
   document.getElementById('btnPrev').disabled = currentStep === 0;
   document.getElementById('btnNext').disabled = currentStep === LESSON_STEPS.length - 1;
+  adjustBottomPadding();
+
+  const shareRow = document.getElementById('shareRow');
+  if (shareRow) {
+    if (currentStep === LESSON_STEPS.length - 1) {
+      const openingNameEl = document.querySelector('.opening-title.lang-element-' + currentLang);
+      const openingName = openingNameEl ? openingNameEl.textContent : '';
+      const msg = currentLang === 'ja'
+        ? '🦊 ' + openingName + 'をKitsuneChessで学んだよ!一手ずつ「なぜその手か」を教えてくれるよ'
+        : '🦊 Just learned the ' + openingName + ' on KitsuneChess! It explains why each move is played, step by step.';
+      const shareBtn = document.getElementById('shareXBtn');
+      shareBtn.textContent = currentLang === 'ja' ? '🦊 𝕏でシェアする' : '🦊 Share on 𝕏';
+      shareBtn.onclick = function() { shareOnX(msg); };
+      shareRow.style.display = 'block';
+    } else {
+      shareRow.style.display = 'none';
+    }
+  }
   adjustBottomPadding();
 }
 

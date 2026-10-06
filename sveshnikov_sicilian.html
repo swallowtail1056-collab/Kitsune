@@ -101,6 +101,11 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
   font-size: 1rem;
   color: var(--text-sub);
 }
+.commentary-text a, .opening-intro a { color:var(--brown); text-decoration:underline; font-weight:700; }
+.commentary-text a:hover, .opening-intro a:hover { color:var(--brown-dark); }
+.more-detail { margin-top:8px; border-top:1px dashed var(--brown-light); padding-top:6px; }
+.more-detail summary { cursor:pointer; font-weight:700; color:var(--brown); font-size:0.92rem; list-style-position:inside; }
+.more-detail .more-body { margin-top:6px; font-size:0.94rem; }
 </style>
   <script src="board-theme.js"></script>
 </head>
@@ -119,8 +124,8 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
   <h1 class="opening-title lang-element-en">Sveshnikov Sicilian</h1>
 
   <div class="opening-intro">
-    <p class="lang-element-ja">💡 黒が積極的にe5を突く鋭いシシリアン。弱点のd5マスを差し出す代わりに、活発な駒の動きとカウンターアタックの機会を得る。現代のトップ棋士にも愛用者が多い、実戦的で面白い変化。</p>
-    <p class="lang-element-en">💡 A sharp Sicilian where Black boldly plays e5. In exchange for a weak d5 square, Black gets active piece play and counterattacking chances. A practical, exciting line favored by many top modern players.</p>
+    <p class="lang-element-ja">💡 スヴェシニコフ・シシリアンは、オープン・シシリアンで黒が5...e5と突いて、白のナイトを追い払う積極的な変化だよ。名前は、この変化を深く研究して広めたロシアのエフゲニー・スヴェシニコフに由来しているんだ。黒はd5のマスやd6のポーンが弱くなるのを承知のうえで、駒の活発さとスペースを手に入れるよ。カールセンが世界チャンピオン戦で使ったことでも知られている、現代のトップレベルで人気の変化なんだ。</p>
+    <p class="lang-element-en">💡 The Sveshnikov Sicilian is an active Open Sicilian line in which Black plays 5...e5 to chase away White's knight. It's named after the Russian grandmaster Evgeny Sveshnikov, who studied and popularized it. Black accepts weaknesses on d5 and d6 in return for active pieces and space. It's well known for being used by Carlsen in World Championship play, and it's popular at the top level today.</p>
   </div>
 
   <div class="board-wrap">
@@ -140,6 +145,9 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
     <button id="btnPrev" class="lesson-btn">← 前へ</button>
     <span class="lesson-progress" id="lessonProgress"></span>
     <button id="btnNext" class="lesson-btn">次へ →</button>
+  </div>
+  <div id="shareRow" style="display:none;text-align:center;margin-top:10px;">
+    <button id="shareXBtn" style="background:#000;color:#fff;border:none;border-radius:20px;padding:8px 16px;font-family:'Crimson Pro',serif;font-weight:700;font-size:0.85rem;cursor:pointer;">🦊 𝕏でシェアする</button>
   </div>
 </div>
 
@@ -179,72 +187,74 @@ const initialBoard = [
 
 const LESSON_STEPS = [
   { move:null, moveLabel:{ja:"開始局面", en:"Starting Position"},
-    ja:'スヴェシニコフ・シシリアンのレッスンを始めるよ！一手ずつジーンと一緒に、なぜその手を指すのかを学んでいこう。',
-    en:'Let\'s start the Sveshnikov Sicilian lesson! Jene will walk you through why each move is played, one step at a time.',
+    ja:"スヴェシニコフ・シシリアンのレッスンを始めるよ！このページでは、黒が5...e5で白のナイトを追い払い、白がd5のマスをめぐって駒を動かす本筋を見ていくよ。黒が手に入れた中央のスペースと、そのせいで弱くなったd5のマスがどうぶつかるのかがポイントなんだ。一手ずつジーンと一緒に、なぜその手を指すのかを学んでいこう。",
+    en:"Let's start the Sveshnikov Sicilian lesson! On this page we follow the main line where Black chases away White's knight with 5...e5, and White maneuvers for control of the d5 square. The key is how Black's central space clashes with the weakened d5 square. Jene will walk you through why each move is played, one step at a time.",
     fox:'welcome' },
   { move:{from:[6,4],to:[4,4]}, moveLabel:{ja:"1. e4", en:"1. e4"},
-    ja:'白はポーンをe4へ進めるよ。',
-    en:'White develops the pawn to e4.',
+    ja:"白はポーンをe4へ進めるよ。白は中央のマスを押さえながら、ビショップとクイーンが動く道を開けるんだ。",
+    en:"White pushes the pawn to e4. White takes control of central squares and opens lines for the bishop and queen.",
     fox:'normal' },
   { move:{from:[1,2],to:[3,2]}, moveLabel:{ja:"1...c5", en:"1...c5"},
-    ja:'黒はポーンをc5へ進めるよ。',
-    en:'Black develops the pawn to c5.',
+    ja:"黒はポーンをc5へ進めるよ。黒はこれで<a href='sicilian.html'>シシリアン・ディフェンス</a>の形に入り、c5のポーンで斜めにd4のマスを押さえるんだ。",
+    en:"Black pushes the pawn to c5. Black enters the <a href='sicilian.html?lang=en'>Sicilian Defense</a> and uses the c5 pawn to control the d4 square diagonally.",
     fox:'normal' },
   { move:{from:[7,6],to:[5,5]}, moveLabel:{ja:"2. Nf3", en:"2. Nf3"},
-    ja:'白はナイトをf3へ進めるよ。',
-    en:'White develops the knight to f3.',
+    ja:"白はナイトをf3へ進めるよ。白は駒を展開しながら、次にd4と突く準備をしているんだ。",
+    en:"White develops the knight to f3. White develops a piece while preparing to push d4 next.",
     fox:'normal' },
   { move:{from:[0,1],to:[2,2]}, moveLabel:{ja:"2...Nc6", en:"2...Nc6"},
-    ja:'黒はナイトをc6へ進めるよ。',
-    en:'Black develops the knight to c6.',
+    ja:"黒はナイトをc6へ進めるよ。黒はナイトを展開しながら、d4とe5のマスに利かせるんだ。",
+    en:"Black develops the knight to c6. Black develops while covering the d4 and e5 squares.",
     fox:'normal' },
   { move:{from:[6,3],to:[4,3]}, moveLabel:{ja:"3. d4", en:"3. d4"},
-    ja:'白はポーンをd4へ進めるよ。',
-    en:'White develops the pawn to d4.',
+    ja:"白はポーンをd4へ進めて、<a href='open_sicilian.html'>オープン・シシリアン</a>に入るよ。白は中央でポーンを交換して、駒が動きやすい開いた局面をねらうんだ。",
+    en:"White pushes the pawn to d4, entering the <a href='open_sicilian.html?lang=en'>Open Sicilian</a>. White aims to trade pawns in the center and open the position for the pieces.",
     fox:'normal' },
   { move:{from:[3,2],to:[4,3]}, moveLabel:{ja:"3...cxd4", en:"3...cxd4"},
-    ja:'黒はポーンでd4の駒を取るよ。',
-    en:'Black captures on d4 with the pawn.',
+    ja:"黒はc5のポーンで、d4に来た白のポーンを取るよ。黒はこれで中央の白のポーンを減らし、cファイルを半分開くんだ。",
+    en:"Black's c5 pawn captures the white pawn that came to d4. Black removes one of White's central pawns and half-opens the c-file.",
     fox:'normal' },
   { move:{from:[5,5],to:[4,3]}, moveLabel:{ja:"4. Nxd4", en:"4. Nxd4"},
-    ja:'白はナイトでd4の駒を取るよ。',
-    en:'White captures on d4 with the knight.',
+    ja:"白はナイトで、d4にいた黒のポーンを取り返すよ。白のナイトは中央の強いマスに入るんだ。",
+    en:"White's knight takes back the black pawn that was on d4. White's knight lands on a strong central square.",
     fox:'normal' },
   { move:{from:[0,6],to:[2,5]}, moveLabel:{ja:"4...Nf6", en:"4...Nf6"},
-    ja:'黒はナイトをf6へ進めるよ。',
-    en:'Black develops the knight to f6.',
+    ja:"黒はナイトをf6へ進めるよ。黒はナイトを展開しながら、白のe4のポーンを攻撃するんだ。",
+    en:"Black develops the knight to f6. Black develops while attacking White's e4 pawn.",
     fox:'normal' },
   { move:{from:[7,1],to:[5,2]}, moveLabel:{ja:"5. Nc3", en:"5. Nc3"},
-    ja:'白はナイトをc3へ進めるよ。',
-    en:'White develops the knight to c3.',
+    ja:"白はナイトをc3へ進めるよ。白はナイトを展開しながら、e4のポーンを守るんだ。",
+    en:"White develops the knight to c3. White develops while defending the e4 pawn.",
     fox:'normal' },
-  { move:{from:[1,4],to:[3,4]}, moveLabel:{ja:"5...e5", en:"5...e5"},
-    ja:'💡 黒はポーンをe5へ進めるよ。 黒が積極的にe5を突く鋭いシシリアン。弱点のd5マスを差し出す代わりに、活発な駒の動きとカウンターアタックの機会を得る。現代のトップ棋士にも愛用者が多い、実戦的で面白い変化。',
-    en:'💡 Black develops the pawn to e5. A sharp Sicilian where Black boldly plays e5. In exchange for a weak d5 square, Black gets active piece play and counterattacking chances. A practical, exciting line favored by many top modern players.',
+  { move:{from:[1,4],to:[3,4]}, moveLabel:{ja:"5...e5（スヴェシニコフ！）", en:"5...e5 (Sveshnikov!)"},
+    ja:"ここがスヴェシニコフの一手！黒はポーンをe5へ進めて、d4の白のナイトを攻撃して追い払うよ。黒はこの手の代わりに5...e6や5...d6と落ち着いて構えることもできるけれど、黒はここで時間をかけずに中央のスペースを取る、積極的な道を選ぶんだ。その代わり、黒のd5のマスはポーンで守れなくなり、d6のポーンも後ろに取り残された弱点になりやすいよ。",
+    en:"Here's the Sveshnikov! Black pushes the pawn to e5, attacking and chasing away White's d4 knight. Instead of this move, Black can also set up calmly with 5...e6 or 5...d6, but here Black takes central space without wasting time. The trade-off is that Black can no longer guard d5 with a pawn, and the d6 pawn tends to become a backward weakness.",
     fox:'happy' },
   { move:{from:[4,3],to:[3,1]}, moveLabel:{ja:"6. Ndb5", en:"6. Ndb5"},
-    ja:'白はナイトをb5へ進めるよ。',
-    en:'White develops the knight to b5.',
+    ja:"白はナイトをb5へ動かすよ。白のナイトは攻撃をかわしながら、黒の陣地のd6のマスと、c7のマスをねらっているんだ。",
+    en:"White moves the knight to b5. White's knight escapes the attack and eyes the d6 and c7 squares in Black's camp.",
     fox:'normal' },
   { move:{from:[1,3],to:[2,3]}, moveLabel:{ja:"6...d6", en:"6...d6"},
-    ja:'黒はポーンをd6へ進めるよ。',
-    en:'Black develops the pawn to d6.',
+    ja:"黒はポーンをd6へ進めるよ。黒はd6のマスを自分のポーンで埋めて、白のナイトがd6に入りこむのを防ぐんだ。",
+    en:"Black pushes the pawn to d6. Black fills the d6 square with a pawn, stopping White's knight from jumping in.",
     fox:'normal' },
   { move:{from:[7,2],to:[3,6]}, moveLabel:{ja:"7. Bg5", en:"7. Bg5"},
-    ja:'白はビショップをg5へ進めるよ。',
-    en:'White develops the bishop to g5.',
+    ja:"白はビショップをg5へ進めるよ。白のビショップはf6のナイトをねらっていて、ナイトが動くとd8の黒のクイーンが取られる形（クイーンへのピン）になっているんだ。f6のナイトはd5のマスを守っている大事な駒なので、白はこのナイトの働きを弱めて、d5を自分のものにしようとしているよ。",
+    en:"White develops the bishop to g5. White's bishop targets the f6 knight, and if the knight moved, Black's queen on d8 would be captured — a pin against the queen. The f6 knight is an important defender of the d5 square, so White is trying to weaken it and take control of d5.",
     fox:'normal' },
   { move:{from:[1,0],to:[2,0]}, moveLabel:{ja:"7...a6", en:"7...a6"},
-    ja:'黒はポーンをa6へ進めるよ。',
-    en:'Black develops the pawn to a6.',
+    ja:"黒はポーンをa6へ進めるよ。黒はb5の白のナイトを攻撃して、白に下がる手を強いるんだ。",
+    en:"Black pushes the pawn to a6. Black attacks White's knight on b5, forcing it to retreat.",
     fox:'normal' },
   { move:{from:[3,1],to:[5,0]}, moveLabel:{ja:"8. Na3", en:"8. Na3"},
-    ja:'白はナイトをa3へ進めるよ。',
-    en:'White develops the knight to a3.',
+    ja:"白はナイトをa3へ下げるよ。白のナイトは盤の端に下がるけれど、この先c4やc2を通ってd5を目指す準備をしているんだ。その代わり、白のナイトはしばらく働きが限られるよ。",
+    en:"White retreats the knight to a3. White's knight drops back to the edge, but it plans to head for d5 via c4 or c2. The trade-off is that its activity is limited for a while.",
     fox:'normal' },
   { move:{from:[1,1],to:[3,1]}, moveLabel:{ja:"8...b5", en:"8...b5"},
-    ja:'黒はポーンをb5へ進めるよ。',
-    en:'Black develops the pawn to b5.',
+    ja:"黒はポーンをb5へ進めるよ。黒はc4のマスを押さえて、a3の白のナイトがc4から出てくるのを防ぐんだ。黒はクイーンサイドでスペースを広げて、白のナイトを盤の端に閉じ込めるよ。その代わり、黒のクイーンサイドのポーンが前に出ることで、白にa4と突かれて揺さぶられやすくもなるんだ。これで本譜は一段落、続きはぜひ自分で指してみてね！",
+    en:"Black pushes the pawn to b5. Black controls c4, stopping White's a3 knight from coming out that way. Black gains space on the queenside and keeps White's knight stuck on the edge. The trade-off is that the advanced queenside pawns can be targeted by White with a4. That's the main line — try continuing the game yourself from here!",
+    jaMore:"この後は9.Bxf6 gxf6 10.Nd5と、白がd5のマスにナイトを置く流れがよく知られているよ。黒はキングサイドのポーンが崩れる代わりに、2つのビショップを手に入れて戦うんだ。",
+    enMore:"A well-known continuation is 9.Bxf6 gxf6 10.Nd5, with White planting a knight on d5. Black's kingside pawns get broken up, but in return Black gets the bishop pair.",
     fox:'happy' }
 ];
 
@@ -330,15 +340,50 @@ function adjustBottomPadding(){
   }
 }
 
+function shareOnX(message) {
+  const shareUrl = 'https://twitter.com/intent/tweet?text=' + encodeURIComponent(message) + '&url=' + encodeURIComponent(window.location.href);
+  window.open(shareUrl, '_blank', 'noopener,noreferrer,width=550,height=420');
+}
+
 function renderStep(){
   const step = LESSON_STEPS[currentStep];
   renderBoard(boardSnapshots[currentStep]);
   document.getElementById('moveLabel').textContent = (step.moveLabel && step.moveLabel[currentLang]) || '';
-  document.getElementById('commentaryText').textContent = step[currentLang];
+  const ctEl = document.getElementById('commentaryText');
+  const moreText = step[currentLang + 'More'];
+  ctEl.innerHTML = step[currentLang] + (moreText
+    ? '<details class="more-detail"><summary>' + (currentLang === 'ja' ? '💡 もっと詳しく知りたい方へ' : '💡 Want to know more?') + '</summary><div class="more-body">' + moreText + '</div></details>'
+    : '');
+  ctEl.scrollTop = 0;
+  const moreEl = ctEl.querySelector('details.more-detail');
+  if (moreEl) {
+    moreEl.addEventListener('toggle', function(){
+      if (moreEl.open) { ctEl.scrollTop = moreEl.offsetTop - ctEl.offsetTop; }
+      adjustBottomPadding();
+    });
+  }
   document.getElementById('foxAvatar').src = FOX_BY_MOOD[step.fox] || FOX_BY_MOOD.normal;
   document.getElementById('lessonProgress').textContent = currentStep + ' / ' + (LESSON_STEPS.length - 1);
   document.getElementById('btnPrev').disabled = currentStep === 0;
   document.getElementById('btnNext').disabled = currentStep === LESSON_STEPS.length - 1;
+  adjustBottomPadding();
+
+  const shareRow = document.getElementById('shareRow');
+  if (shareRow) {
+    if (currentStep === LESSON_STEPS.length - 1) {
+      const openingNameEl = document.querySelector('.opening-title.lang-element-' + currentLang);
+      const openingName = openingNameEl ? openingNameEl.textContent : '';
+      const msg = currentLang === 'ja'
+        ? '🦊 ' + openingName + 'をKitsuneChessで学んだよ!一手ずつ「なぜその手か」を教えてくれるよ'
+        : '🦊 Just learned the ' + openingName + ' on KitsuneChess! It explains why each move is played, step by step.';
+      const shareBtn = document.getElementById('shareXBtn');
+      shareBtn.textContent = currentLang === 'ja' ? '🦊 𝕏でシェアする' : '🦊 Share on 𝕏';
+      shareBtn.onclick = function() { shareOnX(msg); };
+      shareRow.style.display = 'block';
+    } else {
+      shareRow.style.display = 'none';
+    }
+  }
   adjustBottomPadding();
 }
 

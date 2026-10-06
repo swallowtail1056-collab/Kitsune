@@ -103,6 +103,11 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
   font-size: 1rem;
   color: var(--text-sub);
 }
+.commentary-text a, .opening-intro a { color:var(--brown); text-decoration:underline; font-weight:700; }
+.commentary-text a:hover, .opening-intro a:hover { color:var(--brown-dark); }
+.more-detail { margin-top:8px; border-top:1px dashed var(--brown-light); padding-top:6px; }
+.more-detail summary { cursor:pointer; font-weight:700; color:var(--brown); font-size:0.92rem; list-style-position:inside; }
+.more-detail .more-body { margin-top:6px; font-size:0.94rem; }
 </style>
   <script src="board-theme.js"></script>
 </head>
@@ -121,8 +126,8 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
   <h1 class="opening-title lang-element-en">Stonewall Dutch</h1>
 
   <div class="opening-intro">
-    <p class="lang-element-ja">💡 ストーンウォール・ダッチはダッチ・ディフェンスからd5-e6-c6-f5という「石の壁」のような陣形を組む変化だよ！この4つのポーンが作る堅固な壁は非常に崩しにくく、黒は安全な基盤の上からキングサイドへの攻撃を目指すんだ。ナイトをe4の強力なアウトポストに配置してキングサイドへの攻撃を組み立てるのが典型的なプランだよ。ただしc5のマスが白のナイトのアウトポストになりやすいのが注意点なんだ。固い構造と明確な攻撃プランが特徴的で、個性的な戦い方を好む棋士に長年愛されてきたシステムだよ！</p>
-    <p class="lang-element-en">💡 The Stonewall Dutch builds a "stone wall" with pawns on d5, e6, f5, and c6! These four pawns create a very solid and hard-to-break formation. Black then attacks on the kingside with the knight placed on the powerful e4 outpost. However, Black must be careful about the c5 square, which can become a strong outpost for White's pieces. The combination of a firm structure and clear attacking plans makes the Stonewall Dutch a beloved system for players who enjoy original, strategic chess!</p>
+    <p class="lang-element-ja">💡 ストーンウォール・ダッチは、ダッチ・ディフェンスの中で、黒がc6・d5・e6・f5の4つのポーンを並べて「石の壁」のような形を作る変化だよ。中央がとても堅くなるので、黒はe4のマスにナイトを置いて、キングサイドから攻める作戦を取りやすいんだ。一方で、e5のマスが弱くなったり、c8のビショップがポーンの内側に閉じ込められやすかったりする弱点もあるよ。カールセンなどのトップ選手も使ったことのある、作戦がはっきりしたオープニングなんだ。</p>
+    <p class="lang-element-en">💡 The Stonewall Dutch is a Dutch Defense setup in which Black lines up four pawns on c6, d5, e6 and f5, forming a “stone wall.” The center becomes very solid, making it easy for Black to plant a knight on e4 and attack on the kingside. On the other hand, it has weaknesses: the e5 square becomes weak, and the c8 bishop tends to get shut in behind the pawns. Top players such as Carlsen have used it, and its plans are clear and easy to follow.</p>
   </div>
 
   <div class="board-wrap">
@@ -142,6 +147,9 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
     <button id="btnPrev" class="lesson-btn">← 前へ</button>
     <span class="lesson-progress" id="lessonProgress"></span>
     <button id="btnNext" class="lesson-btn">次へ →</button>
+  </div>
+  <div id="shareRow" style="display:none;text-align:center;margin-top:10px;">
+    <button id="shareXBtn" style="background:#000;color:#fff;border:none;border-radius:20px;padding:8px 16px;font-family:'Crimson Pro',serif;font-weight:700;font-size:0.85rem;cursor:pointer;">🦊 𝕏でシェアする</button>
   </div>
 </div>
 
@@ -190,60 +198,70 @@ const initialBoard = [
 // ============================================================
 const LESSON_STEPS = [
   { move:null, moveLabel:{ja:"開始局面", en:"Starting Position"},
-    ja:"ストーンウォール・ダッチのレッスンを始めるよ！4つのポーンで「石の壁」を作り、その上からキングサイドを攻める個性的な変化だよ。ジーンと一緒に、一手ずつ「なぜその手を指すのか」を学んでいこう。",
-    en:"Let's start the Stonewall Dutch lesson! Black builds a four-pawn \"stone wall\" and attacks the kingside from behind it. Jene will explain why each move is played, one step at a time.",
+    ja:"ストーンウォール・ダッチのレッスンを始めるよ！このページでは、黒がc6・d5・e6・f5の4つのポーンで「石の壁」を作り、白がb3とBa3で黒の大事なビショップを交換しにいく本筋を見ていくよ。黒の堅い壁と、そのせいで生まれる弱点がポイントなんだ。一手ずつジーンと一緒に、なぜその手を指すのかを学んでいこう。",
+    en:"Let's start the Stonewall Dutch lesson! On this page we follow the main line where Black builds a “stone wall” with pawns on c6, d5, e6 and f5, and White aims to trade off Black's key bishop with b3 and Ba3. The key is the strength of Black's wall and the weaknesses it creates. Jene will walk you through why each move is played, one step at a time.",
     fox:'welcome' },
   { move:{from:[6,3],to:[4,3]}, moveLabel:{ja:"1. d4", en:"1. d4"},
-    ja:"白はd4で中央を制圧するよ。",
-    en:"White plays 1.d4, claiming the center.",
+    ja:"白はポーンをd4へ進めるよ。白は中央のマスを押さえながら、c1のビショップの道を開けるんだ。",
+    en:"White pushes the pawn to d4. White takes control of central squares and opens the path for the c1 bishop.",
     fox:'normal' },
   { move:{from:[1,5],to:[3,5]}, moveLabel:{ja:"1...f5", en:"1...f5"},
-    ja:"黒はf5でダッチ・ディフェンスを選ぶよ。",
-    en:"Black plays 1...f5, the Dutch Defense.",
+    ja:"黒はポーンをf5へ進めて、<a href='dutch.html'>ダッチ・ディフェンス</a>に入るよ。黒はe4のマスを押さえて、白がe4と突くのを防ぐんだ。その代わり、黒はキングのそばにあるfのポーンを動かすので、キングの周りが少し弱くなるよ。",
+    en:"Black pushes the pawn to f5, entering the <a href='dutch.html?lang=en'>Dutch Defense</a>. Black controls e4 and stops White from pushing e4. The trade-off is that moving the f-pawn next to the king weakens the king's surroundings a little.",
     fox:'normal' },
   { move:{from:[6,2],to:[4,2]}, moveLabel:{ja:"2. c4", en:"2. c4"},
-    ja:"白はc4でさらに中央を広げるよ。",
-    en:"White expands the center with 2.c4.",
+    ja:"白はポーンをc4へ進めるよ。白はこれでd5のマスにも利かせて、中央を広げるんだ。",
+    en:"White pushes the pawn to c4. White adds control of d5 and expands in the center.",
     fox:'normal' },
   { move:{from:[1,4],to:[2,4]}, moveLabel:{ja:"2...e6", en:"2...e6"},
-    ja:"黒はe6で「石の壁」陣形の準備を始めるよ。",
-    en:"Black begins the \"stone wall\" formation with 2...e6.",
+    ja:"黒はポーンをe6へ進めるよ。黒はd5のマスを押さえながら、f8のビショップの道を開けるんだ。",
+    en:"Black pushes the pawn to e6. Black controls d5 and opens the path for the f8 bishop.",
     fox:'normal' },
   { move:{from:[6,6],to:[5,6]}, moveLabel:{ja:"3. g3", en:"3. g3"},
-    ja:"白はg3でフィアンケットを準備するよ。",
-    en:"White prepares a fianchetto with 3.g3.",
+    ja:"白はポーンをg3へ進めるよ。白はg2のマスを空けて、ビショップを長い対角線に出し、黒が押さえているe4のマスに圧力をかける準備をするんだ。",
+    en:"White pushes the pawn to g3. White clears g2 for the bishop, preparing to pressure the e4 square that Black controls.",
     fox:'normal' },
   { move:{from:[0,6],to:[2,5]}, moveLabel:{ja:"3...Nf6", en:"3...Nf6"},
-    ja:"黒はナイトをf6へ展開するよ。",
-    en:"Black develops the knight to f6.",
+    ja:"黒はナイトをf6へ進めるよ。黒はナイトを展開しながら、e4のマスへの利きを増やすんだ。",
+    en:"Black develops the knight to f6. Black develops while adding control of the e4 square.",
     fox:'normal' },
   { move:{from:[7,5],to:[6,6]}, moveLabel:{ja:"4. Bg2", en:"4. Bg2"},
-    ja:"白はビショップをg2へ展開するよ。",
-    en:"White completes the fianchetto with 4.Bg2.",
+    ja:"白はビショップをg2へ進めるよ。白のビショップは長い対角線から、中央をにらんでいるんだ。",
+    en:"White develops the bishop to g2. From the long diagonal, White's bishop eyes the center.",
     fox:'normal' },
   { move:{from:[1,3],to:[3,3]}, moveLabel:{ja:"4...d5（ストーンウォール！）", en:"4...d5 (Stonewall!)"},
-    ja:"ここが本題、ストーンウォールの一手！黒はd5を追加して、d5-e6-f5の壁を完成させるよ。",
-    en:"Here's the Stonewall move! Black adds d5, completing the d5-e6-f5 wall.",
+    ja:"ここがストーンウォールの一手！黒はポーンをd5へ進めて、f5・e6・d5のポーンで中央をがっちり押さえるよ。黒のe4のマスは、d5とf5の2つのポーンとf6のナイトに守られて、黒の駒にとってとても強い拠点になるんだ。その代わり、黒のe5のマスはどのポーンにも守られなくなり、白のナイトに入りこまれやすい弱点になるよ。",
+    en:"Here's the Stonewall! Black pushes the pawn to d5, locking down the center with pawns on f5, e6 and d5. The e4 square is covered by two pawns, on d5 and f5, plus the f6 knight, making it a very strong outpost for Black's pieces. The trade-off is that e5 is no longer covered by any black pawn, so it becomes a weak square that White's knights can use.",
+    jaMore:"黒はこの手の代わりに4...Be7でクラシカル・ダッチ、4...g6でレニングラード・ダッチに進むこともできるよ。",
+    enMore:"Instead of this move, Black can also play 4...Be7, the Classical Dutch, or 4...g6, the Leningrad Dutch.",
     fox:'happy' },
   { move:{from:[7,6],to:[5,5]}, moveLabel:{ja:"5. Nf3", en:"5. Nf3"},
-    ja:"白はナイトをf3へ展開するよ。",
-    en:"White develops the knight to f3.",
+    ja:"白はナイトをf3へ進めるよ。白はナイトを展開しながら、黒の弱点であるe5のマスに利かせるんだ。",
+    en:"White develops the knight to f3. White develops while covering e5, Black's weak square.",
     fox:'normal' },
   { move:{from:[1,2],to:[2,2]}, moveLabel:{ja:"5...c6", en:"5...c6"},
-    ja:"黒はc6で「石の壁」を完成させるよ。",
-    en:"Black completes the stone wall with 5...c6.",
-    fox:'wink' },
+    ja:"黒はポーンをc6へ進めるよ。黒はd5のポーンを支えて、c6・d5・e6・f5の4つのポーンが並ぶ「石の壁（ストーンウォール）」を完成させるんだ。",
+    en:"Black pushes the pawn to c6. Black supports the d5 pawn and completes the “stone wall” of four pawns on c6, d5, e6 and f5.",
+    fox:'normal' },
   { move:{from:[7,4],to:[7,6],castle:{from:[7,7],to:[7,5]}}, moveLabel:{ja:"6. O-O", en:"6. O-O"},
-    ja:"白はキャスリングでキングを安全な場所へ。",
-    en:"White castles kingside, tucking the king away safely.",
+    ja:"白はキャスリングでキングを安全な場所へ動かすよ。白のキングは、g2のビショップとポーンに守られた堅い形に入るんだ。",
+    en:"White castles, bringing the king to safety. White's king settles into a solid shelter guarded by the g2 bishop and pawns.",
     fox:'normal' },
   { move:{from:[0,5],to:[2,3]}, moveLabel:{ja:"6...Bd6", en:"6...Bd6"},
-    ja:"黒はビショップをd6へ展開して、キングサイドへの攻撃プランを準備するよ。",
-    en:"Black develops the bishop to d6, preparing the kingside attacking plan.",
+    ja:"黒はビショップをd6へ進めるよ。黒のビショップは、ストーンウォールの形で最も働く、ポーンと違う色のマスを動くビショップなんだ。黒のビショップはd6からキングサイドをにらみ、e5のマスも見張っているよ。",
+    en:"Black develops the bishop to d6. This is the bishop that moves on the opposite color from Black's pawn wall, which makes it Black's best minor piece in the Stonewall. From d6, it eyes the kingside and also watches the e5 square.",
     fox:'normal' },
   { move:{from:[6,1],to:[5,1]}, moveLabel:{ja:"7. b3", en:"7. b3"},
-    ja:"白はb3でクイーンサイドのフィアンケットを準備するよ。これで本譜は一段落、続きはぜひ自分で指してみてね！",
-    en:"White prepares a queenside fianchetto with 7.b3. That's the main line — try continuing the game yourself from here!",
+    ja:"白はポーンをb3へ進めるよ。白は次にBa3と出て、黒のd6のビショップと交換する準備をするんだ。黒にとって大事なビショップを交換してしまえば、黒の弱いマスがさらに目立つようになるよ。",
+    en:"White pushes the pawn to b3. White prepares to bring the bishop to a3 next and trade off Black's d6 bishop. Once that important bishop is gone, Black's weak squares become even more obvious.",
+    fox:'normal' },
+  { move:{from:[0,3],to:[1,4]}, moveLabel:{ja:"7...Qe7", en:"7...Qe7"},
+    ja:"黒はクイーンをe7へ進めるよ。黒のクイーンはd6のビショップを守り、白がビショップを交換してきたら、クイーンで取り返せるように準備するんだ。",
+    en:"Black brings the queen to e7. Black's queen defends the d6 bishop, ready to recapture with the queen if White trades bishops.",
+    fox:'normal' },
+  { move:{from:[7,2],to:[5,0]}, moveLabel:{ja:"8. Ba3", en:"8. Ba3"},
+    ja:"白はビショップをa3へ進めるよ。白のビショップはd6の黒のビショップと向かい合っていて、交換を申し込んでいるんだ。白は黒の良いビショップを消して、e5のマスなどの弱点をつく作戦を目指すよ。黒はキングサイドでの攻めをねらいながら、この交換にどう応じるかが問われる局面なんだ。これで本譜は一段落、続きはぜひ自分で指してみてね！",
+    en:"White develops the bishop to a3. White's bishop faces Black's d6 bishop, offering a trade. White's plan is to remove Black's good bishop and then target weak squares such as e5. Black, meanwhile, aims for a kingside attack and has to decide how to handle this trade. That's the main line — try continuing the game yourself from here!",
     fox:'happy' }
 ];
 
@@ -329,15 +347,50 @@ function adjustBottomPadding(){
   }
 }
 
+function shareOnX(message) {
+  const shareUrl = 'https://twitter.com/intent/tweet?text=' + encodeURIComponent(message) + '&url=' + encodeURIComponent(window.location.href);
+  window.open(shareUrl, '_blank', 'noopener,noreferrer,width=550,height=420');
+}
+
 function renderStep(){
   const step = LESSON_STEPS[currentStep];
   renderBoard(boardSnapshots[currentStep]);
   document.getElementById('moveLabel').textContent = (step.moveLabel && step.moveLabel[currentLang]) || '';
-  document.getElementById('commentaryText').textContent = step[currentLang];
+  const ctEl = document.getElementById('commentaryText');
+  const moreText = step[currentLang + 'More'];
+  ctEl.innerHTML = step[currentLang] + (moreText
+    ? '<details class="more-detail"><summary>' + (currentLang === 'ja' ? '💡 もっと詳しく知りたい方へ' : '💡 Want to know more?') + '</summary><div class="more-body">' + moreText + '</div></details>'
+    : '');
+  ctEl.scrollTop = 0;
+  const moreEl = ctEl.querySelector('details.more-detail');
+  if (moreEl) {
+    moreEl.addEventListener('toggle', function(){
+      if (moreEl.open) { ctEl.scrollTop = moreEl.offsetTop - ctEl.offsetTop; }
+      adjustBottomPadding();
+    });
+  }
   document.getElementById('foxAvatar').src = FOX_BY_MOOD[step.fox] || FOX_BY_MOOD.normal;
   document.getElementById('lessonProgress').textContent = currentStep + ' / ' + (LESSON_STEPS.length - 1);
   document.getElementById('btnPrev').disabled = currentStep === 0;
   document.getElementById('btnNext').disabled = currentStep === LESSON_STEPS.length - 1;
+  adjustBottomPadding();
+
+  const shareRow = document.getElementById('shareRow');
+  if (shareRow) {
+    if (currentStep === LESSON_STEPS.length - 1) {
+      const openingNameEl = document.querySelector('.opening-title.lang-element-' + currentLang);
+      const openingName = openingNameEl ? openingNameEl.textContent : '';
+      const msg = currentLang === 'ja'
+        ? '🦊 ' + openingName + 'をKitsuneChessで学んだよ!一手ずつ「なぜその手か」を教えてくれるよ'
+        : '🦊 Just learned the ' + openingName + ' on KitsuneChess! It explains why each move is played, step by step.';
+      const shareBtn = document.getElementById('shareXBtn');
+      shareBtn.textContent = currentLang === 'ja' ? '🦊 𝕏でシェアする' : '🦊 Share on 𝕏';
+      shareBtn.onclick = function() { shareOnX(msg); };
+      shareRow.style.display = 'block';
+    } else {
+      shareRow.style.display = 'none';
+    }
+  }
   adjustBottomPadding();
 }
 
