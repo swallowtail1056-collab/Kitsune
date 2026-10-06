@@ -126,8 +126,8 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
   <h1 class="opening-title lang-element-en">Scheveningen Sicilian</h1>
 
   <div class="opening-intro">
-    <p class="lang-element-ja">💡 シェベニンゲン・シシリアンは、オープン・シシリアンで黒がe6とd6の2つのポーンで中央を固める変化だよ。名前は、1923年にオランダのシェベニンゲンで行われた大会で、この形が指されたことに由来しているんだ。カスパロフが世界チャンピオン戦で何度も使ったことでも知られているよ。白に攻められやすい面もあるけれど、黒の形が堅く、反撃のチャンスも多い、奥の深い変化なんだ。</p>
-    <p class="lang-element-en">💡 The Scheveningen Sicilian is an Open Sicilian line in which Black firms up the center with pawns on e6 and d6. It's named after a 1923 tournament held in Scheveningen in the Netherlands, where this setup was played. It's also famous for being used many times by Kasparov in World Championship matches. Black can come under attack, but the setup is solid and offers plenty of counterplay, making it a deep and rich variation.</p>
+    <p class="lang-element-ja">💡 シェベニンゲン・シシリアンは、オープン・シシリアンで黒がe6とd6の2つのポーンを並べて、中央の手前に堅い守りの形を作る変化だよ。名前は、1923年にオランダのシェベニンゲンで行われた大会で、この形が指されたことに由来しているんだ。カスパロフが世界チャンピオン戦で何度も使ったことでも知られているよ。白に攻められやすい面もあるけれど、黒の形が堅く、反撃のチャンスも多い、奥の深い変化なんだ。</p>
+    <p class="lang-element-en">💡 The Scheveningen Sicilian is an Open Sicilian line in which Black lines up pawns on e6 and d6 to build a solid defensive setup just behind the center. It's named after a 1923 tournament held in Scheveningen in the Netherlands, where this setup was played. It's also famous for being used many times by Kasparov in World Championship matches. Black can come under attack, but the setup is solid and offers plenty of counterplay, making it a deep and rich variation.</p>
   </div>
 
   <div class="board-wrap">
@@ -198,8 +198,8 @@ const initialBoard = [
 // ============================================================
 const LESSON_STEPS = [
   { move:null, moveLabel:{ja:"開始局面", en:"Starting Position"},
-    ja:"シェベニンゲン・シシリアンのレッスンを始めるよ！このページでは、黒がd6とe6で小さく堅い中央を作り、白がBe2・O-O・f4と組むクラシカルな形を見ていくよ。黒の堅い中央に対して、白がどうキングサイドで準備を進めるのかがポイントなんだ。一手ずつジーンと一緒に、なぜその手を指すのかを学んでいこう。",
-    en:"Let's start the Scheveningen Sicilian lesson! On this page we follow the classical setup, where Black builds a small, solid center with ...d6 and ...e6, and White sets up with Be2, O-O and f4. The key is how White prepares on the kingside against Black's solid center. Jene will walk you through why each move is played, one step at a time.",
+    ja:"シェベニンゲン・シシリアンのレッスンを始めるよ！このページでは、黒がd6とe6のポーンで中央の手前に堅い形を作り、白がBe2・O-O・f4と組むクラシカルな形を見ていくよ。黒の堅いポーンの形に対して、白がどうキングサイドで準備を進めるのかがポイントなんだ。一手ずつジーンと一緒に、なぜその手を指すのかを学んでいこう。",
+    en:"Let's start the Scheveningen Sicilian lesson! On this page we follow the classical setup, where Black builds a solid setup just behind the center with ...d6 and ...e6, and White sets up with Be2, O-O and f4. The key is how White prepares on the kingside against Black's solid pawn structure. Jene will walk you through why each move is played, one step at a time.",
     fox:'welcome' },
   { move:{from:[6,4],to:[4,4]}, moveLabel:{ja:"1. e4", en:"1. e4"},
     ja:"白はポーンをe4へ進めるよ。白は中央のマスを押さえながら、ビショップとクイーンが動く道を開けるんだ。",
@@ -238,8 +238,8 @@ const LESSON_STEPS = [
     en:"White develops the knight to c3. White develops while defending the e4 pawn.",
     fox:'normal' },
   { move:{from:[1,4],to:[2,4]}, moveLabel:{ja:"5...e6（シェベニンゲン！）", en:"5...e6 (Scheveningen!)"},
-    ja:"ここがシェベニンゲンの一手！黒はポーンをe6へ進めて、d6とe6の2つのポーンで中央を固めるよ。黒はこの手の代わりに5...a6の<a href='najdorf.html'>ナイドルフ</a>や5...g6の<a href='dragon.html'>ドラゴン</a>を選ぶこともできるけれど、黒はここでd5とf5のマスを押さえる、小さくて堅い中央を作る道を選ぶんだ。その代わり、黒のポーンは前に出ないので、白に広いスペースを与えやすいよ。",
-    en:"Here's the Scheveningen! Black pushes the pawn to e6, firming up the center with pawns on d6 and e6. Instead of this move, Black can also choose 5...a6, the <a href='najdorf.html?lang=en'>Najdorf</a>, or 5...g6, the <a href='dragon.html?lang=en'>Dragon</a>, but here Black builds a small, solid center that controls d5 and f5. The trade-off is that Black's pawns stay back, giving White plenty of space.",
+    ja:"ここがシェベニンゲンの一手！黒はポーンをe6へ進めて、d6とe6の2つのポーンを並べるよ。黒のポーンは中央のd5やe5のマスまでは進んでいないけれど、d6のポーンがc5とe5、e6のポーンがd5とf5のマスを押さえていて、白の駒が入りこみにくい堅い形になるんだ。黒のこの形はスモール・センター（小さな中央）と呼ばれているよ。黒はこの手の代わりに5...a6の<a href='najdorf.html'>ナイドルフ</a>や5...g6の<a href='dragon.html'>ドラゴン</a>を選ぶこともできるけれど、黒はここで、中央の手前で守りを固める道を選ぶんだ。その代わり、黒のポーンは前に出ないので、白に広いスペースを与えやすいよ。",
+    en:"Here's the Scheveningen! Black pushes the pawn to e6, lining up pawns on d6 and e6. Black's pawns haven't advanced to the central squares d5 or e5, but the d6 pawn covers c5 and e5 and the e6 pawn covers d5 and f5, creating a solid setup that White's pieces find hard to break into. This structure is called the small center. Instead of this move, Black can also choose 5...a6, the <a href='najdorf.html?lang=en'>Najdorf</a>, or 5...g6, the <a href='dragon.html?lang=en'>Dragon</a>, but here Black chooses to build a solid defensive setup just behind the center. The trade-off is that Black's pawns stay back, giving White plenty of space.",
     fox:'happy' },
   { move:{from:[7,5],to:[6,4]}, moveLabel:{ja:"6. Be2", en:"6. Be2"},
     ja:"白はビショップをe2へ進めるよ。白は落ち着いて駒を展開し、キャスリングの準備をするんだ。",
@@ -264,8 +264,8 @@ const LESSON_STEPS = [
     en:"White pushes the pawn to f4. White advances a kingside pawn, preparing to push e5 or f5 later and break up Black's center. The trade-off is that moving the f-pawn next to the king also thins out the shelter around White's own king.",
     fox:'normal' },
   { move:{from:[0,4],to:[0,6],castle:{from:[0,7],to:[0,5]}}, moveLabel:{ja:"8...O-O", en:"8...O-O"},
-    ja:"黒もキャスリングでキングを安全な場所へ動かすよ。黒は堅い中央に守られて、この先Qc7やNc6、b5でクイーンサイドから反撃する準備をするんだ。白がキングサイド、黒がクイーンサイドで攻め合う、シシリアンらしい展開になるよ。これで本譜は一段落、続きはぜひ自分で指してみてね！",
-    en:"Black also castles, bringing the king to safety. Protected by the solid center, Black prepares queenside counterplay with moves like ...Qc7, ...Nc6 and ...b5. It becomes a typical Sicilian race, with White attacking on the kingside and Black on the queenside. That's the main line — try continuing the game yourself from here!",
+    ja:"黒もキャスリングでキングを安全な場所へ動かすよ。黒は堅いポーンの形に守られて、この先Qc7やNc6、b5でクイーンサイドから反撃する準備をするんだ。白がキングサイド、黒がクイーンサイドで攻め合う、シシリアンらしい展開になるよ。これで本譜は一段落、続きはぜひ自分で指してみてね！",
+    en:"Black also castles, bringing the king to safety. Protected by the solid pawn structure, Black prepares queenside counterplay with moves like ...Qc7, ...Nc6 and ...b5. It becomes a typical Sicilian race, with White attacking on the kingside and Black on the queenside. That's the main line — try continuing the game yourself from here!",
     fox:'happy' }
 ];
 
