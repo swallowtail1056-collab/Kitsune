@@ -26,6 +26,16 @@ html[data-theme="dark"] {
   --input-bg:#111; --board-border:#d4a72c;
   --status-bad:#ff6b6b; --status-good:#4caf50;
 }
+/* ナイトモードの背景色（Black / Dark Gray / Warm Dark） */
+html[data-theme="dark"][data-dark-bg="gray"] {
+  --bg:#1e1f22; --card:#2a2b30; --card-bg:#2a2b30; --input-bg:#25262b;
+  --text:#dedede; --text-sub:#c9c9c9; --text-muted:#9a9a9a; --brown-dark:#e2e2e2;
+}
+html[data-theme="dark"][data-dark-bg="warm"] {
+  --bg:#1d1813; --card:#2a231b; --card-bg:#2a231b; --input-bg:#241e17;
+  --text:#ece1cc; --text-sub:#dacbb0; --text-muted:#a8987c; --brown-dark:#efe2c6;
+}
+
 * { margin:0; padding:0; box-sizing:border-box; }
 body {
   background:var(--bg); color:var(--text);
@@ -183,6 +193,14 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
     <span data-ja="ナイトモード" data-en="Night Mode" style="font-size:0.85rem;color:var(--text);">ナイトモード</span>
     <button id="themeBtn">🌙</button>
+  </div>
+  <div id="darkBgRow" style="display:none;margin-bottom:10px;">
+    <p style="margin:0 0 6px;font-size:0.85rem;color:var(--text);" data-ja="ナイトモードの背景" data-en="Night mode background">ナイトモードの背景</p>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+      <button class="dark-bg-swatch" data-dark-bg="black" style="display:flex;align-items:center;gap:6px;padding:6px 10px;border-radius:16px;border:2px solid var(--brown);background:#0a0a0a;color:#e8e8e8;cursor:pointer;font-size:0.8rem;"><span data-ja="ブラック" data-en="Black">ブラック</span></button>
+      <button class="dark-bg-swatch" data-dark-bg="gray" style="display:flex;align-items:center;gap:6px;padding:6px 10px;border-radius:16px;border:2px solid var(--brown);background:#2a2b30;color:#dedede;cursor:pointer;font-size:0.8rem;"><span data-ja="ダークグレー" data-en="Dark Gray">ダークグレー</span></button>
+      <button class="dark-bg-swatch" data-dark-bg="warm" style="display:flex;align-items:center;gap:6px;padding:6px 10px;border-radius:16px;border:2px solid var(--brown);background:#2a231b;color:#ece1cc;cursor:pointer;font-size:0.8rem;"><span data-ja="ウォームダーク" data-en="Warm Dark">ウォームダーク</span></button>
+    </div>
   </div>
   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
     <span data-ja="メッセージ" data-en="Messages" style="font-size:0.85rem;color:var(--text);">メッセージ</span>
@@ -774,9 +792,31 @@ document.getElementById('blockUserBtn').onclick = async () => {
   renderBlockedUsersList();
 };
   let THEME = localStorage.getItem('selectedTheme') === 'dark' ? 'dark' : 'light';
+
+  // ナイトモードの背景色
+  let DARK_BG = localStorage.getItem('darkBg') || 'black';
+  if (['black','gray','warm'].indexOf(DARK_BG) < 0) DARK_BG = 'black';
+  document.documentElement.setAttribute('data-dark-bg', DARK_BG);
+  function applyDarkBg() {
+    document.documentElement.setAttribute('data-dark-bg', DARK_BG);
+    document.querySelectorAll('.dark-bg-swatch').forEach((btn) => {
+      btn.style.outline = btn.dataset.darkBg === DARK_BG ? '3px solid var(--brown)' : 'none';
+      btn.style.outlineOffset = '2px';
+    });
+  }
+  document.querySelectorAll('.dark-bg-swatch').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      DARK_BG = btn.dataset.darkBg;
+      try { localStorage.setItem('darkBg', DARK_BG); } catch (e) {}
+      applyDarkBg();
+    });
+  });
+  applyDarkBg();
   function applyTheme() {
     document.documentElement.setAttribute('data-theme', THEME);
     document.getElementById('themeBtn').textContent = THEME === 'dark' ? '☀️' : '🌙';
+    const _dbr = document.getElementById('darkBgRow');
+    if (_dbr) _dbr.style.display = THEME === 'dark' ? '' : 'none';
   }
   document.getElementById('themeBtn').onclick = () => {
     THEME = THEME === 'dark' ? 'light' : 'dark';

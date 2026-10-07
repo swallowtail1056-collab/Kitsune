@@ -23,6 +23,16 @@ html[data-theme="dark"] {
   --text:#e8e8e8; --text-sub:#d0d0d0; --text-muted:#999;
   --card-bg:#1a1a1a; --input-bg:#111;
 }
+/* ナイトモードの背景色（Black / Dark Gray / Warm Dark） */
+html[data-theme="dark"][data-dark-bg="gray"] {
+  --bg:#1e1f22; --card:#2a2b30; --card-bg:#2a2b30; --input-bg:#25262b;
+  --text:#dedede; --text-sub:#c9c9c9; --text-muted:#9a9a9a; --brown-dark:#e2e2e2;
+}
+html[data-theme="dark"][data-dark-bg="warm"] {
+  --bg:#1d1813; --card:#2a231b; --card-bg:#2a231b; --input-bg:#241e17;
+  --text:#ece1cc; --text-sub:#dacbb0; --text-muted:#a8987c; --brown-dark:#efe2c6;
+}
+
 *{margin:0;padding:0;box-sizing:border-box;}
 body{background:var(--bg);color:var(--text);font-family:'Crimson Pro',serif;font-weight:600;min-height:100vh;transition:background 0.2s,color 0.2s;}
 /* 全ページコンテンツを中央揃え */
@@ -1547,6 +1557,11 @@ function setLang(lang,btn) {
 }
 
 let THEME = localStorage.getItem('selectedTheme') === 'dark' ? 'dark' : 'light';
+  // ナイトモードの背景色
+  let DARK_BG = localStorage.getItem('darkBg') || 'black';
+  if (['black','gray','warm'].indexOf(DARK_BG) < 0) DARK_BG = 'black';
+  document.documentElement.setAttribute('data-dark-bg', DARK_BG);
+
 function applyTheme() {
   document.documentElement.setAttribute('data-theme', THEME);
   const btn = document.getElementById('btnTheme');
