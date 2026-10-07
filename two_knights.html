@@ -103,6 +103,11 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
   font-size: 1rem;
   color: var(--text-sub);
 }
+.commentary-text a, .opening-intro a { color:var(--brown); text-decoration:underline; font-weight:700; }
+.commentary-text a:hover, .opening-intro a:hover { color:var(--brown-dark); }
+.more-detail { margin-top:8px; border-top:1px dashed var(--brown-light); padding-top:6px; }
+.more-detail summary { cursor:pointer; font-weight:700; color:var(--brown); font-size:0.92rem; list-style-position:inside; }
+.more-detail .more-body { margin-top:6px; font-size:0.94rem; }
 </style>
   <script src="board-theme.js"></script>
 </head>
@@ -121,8 +126,8 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
   <h1 class="opening-title lang-element-en">Two Knights Defense</h1>
 
   <div class="opening-intro">
-    <p class="lang-element-ja">💡 トゥー・ナイツ・ディフェンスはイタリアンへの積極的な応手として黒が3...Nf6と反撃する変化だよ！Bc5と静かに応じる代わりに、すぐにナイトを展開して白のBc4がf7を狙っているのに対してカウンターアタックを仕掛けるんだ。白が4.Ng5と突いてf7を攻撃してくれば黒は4...d5と中央を突いて激しい戦いになるよ。フリード・リバー・アタック（Nxf7）やマックス・ランゲ・アタックなど鋭い変化が多いんだ。攻撃的な黒のプレイヤーが積極的に戦えるすばらしい変化だよ！</p>
-    <p class="lang-element-en">💡 The Two Knights Defense fights back with 3...Nf6 against the Italian Game! Instead of developing quietly with Bc5, Black immediately develops the knight for active counterplay. If White plays 4.Ng5 to attack f7, Black counters with 4...d5 launching a sharp central battle. This leads to exciting variations including the Fried Liver Attack and the Max Lange Attack. A wonderful variation for aggressive Black players who want to fight actively!</p>
+    <p class="lang-element-ja">💡 トゥー・ナイツ・ディフェンスは、イタリアン・ゲームの3.Bc4に対して、黒が3...Nf6ともう一つのナイトを出す積極的なオープニングだよ。白が4.Ng5でf7をねらうと、激しい攻め合いになりやすいのが特徴なんだ。チゴーリンなど多くの名手が研究してきた、長い歴史を持つオープニングだよ。罠や鋭い変化が多いので、初心者にとっては、戦術を学ぶのにぴったりのオープニングなんだ。</p>
+    <p class="lang-element-en">💡 The Two Knights Defense is an active opening in which Black answers the Italian Game's 3.Bc4 by developing the other knight with 3...Nf6. When White targets f7 with 4.Ng5, the game tends to become a sharp fight. It has a long history and has been studied by many great players such as Chigorin. With lots of traps and sharp lines, it's a perfect opening for beginners to learn tactics.</p>
   </div>
 
   <div class="board-wrap">
@@ -142,6 +147,9 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
     <button id="btnPrev" class="lesson-btn">← 前へ</button>
     <span class="lesson-progress" id="lessonProgress"></span>
     <button id="btnNext" class="lesson-btn">次へ →</button>
+  </div>
+  <div id="shareRow" style="display:none;text-align:center;margin-top:10px;">
+    <button id="shareXBtn" style="background:#000;color:#fff;border:none;border-radius:20px;padding:8px 16px;font-family:'Crimson Pro',serif;font-weight:700;font-size:0.85rem;cursor:pointer;">🦊 𝕏でシェアする</button>
   </div>
 </div>
 
@@ -190,60 +198,80 @@ const initialBoard = [
 // ============================================================
 const LESSON_STEPS = [
   { move:null, moveLabel:{ja:"開始局面", en:"Starting Position"},
-    ja:"トゥー・ナイツ・ディフェンスのレッスンを始めるよ！イタリアンに対して、静かに応じず即座に反撃する積極的な一手だよ。今回は「フリード・リバー・アタック」という有名な鋭い変化を見ていこう。ジーンと一緒に、一手ずつ「なぜその手を指すのか」を学んでいこう。",
-    en:"Let's start the Two Knights Defense lesson! Instead of replying quietly, Black counter-attacks immediately. Today we'll look at the famous, razor-sharp Fried Liver Attack. Jene will explain why each move is played, one step at a time.",
+    ja:"トゥー・ナイツ・ディフェンスのレッスンを始めるよ！このページでは、白が4.Ng5でf7をねらい、黒がポーンを1つ差し出して展開のリードを取る本筋を見ていくよ。ポーン1つと駒の活発さ、どちらが大事なのかがポイントなんだ。一手ずつジーンと一緒に、なぜその手を指すのかを学んでいこう。",
+    en:"Let's start the Two Knights Defense lesson! On this page we follow the main line where White targets f7 with 4.Ng5 and Black gives up a pawn to gain a lead in development. The key is the balance between an extra pawn and active pieces. Jene will walk you through why each move is played, one step at a time.",
     fox:'welcome' },
   { move:{from:[6,4],to:[4,4]}, moveLabel:{ja:"1. e4", en:"1. e4"},
-    ja:"白はe4で中央を制圧するよ。",
-    en:"White plays 1.e4, claiming the center.",
+    ja:"白はポーンをe4へ進めるよ。白は中央のマスを押さえながら、ビショップとクイーンが動く道を開けるんだ。",
+    en:"White pushes the pawn to e4. White takes control of central squares and opens lines for the bishop and queen.",
     fox:'normal' },
   { move:{from:[1,4],to:[3,4]}, moveLabel:{ja:"1...e5", en:"1...e5"},
-    ja:"黒も同じくe5で対抗するよ。",
-    en:"Black mirrors with 1...e5.",
+    ja:"黒はポーンをe5へ進めるよ。黒も同じように中央を押さえて、白のポーンと向かい合う形を作るんだ。",
+    en:"Black pushes the pawn to e5. Black also claims the center, setting up a pawn face-off with White.",
     fox:'normal' },
   { move:{from:[7,6],to:[5,5]}, moveLabel:{ja:"2. Nf3", en:"2. Nf3"},
-    ja:"白はナイトをf3に展開するよ。",
-    en:"White develops the knight to f3.",
+    ja:"白はナイトをf3へ進めるよ。白のナイトは展開しながら、黒のe5のポーンを攻撃しているんだ。",
+    en:"White develops the knight to f3. White's knight develops while attacking Black's e5 pawn.",
     fox:'normal' },
   { move:{from:[0,1],to:[2,2]}, moveLabel:{ja:"2...Nc6", en:"2...Nc6"},
-    ja:"黒もナイトをc6へ。e5ポーンをしっかり守るよ。",
-    en:"Black develops the knight to c6, defending the e5 pawn.",
+    ja:"黒はナイトをc6へ進めるよ。黒はナイトを展開しながら、e5のポーンを守るんだ。",
+    en:"Black develops the knight to c6. Black develops a piece and defends the e5 pawn at the same time.",
     fox:'normal' },
   { move:{from:[7,5],to:[4,2]}, moveLabel:{ja:"3. Bc4", en:"3. Bc4"},
-    ja:"白はビショップをc4へ。f7という黒の弱点に狙いをつけるよ。",
-    en:"White develops the bishop to c4, eyeing the weak f7 square.",
+    ja:"白はビショップをc4へ進めて、<a href='italian.html'>イタリアン・ゲーム</a>の形に入るよ。白のビショップは、キングしか守っていない黒のf7のポーンをねらっているんだ。",
+    en:"White develops the bishop to c4, entering the <a href='italian.html?lang=en'>Italian Game</a> setup. White's bishop aims at Black's f7 pawn, which only the king defends.",
     fox:'normal' },
   { move:{from:[0,6],to:[2,5]}, moveLabel:{ja:"3...Nf6（トゥー・ナイツ！）", en:"3...Nf6 (Two Knights!)"},
-    ja:"ここが本題、トゥー・ナイツの一手！黒はBc5と静かに応じず、すぐにナイトを展開してカウンターを狙うよ。",
-    en:"Here's the Two Knights Defense move! Instead of the quiet Bc5, Black immediately develops the knight for active counterplay.",
+    ja:"ここがトゥー・ナイツ・ディフェンスの一手！黒はもう一つのナイトをf6へ進めて、白のe4のポーンを攻撃するよ。一般的には3...Bc5でビショップを出すけれど、黒はここで先に白のe4に反撃する積極的な道を選ぶんだ。その代わり、黒はf7のポーンを守る駒を増やしていないので、白に4.Ng5でf7をねらわれやすくなるよ。",
+    en:"Here's the Two Knights Defense! Black develops the other knight to f6, attacking White's e4 pawn. Black usually plays 3...Bc5, but here Black chooses the more active path of striking at e4 first. The trade-off is that Black hasn't added a defender to f7, so White can target it with 4.Ng5.",
     fox:'happy' },
   { move:{from:[5,5],to:[3,6]}, moveLabel:{ja:"4. Ng5", en:"4. Ng5"},
-    ja:"白はナイトをg5へ！f7を直接狙う、鋭く積極的な一手だよ。",
-    en:"White jumps the knight to g5, directly targeting f7 — a sharp and aggressive try.",
-    fox:'wink' },
+    ja:"白はナイトをg5へ進めるよ。白のナイトはc4のビショップと一緒に、黒のf7のポーンを2つの駒で攻撃しているんだ。",
+    en:"White moves the knight to g5. Together with the c4 bishop, White's knight attacks Black's f7 pawn with two pieces.",
+    fox:'normal' },
   { move:{from:[1,3],to:[3,3]}, moveLabel:{ja:"4...d5", en:"4...d5"},
-    ja:"黒はd5で反撃！白のビショップとナイトに同時に狙いをつけるよ。",
-    en:"Black counters with 4...d5, hitting both White's bishop and knight at once.",
-    fox:'quiz' },
+    ja:"黒はポーンをd5へ進めるよ。黒はc4のビショップの通り道をふさいで、f7への攻撃を1つ止めるんだ。",
+    en:"Black pushes the pawn to d5. Black blocks the c4 bishop's path, cutting off one of the attackers on f7.",
+    jaMore:"黒はこの手の代わりに4...Bc5と反撃する手もあって、これは<a href='traxler_counterattack.html'>トラクスラー・カウンターアタック</a>と呼ばれる激しい変化だよ。",
+    enMore:"Instead of this move, Black can counterattack with 4...Bc5, a sharp line called the <a href='traxler_counterattack.html?lang=en'>Traxler Counterattack</a>.",
+    fox:'normal' },
   { move:{from:[4,4],to:[3,3]}, moveLabel:{ja:"5. exd5", en:"5. exd5"},
-    ja:"白はexd5とポーンを取るよ。",
-    en:"White captures with 5.exd5.",
+    ja:"白はe4のポーンで、d5に来た黒のポーンを取るよ。白はポーンを1つ得して、黒のf6のナイトの前にポーンを置くんだ。",
+    en:"White's e4 pawn captures the black pawn that came to d5. White wins a pawn and places a pawn in front of Black's f6 knight.",
     fox:'normal' },
-  { move:{from:[2,5],to:[3,3]}, moveLabel:{ja:"5...Nxd5", en:"5...Nxd5"},
-    ja:"黒はナイトで取り返すよ。",
-    en:"Black recaptures with the knight.",
+  { move:{from:[2,2],to:[3,0]}, moveLabel:{ja:"5...Na5", en:"5...Na5"},
+    ja:"黒はナイトをa5へ動かすよ。黒のナイトはc4の白のビショップを攻撃して、白に下がる手を強いるんだ。黒はポーンを取り返さずに、展開でリードすることをねらっているよ。",
+    en:"Black moves the knight to a5. Black's knight attacks White's bishop on c4, forcing it to move. Black doesn't win the pawn back, aiming for a lead in development instead.",
+    jaMore:"黒がこの手の代わりに5...Nxd5とすぐにポーンを取り返すと、白は6.Nxf7とナイトを差し出して黒のキングを攻める<a href='fried_liver_attack.html'>フライド・リバー・アタック</a>を仕掛けられるよ。",
+    enMore:"If Black recaptured right away with 5...Nxd5 instead of this move, White could launch the <a href='fried_liver_attack.html?lang=en'>Fried Liver Attack</a> with 6.Nxf7, sacrificing a knight to attack Black's king.",
     fox:'normal' },
-  { move:{from:[3,6],to:[1,5]}, moveLabel:{ja:"6. Nxf7（フリード・リバー！）", en:"6. Nxf7 (Fried Liver!)"},
-    ja:"白はNxf7！ナイトを犠牲にしてキングの守りを崩す、フリード・リバー・アタックの代名詞的な一手だよ。",
-    en:"White sacrifices with 6.Nxf7! The defining move of the Fried Liver Attack, ripping open Black's king position.",
-    fox:'happy' },
-  { move:{from:[0,4],to:[1,5]}, moveLabel:{ja:"6...Kxf7", en:"6...Kxf7"},
-    ja:"黒はキングで取り返すしかないよ。これでキングが盤の真ん中に取り残されてしまうんだ。",
-    en:"Black has no choice but to recapture with the king, leaving it dangerously exposed in the center.",
-    fox:'quiz' },
-  { move:{from:[7,3],to:[5,5]}, moveLabel:{ja:"7. Qf3+", en:"7. Qf3+"},
-    ja:"白はクイーンをf3へ出してチェック！ナイトとキングの両方に同時にプレッシャーをかけるよ。これで本譜は一段落、続きはぜひ自分で指してみてね！",
-    en:"White checks with 7.Qf3+, attacking both the king and the knight on d5 at once. That's the main line — try continuing the game yourself from here!",
+  { move:{from:[4,2],to:[3,1]}, moveLabel:{ja:"6. Bb5+", en:"6. Bb5+"},
+    ja:"白はビショップをb5へ動かして、チェックをかけるよ。白のビショップは攻撃をかわしながら、黒のキングにチェックをかけて、黒に応じ方を決めさせるんだ。",
+    en:"White moves the bishop to b5 with check. White's bishop escapes the attack while checking Black's king, forcing Black to respond.",
+    fox:'normal' },
+  { move:{from:[1,2],to:[2,2]}, moveLabel:{ja:"6...c6", en:"6...c6"},
+    ja:"黒はポーンをc6へ進めて、チェックをさえぎるよ。黒はb5のビショップを攻撃し返して、白にポーンを取るか下がるかを迫るんだ。",
+    en:"Black blocks the check by pushing the pawn to c6. Black hits back at the b5 bishop, asking White to capture or retreat.",
+    fox:'normal' },
+  { move:{from:[3,3],to:[2,2]}, moveLabel:{ja:"7. dxc6", en:"7. dxc6"},
+    ja:"白はd5のポーンで、c6に来た黒のポーンを取るよ。白はこれでポーンを2つ得した形になるんだ。",
+    en:"White's d5 pawn captures the black pawn that came to c6. White is now two pawns up.",
+    fox:'normal' },
+  { move:{from:[1,1],to:[2,2]}, moveLabel:{ja:"7...bxc6", en:"7...bxc6"},
+    ja:"黒はbのポーンで、c6に入った白のポーンを取り返すよ。黒はポーン1つの損に戻して、b5のビショップを攻撃しているんだ。",
+    en:"Black's b-pawn takes back the white pawn that landed on c6. Black is now only one pawn down and is attacking the b5 bishop.",
+    fox:'normal' },
+  { move:{from:[3,1],to:[6,4]}, moveLabel:{ja:"8. Be2", en:"8. Be2"},
+    ja:"白はビショップをe2へ下げるよ。白のビショップは攻撃をかわして、キングの近くで守りにつくんだ。",
+    en:"White retreats the bishop to e2. White's bishop escapes the attack and takes up a defensive post near the king.",
+    fox:'normal' },
+  { move:{from:[1,7],to:[2,7]}, moveLabel:{ja:"8...h6", en:"8...h6"},
+    ja:"黒はポーンをh6へ進めるよ。黒はg5の白のナイトを攻撃して、さらに下がる手を強いるんだ。",
+    en:"Black pushes the pawn to h6. Black attacks White's knight on g5, forcing yet another retreat.",
+    fox:'normal' },
+  { move:{from:[3,6],to:[5,5]}, moveLabel:{ja:"9. Nf3", en:"9. Nf3"},
+    ja:"白はナイトをf3へ下げるよ。白はポーンを1つ多く持っているけれど、駒を何度も下げたので、黒は展開で大きくリードしているんだ。この後は黒が9...e4とナイトを追い払い、ポーン1つの代わりに活発な駒で攻める流れが本筋として知られているよ。これで本譜は一段落、続きはぜひ自分で指してみてね！",
+    en:"White retreats the knight to f3. White is a pawn up, but having retreated pieces several times, White is well behind Black in development. The known main line continues 9...e4, chasing the knight again, with Black using active pieces as compensation for the pawn. That's the main line — try continuing the game yourself from here!",
     fox:'happy' }
 ];
 
@@ -329,15 +357,50 @@ function adjustBottomPadding(){
   }
 }
 
+function shareOnX(message) {
+  const shareUrl = 'https://twitter.com/intent/tweet?text=' + encodeURIComponent(message) + '&url=' + encodeURIComponent(window.location.href);
+  window.open(shareUrl, '_blank', 'noopener,noreferrer,width=550,height=420');
+}
+
 function renderStep(){
   const step = LESSON_STEPS[currentStep];
   renderBoard(boardSnapshots[currentStep]);
   document.getElementById('moveLabel').textContent = (step.moveLabel && step.moveLabel[currentLang]) || '';
-  document.getElementById('commentaryText').textContent = step[currentLang];
+  const ctEl = document.getElementById('commentaryText');
+  const moreText = step[currentLang + 'More'];
+  ctEl.innerHTML = step[currentLang] + (moreText
+    ? '<details class="more-detail"><summary>' + (currentLang === 'ja' ? '💡 もっと詳しく知りたい方へ' : '💡 Want to know more?') + '</summary><div class="more-body">' + moreText + '</div></details>'
+    : '');
+  ctEl.scrollTop = 0;
+  const moreEl = ctEl.querySelector('details.more-detail');
+  if (moreEl) {
+    moreEl.addEventListener('toggle', function(){
+      if (moreEl.open) { ctEl.scrollTop = moreEl.offsetTop - ctEl.offsetTop; }
+      adjustBottomPadding();
+    });
+  }
   document.getElementById('foxAvatar').src = FOX_BY_MOOD[step.fox] || FOX_BY_MOOD.normal;
   document.getElementById('lessonProgress').textContent = currentStep + ' / ' + (LESSON_STEPS.length - 1);
   document.getElementById('btnPrev').disabled = currentStep === 0;
   document.getElementById('btnNext').disabled = currentStep === LESSON_STEPS.length - 1;
+  adjustBottomPadding();
+
+  const shareRow = document.getElementById('shareRow');
+  if (shareRow) {
+    if (currentStep === LESSON_STEPS.length - 1) {
+      const openingNameEl = document.querySelector('.opening-title.lang-element-' + currentLang);
+      const openingName = openingNameEl ? openingNameEl.textContent : '';
+      const msg = currentLang === 'ja'
+        ? '🦊 ' + openingName + 'をKitsuneChessで学んだよ!一手ずつ「なぜその手か」を教えてくれるよ'
+        : '🦊 Just learned the ' + openingName + ' on KitsuneChess! It explains why each move is played, step by step.';
+      const shareBtn = document.getElementById('shareXBtn');
+      shareBtn.textContent = currentLang === 'ja' ? '🦊 𝕏でシェアする' : '🦊 Share on 𝕏';
+      shareBtn.onclick = function() { shareOnX(msg); };
+      shareRow.style.display = 'block';
+    } else {
+      shareRow.style.display = 'none';
+    }
+  }
   adjustBottomPadding();
 }
 

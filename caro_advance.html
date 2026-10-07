@@ -103,6 +103,11 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
   font-size: 1rem;
   color: var(--text-sub);
 }
+.commentary-text a, .opening-intro a { color:var(--brown); text-decoration:underline; font-weight:700; }
+.commentary-text a:hover, .opening-intro a:hover { color:var(--brown-dark); }
+.more-detail { margin-top:8px; border-top:1px dashed var(--brown-light); padding-top:6px; }
+.more-detail summary { cursor:pointer; font-weight:700; color:var(--brown); font-size:0.92rem; list-style-position:inside; }
+.more-detail .more-body { margin-top:6px; font-size:0.94rem; }
 </style>
   <script src="board-theme.js"></script>
 </head>
@@ -121,8 +126,8 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
   <h1 class="opening-title lang-element-en">Caro-Kann Advance Variation</h1>
 
   <div class="opening-intro">
-    <p class="lang-element-ja">💡 カロ・カン・アドバンス変化は白が3.e5と突いてスペースを確保する積極的な変化だよ！黒のf6のナイト展開を制限しながら中央のスペースを確保するんだ。黒はBf5と展開してビショップを早期に活性化してからe6-Nd7-Ne7-Ng6という典型的な形を目指すよ。白はf4-g4とキングサイドを攻める変化や、Nf3-Be2と穏やかに組む変化など様々なアプローチを選べるんだ。フレンチ・アドバンスと似た戦略だけど、カロカンではビショップをf5に出せるのが大きな違いなんだよ！</p>
-    <p class="lang-element-en">💡 The Caro-Kann Advance Variation has White pushing 3.e5 to grab central space immediately! By advancing, White restricts Black's ability to develop the f6 knight while securing a space advantage. Black develops the bishop actively with Bf5 before completing the setup with e6-Nd7-Ne7-Ng6. White can choose between aggressive approaches with f4-g4 or quieter development with Nf3-Be2. An increasingly popular choice among White players against Caro-Kann specialists!</p>
+    <p class="lang-element-ja">💡 カロ・カンのアドバンス変化は、カロ・カン・ディフェンスで白が3.e5と突き、中央を閉じる作戦だよ。白は中央のスペースを取り、黒はポーンの鎖の根元をc5でくずすのが典型的な戦い方なんだ。このページで扱う4.Nf3とBe2の落ち着いた組み方は、イギリスの強豪ナイジェル・ショートが広めたことから、ショート・バリエーションと呼ばれているよ。黒はビショップを先に外に出せるので、フレンチ・ディフェンスよりも駒の働きが良い形を作りやすいんだ。</p>
+    <p class="lang-element-en">💡 The Caro-Kann Advance Variation is a plan in which White closes the center with 3.e5 against the Caro-Kann Defense. White takes central space, while Black typically undermines the base of White's pawn chain with ...c5. The calm setup with 4.Nf3 and Be2 shown on this page is called the Short Variation, after the English grandmaster Nigel Short, who popularized it. Because Black can get the bishop out first, Black often ends up with better-placed pieces than in the French Defense.</p>
   </div>
 
   <div class="board-wrap">
@@ -193,60 +198,62 @@ const initialBoard = [
 // ============================================================
 const LESSON_STEPS = [
   { move:null, moveLabel:{ja:"開始局面", en:"Starting Position"},
-    ja:"カロ・カン・アドバンス変化のレッスンを始めるよ！白がスペースを確保しながら、黒はビショップを早期に活性化する、現代でも人気の変化だよ。ジーンと一緒に、一手ずつ「なぜその手を指すのか」を学んでいこう。",
-    en:"Let's start the Caro-Kann Advance Variation lesson! White grabs space while Black actively develops the bishop early. Jene will explain why each move is played, one step at a time.",
+    ja:"カロ・カンのアドバンス変化のレッスンを始めるよ！このページでは、白が3.e5で中央を閉じ、黒がビショップを先にf5へ出してからe6で固める、ショート・バリエーションを見ていくよ。黒がフレンチと違ってビショップをどう生かすのかがポイントなんだ。一手ずつジーンと一緒に、なぜその手を指すのかを学んでいこう。",
+    en:"Let's start the Caro-Kann Advance Variation lesson! On this page we follow the Short Variation, where White closes the center with 3.e5 and Black gets the bishop out to f5 before solidifying with ...e6. The key is how Black, unlike in the French, makes good use of that bishop. Jene will walk you through why each move is played, one step at a time.",
     fox:'welcome' },
   { move:{from:[6,4],to:[4,4]}, moveLabel:{ja:"1. e4", en:"1. e4"},
-    ja:"白はe4で中央を制圧するよ。",
-    en:"White plays 1.e4, claiming the center.",
+    ja:"白はポーンをe4へ進めるよ。白は中央のマスを押さえながら、ビショップとクイーンが動く道を開けるんだ。",
+    en:"White pushes the pawn to e4. White takes control of central squares and opens lines for the bishop and queen.",
     fox:'normal' },
   { move:{from:[1,2],to:[2,2]}, moveLabel:{ja:"1...c6", en:"1...c6"},
-    ja:"黒はc6でカロ・カン・ディフェンスを選ぶよ。この一手で、次にd5と突いた時にクイーンで安全にe4ポーンへ対抗できるように備えているんだ。",
-    en:"Black plays 1...c6, the Caro-Kann Defense. This prepares to challenge the e4 pawn with d5 next, while keeping the option to recapture safely with the queen.",
+    ja:"黒はポーンをc6へ進めて、<a href='caro_kann.html'>カロ・カン・ディフェンス</a>に入るよ。黒は次にd5と突いたときに、そのポーンをc6のポーンで支えられるように準備するんだ。",
+    en:"Black pushes the pawn to c6, entering the <a href='caro_kann.html?lang=en'>Caro-Kann Defense</a>. Black prepares to support the d5 pawn with the c6 pawn when it's pushed next.",
     fox:'normal' },
   { move:{from:[6,3],to:[4,3]}, moveLabel:{ja:"2. d4", en:"2. d4"},
-    ja:"白はd4で中央をさらに強化するよ。",
-    en:"White reinforces the center with 2.d4.",
+    ja:"白はポーンをd4へ進めるよ。白はe4とd4の2つのポーンで、中央を大きく押さえるんだ。",
+    en:"White pushes the pawn to d4. With pawns on e4 and d4, White takes a big grip on the center.",
     fox:'normal' },
   { move:{from:[1,3],to:[3,3]}, moveLabel:{ja:"2...d5", en:"2...d5"},
-    ja:"黒はd5で白のe4ポーンに挑戦するよ。",
-    en:"Black challenges White's e4 pawn with 2...d5.",
+    ja:"黒はポーンをd5へ進めるよ。黒は白のe4のポーンを攻撃して、中央を争うんだ。",
+    en:"Black pushes the pawn to d5. Black attacks White's e4 pawn and fights for the center.",
     fox:'normal' },
   { move:{from:[4,4],to:[3,4]}, moveLabel:{ja:"3. e5（アドバンス！）", en:"3. e5 (Advance!)"},
-    ja:"ここが本題、アドバンス変化の一手！白はe5と突いてスペースを確保するよ。",
-    en:"Here's the Advance Variation move! White pushes e5, securing a space advantage.",
+    ja:"ここがアドバンス・バリエーションの一手！白はポーンをe5へ進めて、黒の陣地に食い込み、キングサイドのスペースを広げるよ。一般的には3.Nc3や3.Nd2でe4を守ることも多いけれど、白はここでポーンを前に進めて、中央を閉じる道を選ぶんだ。その代わり、白はd5のマスを黒に明け渡すので、黒のc8のビショップが外に出やすくなるよ。",
+    en:"Here's the Advance Variation! White pushes the pawn to e5, advancing into Black's camp and gaining kingside space. White often defends e4 with 3.Nc3 or 3.Nd2 instead, but here White pushes forward and closes the center. The trade-off is that White gives up the d5 square, making it easier for Black's c8 bishop to come out.",
     fox:'happy' },
   { move:{from:[0,2],to:[3,5]}, moveLabel:{ja:"3...Bf5", en:"3...Bf5"},
-    ja:"黒はビショップをf5へ！フレンチと違って、ポーン構造が閉じる前にビショップを出せるのがカロ・カンの強みなんだ。",
-    en:"Black develops the bishop to f5! Unlike the French, the Caro-Kann gets this bishop out before the structure closes.",
-    fox:'wink' },
+    ja:"黒はビショップをf5へ進めるよ。黒はe6と突く前にビショップをポーンの外に出して、ビショップがポーンの内側に閉じ込められないようにするんだ。黒のこの手が、<a href='french_advance.html'>フレンチ・ディフェンスのアドバンス変化</a>と比べたときの、カロ・カンの大きな長所なんだ。",
+    en:"Black develops the bishop to f5. By getting the bishop out before pushing ...e6, Black keeps it from being shut in behind the pawns. This is a big advantage of the Caro-Kann compared with the <a href='french_advance.html?lang=en'>Advance French</a>.",
+    fox:'normal' },
   { move:{from:[7,6],to:[5,5]}, moveLabel:{ja:"4. Nf3", en:"4. Nf3"},
-    ja:"白はナイトをf3へ展開するよ。駒を育てながら、この先のキャスリングに備えるんだ。",
-    en:"White develops the knight to f3, continuing development while preparing to castle.",
+    ja:"白はナイトをf3へ進めるよ。白はナイトを展開しながら、e5のポーンを守り、キャスリングの準備も進めるんだ。白のこの落ち着いた組み方は、ショート・バリエーションと呼ばれているよ。",
+    en:"White develops the knight to f3. White develops while defending the e5 pawn and preparing to castle. This calm setup is called the Short Variation.",
+    jaMore:"白はこの手の代わりに4.Nc3と指して、この先g4と突いてビショップを追い回す、とても鋭い作戦を選ぶこともできるよ。",
+    enMore:"Instead of this move, White can play 4.Nc3, followed by g4 to chase the bishop, a very sharp plan.",
     fox:'normal' },
   { move:{from:[1,4],to:[2,4]}, moveLabel:{ja:"4...e6", en:"4...e6"},
-    ja:"黒はe6でキングの安全を高めながら展開を進めるよ。",
-    en:"Black plays 4...e6, improving king safety while developing.",
+    ja:"黒はポーンをe6へ進めるよ。黒はd5のポーンを支えて、f8のビショップの道も開けるんだ。黒のビショップはすでにf5に出ているので、e6を突いても閉じ込められないよ。",
+    en:"Black pushes the pawn to e6. Black supports the d5 pawn and opens the path for the f8 bishop. Since the bishop is already out on f5, pushing ...e6 doesn't shut it in.",
     fox:'normal' },
   { move:{from:[7,5],to:[6,4]}, moveLabel:{ja:"5. Be2", en:"5. Be2"},
-    ja:"白はビショップをe2へ。g4と伸ばしてビショップを追い立てる激しい変化もあるけど、ここでは穏やかな展開を選ぶよ。",
-    en:"White chooses the quiet development with 5.Be2, rather than the sharper g4 lines that chase Black's bishop.",
+    ja:"白はビショップをe2へ進めるよ。白はキングサイドの駒を出し終えて、キャスリングの準備をするんだ。",
+    en:"White develops the bishop to e2. White finishes developing the kingside pieces and gets ready to castle.",
     fox:'normal' },
   { move:{from:[0,1],to:[1,3]}, moveLabel:{ja:"5...Nd7", en:"5...Nd7"},
-    ja:"黒はナイトをd7へ。これから来る「Nd7-Ne7-Ng6」という典型的な展開プランの始まりだよ。",
-    en:"Black develops the knight to d7, starting the typical Nd7-Ne7-Ng6 development plan.",
+    ja:"黒はナイトをd7へ進めるよ。黒のd7のナイトは白のe5のポーンに利いていて、この先c5と突いて、白の中央のポーンの根元をくずす準備もしているんだ。",
+    en:"Black develops the knight to d7. Black's d7 knight puts pressure on White's e5 pawn and also prepares ...c5 to undermine the base of White's pawn chain.",
     fox:'normal' },
   { move:{from:[7,4],to:[7,6],castle:{from:[7,7],to:[7,5]}}, moveLabel:{ja:"6. O-O", en:"6. O-O"},
-    ja:"白はキャスリングでキングを安全な場所へ。",
-    en:"White castles kingside, tucking the king away safely.",
+    ja:"白はキャスリングでキングを安全な場所へ動かすよ。白はキングの安全を確保して、中央のスペースを生かす準備をするんだ。",
+    en:"White castles, bringing the king to safety. White secures the king and prepares to make use of the central space.",
     fox:'normal' },
   { move:{from:[0,6],to:[1,4]}, moveLabel:{ja:"6...Ne7", en:"6...Ne7"},
-    ja:"黒はもう一つのナイトをe7へ。後でg6へ続くプランだよ。",
-    en:"Black develops the other knight to e7, continuing the plan toward g6.",
+    ja:"黒はナイトをe7へ進めるよ。黒のナイトはこの先g6やf5へ回って、白のe5のポーンや中央に働きかけるんだ。その代わり、黒のナイトがe7にいると、f8のビショップの道が一時的にふさがってしまうよ。",
+    en:"Black develops the knight to e7. Black's knight plans to reroute to g6 or f5 to put pressure on White's e5 pawn and the center. The trade-off is that the knight on e7 temporarily blocks the f8 bishop's path.",
     fox:'normal' },
   { move:{from:[7,1],to:[6,3]}, moveLabel:{ja:"7. Nbd2", en:"7. Nbd2"},
-    ja:"白はナイトをd2へ展開するよ。この先b3やf1などへ経由させて、中央や黒のクイーンサイドの動きに対応していくんだ。これで本譜は一段落、続きはぜひ自分で指してみてね！",
-    en:"White develops the knight to d2, ready to reroute it (often via b3) to respond to Black's play. That's the main line — try continuing the game yourself from here!",
+    ja:"白はナイトをd2へ進めるよ。白はナイトを展開しながら、この先c4やNb3で、黒のクイーンサイドに働きかける準備をするんだ。白は中央のスペースを生かして、黒は堅い守りからc5で反撃をねらう、じっくりした戦いになるよ。これで本譜は一段落、続きはぜひ自分で指してみてね！",
+    en:"White develops the knight to d2. White develops while preparing to put pressure on Black's queenside with c4 or Nb3. It becomes a slow battle, with White using central space and Black aiming for a ...c5 counterattack from a solid position. That's the main line — try continuing the game yourself from here!",
     fox:'happy' }
 ];
 
@@ -341,7 +348,19 @@ function renderStep(){
   const step = LESSON_STEPS[currentStep];
   renderBoard(boardSnapshots[currentStep]);
   document.getElementById('moveLabel').textContent = (step.moveLabel && step.moveLabel[currentLang]) || '';
-  document.getElementById('commentaryText').textContent = step[currentLang];
+  const ctEl = document.getElementById('commentaryText');
+  const moreText = step[currentLang + 'More'];
+  ctEl.innerHTML = step[currentLang] + (moreText
+    ? '<details class="more-detail"><summary>' + (currentLang === 'ja' ? '💡 もっと詳しく知りたい方へ' : '💡 Want to know more?') + '</summary><div class="more-body">' + moreText + '</div></details>'
+    : '');
+  ctEl.scrollTop = 0;
+  const moreEl = ctEl.querySelector('details.more-detail');
+  if (moreEl) {
+    moreEl.addEventListener('toggle', function(){
+      if (moreEl.open) { ctEl.scrollTop = moreEl.offsetTop - ctEl.offsetTop; }
+      adjustBottomPadding();
+    });
+  }
   document.getElementById('foxAvatar').src = FOX_BY_MOOD[step.fox] || FOX_BY_MOOD.normal;
   document.getElementById('lessonProgress').textContent = currentStep + ' / ' + (LESSON_STEPS.length - 1);
   document.getElementById('btnPrev').disabled = currentStep === 0;

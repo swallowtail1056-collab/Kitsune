@@ -101,6 +101,11 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
   font-size: 1rem;
   color: var(--text-sub);
 }
+.commentary-text a, .opening-intro a { color:var(--brown); text-decoration:underline; font-weight:700; }
+.commentary-text a:hover, .opening-intro a:hover { color:var(--brown-dark); }
+.more-detail { margin-top:8px; border-top:1px dashed var(--brown-light); padding-top:6px; }
+.more-detail summary { cursor:pointer; font-weight:700; color:var(--brown); font-size:0.92rem; list-style-position:inside; }
+.more-detail .more-body { margin-top:6px; font-size:0.94rem; }
 </style>
   <script src="board-theme.js"></script>
 </head>
@@ -119,8 +124,8 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
   <h1 class="opening-title lang-element-en">Veresov Attack</h1>
 
   <div class="opening-intro">
-    <p class="lang-element-ja">💡 Nc3とBg5を早めに組み合わせる、あまり知られていないが強力な白の作戦。相手の準備が薄いオープニング理論の隙を突ける実戦向きの選択。</p>
-    <p class="lang-element-en">💡 An underrated but powerful White system combining an early Nc3 and Bg5. A practical choice that can catch opponents out of their usual opening preparation.</p>
+    <p class="lang-element-ja">💡 ヴェレゾフ・アタックは、1.d4 d5 2.Nc3 Nf6 3.Bg5（または1.d4 Nf6 2.Nc3 d5 3.Bg5）と、白がナイトとビショップを早く出すオープニングだよ。名前は、ベラルーシ出身のガブリエル・ヴェレゾフと、ドイツのクルト・リヒターに由来していて、リヒター・ヴェレゾフ・アタックとも呼ばれているんだ。白はf3とe4で中央を取り、クイーンサイドにキャスリングして攻めるのが典型的な作戦だよ。トップレベルではあまり指されないけれど、実戦で相手を驚かせやすいオープニングなんだ。</p>
+    <p class="lang-element-en">💡 The Veresov Attack is an opening in which White develops the knight and bishop early with 1.d4 d5 2.Nc3 Nf6 3.Bg5 (or 1.d4 Nf6 2.Nc3 d5 3.Bg5). It's named after Gavriil Veresov from Belarus and Kurt Richter from Germany, and it's also called the Richter-Veresov Attack. White's typical plan is to take the center with f3 and e4, castle queenside and attack. It's rarely played at the top level, but it's good for surprising opponents in practice.</p>
   </div>
 
   <div class="board-wrap">
@@ -140,6 +145,9 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
     <button id="btnPrev" class="lesson-btn">← 前へ</button>
     <span class="lesson-progress" id="lessonProgress"></span>
     <button id="btnNext" class="lesson-btn">次へ →</button>
+  </div>
+  <div id="shareRow" style="display:none;text-align:center;margin-top:10px;">
+    <button id="shareXBtn" style="background:#000;color:#fff;border:none;border-radius:20px;padding:8px 16px;font-family:'Crimson Pro',serif;font-weight:700;font-size:0.85rem;cursor:pointer;">🦊 𝕏でシェアする</button>
   </div>
 </div>
 
@@ -179,40 +187,58 @@ const initialBoard = [
 
 const LESSON_STEPS = [
   { move:null, moveLabel:{ja:"開始局面", en:"Starting Position"},
-    ja:'ヴェレゾフ・アタックのレッスンを始めるよ！一手ずつジーンと一緒に、なぜその手を指すのかを学んでいこう。',
-    en:'Let\'s start the Veresov Attack lesson! Jene will walk you through why each move is played, one step at a time.',
+    ja:"ヴェレゾフ・アタックのレッスンを始めるよ！このページでは、白がNc3・Bg5・f3・e4で中央を大きく取りにいき、黒がNbd7・c6・e5で反撃する本筋を見ていくよ。白の広い中央と黒の反撃のタイミングがポイントなんだ。一手ずつジーンと一緒に、なぜその手を指すのかを学んでいこう。",
+    en:"Let's start the Veresov Attack lesson! On this page we follow the main line where White aims for a big center with Nc3, Bg5, f3 and e4, while Black fights back with ...Nbd7, ...c6 and ...e5. The key is White's broad center and the timing of Black's counterattack. Jene will walk you through why each move is played, one step at a time.",
     fox:'welcome' },
   { move:{from:[6,3],to:[4,3]}, moveLabel:{ja:"1. d4", en:"1. d4"},
-    ja:'白はポーンをd4へ進めるよ。',
-    en:'White develops the pawn to d4.',
+    ja:"白はポーンをd4へ進めるよ。白は中央のマスを押さえながら、c1のビショップの道を開けるんだ。",
+    en:"White pushes the pawn to d4. White takes control of central squares and opens the path for the c1 bishop.",
     fox:'normal' },
   { move:{from:[0,6],to:[2,5]}, moveLabel:{ja:"1...Nf6", en:"1...Nf6"},
-    ja:'黒はナイトをf6へ進めるよ。',
-    en:'Black develops the knight to f6.',
+    ja:"黒はナイトをf6へ進めるよ。黒はナイトを展開しながら、白がe4と突くのをけん制するんだ。",
+    en:"Black develops the knight to f6. Black develops while discouraging White from pushing e4.",
     fox:'normal' },
   { move:{from:[7,1],to:[5,2]}, moveLabel:{ja:"2. Nc3", en:"2. Nc3"},
-    ja:'白はナイトをc3へ進めるよ。',
-    en:'White develops the knight to c3.',
+    ja:"白はナイトをc3へ進めるよ。白はナイトを展開しながら、e4のマスに利かせて、この先e4と突く準備をするんだ。一般的には2.c4が多いけれど、白はここでcのポーンの前にナイトを置く道を選ぶよ。",
+    en:"White develops the knight to c3. White develops while covering the e4 square, preparing to push e4 later. White more often plays 2.c4, but here White chooses to put the knight in front of the c-pawn.",
     fox:'normal' },
   { move:{from:[1,3],to:[3,3]}, moveLabel:{ja:"2...d5", en:"2...d5"},
-    ja:'黒はポーンをd5へ進めるよ。',
-    en:'Black develops the pawn to d5.',
+    ja:"黒はポーンをd5へ進めるよ。黒は中央を押さえて、白がe4と突くのを防ぐんだ。",
+    en:"Black pushes the pawn to d5. Black claims the center and stops White from pushing e4.",
     fox:'normal' },
-  { move:{from:[7,2],to:[3,6]}, moveLabel:{ja:"3. Bg5", en:"3. Bg5"},
-    ja:'💡 白はビショップをg5へ進めるよ。 Nc3とBg5を早めに組み合わせる、あまり知られていないが強力な白の作戦。相手の準備が薄いオープニング理論の隙を突ける実戦向きの選択。',
-    en:'💡 White develops the bishop to g5. An underrated but powerful White system combining an early Nc3 and Bg5. A practical choice that can catch opponents out of their usual opening preparation.',
+  { move:{from:[7,2],to:[3,6]}, moveLabel:{ja:"3. Bg5（ヴェレゾフ！）", en:"3. Bg5 (Veresov!)"},
+    ja:"ここがヴェレゾフ・アタックの一手！白はビショップをg5へ進めて、e4のマスを守っているf6のナイトをねらうよ。白はこの先f3とe4で中央を広げ、クイーンサイドにキャスリングして攻める作戦を目指すんだ。その代わり、白はcのポーンの前にナイトがいるので、c4と突いて中央を攻めることができないよ。",
+    en:"Here's the Veresov Attack! White develops the bishop to g5, targeting the f6 knight that guards e4. White plans to expand with f3 and e4, castle queenside and attack. The trade-off is that with the knight in front of the c-pawn, White can't strike at the center with c4.",
     fox:'happy' },
   { move:{from:[0,1],to:[1,3]}, moveLabel:{ja:"3...Nbd7", en:"3...Nbd7"},
-    ja:'黒はナイトをd7へ進めるよ。',
-    en:'Black develops the knight to d7.',
+    ja:"黒はナイトをd7へ進めるよ。黒のd7のナイトはf6のナイトを守っていて、白がBxf6と取ってきても、ナイトで取り返してポーンの形を崩さずにすむんだ。",
+    en:"Black develops the knight to d7. Black's d7 knight protects the f6 knight, so if White takes on f6, Black can recapture with the knight and keep the pawn structure intact.",
+    jaMore:"黒はこの手の代わりに3...Bf5や3...e6と指すこともできて、3...e6からはフレンチ・ディフェンスの形になることもあるよ。",
+    enMore:"Instead of this move, Black can also play 3...Bf5 or 3...e6, and 3...e6 can lead to French Defense structures.",
     fox:'normal' },
-  { move:{from:[7,6],to:[5,5]}, moveLabel:{ja:"4. Nf3", en:"4. Nf3"},
-    ja:'白はナイトをf3へ進めるよ。',
-    en:'White develops the knight to f3.',
+  { move:{from:[6,5],to:[5,5]}, moveLabel:{ja:"4. f3", en:"4. f3"},
+    ja:"白はポーンをf3へ進めるよ。白は次にe4と突いて、中央を大きく取る準備をするんだ。その代わり、白はキングのそばにあるfのポーンを動かすので、白のキングの守りも少し薄くなるよ。",
+    en:"White pushes the pawn to f3. White prepares to push e4 next and take a big center. The trade-off is that moving the f-pawn next to the king slightly weakens White's king shelter.",
     fox:'normal' },
-  { move:{from:[1,6],to:[2,6]}, moveLabel:{ja:"4...g6", en:"4...g6"},
-    ja:'黒はポーンをg6へ進めるよ。',
-    en:'Black develops the pawn to g6.',
+  { move:{from:[1,2],to:[2,2]}, moveLabel:{ja:"4...c6", en:"4...c6"},
+    ja:"黒はポーンをc6へ進めるよ。黒はd5のポーンを支えながら、d8のクイーンがa5へ出られる道を開けるんだ。",
+    en:"Black pushes the pawn to c6. Black supports the d5 pawn and opens a path for the queen on d8 to come out to a5.",
+    fox:'normal' },
+  { move:{from:[6,4],to:[4,4]}, moveLabel:{ja:"5. e4", en:"5. e4"},
+    ja:"白はポーンをe4へ進めるよ。白はe4とd4の2つのポーンで中央を大きく取ろうとするんだ。",
+    en:"White pushes the pawn to e4. White tries to take a big center with pawns on e4 and d4.",
+    fox:'normal' },
+  { move:{from:[3,3],to:[4,4]}, moveLabel:{ja:"5...dxe4", en:"5...dxe4"},
+    ja:"黒はd5のポーンで、e4に来た白のポーンを取るよ。黒は白の中央のポーンを1つ減らすんだ。",
+    en:"Black's d5 pawn captures the white pawn that came to e4. Black removes one of White's central pawns.",
+    fox:'normal' },
+  { move:{from:[5,5],to:[4,4]}, moveLabel:{ja:"6. fxe4", en:"6. fxe4"},
+    ja:"白はfのポーンで、e4にいた黒のポーンを取り返すよ。白はe4とd4に2つのポーンを並べて、中央を大きく押さえるんだ。その代わり、白のキングのそばのfファイルが開いて、キングの守りが少し薄くなるよ。",
+    en:"White's f-pawn takes back the black pawn that was on e4. White now has pawns side by side on e4 and d4, taking a big grip on the center. The trade-off is that the f-file next to White's king opens up, thinning out its shelter a little.",
+    fox:'normal' },
+  { move:{from:[1,4],to:[3,4]}, moveLabel:{ja:"6...e5", en:"6...e5"},
+    ja:"黒はポーンをe5へ進めるよ。黒は白のd4のポーンを攻撃して、白の大きな中央にすぐ反撃するんだ。この後は白がdxe5と取ると、黒は...Qa5と出て、c3のナイトをe1の白のキングにピンしながら、e5のポーンもねらう形が知られているよ。白の広い中央と、黒の素早い反撃がぶつかる局面なんだ。これで本譜は一段落、続きはぜひ自分で指してみてね！",
+    en:"Black pushes the pawn to e5. Black attacks White's d4 pawn and strikes back at White's big center right away. A known idea is that after White takes with dxe5, Black plays ...Qa5, pinning the c3 knight against White's king on e1 while also eyeing the e5 pawn. It's a clash between White's broad center and Black's quick counterattack. That's the main line — try continuing the game yourself from here!",
     fox:'happy' }
 ];
 
@@ -298,15 +324,50 @@ function adjustBottomPadding(){
   }
 }
 
+function shareOnX(message) {
+  const shareUrl = 'https://twitter.com/intent/tweet?text=' + encodeURIComponent(message) + '&url=' + encodeURIComponent(window.location.href);
+  window.open(shareUrl, '_blank', 'noopener,noreferrer,width=550,height=420');
+}
+
 function renderStep(){
   const step = LESSON_STEPS[currentStep];
   renderBoard(boardSnapshots[currentStep]);
   document.getElementById('moveLabel').textContent = (step.moveLabel && step.moveLabel[currentLang]) || '';
-  document.getElementById('commentaryText').textContent = step[currentLang];
+  const ctEl = document.getElementById('commentaryText');
+  const moreText = step[currentLang + 'More'];
+  ctEl.innerHTML = step[currentLang] + (moreText
+    ? '<details class="more-detail"><summary>' + (currentLang === 'ja' ? '💡 もっと詳しく知りたい方へ' : '💡 Want to know more?') + '</summary><div class="more-body">' + moreText + '</div></details>'
+    : '');
+  ctEl.scrollTop = 0;
+  const moreEl = ctEl.querySelector('details.more-detail');
+  if (moreEl) {
+    moreEl.addEventListener('toggle', function(){
+      if (moreEl.open) { ctEl.scrollTop = moreEl.offsetTop - ctEl.offsetTop; }
+      adjustBottomPadding();
+    });
+  }
   document.getElementById('foxAvatar').src = FOX_BY_MOOD[step.fox] || FOX_BY_MOOD.normal;
   document.getElementById('lessonProgress').textContent = currentStep + ' / ' + (LESSON_STEPS.length - 1);
   document.getElementById('btnPrev').disabled = currentStep === 0;
   document.getElementById('btnNext').disabled = currentStep === LESSON_STEPS.length - 1;
+  adjustBottomPadding();
+
+  const shareRow = document.getElementById('shareRow');
+  if (shareRow) {
+    if (currentStep === LESSON_STEPS.length - 1) {
+      const openingNameEl = document.querySelector('.opening-title.lang-element-' + currentLang);
+      const openingName = openingNameEl ? openingNameEl.textContent : '';
+      const msg = currentLang === 'ja'
+        ? '🦊 ' + openingName + 'をKitsuneChessで学んだよ!一手ずつ「なぜその手か」を教えてくれるよ'
+        : '🦊 Just learned the ' + openingName + ' on KitsuneChess! It explains why each move is played, step by step.';
+      const shareBtn = document.getElementById('shareXBtn');
+      shareBtn.textContent = currentLang === 'ja' ? '🦊 𝕏でシェアする' : '🦊 Share on 𝕏';
+      shareBtn.onclick = function() { shareOnX(msg); };
+      shareRow.style.display = 'block';
+    } else {
+      shareRow.style.display = 'none';
+    }
+  }
   adjustBottomPadding();
 }
 

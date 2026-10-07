@@ -103,6 +103,11 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
   font-size: 1rem;
   color: var(--text-sub);
 }
+.commentary-text a, .opening-intro a { color:var(--brown); text-decoration:underline; font-weight:700; }
+.commentary-text a:hover, .opening-intro a:hover { color:var(--brown-dark); }
+.more-detail { margin-top:8px; border-top:1px dashed var(--brown-light); padding-top:6px; }
+.more-detail summary { cursor:pointer; font-weight:700; color:var(--brown); font-size:0.92rem; list-style-position:inside; }
+.more-detail .more-body { margin-top:6px; font-size:0.94rem; }
 </style>
   <script src="board-theme.js"></script>
 </head>
@@ -121,8 +126,8 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
   <h1 class="opening-title lang-element-en">Trompowsky Attack</h1>
 
   <div class="opening-intro">
-    <p class="lang-element-ja">💡 トロンポウスキー・アタックは1.d4 Nf6 2.Bg5とビショップを早期に展開する奇襲的なオープニングだよ！通常のd4オープニングでは序盤にビショップをg5に出すことはほとんどないため、相手を主流の理論から外れた局面に誘い込めるんだ。黒がe6と突けば白はBxf6とビショップを交換してポーン構造に影響を与えられるよ。黒がNe4と跳べば白はBf4かBh4と引いて複雑な局面を保つんだ。通常のd4理論をしっかり準備した相手に対して特に効果的な奇襲オープニングだよ！</p>
-    <p class="lang-element-en">💡 The Trompowsky Attack develops the bishop early with 2.Bg5 after 1.d4 Nf6 — an immediate surprise! In normal d4 openings, it's very rare to develop the bishop to g5 so early, which immediately takes opponents out of their prepared theoretical lines. If Black plays e6, White can exchange with Bxf6. If Black jumps with Ne4, White retreats to Bf4 or Bh4. Particularly effective against players who have carefully prepared d4 theory. A practical and dangerous surprise weapon!</p>
+    <p class="lang-element-ja">💡 トロンポウスキー・アタックは、1.d4 Nf6のあとに白が2.Bg5とビショップを出すオープニングだよ。名前は、1930年代から40年代に活躍したブラジルのオクタービオ・トロンポウスキーに由来しているんだ。白は2手目から相手のナイトにねらいをつけて、黒が慣れた形に持ち込むのを防ぐのが特徴だよ。定跡の量がそれほど多くないので覚えやすく、トップ選手からアマチュアまで幅広く指されているんだ。</p>
+    <p class="lang-element-en">💡 The Trompowsky Attack is an opening in which White plays 2.Bg5 after 1.d4 Nf6. It's named after Octávio Trompowsky, the Brazilian player who was active in the 1930s and '40s. White targets Black's knight from move two, steering away from setups Black is familiar with. It doesn't require a huge amount of theory, so it's easy to learn and is played by everyone from top players to amateurs.</p>
   </div>
 
   <div class="board-wrap">
@@ -142,6 +147,9 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
     <button id="btnPrev" class="lesson-btn">← 前へ</button>
     <span class="lesson-progress" id="lessonProgress"></span>
     <button id="btnNext" class="lesson-btn">次へ →</button>
+  </div>
+  <div id="shareRow" style="display:none;text-align:center;margin-top:10px;">
+    <button id="shareXBtn" style="background:#000;color:#fff;border:none;border-radius:20px;padding:8px 16px;font-family:'Crimson Pro',serif;font-weight:700;font-size:0.85rem;cursor:pointer;">🦊 𝕏でシェアする</button>
   </div>
 </div>
 
@@ -190,60 +198,62 @@ const initialBoard = [
 // ============================================================
 const LESSON_STEPS = [
   { move:null, moveLabel:{ja:"開始局面", en:"Starting Position"},
-    ja:"トロンポウスキー・アタックのレッスンを始めるよ！普通のd4オープニングではほとんど見ない、ビショップの早期展開で相手の理論を崩す奇襲的な定跡だよ。ジーンと一緒に、一手ずつ「なぜその手を指すのか」を学んでいこう。",
-    en:"Let's start the Trompowsky Attack lesson! White develops the bishop unusually early, taking opponents straight out of their prepared theory. Jene will explain why each move is played, one step at a time.",
+    ja:"トロンポウスキー・アタックのレッスンを始めるよ！このページでは、白が2.Bg5からBxf6とナイトを交換して中央を広げ、黒が2つのビショップで対抗する形を見ていくよ。中央の広さとビショップのペア、どちらが生きるのかがポイントなんだ。一手ずつジーンと一緒に、なぜその手を指すのかを学んでいこう。",
+    en:"Let's start the Trompowsky Attack lesson! On this page we follow how White trades the bishop for the knight with 2.Bg5 and Bxf6 and expands in the center, while Black answers with the bishop pair. The key is whether White's central space or Black's bishop pair proves stronger. Jene will walk you through why each move is played, one step at a time.",
     fox:'welcome' },
   { move:{from:[6,3],to:[4,3]}, moveLabel:{ja:"1. d4", en:"1. d4"},
-    ja:"白はd4で中央を制圧するよ。",
-    en:"White plays 1.d4, claiming the center.",
+    ja:"白はポーンをd4へ進めるよ。白は中央のマスを押さえながら、c1のビショップの道を開けるんだ。",
+    en:"White pushes the pawn to d4. White takes control of central squares and opens the path for the c1 bishop.",
     fox:'normal' },
   { move:{from:[0,6],to:[2,5]}, moveLabel:{ja:"1...Nf6", en:"1...Nf6"},
-    ja:"黒はナイトをf6へ展開するよ。",
-    en:"Black develops the knight to f6.",
+    ja:"黒はナイトをf6へ進めるよ。黒はナイトを展開しながら、白がe4と突くのをけん制するんだ。",
+    en:"Black develops the knight to f6. Black develops while discouraging White from pushing e4.",
     fox:'normal' },
   { move:{from:[7,2],to:[3,6]}, moveLabel:{ja:"2. Bg5（トロンポウスキー！）", en:"2. Bg5 (Trompowsky!)"},
-    ja:"ここが本題、トロンポウスキーの一手！白は普通ならまだ出さないビショップを、いきなりg5へ展開するよ。",
-    en:"Here's the Trompowsky move! White immediately develops the bishop to g5, far earlier than usual.",
+    ja:"ここがトロンポウスキー・アタックの一手！白はビショップをg5へ進めて、f6のナイトをねらうよ。一般的には2.c4や2.Nf3と展開するけれど、白はここですぐにビショップを出して、黒の膨大な定跡を避ける道を選ぶんだ。白はこの先Bxf6と取って、黒のポーンの形を崩すことをねらっているよ。その代わり、白はビショップをナイトと交換することが多く、2つのビショップを持つ利点を黒に渡しやすいんだ。",
+    en:"Here's the Trompowsky Attack! White develops the bishop to g5, targeting the f6 knight. White usually develops with 2.c4 or 2.Nf3, but here White brings the bishop out at once to sidestep a huge amount of theory. White is ready to take on f6 to damage Black's pawn structure. The trade-off is that White often trades this bishop for the knight, handing Black the bishop pair.",
     fox:'happy' },
   { move:{from:[1,4],to:[2,4]}, moveLabel:{ja:"2...e6", en:"2...e6"},
-    ja:"黒はe6で柔軟に応じるよ。",
-    en:"Black responds flexibly with 2...e6.",
+    ja:"黒はポーンをe6へ進めるよ。黒はf8のビショップの道を開けて、白がBxf6と取ってきたときに、クイーンで取り返せるようにするんだ。",
+    en:"Black pushes the pawn to e6. Black opens the f8 bishop's path and makes sure the queen can recapture if White takes on f6.",
+    jaMore:"黒はこの手の代わりに2...Ne4と、ナイトを中央に出してビショップの攻撃をかわす手がいちばん多く指されているよ。",
+    enMore:"Instead of this move, the most popular reply is 2...Ne4, moving the knight to the center to escape the bishop's attack.",
     fox:'normal' },
   { move:{from:[6,4],to:[4,4]}, moveLabel:{ja:"3. e4", en:"3. e4"},
-    ja:"白はe4で中央をさらに広げるよ。",
-    en:"White further expands the center with 3.e4.",
+    ja:"白はポーンをe4へ進めるよ。白はe4とd4の2つのポーンで、中央を大きく押さえるんだ。",
+    en:"White pushes the pawn to e4. With pawns on e4 and d4, White takes a big grip on the center.",
     fox:'normal' },
   { move:{from:[1,7],to:[2,7]}, moveLabel:{ja:"3...h6", en:"3...h6"},
-    ja:"黒はh6でビショップに「取るか、引くか」を聞くよ。",
-    en:"Black asks the bishop a question with 3...h6: trade, or retreat?",
-    fox:'quiz' },
+    ja:"黒はポーンをh6へ進めるよ。黒はg5のビショップを攻撃して、下がるか交換するかを白に迫るんだ。",
+    en:"Black pushes the pawn to h6. Black attacks the g5 bishop, making White choose between retreating and trading.",
+    fox:'normal' },
   { move:{from:[3,6],to:[2,5]}, moveLabel:{ja:"4. Bxf6", en:"4. Bxf6"},
-    ja:"白はBxf6とナイトを取るよ。黒のポーン構造に影響を与える一手だよ。",
-    en:"White trades with 4.Bxf6, affecting Black's pawn structure.",
-    fox:'wink' },
+    ja:"白はビショップで、f6にいた黒のナイトを取るよ。白はビショップとナイトを交換して、中央での展開のリードを優先するんだ。",
+    en:"White's bishop captures the black knight that was on f6. White trades bishop for knight and prioritizes a lead in central development.",
+    fox:'normal' },
   { move:{from:[0,3],to:[2,5]}, moveLabel:{ja:"4...Qxf6", en:"4...Qxf6"},
-    ja:"黒はクイーンで取り返すよ。",
-    en:"Black recaptures with the queen.",
+    ja:"黒はクイーンで、f6に入った白のビショップを取り返すよ。黒はポーンの形を崩さずに取り返し、2つのビショップを持つ形になったんだ。黒のクイーンはf6から、白のd4のポーンもにらんでいるよ。",
+    en:"Black's queen takes back the white bishop that landed on f6. Black recaptures without damaging the pawn structure and now has the bishop pair. From f6, Black's queen also eyes White's d4 pawn.",
     fox:'normal' },
   { move:{from:[7,1],to:[5,2]}, moveLabel:{ja:"5. Nc3", en:"5. Nc3"},
-    ja:"白はナイトをc3へ展開するよ。",
-    en:"White develops the knight to c3.",
+    ja:"白はナイトをc3へ進めるよ。白はナイトを展開しながら、e4のポーンを守るんだ。",
+    en:"White develops the knight to c3. White develops while defending the e4 pawn.",
     fox:'normal' },
   { move:{from:[1,3],to:[2,3]}, moveLabel:{ja:"5...d6", en:"5...d6"},
-    ja:"黒はd6で柔軟に展開を進めるよ。",
-    en:"Black continues flexibly with 5...d6.",
+    ja:"黒はポーンをd6へ進めるよ。黒は中央を固めて、白がe5と突いてクイーンを攻撃してくるのを防ぐんだ。",
+    en:"Black pushes the pawn to d6. Black firms up and stops White from pushing e5 to hit the queen.",
     fox:'normal' },
   { move:{from:[7,6],to:[5,5]}, moveLabel:{ja:"6. Nf3", en:"6. Nf3"},
-    ja:"白はナイトをf3へ展開するよ。",
-    en:"White develops the other knight to f3.",
+    ja:"白はナイトをf3へ進めるよ。白はナイトを展開しながら、d4のポーンの守りを増やすんだ。",
+    en:"White develops the knight to f3. White develops while adding another defender to the d4 pawn.",
     fox:'normal' },
   { move:{from:[0,5],to:[1,4]}, moveLabel:{ja:"6...Be7", en:"6...Be7"},
-    ja:"黒はビショップをe7へ。キャスリングの準備をするよ。",
-    en:"Black plays 6...Be7, preparing to castle.",
+    ja:"黒はビショップをe7へ進めるよ。黒はキングサイドの駒を出し終えて、キャスリングの準備をするんだ。",
+    en:"Black develops the bishop to e7. Black finishes developing the kingside pieces and gets ready to castle.",
     fox:'normal' },
   { move:{from:[7,3],to:[6,3]}, moveLabel:{ja:"7. Qd2", en:"7. Qd2"},
-    ja:"白はクイーンをd2へ。これで本譜は一段落、続きはぜひ自分で指してみてね！",
-    en:"White develops the queen to d2. That's the main line — try continuing the game yourself from here!",
+    ja:"白はクイーンをd2へ進めるよ。白はクイーンサイドにキャスリングする準備をして、中央のスペースを生かして攻める形を目指すんだ。白は中央の広さと展開のリード、黒は2つのビショップを生かして戦う局面だよ。これで本譜は一段落、続きはぜひ自分で指してみてね！",
+    en:"White brings the queen to d2. White prepares to castle queenside and aims to attack using the central space. White plays on central space and a development lead, while Black relies on the bishop pair. That's the main line — try continuing the game yourself from here!",
     fox:'happy' }
 ];
 
@@ -329,15 +339,50 @@ function adjustBottomPadding(){
   }
 }
 
+function shareOnX(message) {
+  const shareUrl = 'https://twitter.com/intent/tweet?text=' + encodeURIComponent(message) + '&url=' + encodeURIComponent(window.location.href);
+  window.open(shareUrl, '_blank', 'noopener,noreferrer,width=550,height=420');
+}
+
 function renderStep(){
   const step = LESSON_STEPS[currentStep];
   renderBoard(boardSnapshots[currentStep]);
   document.getElementById('moveLabel').textContent = (step.moveLabel && step.moveLabel[currentLang]) || '';
-  document.getElementById('commentaryText').textContent = step[currentLang];
+  const ctEl = document.getElementById('commentaryText');
+  const moreText = step[currentLang + 'More'];
+  ctEl.innerHTML = step[currentLang] + (moreText
+    ? '<details class="more-detail"><summary>' + (currentLang === 'ja' ? '💡 もっと詳しく知りたい方へ' : '💡 Want to know more?') + '</summary><div class="more-body">' + moreText + '</div></details>'
+    : '');
+  ctEl.scrollTop = 0;
+  const moreEl = ctEl.querySelector('details.more-detail');
+  if (moreEl) {
+    moreEl.addEventListener('toggle', function(){
+      if (moreEl.open) { ctEl.scrollTop = moreEl.offsetTop - ctEl.offsetTop; }
+      adjustBottomPadding();
+    });
+  }
   document.getElementById('foxAvatar').src = FOX_BY_MOOD[step.fox] || FOX_BY_MOOD.normal;
   document.getElementById('lessonProgress').textContent = currentStep + ' / ' + (LESSON_STEPS.length - 1);
   document.getElementById('btnPrev').disabled = currentStep === 0;
   document.getElementById('btnNext').disabled = currentStep === LESSON_STEPS.length - 1;
+  adjustBottomPadding();
+
+  const shareRow = document.getElementById('shareRow');
+  if (shareRow) {
+    if (currentStep === LESSON_STEPS.length - 1) {
+      const openingNameEl = document.querySelector('.opening-title.lang-element-' + currentLang);
+      const openingName = openingNameEl ? openingNameEl.textContent : '';
+      const msg = currentLang === 'ja'
+        ? '🦊 ' + openingName + 'をKitsuneChessで学んだよ!一手ずつ「なぜその手か」を教えてくれるよ'
+        : '🦊 Just learned the ' + openingName + ' on KitsuneChess! It explains why each move is played, step by step.';
+      const shareBtn = document.getElementById('shareXBtn');
+      shareBtn.textContent = currentLang === 'ja' ? '🦊 𝕏でシェアする' : '🦊 Share on 𝕏';
+      shareBtn.onclick = function() { shareOnX(msg); };
+      shareRow.style.display = 'block';
+    } else {
+      shareRow.style.display = 'none';
+    }
+  }
   adjustBottomPadding();
 }
 

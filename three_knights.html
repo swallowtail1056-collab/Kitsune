@@ -103,6 +103,11 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
   font-size: 1rem;
   color: var(--text-sub);
 }
+.commentary-text a, .opening-intro a { color:var(--brown); text-decoration:underline; font-weight:700; }
+.commentary-text a:hover, .opening-intro a:hover { color:var(--brown-dark); }
+.more-detail { margin-top:8px; border-top:1px dashed var(--brown-light); padding-top:6px; }
+.more-detail summary { cursor:pointer; font-weight:700; color:var(--brown); font-size:0.92rem; list-style-position:inside; }
+.more-detail .more-body { margin-top:6px; font-size:0.94rem; }
 </style>
   <script src="board-theme.js"></script>
 </head>
@@ -121,8 +126,8 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
   <h1 class="opening-title lang-element-en">Three Knights Game</h1>
 
   <div class="opening-intro">
-    <p class="lang-element-ja">💡 スリー・ナイツ・ゲームはフォー・ナイツの前段階として3枚のナイトが展開される形だよ！白が1.e4 e5 2.Nf3 Nc6 3.Nc3と来た時に黒がg6やBc5などと応じることで独自の局面を作るんだ。対称的なフォー・ナイツに持ち込まれることを避けたい黒のプレイヤーに選ばれることが多いよ。特に3...g6のピルツ風の展開は白の中央に対してフィアンケットで対抗する独創的な変化なんだ。フォー・ナイツよりも研究が少なくて相手の準備を崩しやすいのが特徴の個性的なオープニングだよ！</p>
-    <p class="lang-element-en">💡 The Three Knights Game arises when Black chooses an alternative to 3...Nf6 in the Four Knights setup! When White plays 1.e4 e5 2.Nf3 Nc6 3.Nc3, Black can respond with g6, Bc5, or other moves to create original positions. Often chosen by Black players who want to avoid the well-studied Four Knights theory. The 3...g6 Pirc-style development is particularly interesting, fighting White's center with a fianchetto. Less studied than the Four Knights, making it harder for opponents to use their preparation. A creative and original choice!</p>
+    <p class="lang-element-ja">💡 スリー・ナイツ・ゲームは、1.e4 e5 2.Nf3 Nc6 3.Nc3のあとに、黒が3...Nf6以外の手を選んで、フォー・ナイツ・ゲームを避けるオープニングだよ。両者のナイトが3つ出た形になることから、この名前が付いているんだ。いちばん古い記録は1841年のスタウントン対コクランの対局で、その後シュタイニッツが3...g6を指して有名になったよ。トップレベルではあまり見かけないけれど、フォー・ナイツの落ち着いた形を避けたい黒の選択肢として知られているんだ。</p>
+    <p class="lang-element-en">💡 The Three Knights Game arises when Black, after 1.e4 e5 2.Nf3 Nc6 3.Nc3, chooses something other than 3...Nf6 to avoid the Four Knights Game. The name comes from the three knights that have been developed. The earliest recorded game is Staunton vs. Cochrane in 1841, and it later became known when Steinitz played 3...g6. It's rarely seen at the top level, but it's a known option for Black players who want to avoid the quiet Four Knights.</p>
   </div>
 
   <div class="board-wrap">
@@ -142,6 +147,9 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
     <button id="btnPrev" class="lesson-btn">← 前へ</button>
     <span class="lesson-progress" id="lessonProgress"></span>
     <button id="btnNext" class="lesson-btn">次へ →</button>
+  </div>
+  <div id="shareRow" style="display:none;text-align:center;margin-top:10px;">
+    <button id="shareXBtn" style="background:#000;color:#fff;border:none;border-radius:20px;padding:8px 16px;font-family:'Crimson Pro',serif;font-weight:700;font-size:0.85rem;cursor:pointer;">🦊 𝕏でシェアする</button>
   </div>
 </div>
 
@@ -190,60 +198,74 @@ const initialBoard = [
 // ============================================================
 const LESSON_STEPS = [
   { move:null, moveLabel:{ja:"開始局面", en:"Starting Position"},
-    ja:"スリー・ナイツ・ゲームのレッスンを始めるよ！対称的なフォー・ナイツを避けて、独自の局面を作る個性的な変化だよ。ジーンと一緒に、一手ずつ「なぜその手を指すのか」を学んでいこう。",
-    en:"Let's start the Three Knights Game lesson! Black avoids the symmetrical Four Knights, creating original positions instead. Jene will explain why each move is played, one step at a time.",
+    ja:"スリー・ナイツ・ゲームのレッスンを始めるよ！このページでは、黒が3...g6でビショップを長い対角線に出す、シュタイニッツ・ディフェンスを見ていくよ。白が中央を開いて展開でリードし、黒がg7のビショップでどう対抗するのかがポイントなんだ。一手ずつジーンと一緒に、なぜその手を指すのかを学んでいこう。",
+    en:"Let's start the Three Knights Game lesson! On this page we follow the Steinitz Defense, where Black plays 3...g6 to put the bishop on the long diagonal. The key is how White opens the center and leads in development, and how Black fights back with the g7 bishop. Jene will walk you through why each move is played, one step at a time.",
     fox:'welcome' },
   { move:{from:[6,4],to:[4,4]}, moveLabel:{ja:"1. e4", en:"1. e4"},
-    ja:"白はe4で中央を制圧するよ。",
-    en:"White plays 1.e4, claiming the center.",
+    ja:"白はポーンをe4へ進めるよ。白は中央のマスを押さえながら、ビショップとクイーンが動く道を開けるんだ。",
+    en:"White pushes the pawn to e4. White takes control of central squares and opens lines for the bishop and queen.",
     fox:'normal' },
   { move:{from:[1,4],to:[3,4]}, moveLabel:{ja:"1...e5", en:"1...e5"},
-    ja:"黒も同じくe5で対抗するよ。",
-    en:"Black mirrors with 1...e5.",
+    ja:"黒はポーンをe5へ進めるよ。黒も同じように中央を押さえて、白のポーンと向かい合う形を作るんだ。",
+    en:"Black pushes the pawn to e5. Black also claims the center, setting up a pawn face-off with White.",
     fox:'normal' },
   { move:{from:[7,6],to:[5,5]}, moveLabel:{ja:"2. Nf3", en:"2. Nf3"},
-    ja:"白はナイトをf3に展開するよ。",
-    en:"White develops the knight to f3.",
+    ja:"白はナイトをf3へ進めるよ。白のナイトは展開しながら、黒のe5のポーンを攻撃しているんだ。",
+    en:"White develops the knight to f3. White's knight develops while attacking Black's e5 pawn.",
     fox:'normal' },
   { move:{from:[0,1],to:[2,2]}, moveLabel:{ja:"2...Nc6", en:"2...Nc6"},
-    ja:"黒もナイトをc6へ展開するよ。",
-    en:"Black develops the knight to c6.",
+    ja:"黒はナイトをc6へ進めるよ。黒はナイトを展開しながら、e5のポーンを守るんだ。",
+    en:"Black develops the knight to c6. Black develops a piece and defends the e5 pawn at the same time.",
     fox:'normal' },
   { move:{from:[7,1],to:[5,2]}, moveLabel:{ja:"3. Nc3", en:"3. Nc3"},
-    ja:"白はもう一つのナイトをc3へ展開するよ。",
-    en:"White develops the other knight to c3.",
+    ja:"白はナイトをc3へ進めるよ。白はナイトを展開しながら、e4のポーンを守るんだ。黒が3...Nf6と応じると、<a href='four_knights.html'>フォー・ナイツ・ゲーム</a>になるよ。",
+    en:"White develops the knight to c3. White develops while defending the e4 pawn. If Black answers 3...Nf6, the game becomes the <a href='four_knights.html?lang=en'>Four Knights Game</a>.",
     fox:'normal' },
   { move:{from:[1,6],to:[2,6]}, moveLabel:{ja:"3...g6（スリー・ナイツ！）", en:"3...g6 (Three Knights!)"},
-    ja:"ここが本題、スリー・ナイツの一手！黒はNf6で対称にせず、g6でピルツ風のフィアンケットを選ぶよ。",
-    en:"Here's the Three Knights move! Instead of the symmetrical Nf6, Black chooses a Pirc-style fianchetto with 3...g6.",
+    ja:"ここがスリー・ナイツ・ゲームの一手！黒はポーンをg6へ進めて、ビショップをg7の長い対角線に出す準備をするよ。黒は3...Nf6のフォー・ナイツを避けて、ナイトを3つしか出さない形を選ぶんだ。黒のこの手はシュタイニッツが指したことから、シュタイニッツ・ディフェンスと呼ばれているよ。その代わり、黒はe5のポーンを守る駒を増やしていないので、白にd4と突かれて中央を開かれやすいんだ。",
+    en:"Here's the Three Knights Game! Black pushes the pawn to g6, preparing to put the bishop on the long diagonal at g7. Black avoids the Four Knights with 3...Nf6 and keeps only three knights out. It's called the Steinitz Defense, after Steinitz, who played it. The trade-off is that Black hasn't added a defender to e5, so White can easily open the center with d4.",
     fox:'happy' },
   { move:{from:[6,3],to:[4,3]}, moveLabel:{ja:"4. d4", en:"4. d4"},
-    ja:"白はd4で中央にさらに踏み込むよ。",
-    en:"White strikes further in the center with 4.d4.",
+    ja:"白はポーンをd4へ進めるよ。白は黒のe5のポーンに働きかけて、中央を開くんだ。",
+    en:"White pushes the pawn to d4. White challenges Black's e5 pawn and opens the center.",
     fox:'normal' },
   { move:{from:[3,4],to:[4,3]}, moveLabel:{ja:"4...exd4", en:"4...exd4"},
-    ja:"黒はexd4とポーンを交換するよ。",
-    en:"Black trades with 4...exd4.",
-    fox:'quiz' },
+    ja:"黒はe5のポーンで、d4に来た白のポーンを取るよ。黒は中央でポーンを交換して、g7に出るビショップの通り道をすっきりさせるんだ。",
+    en:"Black's e5 pawn captures the white pawn that came to d4. Black trades in the center, clearing the way for the bishop that's heading to g7.",
+    fox:'normal' },
   { move:{from:[5,5],to:[4,3]}, moveLabel:{ja:"5. Nxd4", en:"5. Nxd4"},
-    ja:"白はナイトで取り返して、中央のいいマスに陣取るよ。",
-    en:"White recaptures with the knight, landing on a strong central square.",
+    ja:"白はナイトで、d4にいた黒のポーンを取り返すよ。白のナイトは中央の強いマスに入るんだ。",
+    en:"White's knight takes back the black pawn that was on d4. White's knight lands on a strong central square.",
+    jaMore:"白はこの手の代わりに5.Nd5と指すこともできて、こちらのほうが黒にとって手ごわいとされているよ。",
+    enMore:"Instead of this move, White can also play 5.Nd5, which is considered more challenging for Black.",
     fox:'normal' },
   { move:{from:[0,5],to:[1,6]}, moveLabel:{ja:"5...Bg7", en:"5...Bg7"},
-    ja:"黒はビショップをg7へ。フィアンケットを完成させるよ。",
-    en:"Black completes the fianchetto with 5...Bg7.",
+    ja:"黒はビショップをg7へ進めるよ。黒のビショップは長い対角線から、d4の白のナイトをにらんでいるんだ。白のd4のナイトは、黒のc6のナイトとg7のビショップの2つに攻撃されていて、白の守りはクイーン1つだけだよ。",
+    en:"Black develops the bishop to g7. From the long diagonal, Black's bishop eyes White's knight on d4. That knight is attacked twice, by the c6 knight and the g7 bishop, and defended only once by the queen.",
     fox:'normal' },
   { move:{from:[7,2],to:[5,4]}, moveLabel:{ja:"6. Be3", en:"6. Be3"},
-    ja:"白はビショップをe3へ展開するよ。",
-    en:"White develops the bishop to e3.",
+    ja:"白はビショップをe3へ進めるよ。白はこれでd4のナイトの守りを2つにするんだ。",
+    en:"White develops the bishop to e3. White now defends the d4 knight twice.",
     fox:'normal' },
-  { move:{from:[0,6],to:[2,5]}, moveLabel:{ja:"6...Nf6", en:"6...Nf6"},
-    ja:"黒はナイトをf6へ。e4ポーンに圧力をかけながら展開するよ。",
-    en:"Black develops the knight to f6, pressuring the e4 pawn.",
+  { move:{from:[0,6],to:[1,4]}, moveLabel:{ja:"6...Nge7", en:"6...Nge7"},
+    ja:"黒はナイトをe7へ進めるよ。黒はナイトをf6ではなくe7に置いて、g7のビショップの長い対角線をふさがないようにするんだ。",
+    en:"Black develops the knight to e7. By putting the knight on e7 instead of f6, Black keeps the g7 bishop's long diagonal open.",
     fox:'normal' },
   { move:{from:[7,5],to:[4,2]}, moveLabel:{ja:"7. Bc4", en:"7. Bc4"},
-    ja:"白はビショップをc4へ展開するよ。これで本譜は一段落、続きはぜひ自分で指してみてね！",
-    en:"White develops the bishop to c4. That's the main line — try continuing the game yourself from here!",
+    ja:"白はビショップをc4へ進めるよ。白のビショップは、キングしか守っていない黒のf7のポーンをねらっているんだ。",
+    en:"White develops the bishop to c4. White's bishop aims at Black's f7 pawn, which only the king defends.",
+    fox:'normal' },
+  { move:{from:[1,3],to:[2,3]}, moveLabel:{ja:"7...d6", en:"7...d6"},
+    ja:"黒はポーンをd6へ進めるよ。黒はc8のビショップの道を開けて、e5のマスも押さえるんだ。",
+    en:"Black pushes the pawn to d6. Black opens the path for the c8 bishop and also controls the e5 square.",
+    fox:'normal' },
+  { move:{from:[7,4],to:[7,6],castle:{from:[7,7],to:[7,5]}}, moveLabel:{ja:"8. O-O", en:"8. O-O"},
+    ja:"白はキャスリングでキングを安全な場所へ動かすよ。白は駒の展開をほぼ終えて、中央の主導権を握っているんだ。",
+    en:"White castles, bringing the king to safety. White has nearly finished development and holds the initiative in the center.",
+    fox:'normal' },
+  { move:{from:[0,4],to:[0,6],castle:{from:[0,7],to:[0,5]}}, moveLabel:{ja:"8...O-O", en:"8...O-O"},
+    ja:"黒もキャスリングでキングを安全な場所へ動かすよ。白は中央のスペースと展開でリードしていて、黒はg7のビショップを生かして反撃のチャンスを待つ形だよ。この後は白がf4と突いて、キングサイドでさらにスペースを広げる流れが知られているんだ。これで本譜は一段落、続きはぜひ自分で指してみてね！",
+    en:"Black also castles, bringing the king to safety. White leads in central space and development, while Black waits for counterplay using the g7 bishop. A known continuation is for White to push f4 and gain even more space on the kingside. That's the main line — try continuing the game yourself from here!",
     fox:'happy' }
 ];
 
@@ -329,15 +351,50 @@ function adjustBottomPadding(){
   }
 }
 
+function shareOnX(message) {
+  const shareUrl = 'https://twitter.com/intent/tweet?text=' + encodeURIComponent(message) + '&url=' + encodeURIComponent(window.location.href);
+  window.open(shareUrl, '_blank', 'noopener,noreferrer,width=550,height=420');
+}
+
 function renderStep(){
   const step = LESSON_STEPS[currentStep];
   renderBoard(boardSnapshots[currentStep]);
   document.getElementById('moveLabel').textContent = (step.moveLabel && step.moveLabel[currentLang]) || '';
-  document.getElementById('commentaryText').textContent = step[currentLang];
+  const ctEl = document.getElementById('commentaryText');
+  const moreText = step[currentLang + 'More'];
+  ctEl.innerHTML = step[currentLang] + (moreText
+    ? '<details class="more-detail"><summary>' + (currentLang === 'ja' ? '💡 もっと詳しく知りたい方へ' : '💡 Want to know more?') + '</summary><div class="more-body">' + moreText + '</div></details>'
+    : '');
+  ctEl.scrollTop = 0;
+  const moreEl = ctEl.querySelector('details.more-detail');
+  if (moreEl) {
+    moreEl.addEventListener('toggle', function(){
+      if (moreEl.open) { ctEl.scrollTop = moreEl.offsetTop - ctEl.offsetTop; }
+      adjustBottomPadding();
+    });
+  }
   document.getElementById('foxAvatar').src = FOX_BY_MOOD[step.fox] || FOX_BY_MOOD.normal;
   document.getElementById('lessonProgress').textContent = currentStep + ' / ' + (LESSON_STEPS.length - 1);
   document.getElementById('btnPrev').disabled = currentStep === 0;
   document.getElementById('btnNext').disabled = currentStep === LESSON_STEPS.length - 1;
+  adjustBottomPadding();
+
+  const shareRow = document.getElementById('shareRow');
+  if (shareRow) {
+    if (currentStep === LESSON_STEPS.length - 1) {
+      const openingNameEl = document.querySelector('.opening-title.lang-element-' + currentLang);
+      const openingName = openingNameEl ? openingNameEl.textContent : '';
+      const msg = currentLang === 'ja'
+        ? '🦊 ' + openingName + 'をKitsuneChessで学んだよ!一手ずつ「なぜその手か」を教えてくれるよ'
+        : '🦊 Just learned the ' + openingName + ' on KitsuneChess! It explains why each move is played, step by step.';
+      const shareBtn = document.getElementById('shareXBtn');
+      shareBtn.textContent = currentLang === 'ja' ? '🦊 𝕏でシェアする' : '🦊 Share on 𝕏';
+      shareBtn.onclick = function() { shareOnX(msg); };
+      shareRow.style.display = 'block';
+    } else {
+      shareRow.style.display = 'none';
+    }
+  }
   adjustBottomPadding();
 }
 

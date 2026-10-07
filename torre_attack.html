@@ -103,6 +103,11 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
   font-size: 1rem;
   color: var(--text-sub);
 }
+.commentary-text a, .opening-intro a { color:var(--brown); text-decoration:underline; font-weight:700; }
+.commentary-text a:hover, .opening-intro a:hover { color:var(--brown-dark); }
+.more-detail { margin-top:8px; border-top:1px dashed var(--brown-light); padding-top:6px; }
+.more-detail summary { cursor:pointer; font-weight:700; color:var(--brown); font-size:0.92rem; list-style-position:inside; }
+.more-detail .more-body { margin-top:6px; font-size:0.94rem; }
 </style>
   <script src="board-theme.js"></script>
 </head>
@@ -121,8 +126,8 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
   <h1 class="opening-title lang-element-en">Torre Attack</h1>
 
   <div class="opening-intro">
-    <p class="lang-element-ja">💡 トーレ・アタックは1.d4 Nf6 2.Nf3 3.Bg5と早期にビショップをg5に展開するシステムだよ！トロンポウスキーと似ているけど、白が先にNf3と展開してからBg5と出すのが違いなんだ。黒のf6のナイトにプレッシャーをかけながら白は堅実に展開していくよ。e3-Nbd2-c3-Bd3という形で組み立ててから中央でのプレイを開始するんだ。カルロス・トーレ・レペトが1920年代に発展させたこのシステムは、複雑な理論を避けながら実戦的なプレッシャーをかけ続けられるよ。初心者から中級者が学ぶのに最適なオープニングだよ！</p>
-    <p class="lang-element-en">💡 The Torre Attack develops the bishop early to g5 with 1.d4 Nf6 2.Nf3 3.Bg5! Similar to the Trompowsky but White develops Nf3 first. White pressures Black's f6 knight while developing solidly. The typical setup involves e3-Nbd2-c3-Bd3 before beginning central operations. Developed by Carlos Torre Repetto in the 1920s, this system maintains practical pressure while avoiding complex theoretical battles. The straightforward and systematic development makes the Torre Attack an excellent opening for beginners and intermediate players!</p>
+    <p class="lang-element-ja">💡 トーレ・アタックは、1.d4 Nf6 2.Nf3 e6 3.Bg5のように、白がナイトとビショップを使って黒のf6のナイトをピンするオープニングだよ。名前は、1920年代に活躍したメキシコの名手カルロス・トーレに由来していて、1925年にはこの形で元世界チャンピオンのラスカーに勝ったことで有名なんだ。白はどんな形で来られても、ほぼ同じ駒の並べ方で戦えるので、覚えることが少なくて済むよ。ロンドン・システムなどと並ぶ、実戦向きのシステムなんだ。</p>
+    <p class="lang-element-en">💡 The Torre Attack is an opening in which White pins Black's f6 knight with moves like 1.d4 Nf6 2.Nf3 e6 3.Bg5. It's named after Carlos Torre, the Mexican master who was active in the 1920s and famously beat former world champion Lasker with it in 1925. White can use almost the same setup against many replies, so there's less to memorize. Like the London System, it's a practical system for real games.</p>
   </div>
 
   <div class="board-wrap">
@@ -142,6 +147,9 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
     <button id="btnPrev" class="lesson-btn">← 前へ</button>
     <span class="lesson-progress" id="lessonProgress"></span>
     <button id="btnNext" class="lesson-btn">次へ →</button>
+  </div>
+  <div id="shareRow" style="display:none;text-align:center;margin-top:10px;">
+    <button id="shareXBtn" style="background:#000;color:#fff;border:none;border-radius:20px;padding:8px 16px;font-family:'Crimson Pro',serif;font-weight:700;font-size:0.85rem;cursor:pointer;">🦊 𝕏でシェアする</button>
   </div>
 </div>
 
@@ -190,60 +198,62 @@ const initialBoard = [
 // ============================================================
 const LESSON_STEPS = [
   { move:null, moveLabel:{ja:"開始局面", en:"Starting Position"},
-    ja:"トーレ・アタックのレッスンを始めるよ！複雑な理論を避けながら実戦的なプレッシャーをかけ続けられる、初心者にも優しいシステムだよ。ジーンと一緒に、一手ずつ「なぜその手を指すのか」を学んでいこう。",
-    en:"Let's start the Torre Attack lesson! A beginner-friendly system that maintains practical pressure while avoiding complex theory. Jene will explain why each move is played, one step at a time.",
+    ja:"トーレ・アタックのレッスンを始めるよ！このページでは、白がBg5でf6のナイトをピンし、e3・Nbd2・Bd3・c3と決まった形を組み立てていく流れを見ていくよ。白がどうやって中央を固め、e4への準備を進めるのかがポイントなんだ。一手ずつジーンと一緒に、なぜその手を指すのかを学んでいこう。",
+    en:"Let's start the Torre Attack lesson! On this page we follow how White pins the f6 knight with Bg5 and builds a set formation with e3, Nbd2, Bd3 and c3. The key is how White locks down the center and prepares e4. Jene will walk you through why each move is played, one step at a time.",
     fox:'welcome' },
   { move:{from:[6,3],to:[4,3]}, moveLabel:{ja:"1. d4", en:"1. d4"},
-    ja:"白はd4で中央を制圧するよ。",
-    en:"White plays 1.d4, claiming the center.",
+    ja:"白はポーンをd4へ進めるよ。白は中央のマスを押さえながら、c1のビショップの道を開けるんだ。",
+    en:"White pushes the pawn to d4. White takes control of central squares and opens the path for the c1 bishop.",
     fox:'normal' },
   { move:{from:[0,6],to:[2,5]}, moveLabel:{ja:"1...Nf6", en:"1...Nf6"},
-    ja:"黒はナイトをf6へ展開するよ。",
-    en:"Black develops the knight to f6.",
+    ja:"黒はナイトをf6へ進めるよ。黒はナイトを展開しながら、白がe4と突くのをけん制するんだ。",
+    en:"Black develops the knight to f6. Black develops while discouraging White from pushing e4.",
     fox:'normal' },
   { move:{from:[7,6],to:[5,5]}, moveLabel:{ja:"2. Nf3", en:"2. Nf3"},
-    ja:"白はナイトをf3へ展開するよ。",
-    en:"White develops the knight to f3.",
+    ja:"白はナイトをf3へ進めるよ。白はナイトを展開しながら、e5のマスを押さえるんだ。",
+    en:"White develops the knight to f3. White develops while controlling the e5 square.",
     fox:'normal' },
   { move:{from:[1,4],to:[2,4]}, moveLabel:{ja:"2...e6", en:"2...e6"},
-    ja:"黒はe6で柔軟に展開を準備するよ。",
-    en:"Black plays 2...e6, preparing flexible development.",
+    ja:"黒はポーンをe6へ進めるよ。黒はd5のマスを押さえながら、f8のビショップの道を開けるんだ。",
+    en:"Black pushes the pawn to e6. Black controls the d5 square and opens the path for the f8 bishop.",
     fox:'normal' },
   { move:{from:[7,2],to:[3,6]}, moveLabel:{ja:"3. Bg5（トーレ！）", en:"3. Bg5 (Torre!)"},
-    ja:"ここが本題、トーレ・アタックの一手！白はビショップを早期にg5へ展開して、黒のナイトにプレッシャーをかけるよ。",
-    en:"Here's the Torre Attack move! White develops the bishop early to g5, pressuring Black's knight.",
+    ja:"ここがトーレ・アタックの一手！白はビショップをg5へ進めて、f6のナイトをねらうよ。黒のeのポーンが動いたので、f6のナイトが動くとd8の黒のクイーンが取られる形（クイーンへのピン）になっているんだ。一般的には3.c4で中央を広げるけれど、白はここでc4を突かずに、決まった駒の並べ方で戦う道を選ぶんだ。その代わり、白は中央を大きく取らないので、黒も楽に駒を展開できるよ。",
+    en:"Here's the Torre Attack! White develops the bishop to g5, targeting the f6 knight. Since Black's e-pawn has moved, the f6 knight is pinned against Black's queen on d8. White usually expands with 3.c4, but here White skips c4 and plays with a fixed system of piece placement. The trade-off is that without a big center, White lets Black develop comfortably too.",
     fox:'happy' },
   { move:{from:[1,2],to:[3,2]}, moveLabel:{ja:"3...c5", en:"3...c5"},
-    ja:"黒はc5で中央に圧力をかけるよ。",
-    en:"Black challenges the center with 3...c5.",
+    ja:"黒はポーンをc5へ進めるよ。黒はc5のポーンで白のd4のポーンを斜めから攻撃して、中央で反撃するんだ。",
+    en:"Black pushes the pawn to c5. Black's c5 pawn attacks White's d4 pawn diagonally as Black strikes back in the center.",
     fox:'normal' },
   { move:{from:[6,4],to:[5,4]}, moveLabel:{ja:"4. e3", en:"4. e3"},
-    ja:"白はe3で堅実に展開を進めるよ。",
-    en:"White continues developing solidly with 4.e3.",
+    ja:"白はポーンをe3へ進めるよ。白はd4のポーンを支えながら、f1のビショップの道を開けるんだ。",
+    en:"White pushes the pawn to e3. White supports the d4 pawn and opens the path for the f1 bishop.",
     fox:'normal' },
   { move:{from:[0,5],to:[1,4]}, moveLabel:{ja:"4...Be7", en:"4...Be7"},
-    ja:"黒はビショップをe7へ。キャスリングの準備をするよ。",
-    en:"Black plays 4...Be7, preparing to castle.",
+    ja:"黒はビショップをe7へ進めるよ。黒のビショップはg5の白のビショップとd8のクイーンの間に入って、f6のナイトのピンを外すんだ。",
+    en:"Black develops the bishop to e7. Black's bishop steps between White's g5 bishop and the queen on d8, breaking the pin on the f6 knight.",
+    jaMore:"黒はこの手の代わりに4...h6と、すぐに白のビショップに下がるか交換するかを迫ることもできるよ。",
+    enMore:"Instead of this move, Black can also play 4...h6, asking White's bishop right away to retreat or trade.",
     fox:'normal' },
   { move:{from:[7,1],to:[6,3]}, moveLabel:{ja:"5. Nbd2", en:"5. Nbd2"},
-    ja:"白はナイトをd2へ展開するよ。トーレらしい堅実な形を作るんだ。",
-    en:"White develops the knight to d2, the characteristic solid Torre setup.",
-    fox:'wink' },
+    ja:"白はナイトをd2へ進めるよ。白はナイトを展開しながら、まだ空いているe4のマスに利かせて、この先e4と突く準備をするんだ。",
+    en:"White develops the knight to d2. White develops while covering the still-empty e4 square, preparing to push e4 later.",
+    fox:'normal' },
   { move:{from:[0,4],to:[0,6],castle:{from:[0,7],to:[0,5]}}, moveLabel:{ja:"5...O-O", en:"5...O-O"},
-    ja:"黒はキャスリングでキングを安全な場所へ。",
-    en:"Black castles kingside, tucking the king away safely.",
+    ja:"黒はキャスリングでキングを安全な場所へ動かすよ。黒はキングの安全を確保して、中央での戦いに備えるんだ。",
+    en:"Black castles, bringing the king to safety. Black secures the king and prepares for the fight in the center.",
     fox:'normal' },
   { move:{from:[7,5],to:[5,3]}, moveLabel:{ja:"6. Bd3", en:"6. Bd3"},
-    ja:"白はビショップをd3へ展開するよ。",
-    en:"White develops the bishop to d3.",
+    ja:"白はビショップをd3へ進めるよ。白のビショップはd3から、まだ空いているe4のマスに利いていて、黒のh7のポーンまで続く斜めの線もにらんでいるんだ。",
+    en:"White develops the bishop to d3. From d3, White's bishop covers the still-empty e4 square and eyes the diagonal leading to Black's h7 pawn.",
     fox:'normal' },
   { move:{from:[1,3],to:[3,3]}, moveLabel:{ja:"6...d5", en:"6...d5"},
-    ja:"黒はd5で中央に踏み込むよ。",
-    en:"Black stakes a claim in the center with 6...d5.",
+    ja:"黒はポーンをd5へ進めるよ。黒は中央にポーンを置いて、白がe4と突くのをけん制するんだ。",
+    en:"Black pushes the pawn to d5. Black plants a pawn in the center to discourage White from pushing e4.",
     fox:'normal' },
   { move:{from:[6,2],to:[5,2]}, moveLabel:{ja:"7. c3", en:"7. c3"},
-    ja:"白はc3で陣形を整えるよ。これで本譜は一段落、続きはぜひ自分で指してみてね！",
-    en:"White completes the setup with 7.c3. That's the main line — try continuing the game yourself from here!",
+    ja:"白はポーンをc3へ進めるよ。白はd4のポーンの守りをc3・e3のポーンとf3のナイトの3つにして、中央をがっちり固めるんだ。白はこの先O-Oとe4で中央を広げ、キングサイドで攻める形を目指すよ。黒はc5のポーンでd4に働きかけながら、クイーンサイドで反撃する準備をするんだ。これで本譜は一段落、続きはぜひ自分で指してみてね！",
+    en:"White pushes the pawn to c3. White now defends d4 three times, with the c3 and e3 pawns and the f3 knight, locking down the center. White plans to castle and push e4 to expand, aiming for a kingside attack. Black keeps pressure on d4 with the c5 pawn and prepares queenside counterplay. That's the main line — try continuing the game yourself from here!",
     fox:'happy' }
 ];
 
@@ -329,15 +339,50 @@ function adjustBottomPadding(){
   }
 }
 
+function shareOnX(message) {
+  const shareUrl = 'https://twitter.com/intent/tweet?text=' + encodeURIComponent(message) + '&url=' + encodeURIComponent(window.location.href);
+  window.open(shareUrl, '_blank', 'noopener,noreferrer,width=550,height=420');
+}
+
 function renderStep(){
   const step = LESSON_STEPS[currentStep];
   renderBoard(boardSnapshots[currentStep]);
   document.getElementById('moveLabel').textContent = (step.moveLabel && step.moveLabel[currentLang]) || '';
-  document.getElementById('commentaryText').textContent = step[currentLang];
+  const ctEl = document.getElementById('commentaryText');
+  const moreText = step[currentLang + 'More'];
+  ctEl.innerHTML = step[currentLang] + (moreText
+    ? '<details class="more-detail"><summary>' + (currentLang === 'ja' ? '💡 もっと詳しく知りたい方へ' : '💡 Want to know more?') + '</summary><div class="more-body">' + moreText + '</div></details>'
+    : '');
+  ctEl.scrollTop = 0;
+  const moreEl = ctEl.querySelector('details.more-detail');
+  if (moreEl) {
+    moreEl.addEventListener('toggle', function(){
+      if (moreEl.open) { ctEl.scrollTop = moreEl.offsetTop - ctEl.offsetTop; }
+      adjustBottomPadding();
+    });
+  }
   document.getElementById('foxAvatar').src = FOX_BY_MOOD[step.fox] || FOX_BY_MOOD.normal;
   document.getElementById('lessonProgress').textContent = currentStep + ' / ' + (LESSON_STEPS.length - 1);
   document.getElementById('btnPrev').disabled = currentStep === 0;
   document.getElementById('btnNext').disabled = currentStep === LESSON_STEPS.length - 1;
+  adjustBottomPadding();
+
+  const shareRow = document.getElementById('shareRow');
+  if (shareRow) {
+    if (currentStep === LESSON_STEPS.length - 1) {
+      const openingNameEl = document.querySelector('.opening-title.lang-element-' + currentLang);
+      const openingName = openingNameEl ? openingNameEl.textContent : '';
+      const msg = currentLang === 'ja'
+        ? '🦊 ' + openingName + 'をKitsuneChessで学んだよ!一手ずつ「なぜその手か」を教えてくれるよ'
+        : '🦊 Just learned the ' + openingName + ' on KitsuneChess! It explains why each move is played, step by step.';
+      const shareBtn = document.getElementById('shareXBtn');
+      shareBtn.textContent = currentLang === 'ja' ? '🦊 𝕏でシェアする' : '🦊 Share on 𝕏';
+      shareBtn.onclick = function() { shareOnX(msg); };
+      shareRow.style.display = 'block';
+    } else {
+      shareRow.style.display = 'none';
+    }
+  }
   adjustBottomPadding();
 }
 

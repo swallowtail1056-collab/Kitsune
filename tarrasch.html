@@ -103,6 +103,11 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
   font-size: 1rem;
   color: var(--text-sub);
 }
+.commentary-text a, .opening-intro a { color:var(--brown); text-decoration:underline; font-weight:700; }
+.commentary-text a:hover, .opening-intro a:hover { color:var(--brown-dark); }
+.more-detail { margin-top:8px; border-top:1px dashed var(--brown-light); padding-top:6px; }
+.more-detail summary { cursor:pointer; font-weight:700; color:var(--brown); font-size:0.92rem; list-style-position:inside; }
+.more-detail .more-body { margin-top:6px; font-size:0.94rem; }
 </style>
   <script src="board-theme.js"></script>
 </head>
@@ -121,8 +126,8 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
   <h1 class="opening-title lang-element-en">Tarrasch Defense</h1>
 
   <div class="opening-intro">
-    <p class="lang-element-ja">💡 タラッシュ・ディフェンスはクイーンズ・ギャンビットに対して積極的にc5と突いて中央での主導権を争う変化だよ！タラッシュ変化の最大の特徴は黒が孤立ポーン（IQP）を持つ局面になりやすいこと。IQPは弱点になりうるけど、その代わりに活発なピース活動と攻撃的な可能性を与えてくれるんだ。ジークベルト・タラッシュが19世紀末に発展させた理論的に重要な変化で、「活発なピース活動はポーン弱点を補う」という重要なチェスの原則を体現しているよ！</p>
-    <p class="lang-element-en">💡 The Tarrasch Defense plays c5 against the Queen's Gambit for an active central fight! The defining characteristic is that Black often ends up with an Isolated Queen's Pawn (IQP). While the IQP can be a weakness in the endgame, it provides active piece play and attacking possibilities in the middlegame. Developed by Siegbert Tarrasch in the late 19th century, this variation sparked important theoretical debates about the value of pawn structure versus piece activity. An important variation for understanding how to play with and against isolated pawns!</p>
+    <p class="lang-element-ja">💡 タラッシュ・ディフェンスは、クイーンズ・ギャンビットに対して黒が3...c5と突き、中央を積極的に開くオープニングだよ。名前は、20世紀初めのドイツの名手ジークベルト・タラッシュに由来していて、彼はこの守りこそ最も正しいと主張したんだ。黒は孤立ポーンを持ちやすいけれど、そのぶん駒が自由に動けるのが特徴だよ。カスパロフも若いころの世界選手権挑戦者決定戦で指したことがある、積極的な守りなんだ。</p>
+    <p class="lang-element-en">💡 The Tarrasch Defense is an opening in which Black answers the Queen's Gambit with 3...c5, actively opening the center. It's named after Siegbert Tarrasch, the German master of the early 20th century, who insisted it was the most correct defense. Black often gets an isolated pawn, but in return the pieces move freely. Kasparov played it in his early Candidates matches, making it a well-known active defense.</p>
   </div>
 
   <div class="board-wrap">
@@ -142,6 +147,9 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
     <button id="btnPrev" class="lesson-btn">← 前へ</button>
     <span class="lesson-progress" id="lessonProgress"></span>
     <button id="btnNext" class="lesson-btn">次へ →</button>
+  </div>
+  <div id="shareRow" style="display:none;text-align:center;margin-top:10px;">
+    <button id="shareXBtn" style="background:#000;color:#fff;border:none;border-radius:20px;padding:8px 16px;font-family:'Crimson Pro',serif;font-weight:700;font-size:0.85rem;cursor:pointer;">🦊 𝕏でシェアする</button>
   </div>
 </div>
 
@@ -190,60 +198,74 @@ const initialBoard = [
 // ============================================================
 const LESSON_STEPS = [
   { move:null, moveLabel:{ja:"開始局面", en:"Starting Position"},
-    ja:"タラッシュ・ディフェンスのレッスンを始めるよ！孤立ポーンを抱えながらも、活発な駒の動きで補う、戦略的に奥深い定跡だよ。ジーンと一緒に、一手ずつ「なぜその手を指すのか」を学んでいこう。",
-    en:"Let's start the Tarrasch Defense lesson! Black accepts an isolated pawn in exchange for active piece play — a deeply strategic idea. Jene will explain why each move is played, one step at a time.",
+    ja:"タラッシュ・ディフェンスのレッスンを始めるよ！このページでは、黒が3...c5で中央を開き、白がg3とBg2でd5のポーンをねらう、ルビンシュタインの作戦を見ていくよ。黒の駒の活発さと、取り残されやすいd5のポーンがポイントなんだ。一手ずつジーンと一緒に、なぜその手を指すのかを学んでいこう。",
+    en:"Let's start the Tarrasch Defense lesson! On this page we follow Rubinstein's plan, where Black opens the center with 3...c5 and White targets the d5 pawn with g3 and Bg2. The key is Black's active pieces versus the d5 pawn, which tends to become isolated. Jene will walk you through why each move is played, one step at a time.",
     fox:'welcome' },
   { move:{from:[6,3],to:[4,3]}, moveLabel:{ja:"1. d4", en:"1. d4"},
-    ja:"白はd4で中央を制圧するよ。",
-    en:"White plays 1.d4, claiming the center.",
+    ja:"白はポーンをd4へ進めるよ。白は中央のマスを押さえながら、c1のビショップの道を開けるんだ。",
+    en:"White pushes the pawn to d4. White takes control of central squares and opens the path for the c1 bishop.",
     fox:'normal' },
   { move:{from:[1,3],to:[3,3]}, moveLabel:{ja:"1...d5", en:"1...d5"},
-    ja:"黒も同じくd5で対抗するよ。",
-    en:"Black mirrors with 1...d5.",
+    ja:"黒はポーンをd5へ進めるよ。黒も同じように中央を押さえて、白のポーンと向かい合う形を作るんだ。",
+    en:"Black pushes the pawn to d5. Black also claims the center, setting up a pawn face-off with White.",
     fox:'normal' },
   { move:{from:[6,2],to:[4,2]}, moveLabel:{ja:"2. c4", en:"2. c4"},
-    ja:"白はc4でポーンをあえて差し出すよ（クイーンズ・ギャンビット）。",
-    en:"White offers the c-pawn with 2.c4 (the Queen's Gambit).",
+    ja:"白はポーンをc4へ進めて、<a href='queens_gambit.html'>クイーンズ・ギャンビット</a>に入るよ。白はc4のポーンで、黒のd5のポーンに働きかけるんだ。",
+    en:"White pushes the pawn to c4, entering the <a href='queens_gambit.html?lang=en'>Queen's Gambit</a>. White uses the c4 pawn to challenge Black's d5 pawn.",
     fox:'normal' },
   { move:{from:[1,4],to:[2,4]}, moveLabel:{ja:"2...e6", en:"2...e6"},
-    ja:"黒はe6で展開の準備をするよ。",
-    en:"Black plays 2...e6, preparing development.",
+    ja:"黒はポーンをe6へ進めるよ。黒はd5のポーンを支えながら、f8のビショップの道を開けるんだ。",
+    en:"Black pushes the pawn to e6. Black supports the d5 pawn and opens the path for the f8 bishop.",
     fox:'normal' },
   { move:{from:[7,1],to:[5,2]}, moveLabel:{ja:"3. Nc3", en:"3. Nc3"},
-    ja:"白はナイトをc3へ展開するよ。",
-    en:"White develops the knight to c3.",
+    ja:"白はナイトをc3へ進めるよ。白はナイトを展開しながら、黒のd5のポーンへの圧力を強めるんだ。",
+    en:"White develops the knight to c3. White develops while increasing the pressure on Black's d5 pawn.",
     fox:'normal' },
   { move:{from:[1,2],to:[3,2]}, moveLabel:{ja:"3...c5（タラッシュ！）", en:"3...c5 (Tarrasch!)"},
-    ja:"ここが本題、タラッシュ・ディフェンスの一手！黒は静かに受けず、すぐにc5で中央の主導権を争うよ。",
-    en:"Here's the Tarrasch Defense move! Instead of passive defense, Black immediately fights for the center with 3...c5.",
+    ja:"ここがタラッシュ・ディフェンスの一手！黒はポーンをc5へ進めて、白のd4のポーンに反撃し、中央を開いて駒を自由に動かす道を選ぶよ。その代わり、黒はこの先dのポーンが1つだけ取り残された形（孤立ポーン）になりやすいよ。",
+    en:"Here's the Tarrasch Defense! Black pushes the pawn to c5, striking back at White's d4 pawn and opening the center for free piece play. The trade-off is that Black often ends up with an isolated d-pawn.",
+    jaMore:"黒はこの手の代わりに3...Nf6（クイーンズ・ギャンビット・ディクラインド）や3...c6で落ち着いて守ることのほうが多いよ。",
+    enMore:"Instead of this move, Black more often defends calmly with 3...Nf6 (the Queen's Gambit Declined) or 3...c6.",
     fox:'happy' },
-  { move:{from:[7,6],to:[5,5]}, moveLabel:{ja:"4. Nf3", en:"4. Nf3"},
-    ja:"白はナイトをf3へ展開するよ。",
-    en:"White develops the other knight to f3.",
+  { move:{from:[4,2],to:[3,3]}, moveLabel:{ja:"4. cxd5", en:"4. cxd5"},
+    ja:"白はc4のポーンで、d5にいた黒のポーンを取るよ。白は黒の中央のポーンを交換して、黒のポーンの形を崩しにいくんだ。",
+    en:"White's c4 pawn captures the black pawn that was on d5. White trades off Black's central pawn to damage Black's pawn structure.",
     fox:'normal' },
-  { move:{from:[0,6],to:[2,5]}, moveLabel:{ja:"4...Nf6", en:"4...Nf6"},
-    ja:"黒もナイトをf6へ展開するよ。",
-    en:"Black develops the knight to f6.",
+  { move:{from:[2,4],to:[3,3]}, moveLabel:{ja:"4...exd5", en:"4...exd5"},
+    ja:"黒はe6のポーンで、d5に入った白のポーンを取り返すよ。黒はこれでc8のビショップの道が開くけれど、黒のd5のポーンの両隣のcとeのファイルに、黒のポーンがいない形に近づいていくんだ。",
+    en:"Black's e6 pawn takes back the white pawn that landed on d5. This opens the c8 bishop's path, but Black is heading toward a structure where the d5 pawn has no neighboring pawns on the c- and e-files.",
     fox:'normal' },
-  { move:{from:[7,2],to:[3,6]}, moveLabel:{ja:"5. Bg5", en:"5. Bg5"},
-    ja:"白はビショップをg5へ。黒のナイトをピンするよ。",
-    en:"White develops the bishop to g5, pinning the knight.",
-    fox:'wink' },
-  { move:{from:[0,5],to:[1,4]}, moveLabel:{ja:"5...Be7", en:"5...Be7"},
-    ja:"黒はビショップをe7へ。ピンを解消する準備をするよ。",
-    en:"Black plays 5...Be7, preparing to unpin the knight.",
+  { move:{from:[7,6],to:[5,5]}, moveLabel:{ja:"5. Nf3", en:"5. Nf3"},
+    ja:"白はナイトをf3へ進めるよ。白はナイトを展開しながら、黒のc5のポーンやd5のマスに働きかける準備をするんだ。",
+    en:"White develops the knight to f3. White develops while preparing to put pressure on Black's c5 pawn and the d5 square.",
     fox:'normal' },
-  { move:{from:[6,4],to:[5,4]}, moveLabel:{ja:"6. e3", en:"6. e3"},
-    ja:"白はe3で展開を進めるよ。",
-    en:"White continues developing with 6.e3.",
+  { move:{from:[0,1],to:[2,2]}, moveLabel:{ja:"5...Nc6", en:"5...Nc6"},
+    ja:"黒はナイトをc6へ進めるよ。黒はナイトを展開しながら、d4のマスに利きを足すんだ。",
+    en:"Black develops the knight to c6. Black develops while adding control of the d4 square.",
     fox:'normal' },
-  { move:{from:[0,4],to:[0,6],castle:{from:[0,7],to:[0,5]}}, moveLabel:{ja:"6...O-O", en:"6...O-O"},
-    ja:"黒はキャスリングでキングを安全な場所へ。",
-    en:"Black castles kingside, tucking the king away safely.",
+  { move:{from:[6,6],to:[5,6]}, moveLabel:{ja:"6. g3（ルビンシュタイン！）", en:"6. g3 (Rubinstein!)"},
+    ja:"ここがルビンシュタインの作戦の一手！白はポーンをg3へ進めて、ビショップをg2に出す準備をするよ。白のビショップは長い対角線から、黒のd5のポーンをねらう形を作るんだ。",
+    en:"Here's Rubinstein's plan! White pushes the pawn to g3, preparing to put the bishop on g2. From the long diagonal, the bishop will aim at Black's d5 pawn.",
+    fox:'happy' },
+  { move:{from:[0,6],to:[2,5]}, moveLabel:{ja:"6...Nf6", en:"6...Nf6"},
+    ja:"黒はナイトをf6へ進めるよ。黒はナイトを展開しながら、d5のポーンの守りを増やすんだ。",
+    en:"Black develops the knight to f6. Black develops while adding another defender to the d5 pawn.",
     fox:'normal' },
-  { move:{from:[4,2],to:[3,3]}, moveLabel:{ja:"7. cxd5", en:"7. cxd5"},
-    ja:"白はcxd5とポーンを取るよ。これで黒は孤立ポーンを抱えることになるけど、その分活発な駒の活動を得られるんだ。これで本譜は一段落、続きはぜひ自分で指してみてね！",
-    en:"White captures with 7.cxd5, leading to Black's isolated d-pawn in exchange for active piece play. That's the main line — try continuing the game yourself from here!",
+  { move:{from:[7,5],to:[6,6]}, moveLabel:{ja:"7. Bg2", en:"7. Bg2"},
+    ja:"白はビショップをg2へ進めるよ。白のビショップは今はf3のナイトの後ろにいるけれど、ナイトが動いたあとは長い対角線で黒のd5のポーンをにらむんだ。",
+    en:"White develops the bishop to g2. White's bishop sits behind the f3 knight for now, but once the knight moves it will eye Black's d5 pawn along the long diagonal.",
+    fox:'normal' },
+  { move:{from:[0,5],to:[1,4]}, moveLabel:{ja:"7...Be7", en:"7...Be7"},
+    ja:"黒はビショップをe7へ進めるよ。黒はキングサイドの駒を出し終えて、キャスリングの準備をするんだ。",
+    en:"Black develops the bishop to e7. Black finishes developing the kingside pieces and gets ready to castle.",
+    fox:'normal' },
+  { move:{from:[7,4],to:[7,6],castle:{from:[7,7],to:[7,5]}}, moveLabel:{ja:"8. O-O", en:"8. O-O"},
+    ja:"白はキャスリングでキングを安全な場所へ動かすよ。白のキングは、g2のビショップとポーンに守られた堅い形に入るんだ。",
+    en:"White castles, bringing the king to safety. White's king settles into a solid shelter guarded by the g2 bishop and pawns.",
+    fox:'normal' },
+  { move:{from:[0,4],to:[0,6],castle:{from:[0,7],to:[0,5]}}, moveLabel:{ja:"8...O-O", en:"8...O-O"},
+    ja:"黒もキャスリングでキングを安全な場所へ動かすよ。この後は、黒がcxd4やc4、白がdxc5などで中央のポーンの形を決めていき、黒のd5のポーンが孤立ポーンになることが多いんだ。白はそのポーンをねらい、黒は駒の活発さを生かして戦う局面だよ。これで本譜は一段落、続きはぜひ自分で指してみてね！",
+    en:"Black also castles, bringing the king to safety. From here, the central pawn structure is usually settled with moves like ...cxd4 or ...c4 for Black and dxc5 for White, and Black's d5 pawn often becomes isolated. White targets that pawn, while Black relies on active pieces. That's the main line — try continuing the game yourself from here!",
     fox:'happy' }
 ];
 
@@ -329,15 +351,50 @@ function adjustBottomPadding(){
   }
 }
 
+function shareOnX(message) {
+  const shareUrl = 'https://twitter.com/intent/tweet?text=' + encodeURIComponent(message) + '&url=' + encodeURIComponent(window.location.href);
+  window.open(shareUrl, '_blank', 'noopener,noreferrer,width=550,height=420');
+}
+
 function renderStep(){
   const step = LESSON_STEPS[currentStep];
   renderBoard(boardSnapshots[currentStep]);
   document.getElementById('moveLabel').textContent = (step.moveLabel && step.moveLabel[currentLang]) || '';
-  document.getElementById('commentaryText').textContent = step[currentLang];
+  const ctEl = document.getElementById('commentaryText');
+  const moreText = step[currentLang + 'More'];
+  ctEl.innerHTML = step[currentLang] + (moreText
+    ? '<details class="more-detail"><summary>' + (currentLang === 'ja' ? '💡 もっと詳しく知りたい方へ' : '💡 Want to know more?') + '</summary><div class="more-body">' + moreText + '</div></details>'
+    : '');
+  ctEl.scrollTop = 0;
+  const moreEl = ctEl.querySelector('details.more-detail');
+  if (moreEl) {
+    moreEl.addEventListener('toggle', function(){
+      if (moreEl.open) { ctEl.scrollTop = moreEl.offsetTop - ctEl.offsetTop; }
+      adjustBottomPadding();
+    });
+  }
   document.getElementById('foxAvatar').src = FOX_BY_MOOD[step.fox] || FOX_BY_MOOD.normal;
   document.getElementById('lessonProgress').textContent = currentStep + ' / ' + (LESSON_STEPS.length - 1);
   document.getElementById('btnPrev').disabled = currentStep === 0;
   document.getElementById('btnNext').disabled = currentStep === LESSON_STEPS.length - 1;
+  adjustBottomPadding();
+
+  const shareRow = document.getElementById('shareRow');
+  if (shareRow) {
+    if (currentStep === LESSON_STEPS.length - 1) {
+      const openingNameEl = document.querySelector('.opening-title.lang-element-' + currentLang);
+      const openingName = openingNameEl ? openingNameEl.textContent : '';
+      const msg = currentLang === 'ja'
+        ? '🦊 ' + openingName + 'をKitsuneChessで学んだよ!一手ずつ「なぜその手か」を教えてくれるよ'
+        : '🦊 Just learned the ' + openingName + ' on KitsuneChess! It explains why each move is played, step by step.';
+      const shareBtn = document.getElementById('shareXBtn');
+      shareBtn.textContent = currentLang === 'ja' ? '🦊 𝕏でシェアする' : '🦊 Share on 𝕏';
+      shareBtn.onclick = function() { shareOnX(msg); };
+      shareRow.style.display = 'block';
+    } else {
+      shareRow.style.display = 'none';
+    }
+  }
   adjustBottomPadding();
 }
 

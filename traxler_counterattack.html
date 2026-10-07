@@ -101,6 +101,11 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
   font-size: 1rem;
   color: var(--text-sub);
 }
+.commentary-text a, .opening-intro a { color:var(--brown); text-decoration:underline; font-weight:700; }
+.commentary-text a:hover, .opening-intro a:hover { color:var(--brown-dark); }
+.more-detail { margin-top:8px; border-top:1px dashed var(--brown-light); padding-top:6px; }
+.more-detail summary { cursor:pointer; font-weight:700; color:var(--brown); font-size:0.92rem; list-style-position:inside; }
+.more-detail .more-body { margin-top:6px; font-size:0.94rem; }
 </style>
   <script src="board-theme.js"></script>
 </head>
@@ -119,8 +124,8 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
   <h1 class="opening-title lang-element-en">Traxler Counterattack</h1>
 
   <div class="opening-intro">
-    <p class="lang-element-ja">💡 白のNg5攻撃に対し、黒が逃げずに真っ向から反撃する型破りな戦法。両者の玉が危険にさらされる大乱戦になり、正確な読みが求められる。</p>
-    <p class="lang-element-en">💡 Instead of retreating from White\'s Ng5 attack, Black counterattacks head-on in this unorthodox line. Both kings end up exposed in a wild melee demanding precise calculation.</p>
+    <p class="lang-element-ja">💡 トラクスラー・カウンターアタックは、トゥー・ナイツ・ディフェンスで白が4.Ng5とf7をねらったときに、黒が4...Bc5と反撃する、とても激しい変化だよ。名前は、19世紀末にこの手を指したチェコの神父カレル・トラクスラーに由来していて、ウィルケス・バール変化とも呼ばれているんだ。黒は駒を差し出してでも白のキングを攻める作戦で、白が正確に応じないとすぐに詰まされてしまうこともあるよ。理論的には白が有利とされているけれど、実戦ではとても危険なオープニングなんだ。</p>
+    <p class="lang-element-en">💡 The Traxler Counterattack is a very sharp line in the Two Knights Defense, where Black answers White's 4.Ng5 attack on f7 with the counterattack 4...Bc5. It's named after Karel Traxler, a Czech priest who played it in the late 19th century, and it's also called the Wilkes-Barre Variation. Black gives up material to attack White's king, and if White doesn't respond accurately, White can be mated quickly. Theory considers it better for White, but it's very dangerous in practice.</p>
   </div>
 
   <div class="board-wrap">
@@ -140,6 +145,9 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
     <button id="btnPrev" class="lesson-btn">← 前へ</button>
     <span class="lesson-progress" id="lessonProgress"></span>
     <button id="btnNext" class="lesson-btn">次へ →</button>
+  </div>
+  <div id="shareRow" style="display:none;text-align:center;margin-top:10px;">
+    <button id="shareXBtn" style="background:#000;color:#fff;border:none;border-radius:20px;padding:8px 16px;font-family:'Crimson Pro',serif;font-weight:700;font-size:0.85rem;cursor:pointer;">🦊 𝕏でシェアする</button>
   </div>
 </div>
 
@@ -179,56 +187,76 @@ const initialBoard = [
 
 const LESSON_STEPS = [
   { move:null, moveLabel:{ja:"開始局面", en:"Starting Position"},
-    ja:'トラクスラー・カウンターアタックのレッスンを始めるよ！一手ずつジーンと一緒に、なぜその手を指すのかを学んでいこう。',
-    en:'Let\'s start the Traxler Counterattack lesson! Jene will walk you through why each move is played, one step at a time.',
+    ja:"トラクスラー・カウンターアタックのレッスンを始めるよ！このページでは、黒がf7を守らずに4...Bc5で反撃し、駒を差し出しながら白のキングを攻め続ける流れを見ていくよ。白のキングがどう追い回されるのか、白がどう受ければよいのかがポイントなんだ。一手ずつジーンと一緒に、なぜその手を指すのかを学んでいこう。",
+    en:"Let's start the Traxler Counterattack lesson! On this page we follow how Black ignores the threat to f7 and counterattacks with 4...Bc5, giving up material to keep attacking White's king. The key is how White's king gets chased around and how White should defend. Jene will walk you through why each move is played, one step at a time.",
     fox:'welcome' },
   { move:{from:[6,4],to:[4,4]}, moveLabel:{ja:"1. e4", en:"1. e4"},
-    ja:'白はポーンをe4へ進めるよ。',
-    en:'White develops the pawn to e4.',
+    ja:"白はポーンをe4へ進めるよ。白は中央のマスを押さえながら、ビショップとクイーンが動く道を開けるんだ。",
+    en:"White pushes the pawn to e4. White takes control of central squares and opens lines for the bishop and queen.",
     fox:'normal' },
   { move:{from:[1,4],to:[3,4]}, moveLabel:{ja:"1...e5", en:"1...e5"},
-    ja:'黒はポーンをe5へ進めるよ。',
-    en:'Black develops the pawn to e5.',
+    ja:"黒はポーンをe5へ進めるよ。黒も同じように中央を押さえて、白のポーンと向かい合う形を作るんだ。",
+    en:"Black pushes the pawn to e5. Black also claims the center, setting up a pawn face-off with White.",
     fox:'normal' },
   { move:{from:[7,6],to:[5,5]}, moveLabel:{ja:"2. Nf3", en:"2. Nf3"},
-    ja:'白はナイトをf3へ進めるよ。',
-    en:'White develops the knight to f3.',
+    ja:"白はナイトをf3へ進めるよ。白のナイトは展開しながら、黒のe5のポーンを攻撃しているんだ。",
+    en:"White develops the knight to f3. White's knight develops while attacking Black's e5 pawn.",
     fox:'normal' },
   { move:{from:[0,1],to:[2,2]}, moveLabel:{ja:"2...Nc6", en:"2...Nc6"},
-    ja:'黒はナイトをc6へ進めるよ。',
-    en:'Black develops the knight to c6.',
+    ja:"黒はナイトをc6へ進めるよ。黒はナイトを展開しながら、e5のポーンを守るんだ。",
+    en:"Black develops the knight to c6. Black develops a piece and defends the e5 pawn at the same time.",
     fox:'normal' },
   { move:{from:[7,5],to:[4,2]}, moveLabel:{ja:"3. Bc4", en:"3. Bc4"},
-    ja:'白はビショップをc4へ進めるよ。',
-    en:'White develops the bishop to c4.',
+    ja:"白はビショップをc4へ進めるよ。白のビショップは、キングしか守っていない黒のf7のポーンをねらっているんだ。",
+    en:"White develops the bishop to c4. White's bishop aims at Black's f7 pawn, which only the king defends.",
     fox:'normal' },
   { move:{from:[0,6],to:[2,5]}, moveLabel:{ja:"3...Nf6", en:"3...Nf6"},
-    ja:'黒はナイトをf6へ進めるよ。',
-    en:'Black develops the knight to f6.',
+    ja:"黒はナイトをf6へ進めて、<a href='two_knights.html'>トゥー・ナイツ・ディフェンス</a>に入るよ。黒はナイトを展開しながら、白のe4のポーンを攻撃するんだ。",
+    en:"Black develops the knight to f6, entering the <a href='two_knights.html?lang=en'>Two Knights Defense</a>. Black develops while attacking White's e4 pawn.",
     fox:'normal' },
   { move:{from:[5,5],to:[3,6]}, moveLabel:{ja:"4. Ng5", en:"4. Ng5"},
-    ja:'白はナイトをg5へ進めるよ。',
-    en:'White develops the knight to g5.',
+    ja:"白はナイトをg5へ進めるよ。白のナイトはc4のビショップと一緒に、黒のf7のポーンを2つの駒で攻撃しているんだ。黒のf7はキングにしか守られていないよ。",
+    en:"White moves the knight to g5. Together with the c4 bishop, White's knight attacks Black's f7 pawn with two pieces. Black's f7 is defended only by the king.",
     fox:'normal' },
-  { move:{from:[0,5],to:[3,2]}, moveLabel:{ja:"4...Bc5", en:"4...Bc5"},
-    ja:'黒はビショップをc5へ進めるよ。',
-    en:'Black develops the bishop to c5.',
-    fox:'normal' },
+  { move:{from:[0,5],to:[3,2]}, moveLabel:{ja:"4...Bc5!?（トラクスラー！）", en:"4...Bc5!? (Traxler!)"},
+    ja:"ここがトラクスラー・カウンターアタックの一手！黒はf7を守らずに、ビショップをc5へ進めて、白のf2のマスに反撃するよ。一般的には4...d5でビショップの通り道をふさぐけれど、黒はここで駒を差し出してでも、白のキングに攻めかかる道を選ぶんだ。その代わり、白が正確に応じると、黒は駒を損したまま苦しい形になりやすいよ。",
+    en:"Here's the Traxler Counterattack! Instead of defending f7, Black develops the bishop to c5 and counterattacks White's f2 square. Black usually plays 4...d5 to block the bishop, but here Black is willing to give up material to attack White's king. The trade-off is that if White responds accurately, Black tends to end up worse with less material.",
+    fox:'wink' },
   { move:{from:[3,6],to:[1,5]}, moveLabel:{ja:"5. Nxf7", en:"5. Nxf7"},
-    ja:'白はナイトでf7の駒を取るよ。',
-    en:'White captures on f7 with the knight.',
+    ja:"白はナイトで、f7にいた黒のポーンを取るよ。白のナイトはd8の黒のクイーンとh8のルークを同時に攻撃しているんだ。",
+    en:"White's knight captures the black pawn that was on f7. White's knight now attacks Black's queen on d8 and rook on h8 at the same time.",
+    jaMore:"白はこの手の代わりに5.Bxf7+と、ビショップで取ってチェックをかけることもできるよ。",
+    enMore:"Instead of this move, White can also capture with the bishop, 5.Bxf7+, giving check.",
     fox:'normal' },
   { move:{from:[3,2],to:[6,5]}, moveLabel:{ja:"5...Bxf2+", en:"5...Bxf2+"},
-    ja:'💡 黒はビショップをf2へ進めて王手をかけるよ。 白のNg5攻撃に対し、黒が逃げずに真っ向から反撃する型破りな戦法。両者の玉が危険にさらされる大乱戦になり、正確な読みが求められる。',
-    en:'💡 Black moves the bishop to f2, giving check. Instead of retreating from White\'s Ng5 attack, Black counterattacks head-on in this unorthodox line. Both kings end up exposed in a wild melee demanding precise calculation.',
+    ja:"黒はビショップで、f2にいた白のポーンを取ってチェックをかけるよ。黒はクイーンとルークを取られる前に、白のキングを先に攻めるんだ。",
+    en:"Black's bishop captures the white pawn that was on f2, giving check. Black attacks White's king first, before losing the queen or rook.",
     fox:'happy' },
   { move:{from:[7,4],to:[6,5]}, moveLabel:{ja:"6. Kxf2", en:"6. Kxf2"},
-    ja:'白はキングでf2の駒を取るよ。',
-    en:'White captures on f2 with the king.',
+    ja:"白はキングで、f2に入った黒のビショップを取るよ。白はビショップを取って駒得するけれど、キングが盤の中央に出てきてしまうんだ。",
+    en:"White's king captures the black bishop that landed on f2. White wins the bishop, but the king comes out toward the center of the board.",
+    jaMore:"白はこの手の代わりに6.Kf1と逃げることもできて、エンジンの評価ではそちらのほうが白にとって良いんだ。",
+    enMore:"Instead of this move, White can also step aside with 6.Kf1, which engines rate as better for White.",
     fox:'normal' },
   { move:{from:[2,5],to:[4,4]}, moveLabel:{ja:"6...Nxe4+", en:"6...Nxe4+"},
-    ja:'黒はナイトをe4へ進めて王手をかけるよ。',
-    en:'Black moves the knight to e4, giving check.',
+    ja:"黒はナイトで、e4にいた白のポーンを取ってチェックをかけるよ。黒は白のキングにチェックをかけ続けて、白に落ち着く時間を与えないんだ。",
+    en:"Black's knight captures the white pawn that was on e4, giving check. Black keeps checking White's king, giving White no time to settle.",
+    fox:'normal' },
+  { move:{from:[6,5],to:[7,6]}, moveLabel:{ja:"7. Kg1", en:"7. Kg1"},
+    ja:"白はキングをg1へ動かすよ。白のキングは隅に逃げて、黒のチェックの連続から抜け出そうとするんだ。",
+    en:"White moves the king to g1. White's king runs to the corner to escape the stream of checks.",
+    fox:'normal' },
+  { move:{from:[0,3],to:[4,7]}, moveLabel:{ja:"7...Qh4", en:"7...Qh4"},
+    ja:"黒はクイーンをh4へ進めるよ。黒のクイーンはf2のマスをねらっていて、e4のナイトと一緒にQf2#のチェックメイトをねらっているんだ。",
+    en:"Black brings the queen to h4. Black's queen eyes the f2 square, threatening checkmate on f2 together with the e4 knight.",
+    fox:'happy' },
+  { move:{from:[6,6],to:[5,6]}, moveLabel:{ja:"8. g3", en:"8. g3"},
+    ja:"白はポーンをg3へ進めるよ。白はクイーンを攻撃して、チェックメイトのねらいを止めようとするんだ。",
+    en:"White pushes the pawn to g3. White attacks the queen to stop the mating threat.",
+    fox:'normal' },
+  { move:{from:[4,4],to:[5,6]}, moveLabel:{ja:"8...Nxg3", en:"8...Nxg3"},
+    ja:"黒はナイトで、g3にいた白のポーンを取るよ。黒のナイトはh1の白のルークを攻撃していて、黒は駒を損しながらも、白のキングへの攻めを続けているんだ。この後は9.hxg3 Qxg3+と、黒がチェックを続けて引き分けをねらう流れがよく知られていて、白はクイーンを動かして受けきれば有利を保てるよ。これで本譜は一段落、続きはぜひ自分で指してみてね！",
+    en:"Black's knight captures the white pawn that was on g3. Black's knight now attacks White's rook on h1, and Black keeps attacking White's king despite being down material. A well-known continuation is 9.hxg3 Qxg3+, with Black giving repeated checks to aim for a draw, while White can keep the advantage by defending accurately. That's the main line — try continuing the game yourself from here!",
     fox:'happy' }
 ];
 
@@ -314,15 +342,50 @@ function adjustBottomPadding(){
   }
 }
 
+function shareOnX(message) {
+  const shareUrl = 'https://twitter.com/intent/tweet?text=' + encodeURIComponent(message) + '&url=' + encodeURIComponent(window.location.href);
+  window.open(shareUrl, '_blank', 'noopener,noreferrer,width=550,height=420');
+}
+
 function renderStep(){
   const step = LESSON_STEPS[currentStep];
   renderBoard(boardSnapshots[currentStep]);
   document.getElementById('moveLabel').textContent = (step.moveLabel && step.moveLabel[currentLang]) || '';
-  document.getElementById('commentaryText').textContent = step[currentLang];
+  const ctEl = document.getElementById('commentaryText');
+  const moreText = step[currentLang + 'More'];
+  ctEl.innerHTML = step[currentLang] + (moreText
+    ? '<details class="more-detail"><summary>' + (currentLang === 'ja' ? '💡 もっと詳しく知りたい方へ' : '💡 Want to know more?') + '</summary><div class="more-body">' + moreText + '</div></details>'
+    : '');
+  ctEl.scrollTop = 0;
+  const moreEl = ctEl.querySelector('details.more-detail');
+  if (moreEl) {
+    moreEl.addEventListener('toggle', function(){
+      if (moreEl.open) { ctEl.scrollTop = moreEl.offsetTop - ctEl.offsetTop; }
+      adjustBottomPadding();
+    });
+  }
   document.getElementById('foxAvatar').src = FOX_BY_MOOD[step.fox] || FOX_BY_MOOD.normal;
   document.getElementById('lessonProgress').textContent = currentStep + ' / ' + (LESSON_STEPS.length - 1);
   document.getElementById('btnPrev').disabled = currentStep === 0;
   document.getElementById('btnNext').disabled = currentStep === LESSON_STEPS.length - 1;
+  adjustBottomPadding();
+
+  const shareRow = document.getElementById('shareRow');
+  if (shareRow) {
+    if (currentStep === LESSON_STEPS.length - 1) {
+      const openingNameEl = document.querySelector('.opening-title.lang-element-' + currentLang);
+      const openingName = openingNameEl ? openingNameEl.textContent : '';
+      const msg = currentLang === 'ja'
+        ? '🦊 ' + openingName + 'をKitsuneChessで学んだよ!一手ずつ「なぜその手か」を教えてくれるよ'
+        : '🦊 Just learned the ' + openingName + ' on KitsuneChess! It explains why each move is played, step by step.';
+      const shareBtn = document.getElementById('shareXBtn');
+      shareBtn.textContent = currentLang === 'ja' ? '🦊 𝕏でシェアする' : '🦊 Share on 𝕏';
+      shareBtn.onclick = function() { shareOnX(msg); };
+      shareRow.style.display = 'block';
+    } else {
+      shareRow.style.display = 'none';
+    }
+  }
   adjustBottomPadding();
 }
 
