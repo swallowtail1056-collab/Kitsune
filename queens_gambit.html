@@ -103,6 +103,11 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
   font-size: 1rem;
   color: var(--text-sub);
 }
+.commentary-text a, .opening-intro a { color:var(--brown); text-decoration:underline; font-weight:700; }
+.commentary-text a:hover, .opening-intro a:hover { color:var(--brown-dark); }
+.more-detail { margin-top:8px; border-top:1px dashed var(--brown-light); padding-top:6px; }
+.more-detail summary { cursor:pointer; font-weight:700; color:var(--brown); font-size:0.92rem; list-style-position:inside; }
+.more-detail .more-body { margin-top:6px; font-size:0.94rem; }
 </style>
   <script src="board-theme.js"></script>
 </head>
@@ -121,8 +126,8 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
   <h1 class="opening-title lang-element-en">Queen's Gambit</h1>
 
   <div class="opening-intro">
-    <p class="lang-element-ja">💡 クイーンズ・ギャンビットは1.d4 d5 2.c4とポーンを差し出す古典的なオープニングだよ！c4のポーンを取ればクイーンズ・ギャンビット・アクセプテッド、断ってe6やc6で守ればクイーンズ・ギャンビット・ディクラインドになるんだ。でも実はc4のポーンはすぐに取り戻せるので本当のギャンビットではなく、白は中央のポーン配置と展開の優位を狙っているんだよ。白の基本プランはNc3-Nf3-Bg5-e3-Bd3とピースを展開してから中央で押し合いをすること。19世紀から現代まで最高峰のチェスで指され続ける伝統的かつ深いオープニングだよ！</p>
-    <p class="lang-element-en">💡 The Queen's Gambit offers a pawn with 1.d4 d5 2.c4 — one of chess's most classic openings! If Black takes it becomes the Queen's Gambit Accepted, and if Black defends with e6 or c6 it becomes the Queen's Gambit Declined. But this isn't truly a gambit because White can almost always recapture quickly — the real goal is to gain a central advantage. White's basic plan involves developing with Nc3-Nf3-Bg5-e3-Bd3 before fighting for central control. Played at the highest levels from the 19th century right up to today!</p>
+    <p class="lang-element-ja">💡 クイーンズ・ギャンビットは、1.d4 d5 2.c4とc4のポーンを差し出す、古くからあるオープニングだよ。黒がc4のポーンを取るとクイーンズ・ギャンビット・アクセプテッド、取らずにe6などで中央を守るとクイーンズ・ギャンビット・ディクラインドと呼ばれるんだ。白はたいていc4のポーンを取り返せるので、本当の意味でのギャンビットではなく、中央を広く押さえるための作戦だよ。19世紀から現代の世界選手権まで、ずっとトップレベルで指され続けているオープニングなんだ。</p>
+    <p class="lang-element-en">💡 The Queen's Gambit is a long-established opening in which White offers the c4 pawn with 1.d4 d5 2.c4. If Black takes the pawn it's the Queen's Gambit Accepted, and if Black holds the center with ...e6 or similar instead, it's the Queen's Gambit Declined. White can usually win the c4 pawn back, so it isn't a true gambit but a way to take control of the center. It has been played at the top level from the 19th century to modern World Championship matches.</p>
   </div>
 
   <div class="board-wrap">
@@ -192,75 +197,92 @@ const initialBoard = [
 // レッスンステップ（手・解説・ジーンの表情）
 // ============================================================
 const LESSON_STEPS = [
-  { move:null, moveLabel:{ja:'開始局面', en:'Starting Position'},
-    ja:'クイーンズ・ギャンビットのレッスンを始めるよ！19世紀から現代の世界選手権まで指され続けている、チェス史上もっとも息の長いオープニングの一つなんだ。「ギャンビット」と名前が付いているけど、実は駒を犠牲にする戦法ではない。その理由も含めて、一手ずつ見ていこう。',
-    en:'Let\'s start the Queen\'s Gambit! It\'s one of the longest-standing openings in chess history, played from the 19th century all the way to modern World Championship matches. Despite the name, it isn\'t really about sacrificing material \u2014 we\'ll see exactly why as we go.',
+  { move:null, moveLabel:{ja:"開始局面", en:"Starting Position"},
+    ja:"クイーンズ・ギャンビットのレッスンを始めるよ！このページでは、黒が2...e6でc4のポーンを取らずに中央を守り、6...h6と7...b6でビショップを生かす、タルタコワ・バリエーションの形を見ていくよ。白と黒が中央でどう駒を交換し、どんな形が残るのかがポイントなんだ。一手ずつジーンと一緒に、なぜその手を指すのかを学んでいこう。",
+    en:"Let's start the Queen's Gambit lesson! On this page we follow the Tartakower Variation, where Black declines the pawn with 2...e6 and then activates the bishop with 6...h6 and 7...b6. The key is how White and Black trade pieces in the center and what structure remains. Jene will walk you through why each move is played, one step at a time.",
     fox:'welcome' },
-
-  { move:{from:[6,3],to:[4,3]}, moveLabel:{ja:'1. d4', en:'1. d4'},
-    ja:'白はd4で中央を制圧。e4と違って、d4はすぐにはポーンで攻撃されにくく、じっくりとした構築的な展開につながりやすいのが特徴だよ。',
-    en:'White stakes a claim in the center with 1.d4. Unlike 1.e4, the d4 pawn is harder for Black to challenge immediately, which tends to lead to a slower, more strategic type of game.',
+  { move:{from:[6,3],to:[4,3]}, moveLabel:{ja:"1. d4", en:"1. d4"},
+    ja:"白はポーンをd4へ進めるよ。白は中央のマスを押さえながら、c1のビショップの道を開けるんだ。",
+    en:"White pushes the pawn to d4. White takes control of central squares and opens the path for the c1 bishop.",
     fox:'normal' },
-
-  { move:{from:[1,3],to:[3,3]}, moveLabel:{ja:'1...d5', en:'1...d5'},
-    ja:'黒も同じくd5で対抗し、中央のバランスを保つよ。ここまでは完全に対称的な局面なんだ。',
-    en:'Black mirrors with 1...d5, keeping the center balanced. So far the position is perfectly symmetrical.',
+  { move:{from:[1,3],to:[3,3]}, moveLabel:{ja:"1...d5", en:"1...d5"},
+    ja:"黒はポーンをd5へ進めるよ。黒も中央のマスを押さえて、白のd4のポーンと向かい合う形を作るんだ。",
+    en:"Black pushes the pawn to d5. Black also claims the center and sets up a face-off with White's d4 pawn.",
     fox:'normal' },
-
-  { move:{from:[6,2],to:[4,2]}, moveLabel:{ja:'2. c4（クイーンズ・ギャンビット！）', en:'2. c4 (Queen\'s Gambit!)'},
-    ja:'ここが本題！白はc4でポーンを差し出す…ように見えるけど、実はこれは「本物のギャンビット」じゃないんだ。黒がdxc4と取っても、白はe3やQa4+などですぐに取り返せる。本当の狙いは駒損ではなく、d5ポーンを守っている黒のe6かc6のどちらかを弱めさせて、中央の主導権を握ることなんだ。',
-    en:'Here\'s the key idea! White offers the c-pawn with 2.c4 \u2014 but this isn\'t really a sacrifice. If Black grabs it with dxc4, White can recapture easily with moves like e3 or Qa4+. The real point isn\'t material at all: it\'s to provoke Black into playing e6 or c6 to support d5, committing to a structure that gives White more central influence.',
+  { move:{from:[6,2],to:[4,2]}, moveLabel:{ja:"2. c4（クイーンズ・ギャンビット！）", en:"2. c4 (Queen's Gambit!)"},
+    ja:"ここがクイーンズ・ギャンビットの一手！白はポーンをc4へ進めて、黒のd5のポーンに取らせるように差し出すよ。白のねらいはポーンを損することではなく、黒のd5のポーンを中央からどかして、白が中央を広く押さえることなんだ。黒がc4のポーンを取っても、白はたいてい取り返せるので、本当の意味でのギャンビットではないと言われているよ。",
+    en:"Here's the Queen's Gambit! White pushes the pawn to c4, offering it to Black's d5 pawn. White's goal isn't to lose a pawn but to lure Black's d5 pawn away from the center so White can control it. Even if Black takes on c4, White can usually win it back, so it's said not to be a true gambit.",
     fox:'happy' },
-
-  { move:{from:[1,4],to:[2,4]}, moveLabel:{ja:'2...e6（ディクラインド）', en:'2...e6 (Declined)'},
-    ja:'黒はe6で「ギャンビットを受けない」と決めたよ(クイーンズ・ギャンビット・ディクラインド)。ポーンを取りに行かず、中央のd5をしっかり支える手堅い選択。ただし代償もある。c8のビショップの活動場所が一時的に塞がれてしまうんだ。',
-    en:'Black plays 2...e6, declining the gambit (the Queen\'s Gambit Declined). It\'s a solid choice that reinforces d5 without grabbing material \u2014 but it comes at a small cost, temporarily boxing in the c8 bishop.',
-    fox:'quiz' },
-
-  { move:{from:[7,1],to:[5,2]}, moveLabel:{ja:'3. Nc3', en:'3. Nc3'},
-   ja:'白はナイトをc3へ進め、d5への圧力を増やしながら、他のマイナーピース(ナイト・ビショップ)も順に盤上へ送り出していくよ。',
-   en:'White brings the knight out to c3, adding pressure on d5 while bringing the rest of the minor pieces into the game.',
-   fox:'normal' },
-
-  { move:{from:[0,6],to:[2,5]}, moveLabel:{ja:'3...Nf6', en:'3...Nf6'},
-    ja:'黒もナイトをf6へ。e4への牽制と、キャスリングの準備を同時に進める効率的な一手だよ。',
-    en:'Black develops the knight to f6, restraining e4 while preparing to castle \u2014 an efficient, dual-purpose move.',
+  { move:{from:[1,4],to:[2,4]}, moveLabel:{ja:"2...e6（ディクラインド）", en:"2...e6 (Declined)"},
+    ja:"黒はポーンをe6へ進めて、クイーンズ・ギャンビット・ディクラインドに入るよ。黒はc4のポーンを取らずに、d5のポーンをe6のポーンで守って、中央を保つんだ。その代わり、黒のc8のビショップはe6とb7のポーンにふさがれて、外に出にくくなるよ。",
+    en:"Black pushes the pawn to e6, entering the Queen's Gambit Declined. Black doesn't take the c4 pawn and instead defends d5 with the e6 pawn, holding the center. The trade-off is that Black's c8 bishop is hemmed in by the pawns on e6 and b7 and has trouble getting out.",
+    jaMore:"黒はこの手の代わりに2...dxc4とc4のポーンを取る<a href='queens_gambit_accepted.html'>クイーンズ・ギャンビット・アクセプテッド</a>や、2...c6でd5を守る<a href='slav.html'>スラブ・ディフェンス</a>を選ぶこともできるよ。",
+    enMore:"Instead of this move, Black can also take the pawn with 2...dxc4, the <a href='queens_gambit_accepted.html?lang=en'>Queen's Gambit Accepted</a>, or defend d5 with 2...c6, the <a href='slav.html?lang=en'>Slav Defense</a>.",
     fox:'normal' },
-
-  { move:{from:[7,2],to:[3,6]}, moveLabel:{ja:'4. Bg5', en:'4. Bg5'},
-    ja:'白はビショップをg5へ。黒のナイトをピンして身動きを取りにくくし、間接的にd5ポーンへの圧力を強める、クイーンズ・ギャンビット・ディクラインドの象徴的な一手だよ。',
-    en:'White develops the bishop to g5, pinning Black\'s knight and adding indirect pressure to d5 \u2014 the signature move of this line.',
-    fox:'wink' },
-
-  { move:{from:[0,5],to:[1,4]}, moveLabel:{ja:'4...Be7', en:'4...Be7'},
-    ja:'黒はビショップをe7へ。ピンを解消しつつ、キャスリングへの道を整える一手だよ。派手さはないけど、この後の駒組みの土台になる大事な一手なんだ。',
-    en:'Black plays 4...Be7, unpinning the knight and clearing the way to castle. Unremarkable on the surface, but it\'s the move that sets up everything Black does next.',
+  { move:{from:[7,1],to:[5,2]}, moveLabel:{ja:"3. Nc3", en:"3. Nc3"},
+    ja:"白はナイトをc3へ進めるよ。白のナイトはd5のポーンに利いて、白はc4のポーンと合わせて2つでd5を攻撃する形になるんだ。黒もe6のポーンとd8のクイーンの2つで、d5を守っているよ。",
+    en:"White develops the knight to c3. White's knight hits the d5 pawn, so White now attacks d5 twice together with the c4 pawn. Black also defends d5 twice, with the e6 pawn and the d8 queen.",
     fox:'normal' },
-
-  { move:{from:[6,4],to:[5,4]}, moveLabel:{ja:'5. e3', en:'5. e3'},
-    ja:'白はe3でd4ポーンを支え、同時にf1のビショップの通り道を用意するよ。ただし少し地味な代償もある。この後Bd3などに展開しても、このビショップの利きはそこまで長くならないんだ。もしg3-Bg2とフィアンケットする作戦を選んでいたら、もっと長い対角線が使えたはず。それでも中央の安定を優先する、実利的な選択なんだ。',
-    en:'White plays 5.e3, supporting d4 and opening a diagonal for the f1 bishop. There\'s a small trade-off, though: once that bishop develops (often to d3), its diagonal stays fairly short. A fianchetto setup with g3 and Bg2 would have given it a longer diagonal instead. Still, prioritizing central stability is considered the practical choice here.',
+  { move:{from:[0,6],to:[2,5]}, moveLabel:{ja:"3...Nf6", en:"3...Nf6"},
+    ja:"黒はナイトをf6へ進めるよ。黒のナイトもd5のポーンを守って、黒はd5を守る駒を3つに増やすんだ。",
+    en:"Black develops the knight to f6. Black's knight also defends the d5 pawn, raising Black's defenders of d5 to three.",
     fox:'normal' },
-
-  { move:{from:[0,4],to:[0,6],castle:{from:[0,7],to:[0,5]}}, moveLabel:{ja:'5...O-O', en:'5...O-O'},
-    ja:'黒はキャスリングでキングを安全な場所へ。序盤で最優先すべき「キングの安全確保」がこれで完了したよ。',
-    en:'Black castles kingside, tucking the king away safely \u2014 opening priority number one is now taken care of.',
-    fox:'happy' },
-
-  { move:{from:[7,6],to:[5,5]}, moveLabel:{ja:'6. Nf3', en:'6. Nf3'},
-    ja:'白はナイトをf3へ。これで両方のナイトと、g5にいるビショップの展開が完了したよ。残るはf1のビショップだけ。5手目のe3でこのビショップの通り道はもう開いているから、あとはいつでもキャスリングできる状態になったんだ。',
-  en:'White develops the last knight to f3, completing development for both knights and the bishop on g5. Only the f1 bishop remains at home, and its diagonal is already open thanks to the earlier e3 \u2014 White can now castle whenever it\'s convenient.',
-   fox:'normal' },
-
-  { move:{from:[1,7],to:[2,7]}, moveLabel:{ja:'6...h6', en:'6...h6'},
-   ja:'黒はh6を突いて、g5のビショップに「取るか、引くか」を問いかけるよ。まだ交換は起きていない、あくまで駆け引きの一手なんだ。この先もし白が7.Bxf6と取れば、黒は7...Bxf6と取り返す。結果は黒がナイト1体を失う代わりにビショップ2体を維持、白はビショップ1体をナイトと交換した形になり「ビショップペア」を手放すことになるんだ。',
-   en:'Black plays 6...h6, asking the bishop on g5 a question: trade, or retreat? Nothing has been captured yet — this is purely a probing move. If White later plays 7.Bxf6, Black recaptures with 7...Bxf6: Black gives up a knight but keeps both bishops, while White trades a bishop for that knight and gives up the bishop pair.',
-   fox:'quiz' },
-
-  { move:{from:[3,6],to:[4,7]}, moveLabel:{ja:'7. Bh4', en:'7. Bh4'},
-    ja:'白はBh4と引いて、g5-d8の対角線からの圧力をそのまま維持するよ。ここで基本の駒組みは完成。ここから中盤に入ると、白はしばしばcxd5からNf6にかけての細かい駆け引きを経て、Rc1やQc2でcファイルとc7マスに狙いを定めていく。黒はdxc4を狙うか、b6でビショップを展開するかで対応する、というのが典型的な中盤の流れだよ。',
-    en:'White retreats with 7.Bh4, keeping the pin and pressure alive. The opening phase is complete here. In the middlegame that follows, White often maneuvers toward Rc1 and Qc2 to target the c-file and the c7 square, sometimes via a well-timed cxd5. Black typically responds by looking for a moment to play ...dxc4, or developing the light bishop with ...b6 \u2014 the classic strategic tug-of-war of this line.',
-    fox:'wink' }
+  { move:{from:[7,2],to:[3,6]}, moveLabel:{ja:"4. Bg5", en:"4. Bg5"},
+    ja:"白はビショップをg5へ進めるよ。白のビショップはf6のナイトをピンしていて、黒のナイトは動くとd8のクイーンが取られてしまうので、動きにくいんだ。白はこうして、d5を守っている黒のナイトの働きを弱めるよ。",
+    en:"White develops the bishop to g5. White's bishop pins the f6 knight: if the knight moved, Black's d8 queen would be captured, so the knight is hard to move. In this way White weakens the knight that is defending d5.",
+    fox:'normal' },
+  { move:{from:[0,5],to:[1,4]}, moveLabel:{ja:"4...Be7", en:"4...Be7"},
+    ja:"黒はビショップをe7へ進めるよ。黒のビショップはf6のナイトとd8のクイーンの間に入って、クイーンが取られる心配をなくすんだ。これでf8とg8のマスが空いて、黒は次の手でキャスリングできるよ。",
+    en:"Black develops the bishop to e7. Black's bishop steps in between the f6 knight and the d8 queen, so the queen is no longer in danger. This also clears f8 and g8, so Black can castle on the next move.",
+    fox:'normal' },
+  { move:{from:[6,4],to:[5,4]}, moveLabel:{ja:"5. e3", en:"5. e3"},
+    ja:"白はポーンをe3へ進めるよ。白はd4のポーンを守りながら、f1のビショップの道を開けるんだ。",
+    en:"White pushes the pawn to e3. White defends the d4 pawn and opens the path for the f1 bishop.",
+    fox:'normal' },
+  { move:{from:[0,4],to:[0,6],castle:{from:[0,7],to:[0,5]}}, moveLabel:{ja:"5...O-O", en:"5...O-O"},
+    ja:"黒はキャスリングでキングを安全な場所へ動かすよ。黒のキングはg8へ移り、h8にいたルークはf8へ出てくるんだ。",
+    en:"Black castles, bringing the king to safety. Black's king goes to g8, and the rook from h8 comes to f8.",
+    fox:'normal' },
+  { move:{from:[7,6],to:[5,5]}, moveLabel:{ja:"6. Nf3", en:"6. Nf3"},
+    ja:"白はナイトをf3へ進めるよ。白のナイトはd4のポーンを守りながら、キングサイドの展開を進めるんだ。",
+    en:"White develops the knight to f3. White's knight defends the d4 pawn while continuing kingside development.",
+    fox:'normal' },
+  { move:{from:[1,7],to:[2,7]}, moveLabel:{ja:"6...h6", en:"6...h6"},
+    ja:"黒はポーンをh6へ進めるよ。黒はg5にいる白のビショップを攻撃して、ビショップを下がらせるか、f6のナイトと交換するかを白に決めさせるんだ。",
+    en:"Black pushes the pawn to h6. Black attacks White's bishop on g5 and makes White decide whether to retreat it or trade it for the f6 knight.",
+    fox:'normal' },
+  { move:{from:[3,6],to:[4,7]}, moveLabel:{ja:"7. Bh4", en:"7. Bh4"},
+    ja:"白はビショップをh4へ下げるよ。白のビショップはh4からもf6のナイトに利き続けて、ピンを保つんだ。",
+    en:"White retreats the bishop to h4. From h4, White's bishop keeps hitting the f6 knight and maintains the pin.",
+    fox:'normal' },
+  { move:{from:[1,1],to:[2,1]}, moveLabel:{ja:"7...b6", en:"7...b6"},
+    ja:"黒はポーンをb6へ進めるよ。黒はc8のビショップをb7へ出す道を作って、e6のポーンにふさがれていたビショップを、長い斜めの列で働かせようとするんだ。黒のこの形は、タルタコワ・バリエーションと呼ばれているよ。",
+    en:"Black pushes the pawn to b6. Black opens a path for the c8 bishop to b7, so the bishop that was blocked by the e6 pawn can work along the long diagonal instead. This setup for Black is called the Tartakower Variation.",
+    fox:'normal' },
+  { move:{from:[4,2],to:[3,3]}, moveLabel:{ja:"8. cxd5", en:"8. cxd5"},
+    ja:"白はc4のポーンで、d5にいた黒のポーンを取るよ。白は中央のポーンを交換して、黒に取り返し方を選ばせるんだ。",
+    en:"White's c4 pawn captures Black's pawn on d5. White trades in the center and makes Black choose how to recapture.",
+    fox:'normal' },
+  { move:{from:[2,5],to:[3,3]}, moveLabel:{ja:"8...Nxd5", en:"8...Nxd5"},
+    ja:"黒はf6のナイトで、d5に入った白のポーンを取り返すよ。黒は駒を交換して、窮屈な形をやわらげようとするんだ。",
+    en:"Black's f6 knight recaptures White's pawn on d5. Black looks to trade pieces and ease the cramped position.",
+    fox:'normal' },
+  { move:{from:[4,7],to:[1,4]}, moveLabel:{ja:"9. Bxe7", en:"9. Bxe7"},
+    ja:"白はh4のビショップで、e7にいた黒のビショップを取るよ。f6のナイトが動いたので、白のビショップはe7まで利くようになっていたんだ。",
+    en:"White's h4 bishop captures Black's bishop on e7. Since the f6 knight moved, White's bishop could now reach all the way to e7.",
+    fox:'normal' },
+  { move:{from:[0,3],to:[1,4]}, moveLabel:{ja:"9...Qxe7", en:"9...Qxe7"},
+    ja:"黒はクイーンで、e7に入った白のビショップを取り返すよ。これで白と黒は、ビショップを1つずつ交換したんだ。",
+    en:"Black's queen recaptures White's bishop on e7. White and Black have now traded one bishop each.",
+    fox:'normal' },
+  { move:{from:[5,2],to:[3,3]}, moveLabel:{ja:"10. Nxd5", en:"10. Nxd5"},
+    ja:"白はc3のナイトで、d5にいた黒のナイトを取るよ。白はナイトも交換して、黒の中央のポーンの形を決めにいくんだ。",
+    en:"White's c3 knight captures Black's knight on d5. White trades the knights too, fixing Black's central pawn structure.",
+    fox:'normal' },
+  { move:{from:[2,4],to:[3,3]}, moveLabel:{ja:"10...exd5", en:"10...exd5"},
+    ja:"黒はe6のポーンで、d5に入った白のナイトを取り返すよ。黒のc8のビショップは、e6のポーンがいなくなったので、c8からh3への斜めの列でも動けるようになったんだ。この後は白がcファイル（c1からc8の縦のマス）を使って黒のクイーンサイドに圧力をかけ、黒はc5と突いて中央で反撃するのが典型的な流れだよ。白と黒のこの形は、1972年の世界選手権の第6局で、フィッシャーがスパスキーに勝った対局でも現れたんだ。これで本譜は一段落、続きはぜひ自分で指してみてね！",
+    en:"Black's e6 pawn recaptures White's knight on d5. With the e6 pawn gone, Black's c8 bishop can now also use the c8–h3 diagonal. From here, White typically uses the c-file (the column of squares from c1 to c8) to pressure Black's queenside, while Black hits back in the center with ...c5. This position also arose in Game 6 of the 1972 World Championship, which Fischer won against Spassky. That's the main line — try continuing the game yourself from here!",
+    fox:'happy' }
 ];
 const BUTTON_TEXT = { ja:{prev:'← 前へ', next:'次へ →'}, en:{prev:'← Prev', next:'Next →'} };
 
@@ -353,7 +375,19 @@ function renderStep(){
   const step = LESSON_STEPS[currentStep];
   renderBoard(boardSnapshots[currentStep]);
   document.getElementById('moveLabel').textContent = (step.moveLabel && step.moveLabel[currentLang]) || '';
-  document.getElementById('commentaryText').textContent = step[currentLang];
+  const ctEl = document.getElementById('commentaryText');
+  const moreText = step[currentLang + 'More'];
+  ctEl.innerHTML = step[currentLang] + (moreText
+    ? '<details class="more-detail"><summary>' + (currentLang === 'ja' ? '💡 もっと詳しく知りたい方へ' : '💡 Want to know more?') + '</summary><div class="more-body">' + moreText + '</div></details>'
+    : '');
+  ctEl.scrollTop = 0;
+  const moreEl = ctEl.querySelector('details.more-detail');
+  if (moreEl) {
+    moreEl.addEventListener('toggle', function(){
+      if (moreEl.open) { ctEl.scrollTop = moreEl.offsetTop - ctEl.offsetTop; }
+      adjustBottomPadding();
+    });
+  }
   document.getElementById('foxAvatar').src = FOX_BY_MOOD[step.fox] || FOX_BY_MOOD.normal;
   document.getElementById('lessonProgress').textContent = currentStep + ' / ' + (LESSON_STEPS.length - 1);
   document.getElementById('btnPrev').disabled = currentStep === 0;

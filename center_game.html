@@ -101,6 +101,11 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
   font-size: 1rem;
   color: var(--text-sub);
 }
+.commentary-text a, .opening-intro a { color:var(--brown); text-decoration:underline; font-weight:700; }
+.commentary-text a:hover, .opening-intro a:hover { color:var(--brown-dark); }
+.more-detail { margin-top:8px; border-top:1px dashed var(--brown-light); padding-top:6px; }
+.more-detail summary { cursor:pointer; font-weight:700; color:var(--brown); font-size:0.92rem; list-style-position:inside; }
+.more-detail .more-body { margin-top:6px; font-size:0.94rem; }
 </style>
   <script src="board-theme.js"></script>
 </head>
@@ -119,8 +124,8 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
   <h1 class="opening-title lang-element-en">Center Game</h1>
 
   <div class="opening-intro">
-    <p class="lang-element-ja">💡 センター・ゲームは2手目にd4を突き、黒のe5ポーンを消してクイーンで取り返す、古くからあるオープニングだよ！一時的に中央4マスすべてを支配できるけど、3...Nc6でクイーンを追い立てられ、余分な手数を使わされてしまうんだ。それでも4.Qe3から白はNc3・Bd2・O-O-Oと素早く駒組みしてキングサイドへの直接攻撃を狙う、攻撃的な変化だよ。</p>
-    <p class="lang-element-en">💡 The Center Game opens with 2.d4, trading off Black's e5 pawn and recapturing with the queen — a very old opening! White briefly controls all four central squares, but 3...Nc6 chases the queen away and costs White some development time. Even so, after 4.Qe3 White aims for a fast Nc3-Bd2-O-O-O setup and a direct kingside attack — an aggressive way to play the opening.</p>
+    <p class="lang-element-ja">💡 センター・ゲームは、1.e4 e5 2.d4 exd4のあとに白が3.Qxd4とクイーンで取り返す、とても古いオープニングだよ。16世紀の終わりごろにはすでに知られていて、19世紀にはタラッシュやチゴリン、パウルゼンなどが好んで指したんだ。白はクイーンを早く出す分だけ手数を損しやすいけれど、クイーンサイドにキャスリングしてキングサイドを攻める、攻撃的な作戦がとれるよ。1990年代にシャバロフが復活させ、その後シロフやネポムニャシチーなどのトップ選手も試しているんだ。</p>
+    <p class="lang-element-en">💡 The Center Game is a very old opening in which White recaptures with the queen, 3.Qxd4, after 1.e4 e5 2.d4 exd4. It was already known by the late 16th century, and in the 19th century players such as Tarrasch, Chigorin and Paulsen played it regularly. White tends to lose time by bringing the queen out early, but can castle queenside and go for an aggressive kingside attack. Shabalov revived it in the 1990s, and top players such as Shirov and Nepomniachtchi have tried it since.</p>
   </div>
 
   <div class="board-wrap">
@@ -182,40 +187,66 @@ const initialBoard = [
 
 const LESSON_STEPS = [
   { move:null, moveLabel:{ja:"開始局面", en:"Starting Position"},
-    ja:'センター・ゲームのレッスンを始めるよ！クイーンを早く中央へ出す、古くからある大胆な変化だよ。一手ずつジーンと一緒に、なぜその手を指すのかを学んでいこう。',
-    en:'Let\'s start the Center Game lesson! White brings the queen to the center early in this bold, old-school opening. Jene will walk you through why each move is played, one step at a time.',
+    ja:"センター・ゲームのレッスンを始めるよ！このページでは、白がクイーンをe3へ動かし、クイーンサイドにキャスリングする形を見ていくよ。白がクイーンを早く出す代わりにどうやって攻めの形を作るのか、黒がどうやって反撃するのかがポイントなんだ。一手ずつジーンと一緒に、なぜその手を指すのかを学んでいこう。",
+    en:"Let's start the Center Game lesson! On this page we follow the line where White moves the queen to e3 and castles queenside. The key ideas are how White builds an attacking setup despite bringing the queen out early, and how Black hits back. Jene will walk you through why each move is played, one step at a time.",
     fox:'welcome' },
   { move:{from:[6,4],to:[4,4]}, moveLabel:{ja:"1. e4", en:"1. e4"},
-    ja:'白はポーンをe4へ進めるよ。中央を制圧するんだ。',
-    en:'White develops the pawn to e4, claiming the center.',
+    ja:"白はポーンをe4へ進めるよ。白は中央のマスを押さえながら、ビショップとクイーンが動く道を開けるんだ。",
+    en:"White pushes the pawn to e4. White takes control of central squares and opens lines for the bishop and queen.",
     fox:'normal' },
   { move:{from:[1,4],to:[3,4]}, moveLabel:{ja:"1...e5", en:"1...e5"},
-    ja:'黒もポーンをe5へ進めて、中央を分け合うよ。',
-    en:'Black mirrors with 1...e5, contesting the center equally.',
+    ja:"黒はポーンをe5へ進めるよ。黒も同じように中央を押さえて、白のポーンと向かい合う形を作るんだ。",
+    en:"Black pushes the pawn to e5. Black also claims the center, setting up a pawn face-off with White.",
     fox:'normal' },
   { move:{from:[6,3],to:[4,3]}, moveLabel:{ja:"2. d4", en:"2. d4"},
-    ja:'白はポーンをd4へ進めるよ。黒のe5ポーンに挑みかけるんだ。',
-    en:'White develops the pawn to d4, challenging Black\'s e5 pawn.',
+    ja:"白はポーンをd4へ進めるよ。白は黒のe5のポーンを攻撃して、すぐに中央を開こうとするんだ。",
+    en:"White pushes the pawn to d4. White attacks Black's e5 pawn and tries to open the center right away.",
     fox:'normal' },
   { move:{from:[3,4],to:[4,3]}, moveLabel:{ja:"2...exd4", en:"2...exd4"},
-    ja:'黒はポーンでd4の駒を取るよ。取らずに放置すると、白にさらに中央を広げられてしまうんだ。',
-    en:'Black captures on d4 with the pawn — leaving it would let White expand even further in the center.',
+    ja:"黒はe5のポーンで、d4にいた白のポーンを取るよ。黒は中央のポーンを交換して、白のd4のポーンを消すんだ。",
+    en:"Black's e5 pawn captures White's pawn on d4. Black trades in the center and removes White's d4 pawn.",
     fox:'normal' },
   { move:{from:[7,3],to:[4,3]}, moveLabel:{ja:"3. Qxd4（センター・ゲーム！）", en:"3. Qxd4 (Center Game!)"},
-    ja:'ここが本題、センター・ゲームの一手！白はクイーンでd4の駒を取り返し、一時的に中央4マスすべてを支配するよ。ただしクイーンを早く出しすぎると、黒に手数を稼がれる危険もあるんだ。',
-    en:'Here\'s the Center Game move! White recaptures with the queen, briefly controlling all four central squares — though bringing the queen out this early risks losing time if Black develops with tempo.',
+    ja:"ここがセンター・ゲームの一手！白はクイーンで、d4に入った黒のポーンを取り返すよ。一般的には3.c3とポーンを差し出す<a href='danish_gambit.html'>デンマーク・ギャンビット</a>や、3.Nf3で<a href='scotch.html'>スコッチ・ゲーム</a>に進む形も指されるけれど、白はここですぐにクイーンで取り返す道を選ぶんだ。その代わり、白のクイーンは早く中央に出てくるので、黒の駒に攻撃されて手数を使わされやすいよ。",
+    en:"Here's the Center Game! White's queen recaptures Black's pawn on d4. White can also offer a pawn with 3.c3 in the <a href='danish_gambit.html?lang=en'>Danish Gambit</a>, or play 3.Nf3 and head into the <a href='scotch.html?lang=en'>Scotch Game</a>, but here White takes back with the queen right away. The trade-off is that White's queen comes out early, so it can be chased by Black's pieces and cost White time.",
     fox:'happy' },
   { move:{from:[0,1],to:[2,2]}, moveLabel:{ja:"3...Nc6", en:"3...Nc6"},
-    ja:'黒はナイトをc6へ！これでクイーンに攻撃をかけて、駒を展開しながら白に手数を使わせるよ。',
-    en:'Black develops the knight to c6, attacking the queen and forcing White to spend another move — developing with tempo.',
-    fox:'quiz' },
+    ja:"黒はナイトをc6へ進めるよ。黒はナイトを展開しながら、d4にいる白のクイーンを攻撃するんだ。",
+    en:"Black develops the knight to c6. Black develops while attacking White's queen on d4.",
+    fox:'normal' },
   { move:{from:[4,3],to:[5,4]}, moveLabel:{ja:"4. Qe3", en:"4. Qe3"},
-    ja:'白はクイーンをe3へ逃がすよ。ここなら黒の...d5という中央突破もしにくくなるし、この先O-O-Oでキングサイドへ攻め込む計画にもつながるんだ。',
-    en:'White retreats the queen to e3 — a square that discourages Black\'s ...d5 break and supports a plan of castling queenside for a kingside attack.',
+    ja:"白はクイーンをe3へ動かすよ。白のクイーンはe4のポーンを守りながら、キングサイドへの攻撃にも加われる場所に移るんだ。その代わり、白のクイーンは、c1のビショップが進むc1からh6への斜めの列をふさいでいるよ。",
+    en:"White moves the queen to e3. White's queen defends the e4 pawn and moves to a square where it can join a kingside attack. The downside is that White's queen blocks the c1–h6 diagonal that the c1 bishop would use.",
+    jaMore:"白はこの手の代わりに4.Qa4や4.Qc4にクイーンを動かすこともあるよ。",
+    enMore:"Instead of this move, White sometimes moves the queen to 4.Qa4 or 4.Qc4.",
     fox:'normal' },
   { move:{from:[0,6],to:[2,5]}, moveLabel:{ja:"4...Nf6", en:"4...Nf6"},
-    ja:'黒はナイトをf6へ。e4のポーンにプレッシャーをかけながら展開を続けるよ。これで本譜は一段落、続きはぜひ自分で指してみてね！',
-    en:'Black develops the other knight to f6, putting pressure on the e4 pawn while continuing development. That\'s the main line — try continuing the game yourself from here!',
+    ja:"黒はナイトをf6へ進めるよ。黒はナイトを展開しながら、白のe4のポーンを攻撃するんだ。白のe4のポーンは、今はe3のクイーンだけに守られているよ。",
+    en:"Black develops the knight to f6. Black develops while attacking White's e4 pawn. Right now White's e4 pawn is defended only by the queen on e3.",
+    fox:'normal' },
+  { move:{from:[7,1],to:[5,2]}, moveLabel:{ja:"5. Nc3", en:"5. Nc3"},
+    ja:"白はナイトをc3へ進めるよ。白のナイトはe4のポーンを守って、白はe4を守る駒を2つに増やすんだ。",
+    en:"White develops the knight to c3. White's knight defends the e4 pawn, so White now has two defenders on e4.",
+    fox:'normal' },
+  { move:{from:[0,5],to:[4,1]}, moveLabel:{ja:"5...Bb4", en:"5...Bb4"},
+    ja:"黒はビショップをb4へ進めるよ。黒のビショップは白のc3のナイトをピンしていて、白のナイトは動くとキングが攻撃されるので、動けないんだ。黒は次にBxc3とナイトを取って、白のe4のポーンを守る駒を減らすこともねらっているよ。",
+    en:"Black develops the bishop to b4. Black's bishop pins White's c3 knight: if the knight moved, White's king would be in check, so it can't move. Black is also thinking about ...Bxc3 to take the knight and remove one of the defenders of White's e4 pawn.",
+    fox:'normal' },
+  { move:{from:[7,2],to:[6,3]}, moveLabel:{ja:"6. Bd2", en:"6. Bd2"},
+    ja:"白はビショップをd2へ進めるよ。白のビショップはb4からe1への斜めの列に入って、c3のナイトのピンを外すんだ。これでb1・c1・d1のマスが空いて、白は次の手でクイーンサイドにキャスリングできるよ。",
+    en:"White develops the bishop to d2. White's bishop steps onto the b4–e1 diagonal and breaks the pin on the c3 knight. This also clears b1, c1 and d1, so White can castle queenside on the next move.",
+    fox:'normal' },
+  { move:{from:[0,4],to:[0,6],castle:{from:[0,7],to:[0,5]}}, moveLabel:{ja:"6...O-O", en:"6...O-O"},
+    ja:"黒はキャスリングでキングを安全な場所へ動かすよ。黒のキングはg8へ移り、h8にいたルークはf8へ出てくるんだ。",
+    en:"Black castles, bringing the king to safety. Black's king goes to g8, and the rook from h8 comes to f8.",
+    fox:'normal' },
+  { move:{from:[7,4],to:[7,2],castle:{from:[7,0],to:[7,3]}}, moveLabel:{ja:"7. O-O-O", en:"7. O-O-O"},
+    ja:"白はクイーンサイドにキャスリングするよ。白のキングはc1へ移り、a1にいたルークはd1へ出てくるんだ。白と黒のキングが反対側にいるので、この後はお互いに相手のキングに向かってポーンを進める、激しい攻め合いになりやすいよ。",
+    en:"White castles queenside. White's king goes to c1, and the rook from a1 comes to d1. With the kings on opposite wings, the game tends to become a sharp race in which both sides push pawns toward the enemy king.",
+    fox:'normal' },
+  { move:{from:[0,5],to:[0,4]}, moveLabel:{ja:"7...Re8", en:"7...Re8"},
+    ja:"黒はルークをe8へ動かすよ。黒のルークはeファイル（e1からe8の縦のマス）で白のe4のポーンに利いていて、黒はf6のナイトと合わせて2つでe4を攻撃する形になるんだ。白はc3のナイトとe3のクイーンでe4を守っているけれど、黒はBxc3と取って、e4を守る駒を減らすこともねらっているよ。この局面では、白が8.Qg3とe4のポーンを差し出して攻める手や、8.Bc4と展開する手がよく指されるんだ。これで本譜は一段落、続きはぜひ自分で指してみてね！",
+    en:"Black moves the rook to e8. Black's rook hits White's e4 pawn along the e-file (the column of squares from e1 to e8), so Black now attacks e4 twice together with the f6 knight. White defends e4 with the c3 knight and the e3 queen, but Black is also eyeing ...Bxc3 to remove one of those defenders. In this position White often plays 8.Qg3, offering the e4 pawn to attack, or 8.Bc4 to develop. That's the main line — try continuing the game yourself from here!",
     fox:'happy' }
 ];
 
@@ -310,7 +341,19 @@ function renderStep(){
   const step = LESSON_STEPS[currentStep];
   renderBoard(boardSnapshots[currentStep]);
   document.getElementById('moveLabel').textContent = (step.moveLabel && step.moveLabel[currentLang]) || '';
-  document.getElementById('commentaryText').textContent = step[currentLang];
+  const ctEl = document.getElementById('commentaryText');
+  const moreText = step[currentLang + 'More'];
+  ctEl.innerHTML = step[currentLang] + (moreText
+    ? '<details class="more-detail"><summary>' + (currentLang === 'ja' ? '💡 もっと詳しく知りたい方へ' : '💡 Want to know more?') + '</summary><div class="more-body">' + moreText + '</div></details>'
+    : '');
+  ctEl.scrollTop = 0;
+  const moreEl = ctEl.querySelector('details.more-detail');
+  if (moreEl) {
+    moreEl.addEventListener('toggle', function(){
+      if (moreEl.open) { ctEl.scrollTop = moreEl.offsetTop - ctEl.offsetTop; }
+      adjustBottomPadding();
+    });
+  }
   document.getElementById('foxAvatar').src = FOX_BY_MOOD[step.fox] || FOX_BY_MOOD.normal;
   document.getElementById('lessonProgress').textContent = currentStep + ' / ' + (LESSON_STEPS.length - 1);
   document.getElementById('btnPrev').disabled = currentStep === 0;

@@ -103,6 +103,11 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
   font-size: 1rem;
   color: var(--text-sub);
 }
+.commentary-text a, .opening-intro a { color:var(--brown); text-decoration:underline; font-weight:700; }
+.commentary-text a:hover, .opening-intro a:hover { color:var(--brown-dark); }
+.more-detail { margin-top:8px; border-top:1px dashed var(--brown-light); padding-top:6px; }
+.more-detail summary { cursor:pointer; font-weight:700; color:var(--brown); font-size:0.92rem; list-style-position:inside; }
+.more-detail .more-body { margin-top:6px; font-size:0.94rem; }
 </style>
   <script src="board-theme.js"></script>
 </head>
@@ -121,8 +126,8 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
   <h1 class="opening-title lang-element-en">Catalan Open Variation</h1>
 
   <div class="opening-intro">
-    <p class="lang-element-ja">💡 カタラン・オープン変化は黒が4...dxc4と中央のポーンを取ってから活発に展開を目指す変化だよ！カタランのポーンを受け取ることで黒は一時的なポーン優位を得るけど、代わりにBg2のビショップが非常に活性化されるんだ。黒はNf6-a6-b5と展開してc4のポーンを守り活発な展開を目指すよ。この変化では黒が正確にプレイしてポーンを守り続けることが重要で、少し間違えると白のビショップとルークによる長期的なプレッシャーが生まれるんだ。高度な理論と正確なプレイが求められる上級者向けの変化だよ！</p>
-    <p class="lang-element-en">💡 The Catalan Open Variation has Black taking the central pawn with 4...dxc4 and aiming for active development! By accepting the Catalan pawn, Black gains a temporary material advantage but the Bg2 bishop becomes extremely active in return. Black develops with Nf6-a6-b5 to protect the c4 pawn. In this variation, it's crucial for Black to defend the extra pawn precisely — any inaccuracy can lead to long-term pressure from White's bishop and rooks. A deeply theoretical variation requiring accurate play from both sides!</p>
+    <p class="lang-element-ja">💡 カタラン・オープン変化は、カタラン・オープニングで黒が4...dxc4とc4のポーンを取る変化だよ。黒は一時的にポーンを1つ多く持つけれど、白は駒の展開でリードしながら、クイーンでポーンを取り返すのが典型的な流れなんだ。黒はa6とb5を突いてクイーンサイドを広げる代わりに、c6のマスなどに弱点を抱えやすいよ。カルポフやゲラーなどの強豪が黒番で用いてきた、理論的にしっかりした変化なんだ。</p>
+    <p class="lang-element-en">💡 The Catalan Open Variation is the line where Black takes the c4 pawn with 4...dxc4. Black is temporarily a pawn up, but White typically leads in development and then wins the pawn back with the queen. Black gains queenside space with ...a6 and ...b5, but often ends up with weak squares such as c6. It's a theoretically sound line that strong players like Karpov and Geller have used with Black.</p>
   </div>
 
   <div class="board-wrap">
@@ -193,60 +198,88 @@ const initialBoard = [
 // ============================================================
 const LESSON_STEPS = [
   { move:null, moveLabel:{ja:"開始局面", en:"Starting Position"},
-    ja:"カタラン・オープン変化のレッスンを始めるよ！ポーンを受け取った黒が、正確なプレイでそれを守り抜けるかが試される、高度な変化だよ。ジーンと一緒に、一手ずつ「なぜその手を指すのか」を学んでいこう。",
-    en:"Let's start the Catalan Open Variation lesson! Black grabs a pawn and must defend it with precise play — a deeply theoretical test. Jene will explain why each move is played, one step at a time.",
+    ja:"カタラン・オープン変化のレッスンを始めるよ！このページでは、黒が4...dxc4とc4のポーンを取り、白がクイーンで取り返す形を見ていくよ。白が先に駒を展開してからポーンを取り返す流れと、黒のクイーンサイドにできる弱点がポイントなんだ。一手ずつジーンと一緒に、なぜその手を指すのかを学んでいこう。",
+    en:"Let's start the Catalan Open Variation lesson! On this page we follow the line where Black takes on c4 with 4...dxc4 and White wins the pawn back with the queen. The key ideas are how White develops first and then recovers the pawn, and the weaknesses that appear on Black's queenside. Jene will walk you through why each move is played, one step at a time.",
     fox:'welcome' },
   { move:{from:[6,3],to:[4,3]}, moveLabel:{ja:"1. d4", en:"1. d4"},
-    ja:"白はd4で中央を制圧するよ。",
-    en:"White plays 1.d4, claiming the center.",
+    ja:"白はポーンをd4へ進めるよ。白は中央のマスを押さえながら、c1のビショップの道を開けるんだ。",
+    en:"White pushes the pawn to d4. White takes control of central squares and opens the path for the c1 bishop.",
     fox:'normal' },
   { move:{from:[0,6],to:[2,5]}, moveLabel:{ja:"1...Nf6", en:"1...Nf6"},
-    ja:"黒はナイトをf6へ展開するよ。中央のe4・d5マスに関与しつつ、柔軟に構えるんだ。",
-    en:"Black develops the knight to f6, staying flexible while keeping a foothold in the center.",
+    ja:"黒はナイトをf6へ進めるよ。黒はナイトを展開しながら、白がe4と突くのをけん制するんだ。",
+    en:"Black develops the knight to f6. Black develops while discouraging White from pushing e4.",
     fox:'normal' },
   { move:{from:[6,2],to:[4,2]}, moveLabel:{ja:"2. c4", en:"2. c4"},
-    ja:"白はc4でさらに中央を広げるよ。",
-    en:"White expands the center with 2.c4.",
+    ja:"白はポーンをc4へ進めるよ。白はこれでd5のマスにも利かせて、中央を広げるんだ。",
+    en:"White pushes the pawn to c4. White adds control of d5 and expands in the center.",
     fox:'normal' },
   { move:{from:[1,4],to:[2,4]}, moveLabel:{ja:"2...e6", en:"2...e6"},
-    ja:"黒はe6で柔軟に展開を準備するよ。すぐにd5と突く準備をしながら、まだ具体的な作戦を決めきらないんだ。",
-    en:"Black plays 2...e6, preparing to strike with d5 while staying flexible about the exact plan.",
+    ja:"黒はポーンをe6へ進めるよ。黒はd5のマスを押さえながら、f8のビショップの道を開けるんだ。",
+    en:"Black pushes the pawn to e6. Black controls the d5 square and opens the path for the f8 bishop.",
     fox:'normal' },
   { move:{from:[6,6],to:[5,6]}, moveLabel:{ja:"3. g3", en:"3. g3"},
-    ja:"白はg3でフィアンケットを準備するよ（カタラン）。",
-    en:"White prepares a fianchetto with 3.g3, the Catalan.",
+    ja:"白はポーンをg3へ進めて、<a href='catalan.html'>カタラン</a>の形に入るよ。白はf1のビショップをg2へ出して、h1からa8までの長い斜めの列をにらむ準備をするんだ。",
+    en:"White pushes the pawn to g3, entering the <a href='catalan.html?lang=en'>Catalan</a>. White prepares to bring the f1 bishop to g2 so it can eye the long diagonal from h1 to a8.",
     fox:'normal' },
   { move:{from:[1,3],to:[3,3]}, moveLabel:{ja:"3...d5", en:"3...d5"},
-    ja:"黒はd5で中央に挑むよ。",
-    en:"Black challenges the center with 3...d5.",
+    ja:"黒はポーンをd5へ進めるよ。黒は中央のマスを押さえて、白のc4のポーンと向かい合う形を作るんだ。",
+    en:"Black pushes the pawn to d5. Black claims the center and sets up a face-off with White's c4 pawn.",
     fox:'normal' },
   { move:{from:[7,5],to:[6,6]}, moveLabel:{ja:"4. Bg2", en:"4. Bg2"},
-    ja:"白はビショップをg2へ。フィアンケットが完成するよ。",
-    en:"White completes the fianchetto with 4.Bg2.",
+    ja:"白はビショップをg2へ進めるよ。白のビショップはf3とe4のマスを通って、黒のd5のポーンにも利いているんだ。",
+    en:"White develops the bishop to g2. White's bishop looks through f3 and e4 and also hits Black's d5 pawn.",
     fox:'normal' },
   { move:{from:[3,3],to:[4,2]}, moveLabel:{ja:"4...dxc4（オープン！）", en:"4...dxc4 (Open!)"},
-    ja:"ここが本題、カタラン・オープンの一手！黒はポーンを受け取るよ。代わりに白のBg2が長期的に活性化するんだ。",
-    en:"Here's the Catalan Open move! Black takes the pawn, but White's Bg2 becomes very active in return.",
+    ja:"ここがオープン変化の一手！黒はd5のポーンで、c4にいた白のポーンを取るよ。一般的には4...Be7でd5のポーンを残す形もよく指されるけれど、黒はここでポーンを取って、白に取り返す手間をかけさせる道を選ぶんだ。その代わり、黒のd5のポーンがいなくなったので、白のg2のビショップは黒のb7のポーンまでにらむようになるよ。",
+    en:"Here's the Open Variation! Black's d5 pawn captures White's pawn on c4. Black often keeps the d5 pawn with 4...Be7 instead, but here Black takes the pawn and makes White spend time winning it back. The trade-off is that with Black's d5 pawn gone, White's g2 bishop now reaches all the way to Black's b7 pawn.",
     fox:'happy' },
   { move:{from:[7,6],to:[5,5]}, moveLabel:{ja:"5. Nf3", en:"5. Nf3"},
-    ja:"白はナイトをf3へ展開するよ。",
-    en:"White develops the knight to f3.",
+    ja:"白はナイトをf3へ進めるよ。白のナイトはd4のポーンを守り、白は次の手でキャスリングできる形になるんだ。",
+    en:"White develops the knight to f3. White's knight defends the d4 pawn, and White is now ready to castle on the next move.",
+    jaMore:"白はこの手の代わりに5.Qa4+とチェックをかけて、すぐにc4のポーンを取り返しにいくこともできるよ。",
+    enMore:"Instead of this move, White can also play 5.Qa4+ with check and go after the c4 pawn right away.",
     fox:'normal' },
-  { move:{from:[1,0],to:[2,0]}, moveLabel:{ja:"5...a6", en:"5...a6"},
-    ja:"黒はa6で、後のb5によってc4ポーンを守る準備をするよ。",
-    en:"Black plays 5...a6, preparing to defend the c4 pawn with b5.",
-    fox:'quiz' },
+  { move:{from:[0,5],to:[1,4]}, moveLabel:{ja:"5...Be7", en:"5...Be7"},
+    ja:"黒はビショップをe7へ進めるよ。これでf8とg8のマスが空いて、黒は次の手でキャスリングできるんだ。",
+    en:"Black develops the bishop to e7. This clears f8 and g8, so Black can castle on the next move.",
+    fox:'normal' },
   { move:{from:[7,4],to:[7,6],castle:{from:[7,7],to:[7,5]}}, moveLabel:{ja:"6. O-O", en:"6. O-O"},
-    ja:"白はキャスリングでキングを安全な場所へ。",
-    en:"White castles kingside, tucking the king away safely.",
+    ja:"白はキャスリングでキングを安全な場所へ動かすよ。白はポーンを1つ損しているけれど、先に駒を展開してから取り返す作戦なんだ。",
+    en:"White castles, bringing the king to safety. White is a pawn down for now, but the plan is to finish developing first and win it back afterward.",
     fox:'normal' },
-  { move:{from:[1,1],to:[3,1]}, moveLabel:{ja:"6...b5", en:"6...b5"},
-    ja:"黒はb5！これでc4のポーンをしっかり守るよ。",
-    en:"Black firmly defends the c4 pawn with 6...b5.",
-    fox:'wink' },
-  { move:{from:[5,5],to:[3,4]}, moveLabel:{ja:"7. Ne5", en:"7. Ne5"},
-    ja:"白はナイトをe5へ！中央の強力な前哨地点に陣取りながら、黒のクイーンサイド(c6・d7周辺)に狙いをつけるよ。これで本譜は一段落、続きはぜひ自分で指してみてね！",
-    en:"White jumps the knight to e5, grabbing a strong central outpost while eyeing weaknesses around c6 and d7 on Black's queenside. That's the main line — try continuing the game yourself from here!",
+  { move:{from:[0,4],to:[0,6],castle:{from:[0,7],to:[0,5]}}, moveLabel:{ja:"6...O-O", en:"6...O-O"},
+    ja:"黒もキャスリングでキングを安全な場所へ動かすよ。黒のキングはg8へ移り、h8にいたルークはf8へ出てくるんだ。",
+    en:"Black also castles, bringing the king to safety. Black's king goes to g8, and the rook from h8 comes to f8.",
+    fox:'normal' },
+  { move:{from:[7,3],to:[6,2]}, moveLabel:{ja:"7. Qc2", en:"7. Qc2"},
+    ja:"白はクイーンをc2へ進めるよ。白のクイーンは、守りのない黒のc4のポーンを攻撃しているんだ。",
+    en:"White brings the queen to c2. White's queen attacks Black's undefended c4 pawn.",
+    fox:'normal' },
+  { move:{from:[1,0],to:[2,0]}, moveLabel:{ja:"7...a6", en:"7...a6"},
+    ja:"黒はポーンをa6へ進めるよ。黒はまだ空いているb5のマスにa6のポーンを利かせて、次にb5と突いてc4のポーンを守る準備をするんだ。",
+    en:"Black pushes the pawn to a6. Black covers the still-empty b5 square with the a6 pawn, preparing ...b5 to defend the c4 pawn.",
+    fox:'normal' },
+  { move:{from:[6,2],to:[4,2]}, moveLabel:{ja:"8. Qxc4", en:"8. Qxc4"},
+    ja:"白はクイーンで、c4にいた黒のポーンを取り返すよ。これで白と黒の駒の数は互角に戻ったんだ。",
+    en:"White's queen recaptures Black's pawn on c4. Material is level again.",
+    jaMore:"白はこの手の代わりに8.a4と突いて、黒にb5と突かせないようにしてから、あとでc4のポーンを取り返すこともできるよ。",
+    enMore:"Instead of this move, White can also play 8.a4 to stop ...b5 first, and win the c4 pawn back later.",
+    fox:'normal' },
+  { move:{from:[1,1],to:[3,1]}, moveLabel:{ja:"8...b5", en:"8...b5"},
+    ja:"黒はポーンをb5へ進めるよ。黒のb5のポーンは白のクイーンを攻撃していて、白は次の手でクイーンを動かさなければならないんだ。黒はこうして時間を稼ぎながら、空いたb7のマスにc8のビショップを出せるようにするよ。",
+    en:"Black pushes the pawn to b5. Black's b5 pawn attacks White's queen, so White has to move the queen next turn. Black gains time this way and frees the b7 square for the c8 bishop.",
+    fox:'normal' },
+  { move:{from:[4,2],to:[6,2]}, moveLabel:{ja:"9. Qc2", en:"9. Qc2"},
+    ja:"白はクイーンをc2へ戻すよ。白のクイーンはcファイル（c1からc8の縦のマス）で黒のc7のポーンに利いていて、黒はd8のクイーンでc7を守っているんだ。",
+    en:"White brings the queen back to c2. White's queen hits Black's c7 pawn along the c-file (the column of squares from c1 to c8), and Black is defending c7 with the queen on d8.",
+    fox:'normal' },
+  { move:{from:[0,2],to:[1,1]}, moveLabel:{ja:"9...Bb7", en:"9...Bb7"},
+    ja:"黒はビショップをb7へ進めるよ。黒のビショップは長い斜めの列に入り、白のf3のナイトに利いて、g2のビショップと向かい合うんだ。白のf3のナイトは、e2のポーンとg2のビショップに守られているよ。",
+    en:"Black develops the bishop to b7. Black's bishop takes up the long diagonal, hits White's f3 knight, and faces off against the g2 bishop. White's f3 knight is defended by the e2 pawn and the g2 bishop.",
+    fox:'normal' },
+  { move:{from:[7,2],to:[6,3]}, moveLabel:{ja:"10. Bd2", en:"10. Bd2"},
+    ja:"白はビショップをd2へ進めるよ。白のビショップはまだ空いているa5のマスにも利いていて、次にa5へ出て黒のクイーンサイドに圧力をかける準備をしているんだ。黒はa6とb5を突いたので、c6のマスなどにポーンで利かせられなくなっていて、白はそこをねらっていくよ。白と黒のこの形は、2007年のクラムニクとアナンドの対局でも指されたんだ。これで本譜は一段落、続きはぜひ自分で指してみてね！",
+    en:"White develops the bishop to d2. White's bishop also covers the still-empty a5 square, preparing to go there and put pressure on Black's queenside. Because Black has pushed ...a6 and ...b5, Black can no longer cover squares like c6 with a pawn, and White will aim at them. This position was also reached in a 2007 game between Kramnik and Anand. That's the main line — try continuing the game yourself from here!",
     fox:'happy' }
 ];
 
@@ -341,7 +374,19 @@ function renderStep(){
   const step = LESSON_STEPS[currentStep];
   renderBoard(boardSnapshots[currentStep]);
   document.getElementById('moveLabel').textContent = (step.moveLabel && step.moveLabel[currentLang]) || '';
-  document.getElementById('commentaryText').textContent = step[currentLang];
+  const ctEl = document.getElementById('commentaryText');
+  const moreText = step[currentLang + 'More'];
+  ctEl.innerHTML = step[currentLang] + (moreText
+    ? '<details class="more-detail"><summary>' + (currentLang === 'ja' ? '💡 もっと詳しく知りたい方へ' : '💡 Want to know more?') + '</summary><div class="more-body">' + moreText + '</div></details>'
+    : '');
+  ctEl.scrollTop = 0;
+  const moreEl = ctEl.querySelector('details.more-detail');
+  if (moreEl) {
+    moreEl.addEventListener('toggle', function(){
+      if (moreEl.open) { ctEl.scrollTop = moreEl.offsetTop - ctEl.offsetTop; }
+      adjustBottomPadding();
+    });
+  }
   document.getElementById('foxAvatar').src = FOX_BY_MOOD[step.fox] || FOX_BY_MOOD.normal;
   document.getElementById('lessonProgress').textContent = currentStep + ' / ' + (LESSON_STEPS.length - 1);
   document.getElementById('btnPrev').disabled = currentStep === 0;

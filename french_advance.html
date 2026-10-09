@@ -103,6 +103,11 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
   font-size: 1rem;
   color: var(--text-sub);
 }
+.commentary-text a, .opening-intro a { color:var(--brown); text-decoration:underline; font-weight:700; }
+.commentary-text a:hover, .opening-intro a:hover { color:var(--brown-dark); }
+.more-detail { margin-top:8px; border-top:1px dashed var(--brown-light); padding-top:6px; }
+.more-detail summary { cursor:pointer; font-weight:700; color:var(--brown); font-size:0.92rem; list-style-position:inside; }
+.more-detail .more-body { margin-top:6px; font-size:0.94rem; }
 </style>
   <script src="board-theme.js"></script>
 </head>
@@ -121,8 +126,8 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
   <h1 class="opening-title lang-element-en">French Advance Variation</h1>
 
   <div class="opening-intro">
-    <p class="lang-element-ja">💡 フレンチ・アドバンス変化は白が3.e5と突いてスペース優位を確保する積極的な変化だよ！e5と突くことで黒のナイトをf6から追い出し、中央のスペースを確保するんだ。黒はc5で白のd4ポーンに反撃するのが基本プランで、複雑な中盤戦が生まれるよ。白はf4-g4とキングサイドを攻め、黒はb5-c4とクイーンサイドで反撃するという激しい相互攻撃になることが多いんだ。フレンチ・ディフェンスに慣れた相手を得意パターンから外せる効果があるよ！</p>
-    <p class="lang-element-en">💡 The French Advance Variation has White pushing 3.e5 to immediately grab central space! By advancing e5, White drives Black's knight away from f6 and secures a space advantage. Black's basic plan is to counter-attack White's d4 pawn with c5. White often attacks on the kingside with f4-g4, while Black counterattacks on the queenside with b5-c4. A popular choice for White players who want a clear attacking plan against the French Defense!</p>
+    <p class="lang-element-ja">💡 フレンチ・アドバンス変化は、フレンチ・ディフェンスで白が3.e5と突き、中央を閉じる作戦だよ。白はd4とe5のポーンでスペースを取り、黒はc5やf6でこのポーンの鎖をくずしにいくのが典型的な戦い方なんだ。20世紀前半にはニムゾヴィッチが好んで指し、のちにスヴェシニコフなどがこの変化を深く研究したよ。黒のc8のビショップがe6のポーンの内側に閉じ込められやすいのも、この変化の特徴なんだ。</p>
+    <p class="lang-element-en">💡 The French Advance Variation is White's plan of pushing 3.e5 against the French Defense and closing the center. White gains space with the d4 and e5 pawns, while Black typically tries to break the chain with ...c5 and ...f6. Nimzowitsch favored it in the first half of the 20th century, and later players such as Sveshnikov studied it deeply. Another feature of this line is that Black's c8 bishop can easily get stuck behind the e6 pawn.</p>
   </div>
 
   <div class="board-wrap">
@@ -142,6 +147,9 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
     <button id="btnPrev" class="lesson-btn">← 前へ</button>
     <span class="lesson-progress" id="lessonProgress"></span>
     <button id="btnNext" class="lesson-btn">次へ →</button>
+  </div>
+  <div id="shareRow" style="display:none;text-align:center;margin-top:10px;">
+    <button id="shareXBtn" style="background:#000;color:#fff;border:none;border-radius:20px;padding:8px 16px;font-family:'Crimson Pro',serif;font-weight:700;font-size:0.85rem;cursor:pointer;">🦊 𝕏でシェアする</button>
   </div>
 </div>
 
@@ -190,60 +198,78 @@ const initialBoard = [
 // ============================================================
 const LESSON_STEPS = [
   { move:null, moveLabel:{ja:"開始局面", en:"Starting Position"},
-    ja:"フレンチ・アドバンス変化のレッスンを始めるよ！白がスペースを確保して、明確な攻撃プランを持てる人気の変化だよ。ジーンと一緒に、一手ずつ「なぜその手を指すのか」を学んでいこう。",
-    en:"Let's start the French Advance Variation lesson! White grabs space with a clear attacking plan. Jene will explain why each move is played, one step at a time.",
+    ja:"フレンチ・アドバンス変化のレッスンを始めるよ！このページでは、黒が5...Qb6で白のd4とb2に圧力をかけ、白が6.a3でクイーンサイドのスペースを広げようとする、現代の本流の形を見ていくよ。白と黒がポーンの鎖をめぐってどう戦うのかがポイントなんだ。一手ずつジーンと一緒に、なぜその手を指すのかを学んでいこう。",
+    en:"Let's start the French Advance Variation lesson! On this page we follow a modern main line in which Black pressures d4 and b2 with 5...Qb6 and White tries to gain queenside space with 6.a3. The key is how both sides fight over the pawn chain. Jene will walk you through why each move is played, one step at a time.",
     fox:'welcome' },
   { move:{from:[6,4],to:[4,4]}, moveLabel:{ja:"1. e4", en:"1. e4"},
-    ja:"白はe4で中央を制圧するよ。",
-    en:"White plays 1.e4, claiming the center.",
+    ja:"白はポーンをe4へ進めるよ。白は中央のマスを押さえながら、ビショップとクイーンが動く道を開けるんだ。",
+    en:"White pushes the pawn to e4. White takes control of central squares and opens lines for the bishop and queen.",
     fox:'normal' },
   { move:{from:[1,4],to:[2,4]}, moveLabel:{ja:"1...e6", en:"1...e6"},
-    ja:"黒はe6でフレンチ・ディフェンスを選ぶよ。",
-    en:"Black plays 1...e6, the French Defense.",
+    ja:"黒はポーンをe6へ進めて、<a href='french.html'>フレンチ・ディフェンス</a>に入るよ。黒は次にd5と突いて、白のe4のポーンに働きかける準備をするんだ。",
+    en:"Black pushes the pawn to e6, entering the <a href='french.html?lang=en'>French Defense</a>. Black prepares to push ...d5 next and challenge White's e4 pawn.",
     fox:'normal' },
   { move:{from:[6,3],to:[4,3]}, moveLabel:{ja:"2. d4", en:"2. d4"},
-    ja:"白はd4で中央をさらに強化するよ。",
-    en:"White reinforces the center with 2.d4.",
+    ja:"白はポーンをd4へ進めるよ。白はe4とd4の2つのポーンで、中央を大きく押さえるんだ。",
+    en:"White pushes the pawn to d4. With pawns on e4 and d4, White takes a big grip on the center.",
     fox:'normal' },
   { move:{from:[1,3],to:[3,3]}, moveLabel:{ja:"2...d5", en:"2...d5"},
-    ja:"黒はd5で白のe4ポーンに正面から挑戦するよ。",
-    en:"Black directly challenges White's e4 pawn with 2...d5.",
+    ja:"黒はポーンをd5へ進めるよ。黒のd5のポーンは白のe4のポーンを攻撃していて、白はこのポーンをどうするか決めなければならないんだ。",
+    en:"Black pushes the pawn to d5. Black's d5 pawn attacks White's e4 pawn, so White has to decide what to do with it.",
     fox:'normal' },
   { move:{from:[4,4],to:[3,4]}, moveLabel:{ja:"3. e5（アドバンス！）", en:"3. e5 (Advance!)"},
-    ja:"ここが本題、アドバンス変化の一手！白はe5と突いて、ナイトを追い払いながらスペースを確保するよ。",
-    en:"Here's the Advance Variation move! White pushes e5, gaining space while driving away Black's knight option.",
+    ja:"ここがアドバンス変化の一手！白はポーンをe5へ進めて、黒の陣地に食い込み、中央のスペースを広げるよ。一般的には3.Nc3や3.Nd2でe4のポーンを守る形も多いけれど、白はここでポーンを前に進めて、中央を閉じる道を選ぶんだ。白のe5のポーンはf6とd6のマスに利いていて、黒はナイトをf6へ出しにくくなるよ。",
+    en:"Here's the Advance Variation! White pushes the pawn to e5, advancing into Black's camp and gaining central space. White often defends the e4 pawn with 3.Nc3 or 3.Nd2 instead, but here White pushes forward and closes the center. White's e5 pawn covers f6 and d6, which makes it hard for Black to bring a knight to f6.",
     fox:'happy' },
   { move:{from:[1,2],to:[3,2]}, moveLabel:{ja:"3...c5", en:"3...c5"},
-    ja:"黒はc5！フレンチ・アドバンスの基本プラン、白のd4ポーンに反撃するよ。",
-    en:"Black counters with 3...c5, the basic plan against White's d4 pawn.",
-    fox:'wink' },
-  { move:{from:[7,6],to:[5,5]}, moveLabel:{ja:"4. Nf3", en:"4. Nf3"},
-    ja:"白はナイトをf3へ展開するよ。",
-    en:"White develops the knight to f3.",
+    ja:"黒はポーンをc5へ進めるよ。黒は白のd4のポーンを攻撃して、d4とe5で斜めにつながった白のポーンの鎖の、根元に働きかけるんだ。",
+    en:"Black pushes the pawn to c5. Black attacks White's d4 pawn, striking at the base of White's pawn chain, where d4 and e5 are linked diagonally.",
+    fox:'normal' },
+  { move:{from:[6,2],to:[5,2]}, moveLabel:{ja:"4. c3", en:"4. c3"},
+    ja:"白はポーンをc3へ進めるよ。白はd4のポーンをc3のポーンでも守って、ポーンの鎖の根元を固めるんだ。",
+    en:"White pushes the pawn to c3. White adds the c3 pawn as another defender of d4, reinforcing the base of the chain.",
     fox:'normal' },
   { move:{from:[0,1],to:[2,2]}, moveLabel:{ja:"4...Nc6", en:"4...Nc6"},
-    ja:"黒はナイトをc6へ展開するよ。",
-    en:"Black develops the knight to c6.",
+    ja:"黒はナイトをc6へ進めるよ。黒はナイトを展開しながら、白のd4のポーンをc5のポーンと合わせて2つで攻撃するんだ。白はd1のクイーンとc3のポーンの2つで、d4を守っているよ。",
+    en:"Black develops the knight to c6. Black develops while attacking White's d4 pawn twice, together with the c5 pawn. White defends d4 twice as well, with the d1 queen and the c3 pawn.",
     fox:'normal' },
-  { move:{from:[7,5],to:[6,4]}, moveLabel:{ja:"5. Be2", en:"5. Be2"},
-    ja:"白はビショップをe2へ展開するよ。",
-    en:"White develops the bishop to e2.",
+  { move:{from:[7,6],to:[5,5]}, moveLabel:{ja:"5. Nf3", en:"5. Nf3"},
+    ja:"白はナイトをf3へ進めるよ。白のナイトはd4のポーンを守って、白はd4を守る駒を3つに増やすんだ。白のf3のナイトは、e5のポーンも守っているよ。",
+    en:"White develops the knight to f3. White's knight defends the d4 pawn, raising White's defenders of d4 to three. White's f3 knight also defends the e5 pawn.",
     fox:'normal' },
-  { move:{from:[0,6],to:[1,4]}, moveLabel:{ja:"5...Nge7", en:"5...Nge7"},
-    ja:"黒はもう一つのナイトをe7へ。f5への展開を準備するよ。",
-    en:"Black develops the other knight to e7, preparing to reroute it to f5.",
+  { move:{from:[0,3],to:[2,1]}, moveLabel:{ja:"5...Qb6", en:"5...Qb6"},
+    ja:"黒はクイーンをb6へ進めるよ。黒のクイーンは白のb2のポーンに利いていて、b2を守っている白のc1のビショップは動きにくくなるんだ。黒のクイーンは、c5のポーンがd4で交換されると、d4のポーンにも利くようになるよ。",
+    en:"Black brings the queen to b6. Black's queen hits White's b2 pawn, so White's c1 bishop, which is guarding b2, becomes hard to move. If the c5 pawn is traded on d4, Black's queen will also bear down on d4.",
     fox:'normal' },
-  { move:{from:[7,4],to:[7,6],castle:{from:[7,7],to:[7,5]}}, moveLabel:{ja:"6. O-O", en:"6. O-O"},
-    ja:"白はキャスリングでキングを安全な場所へ。",
-    en:"White castles kingside, tucking the king away safely.",
+  { move:{from:[6,0],to:[5,0]}, moveLabel:{ja:"6. a3", en:"6. a3"},
+    ja:"白はポーンをa3へ進めるよ。白は次にb4と突いて、クイーンサイドのスペースを広げる準備をするんだ。白がb4と突けば、黒のc5のポーンを攻撃でき、c1のビショップもb2へ出やすくなるよ。",
+    en:"White pushes the pawn to a3. White prepares to push b4 next and gain space on the queenside. If White gets in b4, it attacks Black's c5 pawn and also makes it easier for the c1 bishop to come out to b2.",
     fox:'normal' },
-  { move:{from:[1,4],to:[3,5]}, moveLabel:{ja:"6...Nf5", en:"6...Nf5"},
-    ja:"黒はナイトをf5へ。これでd4ポーンに狙いをつける、フレンチ・アドバンスらしい展開だよ。",
-    en:"Black reroutes the knight to f5, targeting d4 — a typical Advance French maneuver.",
-    fox:'happy' },
-  { move:{from:[6,2],to:[5,2]}, moveLabel:{ja:"7. c3", en:"7. c3"},
-    ja:"白はc3でd4ポーンを支えるよ。これで本譜は一段落、続きはぜひ自分で指してみてね！",
-    en:"White supports d4 with 7.c3. That's the main line — try continuing the game yourself from here!",
+  { move:{from:[3,2],to:[4,2]}, moveLabel:{ja:"6...c4", en:"6...c4"},
+    ja:"黒はポーンをc4へ進めるよ。黒はクイーンサイドを閉じて、白がb4と突いてc5のポーンを攻撃する作戦を先にかわすんだ。黒のc4のポーンはd3のマスに利いていて、白のf1のビショップはd3へ出られなくなるよ。その代わり、黒はd4のポーンへの攻撃をやめることになるんだ。",
+    en:"Black pushes the pawn to c4. Black closes the queenside and sidesteps White's plan of b4 hitting the c5 pawn. Black's c4 pawn covers d3, so White's f1 bishop can no longer go there. The trade-off is that Black gives up the pressure on White's d4 pawn.",
+    jaMore:"黒はこの手の代わりに6...Bd7と展開する形も、よく指されるよ。",
+    enMore:"Instead of this move, Black also often plays 6...Bd7 and develops.",
+    fox:'normal' },
+  { move:{from:[7,1],to:[6,3]}, moveLabel:{ja:"7. Nbd2", en:"7. Nbd2"},
+    ja:"白はナイトをd2へ進めるよ。白のナイトは黒のc4のポーンに利いていて、まだ空いているb3のマスにも利かせながら、b3と突いてc4のポーンをくずす準備をしているんだ。",
+    en:"White develops the knight to d2. White's knight hits Black's c4 pawn and also covers the empty b3 square, preparing to push b3 and break up the c4 pawn.",
+    fox:'normal' },
+  { move:{from:[2,2],to:[3,0]}, moveLabel:{ja:"7...Na5", en:"7...Na5"},
+    ja:"黒はナイトをa5へ進めるよ。黒のナイトはc4のポーンを守りながら、まだ空いているb3のマスにも利かせて、白がb3と突くのをけん制しているんだ。",
+    en:"Black brings the knight to a5. Black's knight defends the c4 pawn and also covers the empty b3 square, discouraging White from pushing b3.",
+    fox:'normal' },
+  { move:{from:[7,0],to:[7,1]}, moveLabel:{ja:"8. Rb1", en:"8. Rb1"},
+    ja:"白はルークをb1へ動かすよ。白のルークはb2のポーンを守って、c1のビショップをb2を守る役目から自由にするんだ。白のルークは、あとでb4と突いてクイーンサイドを開く作戦にも役立つよ。",
+    en:"White moves the rook to b1. White's rook defends the b2 pawn and frees the c1 bishop from guarding it. White's rook will also help later if White pushes b4 to open the queenside.",
+    fox:'normal' },
+  { move:{from:[0,2],to:[1,3]}, moveLabel:{ja:"8...Bd7", en:"8...Bd7"},
+    ja:"黒はビショップをd7へ進めるよ。黒のビショップはまだ空いているb5やa4のマスに利いて、クイーンサイドの戦いに加わるんだ。これでb8・c8・d8のマスが空いて、黒は次の手でクイーンサイドにキャスリングすることもできるよ。",
+    en:"Black develops the bishop to d7. Black's bishop covers the empty b5 and a4 squares and joins the queenside fight. This clears b8, c8 and d8, so Black could also castle queenside on the next move.",
+    fox:'normal' },
+  { move:{from:[7,5],to:[6,4]}, moveLabel:{ja:"9. Be2", en:"9. Be2"},
+    ja:"白はビショップをe2へ進めるよ。これでf1とg1のマスが空いて、白は次の手でキャスリングできるんだ。白はキングを安全にしてから、b3やb4でクイーンサイドをくずすか、キングサイドで攻める作戦を考えていくよ。黒はクイーンサイドのポーンの鎖を守りながら、g8のナイトをe7からf5へ出して、白のd4のポーンに働きかけるのが典型的な作戦なんだ。これで本譜は一段落、続きはぜひ自分で指してみてね！",
+    en:"White develops the bishop to e2. This clears f1 and g1, so White can castle on the next move. Once the king is safe, White will look to break up the queenside with b3 or b4, or to attack on the kingside. A typical plan for Black is to keep the queenside chain intact while bringing the g8 knight to f5 via e7 to pressure White's d4 pawn. That's the main line — try continuing the game yourself from here!",
     fox:'happy' }
 ];
 
@@ -329,15 +355,50 @@ function adjustBottomPadding(){
   }
 }
 
+function shareOnX(message) {
+  const shareUrl = 'https://twitter.com/intent/tweet?text=' + encodeURIComponent(message) + '&url=' + encodeURIComponent(window.location.href);
+  window.open(shareUrl, '_blank', 'noopener,noreferrer,width=550,height=420');
+}
+
 function renderStep(){
   const step = LESSON_STEPS[currentStep];
   renderBoard(boardSnapshots[currentStep]);
   document.getElementById('moveLabel').textContent = (step.moveLabel && step.moveLabel[currentLang]) || '';
-  document.getElementById('commentaryText').textContent = step[currentLang];
+  const ctEl = document.getElementById('commentaryText');
+  const moreText = step[currentLang + 'More'];
+  ctEl.innerHTML = step[currentLang] + (moreText
+    ? '<details class="more-detail"><summary>' + (currentLang === 'ja' ? '💡 もっと詳しく知りたい方へ' : '💡 Want to know more?') + '</summary><div class="more-body">' + moreText + '</div></details>'
+    : '');
+  ctEl.scrollTop = 0;
+  const moreEl = ctEl.querySelector('details.more-detail');
+  if (moreEl) {
+    moreEl.addEventListener('toggle', function(){
+      if (moreEl.open) { ctEl.scrollTop = moreEl.offsetTop - ctEl.offsetTop; }
+      adjustBottomPadding();
+    });
+  }
   document.getElementById('foxAvatar').src = FOX_BY_MOOD[step.fox] || FOX_BY_MOOD.normal;
   document.getElementById('lessonProgress').textContent = currentStep + ' / ' + (LESSON_STEPS.length - 1);
   document.getElementById('btnPrev').disabled = currentStep === 0;
   document.getElementById('btnNext').disabled = currentStep === LESSON_STEPS.length - 1;
+  adjustBottomPadding();
+
+  const shareRow = document.getElementById('shareRow');
+  if (shareRow) {
+    if (currentStep === LESSON_STEPS.length - 1) {
+      const openingNameEl = document.querySelector('.opening-title.lang-element-' + currentLang);
+      const openingName = openingNameEl ? openingNameEl.textContent : '';
+      const msg = currentLang === 'ja'
+        ? '🦊 ' + openingName + 'をKitsuneChessで学んだよ!一手ずつ「なぜその手か」を教えてくれるよ'
+        : '🦊 Just learned the ' + openingName + ' on KitsuneChess! It explains why each move is played, step by step.';
+      const shareBtn = document.getElementById('shareXBtn');
+      shareBtn.textContent = currentLang === 'ja' ? '🦊 𝕏でシェアする' : '🦊 Share on 𝕏';
+      shareBtn.onclick = function() { shareOnX(msg); };
+      shareRow.style.display = 'block';
+    } else {
+      shareRow.style.display = 'none';
+    }
+  }
   adjustBottomPadding();
 }
 

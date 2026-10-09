@@ -103,6 +103,11 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
   font-size: 1rem;
   color: var(--text-sub);
 }
+.commentary-text a, .opening-intro a { color:var(--brown); text-decoration:underline; font-weight:700; }
+.commentary-text a:hover, .opening-intro a:hover { color:var(--brown-dark); }
+.more-detail { margin-top:8px; border-top:1px dashed var(--brown-light); padding-top:6px; }
+.more-detail summary { cursor:pointer; font-weight:700; color:var(--brown); font-size:0.92rem; list-style-position:inside; }
+.more-detail .more-body { margin-top:6px; font-size:0.94rem; }
 </style>
   <script src="board-theme.js"></script>
 </head>
@@ -121,8 +126,8 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
   <h1 class="opening-title lang-element-en">Budapest Gambit</h1>
 
   <div class="opening-intro">
-    <p class="lang-element-ja">💡 ブダペスト・ギャンビットは2...e5と即座に突くサプライズ・ギャンビットだよ！白が3.dxe5と取れば黒は3...Ng4と突いてポーンを攻撃するんだ。黒の狙いはポーンを回収しながら素早くピースを展開してアクティブな局面を作ること。1918年にブダペストの棋士たちが発見したと言われる歴史あるギャンビットで、メインラインのd4理論を完全に外れるため相手の研究を崩しやすいんだ。奇襲好きなプレイヤーには特に効果的な積極的な戦法だよ！</p>
-    <p class="lang-element-en">💡 The Budapest Gambit immediately surprises White with 2...e5, offering a pawn right away! If White accepts with 3.dxe5, Black plays 3...Ng4 to attack the pawn. Black's goal is to recover the pawn while developing pieces rapidly to create active, dynamic positions. Historically discovered by Budapest players around 1918, this gambit completely sidesteps mainstream d4 theory. Since most players who study d4 openings don't spend much time on the Budapest, the surprise factor alone can be decisive!</p>
+    <p class="lang-element-ja">💡 ブダペスト・ギャンビットは、1.d4 Nf6 2.c4のあとに黒が2...e5とポーンを差し出す、めずらしい形のギャンビットだよ。名前はハンガリーの首都ブダペストに由来していて、1918年にヴィドマーがルビンシュタインに勝ったことで、一気に注目を集めたんだ。黒は差し出したポーンをすぐに取り返しにいき、駒を活発に動かして主導権を握ろうとするよ。トップレベルではあまり指されないけれど、白が準備していないと戸惑いやすい、実戦向きの奇襲なんだ。</p>
+    <p class="lang-element-en">💡 The Budapest Gambit is an unusual gambit in which Black offers a pawn with 2...e5 after 1.d4 Nf6 2.c4. It's named after Budapest, the capital of Hungary, and it suddenly drew attention in 1918 when Vidmar used it to beat Rubinstein. Black goes straight after the sacrificed pawn and tries to seize the initiative with active pieces. It's rarely seen at the top level, but it's a practical surprise weapon that can catch an unprepared opponent off guard.</p>
   </div>
 
   <div class="board-wrap">
@@ -196,60 +201,88 @@ const initialBoard = [
 // ============================================================
 const LESSON_STEPS = [
   { move:null, moveLabel:{ja:"開始局面", en:"Starting Position"},
-    ja:"ブダペスト・ギャンビットのレッスンを始めるよ！1918年にブダペストの棋士たちが発見した、d4理論を完全に外す奇襲的なギャンビットだよ。ジーンと一緒に、一手ずつ「なぜその手を指すのか」を学んでいこう。",
-    en:"Let's start the Budapest Gambit lesson! Discovered by Budapest players around 1918, it completely sidesteps mainstream d4 theory. Jene will explain why each move is played, one step at a time.",
+    ja:"ブダペスト・ギャンビットのレッスンを始めるよ！このページでは、白が4.Bf4でe5のポーンを守ろうとし、黒がナイトとクイーンでポーンを取り返す、ルビンシュタイン・バリエーションの形を見ていくよ。黒が差し出したポーンをどうやって取り返すのかがポイントなんだ。一手ずつジーンと一緒に、なぜその手を指すのかを学んでいこう。",
+    en:"Let's start the Budapest Gambit lesson! On this page we follow the Rubinstein Variation, where White tries to hold the e5 pawn with 4.Bf4 and Black wins it back with the knights and queen. The key is how Black recovers the sacrificed pawn. Jene will walk you through why each move is played, one step at a time.",
     fox:'welcome' },
-    { move:{from:[6,3],to:[4,3]}, moveLabel:{ja:"1. d4", en:"1. d4"},
-    ja:"白はd4で中央を制圧するよ。この後どんな黒の応手にも対応できる、王道の一手なんだ。",
-    en:"White plays 1.d4, claiming the center — a mainstream first move that can handle almost any reply from Black.",
+  { move:{from:[6,3],to:[4,3]}, moveLabel:{ja:"1. d4", en:"1. d4"},
+    ja:"白はポーンをd4へ進めるよ。白は中央のマスを押さえながら、c1のビショップの道を開けるんだ。",
+    en:"White pushes the pawn to d4. White takes control of central squares and opens the path for the c1 bishop.",
     fox:'normal' },
-   { move:{from:[0,6],to:[2,5]}, moveLabel:{ja:"1...Nf6", en:"1...Nf6"},
-    ja:"黒はナイトをf6へ展開するよ。まだ何色のオープニングになるか決めていない、様子見の一手だよ。",
-    en:"Black develops the knight to f6, a flexible move that doesn't yet commit to a particular opening plan.",
+  { move:{from:[0,6],to:[2,5]}, moveLabel:{ja:"1...Nf6", en:"1...Nf6"},
+    ja:"黒はナイトをf6へ進めるよ。黒はナイトを展開しながら、白がe4と突くのをけん制するんだ。",
+    en:"Black develops the knight to f6. Black develops while discouraging White from pushing e4.",
     fox:'normal' },
-   { move:{from:[6,2],to:[4,2]}, moveLabel:{ja:"2. c4", en:"2. c4"},
-    ja:"白はc4でさらに中央を広げるよ。次にNc3・e4と続けば、より広い中央を作れる態勢が整うんだ。",
-    en:"White expands the center with 2.c4, setting the stage for an even bigger center with Nc3 and e4 to follow.",
+  { move:{from:[6,2],to:[4,2]}, moveLabel:{ja:"2. c4", en:"2. c4"},
+    ja:"白はポーンをc4へ進めるよ。白はこれでd5のマスにも利かせて、中央を広げるんだ。",
+    en:"White pushes the pawn to c4. White adds control of d5 and expands in the center.",
     fox:'normal' },
   { move:{from:[1,4],to:[3,4]}, moveLabel:{ja:"2...e5（ブダペスト！）", en:"2...e5 (Budapest!)"},
-    ja:"ここが本題、ブダペスト・ギャンビットの一手！黒は即座にポーンを差し出すよ。完全に予想外の一手なんだ。",
-    en:"Here's the Budapest Gambit move! Black immediately offers a pawn — a completely unexpected idea.",
+    ja:"ここがブダペスト・ギャンビットの一手！黒はポーンをe5へ進めて、白のd4のポーンに取らせるように差し出すよ。一般的には2...e6や2...g6で落ち着いて展開することが多いけれど、黒はここでポーンを犠牲にして、駒を素早く動かして主導権を握る道を選ぶんだ。黒のe5のポーンは守られていないので、白はこのポーンをすぐに取れるよ。",
+    en:"Here's the Budapest Gambit! Black pushes the pawn to e5, offering it to White's d4 pawn. Black usually develops calmly with 2...e6 or 2...g6, but here Black sacrifices a pawn to get the pieces moving quickly and seize the initiative. Black's e5 pawn is undefended, so White can take it right away.",
     fox:'happy' },
-   { move:{from:[4,3],to:[3,4]}, moveLabel:{ja:"3. dxe5", en:"3. dxe5"},
-    ja:"白はポーンを受け取るよ。断ることもできるけど、素直に受け取っておいて、この先黒がどう回収してくるかを見るのが本譜の進め方なんだ。",
-    en:"White accepts the pawn. Declining is possible too, but the main line is to take it and see how Black tries to win it back.",
-    fox:'quiz' },
+  { move:{from:[4,3],to:[3,4]}, moveLabel:{ja:"3. dxe5", en:"3. dxe5"},
+    ja:"白はd4のポーンで、e5にいた黒のポーンを取るよ。白はこれで、ポーンを1つ多く持つ形になったんだ。",
+    en:"White's d4 pawn captures Black's pawn on e5. White is now a pawn up.",
+    fox:'normal' },
   { move:{from:[2,5],to:[4,6]}, moveLabel:{ja:"3...Ng4", en:"3...Ng4"},
-    ja:"黒はナイトをg4へ！ポーンを回収する準備をするよ。",
-    en:"Black jumps the knight to g4, preparing to recover the pawn.",
-    fox:'wink' },
-   { move:{from:[7,6],to:[5,5]}, moveLabel:{ja:"4. Nf3", en:"4. Nf3"},
-    ja:"白はナイトをf3へ展開するよ。ただの展開じゃなくて、さっきのNg4に狙われていたe5のポーンを、これでようやく守れるようになるんだ。",
-    en:"White develops the knight to f3. This isn't just development — it also finally defends the e5 pawn that Black's knight on g4 had been attacking.",
+    ja:"黒はナイトをg4へ進めるよ。黒のナイトはe5に入った白のポーンを攻撃していて、黒は次にこのポーンを取り返そうとしているんだ。白のe5のポーンは、今は何にも守られていないよ。",
+    en:"Black brings the knight to g4. Black's knight attacks White's pawn on e5, and Black plans to win it back. Right now White's e5 pawn isn't defended by anything.",
     fox:'normal' },
-  { move:{from:[0,5],to:[3,2]}, moveLabel:{ja:"4...Bc5", en:"4...Bc5"},
-    ja:"黒はビショップをc5へ。積極的に展開を進めるよ。",
-    en:"Black develops the bishop actively to c5.",
+  { move:{from:[7,2],to:[4,5]}, moveLabel:{ja:"4. Bf4", en:"4. Bf4"},
+    ja:"白はビショップをf4へ進めるよ。白のビショップはe5のポーンを守りながら、展開を進めるんだ。白のこの手は、1918年のルビンシュタインとヴィドマーの対局で初めて指されたことから、ルビンシュタイン・バリエーションと呼ばれているよ。",
+    en:"White develops the bishop to f4. White's bishop defends the e5 pawn while continuing development. This move was first played in the 1918 game between Rubinstein and Vidmar, so it's called the Rubinstein Variation.",
+    jaMore:"白はこの手の代わりに4.e4と突いて、中央を広げる形もあるよ。",
+    enMore:"Instead of this move, White can also push 4.e4 and expand in the center.",
     fox:'normal' },
-   { move:{from:[6,4],to:[5,4]}, moveLabel:{ja:"5. e3", en:"5. e3"},
-    ja:"白はe3で守りを固めるよ。これでf1のビショップに逃げ道ができて、この後のキャスリングへの準備も整うんだ。",
-    en:"White plays 5.e3, shoring up the defense. This also gives the bishop on f1 a way out, paving the way to castle soon.",
+  { move:{from:[0,1],to:[2,2]}, moveLabel:{ja:"4...Nc6", en:"4...Nc6"},
+    ja:"黒はナイトをc6へ進めるよ。黒はg4とc6の2つのナイトで、白のe5のポーンを攻撃するんだ。",
+    en:"Black develops the knight to c6. Black now attacks White's e5 pawn with two knights, on g4 and c6.",
     fox:'normal' },
-   { move:{from:[0,1],to:[2,2]}, moveLabel:{ja:"5...Nc6", en:"5...Nc6"},
-    ja:"黒はもう一つのナイトをc6へ展開するよ。これで駒の展開ペースでは、序盤からポーンを犠牲にした黒の方がむしろ白より一歩リードしている状態なんだ。",
-    en:"Black develops the other knight to c6. At this point, despite giving up a pawn early on, Black is actually ahead of White in development.",
+  { move:{from:[7,6],to:[5,5]}, moveLabel:{ja:"5. Nf3", en:"5. Nf3"},
+    ja:"白はナイトをf3へ進めるよ。白はf4のビショップとf3のナイトの2つで、e5のポーンを守るんだ。",
+    en:"White develops the knight to f3. White now defends the e5 pawn twice, with the f4 bishop and the f3 knight.",
     fox:'normal' },
-  { move:{from:[7,5],to:[6,4]}, moveLabel:{ja:"6. Be2", en:"6. Be2"},
-    ja:"白はビショップをe2へ展開するよ。これでキングサイドの駒がすべて動き終わり、次のキャスリングにようやく備えられるんだ。",
-    en:"White develops the bishop to e2. All the kingside pieces are now out of the way, finally clearing the path to castle.",
+  { move:{from:[0,5],to:[4,1]}, moveLabel:{ja:"5...Bb4+", en:"5...Bb4+"},
+    ja:"黒はビショップをb4へ進めて、チェックをかけるよ。黒は白のキングにチェックをかけながら、ビショップを活発な場所に出すんだ。白はこのチェックを防ぐために、駒をd2やc3に動かさなければならないよ。",
+    en:"Black develops the bishop to b4 with check. Black checks White's king while putting the bishop on an active square. White has to block the check by bringing a piece to d2 or c3.",
     fox:'normal' },
-  { move:{from:[4,6],to:[3,4]}, moveLabel:{ja:"6...Ngxe5", en:"6...Ngxe5"},
-    ja:"黒はNgxe5！これでポーンを回収して、活発な展開を完成させるよ。",
-    en:"Black plays 6...Ngxe5, recovering the pawn and completing active development.",
-    fox:'happy' },
-  { move:{from:[5,5],to:[3,4]}, moveLabel:{ja:"7. Nxe5", en:"7. Nxe5"},
-    ja:"白はナイトで取り返すよ。これで本譜は一段落、続きはぜひ自分で指してみてね！",
-    en:"White recaptures with the knight. That's the main line — try continuing the game yourself from here!",
+  { move:{from:[7,1],to:[6,3]}, moveLabel:{ja:"6. Nbd2", en:"6. Nbd2"},
+    ja:"白はナイトをd2へ進めて、チェックを防ぐよ。白のd2のナイトはピンされていて、動くとキングがチェックされるので、今は動けないんだ。",
+    en:"White develops the knight to d2, blocking the check. White's d2 knight is pinned: if it moved, the king would be in check, so it can't move for now.",
+    jaMore:"白はこの手の代わりに6.Nc3でチェックを防ぐこともできるよ。",
+    enMore:"Instead of this move, White can also block the check with 6.Nc3.",
+    fox:'normal' },
+  { move:{from:[0,3],to:[1,4]}, moveLabel:{ja:"6...Qe7", en:"6...Qe7"},
+    ja:"黒はクイーンをe7へ進めるよ。黒はe5のポーンへの攻撃を3つに増やして、白のf3のナイトとf4のビショップの2つの守りを上回るんだ。",
+    en:"Black brings the queen to e7. Black raises the number of attackers on the e5 pawn to three, outnumbering White's two defenders, the f3 knight and the f4 bishop.",
+    fox:'normal' },
+  { move:{from:[6,4],to:[5,4]}, moveLabel:{ja:"7. e3", en:"7. e3"},
+    ja:"白はポーンをe3へ進めるよ。白はf1のビショップの道を開けて、キャスリングの準備をするんだ。白はe5のポーンを守り切れないので、駒の展開を優先するよ。",
+    en:"White pushes the pawn to e3. White opens the path for the f1 bishop and prepares to castle. Since White can't hold the e5 pawn, White prioritizes development.",
+    fox:'normal' },
+  { move:{from:[4,6],to:[3,4]}, moveLabel:{ja:"7...Ngxe5", en:"7...Ngxe5"},
+    ja:"黒はg4のナイトで、e5にいた白のポーンを取り返すよ。これで白と黒の駒の数は互角に戻ったんだ。",
+    en:"Black's g4 knight recaptures White's pawn on e5. Material is now level between White and Black.",
+    fox:'normal' },
+  { move:{from:[5,5],to:[3,4]}, moveLabel:{ja:"8. Nxe5", en:"8. Nxe5"},
+    ja:"白はf3のナイトで、e5に入った黒のナイトを取るよ。白は駒を交換して、黒の攻めの駒を減らすんだ。",
+    en:"White's f3 knight captures Black's knight on e5. White trades pieces to reduce Black's attacking force.",
+    fox:'normal' },
+  { move:{from:[2,2],to:[3,4]}, moveLabel:{ja:"8...Nxe5", en:"8...Nxe5"},
+    ja:"黒はc6のナイトで、e5に入った白のナイトを取り返すよ。黒のe5のナイトは中央の良い場所にいて、白のc4のポーンや、まだ空いているd3のマスに利いているんだ。",
+    en:"Black's c6 knight recaptures White's knight on e5. Black's knight on e5 sits on a fine central square, hitting White's c4 pawn and the empty d3 square.",
+    fox:'normal' },
+  { move:{from:[7,5],to:[6,4]}, moveLabel:{ja:"9. Be2", en:"9. Be2"},
+    ja:"白はビショップをe2へ進めるよ。これでf1とg1のマスが空いて、白は次の手でキャスリングできるんだ。",
+    en:"White develops the bishop to e2. This clears f1 and g1, so White can castle on the next move.",
+    fox:'normal' },
+  { move:{from:[0,4],to:[0,6],castle:{from:[0,7],to:[0,5]}}, moveLabel:{ja:"9...O-O", en:"9...O-O"},
+    ja:"黒はキャスリングでキングを安全な場所へ動かすよ。黒のキングはg8へ移り、h8にいたルークはf8へ出てくるんだ。",
+    en:"Black castles, bringing the king to safety. Black's king goes to g8, and the rook from h8 comes to f8.",
+    fox:'normal' },
+  { move:{from:[7,4],to:[7,6],castle:{from:[7,7],to:[7,5]}}, moveLabel:{ja:"10. O-O", en:"10. O-O"},
+    ja:"白もキャスリングでキングを安全な場所へ動かすよ。白のキングがg1へ移ったので、d2のナイトのピンも外れたんだ。白がわずかに指しやすいとされているけれど、黒も駒を活発に動かせていて、十分に戦える形だよ。この後は白がa3と突いてb4のビショップに働きかけ、黒はa5やd6で駒の位置を整えていく流れがよく見られるんだ。これで本譜は一段落、続きはぜひ自分で指してみてね！",
+    en:"White also castles, bringing the king to safety. With White's king now on g1, the pin on the d2 knight is gone too. White is considered slightly easier to play, but Black's pieces are active and Black has a perfectly playable game. A common continuation is for White to push a3 to challenge the b4 bishop, while Black tidies up the pieces with ...a5 or ...d6. That's the main line — try continuing the game yourself from here!",
     fox:'happy' }
 ];
 
@@ -339,7 +372,19 @@ function renderStep(){
   const step = LESSON_STEPS[currentStep];
   renderBoard(boardSnapshots[currentStep]);
   document.getElementById('moveLabel').textContent = (step.moveLabel && step.moveLabel[currentLang]) || '';
-  document.getElementById('commentaryText').textContent = step[currentLang];
+  const ctEl = document.getElementById('commentaryText');
+  const moreText = step[currentLang + 'More'];
+  ctEl.innerHTML = step[currentLang] + (moreText
+    ? '<details class="more-detail"><summary>' + (currentLang === 'ja' ? '💡 もっと詳しく知りたい方へ' : '💡 Want to know more?') + '</summary><div class="more-body">' + moreText + '</div></details>'
+    : '');
+  ctEl.scrollTop = 0;
+  const moreEl = ctEl.querySelector('details.more-detail');
+  if (moreEl) {
+    moreEl.addEventListener('toggle', function(){
+      if (moreEl.open) { ctEl.scrollTop = moreEl.offsetTop - ctEl.offsetTop; }
+      adjustBottomPadding();
+    });
+  }
   document.getElementById('foxAvatar').src = FOX_BY_MOOD[step.fox] || FOX_BY_MOOD.normal;
   document.getElementById('lessonProgress').textContent = currentStep + ' / ' + (LESSON_STEPS.length - 1);
   document.getElementById('btnPrev').disabled = currentStep === 0;

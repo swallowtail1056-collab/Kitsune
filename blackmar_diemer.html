@@ -103,6 +103,11 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
   font-size: 1rem;
   color: var(--text-sub);
 }
+.commentary-text a, .opening-intro a { color:var(--brown); text-decoration:underline; font-weight:700; }
+.commentary-text a:hover, .opening-intro a:hover { color:var(--brown-dark); }
+.more-detail { margin-top:8px; border-top:1px dashed var(--brown-light); padding-top:6px; }
+.more-detail summary { cursor:pointer; font-weight:700; color:var(--brown); font-size:0.92rem; list-style-position:inside; }
+.more-detail .more-body { margin-top:6px; font-size:0.94rem; }
 </style>
   <script src="board-theme.js"></script>
 </head>
@@ -121,8 +126,8 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
   <h1 class="opening-title lang-element-en">Blackmar-Diemer Gambit</h1>
 
   <div class="opening-intro">
-    <p class="lang-element-ja">💡 ブラックマー・ディーマー・ギャンビットは1.d4 d5 2.e4と突く積極的なギャンビットだよ！白がe4と突いてポーンを犠牲にすることで素早い展開と攻撃的な主導権を得ようとするんだ。黒がdxe4と取れば白は3.Nc3から4.f3と突いてポーンを回収しながら積極的な展開を続けるよ。ウィルヘルム・ブラックマーとエミール・ヨーゼフ・ディーマーが発展させたこのギャンビットは、アマチュアレベルで特に効果的な奇襲オープニングとして知られているんだ。d4ゲームで積極的に攻撃したいプレイヤーに最高の選択肢だよ！</p>
-    <p class="lang-element-en">💡 The Blackmar-Diemer Gambit boldly plays 1.d4 d5 2.e4, sacrificing a pawn for rapid development and an attacking initiative! If Black takes with dxe4, White continues with 3.Nc3 and 4.f3 to recover the pawn while maintaining aggressive development. Developed by Wilhelm Blackmar and Emil Josef Diemer, this gambit is particularly effective at the amateur level where opponents are unprepared. A fun and exciting gambit for players who love aggressive, attacking chess with d4!</p>
+    <p class="lang-element-ja">💡 ブラックマー・ディーマー・ギャンビットは、1.d4 d5 2.e4とポーンを差し出す、攻撃的なギャンビットだよ。19世紀後半にアメリカ・ニューオーリンズのアーマンド・ブラックマーが試し、のちにドイツのエミール・ヨーゼフ・ディーマーが研究を重ねて、今の形に磨き上げたんだ。白はポーンを1つ損する代わりに、素早い展開とfファイルを使った攻めをねらうよ。トップレベルではほとんど指されず、理論的には黒が守り切れるとされているけれど、アマチュアの実戦では今も人気のあるオープニングなんだ。</p>
+    <p class="lang-element-en">💡 The Blackmar-Diemer Gambit is an aggressive gambit in which White offers a pawn with 1.d4 d5 2.e4. Armand Blackmar of New Orleans tried it in the late 19th century, and later the German player Emil Josef Diemer studied it extensively and refined it into its modern form. In return for a pawn, White aims for quick development and an attack along the f-file. It's rarely seen at the top level, and theory says Black can hold, but it remains popular in amateur games.</p>
   </div>
 
   <div class="board-wrap">
@@ -196,60 +201,72 @@ const initialBoard = [
 // ============================================================
 const LESSON_STEPS = [
   { move:null, moveLabel:{ja:"開始局面", en:"Starting Position"},
-    ja:"ブラックマー・ディーマー・ギャンビットのレッスンを始めるよ！d4からポーンを犠牲にして攻撃的な主導権を握る、積極的なギャンビットだよ。ジーンと一緒に、一手ずつ「なぜその手を指すのか」を学んでいこう。",
-    en:"Let's start the Blackmar-Diemer Gambit lesson! White sacrifices a pawn from a d4 start for an aggressive attacking initiative. Jene will explain why each move is played, one step at a time.",
+    ja:"ブラックマー・ディーマー・ギャンビットのレッスンを始めるよ！このページでは、黒が差し出されたポーンを受け取り、g6とBg7でキングを固めるボゴリュボフ・ディフェンスの形を見ていくよ。白がポーンを損する代わりに、どうやって展開と攻めの形を作るのかがポイントなんだ。一手ずつジーンと一緒に、なぜその手を指すのかを学んでいこう。",
+    en:"Let's start the Blackmar-Diemer Gambit lesson! On this page we follow the Bogoljubov Defense, where Black accepts the pawn and shelters the king with ...g6 and ...Bg7. The key is how White builds development and an attack in return for the pawn. Jene will walk you through why each move is played, one step at a time.",
     fox:'welcome' },
-   { move:{from:[6,3],to:[4,3]}, moveLabel:{ja:"1. d4", en:"1. d4"},
-    ja:"白はd4で中央を制圧するよ。e4よりもリスクが低く、じっくりした展開につながりやすい一手なんだ。",
-    en:"White plays 1.d4, claiming the center. It's a bit less committal than 1.e4 and tends to lead to a more strategic game.",
+  { move:{from:[6,3],to:[4,3]}, moveLabel:{ja:"1. d4", en:"1. d4"},
+    ja:"白はポーンをd4へ進めるよ。白は中央のマスを押さえながら、c1のビショップの道を開けるんだ。",
+    en:"White pushes the pawn to d4. White takes control of central squares and opens the path for the c1 bishop.",
     fox:'normal' },
-   { move:{from:[1,3],to:[3,3]}, moveLabel:{ja:"1...d5", en:"1...d5"},
-    ja:"黒も同じくd5で対抗するよ。これで白のd4ポーンと真正面からぶつかり合う、五分の中央争いになるんだ。",
-    en:"Black mirrors with 1...d5, directly confronting White's d4 pawn and keeping the fight for the center even.",
+  { move:{from:[1,3],to:[3,3]}, moveLabel:{ja:"1...d5", en:"1...d5"},
+    ja:"黒はポーンをd5へ進めるよ。黒も中央のマスを押さえて、白のd4のポーンと向かい合う形を作るんだ。",
+    en:"Black pushes the pawn to d5. Black also claims the center and sets up a face-off with White's d4 pawn.",
     fox:'normal' },
   { move:{from:[6,4],to:[4,4]}, moveLabel:{ja:"2. e4（ブラックマー・ディーマー！）", en:"2. e4 (Blackmar-Diemer!)"},
-    ja:"ここが本題、ブラックマー・ディーマー・ギャンビットの一手！白は大胆にポーンを差し出すよ。",
-    en:"Here's the Blackmar-Diemer move! White boldly offers a pawn.",
+    ja:"ここがブラックマー・ディーマー・ギャンビットの一手！白はポーンをe4へ進めて、黒のd5のポーンに取らせるように差し出すよ。一般的には2.c4の<a href='queens_gambit.html'>クイーンズ・ギャンビット</a>がよく指されるけれど、白はここでポーンを犠牲にして、素早い展開と攻めをねらう道を選ぶんだ。その代わり、白は差し出したポーンを取り返せないことも多く、ポーンを損したまま戦うことになるよ。",
+    en:"Here's the Blackmar-Diemer Gambit! White pushes the pawn to e4, offering it to Black's d5 pawn. White usually plays 2.c4, the <a href='queens_gambit.html?lang=en'>Queen's Gambit</a>, but here White sacrifices a pawn for fast development and an attack. The trade-off is that White often can't win the pawn back and has to play a pawn down.",
     fox:'happy' },
-   { move:{from:[3,3],to:[4,4]}, moveLabel:{ja:"2...dxe4", en:"2...dxe4"},
-    ja:"黒はポーンを受け取るよ。断ることもできるけど、素直に受け取っておいて、この先の白の攻めをきちんと受け止められるか試すのが本譜の進め方なんだ。",
-    en:"Black accepts the pawn. Declining is possible too, but the main line is to take it and see whether Black can weather the coming attack.",
-    fox:'quiz' },
-   { move:{from:[7,1],to:[5,2]}, moveLabel:{ja:"3. Nc3", en:"3. Nc3"},
-    ja:"白はナイトをc3へ展開するよ。実はこの瞬間、ナイトはすでにe4のポーンに直接利いていて、次にそのまま取り返せる状態になっているんだ。",
-    en:"White develops the knight to c3. This immediately attacks the pawn on e4 — the knight could simply recapture it next move if Black does nothing.",
+  { move:{from:[3,3],to:[4,4]}, moveLabel:{ja:"2...dxe4", en:"2...dxe4"},
+    ja:"黒はd5のポーンで、e4にいた白のポーンを取るよ。黒は差し出されたポーンを受け取って、ポーンを1つ多く持つんだ。",
+    en:"Black's d5 pawn captures White's pawn on e4. Black accepts the offer and is now a pawn up.",
     fox:'normal' },
-    { move:{from:[0,6],to:[2,5]}, moveLabel:{ja:"3...Nf6", en:"3...Nf6"},
-    ja:"黒はナイトをf6へ展開するよ。ただの駒の展開じゃなくて、さっき取ったe4のポーンを守る役割も兼ねているんだ。",
-    en:"Black develops the knight to f6. This isn't just development — it also defends the e4 pawn Black just won.",
+  { move:{from:[7,1],to:[5,2]}, moveLabel:{ja:"3. Nc3", en:"3. Nc3"},
+    ja:"白はナイトをc3へ進めるよ。白のナイトは黒のe4のポーンを攻撃しながら、展開を進めるんだ。",
+    en:"White develops the knight to c3. White's knight attacks Black's e4 pawn while continuing development.",
+    jaMore:"白はこの手の代わりに3.f3とすぐにポーンを突く形もあるよ。これはブラックマーが最初に試した形だけれど、黒に3...e5と反撃されやすいんだ。",
+    enMore:"Instead of this move, White can push 3.f3 right away. This is the form Blackmar first tried, but it lets Black hit back with 3...e5.",
+    fox:'normal' },
+  { move:{from:[0,6],to:[2,5]}, moveLabel:{ja:"3...Nf6", en:"3...Nf6"},
+    ja:"黒はナイトをf6へ進めるよ。黒はナイトを展開しながら、e4のポーンを守るんだ。",
+    en:"Black develops the knight to f6. Black develops while defending the e4 pawn.",
     fox:'normal' },
   { move:{from:[6,5],to:[5,5]}, moveLabel:{ja:"4. f3", en:"4. f3"},
-    ja:"白はf3！もう一つのポーンを差し出して、e4のポーンを回収する準備をするよ。",
-    en:"White offers another pawn with 4.f3, preparing to recover the e4 pawn.",
-    fox:'wink' },
-   { move:{from:[4,4],to:[5,5]}, moveLabel:{ja:"4...exf3", en:"4...exf3"},
-    ja:"黒はポーンを受け取るよ。これで黒は2ポーン得をしているけど、その代償として白にどんどん駒を展開させてしまっている。この駒の展開スピードの差こそが、このギャンビット全体の核心なんだ。",
-    en:"Black accepts the pawn, now two pawns ahead — but at the cost of letting White develop pieces rapidly. This gap in development speed is the whole point of the gambit.",
+    ja:"白はポーンをf3へ進めるよ。白はe4のポーンをc3のナイトとf3のポーンの2つで攻撃して、もう1つポーンを差し出すんだ。黒がf3のポーンを取っても、白はナイトで取り返せるので、白がポーンを1つ損している状態は変わらないよ。",
+    en:"White pushes the pawn to f3. White now attacks the e4 pawn twice, with the c3 knight and the f3 pawn, offering another pawn. Even if Black takes on f3, White can recapture with the knight, so White stays just one pawn down.",
+    fox:'normal' },
+  { move:{from:[4,4],to:[5,5]}, moveLabel:{ja:"4...exf3", en:"4...exf3"},
+    ja:"黒はe4のポーンで、f3にいた白のポーンを取るよ。黒はこれで、一時的にポーンを2つ多く持つ形になったんだ。",
+    en:"Black's e4 pawn captures White's pawn on f3. For the moment, Black is two pawns up.",
     fox:'normal' },
   { move:{from:[7,6],to:[5,5]}, moveLabel:{ja:"5. Nxf3", en:"5. Nxf3"},
-    ja:"白はナイトで取り返すよ。これでポーン損だけど、圧倒的な展開のリードを手に入れたんだ。",
-    en:"White recaptures with the knight, down a pawn but with a huge lead in development.",
+    ja:"白はg1のナイトで、f3に入った黒のポーンを取り返すよ。白はポーンを1つ損しているけれど、ナイトを2つとも展開して、fファイル（f1からf8の縦のマス）も白のポーンがいない形になったんだ。",
+    en:"White's g1 knight recaptures Black's pawn on f3. White is a pawn down, but both knights are developed, and White no longer has a pawn on the f-file (the column of squares from f1 to f8).",
     fox:'normal' },
-   { move:{from:[1,6],to:[2,6]}, moveLabel:{ja:"5...g6", en:"5...g6"},
-    ja:"黒はg6でフィアンケットを準備するよ。長い対角線からビショップを活躍させつつ、素早くキャスリングして王様を安全な場所へ避難させることを急ぐんだ。",
-    en:"Black prepares a fianchetto with 5...g6, aiming to get the bishop active on the long diagonal while rushing to castle the king to safety.",
+  { move:{from:[1,6],to:[2,6]}, moveLabel:{ja:"5...g6", en:"5...g6"},
+    ja:"黒はポーンをg6へ進めるよ。黒はf8のビショップをg7へ出す準備をして、キングの守りを固める形を作るんだ。黒のこの形は、ボゴリュボフ・ディフェンスと呼ばれているよ。",
+    en:"Black pushes the pawn to g6. Black prepares to bring the f8 bishop to g7 and build a solid shelter for the king. This setup is called the Bogoljubov Defense.",
+    jaMore:"黒はこの手の代わりに5...Bg4と、白のf3のナイトをd1のクイーンとの間でピンする形（タイヒマン・ディフェンス）や、5...e6と堅く守る形（オイヴェ・ディフェンス）も、よく指されるよ。",
+    enMore:"Instead of this move, Black also often plays 5...Bg4, pinning White's f3 knight to the d1 queen (the Teichmann Defense), or 5...e6, defending solidly (the Euwe Defense).",
     fox:'normal' },
   { move:{from:[7,5],to:[4,2]}, moveLabel:{ja:"6. Bc4", en:"6. Bc4"},
-    ja:"白はビショップをc4へ。f7という黒の弱点に狙いをつけるよ。",
-    en:"White develops the bishop to c4, eyeing the weak f7 square.",
+    ja:"白はビショップをc4へ進めるよ。白のビショップはa2からg8への斜めの列に入り、黒のf7のポーンに利いて、キングサイドへの攻めに加わるんだ。黒のf7のポーンは今はキングに守られているので、白がすぐに取ることはできないよ。",
+    en:"White develops the bishop to c4. White's bishop takes up the a2–g8 diagonal and hits Black's f7 pawn, joining the kingside attack. Right now Black's king defends f7, so White can't simply take it.",
     fox:'normal' },
   { move:{from:[0,5],to:[1,6]}, moveLabel:{ja:"6...Bg7", en:"6...Bg7"},
-    ja:"黒はビショップをg7へ。フィアンケットを完成させるよ。",
-    en:"Black completes the fianchetto with 6...Bg7.",
+    ja:"黒はビショップをg7へ進めるよ。これでf8とg8のマスが空いて、黒は次の手でキャスリングできるんだ。",
+    en:"Black develops the bishop to g7. This clears f8 and g8, so Black can castle on the next move.",
     fox:'normal' },
   { move:{from:[7,4],to:[7,6],castle:{from:[7,7],to:[7,5]}}, moveLabel:{ja:"7. O-O", en:"7. O-O"},
-    ja:"白はキャスリングでキングを安全な場所へ。これで本譜は一段落、続きはぜひ自分で指してみてね！",
-    en:"White castles kingside, tucking the king away safely. That's the main line — try continuing the game yourself from here!",
+    ja:"白はキャスリングでキングを安全な場所へ動かすよ。白のルークはf1に入り、f3のナイトが動けば、fファイルで黒のキングサイドに利かせられるようになるんだ。",
+    en:"White castles, bringing the king to safety. White's rook arrives on f1, and once the f3 knight moves, it will bear down on Black's kingside along the f-file.",
+    fox:'normal' },
+  { move:{from:[0,4],to:[0,6],castle:{from:[0,7],to:[0,5]}}, moveLabel:{ja:"7...O-O", en:"7...O-O"},
+    ja:"黒もキャスリングでキングを安全な場所へ動かすよ。黒のキングは、g7のビショップとf7・g6・h7のポーンに守られた、堅い形に入るんだ。",
+    en:"Black also castles, bringing the king to safety. Black's king settles into a solid shelter guarded by the g7 bishop and the pawns on f7, g6 and h7.",
+    fox:'normal' },
+  { move:{from:[7,3],to:[7,4]}, moveLabel:{ja:"8. Qe1", en:"8. Qe1"},
+    ja:"白はクイーンをe1へ動かすよ。白のクイーンは次にh4へ出て、黒のキングサイドを攻める準備をしているんだ。白はQh4やBh6で黒のキングに迫り、黒はポーンを1つ多く持ったまま、落ち着いて守りを固めるのが典型的な流れだよ。コンピューターの評価では、ポーンを1つ多く持つ黒がやや良いとされているけれど、実戦で黒が正確に守り続けるのは簡単ではないんだ。これで本譜は一段落、続きはぜひ自分で指してみてね！",
+    en:"White moves the queen to e1. White's queen is getting ready to come to h4 and attack Black's kingside. The typical pattern is for White to go after Black's king with Qh4 and Bh6, while Black calmly reinforces the defense with the extra pawn in hand. Engines rate Black, with the extra pawn, as slightly better, but defending accurately in a practical game is not easy for Black. That's the main line — try continuing the game yourself from here!",
     fox:'happy' }
 ];
 
@@ -339,7 +356,19 @@ function renderStep(){
   const step = LESSON_STEPS[currentStep];
   renderBoard(boardSnapshots[currentStep]);
   document.getElementById('moveLabel').textContent = (step.moveLabel && step.moveLabel[currentLang]) || '';
-  document.getElementById('commentaryText').textContent = step[currentLang];
+  const ctEl = document.getElementById('commentaryText');
+  const moreText = step[currentLang + 'More'];
+  ctEl.innerHTML = step[currentLang] + (moreText
+    ? '<details class="more-detail"><summary>' + (currentLang === 'ja' ? '💡 もっと詳しく知りたい方へ' : '💡 Want to know more?') + '</summary><div class="more-body">' + moreText + '</div></details>'
+    : '');
+  ctEl.scrollTop = 0;
+  const moreEl = ctEl.querySelector('details.more-detail');
+  if (moreEl) {
+    moreEl.addEventListener('toggle', function(){
+      if (moreEl.open) { ctEl.scrollTop = moreEl.offsetTop - ctEl.offsetTop; }
+      adjustBottomPadding();
+    });
+  }
   document.getElementById('foxAvatar').src = FOX_BY_MOOD[step.fox] || FOX_BY_MOOD.normal;
   document.getElementById('lessonProgress').textContent = currentStep + ' / ' + (LESSON_STEPS.length - 1);
   document.getElementById('btnPrev').disabled = currentStep === 0;
