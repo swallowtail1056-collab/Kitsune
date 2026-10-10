@@ -486,7 +486,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     </div>
     <p id="oppPresence" style="font-size:0.8rem;color:var(--text-muted);"></p>
     <p id="gameClock" style="font-weight:700;color:var(--brown-dark);"></p>
-    <p id="capturedArea" style="font-size:1.1rem;"></p>
+    <p id="capturedArea" style="font-size:1.1rem;min-height:56px;"></p>
     <div id="miniBoard"></div>
     <div id="matchLikeArea" style="margin-top:6px;"></div>
     <div id="boardNavRow" style="display:none;text-align:center;margin-top:6px;">
@@ -1226,10 +1226,11 @@ applyBoardTheme();
 
   function buildCapturedRow(labelText, obj, iconColor, plusNum) {
     const row = document.createElement('div');
-    row.style.cssText = 'display:flex;align-items:center;flex-wrap:wrap;gap:2px;';
+    row.style.cssText = 'display:flex;align-items:center;flex-wrap:nowrap;white-space:nowrap;overflow-x:auto;overflow-y:hidden;gap:2px;height:28px;font-size:0.95rem;scrollbar-width:none;'; // 1行に固定して、駒が増えても盤面が動かないようにする
     const label = document.createElement('span');
     label.textContent = labelText;
     label.style.marginRight = '4px';
+    label.style.flexShrink = '0';
     row.appendChild(label);
     const entries = Object.entries(obj);
     if (entries.length === 0) {
@@ -1240,7 +1241,7 @@ applyBoardTheme();
       entries.forEach(([type, n]) => {
         const img = document.createElement('img');
         img.src = PIECE_IMG[iconColor + type.toUpperCase()];
-        img.style.cssText = 'width:18px;height:18px;vertical-align:middle;';
+        img.style.cssText = 'width:17px;height:17px;vertical-align:middle;flex-shrink:0;';
         row.appendChild(img);
         if (n > 1) {
           const cnt = document.createElement('span');
