@@ -3991,8 +3991,17 @@ const PIECE_IMG = {
         rematchBtn.id = 'rematchBtn';
         rematchBtn.textContent = LANG === 'ja' ? '🔄 再戦を申し込む' : '🔄 Request Rematch';
         rematchBtn.style.cssText = 'margin-top:10px; display:block; width:100%;';
+        const rematchOppUid = myColor === 'w' ? m.black : m.white;
+        const markOppDeleted = () => {
+          rematchBtn.disabled = true;
+          rematchBtn.textContent = LANG === 'ja' ? '相手のアカウントは削除されているため、再戦を申し込めません。' : "Your opponent's account has been deleted, so a rematch isn't possible.";
+        };
+        // 相手が退会していないか確認（退会するとpublicProfilesが消える）
+        get(ref(db, 'publicProfiles/' + rematchOppUid)).then(ps => { if (!ps.exists()) markOppDeleted(); }).catch(() => {});
         rematchBtn.onclick = async () => {
           rematchBtn.disabled = true;
+          const oppProf = await get(ref(db, 'publicProfiles/' + rematchOppUid)).catch(() => null);
+          if (oppProf && !oppProf.exists()) { markOppDeleted(); return; }
           rematchBtn.textContent = LANG === 'ja' ? '申し込み中...' : 'Sending...';
           await update(ref(db, 'matches/' + matchId), {
             rematchRequestBy: user.uid,
