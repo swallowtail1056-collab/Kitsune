@@ -406,12 +406,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <p><span data-ja="先行登録者特典: " data-en="Founding Member: ">先行登録者特典: </span><span id="profileFounder">-</span></p>
     <p style="font-size:0.8rem;"><span data-ja="通知の状態: " data-en="Notification status: ">通知の状態: </span><span id="pushNotifStatus">-</span></p>
         <div id="linkGoogleArea" style="display:none;margin-top:8px;margin-bottom:8px;">
-      <p style="font-size:0.8rem;color:var(--text-muted);margin-bottom:4px;" data-ja="ゲストアカウントです。Googleアカウントと連携すると、今のデータ(友達・レーティング・対局履歴)を保ったまま、別の端末からもログインできるようになります。" data-en="This is a guest account. Linking a Google account keeps all your current data (friends, rating, match history) while letting you sign in from other devices too.">ゲストアカウントです。Googleアカウントと連携すると、今のデータ(友達・レーティング・対局履歴)を保ったまま、別の端末からもログインできるようになります。</p>
-      <button id="linkGoogleBtn" data-ja="🔗 Googleアカウントと連携する" data-en="🔗 Link a Google Account">🔗 Googleアカウントと連携する</button>
-      <p id="linkGoogleMsg" style="font-size:0.85rem;margin-top:4px;"></p>
-    </div>
-       <div id="linkGoogleArea" style="display:none;margin-top:8px;margin-bottom:8px;">
-      <p style="font-size:0.8rem;color:var(--text-muted);margin-bottom:4px;" data-ja="ゲストアカウントです。Googleアカウントと連携すると、今のデータ(友達・レーティング・対局履歴)を保ったまま、別の端末からもログインできるようになります。" data-en="This is a guest account. Linking a Google account keeps all your current data (friends, rating, match history) while letting you sign in from other devices too.">ゲストアカウントです。Googleアカウントと連携すると、今のデータ(友達・レーティング・対局履歴)を保ったまま、別の端末からもログインできるようになります。</p>
+      <p style="font-size:0.8rem;color:var(--text-muted);margin-bottom:4px;" data-ja="ゲストアカウントです。ゲストアカウントが参加する対局は、すべてノーレートになります。Googleアカウントと連携すると、今のデータ(友達・対局履歴など)を保ったまま、レーティングのある対局に参加でき、別の端末からもログインできるようになります。" data-en="This is a guest account. All games involving a guest account are unrated. Linking a Google account keeps your current data (friends, match history, etc.), lets you play rated games, and lets you sign in from other devices too.">ゲストアカウントです。ゲストアカウントが参加する対局は、すべてノーレートになります。Googleアカウントと連携すると、今のデータ(友達・対局履歴など)を保ったまま、レーティングのある対局に参加でき、別の端末からもログインできるようになります。</p>
       <button id="linkGoogleBtn" data-ja="🔗 Googleアカウントと連携する" data-en="🔗 Link a Google Account">🔗 Googleアカウントと連携する</button>
       <p id="linkGoogleMsg" style="font-size:0.85rem;margin-top:4px;"></p>
     </div>
@@ -428,7 +423,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
   <div class="box" id="randomMatchBox">
     <p><strong data-ja="🎲 ランダム対局" data-en="🎲 Quick Match">🎲 ランダム対局</strong></p>
-    <p style="font-size:0.8rem;color:var(--text-muted);" data-ja="レーティングが近い相手を自動でマッチングします。マッチした相手は自動では友達になりません。" data-en="Automatically matches you with a similarly-rated opponent. Matched opponents are not automatically added as friends.">レーティングが近い相手を自動でマッチングします。マッチした相手は自動では友達になりません。</p>
+    <p style="font-size:0.8rem;color:var(--text-muted);" data-ja="レーティングが近い相手を自動でマッチングします。マッチした相手は自動では友達になりません。ゲストアカウントが参加する対局は、ノーレートになります。" data-en="Automatically matches you with a similarly-rated opponent. Matched opponents are not automatically added as friends. Games involving a guest account are unrated.">レーティングが近い相手を自動でマッチングします。マッチした相手は自動では友達になりません。ゲストアカウントが参加する対局は、ノーレートになります。</p>
     <div id="randomMatchIdle">
       <div style="font-size:0.75rem;color:var(--text-muted);margin-top:4px;" data-ja="固定" data-en="Fixed">固定</div>
       <div id="rmFixedRow"></div>
@@ -2606,7 +2601,22 @@ applyBoardTheme();
     if (rmSelfUnsub) { rmSelfUnsub(); rmSelfUnsub = null; }
   }
 
+  // ゲスト（匿名）アカウントが関わる対局は、レート稼ぎを防ぐため自動でノーレートにする
+  async function involvesGuest(uidA, uidB) {
+    try {
+      const [a, b] = await Promise.all([
+        get(ref(db, 'publicProfiles/' + uidA)),
+        get(ref(db, 'publicProfiles/' + uidB))
+      ]);
+      return !!((a.exists() && a.val().isAnonymous) || (b.exists() && b.val().isAnonymous));
+    } catch (e) {
+      return false;
+    }
+  }
+  window.kcInvolvesGuest = involvesGuest;
+
   async function createRandomMatch(myUid, myName, oppUid, oppData, timeControl, fixed) {
+    const guestInvolved = await involvesGuest(myUid, oppUid);
     const matchId = 'm_' + Date.now() + '_' + Math.floor(Math.random() * 10000);
     const iAmWhite = Math.random() < 0.5;
     const baseMs = RM_TC_MS[timeControl].base;
@@ -2627,7 +2637,8 @@ await set(ref(db, 'matches/' + matchId), {
       whiteJoined: isCorrespondence ? true : false,
       blackJoined: isCorrespondence ? true : false,
       turnStartedAt: isCorrespondence ? Date.now() : null,
-      randomMatch: true
+      randomMatch: true,
+      rated: !guestInvolved
     });
     await set(ref(db, 'currentMatches/' + myUid + '/' + matchId), true);
     await set(ref(db, 'currentMatches/' + oppUid + '/' + matchId), true);
@@ -2941,7 +2952,7 @@ await set(ref(db, 'matches/' + matchId), {
           whiteJoined: isCorrespondence ? true : false,
           blackJoined: isCorrespondence ? true : false,
           turnStartedAt: isCorrespondence ? Date.now() : null,
-          rated: info.rated !== false
+          rated: info.rated !== false && !(await window.kcInvolvesGuest(user.uid, fromUid))
         });
         await set(ref(db, 'currentMatches/' + user.uid + '/' + matchId), true);
         await set(ref(db, 'currentMatches/' + fromUid + '/' + matchId), true);
@@ -3362,6 +3373,10 @@ const PIECE_IMG = {
     if (m[flagField]) { appliedRatingsFor.add(dedupeKey); return; }
     appliedRatingsFor.add(dedupeKey);
 
+    if (m.rated !== false && await window.kcInvolvesGuest(m.white, m.black)) {
+      // 念のため：ゲストが関わる対局は、作成時の設定にかかわらずノーレート扱い
+      m = Object.assign({}, m, { rated: false });
+    }
     if (m.rated === false) {
       // ノーレート対局:レーティング・勝敗数・対局履歴には一切影響させない
       await update(ref(db, 'matches/' + matchId), { [flagField]: true });
@@ -4036,7 +4051,8 @@ const PIECE_IMG = {
               white: myColorNew === 'w' ? myUid : oppUid,
               black: myColorNew === 'w' ? oppUid : myUid,
               status: 'active', turn: 'w', moves: [], fen: new Chess().fen(),
-              createdAt: Date.now(), timeControl: m.timeControl || 180
+              createdAt: Date.now(), timeControl: m.timeControl || 180,
+              rated: m.rated !== false && !(await window.kcInvolvesGuest(myUid, oppUid))
             });
             window.location.href = 'match.html?id=' + newMatchId;
           };
