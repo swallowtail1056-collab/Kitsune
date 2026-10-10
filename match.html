@@ -523,11 +523,33 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <button id="historyCloseBtn" data-ja="履歴を閉じる" data-en="Close History" style="margin-top:8px;">履歴を閉じる</button>
     </div>
     <button id="reportToggleBtn" style="display:none;margin-top:10px;" data-ja="🔬 詳細な振り返りレポート" data-en="🔬 Detailed Review Report">🔬 詳細な振り返りレポート</button>
+    <button id="cheatReportBtn" style="display:none;margin-top:10px;margin-left:6px;background:#8a3b2e;" data-ja="🚩 不正・迷惑行為を報告" data-en="🚩 Report Cheating / Abuse">🚩 不正・迷惑行為を報告</button>
     <div id="reportPanel" style="display:none;margin-top:10px;">
       <p style="font-size:0.8rem;color:var(--text-muted);" data-ja="自分の手を1手ずつAIが簡易チェックします。あくまで参考程度にご覧ください。" data-en="A simple AI check of each of your moves. Please treat this as a rough guide only.">自分の手を1手ずつAIが簡易チェックします。あくまで参考程度にご覧ください。</p>
       <div id="reportList" style="max-height:260px;overflow-y:auto;background:var(--input-bg);border:1px solid rgba(124,74,30,0.3);border-radius:6px;padding:8px;font-size:0.85rem;"></div>
       <button id="reportCloseBtn" data-ja="レポートを閉じる" data-en="Close Report" style="margin-top:8px;">レポートを閉じる</button>
     </div>
+  </div>
+</div>
+
+<!-- 不正報告モーダル -->
+<div id="cheatReportOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:3600;align-items:center;justify-content:center;">
+  <div style="background:var(--card);border:2px solid var(--brown);border-radius:12px;padding:16px;max-width:360px;width:90%;max-height:85vh;overflow-y:auto;">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+      <strong style="color:var(--text);" data-ja="🚩 不正・迷惑行為の報告" data-en="🚩 Report Cheating / Abuse">🚩 不正・迷惑行為の報告</strong>
+      <button id="cheatReportCloseBtn" style="background:none;border:none;font-size:1.3rem;color:var(--text-muted);padding:0 4px;">✕</button>
+    </div>
+    <p style="font-size:0.85rem;color:var(--text);margin:0 0 8px;"><span data-ja="報告する相手：" data-en="Reporting:">報告する相手：</span><strong id="cheatReportTarget"></strong></p>
+    <div id="cheatReportReasons" style="display:flex;flex-direction:column;gap:6px;font-size:0.88rem;color:var(--text);margin-bottom:8px;">
+      <label><input type="radio" name="cheatReason" value="engine"> <span data-ja="エンジン（ソフト）を使っている疑い" data-en="Suspected engine use">エンジン（ソフト）を使っている疑い</span></label>
+      <label><input type="radio" name="cheatReason" value="stalling"> <span data-ja="わざと時間を使い切る・放置する" data-en="Stalling / abandoning the game">わざと時間を使い切る・放置する</span></label>
+      <label><input type="radio" name="cheatReason" value="name"> <span data-ja="不適切なユーザー名" data-en="Inappropriate username">不適切なユーザー名</span></label>
+      <label><input type="radio" name="cheatReason" value="other"> <span data-ja="その他" data-en="Other">その他</span></label>
+    </div>
+    <textarea id="cheatReportComment" maxlength="300" rows="3" style="width:100%;box-sizing:border-box;" data-ja-ph="くわしい内容（任意・300文字まで）" data-en-ph="Details (optional, up to 300 characters)" placeholder="くわしい内容（任意・300文字まで）"></textarea>
+    <p style="font-size:0.78rem;color:var(--text-muted);margin:8px 0;" data-ja="報告すると、この相手は自動でブロックされます。報告は運営が確認しますが、個別の返信はしていません。" data-en="The player will be blocked automatically once you report them. Reports are reviewed by the KitsuneChess team, but we can't reply individually.">報告すると、この相手は自動でブロックされます。報告は運営が確認しますが、個別の返信はしていません。</p>
+    <button id="cheatReportSubmitBtn" style="width:100%;background:#8a3b2e;" data-ja="報告を送る" data-en="Send Report">報告を送る</button>
+    <p id="cheatReportMsg" style="font-size:0.85rem;margin:8px 0 0;"></p>
   </div>
 </div>
 
@@ -2468,6 +2490,7 @@ applyBoardTheme();
         { key: 'rapid', incLabel: 'Rapid (10+5)', fixedLabel: 'Rapid (10 min)' }
       ];
       const sendInvite = async (opt, fixed) => {
+        if (window.KC_BANNED) { alert(LANG === 'ja' ? 'このアカウントは利用規約に反する行為があったため、オンライン対局を利用できません。' : 'This account has been restricted from online play due to a violation of our rules.'); return; }
         const myProfile = await get(ref(db, 'users/' + user.uid));
         const myName = myProfile.exists() ? myProfile.val().username : user.displayName;
         await set(ref(db, 'matchInvites/' + friendUid + '/' + user.uid), {
@@ -2621,6 +2644,7 @@ await set(ref(db, 'matches/' + matchId), {
 
   async function joinRandomQueue(user, timeControl, fixed) {
     if (rmQueueKey) return; // 既に待機中
+    if (window.KC_BANNED) { alert(LANG === 'ja' ? 'このアカウントは利用規約に反する行為があったため、オンライン対局を利用できません。' : 'This account has been restricted from online play due to a violation of our rules.'); return; }
     const profSnap = await get(ref(db, 'publicProfiles/' + user.uid));
     const myProfile = profSnap.val() || {};
     const myRating = myProfile.rating || 1200;
@@ -2886,6 +2910,7 @@ await set(ref(db, 'matches/' + matchId), {
       const acceptBtn = document.createElement('button');
       acceptBtn.textContent = LANG === 'ja' ? '受ける' : 'Accept';
       acceptBtn.onclick = async () => {
+        if (window.KC_BANNED) { alert(LANG === 'ja' ? 'このアカウントは利用規約に反する行為があったため、オンライン対局を利用できません。' : 'This account has been restricted from online play due to a violation of our rules.'); return; }
         const matchId = 'm_' + Date.now();
         const iAmWhite = Math.random() < 0.5;
         const myProfile = await get(ref(db, 'users/' + user.uid));
@@ -3936,6 +3961,9 @@ const PIECE_IMG = {
     } else if (m.status === 'draw_agreed') {
       statusEl.textContent = LANG === 'ja' ? '合意によりドローになりました。' : 'Draw agreed by both players.';
       applyEloIfNeeded(matchId, m, user, 0.5, 'draw_agreed');
+      applyAnalysisIfNeeded(matchId, m, user, 0.5);
+      document.getElementById('reportToggleBtn').style.display = 'inline-block';
+    } else if (gameChess.game_over()) {
       let resultMsg;
       if (gameChess.in_checkmate()) {
         const winnerColor = m.turn === 'w' ? 'b' : 'w';
@@ -4019,6 +4047,15 @@ const PIECE_IMG = {
         + (m.rated === false ? (LANG === 'ja' ? '(ノーレート)' : ' (unrated)') : '') + ' | ' +
         (myTurn ? (LANG === 'ja' ? 'あなたの番です' : 'Your turn') : (LANG === 'ja' ? '相手の番です' : "Opponent's turn"));
       document.getElementById('reportToggleBtn').style.display = 'none';
+    }
+
+    // 🚩 不正報告ボタン（対局が終わったあと、対局者だけに表示）
+    const cheatBtnEl = document.getElementById('cheatReportBtn');
+    if (cheatBtnEl) {
+      const finished = ['timeout', 'resigned', 'draw_agreed'].includes(m.status) || (m.status === 'active' && gameChess.game_over());
+      const amPlayer = !!myColor && (m.white === user.uid || m.black === user.uid);
+      cheatBtnEl.style.display = (finished && amPlayer) ? 'inline-block' : 'none';
+      cheatBtnEl.onclick = () => openCheatReport(m, user, matchId);
     }
 
     const gameIsActive = m.status === 'active' && !gameChess.game_over();
@@ -4299,6 +4336,101 @@ const PIECE_IMG = {
 
  
 
+  // ── フェアプレー記録（考慮時間・ほかの画面へ移った回数） ─────────
+  const fpState = {};
+  function fpGet(matchId) {
+    if (!fpState[matchId]) fpState[matchId] = { moveTimes: [], hiddenCount: 0, hiddenMs: 0, hiddenAt: null };
+    return fpState[matchId];
+  }
+  function fpSave(matchId, uid) {
+    const st = fpGet(matchId);
+    update(ref(db, 'fairplay/' + matchId + '/' + uid), {
+      moveTimes: st.moveTimes, hiddenCount: st.hiddenCount, hiddenMs: Math.round(st.hiddenMs), updatedAt: Date.now()
+    }).catch(() => {});
+  }
+  function fpRecordMove(matchId, uid, thinkMs) {
+    const st = fpGet(matchId);
+    st.moveTimes.push(Math.max(0, Math.round(thinkMs)));
+    fpSave(matchId, uid);
+  }
+  if (!window.__kcFpVisBound) {
+    window.__kcFpVisBound = true;
+    document.addEventListener('visibilitychange', () => {
+      const u = auth.currentUser;
+      const mId = myMatchId;
+      const md = latestMatchData;
+      if (!u || !mId || !md || !myColor || md.status !== 'active') return;
+      const st = fpGet(mId);
+      if (document.hidden) {
+        st.hiddenAt = Date.now();
+      } else if (st.hiddenAt) {
+        st.hiddenCount += 1;
+        st.hiddenMs += Date.now() - st.hiddenAt;
+        st.hiddenAt = null;
+        fpSave(mId, u.uid);
+      }
+    });
+  }
+
+  // ── 不正・迷惑行為の報告 ─────────────────────────
+  let cheatReportCtx = null;
+  const reportedMatchIds = new Set();
+  function openCheatReport(m, user, matchId) {
+    const oppUid = myColor === 'w' ? m.black : m.white;
+    const oppName = myColor === 'w' ? m.blackName : m.whiteName;
+    cheatReportCtx = { m, user, matchId, oppUid, oppName };
+    document.getElementById('cheatReportTarget').textContent = oppName || '';
+    document.querySelectorAll('input[name="cheatReason"]').forEach(r => { r.checked = false; });
+    document.getElementById('cheatReportComment').value = '';
+    const msgEl = document.getElementById('cheatReportMsg');
+    const btn = document.getElementById('cheatReportSubmitBtn');
+    if (reportedMatchIds.has(matchId)) {
+      msgEl.textContent = LANG === 'ja' ? 'この対局はすでに報告済みです。' : 'You have already reported this game.';
+      btn.disabled = true;
+    } else {
+      msgEl.textContent = '';
+      btn.disabled = false;
+    }
+    document.getElementById('cheatReportOverlay').style.display = 'flex';
+  }
+  document.getElementById('cheatReportCloseBtn').onclick = () => {
+    document.getElementById('cheatReportOverlay').style.display = 'none';
+  };
+  document.getElementById('cheatReportOverlay').addEventListener('click', (ev) => {
+    if (ev.target.id === 'cheatReportOverlay') document.getElementById('cheatReportOverlay').style.display = 'none';
+  });
+  document.getElementById('cheatReportSubmitBtn').onclick = async () => {
+    const msgEl = document.getElementById('cheatReportMsg');
+    const btn = document.getElementById('cheatReportSubmitBtn');
+    if (!cheatReportCtx) return;
+    const { m, user, matchId, oppUid, oppName } = cheatReportCtx;
+    const reasonEl = document.querySelector('input[name="cheatReason"]:checked');
+    if (!reasonEl) {
+      msgEl.textContent = LANG === 'ja' ? '報告の理由を選んでください。' : 'Please choose a reason.';
+      return;
+    }
+    if (!oppUid || oppUid === user.uid) return;
+    btn.disabled = true;
+    try {
+      await set(push(ref(db, 'cheatReports')), {
+        reporter: user.uid,
+        reported: oppUid,
+        reportedName: oppName || '',
+        matchId: matchId,
+        reason: reasonEl.value,
+        comment: document.getElementById('cheatReportComment').value.trim().slice(0, 300),
+        moves: (m.moves || []).map(x => x.san).join(' '),
+        createdAt: Date.now()
+      });
+      await set(ref(db, 'blocks/' + user.uid + '/' + oppUid), true).catch(() => {});
+      reportedMatchIds.add(matchId);
+      msgEl.textContent = LANG === 'ja' ? 'ご報告ありがとうございました。この相手をブロックしました。' : 'Thank you for your report. This player has been blocked.';
+    } catch (e) {
+      btn.disabled = false;
+      msgEl.textContent = LANG === 'ja' ? '送信できませんでした。時間をおいてもう一度お試しください。' : "Couldn't send the report. Please try again later.";
+    }
+  };
+
   async function onSquareClick(sq, user) {
     if (!gameChess || gameChess.game_over()) return;
     const matchId = myMatchId;
@@ -4335,7 +4467,8 @@ const PIECE_IMG = {
           moves: moveHistory,
           drawOfferBy: null, takebackRequestBy: null
         });
-       
+        fpRecordMove(matchId, user.uid, elapsed);
+
       } else {
         renderMiniBoard(m, user, matchId);
       }
@@ -4583,6 +4716,10 @@ function startClockTicker(user) {
     const profileArea = document.getElementById('profileArea');
 
     if (user) {
+      try {
+        const banSnap = await get(ref(db, 'banned/' + user.uid));
+        window.KC_BANNED = banSnap.exists();
+      } catch (e) { window.KC_BANNED = false; }
       status.style.display = 'none';
       loginBtn.style.display = 'none';
       logoutBtn.style.display = 'inline-block';
