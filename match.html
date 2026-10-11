@@ -414,6 +414,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <p style="font-size:0.8rem;color:var(--text-muted);margin-bottom:4px;" data-ja="ゲストアカウントです。ゲストアカウントが参加する対局は、すべてノーレートになります。Googleアカウントと連携すると、今のデータ(友達・対局履歴など)を保ったまま、レーティングのある対局に参加でき、別の端末からもログインできるようになります。" data-en="This is a guest account. All games involving a guest account are unrated. Linking a Google account keeps your current data (friends, match history, etc.), lets you play rated games, and lets you sign in from other devices too.">ゲストアカウントです。ゲストアカウントが参加する対局は、すべてノーレートになります。Googleアカウントと連携すると、今のデータ(友達・対局履歴など)を保ったまま、レーティングのある対局に参加でき、別の端末からもログインできるようになります。</p>
       <button id="linkGoogleBtn" data-ja="🔗 Googleアカウントと連携する" data-en="🔗 Link a Google Account">🔗 Googleアカウントと連携する</button>
       <p id="linkGoogleMsg" style="font-size:0.85rem;margin-top:4px;"></p>
+      <p style="font-size:0.8rem;color:var(--text-muted);margin:10px 0 4px;" data-ja="ゲストアカウントは、ログアウトすると二度と入れなくなります。使わなくなったときは、下のボタンで削除してください。" data-en="Once you log out of a guest account, you can never sign back in to it. If you no longer need it, please delete it with the button below.">ゲストアカウントは、ログアウトすると二度と入れなくなります。使わなくなったときは、下のボタンで削除してください。</p>
+      <button id="deleteGuestBtn" type="button" style="background:#8a3b2e;" data-ja="🗑 このゲストアカウントを削除する" data-en="🗑 Delete This Guest Account">🗑 このゲストアカウントを削除する</button>
     </div>
     <div style="position:relative;display:inline-block;">
       <img id="profilePhoto" src="" alt="avatar" style="cursor:pointer;">
@@ -2108,7 +2110,18 @@ applyBoardTheme();
       }
     }
   };
- document.getElementById('logoutBtn').onclick = () => {
+ document.getElementById('logoutBtn').onclick = async () => {
+  const cu = auth.currentUser;
+  if (cu && cu.isAnonymous) {
+    const wantDelete = confirm(LANG === 'ja'
+      ? 'ゲストアカウントは、ログアウトすると二度と入れなくなります。\nこのゲストアカウントを削除しますか？\n\n「OK」= 削除する\n「キャンセル」= 削除しない'
+      : 'Once you log out of a guest account, you can never sign back in to it.\nDo you want to delete this guest account?\n\nOK = Delete it\nCancel = Keep it');
+    if (wantDelete) { await kcDeleteAccount(true); return; }
+    const justLogout = confirm(LANG === 'ja'
+      ? '削除せずにログアウトしますか？(このゲストアカウントには、もう入れなくなります)'
+      : 'Log out without deleting? (You will no longer be able to use this guest account.)');
+    if (!justLogout) return;
+  }
   closeOpenedMatch();
   myColor = null;
   gameChess = null;
@@ -2118,12 +2131,33 @@ applyBoardTheme();
 
   document.getElementById('deleteAccountBtn').onclick = async (e) => {
     e.preventDefault();
+    await kcDeleteAccount(false);
+  };
+  document.getElementById('deleteGuestBtn').onclick = async () => {
+    await kcDeleteAccount(false);
+  };
+  // アカウント削除(ゲスト・Googleどちらも)。skipConfirm=true のときは確認を省く(ログアウト時に確認済みの場合)
+  async function kcDeleteAccount(skipConfirm) {
     const user = auth.currentUser;
-    if (!user) return;
+    if (!user) return false;
     const confirmMsg = LANG === 'ja'
-      ? '本当にアカウントを削除しますか？友達関係・対局記録・レーティングなど、全てのデータが消え、元に戻せません。'
-      : 'Are you sure you want to delete your account? All your data — friends, match history, rating — will be permanently erased.';
-    if (!confirm(confirmMsg)) return;
+      ? (user.isAnonymous
+          ? '本当にこのゲストアカウントを削除しますか？友達関係・対局記録など、全てのデータが消え、元に戻せません。'
+          : '本当にアカウントを削除しますか？友達関係・対局記録・レーティングなど、全てのデータが消え、元に戻せません。')
+      : (user.isAnonymous
+          ? 'Are you sure you want to delete this guest account? All your data — friends, match history — will be permanently erased.'
+          : 'Are you sure you want to delete your account? All your data — friends, match history, rating — will be permanently erased.');
+    if (!skipConfirm && !confirm(confirmMsg)) return false;
+
+    // Googleアカウントは、ログインから時間がたっていると削除できないため、先に本人確認をし直す
+    if (!user.isAnonymous) {
+      try {
+        await reauthenticateWithPopup(user, provider);
+      } catch (e) {
+        alert(LANG === 'ja' ? '本人確認ができなかったため、削除を中止しました。' : 'Could not confirm your identity, so the deletion was cancelled.');
+        return false;
+      }
+    }
 
     try {
       const myUid = user.uid;
@@ -2157,14 +2191,22 @@ applyBoardTheme();
       await remove(ref(db, 'users/' + myUid));
       if (myUsername) await remove(ref(db, 'usernames/' + normName(myUsername)));
 
+      await remove(ref(db, 'fcmTokens/' + myUid)).catch(() => {});
+
       // Firebase認証アカウント自体も削除
+      closeOpenedMatch();
+      myColor = null;
+      gameChess = null;
+      selectedSquare = null;
       await deleteUser(user);
 
       alert(LANG === 'ja' ? 'アカウントを削除しました。' : 'Your account has been deleted.');
+      return true;
     } catch (e) {
       alert((LANG === 'ja' ? '削除中にエラーが発生しました: ' : 'An error occurred while deleting: ') + e.message);
+      return false;
     }
-  };
+  }
 
   function normName(name) { return name.trim().toLowerCase(); }
 
