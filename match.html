@@ -88,7 +88,7 @@ img#profilePhoto { border:2px solid var(--brown); border-radius:50%; width:60px;
   transform: scale(1.18);
   will-change: left, top;
 }
-  .chessboard, .sq, .sq img {
+  .chessboard, .sq, .sq img, [id$="Board"], [id$="Board"] *, button {
   -webkit-user-select: none;
   -webkit-touch-callout: none;
   -webkit-tap-highlight-color: transparent;
@@ -113,6 +113,9 @@ img#profilePhoto { border:2px solid var(--brown); border-radius:50%; width:60px;
 .thumb-turn { font-size:0.7rem; text-align:center; }
 .thumb-turn.my-turn { color:#2d8a3e; font-weight:700; }
   /* チャットモーダル */
+  .kc-fullpanel{position:fixed !important;inset:0;z-index:1900;background:var(--bg);overflow-y:auto;-webkit-overflow-scrolling:touch;padding:14px 12px 40px;margin:0 !important;box-sizing:border-box;}
+  .kc-panel-back{display:none;margin-bottom:10px;}
+  .kc-fullpanel .kc-panel-back{display:inline-block;}
   .chat-modal-overlay{display:none;position:fixed;inset:0;background:#1a1a1a;z-index:2000;align-items:stretch;justify-content:stretch;}
   .chat-modal-overlay.open{display:flex;}
   .chat-modal-box{background:#1a1a1a;color:#eee;border-radius:0;width:100%;max-width:100%;height:100%;max-height:100%;display:flex;flex-direction:column;box-shadow:none;}
@@ -405,6 +408,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <p><span data-ja="レーティング: " data-en="Rating: ">レーティング: </span><span id="profileRating">1200</span></p>
     <p><span data-ja="先行登録者特典: " data-en="Founding Member: ">先行登録者特典: </span><span id="profileFounder">-</span></p>
     <p style="font-size:0.8rem;"><span data-ja="通知の状態: " data-en="Notification status: ">通知の状態: </span><span id="pushNotifStatus">-</span></p>
+    <button id="enableNotifBtn" type="button" style="display:none;margin:4px 0 8px;" data-ja="🔔 通知をオンにする" data-en="🔔 Turn On Notifications">🔔 通知をオンにする</button>
+    <p id="iosNotifHint" style="display:none;font-size:0.8rem;color:var(--text-muted);margin-bottom:8px;" data-ja="iPhoneでは、Safariの共有ボタン →「ホーム画面に追加」をして、ホーム画面のアイコンから開くと通知を使えます(iOS 16.4以降)。開いたら、もう一度ログインして「🔔 通知をオンにする」を押してください。" data-en="On iPhone, tap Safari's Share button → “Add to Home Screen”, then open KitsuneChess from the home screen icon to use notifications (iOS 16.4 or later). After opening it, sign in again and tap “🔔 Turn On Notifications”.">iPhoneでは、Safariの共有ボタン →「ホーム画面に追加」をして、ホーム画面のアイコンから開くと通知を使えます(iOS 16.4以降)。開いたら、もう一度ログインして「🔔 通知をオンにする」を押してください。</p>
         <div id="linkGoogleArea" style="display:none;margin-top:8px;margin-bottom:8px;">
       <p style="font-size:0.8rem;color:var(--text-muted);margin-bottom:4px;" data-ja="ゲストアカウントです。ゲストアカウントが参加する対局は、すべてノーレートになります。Googleアカウントと連携すると、今のデータ(友達・対局履歴など)を保ったまま、レーティングのある対局に参加でき、別の端末からもログインできるようになります。" data-en="This is a guest account. All games involving a guest account are unrated. Linking a Google account keeps your current data (friends, match history, etc.), lets you play rated games, and lets you sign in from other devices too.">ゲストアカウントです。ゲストアカウントが参加する対局は、すべてノーレートになります。Googleアカウントと連携すると、今のデータ(友達・対局履歴など)を保ったまま、レーティングのある対局に参加でき、別の端末からもログインできるようになります。</p>
       <button id="linkGoogleBtn" data-ja="🔗 Googleアカウントと連携する" data-en="🔗 Link a Google Account">🔗 Googleアカウントと連携する</button>
@@ -500,14 +505,18 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <div id="matchChatPanel" style="display:none;"></div>
 
     <div id="analysisPanel" style="display:none;margin-top:10px;">
+      <button type="button" class="kc-panel-back" data-ja="← 対局画面に戻る" data-en="← Back to the Game">← 対局画面に戻る</button>
+      <p style="font-weight:700;margin-bottom:6px;" data-ja="🔍 局面の分析" data-en="🔍 Position Analysis">🔍 局面の分析</p>
       <p style="font-size:0.8rem;color:var(--text-muted);" data-ja="ここで自由に駒を動かして試せます。本番の対局には影響しません。" data-en="Move pieces freely here to explore ideas. This has no effect on the real game.">ここで自由に駒を動かして試せます。本番の対局には影響しません。</p>
       <div id="analysisBoard"></div>
       <button id="analysisResetBtn" data-ja="現在の局面に戻す" data-en="Reset to Current Position" style="margin-top:8px;">現在の局面に戻す</button>
-      <button id="analysisHintBtn" data-ja="💡 候補手を見る" data-en="💡 Suggest a Move" style="margin-top:8px;">💡 候補手を見る</button>
+      <button id="analysisHintBtn" data-ja="💡 候補手を見る" data-en="💡 Suggest a Move" style="display:none;margin-top:8px;">💡 候補手を見る</button>
       <button id="analysisCloseBtn" data-ja="分析を終える" data-en="Close Analysis" style="margin-top:8px;">分析を終える</button>
       <p id="analysisHintText" style="font-size:0.85rem;color:var(--text-muted);margin-top:6px;"></p>
     </div>
     <div id="historyPanel" style="display:none;margin-top:10px;">
+      <button type="button" class="kc-panel-back" data-ja="← 対局画面に戻る" data-en="← Back to the Game">← 対局画面に戻る</button>
+      <p style="font-weight:700;margin-bottom:6px;" data-ja="📜 対局の履歴" data-en="📜 Game History">📜 対局の履歴</p>
       <p style="font-size:0.8rem;color:var(--text-muted);" data-ja="過去の局面を見返せます。ここから指すことはできません。" data-en="Browse past positions. You can't move pieces here.">過去の局面を見返せます。ここから指すことはできません。</p>
       <div id="historyBoard"></div>
       <p id="historyMoveLabel" style="text-align:center;font-weight:700;margin-top:6px;"></p>
@@ -519,6 +528,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     </div>
     <button id="reportToggleBtn" style="display:none;margin-top:10px;" data-ja="🔬 詳細な振り返りレポート" data-en="🔬 Detailed Review Report">🔬 詳細な振り返りレポート</button>
     <button id="cheatReportBtn" style="display:none;margin-top:10px;margin-left:6px;background:#8a3b2e;" data-ja="🚩 不正・迷惑行為を報告" data-en="🚩 Report Cheating / Abuse">🚩 不正・迷惑行為を報告</button>
+    <button id="matchAddFriendBtn" type="button" style="display:none;margin-top:10px;" data-ja="👋 この人に友達申請を送る" data-en="👋 Send a Friend Request">👋 この人に友達申請を送る</button>
+    <p id="matchAddFriendMsg" style="font-size:0.85rem;margin-top:4px;"></p>
     <div id="reportPanel" style="display:none;margin-top:10px;">
       <p style="font-size:0.8rem;color:var(--text-muted);" data-ja="自分の手を1手ずつAIが簡易チェックします。あくまで参考程度にご覧ください。" data-en="A simple AI check of each of your moves. Please treat this as a rough guide only.">自分の手を1手ずつAIが簡易チェックします。あくまで参考程度にご覧ください。</p>
       <div id="reportList" style="max-height:260px;overflow-y:auto;background:var(--input-bg);border:1px solid rgba(124,74,30,0.3);border-radius:6px;padding:8px;font-size:0.85rem;"></div>
@@ -650,24 +661,53 @@ import { getAuth, GoogleAuthProvider, signInWithPopup, signInAnonymously, signOu
   // 発行したVAPIDキーに置き換えてください(Firebase Console → プロジェクトの設定 → Cloud Messaging → ウェブ設定)
  const FCM_VAPID_KEY = 'BGwVB9qTXi18RFwgXmqXUAIL9nsPsvGKuS98mla74CXTlotu7wOfF5nqy1AYS8zjozqcNN-8qlmxw6wdalMkJpA';
   const CHAT_ENABLED = false; // trueに戻せばチャット機能が復活します
-  async function setupPushNotifications(user) {
+  // fromButton = true のときだけ、通知の許可を求める(iPhoneはボタンを押したときしか許可の確認を出せないため)
+  async function setupPushNotifications(user, fromButton) {
       const statusEl = document.getElementById('pushNotifStatus');
     const setStatus = (msg, ok) => { if (statusEl) { statusEl.textContent = msg; statusEl.style.color = ok === false ? '#e63946' : (ok === true ? '#4caf50' : ''); } };
+    const notifBtn = document.getElementById('enableNotifBtn');
+    const iosHint = document.getElementById('iosNotifHint');
+    const showBtn = (on) => { if (notifBtn) notifBtn.style.display = on ? 'inline-block' : 'none'; };
     try {
+      const isIOS = /iPhone|iPad|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+      const isStandalone = (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) || window.navigator.standalone === true;
       if (!('serviceWorker' in navigator) || !('Notification' in window)) {
-        setStatus(LANG === 'ja' ? 'このブラウザは通知に対応していません' : 'Not supported in this browser', false);
+        showBtn(false);
+        if (isIOS && !isStandalone) {
+          setStatus(LANG === 'ja' ? 'iPhoneはホーム画面に追加すると使えます' : 'On iPhone, add to Home Screen to use notifications', false);
+          if (iosHint) iosHint.style.display = 'block';
+        } else {
+          setStatus(LANG === 'ja' ? 'このブラウザは通知に対応していません' : 'Not supported in this browser', false);
+        }
         return;
       }
-           setStatus(LANG === 'ja' ? 'Service Workerの準備を待っています...' : 'Waiting for service worker...');
+      if (iosHint) iosHint.style.display = 'none';
+      let permission = Notification.permission;
+      if (permission === 'denied') {
+        showBtn(false);
+        setStatus(LANG === 'ja' ? '通知が許可されていません(端末やブラウザの設定で許可してください)' : 'Notifications blocked (allow them in your device or browser settings)', false);
+        return;
+      }
+      if (permission !== 'granted') {
+        if (!fromButton) {
+          showBtn(true);
+          setStatus(LANG === 'ja' ? 'オフ(下のボタンでオンにできます)' : 'Off (use the button below to turn on)');
+          return;
+        }
+        // ボタンを押した直後に、すぐ許可の確認を出す
+        setStatus(LANG === 'ja' ? '通知の許可を確認中...' : 'Checking notification permission...');
+        permission = await Notification.requestPermission();
+        if (permission !== 'granted') {
+          showBtn(permission !== 'denied');
+          setStatus(LANG === 'ja' ? '通知が許可されていません(端末やブラウザの設定で許可してください)' : 'Notifications not allowed (check your device or browser settings)', false);
+          return;
+        }
+      }
+      showBtn(false);
+      setStatus(LANG === 'ja' ? 'Service Workerの準備を待っています...' : 'Waiting for service worker...');
       // firebase-messaging-sw.js は単独で登録しない(match-sw.jsと同じスコープ'/'で競合するため)。
       // 代わりに、すでに登録・稼働中のmatch-sw.jsのregistrationをそのままFCM用に再利用する
       const swReg = await navigator.serviceWorker.ready;
-      setStatus(LANG === 'ja' ? '通知の許可を確認中...' : 'Checking notification permission...');
-      const permission = await Notification.requestPermission();
-      if (permission !== 'granted') {
-        setStatus(LANG === 'ja' ? '通知が許可されていません(ブラウザ設定を確認してください)' : 'Notifications not allowed (check browser settings)', false);
-        return;
-      }
       const messaging = getMessaging(app);
       setStatus(LANG === 'ja' ? 'トークンを取得中...' : 'Getting token...');
       const token = await getToken(messaging, { vapidKey: FCM_VAPID_KEY, serviceWorkerRegistration: swReg });
@@ -690,6 +730,9 @@ import { getAuth, GoogleAuthProvider, signInWithPopup, signInAnonymously, signOu
       setStatus((LANG === 'ja' ? '❌ エラー: ' : '❌ Error: ') + e.message, false);
     }
   }
+  document.getElementById('enableNotifBtn').addEventListener('click', () => {
+    if (auth.currentUser) setupPushNotifications(auth.currentUser, true);
+  });
   const provider = new GoogleAuthProvider();
 
  const FOUNDER_CUTOFF = new Date('2027-01-01T00:00:00+09:00').getTime();
@@ -3576,14 +3619,34 @@ const PIECE_IMG = {
     }
   }
 
+  // 分析・履歴のパネルを開いたら画面をそこへ移動し、閉じたら対局の盤へ戻す
+  // 分析・履歴は、対局画面とは別の画面(全画面)として開く
+  function kcScrollTo(panel) {
+    if (!panel) return;
+    ['analysisPanel', 'historyPanel'].forEach(id => { const p = document.getElementById(id); if (p && p !== panel) { p.classList.remove('kc-fullpanel'); p.style.display = 'none'; } });
+    panel.classList.add('kc-fullpanel');
+    panel.scrollTop = 0;
+    document.body.style.overflow = 'hidden';
+  }
+  function kcBackToBoard() {
+    ['analysisPanel', 'historyPanel'].forEach(id => { const p = document.getElementById(id); if (p) { p.classList.remove('kc-fullpanel'); p.style.display = 'none'; } });
+    document.body.style.overflow = '';
+    const b = document.getElementById('miniBoard');
+    if (b) { try { b.scrollIntoView({ block: 'center' }); } catch (e) {} }
+  }
+  document.querySelectorAll('.kc-panel-back').forEach(btn => { btn.onclick = () => kcBackToBoard(); });
   document.getElementById('analysisToggleBtn').onclick = () => {
     const panel = document.getElementById('analysisPanel');
     const opening = panel.style.display === 'none';
     panel.style.display = opening ? 'block' : 'none';
     if (opening) {
+      document.getElementById('historyPanel').style.display = 'none';
       analysisChess = new Chess(gameChess.fen());
       analysisSelectedSquare = null;
       renderAnalysisBoard();
+      kcScrollTo(panel);
+    } else {
+      kcBackToBoard();
     }
   };
   document.getElementById('analysisResetBtn').onclick = () => {
@@ -3594,9 +3657,10 @@ const PIECE_IMG = {
   };
   document.getElementById('analysisCloseBtn').onclick = () => {
     document.getElementById('analysisPanel').style.display = 'none';
+    kcBackToBoard();
   };
   document.getElementById('analysisHintBtn').onclick = () => {
-    if (!analysisChess) return;
+    if (!analysisChess || window.KC_GAME_ACTIVE) return;
     const hintEl = document.getElementById('analysisHintText');
     if (analysisChess.game_over()) {
       hintEl.textContent = LANG === 'ja' ? 'この局面はすでに終局しています。' : 'This position is already game over.';
@@ -3610,6 +3674,79 @@ const PIECE_IMG = {
       hintEl.textContent = (LANG === 'ja' ? '💡 候補手(' : '💡 Suggested move (') + whoLabel + (LANG === 'ja' ? '番): ' : '): ') + suggestion.san;
     }
   };
+
+  // ===== 対局後の友達申請ボタン =====
+  // 状態: 'pending'(確認中) / 'show'(申請できる) / 'hide'(友達・申請済み・ブロックなど) / 'incoming'(相手から申請が届いている) / 'sent'(今送った)
+  const matchFriendState = {};
+  async function updateMatchFriendBtn(matchId, oppUid, user) {
+    const key = matchId + '_' + oppUid;
+    const apply = () => {
+      const btn = document.getElementById('matchAddFriendBtn');
+      const msg = document.getElementById('matchAddFriendMsg');
+      if (!btn || !msg) return;
+      const st = matchFriendState[key];
+      btn.style.display = st === 'show' ? 'inline-block' : 'none';
+      btn.disabled = false;
+      if (st === 'incoming') {
+        msg.className = 'msg';
+        msg.textContent = LANG === 'ja' ? 'この人から友達申請が届いています。「届いている友達申請」から承認できます。' : 'This player has sent you a friend request. You can accept it under "Incoming Friend Requests".';
+      } else if (st === 'sent') {
+        msg.className = 'msg';
+        msg.textContent = LANG === 'ja' ? '友達申請を送りました！' : 'Friend request sent!';
+      } else {
+        msg.textContent = '';
+      }
+      btn.onclick = async () => {
+        btn.disabled = true;
+        try {
+          const blockedBySnap = await get(ref(db, 'blocks/' + oppUid + '/' + user.uid));
+          if (blockedBySnap.exists()) {
+            matchFriendState[key] = 'hide';
+            msg.className = 'err';
+            msg.textContent = LANG === 'ja' ? '申請を送信できませんでした。' : 'Could not send the request.';
+            btn.style.display = 'none';
+            return;
+          }
+          const myProfile = await get(ref(db, 'users/' + user.uid));
+          const myUsername = myProfile.exists() ? myProfile.val().username : user.displayName;
+          await set(ref(db, 'friendRequests/' + oppUid + '/' + user.uid), { username: myUsername, sentAt: Date.now() });
+          await set(ref(db, 'sentRequests/' + user.uid + '/' + oppUid), true);
+          try { if (typeof mySentSet !== 'undefined' && mySentSet) mySentSet.add(oppUid); } catch (e) {}
+          matchFriendState[key] = 'sent';
+          apply();
+        } catch (e) {
+          console.error('友達申請の送信に失敗:', e);
+          btn.disabled = false;
+          msg.className = 'err';
+          msg.textContent = LANG === 'ja' ? '申請を送信できませんでした。' : 'Could not send the request.';
+        }
+      };
+    };
+    if (matchFriendState[key] && matchFriendState[key] !== 'pending') { apply(); return; }
+    if (matchFriendState[key] === 'pending') return;
+    matchFriendState[key] = 'pending';
+    try {
+      const [fr, sent, inc, myBlock, blockedBy, oppProf] = await Promise.all([
+        get(ref(db, 'friends/' + user.uid + '/' + oppUid)),
+        get(ref(db, 'sentRequests/' + user.uid + '/' + oppUid)),
+        get(ref(db, 'friendRequests/' + user.uid + '/' + oppUid)),
+        get(ref(db, 'blocks/' + user.uid + '/' + oppUid)),
+        get(ref(db, 'blocks/' + oppUid + '/' + user.uid)),
+        get(ref(db, 'publicProfiles/' + oppUid))
+      ]);
+      if (fr.exists() || sent.exists() || myBlock.exists() || blockedBy.exists() || !oppProf.exists()) {
+        matchFriendState[key] = 'hide';
+      } else if (inc.exists()) {
+        matchFriendState[key] = 'incoming';
+      } else {
+        matchFriendState[key] = 'show';
+      }
+    } catch (e) {
+      console.error('友達状態の確認に失敗:', e);
+      matchFriendState[key] = 'hide';
+    }
+    apply();
+  }
 
   // ===== 対局の履歴ビューア(閲覧専用、過去の局面を1手ずつ振り返れる) =====
   let latestMatchData = null;
@@ -3689,11 +3826,13 @@ const PIECE_IMG = {
     const panel = document.getElementById('historyPanel');
     const opening = panel.style.display === 'none';
     panel.style.display = opening ? 'block' : 'none';
+    if (opening) document.getElementById('analysisPanel').style.display = 'none';
     if (opening && latestMatchData) {
       historyIndex = (latestMatchData.moves || []).length;
       historyHighlight = null;
       renderHistoryBoard();
     }
+    if (opening) kcScrollTo(panel); else kcBackToBoard();
   };
   document.getElementById('historyPrevBtn').onclick = () => {
     historyIndex = Math.max(0, historyIndex - 1);
@@ -3706,6 +3845,7 @@ const PIECE_IMG = {
   };
   document.getElementById('historyCloseBtn').onclick = () => {
     document.getElementById('historyPanel').style.display = 'none';
+    kcBackToBoard();
   };
 
   // ===== Stockfish(自前ホスティング、詳細レポート専用) =====
@@ -4084,7 +4224,27 @@ const PIECE_IMG = {
       cheatBtnEl.onclick = () => openCheatReport(m, user, matchId);
     }
 
+    // 👋 対局が終わったら、まだ友達でない相手に友達申請を送れるボタン
+    {
+      const fin = ['timeout', 'resigned', 'draw_agreed'].includes(m.status) || (m.status === 'active' && gameChess.game_over());
+      const isPlayer = !!myColor && (m.white === user.uid || m.black === user.uid);
+      const oppUid = isPlayer ? (m.white === user.uid ? m.black : m.white) : null;
+      if (fin && oppUid && oppUid !== user.uid) {
+        updateMatchFriendBtn(matchId, oppUid, user);
+      } else {
+        const fb = document.getElementById('matchAddFriendBtn');
+        const fm = document.getElementById('matchAddFriendMsg');
+        if (fb) fb.style.display = 'none';
+        if (fm) fm.textContent = '';
+      }
+    }
+
     const gameIsActive = m.status === 'active' && !gameChess.game_over();
+    // 💡 候補手は、対局中は使えないようにする(不正防止)。対局が終わったら振り返りに使える
+    window.KC_GAME_ACTIVE = gameIsActive;
+    const hintBtnEl = document.getElementById('analysisHintBtn');
+    if (hintBtnEl) hintBtnEl.style.display = gameIsActive ? 'none' : 'inline-block';
+    if (gameIsActive) { const ht = document.getElementById('analysisHintText'); if (ht) ht.textContent = ''; }
     const resignBtnEl = document.getElementById('resignBtn');
     const offerDrawBtnEl = document.getElementById('offerDrawBtn');
     const takebackBtnEl = document.getElementById('takebackBtn');
