@@ -41,7 +41,7 @@ footer a { margin:0 8px; }
 <body>
 
 <h1>🦊 プライバシーポリシー / Privacy Policy</h1>
-<p class="updated">最終更新日 / Last updated: 2026年8月</p>
+<p class="updated">最終更新日 / Last updated: 2026年10月12日 / October 12, 2026</p>
 
 <div class="section">
 <p>本ページは、KitsuneChess 対局モード(match.html、以下「本サービス」)におけるユーザーの個人情報の取り扱いについて説明するものです。</p>
@@ -50,7 +50,7 @@ footer a { margin:0 8px; }
 
 <h2>収集する情報 / Information We Collect</h2>
 <div class="section">
-<p>本サービスはGoogleアカウントでのログインを利用しており、以下の情報を取得・保存します。</p>
+<p>本サービスは、Googleアカウントでのログイン、またはゲストとしての利用ができます。以下の情報を取得・保存します。(ゲストとして利用する場合、Googleアカウントの情報は取得しません)</p>
 <ul>
   <li>Googleアカウントのメールアドレス、表示名、プロフィール画像</li>
   <li>ユーザーが設定した表示名(ユーザーネーム)</li>
@@ -58,8 +58,11 @@ footer a { margin:0 8px; }
   <li>対局の記録(手順、勝敗、レーティング、対局相手)</li>
   <li>チャットメッセージの内容(友達間のメッセージ機能を利用した場合)</li>
   <li>オンライン状態および最終ログイン時刻</li>
+  <li>通知を許可した場合、通知を送るための情報(通知用トークン)</li>
+  <li>公正な対局のための記録(1手ごとの考慮時間、対局中に別の画面へ移った回数・時間)</li>
+  <li>利用者から届いた不正・迷惑行為の報告の内容</li>
 </ul>
-<p class="lang-block-en">The Service uses Google Sign-In and collects the following information:</p>
+<p class="lang-block-en">The Service can be used with Google Sign-In or as a guest, and collects the following information (if you play as a guest, no Google account information is collected):</p>
 <ul class="lang-block-en">
   <li>Your Google account email address, display name, and profile photo</li>
   <li>The username you set within the Service</li>
@@ -67,6 +70,9 @@ footer a { margin:0 8px; }
   <li>Match records (moves, results, rating, opponents)</li>
   <li>Chat message content (if you use the friend chat feature)</li>
   <li>Online/offline status and last-seen timestamp</li>
+  <li>If you allow notifications, the information needed to send them (a notification token)</li>
+  <li>Fair-play records (time spent on each move, and how often and how long you switched to another screen during a game)</li>
+  <li>The content of reports of cheating or abuse sent by users</li>
 </ul>
 </div>
 
@@ -79,6 +85,8 @@ footer a { margin:0 8px; }
   <li>レーティング・対局成績・対局分析を表示するため</li>
   <li>チャットメッセージを表示・自動翻訳するため</li>
   <li>オンライン状態を友達に表示するため</li>
+  <li>対局の申し込みなどを通知でお知らせするため</li>
+  <li>不正行為や迷惑行為を防ぎ、公正な対局を保つため</li>
 </ul>
 <p class="lang-block-en">We use this information solely to:</p>
 <ul class="lang-block-en">
@@ -87,6 +95,8 @@ footer a { margin:0 8px; }
   <li>Display ratings, match records, and game analysis</li>
   <li>Display and auto-translate chat messages</li>
   <li>Show your online status to your friends</li>
+  <li>Notify you of match challenges and similar events</li>
+  <li>Prevent cheating and abuse and keep games fair</li>
 </ul>
 </div>
 
@@ -94,12 +104,12 @@ footer a { margin:0 8px; }
 <div class="section">
 <p>本サービスは以下の第三者サービスを利用しています。</p>
 <ul>
-  <li><strong>Google Firebase(Authentication / Realtime Database)</strong>: ログイン認証および対局データ・ユーザーデータの保存に使用</li>
+  <li><strong>Google Firebase(Authentication / Realtime Database / Cloud Messaging)</strong>: ログイン認証、対局データ・ユーザーデータの保存、通知の送信に使用</li>
   <li><strong>MyMemory Translation API</strong>: チャットメッセージの自動翻訳に使用(送信されたメッセージのテキストが翻訳のため外部APIに送信されます)</li>
 </ul>
 <p class="lang-block-en">The Service uses the following third-party services:</p>
 <ul class="lang-block-en">
-  <li><strong>Google Firebase (Authentication / Realtime Database)</strong>: used for login authentication and to store match and user data</li>
+  <li><strong>Google Firebase (Authentication / Realtime Database / Cloud Messaging)</strong>: used for login authentication, storing match and user data, and sending notifications</li>
   <li><strong>MyMemory Translation API</strong>: used to auto-translate chat messages (message text is sent to this external API for translation)</li>
 </ul>
 </div>
@@ -124,8 +134,8 @@ footer a { margin:0 8px; }
 
 <h2>お問い合わせ / Contact</h2>
 <div class="section">
-<p>本ポリシーに関するご質問は、KitsuneChessサイト内のお問い合わせフォームよりご連絡ください。</p>
-<p class="lang-block-en">If you have any questions about this policy, please contact us through the contact form on the KitsuneChess site.</p>
+<p>本ポリシーに関するご質問は、下記のメールアドレスまでご連絡ください。<br>KitsuneChess:<a href="mailto:info@kitsunechess-app.com">info@kitsunechess-app.com</a></p>
+<p class="lang-block-en">If you have any questions about this policy, please contact us at the email address below.<br>KitsuneChess: <a href="mailto:info@kitsunechess-app.com">info@kitsunechess-app.com</a></p>
 </div>
 
 <h2>ポリシーの変更 / Changes to This Policy</h2>
