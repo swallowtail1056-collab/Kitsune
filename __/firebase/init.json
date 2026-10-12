@@ -1,1 +1,11 @@
 
+{
+  "apiKey": "AIzaSyDR6vsVq2uePiFRUmoqYB4LjdGZJiRM4eE",
+  "appId": "1:1025643200128:web:cf333443c75742ea127065",
+  "authDomain": "kitsunechess-multiplayer.firebaseapp.com",
+  "databaseURL": "https://kitsunechess-multiplayer-default-rtdb.asia-southeast1.firebasedatabase.app",
+  "measurementId": "G-HPDM5LPV3P",
+  "messagingSenderId": "1025643200128",
+  "projectId": "kitsunechess-multiplayer",
+  "storageBucket": "kitsunechess-multiplayer.firebasestorage.app"
+}
