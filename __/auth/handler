@@ -1,1 +1,16 @@
-Unable to process request due to missing initial state. This may happen if browser sessionStorage is inaccessible or accidentally cleared. Some specific scenarios are - 1) Using IDP-Initiated SAML SSO. 2) Using signInWithRedirect in a storage-partitioned browser environment.
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta name=viewport content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<script type="text/javascript" src="experiments.js"></script>
+<script type="text/javascript" src="handler.js"></script>
+<script type="text/javascript" nonce="firebase-auth-helper">
+var POST_BODY = '{{POST_BODY}}';
+fireauth.oauthhelper.widget.initialize();
+</script>
+</head>
+<body>
+</body>
+</html>
