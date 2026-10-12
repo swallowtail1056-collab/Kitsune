@@ -2147,17 +2147,17 @@ applyBoardTheme();
       : (user.isAnonymous
           ? 'Are you sure you want to delete this guest account? All your data — friends, match history — will be permanently erased.'
           : 'Are you sure you want to delete your account? All your data — friends, match history, rating — will be permanently erased.');
-    if (!skipConfirm && !confirm(confirmMsg)) return false;
-
-    // Googleアカウントは、ログインから時間がたっていると削除できないため、先に本人確認をし直す
+    // Googleアカウントは、ログインから時間がたっていると削除できないため、先に本人確認をし直す。
+    // iPhoneでは、ボタンを押した直後でないとGoogleの確認画面が開かないので、確認ダイアログより先に行う
     if (!user.isAnonymous) {
       try {
         await reauthenticateWithPopup(user, provider);
       } catch (e) {
-        alert(LANG === 'ja' ? '本人確認ができなかったため、削除を中止しました。' : 'Could not confirm your identity, so the deletion was cancelled.');
+        alert(LANG === 'ja' ? '本人確認ができなかったため、削除を中止しました。(アカウントは削除されていません)' : 'Could not confirm your identity, so the deletion was cancelled. (Your account was not deleted.)');
         return false;
       }
     }
+    if (!skipConfirm && !confirm(confirmMsg)) return false;
 
     try {
       const myUid = user.uid;
