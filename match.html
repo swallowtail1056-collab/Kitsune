@@ -2181,6 +2181,13 @@ applyBoardTheme();
         await remove(ref(db, 'friendRequests/' + targetUid + '/' + myUid));
       }
 
+      // 自分に届いていた(まだ承認していない)友達申請について、送った人側の「送信済み」記録も削除
+      const incomingSnap = await get(ref(db, 'friendRequests/' + myUid));
+      const incomingFromUids = incomingSnap.exists() ? Object.keys(incomingSnap.val()) : [];
+      for (const fromUid of incomingFromUids) {
+        await remove(ref(db, 'sentRequests/' + fromUid + '/' + myUid)).catch(() => {});
+      }
+
       // 自分自身に関する記録を削除
       await remove(ref(db, 'friends/' + myUid));
       await remove(ref(db, 'friendRequests/' + myUid));
