@@ -103,6 +103,11 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
   font-size: 1rem;
   color: var(--text-sub);
 }
+.commentary-text a, .opening-intro a { color:var(--brown); text-decoration:underline; font-weight:700; }
+.commentary-text a:hover, .opening-intro a:hover { color:var(--brown-dark); }
+.more-detail { margin-top:8px; border-top:1px dashed var(--brown-light); padding-top:6px; }
+.more-detail summary { cursor:pointer; font-weight:700; color:var(--brown); font-size:0.92rem; list-style-position:inside; }
+.more-detail .more-body { margin-top:6px; font-size:0.94rem; }
 </style>
   <script src="board-theme.js"></script>
 </head>
@@ -121,8 +126,8 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
   <h1 class="opening-title lang-element-en">Caro-Kann Defense</h1>
 
   <div class="opening-intro">
-    <p class="lang-element-ja">💡 カロ・カンは1...c6と応じることでd5のマスをサポートする堅牢な守りだよ！フレンチ・ディフェンスと同じくd5への反撃を準備するけど、c6はe6と違ってキングサイドのビショップを閉じ込めないのが大きな利点なんだ。2.d4 d5 3.Nc3のあと黒はdxe4と取ってビショップをf5に展開できるよ。このビショップをキング・インディアン・セットアップの前に外に出せることがカロ・カンの最大の強みなんだ。アナトリー・カルポフが得意とした信頼性バツグンのシステムだよ！</p>
-    <p class="lang-element-en">💡 The Caro-Kann Defense starts with 1...c6, supporting the d5 square for a solid counterattack! Similar to the French Defense in aiming for d5, but c6 has one big advantage — it doesn't lock in the kingside bishop. After 2.d4 d5 3.Nc3, Black can take with dxe4 and develop the bishop actively to f5. Getting this bishop outside before closing the pawn structure is the Caro-Kann's greatest strength. Made famous by Anatoly Karpov, a highly reliable system loved by players who value solid, positional chess!</p>
+    <p class="lang-element-ja">💡 カロ・カン・ディフェンスは、1.e4 c6と突いて、次にd5で中央に挑む、堅実なオープニングだよ。名前は、19世紀の終わりにこの形を研究した、ホレイショ・カロとマルクス・カンという2人の名手に由来しているんだ。黒はフレンチ・ディフェンスのように堅い形を作りながら、c8のビショップを外に出しやすいのが特長だよ。カルポフをはじめ、多くの世界チャンピオンが大事な対局で指してきたんだ。</p>
+    <p class="lang-element-en">💡 The Caro-Kann Defense is a solid opening in which Black plays 1.e4 c6 and then challenges the center with ...d5. It's named after two masters, Horatio Caro and Marcus Kann, who studied it in the late 19th century. Black builds a solid setup like in the French Defense, but with the advantage that the c8 bishop can come out more easily. Many world champions, starting with Karpov, have played it in important games.</p>
   </div>
 
   <div class="board-wrap">
@@ -195,61 +200,103 @@ const initialBoard = [
 // レッスンステップ（手・解説・ジーンの表情）
 // ============================================================
 const LESSON_STEPS = [
-  { move:null, moveLabel:{ja:'開始局面', en:'Starting Position'},
-    ja:'カロ・カン・ディフェンスのレッスンを始めるよ！堅実でリスクが少なく、長年トップ棋士にも愛されている黒の定跡なんだ。ジーンと一緒に、一手ずつ「なぜその手を指すのか」を学んでいこう。',
-    en:"Let's start the Caro-Kann Defense lesson! It's a solid, low-risk choice for Black that's been trusted by top players for generations. Jene will explain why each move is played, one step at a time.",
+  { move:null, moveLabel:{ja:"開始局面", en:"Starting Position"},
+    ja:"カロ・カン・ディフェンスのレッスンを始めるよ！このページでは、黒がビショップをf5に出してから中央を固める、クラシカル・バリエーションを見ていくよ。白がh4とh5でビショップを追いかけ、黒がどうやって堅い形を作るのかがポイントなんだ。一手ずつジーンと一緒に、なぜその手を指すのかを学んでいこう。",
+    en:"Let's start the Caro-Kann Defense lesson! On this page we follow the Classical Variation, where Black develops the bishop to f5 before solidifying the center. The key is how White chases the bishop with h4 and h5, and how Black builds a solid setup. Jene will walk you through why each move is played, one step at a time.",
     fox:'welcome' },
-   { move:{from:[6,4],to:[4,4]}, moveLabel:{ja:'1. e4', en:'1. e4'},
-    ja:'白はe4で中央を制圧するよ。中央のマスを押さえることで、この後の駒の動ける範囲が広がるんだ。',
-    en:'White plays 1.e4, claiming the center. Controlling these central squares gives the pieces more room to maneuver later on.',
+  { move:{from:[6,4],to:[4,4]}, moveLabel:{ja:"1. e4", en:"1. e4"},
+    ja:"白はポーンをe4へ進めるよ。白は中央のマスを押さえながら、ビショップとクイーンが動く道を開けるんだ。",
+    en:"White pushes the pawn to e4. White takes control of central squares and opens lines for the bishop and queen.",
     fox:'normal' },
-    { move:{from:[1,2],to:[2,2]}, moveLabel:{ja:'1...c6（カロ・カン！）', en:'1...c6 (Caro-Kann!)'},
-    ja:'ここが本題、カロ・カン・ディフェンスの一手！黒はc6で次のd5を準備するよ。フレンチと似た発想だけど、この後の展開次第でビショップを閉じ込めずに済むのが大きな違いなんだ（数手先、d5・dxe4を経てBf5と出られるようになるよ）。',
-    en:"Here's the Caro-Kann move! Black plays 1...c6, preparing d5 next. It's similar in spirit to the French Defense, but a few moves from now — after ...d5 and the trade on e4 — Black will be able to free this bishop with ...Bf5 instead of trapping it. That's the key difference, though it hasn't happened yet at this exact moment.",
+  { move:{from:[1,2],to:[2,2]}, moveLabel:{ja:"1...c6（カロ・カン！）", en:"1...c6 (Caro-Kann!)"},
+    ja:"ここがカロ・カン・ディフェンスの一手！黒はポーンをc6へ進めて、次にd5と突いたときに、そのポーンをc6のポーンで支えられるように準備するよ。一般的には1...e5や1...c5もよく指されるけれど、黒はここで堅い形を作る道を選ぶんだ。黒のこの手は、<a href='french.html'>フレンチ・ディフェンス</a>（1...e6）と違って、c8のビショップの道をふさがないのが特長だよ。",
+    en:"Here's the Caro-Kann Defense! Black pushes the pawn to c6, preparing to support the d5 pawn with it once ...d5 is played. Black often plays 1...e5 or 1...c5 instead, but here Black chooses to build a solid setup. Unlike the <a href='french.html?lang=en'>French Defense</a> (1...e6), this move doesn't block the c8 bishop.",
     fox:'happy' },
-   { move:{from:[6,3],to:[4,3]}, moveLabel:{ja:'2. d4', en:'2. d4'},
-    ja:'白はd4で中央をさらに強化するよ。e4とd4の2つのポーンを並べることで、黒はまだこの中央に直接手出しできない状態なんだ。',
-    en:'White reinforces the center with 2.d4. With both e4 and d4 pawns side by side, Black still has no direct way to challenge this center yet.',
+  { move:{from:[6,3],to:[4,3]}, moveLabel:{ja:"2. d4", en:"2. d4"},
+    ja:"白はポーンをd4へ進めるよ。白はe4とd4の2つのポーンで、中央を大きく押さえるんだ。",
+    en:"White pushes the pawn to d4. With pawns on e4 and d4, White takes a big grip on the center.",
     fox:'normal' },
-  { move:{from:[1,3],to:[3,3]}, moveLabel:{ja:'2...d5', en:'2...d5'},
-    ja:'黒はd5！c6で準備していた本当の狙い、中央への直接対抗だよ。',
-    en:'Black plays 2...d5, the point of c6 \u2014 directly challenging the center.',
-    fox:'quiz' },
-  { move:{from:[7,1],to:[5,2]}, moveLabel:{ja:'3. Nc3', en:'3. Nc3'},
-    ja:'白はナイトをc3に展開して、e4ポーンを支えながら駒を育てるよ。',
-    en:'White develops the knight to c3, supporting e4 while developing.',
+  { move:{from:[1,3],to:[3,3]}, moveLabel:{ja:"2...d5", en:"2...d5"},
+    ja:"黒はポーンをd5へ進めるよ。黒は白のe4のポーンを攻撃して、中央を争うんだ。黒のd5のポーンは、c6のポーンとd8のクイーンに守られているよ。",
+    en:"Black pushes the pawn to d5. Black attacks White's e4 pawn and fights for the center. Black's d5 pawn is defended by the c6 pawn and the d8 queen.",
     fox:'normal' },
-  { move:{from:[3,3],to:[4,4]}, moveLabel:{ja:'3...dxe4', en:'3...dxe4'},
-    ja:'黒はdxe4でe4ポーンを取るよ。中央のポーンを交換して、すぐにビショップを良いマスへ出す準備をするんだ。',
-    en:'Black captures with 3...dxe4, trading the central pawn and preparing to develop the bishop to a great square right away.',
+  { move:{from:[7,1],to:[5,2]}, moveLabel:{ja:"3. Nc3", en:"3. Nc3"},
+    ja:"白はナイトをc3へ進めるよ。白はe4のポーンをナイトで守りながら、展開を進めるんだ。",
+    en:"White develops the knight to c3. White defends the e4 pawn with the knight while continuing development.",
+    jaMore:"白はこの手の代わりに3.e5と突く<a href='caro_advance.html'>アドバンス変化</a>や、3.exd5と中央のポーンを交換する形を選ぶこともできるよ。",
+    enMore:"Instead of this move, White can also choose the <a href='caro_advance.html?lang=en'>Advance Variation</a> with 3.e5, or trade in the center with 3.exd5.",
     fox:'normal' },
-  { move:{from:[5,2],to:[4,4]}, moveLabel:{ja:'4. Nxe4', en:'4. Nxe4'},
-    ja:'白はナイトで取り返すよ。',
-    en:'White recaptures with the knight.',
+  { move:{from:[3,3],to:[4,4]}, moveLabel:{ja:"3...dxe4", en:"3...dxe4"},
+    ja:"黒はd5のポーンで、e4にいた白のポーンを取るよ。黒は中央のポーンを交換して、白のe4のポーンを消すんだ。",
+    en:"Black's d5 pawn captures White's pawn on e4. Black trades in the center and removes White's e4 pawn.",
     fox:'normal' },
-  { move:{from:[0,2],to:[3,5]}, moveLabel:{ja:'4...Bf5', en:'4...Bf5'},
-    ja:'黒はビショップをf5へ！カロ・カンの一番の魅力、この駒をポーンの外に出してから後ろのポーン構造を作れることを見せる一手だよ。ナイトにもプレッシャーをかけるよ。',
-    en:'Black develops the bishop to f5 \u2014 showcasing the Caro-Kann\u2019s biggest perk: getting this piece out before the pawn structure closes in. It also pressures the knight.',
-    fox:'happy' },
-   { move:{from:[4,4],to:[5,6]}, moveLabel:{ja:'5. Ng3', en:'5. Ng3'},
-    ja:'白はナイトをg3に引くよ。ただの撤退じゃないんだ — g3からは今度はf5のビショップを狙い返せる位置になっていて、ビショップはまた動かされることになるよ。',
-    en:"White retreats the knight to g3 — but this isn't just dodging the attack. From g3, the knight now eyes the bishop on f5 in return, forcing it to move again.",
+  { move:{from:[5,2],to:[4,4]}, moveLabel:{ja:"4. Nxe4", en:"4. Nxe4"},
+    ja:"白はc3のナイトで、e4に入った黒のポーンを取り返すよ。白のナイトは、中央のe4のマスに出てきたんだ。",
+    en:"White's c3 knight recaptures Black's pawn on e4. White's knight is now on the central e4 square.",
     fox:'normal' },
-  { move:{from:[3,5],to:[2,6]}, moveLabel:{ja:'5...Bg6', en:'5...Bg6'},
-    ja:'黒はビショップをg6へ。これから来るh4-h5の追撃に備えて、あらかじめ安全な場所に移動するよ。',
-    en:'Black retreats the bishop to g6, getting ahead of White\u2019s coming h4-h5 idea.',
-    fox:'wink' },
-    { move:{from:[6,7],to:[4,7]}, moveLabel:{ja:'6. h4', en:'6. h4'},
-    ja:'白はh4を指すよ。この手自体はまだビショップを直接攻撃していなくて、次のh5でビショップを追い出す準備をしているんだ。これがクラシカル・カロ・カンの代名詞的な一手だよ。',
-    en:"White plays 6.h4. This move doesn't attack the bishop directly yet — it's setting up h5 next, which will actually chase the bishop away. This is the signature idea of the Classical Caro-Kann.",
-    fox:'happy' },
-   { move:{from:[1,7],to:[2,7]}, moveLabel:{ja:'6...h6', en:'6...h6'},
-    ja:'黒はh6を指すよ。これはh5そのものを防ぐ手じゃなくて(h5は結局指されてくるよ)、狙いは別のところ。h6のポーンがg5のマスを見張ることで、この先ビショップがh7まで追われた後に、白のナイトがf3からg5へ跳んでビショップを再び狙う手を、あらかじめ封じているんだ。',
-    en:"Black plays 6...h6. This doesn't stop h5 itself — White still plays it next. Instead, the pawn on h6 covers the g5 square, so later on, once the bishop gets pushed all the way to h7, White's knight won't be able to jump from f3 to g5 to attack it again.",
-    fox:'quiz' },
-  { move:{from:[7,6],to:[5,5]}, moveLabel:{ja:'7. Nf3', en:'7. Nf3'},
-    ja:'白はナイトをf3へ展開。これで本譜は一段落、続きはぜひ自分で指してみてね！',
-    en:'White develops the last knight to f3. That\u2019s the main line \u2014 try continuing the game yourself from here!',
+  { move:{from:[0,2],to:[3,5]}, moveLabel:{ja:"4...Bf5", en:"4...Bf5"},
+    ja:"黒はビショップをf5へ進めるよ。黒のビショップは、守りのない白のe4のナイトを攻撃しながら、ポーンの外に出てくるんだ。黒のこの形は、カロ・カンのクラシカル・バリエーションと呼ばれているよ。",
+    en:"Black develops the bishop to f5. Black's bishop comes outside the pawn chain while attacking White's undefended knight on e4. This setup for Black is called the Classical Variation of the Caro-Kann.",
+    fox:'normal' },
+  { move:{from:[4,4],to:[5,6]}, moveLabel:{ja:"5. Ng3", en:"5. Ng3"},
+    ja:"白はナイトをg3へ動かすよ。白のナイトは攻撃をかわしながら、f5にいる黒のビショップを攻撃し返すんだ。",
+    en:"White moves the knight to g3. White's knight sidesteps the attack and hits back at Black's bishop on f5.",
+    fox:'normal' },
+  { move:{from:[3,5],to:[2,6]}, moveLabel:{ja:"5...Bg6", en:"5...Bg6"},
+    ja:"黒はビショップをg6へ下げるよ。黒のビショップはh7からb1への斜めの列から外れずに、白のキングサイドからクイーンサイドまでをにらみ続けるんだ。",
+    en:"Black retreats the bishop to g6. Black's bishop stays on the h7–b1 diagonal and keeps eyeing the board from White's kingside to the queenside.",
+    fox:'normal' },
+  { move:{from:[6,7],to:[4,7]}, moveLabel:{ja:"6. h4", en:"6. h4"},
+    ja:"白はポーンをh4へ進めるよ。白は次にh5と突いて、g6にいる黒のビショップを追い払おうとしているんだ。",
+    en:"White pushes the pawn to h4. White plans to push h5 next and chase away Black's bishop on g6.",
+    fox:'normal' },
+  { move:{from:[1,7],to:[2,7]}, moveLabel:{ja:"6...h6", en:"6...h6"},
+    ja:"黒はポーンをh6へ進めるよ。黒は白がh5と突いてもビショップがh7へ下がれるように、逃げ道を作るんだ。黒のh6のポーンは、白の駒がg5に入るのも防いでいるよ。",
+    en:"Black pushes the pawn to h6. Black makes room so the bishop can retreat to h7 when White pushes h5. Black's h6 pawn also stops White's pieces from landing on g5.",
+    fox:'normal' },
+  { move:{from:[7,6],to:[5,5]}, moveLabel:{ja:"7. Nf3", en:"7. Nf3"},
+    ja:"白はナイトをf3へ進めるよ。白のナイトはd4のポーンを守りながら、まだ空いているe5のマスにも利かせるんだ。",
+    en:"White develops the knight to f3. White's knight defends the d4 pawn and also covers the empty e5 square.",
+    fox:'normal' },
+  { move:{from:[0,1],to:[1,3]}, moveLabel:{ja:"7...Nd7", en:"7...Nd7"},
+    ja:"黒はナイトをd7へ進めるよ。黒のナイトもまだ空いているe5のマスに利いて、白のナイトがe5に入るのを防ぐんだ。黒はg8のナイトをf6へ出す予定なので、こちらのナイトはd7に置くよ。",
+    en:"Black develops the knight to d7. Black's knight also covers the empty e5 square, keeping White's knight out of e5. Black plans to bring the g8 knight to f6, so this knight goes to d7.",
+    fox:'normal' },
+  { move:{from:[4,7],to:[3,7]}, moveLabel:{ja:"8. h5", en:"8. h5"},
+    ja:"白はポーンをh5へ進めて、g6にいる黒のビショップを攻撃するよ。白のh5のポーンは、黒のキングサイドのスペースを押さえる役目もあるんだ。",
+    en:"White pushes the pawn to h5, attacking Black's bishop on g6. White's h5 pawn also helps restrict Black on the kingside.",
+    fox:'normal' },
+  { move:{from:[2,6],to:[1,7]}, moveLabel:{ja:"8...Bh7", en:"8...Bh7"},
+    ja:"黒はビショップをh7へ下げるよ。黒のビショップは、h7からも同じ斜めの列で、白のc2のポーンまで利き続けるんだ。",
+    en:"Black retreats the bishop to h7. From h7, Black's bishop stays on the same diagonal and still reaches White's c2 pawn.",
+    fox:'normal' },
+  { move:{from:[7,5],to:[5,3]}, moveLabel:{ja:"9. Bd3", en:"9. Bd3"},
+    ja:"白はビショップをd3へ進めるよ。白は黒のビショップと向かい合って、ビショップ同士の交換を申し込むんだ。白のビショップがd3に出たことで、黒のビショップの斜めの列もさえぎられるよ。",
+    en:"White develops the bishop to d3. White faces Black's bishop and offers a bishop trade. With White's bishop on d3, the diagonal of Black's bishop is also blocked.",
+    fox:'normal' },
+  { move:{from:[1,7],to:[5,3]}, moveLabel:{ja:"9...Bxd3", en:"9...Bxd3"},
+    ja:"黒はh7のビショップで、d3に入った白のビショップを取るよ。黒は、活発に動ける白のビショップを消すことを選ぶんだ。",
+    en:"Black's h7 bishop captures White's bishop on d3. Black chooses to eliminate White's active bishop.",
+    fox:'normal' },
+  { move:{from:[7,3],to:[5,3]}, moveLabel:{ja:"10. Qxd3", en:"10. Qxd3"},
+    ja:"白はクイーンで、d3に入った黒のビショップを取り返すよ。白のクイーンはd3から、まだ空いているe4やf5のマスにも利いているんだ。",
+    en:"White's queen recaptures Black's bishop on d3. From d3, White's queen also covers the empty e4 and f5 squares.",
+    fox:'normal' },
+  { move:{from:[1,4],to:[2,4]}, moveLabel:{ja:"10...e6", en:"10...e6"},
+    ja:"黒はポーンをe6へ進めるよ。黒はc8のビショップをすでに外に出しているので、ここで安心してe6と突き、f8のビショップの道を開けるんだ。",
+    en:"Black pushes the pawn to e6. Since Black's c8 bishop has already come out, Black can safely play ...e6 here and open the path for the f8 bishop.",
+    fox:'normal' },
+  { move:{from:[7,2],to:[6,3]}, moveLabel:{ja:"11. Bd2", en:"11. Bd2"},
+    ja:"白はビショップをd2へ進めるよ。これでb1・c1・d1のマスが空いて、白は次の手でクイーンサイドにキャスリングできるんだ。",
+    en:"White develops the bishop to d2. This clears b1, c1 and d1, so White can castle queenside on the next move.",
+    fox:'normal' },
+  { move:{from:[0,6],to:[2,5]}, moveLabel:{ja:"11...Ngf6", en:"11...Ngf6"},
+    ja:"黒はナイトをf6へ進めるよ。黒のナイトは、まだ空いているe4やd5のマスに利いているんだ。",
+    en:"Black develops the knight to f6. Black's knight covers the empty e4 and d5 squares.",
+    fox:'normal' },
+  { move:{from:[7,4],to:[7,2],castle:{from:[7,0],to:[7,3]}}, moveLabel:{ja:"12. O-O-O", en:"12. O-O-O"},
+    ja:"白はクイーンサイドにキャスリングするよ。白のキングはc1へ移り、a1にいたルークはd1へ出てくるんだ。白はh5のポーンでキングサイドのスペースを持ち、黒は堅い形からc5と突いて反撃するのが典型的な流れだよ。これで本譜は一段落、続きはぜひ自分で指してみてね！",
+    en:"White castles queenside. White's king goes to c1, and the rook from a1 comes to d1. White has kingside space thanks to the h5 pawn, while the typical plan for Black is to hit back from a solid position with ...c5. That's the main line — try continuing the game yourself from here!",
     fox:'happy' }
 ];
 
@@ -339,7 +386,19 @@ function renderStep(){
   const step = LESSON_STEPS[currentStep];
   renderBoard(boardSnapshots[currentStep]);
   document.getElementById('moveLabel').textContent = (step.moveLabel && step.moveLabel[currentLang]) || '';
-  document.getElementById('commentaryText').textContent = step[currentLang];
+  const ctEl = document.getElementById('commentaryText');
+  const moreText = step[currentLang + 'More'];
+  ctEl.innerHTML = step[currentLang] + (moreText
+    ? '<details class="more-detail"><summary>' + (currentLang === 'ja' ? '💡 もっと詳しく知りたい方へ' : '💡 Want to know more?') + '</summary><div class="more-body">' + moreText + '</div></details>'
+    : '');
+  ctEl.scrollTop = 0;
+  const moreEl = ctEl.querySelector('details.more-detail');
+  if (moreEl) {
+    moreEl.addEventListener('toggle', function(){
+      if (moreEl.open) { ctEl.scrollTop = moreEl.offsetTop - ctEl.offsetTop; }
+      adjustBottomPadding();
+    });
+  }
   document.getElementById('foxAvatar').src = FOX_BY_MOOD[step.fox] || FOX_BY_MOOD.normal;
   document.getElementById('lessonProgress').textContent = currentStep + ' / ' + (LESSON_STEPS.length - 1);
   document.getElementById('btnPrev').disabled = currentStep === 0;

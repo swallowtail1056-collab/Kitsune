@@ -103,6 +103,11 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
   font-size: 1rem;
   color: var(--text-sub);
 }
+.commentary-text a, .opening-intro a { color:var(--brown); text-decoration:underline; font-weight:700; }
+.commentary-text a:hover, .opening-intro a:hover { color:var(--brown-dark); }
+.more-detail { margin-top:8px; border-top:1px dashed var(--brown-light); padding-top:6px; }
+.more-detail summary { cursor:pointer; font-weight:700; color:var(--brown); font-size:0.92rem; list-style-position:inside; }
+.more-detail .more-body { margin-top:6px; font-size:0.94rem; }
 </style>
 </head>
 <body>
@@ -120,8 +125,8 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
 <h1 class="opening-title lang-element-en">Italian Game (Giuoco Piano)</h1>
 
   <div class="opening-intro">
-    <p class="lang-element-ja">💡 イタリアン・ゲームは1.e4 e5 2.Nf3 Nc6 3.Bc4と展開するクラシカルなオープニングだよ！白がビショップをc4に置くことでf7への攻撃ラインを作り、中央のコントロールも狙うんだ。f7は黒にとってキング周りの弱点になりやすいポイントだよ。現代では白がc3-d4と突いて中央ポーンを前進させる形が主流で、均衡した複雑な中盤戦になりやすい。ジョコ・ピアノやエヴァンズ・ギャンビットなど多くの有名な変化に発展するオープニングでもあるんだ。初心者からプロのグランドマスターまで幅広く採用される、ぼくも大好きな一手だよ！</p>
-    <p class="lang-element-en">💡 The Italian Game starts with 1.e4 e5 2.Nf3 Nc6 3.Bc4 — a truly classical opening! White places the bishop on c4 to target the f7 square, one of the weakest points around Black's king. The modern approach involves pushing c3 and d4 to advance the central pawns, leading to rich and complex middlegame positions. This opening branches into many famous variations like the Giuoco Piano and the Evans Gambit. From beginners to grandmasters, everyone plays this one — and it's one of my personal favorites too!</p>
+    <p class="lang-element-ja">💡 イタリアン・ゲームは、1.e4 e5 2.Nf3 Nc6 3.Bc4と展開する、とても古くからあるオープニングだよ。名前は、16世紀ごろのイタリアの指し手たちがこの形を研究したことに由来しているんだ。白はc4のビショップで黒のf7のポーンをねらいながら、素早くキャスリングして中央で戦う準備をするよ。3...Bc5と応じる形はジョコ・ピアノ（イタリア語で「静かな対局」）とも呼ばれていて、現代ではc3とd3でじっくり駒を並べる形が、トップ選手の間でもよく指されているんだ。</p>
+    <p class="lang-element-en">💡 The Italian Game, 1.e4 e5 2.Nf3 Nc6 3.Bc4, is one of the oldest openings in chess. Its name comes from the Italian players who studied it around the 16th century. White aims the c4 bishop at Black's f7 pawn, castles quickly and prepares to fight in the center. The line with 3...Bc5 is also called the Giuoco Piano (Italian for "quiet game"), and today the slow setup with c3 and d3 is popular even among top players.</p>
   </div>
 
   <div class="board-wrap">
@@ -209,61 +214,83 @@ const initialBoard = [
 // レッスンステップ（手・解説・ジーンの表情）
 // ============================================================
 const LESSON_STEPS = [
-  { move:null, moveLabel:{ja:'開始局面', en:'Starting Position'},
-    ja:'イタリアン・ゲームのレッスンを始めるよ！チェス史上もっとも古くから愛されているオープニングのひとつで、f7という黒の弱点を狙う積極的な一手だよ。ジーンと一緒に、一手ずつ「なぜその手を指すのか」を学んでいこう。',
-    en:"Let's start the Italian Game lesson! It's one of the oldest and most beloved openings in chess, aiming straight at Black's weak f7 square. Jene will explain why each move is played, one step at a time.",
+  { move:null, moveLabel:{ja:"開始局面", en:"Starting Position"},
+    ja:"イタリアン・ゲームのレッスンを始めるよ！このページでは、白がc3とd3でじっくり駒を並べる、現代でよく指されるジョコ・ピアニッシモという形を見ていくよ。白と黒がどちらもf7とf2をねらうビショップを置き、キャスリングのあとにポーンで少しずつ陣地を広げていく流れがポイントなんだ。一手ずつジーンと一緒に、なぜその手を指すのかを学んでいこう。",
+    en:"Let's start the Italian Game lesson! On this page we follow the Giuoco Pianissimo, the slow setup with c3 and d3 that is popular in modern chess. The key is how both sides place bishops aiming at f7 and f2, castle, and then slowly gain space with their pawns. Jene will walk you through why each move is played, one step at a time.",
     fox:'welcome' },
-   { move:{from:[6,4],to:[4,4]}, moveLabel:{ja:'1. e4', en:'1. e4'},
-    ja:'白はe4で中央を制圧するよ。ビショップとクイーンの通り道を同時に開く、効率の良い一手だね。',
-    en:'White claims the center with 1.e4, opening lines for the bishop and queen in the same move.',
+  { move:{from:[6,4],to:[4,4]}, moveLabel:{ja:"1. e4", en:"1. e4"},
+    ja:"白はポーンをe4へ進めるよ。白は中央のマスを押さえながら、ビショップとクイーンが動く道を開けるんだ。",
+    en:"White pushes the pawn to e4. White takes control of central squares and opens lines for the bishop and queen.",
     fox:'normal' },
-  { move:{from:[1,4],to:[3,4]}, moveLabel:{ja:'1...e5', en:'1...e5'},
-    ja:'黒も同じくe5で対抗。中央の取り合いはお互い様、というバランスを保つよ。',
-    en:'Black mirrors with 1...e5, keeping the fight for the center balanced.',
+  { move:{from:[1,4],to:[3,4]}, moveLabel:{ja:"1...e5", en:"1...e5"},
+    ja:"黒はポーンをe5へ進めるよ。黒も同じように中央を押さえて、白のポーンと向かい合う形を作るんだ。",
+    en:"Black pushes the pawn to e5. Black also claims the center, setting up a pawn face-off with White.",
     fox:'normal' },
-  { move:{from:[7,6],to:[5,5]}, moveLabel:{ja:'2. Nf3', en:'2. Nf3'},
-    ja:'白はナイトをf3に展開。e5ポーンに狙いをつけながら、キングサイドの守りも整えていくよ。',
-    en:'White develops the knight to f3, eyeing the e5 pawn while preparing kingside safety.',
+  { move:{from:[7,6],to:[5,5]}, moveLabel:{ja:"2. Nf3", en:"2. Nf3"},
+    ja:"白はナイトをf3へ進めるよ。白のナイトは展開しながら、黒のe5のポーンを攻撃しているんだ。",
+    en:"White develops the knight to f3. White's knight develops while attacking Black's e5 pawn.",
     fox:'normal' },
-  { move:{from:[0,1],to:[2,2]}, moveLabel:{ja:'2...Nc6', en:'2...Nc6'},
-    ja:'黒もナイトをc6へ。e5ポーンをしっかり守る、自然な一手だよ。',
-    en:'Black develops the knight to c6, defending the e5 pawn.',
+  { move:{from:[0,1],to:[2,2]}, moveLabel:{ja:"2...Nc6", en:"2...Nc6"},
+    ja:"黒はナイトをc6へ進めるよ。黒はナイトを展開しながら、e5のポーンを守るんだ。",
+    en:"Black develops the knight to c6. Black develops a piece and defends the e5 pawn at the same time.",
     fox:'normal' },
-  { move:{from:[7,5],to:[4,2]}, moveLabel:{ja:'3. Bc4（イタリアン！）', en:'3. Bc4 (Italian!)'},
-    ja:'ここが本題、イタリアン・ゲームの一手！ビショップをc4に出して、黒のキング周りの弱点f7に狙いをつけるよ。これが「イタリアン」と呼ばれる所以なんだ。',
-    en:"Here's the Italian Game move! White develops the bishop to c4, taking aim at f7 \u2014 one of the weakest squares around Black's king. This is the defining idea of the Italian Game.",
+  { move:{from:[7,5],to:[4,2]}, moveLabel:{ja:"3. Bc4（イタリアン！）", en:"3. Bc4 (Italian!)"},
+    ja:"ここがイタリアン・ゲームの一手！白はビショップをc4へ進めて、黒のf7のポーンに利かせるよ。黒のf7のポーンは、今はe8のキングだけに守られている、キングのそばの弱いマスなんだ。",
+    en:"Here's the Italian Game! White develops the bishop to c4, aiming at Black's f7 pawn. Black's f7 pawn is defended only by the king on e8 right now, making it a weak point near the king.",
     fox:'happy' },
-  { move:{from:[0,5],to:[3,2]}, moveLabel:{ja:'3...Bc5', en:'3...Bc5'},
-    ja:'黒も同じくビショップをc5へ。鏡のような展開で、お互いがf7とf2という相手の弱点をにらみ合う均衡した局面が生まれるよ。',
-    en:'Black mirrors with 3...Bc5, creating a symmetrical standoff where both sides eye the f7 and f2 weaknesses.',
-    fox:'quiz' },
-  { move:{from:[6,2],to:[5,2]}, moveLabel:{ja:'4. c3', en:'4. c3'},
-    ja:'白はc3で、次のd4突きを支える準備をするよ。',
-    en:'White plays 4.c3, preparing to support a future d4 push.',
+  { move:{from:[0,5],to:[3,2]}, moveLabel:{ja:"3...Bc5", en:"3...Bc5"},
+    ja:"黒もビショップをc5へ進めるよ。黒のビショップは白のf2のポーンに利いて、白と同じようにキングのそばの弱いマスをねらうんだ。黒のビショップは、まだ空いているd4のマスにも利かせて、白がd4と突くのをけん制しているよ。",
+    en:"Black also develops the bishop to c5. Black's bishop aims at White's f2 pawn, targeting the weak point near White's king just as White did. Black's bishop also covers the empty d4 square, discouraging White from pushing d4.",
+    jaMore:"黒はこの手の代わりに3...Nf6と指して、白のe4のポーンを攻撃する形も人気があるよ。この形はツー・ナイツ・ディフェンスと呼ばれているんだ。",
+    enMore:"Instead of this move, Black can also play 3...Nf6, attacking White's e4 pawn. This is called the Two Knights Defense.",
     fox:'normal' },
-  { move:{from:[0,6],to:[2,5]}, moveLabel:{ja:'4...Nf6', en:'4...Nf6'},
-    ja:'黒はナイトをf6へ展開。e4ポーンに反撃しながら、キングサイドの準備も進めるよ。',
-    en:'Black develops the knight to f6, counter-attacking e4 while preparing to castle.',
+  { move:{from:[6,2],to:[5,2]}, moveLabel:{ja:"4. c3", en:"4. c3"},
+    ja:"白はポーンをc3へ進めるよ。白はまだ空いているd4のマスに利かせて、あとでd4と突く準備をするんだ。白のc3のポーンは、b4のマスにも利いているよ。",
+    en:"White pushes the pawn to c3. White covers the empty d4 square, preparing to push d4 later. White's c3 pawn also covers the b4 square.",
+    jaMore:"白はこの手の代わりに4.b4とポーンを差し出して、黒のビショップを追いながら素早く攻める、エヴァンズ・ギャンビットという形もあるよ。",
+    enMore:"Instead of this move, White can offer a pawn with 4.b4, chasing Black's bishop and attacking quickly. This is called the Evans Gambit.",
     fox:'normal' },
-  { move:{from:[6,3],to:[5,3]}, moveLabel:{ja:'5. d3', en:'5. d3'},
-    ja:'白はd3で控えめに中央を支えるよ。激しい変化（エヴァンズ・ギャンビットなど）を避けて、じっくり駒を展開していく現代的なプランなんだ。',
-    en:'White plays the modest 5.d3, supporting the center while avoiding sharp lines like the Evans Gambit \u2014 a more patient, modern approach.',
-    fox:'wink' },
-   { move:{from:[1,3],to:[2,3]}, moveLabel:{ja:'5...d6', en:'5...d6'},
-    ja:'黒もd6で中央を支えるよ。これでc8のビショップの逃げ道も確保できるんだ。',
-    en:'Black supports the center in turn with 5...d6, which also opens a path for the bishop on c8.',
+  { move:{from:[0,6],to:[2,5]}, moveLabel:{ja:"4...Nf6", en:"4...Nf6"},
+    ja:"黒はナイトをf6へ進めるよ。黒はナイトを展開しながら、白のe4のポーンを攻撃するんだ。白のe4のポーンは、今はどの駒にも守られていないよ。",
+    en:"Black develops the knight to f6. Black develops while attacking White's e4 pawn. White's e4 pawn isn't defended by any piece right now.",
     fox:'normal' },
-  { move:{from:[7,4],to:[7,6],castle:{from:[7,7],to:[7,5]}}, moveLabel:{ja:'6. O-O', en:'6. O-O'},
-    ja:'白はキャスリングでキングを安全な場所へ。序盤の最優先事項、「キングの安全」が片付いたよ。',
-    en:'White castles kingside, tucking the king away safely \u2014 opening priority number one, done.',
-    fox:'happy' },
-  { move:{from:[0,4],to:[0,6],castle:{from:[0,7],to:[0,5]}}, moveLabel:{ja:'6...O-O', en:'6...O-O'},
-    ja:'黒も同じくキャスリングして、両者ともキングの安全を確保したよ。',
-    en:'Black castles too, and both kings are now safely tucked away.',
+  { move:{from:[6,3],to:[5,3]}, moveLabel:{ja:"5. d3", en:"5. d3"},
+    ja:"白はポーンをd3へ進めるよ。白はd3のポーンでe4のポーンを守って、c1のビショップの道も開けるんだ。白はすぐにd4と突かずに、じっくり駒を並べてから中央で戦う作戦を選ぶよ。",
+    en:"White pushes the pawn to d3. White's d3 pawn defends the e4 pawn and also opens the path for the c1 bishop. Rather than pushing d4 right away, White chooses to set up the pieces patiently before fighting in the center.",
+    jaMore:"白はこの手の代わりに5.d4と突いて、すぐに中央で戦う形もあるよ。この形は、黒がe5のポーンで取り返したあとの激しい戦いになりやすいんだ。",
+    enMore:"Instead of this move, White can push 5.d4 and fight in the center right away. That line tends to lead to sharp play after Black captures with the e5 pawn.",
     fox:'normal' },
-  { move:{from:[7,5],to:[7,4]}, moveLabel:{ja:'7. Re1', en:'7. Re1'},
-    ja:'白はルークをe1へ。e4ポーンを後ろから支えて、これで本譜は一段落。続きはぜひ自分で指してみてね！',
-    en:"White plays 7.Re1, supporting the e4 pawn from behind. That's the main line \u2014 try continuing the game yourself from here!",
+  { move:{from:[1,3],to:[2,3]}, moveLabel:{ja:"5...d6", en:"5...d6"},
+    ja:"黒はポーンをd6へ進めるよ。黒はd6のポーンでe5のポーンを守り、e5のポーンを守る駒をc6のナイトと合わせて2つにするんだ。黒はc8のビショップの道も開けて、g4などへ出られるようにしたよ。",
+    en:"Black pushes the pawn to d6. Black's d6 pawn defends the e5 pawn, so e5 is now defended twice together with the c6 knight. Black also opens the path for the c8 bishop, so it can come out to squares like g4.",
+    fox:'normal' },
+  { move:{from:[7,4],to:[7,6],castle:{from:[7,7],to:[7,5]}}, moveLabel:{ja:"6. O-O", en:"6. O-O"},
+    ja:"白はキャスリングでキングを安全な場所へ動かすよ。白のキングはg1へ移り、h1にいたルークはf1へ出てくるんだ。白のf2のポーンは、これでf1のルークとg1のキングに守られたよ。",
+    en:"White castles, bringing the king to safety. White's king goes to g1, and the rook from h1 comes to f1. White's f2 pawn is now defended by the f1 rook and the g1 king.",
+    fox:'normal' },
+  { move:{from:[0,4],to:[0,6],castle:{from:[0,7],to:[0,5]}}, moveLabel:{ja:"6...O-O", en:"6...O-O"},
+    ja:"黒もキャスリングでキングを安全な場所へ動かすよ。黒のキングはg8へ移り、h8にいたルークはf8へ出てくるんだ。黒のf7のポーンも、これでf8のルークとg8のキングに守られたよ。",
+    en:"Black also castles, bringing the king to safety. Black's king goes to g8, and the rook from h8 comes to f8. Black's f7 pawn is now defended by the f8 rook and the g8 king.",
+    fox:'normal' },
+  { move:{from:[7,5],to:[7,4]}, moveLabel:{ja:"7. Re1", en:"7. Re1"},
+    ja:"白はf1のルークをe1へ動かすよ。白のルークはe4のポーンを守り、e4のポーンを守る駒をd3のポーンと合わせて2つにするんだ。白はこのルークで、あとでd4と突いて中央が開いたときに、e1からe8の縦のマスで働かせる準備もしているよ。",
+    en:"White moves the f1 rook to e1. White's rook defends the e4 pawn, so e4 is now defended twice together with the d3 pawn. White is also preparing to use this rook along the e1–e8 file once the center opens after a later d4.",
+    fox:'normal' },
+  { move:{from:[1,0],to:[2,0]}, moveLabel:{ja:"7...a6", en:"7...a6"},
+    ja:"黒はポーンをa6へ進めるよ。黒はc5のビショップの逃げ道としてa7のマスを空けておくんだ。黒のa6のポーンは、まだ空いているb5のマスにも利いていて、白のポーンや駒がb5へ来るのを防いでいるよ。",
+    en:"Black pushes the pawn to a6. Black clears the a7 square as a retreat for the c5 bishop. Black's a6 pawn also covers the empty b5 square, keeping White's pawns and pieces from coming to b5.",
+    fox:'normal' },
+  { move:{from:[6,0],to:[4,0]}, moveLabel:{ja:"8. a4", en:"8. a4"},
+    ja:"白はポーンをa4へ進めるよ。白はクイーンサイドで場所を広げて、次にa5と突いてb6のマスを押さえる準備をするんだ。白のa4のポーンは、c4のビショップと合わせて、まだ空いているb5のマスにも利いているよ。",
+    en:"White pushes the pawn to a4. White gains space on the queenside and prepares to push a5 next, taking away the b6 square. Together with the c4 bishop, White's a4 pawn also covers the empty b5 square.",
+    fox:'normal' },
+  { move:{from:[3,2],to:[1,0]}, moveLabel:{ja:"8...Ba7", en:"8...Ba7"},
+    ja:"黒はc5のビショップをa7へ下げるよ。黒は、白がd4やb4と突いてビショップを追ってくる前に、先に安全なマスへ動かしておくんだ。黒のa7のビショップは、b6、c5、d4、e3を通って、白のf2のポーンにまだ利いているよ。",
+    en:"Black retreats the c5 bishop to a7. Black moves the bishop to a safe square in advance, before White can chase it with d4 or b4. Black's bishop on a7 still aims at White's f2 pawn through b6, c5, d4 and e3.",
+    fox:'normal' },
+  { move:{from:[6,7],to:[5,7]}, moveLabel:{ja:"9. h3", en:"9. h3"},
+    ja:"白はポーンをh3へ進めるよ。白はまだ空いているg4のマスに利かせて、黒のビショップがg4へ来てf3のナイトをピンするのを防ぐんだ。白は駒の配置がほぼ整い、黒の準備がすんだら、d4と突いて中央で戦う形になったね。この後は、白がNbd2からf1、g3へナイトを回し、黒はNe7やh6で対抗するのが典型的な流れだよ。これで本譜は一段落、続きはぜひ自分で指してみてね！",
+    en:"White pushes the pawn to h3. White covers the empty g4 square, stopping Black's bishop from coming to g4 and pinning the f3 knight. White's pieces are almost set up, ready to push d4 and fight in the center when the time is right. A typical continuation is for White to reroute the knight via Nbd2, f1 and g3, while Black responds with ...Ne7 or ...h6. That's the main line — try continuing the game yourself from here!",
     fox:'happy' }
 ];
 
@@ -353,7 +380,19 @@ function renderStep(){
   const step = LESSON_STEPS[currentStep];
   renderBoard(boardSnapshots[currentStep]);
   document.getElementById('moveLabel').textContent = (step.moveLabel && step.moveLabel[currentLang]) || '';
-  document.getElementById('commentaryText').textContent = step[currentLang];
+  const ctEl = document.getElementById('commentaryText');
+  const moreText = step[currentLang + 'More'];
+  ctEl.innerHTML = step[currentLang] + (moreText
+    ? '<details class="more-detail"><summary>' + (currentLang === 'ja' ? '💡 もっと詳しく知りたい方へ' : '💡 Want to know more?') + '</summary><div class="more-body">' + moreText + '</div></details>'
+    : '');
+  ctEl.scrollTop = 0;
+  const moreEl = ctEl.querySelector('details.more-detail');
+  if (moreEl) {
+    moreEl.addEventListener('toggle', function(){
+      if (moreEl.open) { ctEl.scrollTop = moreEl.offsetTop - ctEl.offsetTop; }
+      adjustBottomPadding();
+    });
+  }
   document.getElementById('foxAvatar').src = FOX_BY_MOOD[step.fox] || FOX_BY_MOOD.normal;
   document.getElementById('lessonProgress').textContent = currentStep + ' / ' + (LESSON_STEPS.length - 1);
   document.getElementById('btnPrev').disabled = currentStep === 0;

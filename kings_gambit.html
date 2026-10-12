@@ -103,6 +103,11 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
   font-size: 1rem;
   color: var(--text-sub);
 }
+.commentary-text a, .opening-intro a { color:var(--brown); text-decoration:underline; font-weight:700; }
+.commentary-text a:hover, .opening-intro a:hover { color:var(--brown-dark); }
+.more-detail { margin-top:8px; border-top:1px dashed var(--brown-light); padding-top:6px; }
+.more-detail summary { cursor:pointer; font-weight:700; color:var(--brown); font-size:0.92rem; list-style-position:inside; }
+.more-detail .more-body { margin-top:6px; font-size:0.94rem; }
 </style>
   <script src="board-theme.js"></script>
 </head>
@@ -121,8 +126,8 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
   <h1 class="opening-title lang-element-en">King's Gambit</h1>
 
   <div class="opening-intro">
-    <p class="lang-element-ja">💡 キングズ・ギャンビットは2.f4とポーンを差し出すことで素早い展開と攻撃的な主導権を握るロマンチックなオープニングだよ！黒がfxe4とポーンを取れば白はf4のポーンを失うけど、代わりにe4のマスのコントロールと素早いピース展開を手に入れるんだ。白の狙いはNf3-Bc4-O-Oと素早くキャスリングして、キングサイドへの猛攻を仕掛けること。19世紀に最も流行した古典的な戦法で、モルフィーやアンダーセンといった伝説的な棋士たちが愛用したんだ。ポーンを犠牲にして相手のキングを攻める積極的なスタイルが好きなプレイヤーにはたまらない一手！</p>
-    <p class="lang-element-en">💡 The King's Gambit offers a pawn with 2.f4 in exchange for rapid development and a fierce attacking initiative! If Black accepts with fxe4, White loses the f4 pawn but gains control of the e4 square and rapid piece development. White's plan is to castle fast with Nf3-Bc4-O-O and launch a powerful kingside attack. This was the most popular opening in the 19th century, loved by legendary players like Morphy and Anderssen. Even in modern chess it works as a powerful surprise weapon. If you love aggressive, tactical chess, the King's Gambit is absolutely for you!</p>
+    <p class="lang-element-ja">💡 キングズ・ギャンビットは、1.e4 e5 2.f4とポーンを差し出して、素早い展開と攻めをねらう、とても古いオープニングだよ。19世紀にもっとも流行した戦法で、アンデルセンやモーフィーといった伝説的な指し手たちが好んで使ったんだ。このページの3.Nf3 g5 4.h4 g4 5.Ne5は、19世紀にパリで活躍したライオネル・キーゼリツキーの名前がついた形で、1960年にスパスキーがフィッシャーに勝った対局でも指されたよ。現代では、正しく守れば黒が少し良いと考えられているけれど、相手が慣れていないと一気に攻めが決まることもある、ロマンあふれるオープニングなんだ。</p>
+    <p class="lang-element-en">💡 The King's Gambit, 1.e4 e5 2.f4, offers a pawn for fast development and an attack, and it's one of the oldest openings in chess. It was the most popular opening of the 19th century, loved by legendary players like Anderssen and Morphy. The line on this page, 3.Nf3 g5 4.h4 g4 5.Ne5, is named after Lionel Kieseritzky, who was active in Paris in the 19th century, and it was played in Spassky's 1960 win over Fischer. Today it's thought that Black is slightly better with accurate defense, but against an unprepared opponent the attack can break through quickly, which makes it a truly romantic opening.</p>
   </div>
 
   <div class="board-wrap">
@@ -196,60 +201,80 @@ const initialBoard = [
 // ============================================================
 const LESSON_STEPS = [
   { move:null, moveLabel:{ja:"開始局面", en:"Starting Position"},
-    ja:"キングズ・ギャンビットのレッスンを始めるよ！ポーンを犠牲にして素早い展開と攻撃的な主導権を握る、ロマンチックなオープニングだよ。ジーンと一緒に、一手ずつ「なぜその手を指すのか」を学んでいこう。",
-    en:"Let's start the King's Gambit lesson! White sacrifices a pawn for rapid development and a fierce attacking initiative — pure romantic-era chess. Jene will explain why each move is played, one step at a time.",
+    ja:"キングズ・ギャンビットのレッスンを始めるよ！このページでは、白がh4とNe5で黒のポーンを崩しにいく、キーゼリツキー・ギャンビットを見ていくよ。白がポーンを差し出す代わりに素早く駒を展開し、黒がもらったポーンを守りながら反撃する流れがポイントなんだ。一手ずつジーンと一緒に、なぜその手を指すのかを学んでいこう。",
+    en:"Let's start the King's Gambit lesson! On this page we follow the Kieseritzky Gambit, where White breaks up Black's pawns with h4 and Ne5. The key is how White gives up pawns in exchange for fast development, while Black holds on to the extra pawn and counterattacks. Jene will walk you through why each move is played, one step at a time.",
     fox:'welcome' },
   { move:{from:[6,4],to:[4,4]}, moveLabel:{ja:"1. e4", en:"1. e4"},
-    ja:"白はe4で中央を制圧するよ。ビショップとクイーンの通り道を同時に開く、効率の良い一手だね。",
-    en:"White claims the center with 1.e4, opening lines for the bishop and queen in the same move.",
+    ja:"白はポーンをe4へ進めるよ。白は中央のマスを押さえながら、ビショップとクイーンが動く道を開けるんだ。",
+    en:"White pushes the pawn to e4. White takes control of central squares and opens lines for the bishop and queen.",
     fox:'normal' },
   { move:{from:[1,4],to:[3,4]}, moveLabel:{ja:"1...e5", en:"1...e5"},
-    ja:"黒も同じくe5で対抗。中央の取り合いはお互い様、というバランスを保つよ。",
-    en:"Black mirrors with 1...e5, keeping the fight for the center balanced.",
+    ja:"黒はポーンをe5へ進めるよ。黒も同じように中央を押さえて、白のポーンと向かい合う形を作るんだ。",
+    en:"Black pushes the pawn to e5. Black also claims the center, setting up a pawn face-off with White.",
     fox:'normal' },
   { move:{from:[6,5],to:[4,5]}, moveLabel:{ja:"2. f4（キングズ・ギャンビット！）", en:"2. f4 (King's Gambit!)"},
-    ja:"ここが本題、キングズ・ギャンビットの一手！ポーンを差し出して、素早い展開とe4のマスのコントロールを目指すよ。",
-    en:"Here's the King's Gambit move! White offers a pawn in exchange for rapid development and control of the e4 square.",
+    ja:"ここがキングズ・ギャンビットの一手！白はポーンをf4へ進めて、黒のe5のポーンに取らせるように差し出すよ。白はe5のポーンを中央からどかして、あとでd4と突き、中央を大きく押さえるのがねらいなんだ。そのかわり、白のキングのそばのe1からh4への斜めが開くので、白は注意も必要だよ。",
+    en:"Here's the King's Gambit! White pushes the pawn to f4, offering it to Black's e5 pawn. White's aim is to remove the e5 pawn from the center, then push d4 later and take a big grip on the center. In return, the e1–h4 diagonal next to White's king opens up, so White has to be careful.",
     fox:'happy' },
   { move:{from:[3,4],to:[4,5]}, moveLabel:{ja:"2...exf4", en:"2...exf4"},
-    ja:"黒はポーンを受け取るよ（キングズ・ギャンビット・アクセプテッド）。",
-    en:"Black accepts the pawn — the King's Gambit Accepted.",
-    fox:'quiz' },
-    { move:{from:[7,6],to:[5,5]}, moveLabel:{ja:"3. Nf3", en:"3. Nf3"},
-    ja:"白はナイトをf3へ。ここでは駒の展開を優先するよ。f4は黒に取られたポーンだけど、慌てて今すぐ取り返しには行かず、この後Bc4のような手を通じて、じっくり主導権を握っていくプランなんだ。",
-    en:"White develops the knight to f3, prioritizing development. The pawn on f4 now belongs to Black, but rather than rushing to win it back immediately, White focuses on building up the initiative first with moves like Bc4.",
+    ja:"黒はe5のポーンで、f4にいた白のポーンを取るよ。黒はポーンを1つ多く持ち、白は中央のe4のポーンだけが残る形になるんだ。",
+    en:"Black's e5 pawn captures White's pawn on f4. Black is now a pawn up, and White is left with only the e4 pawn in the center.",
+    jaMore:"黒はこの手の代わりに、ポーンを取らずに2...Bc5などで駒を展開する<a href='kings_gambit_declined.html'>キングズ・ギャンビット辞退</a>や、2...d5と中央で反撃する<a href='falkbeer.html'>ファルクベアー・カウンターギャンビット</a>を選ぶこともできるよ。",
+    enMore:"Instead of this move, Black can decline the pawn and develop with 2...Bc5, the <a href='kings_gambit_declined.html?lang=en'>King's Gambit Declined</a>, or counterattack in the center with 2...d5, the <a href='falkbeer.html?lang=en'>Falkbeer Countergambit</a>.",
     fox:'normal' },
-  { move:{from:[1,3],to:[3,3]}, moveLabel:{ja:"3...d5", en:"3...d5"},
-    ja:"黒はd5で反撃！白のe4ポーンに挑戦するよ。",
-    en:"Black counters with 3...d5, challenging the e4 pawn.",
-    fox:'wink' },
-  { move:{from:[4,4],to:[3,3]}, moveLabel:{ja:"4. exd5", en:"4. exd5"},
-    ja:"白はexd5とポーンを取るよ。",
-    en:"White captures with 4.exd5.",
+  { move:{from:[7,6],to:[5,5]}, moveLabel:{ja:"3. Nf3", en:"3. Nf3"},
+    ja:"白はナイトをf3へ進めるよ。白はナイトを展開しながら、まだ空いているh4のマスに利かせて、黒のクイーンがh4へ来てチェックするのを防ぐんだ。",
+    en:"White develops the knight to f3. White develops while covering the empty h4 square, stopping Black's queen from coming to h4 with check.",
     fox:'normal' },
-  { move:{from:[0,6],to:[2,5]}, moveLabel:{ja:"4...Nf6", en:"4...Nf6"},
-    ja:"黒はナイトをf6へ展開しながら、d5のポーンを回収する準備をするよ。",
-    en:"Black develops the knight to f6, preparing to recover the pawn on d5.",
+  { move:{from:[1,6],to:[3,6]}, moveLabel:{ja:"3...g5", en:"3...g5"},
+    ja:"黒はポーンをg5へ進めるよ。黒はg5のポーンでf4のポーンを守り、もらったポーンを返さないようにするんだ。黒は次にg4と突いて、f3のナイトを追い払うこともねらっているよ。",
+    en:"Black pushes the pawn to g5. Black's g5 pawn defends the f4 pawn, so Black can keep the extra pawn. Black is also aiming to push ...g4 next and chase away the f3 knight.",
     fox:'normal' },
-    { move:{from:[7,5],to:[3,1]}, moveLabel:{ja:"5. Bb5+", en:"5. Bb5+"},
-    ja:"白はビショップをb5へ出してチェック！ただのチェックじゃなくて、この後の展開まで見据えた一手なんだ。黒がc6でブロックした後、白がdxc6と取ってナイトに取り返させれば、黒のナイトはd4のマスへの利きを失う。そうすると白は次にd4と、心置きなく中央を制圧できるようになるよ。",
-    en:"White checks with 5.Bb5+. This isn't just about gaining a tempo — it sets up a deeper plan. After Black blocks with ...c6 and White captures on c6, forcing Black's knight to recapture there, that knight loses its grip on the d4 square. That clears the way for White to safely claim the center with d4 next.",
-    fox:'happy' },
-  { move:{from:[1,2],to:[2,2]}, moveLabel:{ja:"5...c6", en:"5...c6"},
-    ja:"黒はc6でチェックをブロックするよ。",
-    en:"Black blocks the check with 5...c6.",
+  { move:{from:[6,7],to:[4,7]}, moveLabel:{ja:"4. h4", en:"4. h4"},
+    ja:"白はポーンをh4へ進めて、黒のg5のポーンを攻撃するよ。白はf3のナイトとh4のポーンの2つでg5を攻撃して、黒のf4とg5のポーンのつながりを崩そうとするんだ。黒のg5のポーンは、今はd8のクイーンだけに守られているよ。",
+    en:"White pushes the pawn to h4, attacking Black's g5 pawn. White attacks g5 twice, with the f3 knight and the h4 pawn, trying to break up Black's chain of f4 and g5 pawns. Black's g5 pawn is defended only by the d8 queen right now.",
+    jaMore:"白はこの手の代わりに4.Bc4と指して、ビショップを素早く展開し、黒のf7のポーンをねらう形もよく指されるよ。",
+    enMore:"Instead of this move, White often plays 4.Bc4, developing the bishop quickly and aiming at Black's f7 pawn.",
     fox:'normal' },
-     { move:{from:[3,3],to:[2,2]}, moveLabel:{ja:"6. dxc6", en:"6. dxc6"},
-    ja:"白はdxc6とポーンを取るよ。ここで他の手を指してしまうと、黒からcxd5とポーンを取り返されて、白はせっかく先に進めたポーンを失ってしまうんだ。",
-    en:"White captures with 6.dxc6. Playing anything else here would let Black simply recapture with ...cxd5, and White would lose the pawn that had been pushed ahead.",
+  { move:{from:[3,6],to:[4,6]}, moveLabel:{ja:"4...g4", en:"4...g4"},
+    ja:"黒はg5のポーンをg4へ進めて、f3のナイトを攻撃するよ。黒はポーンを取られる前に先へ進めて、白のナイトを追い払うんだ。",
+    en:"Black pushes the g5 pawn to g4, attacking the f3 knight. Black advances the pawn before it can be captured and chases White's knight away.",
     fox:'normal' },
-    { move:{from:[0,1],to:[2,2]}, moveLabel:{ja:"6...Nxc6", en:"6...Nxc6"},
-    ja:"黒はナイトで取り返すよ。ポーン(bxc6)で取り返す道もあったけど、それだとナイトの展開が遅れてしまう。ナイトで取れば、駒を展開しながらd4のマスへの利きも確保できる、一石二鳥の一手なんだ。",
-    en:"Black recaptures with the knight. Recapturing with the pawn (...bxc6) was also possible, but that would leave the knight undeveloped. Taking with the knight develops a piece while also gaining control over the d4 square — two birds with one stone.",
+  { move:{from:[5,5],to:[3,4]}, moveLabel:{ja:"5. Ne5", en:"5. Ne5"},
+    ja:"白はナイトをe5へ進めるよ。この形はキーゼリツキー・ギャンビットと呼ばれているんだ。白のe5のナイトは、d1のクイーンと合わせて黒のg4のポーンを2つで攻撃し、黒のf7のポーンにも利いているよ。",
+    en:"White moves the knight to e5. This line is called the Kieseritzky Gambit. White's knight on e5 attacks Black's g4 pawn twice together with the d1 queen, and it also hits Black's f7 pawn.",
     fox:'normal' },
-  { move:{from:[6,3],to:[4,3]}, moveLabel:{ja:"7. d4", en:"7. d4"},
-    ja:"白はd4で中央を一気に強化するよ。これで本譜は一段落、続きはぜひ自分で指してみてね！",
-    en:"White strengthens the center with 7.d4. That's the main line — try continuing the game yourself from here!",
+  { move:{from:[0,6],to:[2,5]}, moveLabel:{ja:"5...Nf6", en:"5...Nf6"},
+    ja:"黒はナイトをf6へ進めるよ。黒のナイトはg4のポーンを守りながら、白のe4のポーンを攻撃するんだ。白のe4のポーンは、今はどの駒にも守られていないよ。",
+    en:"Black develops the knight to f6. Black's knight defends the g4 pawn while attacking White's e4 pawn. White's e4 pawn isn't defended by any piece right now.",
+    fox:'normal' },
+  { move:{from:[7,5],to:[4,2]}, moveLabel:{ja:"6. Bc4", en:"6. Bc4"},
+    ja:"白はビショップをc4へ進めるよ。白はe5のナイトとc4のビショップの2つで、黒のf7のポーンを攻撃するんだ。黒のf7のポーンはe8のキングにしか守られていないので、白は次にナイトでf7を取り、d8のクイーンとh8のルークを同時にねらう手をねらっているよ。",
+    en:"White develops the bishop to c4. White attacks Black's f7 pawn twice, with the e5 knight and the c4 bishop. Since Black's f7 pawn is defended only by the king on e8, White threatens to take on f7 with the knight, hitting the d8 queen and the h8 rook at the same time.",
+    fox:'normal' },
+  { move:{from:[1,3],to:[3,3]}, moveLabel:{ja:"6...d5", en:"6...d5"},
+    ja:"黒はポーンをd5へ進めるよ。黒のd5のポーンは、c4のビショップからf7への斜めをふさいで、白のねらいを止めるんだ。黒はd5のポーンでc4のビショップを攻撃しながら、f6のナイトと合わせてe4のポーンも2つで攻撃しているよ。",
+    en:"Black pushes the pawn to d5. Black's d5 pawn blocks the diagonal from the c4 bishop to f7, stopping White's threat. Black's d5 pawn attacks the c4 bishop and, together with the f6 knight, attacks the e4 pawn twice.",
+    fox:'normal' },
+  { move:{from:[4,4],to:[3,3]}, moveLabel:{ja:"7. exd5", en:"7. exd5"},
+    ja:"白はe4のポーンで、d5にいた黒のポーンを取るよ。白はビショップへの攻撃をなくしながら、d5に入ったポーンをc4のビショップで守るんだ。黒はf6のナイトとd8のクイーンで、白のd5のポーンを攻撃しているよ。",
+    en:"White's e4 pawn captures Black's pawn on d5. White removes the attack on the bishop, and the c4 bishop defends the pawn on d5. Black attacks White's d5 pawn with the f6 knight and the d8 queen.",
+    fox:'normal' },
+  { move:{from:[0,5],to:[2,3]}, moveLabel:{ja:"7...Bd6", en:"7...Bd6"},
+    ja:"黒はビショップをd6へ進めて、白のe5のナイトを攻撃するよ。白のe5のナイトは、今はどの駒にも守られていないんだ。黒はビショップを展開して、キャスリングの準備も進めているよ。",
+    en:"Black develops the bishop to d6, attacking White's knight on e5. White's e5 knight isn't defended by any piece right now. By developing the bishop, Black also gets closer to castling.",
+    fox:'normal' },
+  { move:{from:[6,3],to:[4,3]}, moveLabel:{ja:"8. d4", en:"8. d4"},
+    ja:"白はポーンをd4へ進めて、e5のナイトを守るよ。白はc1のビショップの道も開けて、黒のf4のポーンに利かせるんだ。",
+    en:"White pushes the pawn to d4, defending the knight on e5. White also opens the path for the c1 bishop, which now hits Black's f4 pawn.",
+    fox:'normal' },
+  { move:{from:[2,5],to:[3,7]}, moveLabel:{ja:"8...Nh5", en:"8...Nh5"},
+    ja:"黒はナイトをh5へ動かして、f4のポーンを守るよ。黒のナイトがf6からどいたことで、d8のクイーンからh4への斜めも開き、黒のクイーンは白のh4のポーンに利いているんだ。白のh4のポーンは、今はh1のルークに守られているよ。",
+    en:"Black moves the knight to h5, defending the f4 pawn. With the knight gone from f6, the diagonal from the d8 queen to h4 opens, and Black's queen now hits White's h4 pawn. White's h4 pawn is defended by the h1 rook for now.",
+    fox:'normal' },
+  { move:{from:[7,4],to:[7,6],castle:{from:[7,7],to:[7,5]}}, moveLabel:{ja:"9. O-O", en:"9. O-O"},
+    ja:"白はキャスリングでキングを安全な場所へ動かすよ。白のf1のルークは、c1のビショップと合わせて黒のf4のポーンを2つで攻撃するんだ。その代わり、h1のルークがいなくなったので、白のh4のポーンは守りがなくなったよ。コンピューターの評価では黒が少し良いとされているけれど、白は駒の展開の速さと攻めの勢いで戦う、キングズ・ギャンビットらしい形だね。この後は、黒がQxh4でポーンを取るか、O-Oでキングを守り、白はRxf4やQe1で攻めを続けるのが典型的な流れだよ。これで本譜は一段落、続きはぜひ自分で指してみてね！",
+    en:"White castles, bringing the king to safety. White's f1 rook attacks Black's f4 pawn twice together with the c1 bishop. In return, with the rook gone from h1, White's h4 pawn is no longer defended. Computers rate Black as slightly better here, but White fights with faster development and attacking momentum, a typical King's Gambit position. A typical continuation is for Black to grab the pawn with ...Qxh4 or castle with ...O-O, while White keeps attacking with Rxf4 or Qe1. That's the main line — try continuing the game yourself from here!",
     fox:'happy' }
 ];
 
@@ -339,7 +364,19 @@ function renderStep(){
   const step = LESSON_STEPS[currentStep];
   renderBoard(boardSnapshots[currentStep]);
   document.getElementById('moveLabel').textContent = (step.moveLabel && step.moveLabel[currentLang]) || '';
-  document.getElementById('commentaryText').textContent = step[currentLang];
+  const ctEl = document.getElementById('commentaryText');
+  const moreText = step[currentLang + 'More'];
+  ctEl.innerHTML = step[currentLang] + (moreText
+    ? '<details class="more-detail"><summary>' + (currentLang === 'ja' ? '💡 もっと詳しく知りたい方へ' : '💡 Want to know more?') + '</summary><div class="more-body">' + moreText + '</div></details>'
+    : '');
+  ctEl.scrollTop = 0;
+  const moreEl = ctEl.querySelector('details.more-detail');
+  if (moreEl) {
+    moreEl.addEventListener('toggle', function(){
+      if (moreEl.open) { ctEl.scrollTop = moreEl.offsetTop - ctEl.offsetTop; }
+      adjustBottomPadding();
+    });
+  }
   document.getElementById('foxAvatar').src = FOX_BY_MOOD[step.fox] || FOX_BY_MOOD.normal;
   document.getElementById('lessonProgress').textContent = currentStep + ' / ' + (LESSON_STEPS.length - 1);
   document.getElementById('btnPrev').disabled = currentStep === 0;

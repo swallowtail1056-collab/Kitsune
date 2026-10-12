@@ -103,6 +103,11 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
   font-size: 1rem;
   color: var(--text-sub);
 }
+.commentary-text a, .opening-intro a { color:var(--brown); text-decoration:underline; font-weight:700; }
+.commentary-text a:hover, .opening-intro a:hover { color:var(--brown-dark); }
+.more-detail { margin-top:8px; border-top:1px dashed var(--brown-light); padding-top:6px; }
+.more-detail summary { cursor:pointer; font-weight:700; color:var(--brown); font-size:0.92rem; list-style-position:inside; }
+.more-detail .more-body { margin-top:6px; font-size:0.94rem; }
 </style>
   <script src="board-theme.js"></script>
 </head>
@@ -121,8 +126,8 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
   <h1 class="opening-title lang-element-en">Benoni Defense</h1>
 
   <div class="opening-intro">
-    <p class="lang-element-ja">💡 ベノニ・ディフェンスはd4に対して5...c5と突いて非対称な局面を作る攻撃的なオープニングだよ！白がd5と突けば黒はe6とぶつけてポーンを取り合い、d6-c5の非対称なポーン構造が生まれるんだ。白はクイーンサイドでスペース優位を持ち、黒はキングサイドでの積極的な攻撃を狙うよ。ロバート・フィッシャーが1972年の世界選手権でスパスキーに対して採用して世界的に有名になったんだ。「ベノニ」はヘブライ語で「悲しみの息子」という意味だけど、実際には豊富なカウンターアタックの可能性がある積極的な守りだよ！</p>
-    <p class="lang-element-en">💡 The Benoni Defense plays 5...c5 against d4 to create an asymmetrical, fighting position! If White pushes d5, Black exchanges with e6 to create the characteristic d6-c5 pawn structure. White gains queenside space while Black aims for active kingside play. Robert Fischer famously used this opening against Spassky in the 1972 World Championship. "Benoni" means "son of sorrow" in Hebrew, but the opening is actually full of rich counterattacking possibilities. A dynamic and exciting choice for players who love asymmetrical, fighting chess!</p>
+    <p class="lang-element-ja">💡 ベノニ・ディフェンスは、1.d4 Nf6 2.c4 c5と突いて、白のd4のポーンにすぐ挑む、攻撃的なオープニングだよ。ベノニという名前は、1825年に出版された本の題名『Ben-Oni』から来ていて、ヘブライ語で「悲しみの子」という意味なんだ。このページで扱うe6とexd5の形はモダン・ベノニと呼ばれ、白が中央、黒がクイーンサイドで多くのポーンを持つ、激しい戦いになりやすいよ。タリやフィッシャーなど、攻めの好きな世界チャンピオンが好んで指したんだ。</p>
+    <p class="lang-element-en">💡 The Benoni Defense is an aggressive opening in which Black challenges White's d4 pawn right away with 1.d4 Nf6 2.c4 c5. The name comes from the title of a book, Ben-Oni, published in 1825, which means “son of sorrow” in Hebrew. The structure on this page, with ...e6 and ...exd5, is called the Modern Benoni and tends to lead to sharp fights, with White having more pawns in the center and Black on the queenside. Attacking world champions such as Tal and Fischer liked to play it.</p>
   </div>
 
   <div class="board-wrap">
@@ -193,60 +198,84 @@ const initialBoard = [
 // ============================================================
 const LESSON_STEPS = [
   { move:null, moveLabel:{ja:"開始局面", en:"Starting Position"},
-    ja:"ベノニ・ディフェンスのレッスンを始めるよ！非対称な局面を作り出して、フィッシャーも愛用した積極的な反撃を狙う定跡だよ。ジーンと一緒に、一手ずつ「なぜその手を指すのか」を学んでいこう。",
-    en:"Let's start the Benoni Defense lesson! Black creates an asymmetrical fighting position, a weapon Fischer himself trusted. Jene will explain why each move is played, one step at a time.",
+    ja:"ベノニ・ディフェンスのレッスンを始めるよ！このページでは、黒がe6とexd5で中央のポーンを交換する、モダン・ベノニの形を見ていくよ。白が中央、黒がクイーンサイドで多くのポーンを持つ形になり、お互いにどう戦うのかがポイントなんだ。一手ずつジーンと一緒に、なぜその手を指すのかを学んでいこう。",
+    en:"Let's start the Benoni Defense lesson! On this page we follow the Modern Benoni, where Black trades in the center with ...e6 and ...exd5. White ends up with more pawns in the center and Black with more on the queenside, and the key is how each side fights from there. Jene will walk you through why each move is played, one step at a time.",
     fox:'welcome' },
   { move:{from:[6,3],to:[4,3]}, moveLabel:{ja:"1. d4", en:"1. d4"},
-    ja:"白はd4で中央を制圧するよ。",
-    en:"White plays 1.d4, claiming the center.",
+    ja:"白はポーンをd4へ進めるよ。白は中央のマスを押さえながら、c1のビショップの道を開けるんだ。",
+    en:"White pushes the pawn to d4. White takes control of central squares and opens the path for the c1 bishop.",
     fox:'normal' },
   { move:{from:[0,6],to:[2,5]}, moveLabel:{ja:"1...Nf6", en:"1...Nf6"},
-    ja:"黒はナイトをf6へ展開するよ。中央のe4・d5マスに利きを保ちながら、局面を柔軟にしておく一手だね。",
-    en:"Black develops the knight to f6, keeping an eye on the central e4 and d5 squares while staying flexible about how the position will unfold.",
+    ja:"黒はナイトをf6へ進めるよ。黒はナイトを展開しながら、白がe4と突くのをけん制するんだ。",
+    en:"Black develops the knight to f6. Black develops while discouraging White from pushing e4.",
     fox:'normal' },
   { move:{from:[6,2],to:[4,2]}, moveLabel:{ja:"2. c4", en:"2. c4"},
-    ja:"白はc4でさらに中央を広げるよ。",
-    en:"White expands the center with 2.c4.",
+    ja:"白はポーンをc4へ進めるよ。白はこれでd5のマスにも利かせて、中央を広げるんだ。",
+    en:"White pushes the pawn to c4. White adds control of d5 and expands in the center.",
     fox:'normal' },
   { move:{from:[1,2],to:[3,2]}, moveLabel:{ja:"2...c5（ベノニ！）", en:"2...c5 (Benoni!)"},
-    ja:"ここが本題、ベノニ・ディフェンスの一手！黒はc5で、あえて非対称な局面を作り出すよ。",
-    en:"Here's the Benoni move! Black deliberately creates an asymmetrical position with 2...c5.",
+    ja:"ここがベノニ・ディフェンスの一手！黒はポーンをc5へ進めて、白のd4のポーンを攻撃するよ。一般的には2...e6や2...g6で落ち着いて展開することが多いけれど、黒はここでc5と突いて、すぐに中央で戦う道を選ぶんだ。白のd4のポーンは、今はd1のクイーンだけに守られているよ。",
+    en:"Here's the Benoni Defense! Black pushes the pawn to c5 and attacks White's d4 pawn. Black usually develops calmly with 2...e6 or 2...g6, but here Black strikes with ...c5 and fights in the center right away. Right now White's d4 pawn is defended only by the queen on d1.",
     fox:'happy' },
   { move:{from:[4,3],to:[3,3]}, moveLabel:{ja:"3. d5", en:"3. d5"},
-    ja:"白はd5でさらにスペースを広げるよ。",
-    en:"White grabs more space with 3.d5.",
+    ja:"白はポーンをd5へ進めるよ。白はc5のポーンとの交換を避けて、黒の陣地に食い込み、スペースを広げるんだ。",
+    en:"White pushes the pawn to d5. White avoids trading with the c5 pawn, pushes into Black's half of the board and gains space.",
     fox:'normal' },
   { move:{from:[1,4],to:[2,4]}, moveLabel:{ja:"3...e6", en:"3...e6"},
-    ja:"黒はe6でd5ポーンにぶつけるよ。",
-    en:"Black challenges the d5 pawn with 3...e6.",
-    fox:'quiz' },
+    ja:"黒はポーンをe6へ進めるよ。黒は白のd5のポーンを攻撃して、e6のポーンとf6のナイトの2つで、d5に働きかけるんだ。",
+    en:"Black pushes the pawn to e6. Black attacks White's d5 pawn, now hitting it twice with the e6 pawn and the f6 knight.",
+    fox:'normal' },
   { move:{from:[7,1],to:[5,2]}, moveLabel:{ja:"4. Nc3", en:"4. Nc3"},
-    ja:"白はナイトをc3へ展開するよ。d5ポーンを支えつつ、この先のe4進出に備える一手だね。",
-    en:"White develops the knight to c3, supporting the d5 pawn and preparing to follow up with e4.",
+    ja:"白はナイトをc3へ進めるよ。白はd5のポーンを守る駒を、c4のポーンとd1のクイーンと合わせて3つに増やすんだ。",
+    en:"White develops the knight to c3. Together with the c4 pawn and the d1 queen, White now has three defenders on d5.",
     fox:'normal' },
   { move:{from:[2,4],to:[3,3]}, moveLabel:{ja:"4...exd5", en:"4...exd5"},
-    ja:"黒はexd5とポーンを取るよ。ここで取らずに放っておくと、白にdxe6と取られて陣形を崩されてしまうんだ。",
-    en:"Black captures with 4...exd5. Leaving it alone would let White play dxe6, wrecking Black's pawn structure.",
+    ja:"黒はe6のポーンで、d5にいた白のポーンを取るよ。黒は中央のポーンを交換して、白のポーンの形を決めにいくんだ。",
+    en:"Black's e6 pawn captures White's pawn on d5. Black trades in the center to fix White's pawn structure.",
     fox:'normal' },
   { move:{from:[4,2],to:[3,3]}, moveLabel:{ja:"5. cxd5", en:"5. cxd5"},
-    ja:"白はcxd5と取り返すよ。これでベノニらしい非対称な構造が生まれるんだ。",
-    en:"White recaptures with 5.cxd5, creating the characteristic asymmetrical Benoni structure.",
+    ja:"白はc4のポーンで、d5に入った黒のポーンを取り返すよ。これで白は中央からキングサイドに、黒はクイーンサイドに、相手より多くのポーンを持つ形になったんだ。",
+    en:"White's c4 pawn recaptures Black's pawn on d5. Now White has more pawns in the center and on the kingside, while Black has more on the queenside.",
     fox:'normal' },
   { move:{from:[1,3],to:[2,3]}, moveLabel:{ja:"5...d6", en:"5...d6"},
-    ja:"黒はd6でe5マスを制圧するよ。これで白がe4-e5と伸ばしてくる中央突破を抑えつつ、陣形を整えるんだ。",
-    en:"Black plays 5...d6, taking control of the e5 square. This restrains White from later pushing e4-e5 and settles Black's pawn structure.",
+    ja:"黒はポーンをd6へ進めるよ。黒は白のd5のポーンが前に進むのを止めて、まだ空いているe5のマスにも利かせるんだ。",
+    en:"Black pushes the pawn to d6. Black stops White's d5 pawn from advancing and also covers the empty e5 square.",
     fox:'normal' },
   { move:{from:[6,4],to:[4,4]}, moveLabel:{ja:"6. e4", en:"6. e4"},
-    ja:"白はe4でさらに中央を強化するよ。",
-    en:"White further strengthens the center with 6.e4.",
+    ja:"白はポーンをe4へ進めるよ。白はd5のポーンを支えて、中央に大きなポーンの壁を作るんだ。白は、あとでe5と突いて黒の陣地に食い込む作戦も考えられるよ。",
+    en:"White pushes the pawn to e4. White supports the d5 pawn and builds a big pawn wall in the center. Later, White can also consider pushing e5 to break into Black's position.",
     fox:'normal' },
   { move:{from:[1,6],to:[2,6]}, moveLabel:{ja:"6...g6", en:"6...g6"},
-    ja:"黒はg6でフィアンケットを準備するよ。狙いはビショップをg7に置いて、長い対角線(a1-h8)を通じてd5ポーンに圧力をかけることなんだ。",
-    en:"Black prepares a fianchetto with 6...g6. The idea is to put the bishop on g7 and pressure the d5 pawn along the long a1-h8 diagonal.",
-    fox:'wink' },
+    ja:"黒はポーンをg6へ進めるよ。黒はf8のビショップをg7へ出す準備をするんだ。",
+    en:"Black pushes the pawn to g6. Black prepares to bring the f8 bishop to g7.",
+    fox:'normal' },
   { move:{from:[7,6],to:[5,5]}, moveLabel:{ja:"7. Nf3", en:"7. Nf3"},
-    ja:"白はナイトをf3へ展開するよ。中央のd4・e5方向を支えつつ、この先のキャスリングに向けて駒を出していくんだ。これで本譜は一段落、続きはぜひ自分で指してみてね！",
-    en:"White develops the knight to f3, supporting the center while continuing to develop toward castling. That's the main line — try continuing the game yourself from here!",
+    ja:"白はナイトをf3へ進めるよ。白のナイトはまだ空いているe5のマスにも利いて、白はe5と突く準備を進めるんだ。",
+    en:"White develops the knight to f3. White's knight also covers the empty e5 square as White prepares a possible e5 push.",
+    fox:'normal' },
+  { move:{from:[0,5],to:[1,6]}, moveLabel:{ja:"7...Bg7", en:"7...Bg7"},
+    ja:"黒はビショップをg7へ進めるよ。黒のビショップはh8からa1への長い斜めの列に入り、f6のナイトが動けば、白のクイーンサイドまで利くようになるんだ。これでf8とg8のマスが空いて、黒は次の手でキャスリングできるよ。",
+    en:"Black develops the bishop to g7. Black's bishop takes up the long h8–a1 diagonal, and once the f6 knight moves, it will reach all the way to White's queenside. This also clears f8 and g8, so Black can castle on the next move.",
+    fox:'normal' },
+  { move:{from:[7,5],to:[6,4]}, moveLabel:{ja:"8. Be2", en:"8. Be2"},
+    ja:"白はビショップをe2へ進めるよ。これでf1とg1のマスが空いて、白も次の手でキャスリングできるんだ。",
+    en:"White develops the bishop to e2. This clears f1 and g1, so White can castle on the next move too.",
+    fox:'normal' },
+  { move:{from:[0,4],to:[0,6],castle:{from:[0,7],to:[0,5]}}, moveLabel:{ja:"8...O-O", en:"8...O-O"},
+    ja:"黒はキャスリングでキングを安全な場所へ動かすよ。黒のキングはg8へ移り、h8にいたルークはf8へ出てくるんだ。",
+    en:"Black castles, bringing the king to safety. Black's king goes to g8, and the rook from h8 comes to f8.",
+    fox:'normal' },
+  { move:{from:[7,4],to:[7,6],castle:{from:[7,7],to:[7,5]}}, moveLabel:{ja:"9. O-O", en:"9. O-O"},
+    ja:"白もキャスリングでキングを安全な場所へ動かすよ。白のキングはg1へ移り、h1にいたルークはf1へ出てくるんだ。",
+    en:"White also castles, bringing the king to safety. White's king goes to g1, and the rook from h1 comes to f1.",
+    fox:'normal' },
+  { move:{from:[0,5],to:[0,4]}, moveLabel:{ja:"9...Re8", en:"9...Re8"},
+    ja:"黒はルークをe8へ動かすよ。黒のルークはeファイル（e1からe8の縦のマス）で白のe4のポーンに利いていて、黒はf6のナイトと合わせて2つでe4を攻撃する形になるんだ。白は今、c3のナイトだけでe4を守っているよ。",
+    en:"Black moves the rook to e8. Black's rook hits White's e4 pawn along the e-file (the column of squares from e1 to e8), so Black now attacks e4 twice together with the f6 knight. Right now White is defending e4 only with the c3 knight.",
+    fox:'normal' },
+  { move:{from:[5,5],to:[6,3]}, moveLabel:{ja:"10. Nd2", en:"10. Nd2"},
+    ja:"白はナイトをd2へ動かすよ。白のナイトはe4のポーンを守って、e4を守る駒を2つに増やすんだ。白のナイトは、あとでc4へ出て、黒のd6のポーンに働きかけることもできるよ。白は中央のスペースを生かしてe5と突く機会をうかがい、黒はa6とb5と突いてクイーンサイドで反撃するのが典型的な流れだよ。これで本譜は一段落、続きはぜひ自分で指してみてね！",
+    en:"White moves the knight to d2. White's knight defends the e4 pawn, giving White two defenders there. Later, the knight can also go to c4 to put pressure on Black's d6 pawn. The typical plan is for White to use the central space and look for a chance to push e5, while Black counterattacks by advancing the queenside pawns with ...a6 and ...b5. That's the main line — try continuing the game yourself from here!",
     fox:'happy' }
 ];
 
@@ -341,7 +370,19 @@ function renderStep(){
   const step = LESSON_STEPS[currentStep];
   renderBoard(boardSnapshots[currentStep]);
   document.getElementById('moveLabel').textContent = (step.moveLabel && step.moveLabel[currentLang]) || '';
-  document.getElementById('commentaryText').textContent = step[currentLang];
+  const ctEl = document.getElementById('commentaryText');
+  const moreText = step[currentLang + 'More'];
+  ctEl.innerHTML = step[currentLang] + (moreText
+    ? '<details class="more-detail"><summary>' + (currentLang === 'ja' ? '💡 もっと詳しく知りたい方へ' : '💡 Want to know more?') + '</summary><div class="more-body">' + moreText + '</div></details>'
+    : '');
+  ctEl.scrollTop = 0;
+  const moreEl = ctEl.querySelector('details.more-detail');
+  if (moreEl) {
+    moreEl.addEventListener('toggle', function(){
+      if (moreEl.open) { ctEl.scrollTop = moreEl.offsetTop - ctEl.offsetTop; }
+      adjustBottomPadding();
+    });
+  }
   document.getElementById('foxAvatar').src = FOX_BY_MOOD[step.fox] || FOX_BY_MOOD.normal;
   document.getElementById('lessonProgress').textContent = currentStep + ' / ' + (LESSON_STEPS.length - 1);
   document.getElementById('btnPrev').disabled = currentStep === 0;

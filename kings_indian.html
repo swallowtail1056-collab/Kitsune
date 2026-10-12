@@ -103,6 +103,11 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
   font-size: 1rem;
   color: var(--text-sub);
 }
+.commentary-text a, .opening-intro a { color:var(--brown); text-decoration:underline; font-weight:700; }
+.commentary-text a:hover, .opening-intro a:hover { color:var(--brown-dark); }
+.more-detail { margin-top:8px; border-top:1px dashed var(--brown-light); padding-top:6px; }
+.more-detail summary { cursor:pointer; font-weight:700; color:var(--brown); font-size:0.92rem; list-style-position:inside; }
+.more-detail .more-body { margin-top:6px; font-size:0.94rem; }
 </style>
   <script src="board-theme.js"></script>
 </head>
@@ -121,8 +126,8 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
   <h1 class="opening-title lang-element-en">King's Indian Defense</h1>
 
   <div class="opening-intro">
-       <p class="lang-element-ja">💡 キングズ・インディアンは白の強力な中央支配を許しながらフィアンケットから反撃するダイナミックなシステムだよ！黒はNf6-g6-Bg7-O-Oと展開して白がd4-c4-Nc3-e4と広大なポーンセンターを築くのを許すんだ。しかしその後黒はe5またはc5と突いて白のポーンセンターに真っ向から挑戦するよ。e5変化では黒がキングサイドでの攻めを目指し、白はクイーンサイドでカウンターするという複雑な相互攻撃が生まれるんだ。ボビー・フィッシャーやガルリ・カスパロフをはじめ、多くの攻撃的な棋士たちが黒番の主力として使ってきた戦法だよ！</p>
-      <p class="lang-element-en">💡 The King's Indian Defense is a dynamic hypermodern system where Black allows White to build a massive pawn center, then counter-attacks it with full force! Black develops with Nf6-g6-Bg7-O-O while White constructs a broad center with d4-c4-Nc3-e4. But then Black strikes back with e5 or c5. In the e5 variation, Black typically aims for a kingside attack while White counterattacks on the queenside. Many aggressive players, including Bobby Fischer and Garry Kasparov, have used the King's Indian as a main weapon with Black. It perfectly embodies the hypermodern philosophy!</p>   
+       <p class="lang-element-ja">💡 キングズ・インディアン・ディフェンスは、1.d4 Nf6 2.c4 g6と指して、ビショップをg7へ出し、素早くキャスリングするオープニングだよ。黒はわざと白に大きな中央を作らせて、あとからe5やc5と突いて反撃する、ハイパーモダンの考え方の戦法なんだ。フィッシャーやカスパロフをはじめ、多くの攻撃的な指し手が黒番で愛用してきたよ。このページの5.f3は、1920年代に活躍したドイツの名手フリードリヒ・ゼーミッシュの名前がついた形で、白がキングズ・インディアンに対抗するための代表的な作戦の1つなんだ。</p>
+      <p class="lang-element-en">💡 The King's Indian Defense, 1.d4 Nf6 2.c4 g6, develops the bishop to g7 and castles quickly. Black deliberately lets White build a big center and then strikes back with ...e5 or ...c5, a hypermodern approach. Many attacking players, including Fischer and Kasparov, have relied on it with Black. The 5.f3 line on this page is named after the German master Friedrich Sämisch, who was active in the 1920s, and it's one of White's main weapons against the King's Indian.</p>   
   </div>
 
   <div class="board-wrap">
@@ -193,60 +198,78 @@ const initialBoard = [
 // ============================================================
 const LESSON_STEPS = [
   { move:null, moveLabel:{ja:"開始局面", en:"Starting Position"},
-    ja:"キングズ・インディアンのレッスンを始めるよ！白に大きな中央を作らせてから、フィアンケットから真っ向反撃する、フィッシャーやカスパロフも黒番の主力にした攻撃的な定跡だよ。ジーンと一緒に、一手ずつ「なぜその手を指すのか」を学んでいこう。",
-    en:"Let's start the King's Indian Defense lesson! Black lets White build a big center, then strikes back with full force from a fianchetto — a dynamic weapon that both Fischer and Kasparov made a main part of their repertoire. Jene will explain why each move is played, one step at a time.",
+    ja:"キングズ・インディアン・ディフェンスのレッスンを始めるよ！このページでは、白がf3とBe3で中央を固め、クイーンサイドへキャスリングするゼーミッシュ・バリエーションを見ていくよ。中央が閉じたあと、白と黒がそれぞれ反対側のキングを攻める流れがポイントなんだ。一手ずつジーンと一緒に、なぜその手を指すのかを学んでいこう。",
+    en:"Let's start the King's Indian Defense lesson! On this page we follow the Sämisch Variation, where White secures the center with f3 and Be3 and castles queenside. The key is how, once the center is closed, each side goes after the king on the opposite wing. Jene will walk you through why each move is played, one step at a time.",
     fox:'welcome' },
   { move:{from:[6,3],to:[4,3]}, moveLabel:{ja:"1. d4", en:"1. d4"},
-    ja:"白はポーンをd4へ進めるよ。この後Nc3・e4と続けば、より広い中央を目指せる態勢が整うんだ。",
-    en:"White pushes the pawn to d4, claiming the center — the first step toward a broader pawn center with Nc3 and e4 to follow.",
+    ja:"白はポーンをd4へ進めるよ。白は中央のマスを押さえながら、c1のビショップの道を開けるんだ。",
+    en:"White pushes the pawn to d4. White takes control of central squares and opens the path for the c1 bishop.",
     fox:'normal' },
   { move:{from:[0,6],to:[2,5]}, moveLabel:{ja:"1...Nf6", en:"1...Nf6"},
-    ja:"黒はナイトをf6へ展開するよ。ここで1...d5と指してクイーンズ・ギャンビットの形へ向かう選び方もあるけれど、Nf6はまだどの「インディアン・ディフェンス」になるか決めていない、柔軟な一手なんだ。",
-    en:"Black develops the knight to f6. Playing 1...d5 here, heading toward Queen's Gambit territory, is another option, but Nf6 keeps things flexible, not yet committing to which Indian Defense this will become.",
+    ja:"黒はナイトをf6へ進めるよ。黒はナイトを展開しながら、白がe4と突くのをけん制するんだ。",
+    en:"Black develops the knight to f6. Black develops while discouraging White from pushing e4.",
     fox:'normal' },
   { move:{from:[6,2],to:[4,2]}, moveLabel:{ja:"2. c4", en:"2. c4"},
-    ja:"白はポーンをc4へ進めて、さらに中央を広げるよ。次にNc3、そしてe4と続けば、理想的な大きなポーンセンターが完成することになるんだ。",
-    en:"White expands the center with 2.c4. If White follows up with Nc3 and then e4, it would complete an ideal, dominant pawn center.",
+    ja:"白はポーンをc4へ進めるよ。白はこれでd5のマスにも利かせて、中央を広げるんだ。",
+    en:"White pushes the pawn to c4. White adds control of d5 and expands in the center.",
     fox:'normal' },
   { move:{from:[1,6],to:[2,6]}, moveLabel:{ja:"2...g6（キングズ・インディアン！）", en:"2...g6 (King's Indian!)"},
-    ja:"ここが本題、キングズ・インディアンの一手！ここで2...d5と指せばグリュンフェルド・ディフェンスという、中央に正面から対抗する変化になるけれど、g6は中央への直接対抗を後回しにして、まずフィアンケットを準備する一手なんだ。",
-    en:"Here's the King's Indian move! Playing 2...d5 here instead leads to the Grunfeld Defense, directly contesting the center, but g6 delays that confrontation and prepares a fianchetto instead.",
+    ja:"ここがキングズ・インディアン・ディフェンスの一手！黒はポーンをg6へ進めて、f8のビショップをg7へ出す準備をするよ。黒はすぐに中央へポーンを出さず、まずキングの守りと駒の展開を進めるんだ。",
+    en:"Here's the King's Indian Defense! Black pushes the pawn to g6, preparing to bring the f8 bishop to g7. Black doesn't rush pawns into the center and focuses first on king safety and development.",
     fox:'happy' },
   { move:{from:[7,1],to:[5,2]}, moveLabel:{ja:"3. Nc3", en:"3. Nc3"},
-    ja:"白はナイトをc3へ展開するよ。これで次にe4と突けば、d4・e4・c4という理想的な大きなポーンセンターがいよいよ完成してしまうんだ。",
-    en:"White develops the knight to c3. If White gets to play e4 next, the ideal pawn center (d4-e4-c4) would be complete.",
+    ja:"白はナイトをc3へ進めるよ。白はナイトを展開しながら、まだ空いているe4とd5のマスに利かせて、次にe4と突く準備をするんだ。",
+    en:"White develops the knight to c3. White develops while covering the empty e4 and d5 squares, preparing to push e4 next.",
     fox:'normal' },
   { move:{from:[0,5],to:[1,6]}, moveLabel:{ja:"3...Bg7", en:"3...Bg7"},
-    ja:"黒はビショップをg7へ。長い対角線の先には白の中央が見えているけど、今はまだ自分のナイトがf6にいて対角線を塞いでいるんだ。このナイトがどくと、ビショップは一気に牽制力を発揮するようになるよ。",
-    en:"Black completes the fianchetto with 3...Bg7. The long diagonal points straight at White's center, but right now Black's own knight on f6 is blocking it. Once that knight moves out of the way, this bishop will suddenly become a major weapon.",
+    ja:"黒はビショップをg7へ進めるよ。黒のビショップは長い斜めの列に入り、あとで中央が開いたときに強く働くんだ。",
+    en:"Black develops the bishop to g7. Black's bishop takes up the long diagonal, where it will be powerful once the center opens later.",
     fox:'normal' },
   { move:{from:[6,4],to:[4,4]}, moveLabel:{ja:"4. e4", en:"4. e4"},
-    ja:"白はポーンをe4へ進めて、大きな中央のポーンセンターを完成させるよ。d4・e4・c4という3つのポーンで中央を制圧すれば、黒の駒が中央付近の良いマスに出づらくなるんだ。ただしこれは諸刃の剣でもあって、この先黒がe5やc5でこの中央を狙い撃ちにしてくることになるよ。",
-    en:"White completes the big pawn center with 4.e4. Controlling the center with three pawns (d4, e4, c4) makes it hard for Black's pieces to find good squares near the middle of the board. But it's a double-edged sword — this very center becomes the target Black will attack later with ...e5 or ...c5.",
-    fox:'happy' },
-  { move:{from:[1,3],to:[2,3]}, moveLabel:{ja:"4...d6", en:"4...d6"},
-    ja:"黒はポーンをd6へ進めるよ。これでc8のビショップの逃げ道も確保しつつ、この先e5でカウンターを狙う準備をするんだ。",
-    en:"Black plays 4...d6. This clears a path for the bishop on c8 and prepares a future ...e5 counter-strike.",
+    ja:"白はポーンをe4へ進めるよ。白はd4、c4、e4の3つのポーンを並べて、中央を大きく押さえるんだ。",
+    en:"White pushes the pawn to e4. White lines up pawns on d4, c4 and e4, taking a big grip on the center.",
     fox:'normal' },
-  { move:{from:[7,6],to:[5,5]}, moveLabel:{ja:"5. Nf3", en:"5. Nf3"},
-    ja:"白はナイトをf3へ展開するよ。まだf1にビショップが残っているから、キャスリングにはもう一手必要なんだ。ここではまず駒の展開を優先しているよ。他にも5.f3で厳しいサミッシュ・バリエーションを選ぶ道や、5.f4で最大限に中央を広げるフォー・ポーンズ・アタックといった、より積極的な選び方も知られているんだ。",
-    en:"White develops the other knight to f3. The bishop on f1 is still at home, so castling isn't quite ready yet — this move is mainly about development. White also has sharper options here, such as 5.f3 (the Samisch Variation) or 5.f4 (the ambitious Four Pawns Attack), pushing the center even further.",
+  { move:{from:[1,3],to:[2,3]}, moveLabel:{ja:"4...d6", en:"4...d6"},
+    ja:"黒はポーンをd6へ進めるよ。黒はまだ空いているe5のマスに利かせて、あとでe5と突いて白の中央に挑む準備をするんだ。黒はc8のビショップの道も開けたよ。",
+    en:"Black pushes the pawn to d6. Black covers the empty e5 square, preparing to challenge White's center with ...e5 later. Black also opens the path for the c8 bishop.",
+    fox:'normal' },
+  { move:{from:[6,5],to:[5,5]}, moveLabel:{ja:"5. f3", en:"5. f3"},
+    ja:"白はポーンをf3へ進めるよ。この形はゼーミッシュ・バリエーションと呼ばれているんだ。白のf3のポーンはe4のポーンを守り、まだ空いているg4のマスにも利かせて、黒のナイトやビショップがg4へ来るのを防いでいるよ。白は次にBe3とQd2で駒を並べ、あとでg4やh4と突いて黒のキングを攻める準備をするんだ。",
+    en:"White pushes the pawn to f3. This line is called the Sämisch Variation. White's f3 pawn defends the e4 pawn and also covers the empty g4 square, keeping Black's knight and bishop from coming to g4. White plans to set up the pieces with Be3 and Qd2, then push g4 or h4 later to attack Black's king.",
+    jaMore:"白はこの手の代わりに5.Nf3と6.Be2で駒を展開してキャスリングする、<a href='kings_indian_classical.html'>クラシカル・バリエーション</a>を選ぶこともできるよ。",
+    enMore:"Instead of this move, White can develop with 5.Nf3 and 6.Be2 and then castle, the <a href='kings_indian_classical.html?lang=en'>Classical Variation</a>.",
     fox:'normal' },
   { move:{from:[0,4],to:[0,6],castle:{from:[0,7],to:[0,5]}}, moveLabel:{ja:"5...O-O", en:"5...O-O"},
-    ja:"黒はキャスリングでキングを安全な場所へ動かすよ。",
-    en:"Black castles kingside, tucking the king away safely.",
+    ja:"黒はキャスリングでキングを安全な場所へ動かすよ。黒のキングはg8へ移り、h8にいたルークはf8へ出てくるんだ。黒のキングは、g7のビショップとf6のナイトに囲まれた、かたい守りの形に入ったよ。",
+    en:"Black castles, bringing the king to safety. Black's king goes to g8, and the rook from h8 comes to f8. Black's king is now tucked into a solid shelter with the g7 bishop and the f6 knight.",
     fox:'normal' },
-  { move:{from:[7,5],to:[6,4]}, moveLabel:{ja:"6. Be2", en:"6. Be2"},
-    ja:"白はビショップをe2へ展開するよ。これでキングサイドの駒組みがすべて完了して、いよいよキャスリングできる態勢が整ったんだ。",
-    en:"White develops the bishop to e2. With the kingside setup now complete, White is finally ready to castle.",
+  { move:{from:[7,2],to:[5,4]}, moveLabel:{ja:"6. Be3", en:"6. Be3"},
+    ja:"白はビショップをe3へ進めるよ。白のビショップはd4のポーンを守り、まだ空いているh6のマスにも利いているんだ。白は次にQd2と指して、Bh6で黒のg7のビショップと交換する作戦も準備しているよ。",
+    en:"White develops the bishop to e3. White's bishop defends the d4 pawn and also covers the empty h6 square. White is also preparing Qd2 followed by Bh6, to trade off Black's g7 bishop.",
     fox:'normal' },
   { move:{from:[1,4],to:[3,4]}, moveLabel:{ja:"6...e5", en:"6...e5"},
-    ja:"黒はポーンをe5へ！表面上は中央を譲っていたけど、ここで白のポーンセンターに真っ向から挑戦するよ。ここで6...c5と指してベノニに近い形をねらう選び方もあるけれど、e5がこの後のクラシカル・バリエーションの本筋になるんだ。",
-    en:"Black strikes with 6...e5 — the long-awaited counter-attack against White's pawn center begins. Playing 6...c5 here instead, heading toward Benoni-like structures, is another option, but e5 is the main path into the Classical Variation from here.",
-    fox:'wink' },
-  { move:{from:[7,4],to:[7,6],castle:{from:[7,7],to:[7,5]}}, moveLabel:{ja:"7. O-O", en:"7. O-O"},
-    ja:"白もキャスリングでキングを安全な場所へ動かすよ。これでクラシカル・バリエーションの基本の形が完成したんだ。この先は、黒がNc6・Ne7・f5といった手順でキングサイドの攻めを、白がc5やb4といった手順でクイーンサイドの攻めを、それぞれ同時に進めていくことが多いよ。これで本譜は一段落、続きはぜひ自分で指してみてね！",
-    en:"White castles too, tucking the king away safely. This completes the basic setup of the Classical Variation. From here, Black typically pushes for a kingside attack with moves like Nc6, Ne7 and f5, while White counters on the queenside with c5 or b4. That's the main line — try continuing the game yourself from here!",
+    ja:"黒はポーンをe5へ進めて、白のd4のポーンを攻撃するよ。黒はd6のポーンでe5のポーンを守りながら、白の大きな中央に挑むんだ。",
+    en:"Black pushes the pawn to e5, attacking White's d4 pawn. With the e5 pawn defended by the d6 pawn, Black challenges White's big center.",
+    fox:'normal' },
+  { move:{from:[4,3],to:[3,3]}, moveLabel:{ja:"7. d5", en:"7. d5"},
+    ja:"白はd4のポーンをd5へ進めて、中央を閉じるよ。白はポーンを交換せずに、中央とクイーンサイドで場所を広げるんだ。中央が閉じたことで、黒はキングサイドでf5と突いて反撃する作戦をとるよ。",
+    en:"White pushes the d4 pawn to d5, closing the center. Rather than trading pawns, White gains space in the center and on the queenside. With the center closed, Black's plan is to counterattack on the kingside with ...f5.",
+    fox:'normal' },
+  { move:{from:[2,5],to:[3,7]}, moveLabel:{ja:"7...Nh5", en:"7...Nh5"},
+    ja:"黒はナイトをh5へ動かすよ。黒はf6からナイトをどかして、f7のポーンをf5へ進める道を開けるんだ。黒のh5のナイトは、まだ空いているf4とg3のマスにも利いているよ。",
+    en:"Black moves the knight to h5. Black moves the knight off f6 to clear the way for the f7 pawn to advance to f5. Black's knight on h5 also covers the empty f4 and g3 squares.",
+    fox:'normal' },
+  { move:{from:[7,3],to:[6,3]}, moveLabel:{ja:"8. Qd2", en:"8. Qd2"},
+    ja:"白はクイーンをd2へ進めるよ。白のクイーンはe3のビショップを守り、クイーンサイドへのキャスリングの準備もするんだ。白は、ビショップがh6へ出たときにクイーンで後ろから支える形も作ったよ。",
+    en:"White develops the queen to d2. White's queen defends the e3 bishop and prepares to castle queenside. White has also set things up so that if the bishop goes to h6, the queen can back it up from behind.",
+    fox:'normal' },
+  { move:{from:[1,5],to:[3,5]}, moveLabel:{ja:"8...f5", en:"8...f5"},
+    ja:"黒はポーンをf5へ進めて、白のe4のポーンを攻撃するよ。黒はf7のマスも空けて、f8のルークの前を開けながら、キングサイドで反撃するんだ。白のe4のポーンは、c3のナイトとf3のポーンに守られているよ。",
+    en:"Black pushes the pawn to f5, attacking White's e4 pawn. Black also clears the f7 square, opening the way in front of the f8 rook, and counterattacks on the kingside. White's e4 pawn is defended by the c3 knight and the f3 pawn.",
+    fox:'normal' },
+  { move:{from:[7,4],to:[7,2],castle:{from:[7,0],to:[7,3]}}, moveLabel:{ja:"9. O-O-O", en:"9. O-O-O"},
+    ja:"白はクイーンサイドへキャスリングするよ。白のキングはc1へ移り、a1にいたルークはd1へ出てくるんだ。白と黒のキングが反対側にいるので、白はg4やh4と突いて黒のキングを、黒はa6やb5と突いて白のキングを攻める、激しい攻め合いの形になったね。これで本譜は一段落、続きはぜひ自分で指してみてね！",
+    en:"White castles queenside. White's king goes to c1, and the rook from a1 comes to d1. With the kings on opposite sides, the game turns into a sharp race: White pushes g4 or h4 to attack Black's king, while Black pushes ...a6 or ...b5 to attack White's king. That's the main line — try continuing the game yourself from here!",
     fox:'happy' }
 ];
 
@@ -341,7 +364,19 @@ function renderStep(){
   const step = LESSON_STEPS[currentStep];
   renderBoard(boardSnapshots[currentStep]);
   document.getElementById('moveLabel').textContent = (step.moveLabel && step.moveLabel[currentLang]) || '';
-  document.getElementById('commentaryText').textContent = step[currentLang];
+  const ctEl = document.getElementById('commentaryText');
+  const moreText = step[currentLang + 'More'];
+  ctEl.innerHTML = step[currentLang] + (moreText
+    ? '<details class="more-detail"><summary>' + (currentLang === 'ja' ? '💡 もっと詳しく知りたい方へ' : '💡 Want to know more?') + '</summary><div class="more-body">' + moreText + '</div></details>'
+    : '');
+  ctEl.scrollTop = 0;
+  const moreEl = ctEl.querySelector('details.more-detail');
+  if (moreEl) {
+    moreEl.addEventListener('toggle', function(){
+      if (moreEl.open) { ctEl.scrollTop = moreEl.offsetTop - ctEl.offsetTop; }
+      adjustBottomPadding();
+    });
+  }
   document.getElementById('foxAvatar').src = FOX_BY_MOOD[step.fox] || FOX_BY_MOOD.normal;
   document.getElementById('lessonProgress').textContent = currentStep + ' / ' + (LESSON_STEPS.length - 1);
   document.getElementById('btnPrev').disabled = currentStep === 0;

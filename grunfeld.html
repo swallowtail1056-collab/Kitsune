@@ -103,6 +103,11 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
   font-size: 1rem;
   color: var(--text-sub);
 }
+.commentary-text a, .opening-intro a { color:var(--brown); text-decoration:underline; font-weight:700; }
+.commentary-text a:hover, .opening-intro a:hover { color:var(--brown-dark); }
+.more-detail { margin-top:8px; border-top:1px dashed var(--brown-light); padding-top:6px; }
+.more-detail summary { cursor:pointer; font-weight:700; color:var(--brown); font-size:0.92rem; list-style-position:inside; }
+.more-detail .more-body { margin-top:6px; font-size:0.94rem; }
 </style>
   <script src="board-theme.js"></script>
 </head>
@@ -121,8 +126,8 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
   <h1 class="opening-title lang-element-en">Grünfeld Defense</h1>
 
   <div class="opening-intro">
-    <p class="lang-element-ja">💡 グリュンフェルト・ディフェンスは3...d5と突いて白のポーンセンターを直接攻撃するダイナミックなオープニングだよ！4.cxd5 Nxd5 5.e4 Nxc3 6.bxc3の後、白はe4-d4-c3という巨大なポーンセンターを持つんだ。しかし黒はBg7のフィアンケットビショップでd4のポーンを長い対角線から狙い、Qa5やc5で継続的にプレッシャーをかけるよ。「白に巨大なセンターを作らせてから崩す」という超モダン理論の最高傑作で、カスパロフが頻繁に使って世界的に有名になったんだ！</p>
-    <p class="lang-element-en">💡 The Grünfeld Defense strikes directly at White's center with 3...d5! After 4.cxd5 Nxd5 5.e4 Nxc3 6.bxc3, White ends up with a massive pawn center on e4-d4-c3. But Black immediately targets the d4 pawn with the Bg7 fianchetto bishop along the long diagonal, and keeps up the pressure with Qa5 and c5. This is the ultimate expression of hypermodern theory — letting White build a huge center, then destroying it. Garry Kasparov used it frequently and made it world-famous!</p>
+    <p class="lang-element-ja">💡 グリュンフェルト・ディフェンスは、1.d4 Nf6 2.c4 g6 3.Nc3 d5と突いて、白の中央にすぐ挑むオープニングだよ。名前は、1922年にこの形を指して広めた、オーストリアの名手エルンスト・グリュンフェルトに由来しているんだ。黒はわざと白に大きな中央を作らせて、あとからビショップやナイトで圧力をかける、ハイパーモダンの考え方のオープニングだよ。カスパロフが世界選手権で何度も使ったことでも知られているんだ。</p>
+    <p class="lang-element-en">💡 The Grünfeld Defense challenges White's center right away with 1.d4 Nf6 2.c4 g6 3.Nc3 d5. It's named after the Austrian master Ernst Grünfeld, who introduced it in 1922. Black deliberately lets White build a big center and then pressures it with bishops and knights, a hypermodern approach. It's also known for being used many times by Kasparov in World Championship matches.</p>
   </div>
 
   <div class="board-wrap">
@@ -196,73 +201,84 @@ const initialBoard = [
 // ============================================================
 const LESSON_STEPS = [
   { move:null, moveLabel:{ja:"開始局面", en:"Starting Position"},
-    ja:"グリュンフェルト・ディフェンスのレッスンを始めるよ！白に巨大な中央を作らせてから、長い対角線から真っ向勝負で崩す、カスパロフも愛用したダイナミックな定跡だよ。ジーンと一緒に、一手ずつ「なぜその手を指すのか」を学んでいこう。",
-    en:"Let's start the Grünfeld Defense lesson! Black lets White build a massive center, then strikes it down the long diagonal — a dynamic weapon loved by Kasparov. Jene will explain why each move is played, one step at a time.",
+    ja:"グリュンフェルト・ディフェンスのレッスンを始めるよ！このページでは、白がc4のポーンでd5を取り、大きな中央を作る交換変化を見ていくよ。黒がビショップとナイト、c5のポーンで、白の中央にどう圧力をかけるのかがポイントなんだ。一手ずつジーンと一緒に、なぜその手を指すのかを学んでいこう。",
+    en:"Let's start the Grünfeld Defense lesson! On this page we follow the Exchange Variation, where White captures on d5 and builds a big center. The key is how Black puts pressure on that center with the bishop, the knight and the c5 pawn. Jene will walk you through why each move is played, one step at a time.",
     fox:'welcome' },
-
   { move:{from:[6,3],to:[4,3]}, moveLabel:{ja:"1. d4", en:"1. d4"},
-    ja:"白はd4で中央を制圧するよ。",
-    en:"White plays 1.d4, claiming the center.",
+    ja:"白はポーンをd4へ進めるよ。白は中央のマスを押さえながら、c1のビショップの道を開けるんだ。",
+    en:"White pushes the pawn to d4. White takes control of central squares and opens the path for the c1 bishop.",
     fox:'normal' },
-
   { move:{from:[0,6],to:[2,5]}, moveLabel:{ja:"1...Nf6", en:"1...Nf6"},
-    ja:"黒はナイトをf6へ。まだ何色のインディアン・ディフェンスになるか決めていない、柔軟な一手だよ。",
-    en:"Black develops the knight to f6 — a flexible move that doesn't yet commit to which Indian Defense this will become.",
+    ja:"黒はナイトをf6へ進めるよ。黒はナイトを展開しながら、白がe4と突くのをけん制するんだ。",
+    en:"Black develops the knight to f6. Black develops while discouraging White from pushing e4.",
     fox:'normal' },
-
   { move:{from:[6,2],to:[4,2]}, moveLabel:{ja:"2. c4", en:"2. c4"},
-    ja:"白はc4でさらに中央を広げるよ。次にNc3、そしてe4と続けば、理想的な大きなポーンセンターが完成する。",
-    en:"White expands the center with 2.c4. If White follows up with Nc3 and then e4, it would complete an ideal, dominant pawn center.",
+    ja:"白はポーンをc4へ進めるよ。白はこれでd5のマスにも利かせて、中央を広げるんだ。",
+    en:"White pushes the pawn to c4. White adds control of d5 and expands in the center.",
     fox:'normal' },
-
   { move:{from:[1,6],to:[2,6]}, moveLabel:{ja:"2...g6", en:"2...g6"},
-    ja:"黒はg6でフィアンケットを準備するよ。ビショップを長い対角線に出すことで、この先白が作る大きな中央を、駒の力で間接的に狙い続ける計画なんだ。",
-    en:"Black prepares a fianchetto with 2...g6, planning to put the bishop on the long diagonal — setting up to pressure whatever big center White builds, using piece power rather than pawns.",
+    ja:"黒はポーンをg6へ進めるよ。黒はf8のビショップをg7へ出す準備をするんだ。",
+    en:"Black pushes the pawn to g6. Black prepares to bring the f8 bishop to g7.",
     fox:'normal' },
-
   { move:{from:[7,1],to:[5,2]}, moveLabel:{ja:"3. Nc3", en:"3. Nc3"},
-    ja:"白はナイトをc3へ展開するよ。これで次にe4と突けば、d4・e4・c4という理想的な大きなポーンセンターがいよいよ完成してしまう。",
-    en:"White develops the knight to c3. If White gets to play e4 next, the ideal pawn center (d4-e4-c4) would be complete.",
+    ja:"白はナイトをc3へ進めるよ。白はナイトを展開しながら、まだ空いているd5とe4のマスに利かせて、次にe4と突く準備をするんだ。",
+    en:"White develops the knight to c3. White develops while covering the empty d5 and e4 squares, preparing to push e4 next.",
     fox:'normal' },
-
-  { move:{from:[1,3],to:[3,3]}, moveLabel:{ja:"3...d5（グリュンフェルト！）", en:"3...d5 (Grünfeld!)"},
-    ja:"ここが本題、グリュンフェルトの一手！黒はフィアンケットの準備中に、いきなり白の中央へ真っ向から挑戦するよ。白がe4と突いて理想の中央を完成させる前に、今すぐ揺さぶりをかけるのが狙いなんだ。",
-    en:"Here's the Grünfeld move! In the middle of preparing a fianchetto, Black suddenly strikes directly at White's center — challenging it right now, before White gets the chance to complete the ideal setup with e4.",
+  { move:{from:[1,3],to:[3,3]}, moveLabel:{ja:"3...d5（グリュンフェルト！）", en:"3...d5 (Gr\u00fcnfeld!)"},
+    ja:"ここがグリュンフェルト・ディフェンスの一手！黒はポーンをd5へ進めて、白のc4のポーンと向かい合うよ。一般的には3...Bg7からd6と指す<a href='kings_indian.html'>キングズ・インディアン・ディフェンス</a>もよく指されるけれど、黒はここで、すぐに中央のポーンで挑む道を選ぶんだ。黒のd5のポーンは、f6のナイトとd8のクイーンに守られているよ。",
+    en:"Here's the Grünfeld Defense! Black pushes the pawn to d5 and faces off against White's c4 pawn. Black often plays 3...Bg7 and ...d6, the <a href='kings_indian.html?lang=en'>King's Indian Defense</a>, but here Black challenges the center with a pawn right away. Black's d5 pawn is defended by the f6 knight and the d8 queen.",
     fox:'happy' },
-
   { move:{from:[4,2],to:[3,3]}, moveLabel:{ja:"4. cxd5", en:"4. cxd5"},
-    ja:"白はcxd5とポーンを取るよ。取らずに他の手を指すと、黒からdxc4とポーンを交換されて主導権を握られてしまうんだ。",
-    en:"White captures with 4.cxd5. Declining would let Black trade with ...dxc4 and seize the initiative instead.",
+    ja:"白はc4のポーンで、d5にいた黒のポーンを取るよ。白は中央のポーンを交換して、黒のナイトを中央に引き出すんだ。白のこの形は、グリュンフェルトの交換変化と呼ばれているよ。",
+    en:"White's c4 pawn captures Black's pawn on d5. White trades in the center and draws Black's knight into the middle. This line for White is called the Exchange Variation of the Grünfeld.",
     fox:'normal' },
-
   { move:{from:[2,5],to:[3,3]}, moveLabel:{ja:"4...Nxd5", en:"4...Nxd5"},
-    ja:"黒はナイトで取り返すよ。ポーン(の駒がここにはないので実質的にナイト一択)で中央のマスに陣取りながら、次のe4に備えるんだ。",
-    en:"Black recaptures with the knight, occupying a strong central square while bracing for White's coming e4 push.",
+    ja:"黒はf6のナイトで、d5に入った白のポーンを取り返すよ。黒のナイトは中央のd5に出てきて、白のc3のナイトに利いているんだ。",
+    en:"Black's f6 knight recaptures White's pawn on d5. Black's knight comes to the central d5 square and hits White's knight on c3.",
     fox:'normal' },
-
   { move:{from:[6,4],to:[4,4]}, moveLabel:{ja:"5. e4", en:"5. e4"},
-    ja:"白はe4で、ナイトに「動け」とプレッシャーをかけながら中央をさらに広げるよ。ナイトがこのまま逃げれば、白はd4・e4という巨大な中央をそのまま維持できてしまう。",
-    en:"White plays 5.e4, pressuring the knight while expanding the center further. If the knight simply retreats, White gets to keep a dominant d4-e4 center intact.",
-    fox:'wink' },
-
-  { move:{from:[3,3],to:[5,2]}, moveLabel:{ja:"5...Nxc3", en:"5...Nxc3"},
-    ja:"黒はNxc3とナイトを取るよ。すぐにbxc3で取り返されるけど、それが狙いなんだ。白のポーン構造をc3・d4・e4という硬直した塊に変えてしまうことで、この後ずっとd4を弱点として攻め続けられるようになるんだ。",
-    en:"Black captures with 5...Nxc3. White will recapture immediately with bxc3, but that's exactly the point — it distorts White's pawn structure into a rigid c3-d4-e4 cluster that Black can keep pressuring, especially the pawn on d4, for the rest of the game.",
-    fox:'quiz' },
-
-  { move:{from:[6,1],to:[5,2]}, moveLabel:{ja:"6. bxc3", en:"6. bxc3"},
-    ja:"白はbxc3と取り返して、e4-d4-c3という巨大なポーンセンターを完成させるよ。駒の損得はないけど、これで黒はナイト2枚に対してビショップ2枚という、駒の性質でも中央を攻めやすい組み合わせを手にしているんだ。",
-    en:"White recaptures with 6.bxc3, completing the massive e4-d4-c3 pawn center. Material is even, but Black now holds the bishop pair — pieces well suited to attacking that very center from a distance.",
+    ja:"白はポーンをe4へ進めて、d5にいる黒のナイトを攻撃するよ。白はe4とd4の2つのポーンで、中央を大きく押さえるんだ。",
+    en:"White pushes the pawn to e4, attacking Black's knight on d5. With pawns on e4 and d4, White takes a big grip on the center.",
     fox:'normal' },
-
+  { move:{from:[3,3],to:[5,2]}, moveLabel:{ja:"5...Nxc3", en:"5...Nxc3"},
+    ja:"黒はd5のナイトで、c3にいた白のナイトを取るよ。黒はナイトを交換して、白のポーンをc3へ引き寄せるんだ。",
+    en:"Black's d5 knight captures White's knight on c3. Black trades knights and draws a White pawn to c3.",
+    fox:'normal' },
+  { move:{from:[6,1],to:[5,2]}, moveLabel:{ja:"6. bxc3", en:"6. bxc3"},
+    ja:"白はb2のポーンで、c3に入った黒のナイトを取り返すよ。白のc3のポーンはd4のポーンを守り、白は大きな中央を作ったんだ。その代わり、白の中央のポーンは、これから黒の駒の標的になりやすいよ。",
+    en:"White's b2 pawn recaptures Black's knight on c3. White's c3 pawn defends the d4 pawn, and White now has a big center. The trade-off is that White's central pawns will become targets for Black's pieces.",
+    fox:'normal' },
   { move:{from:[0,5],to:[1,6]}, moveLabel:{ja:"6...Bg7", en:"6...Bg7"},
-    ja:"黒はビショップをg7へ。これでフィアンケットが完成し、長い対角線からd4ポーンをにらむ形になるよ。ただし今すぐ取れるわけじゃなくて、d4はc3のポーンに守られているから、今はまだプレッシャーをかけ続ける段階なんだ。",
-    en:"Black completes the fianchetto with 6...Bg7, now eyeing the d4 pawn along the long diagonal. It can't actually be won just yet, though — d4 is defended by the pawn on c3, so for now this is about building pressure rather than an immediate threat.",
-    fox:'happy' },
-
+    ja:"黒はビショップをg7へ進めるよ。黒のビショップは長い斜めの列に入り、白のd4のポーンに利いているんだ。黒はd8のクイーンと合わせて、d4を2つで攻撃しているよ。",
+    en:"Black develops the bishop to g7. Black's bishop takes up the long diagonal and hits White's d4 pawn. Together with the d8 queen, Black now attacks d4 twice.",
+    fox:'normal' },
   { move:{from:[7,5],to:[4,2]}, moveLabel:{ja:"7. Bc4", en:"7. Bc4"},
-    ja:"白はビショップをc4へ展開するよ。ただの展開じゃなくて、この位置から黒のキング周りの弱点、f7に狙いをつけているんだ。これで本譜は一段落、続きはぜひ自分で指してみてね！",
-    en:"White develops the bishop to c4. This isn't just development — from here, the bishop also takes aim at f7, a weak point around Black's king. That's the main line — try continuing the game yourself from here!",
+    ja:"白はビショップをc4へ進めるよ。白のビショップは黒のf7のポーンに利いて、キングサイドへの攻めの準備をするんだ。黒のf7のポーンは、今はキングに守られているよ。",
+    en:"White develops the bishop to c4. White's bishop hits Black's f7 pawn and prepares for a kingside attack. Right now Black's king defends f7.",
+    fox:'normal' },
+  { move:{from:[1,2],to:[3,2]}, moveLabel:{ja:"7...c5", en:"7...c5"},
+    ja:"黒はポーンをc5へ進めるよ。黒は白のd4のポーンへの攻撃を、c5のポーンとg7のビショップ、d8のクイーンの3つに増やすんだ。白のd4のポーンは、今はd1のクイーンとc3のポーンの2つで守られているよ。",
+    en:"Black pushes the pawn to c5. Black raises the attack on White's d4 pawn to three: the c5 pawn, the g7 bishop and the d8 queen. White's d4 pawn is currently defended twice, by the d1 queen and the c3 pawn.",
+    fox:'normal' },
+  { move:{from:[7,6],to:[6,4]}, moveLabel:{ja:"8. Ne2", en:"8. Ne2"},
+    ja:"白はナイトをe2へ進めるよ。白のナイトはd4のポーンを守って、守る駒を3つに増やすんだ。白はf3ではなくe2にナイトを出すことで、f2のポーンを動かせる余地を残しておくよ。",
+    en:"White develops the knight to e2. White's knight defends the d4 pawn, raising the number of defenders to three. By choosing e2 rather than f3, White keeps the option of moving the f2 pawn later.",
+    fox:'normal' },
+  { move:{from:[0,1],to:[2,2]}, moveLabel:{ja:"8...Nc6", en:"8...Nc6"},
+    ja:"黒はナイトをc6へ進めるよ。黒はd4のポーンへの攻撃を4つに増やして、白に中央を守り続けさせるんだ。",
+    en:"Black develops the knight to c6. Black raises the attack on the d4 pawn to four, forcing White to keep defending the center.",
+    fox:'normal' },
+  { move:{from:[7,2],to:[5,4]}, moveLabel:{ja:"9. Be3", en:"9. Be3"},
+    ja:"白はビショップをe3へ進めるよ。白はd4のポーンを守る駒を4つに増やして、黒の攻撃に備えるんだ。",
+    en:"White develops the bishop to e3. White raises the number of defenders of the d4 pawn to four, standing firm against Black's attack.",
+    fox:'normal' },
+  { move:{from:[0,4],to:[0,6],castle:{from:[0,7],to:[0,5]}}, moveLabel:{ja:"9...O-O", en:"9...O-O"},
+    ja:"黒はキャスリングでキングを安全な場所へ動かすよ。黒のキングはg8へ移り、h8にいたルークはf8へ出てくるんだ。",
+    en:"Black castles, bringing the king to safety. Black's king goes to g8, and the rook from h8 comes to f8.",
+    fox:'normal' },
+  { move:{from:[7,4],to:[7,6],castle:{from:[7,7],to:[7,5]}}, moveLabel:{ja:"10. O-O", en:"10. O-O"},
+    ja:"白もキャスリングでキングを安全な場所へ動かすよ。白は大きな中央を持ち、黒はその中央のポーンに駒で圧力をかけ続ける、という形がはっきりしたね。この後は、黒がBg4やNa5で白の駒を揺さぶり、白はf3やd5と突いて対抗するのが典型的な流れだよ。これで本譜は一段落、続きはぜひ自分で指してみてね！",
+    en:"White also castles, bringing the king to safety. The picture is now clear: White has a big center, and Black keeps pressuring those central pawns with pieces. A typical continuation is for Black to harass White's pieces with ...Bg4 or ...Na5, while White responds with f3 or d5. That's the main line — try continuing the game yourself from here!",
     fox:'happy' }
 ];
 
@@ -352,7 +368,19 @@ function renderStep(){
   const step = LESSON_STEPS[currentStep];
   renderBoard(boardSnapshots[currentStep]);
   document.getElementById('moveLabel').textContent = (step.moveLabel && step.moveLabel[currentLang]) || '';
-  document.getElementById('commentaryText').textContent = step[currentLang];
+  const ctEl = document.getElementById('commentaryText');
+  const moreText = step[currentLang + 'More'];
+  ctEl.innerHTML = step[currentLang] + (moreText
+    ? '<details class="more-detail"><summary>' + (currentLang === 'ja' ? '💡 もっと詳しく知りたい方へ' : '💡 Want to know more?') + '</summary><div class="more-body">' + moreText + '</div></details>'
+    : '');
+  ctEl.scrollTop = 0;
+  const moreEl = ctEl.querySelector('details.more-detail');
+  if (moreEl) {
+    moreEl.addEventListener('toggle', function(){
+      if (moreEl.open) { ctEl.scrollTop = moreEl.offsetTop - ctEl.offsetTop; }
+      adjustBottomPadding();
+    });
+  }
   document.getElementById('foxAvatar').src = FOX_BY_MOOD[step.fox] || FOX_BY_MOOD.normal;
   document.getElementById('lessonProgress').textContent = currentStep + ' / ' + (LESSON_STEPS.length - 1);
   document.getElementById('btnPrev').disabled = currentStep === 0;

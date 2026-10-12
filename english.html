@@ -103,6 +103,11 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
   font-size: 1rem;
   color: var(--text-sub);
 }
+.commentary-text a, .opening-intro a { color:var(--brown); text-decoration:underline; font-weight:700; }
+.commentary-text a:hover, .opening-intro a:hover { color:var(--brown-dark); }
+.more-detail { margin-top:8px; border-top:1px dashed var(--brown-light); padding-top:6px; }
+.more-detail summary { cursor:pointer; font-weight:700; color:var(--brown); font-size:0.92rem; list-style-position:inside; }
+.more-detail .more-body { margin-top:6px; font-size:0.94rem; }
 </style>
   <script src="board-theme.js"></script>
 </head>
@@ -121,8 +126,8 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
   <h1 class="opening-title lang-element-en">English Opening</h1>
 
   <div class="opening-intro">
-    <p class="lang-element-ja">💡 イングリッシュ・オープニングは1.c4と突くオープニングだよ！d5のマスを間接的にコントロールしながら相手の中央進出を牽制するんだ。多くの変化に移行できる非常に柔軟なオープニングで、白はNf3-g3-Bg2というレティ風のフィアンケットや、e4と突いてセンターを広げる形、d4を突いてクイーンズ・ギャンビット的な形に移行することもできるんだ。現代でもカールセンやカルアナが頻繁に採用する戦略的に奥深いオープニングだよ！</p>
-    <p class="lang-element-en">💡 The English Opening starts with 1.c4, indirectly controlling d5 while restraining Black's central advances! It's an incredibly flexible opening that can transition into many different systems. White can develop with Nf3-g3-Bg2 in a Réti style, expand with e4, or transpose into a Queen's Gambit formation with d4. This versatility is precisely what makes the English so valuable. The English Opening is used regularly today by top players like Magnus Carlsen and Fabiano Caruana. A deeply strategic opening!</p>
+    <p class="lang-element-ja">💡 イングリッシュ・オープニングは、1.c4と突いて、中央の外からd5のマスに働きかけるオープニングだよ。名前は、19世紀のイギリスの名手ハワード・スタントンが、1843年のサン＝タマンとの試合で指したことに由来しているんだ。このページの1...e5の形は、シシリアン・ディフェンスの白と黒が入れかわった形になり、白は1手多い分だけ余裕をもって戦えるよ。ボトヴィニクやカスパロフ、カールセンなど、多くの世界チャンピオンが好んで指しているんだ。</p>
+    <p class="lang-element-en">💡 The English Opening begins with 1.c4, influencing the d5 square from outside the center. It's named after the 19th-century English master Howard Staunton, who played it in his 1843 match against Saint-Amant. The 1...e5 line on this page is like a Sicilian Defense with the colors reversed, so White plays it with an extra tempo in hand. Many world champions, including Botvinnik, Kasparov and Carlsen, have liked to play it.</p>
   </div>
 
   <div class="board-wrap">
@@ -195,61 +200,79 @@ const initialBoard = [
 // レッスンステップ（手・解説・ジーンの表情）
 // ============================================================
 const LESSON_STEPS = [
-   { move:null, moveLabel:{ja:"開始局面", en:"Starting Position"},
-    ja:"イングリッシュ・オープニングのレッスンを始めるよ！多くの変化に移行できる、カールセンも愛用する柔軟性バツグンのオープニングだよ。ここでは代表的な変化のひとつ、「フォー・ナイツ変化」を見ていくよ。ジーンと一緒に、一手ずつ「なぜその手を指すのか」を学んでいこう。",
-    en:"Let's start the English Opening lesson! It's an incredibly flexible opening that can transpose into many systems, regularly used by Magnus Carlsen. We'll walk through one of its most well-known lines, the Four Knights Variation. Jene will explain why each move is played, one step at a time.",
+  { move:null, moveLabel:{ja:"開始局面", en:"Starting Position"},
+    ja:"イングリッシュ・オープニングのレッスンを始めるよ！このページでは、黒が1...e5と中央に構え、両者のナイトが2つずつ出る、フォー・ナイツ・バリエーションを見ていくよ。白がシシリアンの白と黒が入れかわった形をどう生かすのかがポイントなんだ。一手ずつジーンと一緒に、なぜその手を指すのかを学んでいこう。",
+    en:"Let's start the English Opening lesson! On this page we follow the Four Knights Variation, where Black meets 1.c4 with 1...e5 and both sides develop their knights. The key is how White makes use of what is essentially a Sicilian with the colors reversed. Jene will walk you through why each move is played, one step at a time.",
     fox:'welcome' },
   { move:{from:[6,2],to:[4,2]}, moveLabel:{ja:"1. c4（イングリッシュ！）", en:"1. c4 (English!)"},
-    ja:"ここが本題、イングリッシュ・オープニングの一手！白はc4で、d5のマスを間接的にコントロールするよ。",
-    en:"Here's the English Opening move! White plays 1.c4, indirectly controlling the d5 square.",
+    ja:"ここがイングリッシュ・オープニングの一手！白はポーンをc4へ進めて、まだ空いているd5のマスに利かせるよ。一般的には1.e4や1.d4で中央にポーンを置くことが多いけれど、白はここで中央の外からd5に働きかける、落ち着いた道を選ぶんだ。",
+    en:"Here's the English Opening! White pushes the pawn to c4 and covers the empty d5 square. White usually puts a pawn in the center with 1.e4 or 1.d4, but here White chooses a calmer approach, influencing d5 from outside the center.",
     fox:'happy' },
   { move:{from:[1,4],to:[3,4]}, moveLabel:{ja:"1...e5", en:"1...e5"},
-    ja:"黒はe5で中央を取るよ。これで色違いのシシリアンのような局面になるんだ。",
-    en:"Black takes the center with 1...e5, creating a kind of \"reversed Sicilian\" structure.",
-    fox:'quiz' },
-    { move:{from:[7,1],to:[5,2]}, moveLabel:{ja:"2. Nc3", en:"2. Nc3"},
-    ja:"白はナイトをc3へ展開するよ。これで次にe4と突けば、d4は突かずにポーン2つと駒でしっかり中央を支える形が作れるんだ。",
-    en:"White develops the knight to c3, setting up a solid center supported by pawns and pieces if e4 follows next.",
+    ja:"黒はポーンをe5へ進めるよ。黒は中央のd4とf4のマスに利かせて、中央を押さえにいくんだ。白と黒のこの形は、<a href='sicilian.html'>シシリアン・ディフェンス</a>（1.e4 c5）の白と黒が入れかわった形になるよ。",
+    en:"Black pushes the pawn to e5. Black covers the central d4 and f4 squares and claims the center. This position is like the <a href='sicilian.html?lang=en'>Sicilian Defense</a> (1.e4 c5) with the colors reversed.",
     fox:'normal' },
-    { move:{from:[0,6],to:[2,5]}, moveLabel:{ja:"2...Nf6", en:"2...Nf6"},
-    ja:"黒はナイトをf6へ展開するよ。白と同じように、まずは自然な駒の展開を優先しているんだ。",
-    en:"Black develops the knight to f6, mirroring White's approach of prioritizing natural development first.",
+  { move:{from:[7,1],to:[5,2]}, moveLabel:{ja:"2. Nc3", en:"2. Nc3"},
+    ja:"白はナイトをc3へ進めるよ。白はd5のマスにc4のポーンとc3のナイトの2つで利かせて、まだ空いているe4のマスにも目を光らせるんだ。",
+    en:"White develops the knight to c3. White now covers d5 twice, with the c4 pawn and the c3 knight, and also keeps an eye on the empty e4 square.",
     fox:'normal' },
-    { move:{from:[7,6],to:[5,5]}, moveLabel:{ja:"3. Nf3", en:"3. Nf3"},
-    ja:"白はもう一つのナイトをf3へ展開するよ。e5のポーンを間接的に見張りつつ、この後のg3-Bg2フィアンケットの準備も進めるんだ。",
-    en:"White develops the other knight to f3, keeping an eye on e5 while preparing the coming g3-Bg2 fianchetto.",
+  { move:{from:[0,6],to:[2,5]}, moveLabel:{ja:"2...Nf6", en:"2...Nf6"},
+    ja:"黒はナイトをf6へ進めるよ。黒はナイトを展開しながら、まだ空いているe4とd5のマスに利かせるんだ。",
+    en:"Black develops the knight to f6. Black develops while covering the empty e4 and d5 squares.",
+    fox:'normal' },
+  { move:{from:[7,6],to:[5,5]}, moveLabel:{ja:"3. Nf3", en:"3. Nf3"},
+    ja:"白はナイトをf3へ進めるよ。白のナイトは、守りのない黒のe5のポーンを攻撃しながら、キングサイドの展開を進めるんだ。",
+    en:"White develops the knight to f3. White's knight attacks Black's undefended e5 pawn while continuing kingside development.",
     fox:'normal' },
   { move:{from:[0,1],to:[2,2]}, moveLabel:{ja:"3...Nc6", en:"3...Nc6"},
-    ja:"黒もナイトをc6へ展開するよ。これでe5のポーンをしっかり守りながら、白と同じフォー・ナイツの形に足並みを揃えるんだ。",
-    en:"Black develops the other knight to c6, defending e5 and mirroring White's Four Knights setup.",
+    ja:"黒はナイトをc6へ進めるよ。黒はナイトでe5のポーンを守りながら、まだ空いているd4のマスにも利かせるんだ。白と黒のナイトが2つずつ出たこの形は、フォー・ナイツ・バリエーションと呼ばれているよ。",
+    en:"Black develops the knight to c6. Black defends the e5 pawn with the knight and also covers the empty d4 square. With both sides' knights out, this position is called the Four Knights Variation.",
     fox:'normal' },
   { move:{from:[6,6],to:[5,6]}, moveLabel:{ja:"4. g3", en:"4. g3"},
-    ja:"白はg3でレティ風のフィアンケットを準備するよ。柔軟性こそイングリッシュの真骨頂なんだ。",
-    en:"White prepares a Réti-style fianchetto with 4.g3 — flexibility is the English's true strength.",
-    fox:'wink' },
+    ja:"白はポーンをg3へ進めるよ。白はf1のビショップをg2へ出す準備をして、h1からa8への長い斜めの列を使う作戦なんだ。",
+    en:"White pushes the pawn to g3. White prepares to bring the f1 bishop to g2 and plans to use the long h1–a8 diagonal.",
+    fox:'normal' },
   { move:{from:[1,3],to:[3,3]}, moveLabel:{ja:"4...d5", en:"4...d5"},
-    ja:"黒はd5で中央にしっかり踏み込むよ。",
-    en:"Black firmly stakes a claim in the center with 4...d5.",
+    ja:"黒はポーンをd5へ進めるよ。黒は中央にポーンを置こうとして、白のc4のポーンとの交換を誘うんだ。",
+    en:"Black pushes the pawn to d5. Black tries to establish a pawn in the center and invites a trade with White's c4 pawn.",
     fox:'normal' },
-   { move:{from:[4,2],to:[3,3]}, moveLabel:{ja:"5. cxd5", en:"5. cxd5"},
-    ja:"白はcxd5とポーンを取るよ。このまま緊張を保ってもよかったけど、ここで取ることで局面をはっきりさせて、次の展開を進めやすくするんだ。",
-    en:"White captures with 5.cxd5. Keeping the tension was also possible, but resolving it here clarifies the position and makes it easier to continue developing.",
+  { move:{from:[4,2],to:[3,3]}, moveLabel:{ja:"5. cxd5", en:"5. cxd5"},
+    ja:"白はc4のポーンで、d5にいた黒のポーンを取るよ。白は中央のポーンを交換して、黒が中央にポーンを置けないようにするんだ。",
+    en:"White's c4 pawn captures Black's pawn on d5. White trades in the center so that Black can't keep a pawn there.",
     fox:'normal' },
-   { move:{from:[2,5],to:[3,3]}, moveLabel:{ja:"5...Nxd5", en:"5...Nxd5"},
-    ja:"黒はナイトで取り返すよ。中央の良いマスに駒を進めながら、局面を立て直すんだ。",
-    en:"Black recaptures with the knight, landing on a strong central square while re-consolidating the position.",
+  { move:{from:[2,5],to:[3,3]}, moveLabel:{ja:"5...Nxd5", en:"5...Nxd5"},
+    ja:"黒はf6のナイトで、d5に入った白のポーンを取り返すよ。黒のナイトは中央のd5に出てきて、白のc3のナイトに利いているんだ。",
+    en:"Black's f6 knight recaptures White's pawn on d5. Black's knight comes to the central d5 square and hits White's knight on c3.",
     fox:'normal' },
   { move:{from:[7,5],to:[6,6]}, moveLabel:{ja:"6. Bg2", en:"6. Bg2"},
-    ja:"白はビショップをg2へ。フィアンケットが完成して、長い対角線からd5のナイトに早速プレッシャーをかけ始めるよ。",
-    en:"White completes the fianchetto with 6.Bg2 — and immediately starts pressuring Black's knight on d5 along the long diagonal.",
+    ja:"白はビショップをg2へ進めるよ。白のビショップは長い斜めの列に入り、f3のナイトが動けば、黒のd5のナイトやb7のポーンまで利くようになるんだ。これでf1とg1のマスが空いて、白は次の手でキャスリングできるよ。",
+    en:"White develops the bishop to g2. White's bishop takes up the long diagonal, and once the f3 knight moves, it will reach Black's d5 knight and b7 pawn. This also clears f1 and g1, so White can castle on the next move.",
     fox:'normal' },
-  { move:{from:[0,5],to:[1,4]}, moveLabel:{ja:"6...Be7", en:"6...Be7"},
-    ja:"黒はビショップをe7へ。キャスリングの準備をするよ。",
-    en:"Black plays 6...Be7, preparing to castle.",
+  { move:{from:[3,3],to:[2,1]}, moveLabel:{ja:"6...Nb6", en:"6...Nb6"},
+    ja:"黒はナイトをb6へ下げるよ。黒のナイトは白のビショップの斜めの列から外れて、まだ空いているc4やd5のマスに利かせるんだ。",
+    en:"Black retreats the knight to b6. Black's knight steps off the diagonal of White's bishop and covers the empty c4 and d5 squares.",
+    jaMore:"黒はこの手の代わりに6...Bc5と、ビショップを活発な場所に出すこともできるよ。",
+    enMore:"Instead of this move, Black can also play 6...Bc5 and put the bishop on an active square.",
     fox:'normal' },
   { move:{from:[7,4],to:[7,6],castle:{from:[7,7],to:[7,5]}}, moveLabel:{ja:"7. O-O", en:"7. O-O"},
-    ja:"白はキャスリングでキングを安全な場所へ。これで本譜は一段落、続きはぜひ自分で指してみてね！",
-    en:"White castles kingside, tucking the king away safely. That's the main line — try continuing the game yourself from here!",
+    ja:"白はキャスリングでキングを安全な場所へ動かすよ。白のキングはg1へ移り、h1にいたルークはf1へ出てくるんだ。",
+    en:"White castles, bringing the king to safety. White's king goes to g1, and the rook from h1 comes to f1.",
+    fox:'normal' },
+  { move:{from:[0,5],to:[1,4]}, moveLabel:{ja:"7...Be7", en:"7...Be7"},
+    ja:"黒はビショップをe7へ進めるよ。これでf8とg8のマスが空いて、黒は次の手でキャスリングできるんだ。",
+    en:"Black develops the bishop to e7. This clears f8 and g8, so Black can castle on the next move.",
+    fox:'normal' },
+  { move:{from:[6,3],to:[5,3]}, moveLabel:{ja:"8. d3", en:"8. d3"},
+    ja:"白はポーンをd3へ進めるよ。白はc1のビショップの道を開けて、まだ空いているe4やc4のマスにも利かせるんだ。",
+    en:"White pushes the pawn to d3. White opens the path for the c1 bishop and also covers the empty e4 and c4 squares.",
+    fox:'normal' },
+  { move:{from:[0,4],to:[0,6],castle:{from:[0,7],to:[0,5]}}, moveLabel:{ja:"8...O-O", en:"8...O-O"},
+    ja:"黒はキャスリングでキングを安全な場所へ動かすよ。黒のキングはg8へ移り、h8にいたルークはf8へ出てくるんだ。",
+    en:"Black castles, bringing the king to safety. Black's king goes to g8, and the rook from h8 comes to f8.",
+    fox:'normal' },
+  { move:{from:[6,0],to:[5,0]}, moveLabel:{ja:"9. a3", en:"9. a3"},
+    ja:"白はポーンをa3へ進めるよ。白は次にb4と突いて、クイーンサイドのスペースを広げる準備をするんだ。白のa3のポーンは、まだ空いているb4のマスに利いて、黒の駒がb4に入るのも防いでいるよ。この後は、白が長い斜めの列とクイーンサイドのポーンを使い、黒がe5のポーンで中央を押さえて、それぞれの作戦を進めていくんだ。これで本譜は一段落、続きはぜひ自分で指してみてね！",
+    en:"White pushes the pawn to a3. White prepares to push b4 next and gain space on the queenside. White's a3 pawn also covers the empty b4 square, keeping Black's pieces out of there. From here, White uses the long diagonal and the queenside pawns, while Black holds the center with the e5 pawn, and each side pursues its own plan. That's the main line — try continuing the game yourself from here!",
     fox:'happy' }
 ];
 
@@ -339,7 +362,19 @@ function renderStep(){
   const step = LESSON_STEPS[currentStep];
   renderBoard(boardSnapshots[currentStep]);
   document.getElementById('moveLabel').textContent = (step.moveLabel && step.moveLabel[currentLang]) || '';
-  document.getElementById('commentaryText').textContent = step[currentLang];
+  const ctEl = document.getElementById('commentaryText');
+  const moreText = step[currentLang + 'More'];
+  ctEl.innerHTML = step[currentLang] + (moreText
+    ? '<details class="more-detail"><summary>' + (currentLang === 'ja' ? '💡 もっと詳しく知りたい方へ' : '💡 Want to know more?') + '</summary><div class="more-body">' + moreText + '</div></details>'
+    : '');
+  ctEl.scrollTop = 0;
+  const moreEl = ctEl.querySelector('details.more-detail');
+  if (moreEl) {
+    moreEl.addEventListener('toggle', function(){
+      if (moreEl.open) { ctEl.scrollTop = moreEl.offsetTop - ctEl.offsetTop; }
+      adjustBottomPadding();
+    });
+  }
   document.getElementById('foxAvatar').src = FOX_BY_MOOD[step.fox] || FOX_BY_MOOD.normal;
   document.getElementById('lessonProgress').textContent = currentStep + ' / ' + (LESSON_STEPS.length - 1);
   document.getElementById('btnPrev').disabled = currentStep === 0;
