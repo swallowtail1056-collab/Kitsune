@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>ログインテスト</title>
+<style>
+  body { font-family: sans-serif; background:#f5edd6; color:#4a2a0e; padding:20px; }
+  button { display:block; width:100%; margin:10px 0; padding:14px; font-size:16px; border:0; border-radius:8px; background:#7c4a1e; color:#fff; }
+  #log { white-space:pre-wrap; background:#fff; border:1px solid #c9a; border-radius:8px; padding:10px; font-size:13px; min-height:80px; word-break:break-all; }
+</style>
+</head>
+<body>
+<h2>🦊 ログインテスト（テスト用ページ）</h2>
+<p>受け取り口（kitsunechess.com/__/auth）を使ったログインのテストです。本番の対局ページには影響しません。</p>
+<button id="popupBtn">① ポップアップでログイン</button>
+<button id="redirectBtn">② 画面切り替えでログイン</button>
+<button id="logoutBtn" style="background:#888;">ログアウト</button>
+<div id="log">状態を確認中...</div>
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithRedirect, getRedirectResult, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+  const app = initializeApp({
+    apiKey: "AIzaSyDR6vsVq2uePiFRUmoqYB4LjdGZJiRM4eE",
+    authDomain: "kitsunechess.com",
+    projectId: "kitsunechess-multiplayer",
+    appId: "1:1025643200128:web:cf333443c75742ea127065"
+  });
+  const auth = getAuth(app);
+  const provider = new GoogleAuthProvider();
+  const logEl = document.getElementById('log');
+  const log = (m) => { logEl.textContent = new Date().toLocaleTimeString() + '  ' + m + '\n' + logEl.textContent; };
+  const standalone = (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) || window.navigator.standalone === true;
+  log('ホーム画面から開いている: ' + (standalone ? 'はい' : 'いいえ'));
+  onAuthStateChanged(auth, u => log(u ? ('✅ ログイン中: ' + (u.email || u.uid) + (u.isAnonymous ? '（ゲスト）' : '')) : 'ログインしていません'));
+  getRedirectResult(auth).then(r => { if (r) log('✅ 画面切り替えログイン成功: ' + r.user.email); }).catch(e => log('❌ 画面切り替えの結果エラー: ' + e.code + ' / ' + e.message));
+  document.getElementById('popupBtn').onclick = () => signInWithPopup(auth, provider).then(r => log('✅ ポップアップ成功: ' + r.user.email)).catch(e => log('❌ ポップアップエラー: ' + e.code + ' / ' + e.message));
+  document.getElementById('redirectBtn').onclick = () => signInWithRedirect(auth, provider).catch(e => log('❌ 画面切り替えエラー: ' + e.code + ' / ' + e.message));
+  document.getElementById('logoutBtn').onclick = () => signOut(auth).then(() => log('ログアウトしました'));
+</script>
+</body>
+</html>
