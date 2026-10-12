@@ -638,7 +638,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getAuth, GoogleAuthProvider, signInWithPopup, signInAnonymously, signOut, deleteUser, reauthenticateWithPopup, linkWithPopup, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithRedirect, getRedirectResult, signInAnonymously, signOut, deleteUser, reauthenticateWithPopup, linkWithPopup, linkWithRedirect, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
   import { getDatabase, ref, set, get, push, update, remove, onValue, onDisconnect, serverTimestamp, runTransaction } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
   import { getMessaging, getToken, onMessage } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-messaging.js";
   import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-storage.js";
@@ -2066,9 +2066,38 @@ applyBoardTheme();
   };
   // ===== ここまでAIモード =====
 
+  // ホーム画面に追加したとき(iPhone)やアプリの中では、ポップアップが使えないので「画面ごと切り替わる」ログインにする
+  const KC_STANDALONE = (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) || window.navigator.standalone === true;
   document.getElementById('loginBtn').onclick = () => {
-    signInWithPopup(auth, provider).catch(err => { document.getElementById('status').textContent = 'Error: ' + err.message; });
+    if (KC_STANDALONE) {
+      signInWithRedirect(auth, provider).catch(err => { document.getElementById('status').textContent = 'Error: ' + err.message; });
+      return;
+    }
+    signInWithPopup(auth, provider).catch(err => {
+      if (err.code === 'auth/popup-blocked' || err.code === 'auth/operation-not-supported-in-this-environment') {
+        signInWithRedirect(auth, provider).catch(e2 => { document.getElementById('status').textContent = 'Error: ' + e2.message; });
+        return;
+      }
+      document.getElementById('status').textContent = 'Error: ' + err.message;
+    });
   };
+  // 「画面ごと切り替わる」ログイン・連携から戻ってきたときの結果を受け取る
+  getRedirectResult(auth).then(async (result) => {
+    if (result && result.operationType === 'link') {
+      try { await update(ref(db, 'publicProfiles/' + result.user.uid), { isAnonymous: false }); } catch (e) {}
+      const msgEl = document.getElementById('linkGoogleMsg');
+      if (msgEl) { msgEl.className = 'msg'; msgEl.textContent = LANG === 'ja' ? '連携が完了しました!' : 'Linked successfully!'; }
+      const area = document.getElementById('linkGoogleArea');
+      if (area) area.style.display = 'none';
+    }
+  }).catch(err => {
+    const msgEl = document.getElementById('linkGoogleMsg');
+    const text = err.code === 'auth/credential-already-in-use'
+      ? (LANG === 'ja' ? 'そのGoogleアカウントは既に別のアカウントで使われています。別のGoogleアカウントをお試しください。' : 'That Google account is already linked to a different account. Please try a different one.')
+      : ((LANG === 'ja' ? 'エラー: ' : 'Error: ') + err.message);
+    if (msgEl) { msgEl.className = 'err'; msgEl.textContent = text; }
+    else { document.getElementById('status').textContent = text; }
+  });
     document.getElementById('guestLoginBtn').onclick = () => {
     signInAnonymously(auth).catch(err => { document.getElementById('status').textContent = 'Error: ' + err.message; });
   };
@@ -2095,6 +2124,11 @@ applyBoardTheme();
     const msgEl = document.getElementById('linkGoogleMsg');
     msgEl.className = '';
     msgEl.textContent = '';
+    if (KC_STANDALONE) {
+      try { await linkWithRedirect(auth.currentUser, provider); }
+      catch (err) { msgEl.className = 'err'; msgEl.textContent = (LANG === 'ja' ? 'エラー: ' : 'Error: ') + err.message; }
+      return;
+    }
     try {
       const result = await linkWithPopup(auth.currentUser, provider);
       await update(ref(db, 'publicProfiles/' + result.user.uid), { isAnonymous: false });
