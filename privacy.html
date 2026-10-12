@@ -120,7 +120,10 @@
 </head>
 <body>
 <div class="container">
-    <h1>プライバシーポリシー / Privacy Policy</h1>
+<button type="button" id="btnJa" class="lang-btn-active">日本語</button>
+<button type="button" id="btnEn" class="lang-btn-inactive">ENGLISH</button>
+<div id="ja-block">
+    <h1>プライバシーポリシー</h1>
     <p>最終更新日：2026年10月12日</p>
 
     <p>KitsuneChess（以下「本サイト」）は、チェスのオープニング（定跡）を学べる学習サイトです。本サイトでは、利用者の皆さまの情報を大切に扱うため、以下のとおりプライバシーポリシーを定めます。</p>
@@ -162,8 +165,9 @@
     <p>本ポリシーや本サイトに関するお問い合わせは、下記までお願いいたします。</p>
     <p>KitsuneChess<br>メール：<a href="mailto:info@kitsunechess-app.com">info@kitsunechess-app.com</a></p>
 
-    <hr style="margin:40px 0;border:none;border-top:2px solid rgba(184,134,11,0.3);">
+</div>
 
+<div id="en-block" style="display:none;">
     <h1>Privacy Policy</h1>
     <p>Last updated: October 12, 2026</p>
     <p>KitsuneChess (the "Site") is a website for learning chess openings. This policy explains how we handle information about our users.</p>
@@ -202,8 +206,35 @@
     <p>If you have any questions about this policy or the Site, please contact us at:</p>
     <p>KitsuneChess<br>Email: <a href="mailto:info@kitsunechess-app.com">info@kitsunechess-app.com</a></p>
 
-    <a href="index.html" class="back-btn">🦊 トップページへ / Home</a>
 </div>
+
+    <a href="index.html" class="back-btn" id="backBtn">🦊 トップページへ</a>
+</div>
+<script>
+(function () {
+  function setLang(lang) {
+    var en = lang === 'en';
+    document.getElementById('ja-block').style.display = en ? 'none' : 'block';
+    document.getElementById('en-block').style.display = en ? 'block' : 'none';
+    document.getElementById('btnJa').className = en ? 'lang-btn-inactive' : 'lang-btn-active';
+    document.getElementById('btnEn').className = en ? 'lang-btn-active' : 'lang-btn-inactive';
+    document.getElementById('backBtn').textContent = en ? '🦊 Back to Home' : '🦊 トップページへ';
+    document.getElementById('backBtn').href = en ? 'index.html?lang=en' : 'index.html';
+    document.documentElement.lang = en ? 'en' : 'ja';
+    document.title = en ? 'Privacy Policy | KitsuneChess' : 'プライバシーポリシー | KitsuneChess';
+    try { localStorage.setItem('selectedLang', lang); } catch (e) {}
+  }
+  var lang = 'ja';
+  try {
+    var q = new URLSearchParams(location.search).get('lang');
+    if (q === 'en' || q === 'ja') lang = q;
+    else if (localStorage.getItem('selectedLang') === 'en') lang = 'en';
+  } catch (e) {}
+  setLang(lang);
+  document.getElementById('btnJa').onclick = function () { setLang('ja'); };
+  document.getElementById('btnEn').onclick = function () { setLang('en'); };
+})();
+</script>
 
 <div class="footer-copy">
     © 2026 KitsuneChess
