@@ -115,8 +115,12 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
 
 <nav>
   <div class="nav-inner">
+    <span style="display:inline-flex;align-items:center;gap:16px;">
     <a href="openings_list.html" class="back-link lang-element-ja">← 一覧へ戻る</a>
     <a href="openings_list.html" class="back-link lang-element-en">← Back to List</a>
+    <a href="index.html" class="back-link lang-element-ja">🏠 ホーム</a>
+    <a href="index.html?lang=en" class="back-link lang-element-en">🏠 Home</a>
+    </span>
     <button id="langToggle" class="lang-switch-btn">English</button>
   </div>
 </nav>
@@ -230,8 +234,8 @@ const LESSON_STEPS = [
     en:"White develops the knight to c3. Together with the c4 pawn and the d1 queen, White now has three defenders on d5.",
     fox:'normal' },
   { move:{from:[2,4],to:[3,3]}, moveLabel:{ja:"4...exd5", en:"4...exd5"},
-    ja:"黒はe6のポーンで、d5にいた白のポーンを取るよ。黒は中央のポーンを交換して、白のポーンの形を決めにいくんだ。",
-    en:"Black's e6 pawn captures White's pawn on d5. Black trades in the center to fix White's pawn structure.",
+    ja:"黒はe6のポーンで、d5にいた白のポーンを取るよ。黒は中央でポーンを交換して、白と黒でポーンの並び方がちがう形を作りにいくんだ。",
+    en:"Black's e6 pawn captures White's pawn on d5. Black trades in the center to create an unbalanced pawn structure, with White and Black arranging their pawns differently.",
     fox:'normal' },
   { move:{from:[4,2],to:[3,3]}, moveLabel:{ja:"5. cxd5", en:"5. cxd5"},
     ja:"白はc4のポーンで、d5に入った黒のポーンを取り返すよ。これで白は中央からキングサイドに、黒はクイーンサイドに、相手より多くのポーンを持つ形になったんだ。",
