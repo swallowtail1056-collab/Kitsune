@@ -103,6 +103,11 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
   font-size: 1rem;
   color: var(--text-sub);
 }
+.commentary-text a, .opening-intro a { color:var(--brown); text-decoration:underline; font-weight:700; }
+.commentary-text a:hover, .opening-intro a:hover { color:var(--brown-dark); }
+.more-detail { margin-top:8px; border-top:1px dashed var(--brown-light); padding-top:6px; }
+.more-detail summary { cursor:pointer; font-weight:700; color:var(--brown); font-size:0.92rem; list-style-position:inside; }
+.more-detail .more-body { margin-top:6px; font-size:0.94rem; }
 </style>
   <script src="board-theme.js"></script>
 </head>
@@ -125,8 +130,8 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
   <h1 class="opening-title lang-element-en">Scandinavian Defense</h1>
 
   <div class="opening-intro">
-    <p class="lang-element-ja">💡 スカンジナビアン・ディフェンスは1...d5と即座に中央に挑む奇襲的なオープニングだよ！白がexd5と取れば黒はQxd5とクイーンで取り返して早期に活性化するか、Nf6と突いて後でポーンを回収する変化を選べるんだ。クイーンを早く出すのはチェスの原則に反するように見えるけど、黒のクイーンはa5やd6に退いて安全を保ちながら白の展開を妨害できるよ。主流のオープニング理論から外れているため、相手の事前研究を崩しやすいのが大きな武器。アマチュアレベルで非常に効果的な実戦的な守りだよ！</p>
-    <p class="lang-element-en">💡 The Scandinavian Defense immediately challenges the center with 1...d5 — a real surprise weapon! If White captures with exd5, Black can recapture with the queen for immediate activity, or play Nf6 to recover the pawn later. Taking with the queen so early might seem to break opening principles, but Black's queen can retreat safely to a5 or d6 while disrupting White's development. Since the Scandinavian is outside mainstream theory, it's excellent for throwing opponents off their prepared lines. A practical and effective defense that is highly effective at the amateur level!</p>
+    <p class="lang-element-ja">💡 スカンジナビアン・ディフェンスは、1.e4 d5と、黒が1手目から白のe4のポーンに挑むオープニングだよ。15世紀のカタルーニャの詩『Scachs d'amor』に描かれた対局にも出てきて、記録に残るいちばん古いオープニングのひとつと言われているんだ。2014年のチェス・オリンピアードでは、カールセンがこのオープニングでカルアナに勝っているよ。</p>
+    <p class="lang-element-en">💡 The Scandinavian Defense begins 1.e4 d5, with Black challenging White's e4 pawn on the very first move. It appears in a game described in Scachs d'amor, a 15th-century Catalan poem, and is said to be one of the oldest recorded openings. At the 2014 Chess Olympiad, Carlsen used it to beat Caruana.</p>
   </div>
 
   <div class="board-wrap">
@@ -200,60 +205,76 @@ const initialBoard = [
 // ============================================================
 const LESSON_STEPS = [
   { move:null, moveLabel:{ja:"開始局面", en:"Starting Position"},
-    ja:"スカンジナビアン・ディフェンスのレッスンを始めるよ！1手目から即座に中央へ挑む、奇襲的なオープニングだよ。ジーンと一緒に、一手ずつ「なぜその手を指すのか」を学んでいこう。",
-    en:"Let's start the Scandinavian Defense lesson! Black challenges the center immediately on move one — a true surprise weapon. Jene will explain why each move is played, one step at a time.",
+    ja:"スカンジナビアン・ディフェンスのレッスンを始めるよ！このページでは、黒が3...Qa5とクイーンを下げる、いちばんよく指される本線を見ていくよ。早く出た黒のクイーンを白がどう追い回し、黒がどう固めるのかがポイントなんだ。一手ずつジーンと一緒に、なぜその手を指すのかを学んでいこう。",
+    en:"Let's start the Scandinavian Defense lesson! On this page we follow the most popular main line, where Black retreats the queen with 3...Qa5. The key is how White chases Black's early queen and how Black builds a solid position. Jene will walk you through why each move is played, one step at a time.",
     fox:'welcome' },
   { move:{from:[6,4],to:[4,4]}, moveLabel:{ja:"1. e4", en:"1. e4"},
-    ja:"白はe4で中央を制圧するよ。ビショップとクイーンの通り道を同時に開く、効率の良い一手だね。",
-    en:"White claims the center with 1.e4, opening lines for the bishop and queen in the same move.",
+    ja:"白はポーンをe4へ進めるよ。白は中央のマスを押さえながら、ビショップとクイーンが動く道を開けるんだ。",
+    en:"White pushes the pawn to e4. White takes control of central squares and opens lines for the bishop and queen.",
     fox:'normal' },
   { move:{from:[1,3],to:[3,3]}, moveLabel:{ja:"1...d5（スカンジナビアン！）", en:"1...d5 (Scandinavian!)"},
-    ja:"ここが本題、スカンジナビアン・ディフェンスの一手！黒は1手目から即座にd5と中央に挑むよ。",
-    en:"Here's the Scandinavian Defense move! Black immediately challenges the center with 1...d5.",
+    ja:"ここがスカンジナビアン・ディフェンスの一手！黒はポーンをd5へ進めて、白のe4のポーンにすぐ挑むよ。黒は1手目から中央で戦いを始めて、白に大きな中央を作らせないんだ。",
+    en:"Here's the Scandinavian Defense! Black pushes the pawn to d5 and challenges White's e4 pawn right away. Black starts the fight in the center from move one and does not let White build a big center.",
     fox:'happy' },
-   { move:{from:[4,4],to:[3,3]}, moveLabel:{ja:"2. exd5", en:"2. exd5"},
-    ja:"白はexd5とポーンを取るよ。断ることもできるけど、素直に受け取っておいて、黒がどう回収してくるかを見るのが本譜の進め方なんだ。",
-    en:"White captures with 2.exd5. Declining is possible too, but the main line is to take it and see how Black tries to win it back.",
+  { move:{from:[4,4],to:[3,3]}, moveLabel:{ja:"2. exd5", en:"2. exd5"},
+    ja:"白はe4のポーンで、d5に来た黒のポーンを取るよ。白はこれで、黒のポーンを1つ取った形になったんだ。",
+    en:"White's e4 pawn captures Black's pawn on d5. White is now a pawn up for the moment.",
     fox:'normal' },
   { move:{from:[0,3],to:[3,3]}, moveLabel:{ja:"2...Qxd5", en:"2...Qxd5"},
-    ja:"黒はクイーンで取り返すよ。クイーンを早く出すのは普通は避けるべきだけど、ここには理由があるんだ。",
-    en:"Black recaptures with the queen. Bringing the queen out early usually breaks opening principles, but here it's justified.",
-    fox:'quiz' },
+    ja:"黒はクイーンでd5のポーンを取り返すよ。これで白と黒の駒の数は同じに戻ったんだ。ただし黒のクイーンは早くから盤の真ん中に出たので、白の駒に追われやすくなっているよ。",
+    en:"Black's queen recaptures the pawn on d5. White and Black now have the same material again. However, Black's queen has come out to the middle of the board early, so it can easily be chased by White's pieces.",
+    jaMore:"黒はこの手の代わりに、2...Nf6とナイトを出してから、あとでd5のポーンを取り返すこともできるよ。黒はクイーンを早く出さずに済む代わりに、ポーンを取り返すのに少し時間がかかるんだ。",
+    enMore:"Instead of this move, Black can also play 2...Nf6 and win the d5 pawn back later. Black avoids bringing the queen out early, but it takes a little longer to regain the pawn.",
+    fox:'normal' },
   { move:{from:[7,1],to:[5,2]}, moveLabel:{ja:"3. Nc3", en:"3. Nc3"},
-    ja:"白はナイトをc3へ展開して、クイーンに「動け」とテンポを得るよ。",
-    en:"White develops the knight to c3, gaining a tempo by attacking the queen.",
-    fox:'wink' },
-   { move:{from:[3,3],to:[3,0]}, moveLabel:{ja:"3...Qa5", en:"3...Qa5"},
-    ja:"黒はクイーンをa5へ。安全な場所に退くだけじゃなくて、この位置からc3のナイトに斜めのプレッシャーをかけ続けるよ。この先d4が指されると、ナイトは白キングに対してピンされる形になるんだ。",
-    en:"Black retreats the queen to a5. It's not just a safe square — from here the queen keeps pressuring the knight on c3 along the diagonal. Once White plays d4, that knight will actually be pinned to the king.",
+    ja:"白はナイトをc3へ進めて、d5のクイーンを攻撃するよ。白は駒を展開しながら黒のクイーンを追い回して、そのあいだに展開で先を行こうとするんだ。",
+    en:"White develops the knight to c3 and attacks the queen on d5. White develops while chasing Black's queen, trying to get ahead in development.",
+    fox:'normal' },
+  { move:{from:[3,3],to:[3,0]}, moveLabel:{ja:"3...Qa5", en:"3...Qa5"},
+    ja:"黒はクイーンをa5へ動かすよ。黒のクイーンはa5に下がって、白の駒に追われにくい場所に落ち着くんだ。黒のクイーンはa5からe1までの斜めの列にも利いていて、白のdのポーンが動くと、c3のナイトをピンできるよ。",
+    en:"Black moves the queen to a5. Black's queen settles on a5, where it is harder for White's pieces to chase. Black's queen also lies on the diagonal from a5 to e1, so once White's d-pawn moves, it will pin the c3 knight.",
+    jaMore:"黒はこの手の代わりに、3...Qd6や3...Qd8とクイーンを下げることもできるよ。黒はどのマスに下げるかで、そのあとの駒の組み立て方が変わってくるんだ。",
+    enMore:"Instead of this move, Black can also retreat the queen with 3...Qd6 or 3...Qd8. Which square Black chooses changes how Black builds up the pieces afterward.",
     fox:'normal' },
   { move:{from:[6,3],to:[4,3]}, moveLabel:{ja:"4. d4", en:"4. d4"},
-    ja:"白はd4で中央をしっかり制圧するよ。",
-    en:"White firmly claims the center with 4.d4.",
+    ja:"白はポーンをd4へ進めるよ。白は中央のマスを押さえながら、c1のビショップの道を開けるんだ。白のd2のポーンが動いたので、c3のナイトは今、a5のクイーンにピンされているよ。",
+    en:"White pushes the pawn to d4. White claims a central square and opens the path for the c1 bishop. Because White's d2 pawn has moved, the c3 knight is now pinned by the queen on a5.",
     fox:'normal' },
-   { move:{from:[0,6],to:[2,5]}, moveLabel:{ja:"4...Nf6", en:"4...Nf6"},
-    ja:"黒はナイトをf6へ展開するよ。クイーンを早く出した分、他の駒の展開が遅れないよう急ぐ必要があるんだ。",
-    en:"Black develops the knight to f6, hurrying to catch up on development after bringing the queen out early.",
+  { move:{from:[1,2],to:[2,2]}, moveLabel:{ja:"4...c6", en:"4...c6"},
+    ja:"黒はポーンをc6へ進めるよ。黒はb5とd5のマスを押さえて、白のナイトがそこへ入ってくるのを防ぐんだ。黒のポーンの形は、<a href='caro_kann.html'>カロ・カン・ディフェンス</a>に似た固い形になっていくよ。",
+    en:"Black pushes the pawn to c6. Black covers the b5 and d5 squares and keeps White's knight from jumping there. Black's pawns are heading toward a solid structure similar to the <a href='caro_kann.html?lang=en'>Caro-Kann Defense</a>.",
     fox:'normal' },
-    { move:{from:[7,6],to:[5,5]}, moveLabel:{ja:"5. Nf3", en:"5. Nf3"},
-    ja:"白はナイトをf3へ展開するよ。まだf1にビショップが残っているから、キャスリングにはもう一手必要。ここではまず駒の展開を優先するんだ。",
-    en:"White develops the other knight to f3. The bishop on f1 is still at home, so castling isn't quite ready yet — this move is mainly about development.",
+  { move:{from:[7,6],to:[5,5]}, moveLabel:{ja:"5. Nf3", en:"5. Nf3"},
+    ja:"白はナイトをf3へ進めるよ。白のナイトはd4のポーンを守り、e5のマスにも利かせるんだ。",
+    en:"White develops the knight to f3. White's knight defends the d4 pawn and also covers the e5 square.",
     fox:'normal' },
-  { move:{from:[0,2],to:[4,6]}, moveLabel:{ja:"5...Bg4", en:"5...Bg4"},
-    ja:"黒はビショップをg4へ。ナイトをピンして展開のリードを縮めようとするよ。",
-    en:"Black develops the bishop to g4, pinning the knight to slow White's development.",
-    fox:'wink' },
-  { move:{from:[6,7],to:[5,7]}, moveLabel:{ja:"6. h3", en:"6. h3"},
-    ja:"白はh3でビショップに「取るか、引くか」を聞くよ。",
-    en:"White asks the bishop a question with 6.h3: trade, or retreat?",
+  { move:{from:[0,6],to:[2,5]}, moveLabel:{ja:"5...Nf6", en:"5...Nf6"},
+    ja:"黒はナイトをf6へ進めるよ。黒のナイトはd5とe4のマスに利かせて、キングサイドの展開を進めるんだ。",
+    en:"Black develops the knight to f6. Black's knight covers the d5 and e4 squares as Black continues developing the kingside.",
     fox:'normal' },
-    { move:{from:[4,6],to:[5,5]}, moveLabel:{ja:"6...Bxf3", en:"6...Bxf3"},
-    ja:"黒はBxf3とナイトを取るよ。ビショップを引く選択肢もあったけど、ここで交換しておくことで白のポーン構造をわずかに崩す狙いがあるんだ。",
-    en:"Black captures the knight with 6...Bxf3. Retreating the bishop was also an option, but trading here slightly disrupts White's pawn structure.",
+  { move:{from:[7,5],to:[4,2]}, moveLabel:{ja:"6. Bc4", en:"6. Bc4"},
+    ja:"白はビショップをc4へ進めるよ。白のビショップはa2からg8への斜めの列で、黒のf7のマスをねらうんだ。これでf1のマスが空いて、白はキャスリングの準備も進めているよ。",
+    en:"White develops the bishop to c4. White's bishop aims at Black's f7 square along the a2–g8 diagonal. This also clears f1, so White is getting ready to castle.",
     fox:'normal' },
-  { move:{from:[7,3],to:[5,5]}, moveLabel:{ja:"7. Qxf3", en:"7. Qxf3"},
-    ja:"白はクイーンで取り返すよ。これで本譜は一段落、続きはぜひ自分で指してみてね！",
-    en:"White recaptures with the queen. That's the main line — try continuing the game yourself from here!",
+  { move:{from:[0,2],to:[3,5]}, moveLabel:{ja:"6...Bf5", en:"6...Bf5"},
+    ja:"黒はビショップをf5へ進めるよ。黒はeのポーンを突く前に、c8のビショップを外へ出しておくんだ。黒のビショップはf5から、白のc2のポーンもねらっているよ。",
+    en:"Black develops the bishop to f5. Black gets the c8 bishop outside the pawn chain before pushing the e-pawn. From f5, Black's bishop also eyes White's c2 pawn.",
+    fox:'normal' },
+  { move:{from:[7,2],to:[6,3]}, moveLabel:{ja:"7. Bd2", en:"7. Bd2"},
+    ja:"白はビショップをd2へ進めるよ。白のビショップはc3のナイトのピンを外して、ナイトが自由に動けるようにするんだ。白のナイトがd5などへ動けば、白はd2のビショップでa5のクイーンをねらえるようになるよ。",
+    en:"White develops the bishop to d2. White's bishop breaks the pin on the c3 knight so the knight can move freely. If White's knight moves, for example to d5, White's d2 bishop will hit the queen on a5.",
+    fox:'normal' },
+  { move:{from:[1,4],to:[2,4]}, moveLabel:{ja:"7...e6", en:"7...e6"},
+    ja:"黒はポーンをe6へ進めるよ。黒はd5のマスをもう一つ押さえて、白のナイトがd5に入ってくるのを防ぐんだ。黒はf8のビショップの道も開けているよ。",
+    en:"Black pushes the pawn to e6. Black adds another guard on d5 and keeps White's knight from landing there. Black also opens the path for the f8 bishop.",
+    fox:'normal' },
+  { move:{from:[7,3],to:[6,4]}, moveLabel:{ja:"8. Qe2", en:"8. Qe2"},
+    ja:"白はクイーンをe2へ動かすよ。白はこれで、b1・c1・d1のマスがすべて空いて、クイーンサイドにキャスリングする道も開けたんだ。白のクイーンはe2から、c4のビショップも守っているよ。",
+    en:"White moves the queen to e2. With b1, c1, and d1 all empty, White now has the option of castling queenside. From e2, White's queen also defends the c4 bishop.",
+    fox:'normal' },
+  { move:{from:[0,5],to:[4,1]}, moveLabel:{ja:"8...Bb4", en:"8...Bb4"},
+    ja:"黒はビショップをb4へ進めるよ。黒のビショップはc3のナイトに圧力をかけて、白のナイトを動きにくくするんだ。これでf8のマスも空いて、黒はキャスリングの準備を進めるよ。白は展開の速さを生かして攻め、黒はカロ・カンに似た固いポーンの形で守りながら反撃をねらうのが典型的な流れだよ。これで本譜は一段落、続きはぜひ自分で指してみてね！",
+    en:"Black develops the bishop to b4. Black's bishop puts pressure on the c3 knight and makes it harder for White's knight to move. This also clears f8, so Black can prepare to castle. The typical plan is for White to use the lead in development to attack, while Black defends with a solid, Caro-Kann-like pawn structure and looks for counterplay. That's the main line — try continuing the game yourself from here!",
     fox:'happy' }
 ];
 
@@ -343,7 +364,19 @@ function renderStep(){
   const step = LESSON_STEPS[currentStep];
   renderBoard(boardSnapshots[currentStep]);
   document.getElementById('moveLabel').textContent = (step.moveLabel && step.moveLabel[currentLang]) || '';
-  document.getElementById('commentaryText').textContent = step[currentLang];
+  const ctEl = document.getElementById('commentaryText');
+  const moreText = step[currentLang + 'More'];
+  ctEl.innerHTML = step[currentLang] + (moreText
+    ? '<details class="more-detail"><summary>' + (currentLang === 'ja' ? '💡 もっと詳しく知りたい方へ' : '💡 Want to know more?') + '</summary><div class="more-body">' + moreText + '</div></details>'
+    : '');
+  ctEl.scrollTop = 0;
+  const moreEl = ctEl.querySelector('details.more-detail');
+  if (moreEl) {
+    moreEl.addEventListener('toggle', function(){
+      if (moreEl.open) { ctEl.scrollTop = moreEl.offsetTop - ctEl.offsetTop; }
+      adjustBottomPadding();
+    });
+  }
   document.getElementById('foxAvatar').src = FOX_BY_MOOD[step.fox] || FOX_BY_MOOD.normal;
   document.getElementById('lessonProgress').textContent = currentStep + ' / ' + (LESSON_STEPS.length - 1);
   document.getElementById('btnPrev').disabled = currentStep === 0;

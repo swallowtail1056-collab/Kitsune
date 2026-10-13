@@ -101,6 +101,11 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
   font-size: 1rem;
   color: var(--text-sub);
 }
+.commentary-text a, .opening-intro a { color:var(--brown); text-decoration:underline; font-weight:700; }
+.commentary-text a:hover, .opening-intro a:hover { color:var(--brown-dark); }
+.more-detail { margin-top:8px; border-top:1px dashed var(--brown-light); padding-top:6px; }
+.more-detail summary { cursor:pointer; font-weight:700; color:var(--brown); font-size:0.92rem; list-style-position:inside; }
+.more-detail .more-body { margin-top:6px; font-size:0.94rem; }
 </style>
   <script src="board-theme.js"></script>
 </head>
@@ -123,8 +128,8 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
   <h1 class="opening-title lang-element-en">Sicilian Defense</h1>
 
   <div class="opening-intro">
-    <p class="lang-element-ja">💡 シシリアン・ディフェンスは1...c5と応じる、1.e4に対して最もよく指される黒の戦法だよ！1...e5と違ってc5は非対称な局面を作り出し、黒は白と違う形でポーンを配置するんだ。白が2.Nf3から3.d4とオープン・シシリアンを目指しても、黒は端のcポーンを白の中央のdポーンと交換できて、白に強力なd4・e4のポーンセンターを作らせないよ。そのうえ、半分開いたcファイルを使った反撃も狙えるんだ。グランドマスター同士の対局の約17%、チェス・インフォーマントのデータベースでは約25%がこの戦法で始まっていて、マスターレベルでは成績も最もよいとされているよ。白には、2.Nc3のクローズド・シシリアンなど、オープン・シシリアン以外の作戦もあるんだ。</p>
-    <p class="lang-element-en">💡 The Sicilian Defense starts with 1...c5, the most popular reply to 1.e4 and, at master level, its best-scoring one. Unlike 1...e5, 1...c5 creates an asymmetrical position where Black places pawns differently from White. Even if White heads for the Open Sicilian with 2.Nf3 and 3.d4, Black can trade a wing c-pawn for White's central d-pawn, denying White a strong d4-e4 pawn center, and gains the half-open c-file for counterplay. About 17% of grandmaster games and about 25% of the Chess Informant database begin with the Sicilian. White also has other plans besides the Open Sicilian, such as the Closed Sicilian with 2.Nc3.</p>
+    <p class="lang-element-ja">💡 シシリアン・ディフェンスは、1.e4 c5と、黒が白のe4に対して左右がちがう形で応じるオープニングだよ。1.e4に対していちばんよく指される応手のひとつで、黒が引き分けではなく勝ちをねらいやすい、戦いの激しいオープニングとして知られているんだ。白と黒で作戦がまったくちがうので、バリエーションの数がとても多いのも特徴だよ。</p>
+    <p class="lang-element-en">💡 The Sicilian Defense begins 1.e4 c5, with Black answering White's e4 with an unbalanced setup instead of a mirror image. It is one of the most popular replies to 1.e4 and is known as a fighting opening that gives Black real winning chances rather than just aiming for a draw. Because White and Black follow very different plans, it has an especially large number of variations.</p>
   </div>
 
   <div class="board-wrap">
@@ -186,60 +191,86 @@ const initialBoard = [
 
 const LESSON_STEPS = [
   { move:null, moveLabel:{ja:"開始局面", en:"Starting Position"},
-    ja:'シシリアン・ディフェンスのレッスンを始めるよ！1.e4に対する黒の返し方の中で、最もよく指され、成績も最もよいとされる戦法なんだ。今回は、黒がわざと白と違う形をつくる理由と、ナジドルフ・シシリアンの入口までを、一手ずつ追っていくよ。',
-    en:'Let\'s start the Sicilian Defense lesson! It is the most popular reply to 1.e4 and is considered its best-scoring one. In this lesson we\'ll follow why Black deliberately builds a different structure from White, all the way to the entrance of the Najdorf Sicilian, one move at a time.',
+    ja:"シシリアン・ディフェンスのレッスンを始めるよ！このページでは、オープン・シシリアンの代表、ナイドルフ・バリエーションを、白が6.Be2と落ち着いて受ける形で見ていくよ。黒がd5のマスをどう守り、白がどうねらうのかがポイントなんだ。一手ずつジーンと一緒に、なぜその手を指すのかを学んでいこう。",
+    en:"Let's start the Sicilian Defense lesson! On this page we follow the Najdorf Variation, the flagship of the Open Sicilian, with White answering calmly with 6.Be2. The key is how Black guards the d5 square and how White targets it. Jene will walk you through why each move is played, one step at a time.",
     fox:'welcome' },
   { move:{from:[6,4],to:[4,4]}, moveLabel:{ja:"1. e4", en:"1. e4"},
-    ja:'白はポーンをe4へ進めるよ。このポーンはd5とf5のマスに利いていて、ビショップとクイーンが動く道も同時に開けるんだ。白は中央を取りながら、駒の展開も速められるんだよ。',
-    en:'White pushes the pawn to e4. This pawn controls the d5 and f5 squares and opens lines for the bishop and queen at the same time. White claims the center while speeding up development.',
+    ja:"白はポーンをe4へ進めるよ。白は中央のマスを押さえながら、ビショップとクイーンが動く道を開けるんだ。",
+    en:"White pushes the pawn to e4. White takes control of central squares and opens lines for the bishop and queen.",
     fox:'normal' },
   { move:{from:[1,2],to:[3,2]}, moveLabel:{ja:"1...c5（シシリアン！）", en:"1...c5 (Sicilian!)"},
-    ja:'ここがシシリアンの核心！黒はポーンをc5へ進めるよ。このポーンは白のd4のマスをねらっていて、1...e5と違って白と対称な形にはならないんだ。もし白がd4と突いてポーンを交換すると、黒は端に近いcポーンを差し出して、白の中央のdポーンと交換できるんだよ。',
-    en:'This is the heart of the Sicilian! Black pushes the pawn to c5. It attacks the d4 square, and unlike 1...e5 it does not mirror White\'s setup. If White later plays d4 and the pawns are exchanged, Black gives up a wing c-pawn in return for White\'s central d-pawn.',
+    ja:"ここがシシリアン・ディフェンスの一手！黒はポーンをc5へ進めて、d4のマスに横から利かせるよ。黒は白と同じようにe5で受けずに、左右がちがう形を作って、勝ちをねらいにいくんだ。",
+    en:"Here's the Sicilian Defense! Black pushes the pawn to c5 and covers the d4 square from the side. Instead of mirroring White with ...e5, Black creates an unbalanced position and plays for a win.",
     fox:'happy' },
   { move:{from:[7,6],to:[5,5]}, moveLabel:{ja:"2. Nf3", en:"2. Nf3"},
-    ja:'白はナイトをf3へ進めるよ。このナイトはd4のマスに利いていて、次のd4の突き出しを支えられるんだ。同時に、キングサイドのキャスリングに向けた展開にもなっているよ。',
-    en:'White develops the knight to f3. This knight controls the d4 square and supports the coming d4 push. It also develops a piece toward kingside castling.',
+    ja:"白はナイトをf3へ進めるよ。白のナイトはd4のマスに利かせて、白は次にd4と突いて中央を開く準備をするんだ。",
+    en:"White develops the knight to f3. White's knight covers the d4 square, and White prepares to open the center with d4 next.",
+    jaMore:"白はこの手の代わりに、2.c3と突いてd4をポーンで支える<a href='alapin_sicilian.html'>アラピン・シシリアン</a>や、2.Nc3とゆっくり進める<a href='closed_sicilian.html'>クローズド・シシリアン</a>を選ぶこともできるよ。",
+    enMore:"Instead of this move, White can also play 2.c3 to support d4 with a pawn — the <a href='alapin_sicilian.html?lang=en'>Alapin Sicilian</a> — or 2.Nc3 for a slower game — the <a href='closed_sicilian.html?lang=en'>Closed Sicilian</a>.",
     fox:'normal' },
   { move:{from:[1,3],to:[2,3]}, moveLabel:{ja:"2...d6", en:"2...d6"},
-    ja:'黒はポーンをd6へ進めるよ。このポーンはc5とe5のマスに利いていて、c5のポーンを守りながら、白がe5と進んでもすぐ取れる形にするんだ。派手さはないけれど、黒の陣形を固める大事な一手だよ。',
-    en:'Black pushes the pawn to d6. This pawn controls c5 and e5, defending the c5 pawn and making sure it can capture if White pushes to e5. It is a quiet move, but it firms up Black\'s structure.',
+    ja:"黒はポーンをd6へ進めるよ。黒はe5のマスに利かせて、白の駒がe5に入ってくるのを防ぐんだ。黒はc8のビショップの道も開けているよ。",
+    en:"Black pushes the pawn to d6. Black covers the e5 square and keeps White's pieces from landing there. Black also opens the path for the c8 bishop.",
     fox:'normal' },
   { move:{from:[6,3],to:[4,3]}, moveLabel:{ja:"3. d4", en:"3. d4"},
-    ja:'白はポーンをd4へ進めるよ。黒のc5のポーンに挑みかけながら、中央を大きく取りにいくんだ。黒がcxd4と取れば、白はナイトで取り返して、そのナイトを中央のいいマスに置けるよ。',
-    en:'White pushes the pawn to d4, challenging Black\'s c5 pawn and going for a big center. If Black captures with cxd4, White recaptures with the knight and places it on a good central square.',
+    ja:"白はポーンをd4へ進めるよ。白は黒のc5のポーンと交換して中央を開き、駒を早く働かせようとするんだ。白のこの手から始まる形は、<a href='open_sicilian.html'>オープン・シシリアン</a>と呼ばれているよ。",
+    en:"White pushes the pawn to d4. White trades with Black's c5 pawn to open the center and get the pieces working quickly. The line starting with this move by White is called the <a href='open_sicilian.html?lang=en'>Open Sicilian</a>.",
     fox:'normal' },
   { move:{from:[3,2],to:[4,3]}, moveLabel:{ja:"3...cxd4", en:"3...cxd4"},
-    ja:'黒はc5のポーンでd4のポーンを取るよ。これで白のdポーンがなくなって、黒は中央のポーン（dとe）の数で、白（eだけ）を上回るんだ。さらに、黒のc筋にポーンがいなくなったので、c筋が半分開いて、あとで黒のルークが使えるようになるよ。',
-    en:'Black captures White\'s d4 pawn with the c5 pawn. White\'s d-pawn is gone, so Black now has more central pawns (d and e) than White (only e). Black also has no pawn on the c-file anymore, so the c-file is half-open and Black\'s rook can use it later.',
-    fox:'quiz' },
+    ja:"黒はc5のポーンで、d4に来た白のポーンを取るよ。黒は白の中央のポーンを1つ減らして、c列を開けるんだ。黒はあとでc列にルークを出して、白のクイーンサイドに圧力をかけられるよ。",
+    en:"Black's c5 pawn captures White's pawn on d4. Black removes one of White's central pawns and opens the c-file. Later, Black can put a rook on the c-file and press on White's queenside.",
+    fox:'normal' },
   { move:{from:[5,5],to:[4,3]}, moveLabel:{ja:"4. Nxd4", en:"4. Nxd4"},
-    ja:'白はナイトでd4のポーンを取り返すよ。これで白のナイトは中央のd4に出て、盤の広い範囲に利くんだ。ポーンの数は白も黒も7つずつになって、ここまでで駒の損得はないよ。',
-    en:'White recaptures on d4 with the knight. The knight now stands in the center on d4, influencing a wide part of the board. Each side has seven pawns, so no material has been won or lost so far.',
+    ja:"白はナイトでd4のポーンを取り返すよ。白のナイトは中央のd4に入り、白は展開で少し先を行っているんだ。白は中央のポーンを1つ、黒はd6とe7の2つを持つ形になったよ。",
+    en:"White's knight recaptures the pawn on d4. White's knight now stands in the center on d4, and White is slightly ahead in development. White has one central pawn, while Black has two, on d6 and e7.",
     fox:'normal' },
   { move:{from:[0,6],to:[2,5]}, moveLabel:{ja:"4...Nf6", en:"4...Nf6"},
-    ja:'黒はナイトをf6へ進めるよ。このナイトは白のe4のポーンをねらっていて、白は次にe4を守る手を指す必要が出てくるんだ。黒は展開を進めながら、白に手を使わせているよ。',
-    en:'Black develops the knight to f6. This knight attacks White\'s e4 pawn, so White will need to defend it next. Black develops a piece while forcing White to spend a move.',
+    ja:"黒はナイトをf6へ進めて、白のe4のポーンを攻撃するよ。黒は展開しながら、白にe4のポーンを守らせるんだ。",
+    en:"Black develops the knight to f6 and attacks White's e4 pawn. Black develops while making White spend a move defending e4.",
     fox:'normal' },
   { move:{from:[7,1],to:[5,2]}, moveLabel:{ja:"5. Nc3", en:"5. Nc3"},
-    ja:'白はナイトをc3へ進めるよ。このナイトはe4のポーンを守りながら、白の展開も進めるんだ。1つの手で守りと展開を両方こなす、効率のよい一手だよ。',
-    en:'White develops the knight to c3. This knight defends the e4 pawn while continuing White\'s development. It does two jobs in one move, defense and development.',
+    ja:"白はナイトをc3へ進めるよ。白のナイトはe4のポーンを守りながら、d5のマスにも利かせるんだ。",
+    en:"White develops the knight to c3. White's knight defends the e4 pawn and also covers the d5 square.",
     fox:'normal' },
-  { move:{from:[1,0],to:[2,0]}, moveLabel:{ja:"5...a6（ナジドルフ）", en:"5...a6 (Najdorf)"},
-    ja:'黒はポーンをa6へ進めるよ。これがナジドルフ・シシリアンの目印の一手で、最もよく指されるシシリアンの変化の1つなんだ。a6のポーンはb5のマスをねらって、白のBb5+（王手）やNb5といった動きを防ぎながら、あとでb5と進める準備もしているよ。',
-    en:'Black pushes the pawn to a6. This is the hallmark move of the Najdorf Sicilian, one of the most popular Sicilian variations. The a6 pawn attacks the b5 square, preventing White ideas like Bb5+ (check) or Nb5, and also prepares a later ...b5.',
-    fox:'wink' },
+  { move:{from:[1,0],to:[2,0]}, moveLabel:{ja:"5...a6（ナイドルフ）", en:"5...a6 (Najdorf)"},
+    ja:"ここが<a href='najdorf.html'>ナイドルフ・バリエーション</a>の一手！黒はポーンをa6へ進めて、白のナイトやビショップがb5のマスに入ってくるのを防ぐよ。黒はあとでe5やb5と突いて、中央やクイーンサイドで戦う準備をするんだ。黒のこの形は、フィッシャーやカスパロフも好んで指したよ。",
+    en:"Here's the <a href='najdorf.html?lang=en'>Najdorf Variation</a>! Black pushes the pawn to a6 and keeps White's knight and bishop off the b5 square. Black prepares to fight in the center and on the queenside later with ...e5 or ...b5. Fischer and Kasparov both loved this setup for Black.",
+    jaMore:"黒はこの手の代わりに、5...g6と突いてビショップをg7へ出す<a href='dragon.html'>ドラゴン・バリエーション</a>を選ぶこともできるよ。",
+    enMore:"Instead of this move, Black can also play 5...g6 and put the bishop on g7 — the <a href='dragon.html?lang=en'>Dragon Variation</a>.",
+    fox:'happy' },
   { move:{from:[7,5],to:[6,4]}, moveLabel:{ja:"6. Be2", en:"6. Be2"},
-    ja:'白はビショップをe2へ進めるよ。白はキングサイドへのキャスリングを急いで、王様の安全を先に確保する、落ち着いた方針なんだ。この手で始まる形は「オポチェンスキー変化」と呼ばれているよ。',
-    en:'White develops the bishop to e2. White aims to castle kingside quickly and put the king\'s safety first, a calm approach. Lines starting with this move are called the Opocensky Variation.',
+    ja:"白はビショップをe2へ進めるよ。白は落ち着いて駒を展開して、早くキャスリングする準備をするんだ。白のこの手は、カルポフも好んで指した堅実な作戦なんだよ。",
+    en:"White develops the bishop to e2. White develops calmly and prepares to castle quickly. This solid approach was a favorite of Karpov's.",
+    jaMore:"白はこの手の代わりに、6.Bg5と黒のf6のナイトにプレッシャーをかけることもできるよ。<a href='najdorf.html'>ナイドルフのページ</a>では、その形を見ているんだ。",
+    enMore:"Instead of this move, White can also play 6.Bg5 and put pressure on Black's f6 knight. The <a href='najdorf.html?lang=en'>Najdorf page</a> covers that line.",
     fox:'normal' },
   { move:{from:[1,4],to:[3,4]}, moveLabel:{ja:"6...e5", en:"6...e5"},
-    ja:'黒はポーンをe5へ進めるよ。このポーンはd4の白ナイトをねらって、中央から追い払おうとするんだ。ただし代償もあって、d5のマスを守る黒のポーンがいなくなり、白の駒が入り込みやすい弱点になるよ。攻めと引き換えに弱点をつくる、シシリアンらしい駆け引きなんだ。',
-    en:'Black pushes the pawn to e5. This pawn attacks White\'s knight on d4, trying to drive it out of the center. There is a cost, though: no Black pawn guards d5 anymore, so it becomes a weak square where White\'s pieces can settle. Trading a weakness for activity is the classic Sicilian bargain.',
-    fox:'happy' },
+    ja:"黒はポーンをe5へ進めて、d4のナイトを攻撃するよ。黒は中央のマスをポーンで押さえて、白のナイトを中央から追い払うんだ。そのかわり、黒のd5のマスとd6のポーンは少し弱くなるよ。",
+    en:"Black pushes the pawn to e5 and attacks the d4 knight. Black claims central squares with a pawn and drives White's knight out of the center. In return, Black's d5 square and d6 pawn become a little weak.",
+    fox:'normal' },
   { move:{from:[4,3],to:[5,1]}, moveLabel:{ja:"7. Nb3", en:"7. Nb3"},
-    ja:'白はナイトをb3へ引くよ。これでe5のポーンにねらわれたナイトが安全なマスへ下がって、c5とd4の両方のマスに利いたままになるんだ。ここまでが、ナジドルフのオポチェンスキー変化の基本の形だよ。この先は、黒がBe7でキャスリングの準備をして、白もキャスリングで王様を安全にしながら、お互いに中盤の計画を進めていくんだ。これで本譜は一段落、続きはぜひ自分で指してみてね！',
-    en:'White retreats the knight to b3. The knight, attacked by the e5 pawn, steps back to a safe square while still controlling both c5 and d4. This is the basic setup of the Najdorf, Opocensky Variation. From here Black typically prepares to castle with ...Be7, White castles to safety too, and both sides carry on with their middlegame plans. That\'s the main line — try continuing the game yourself from here!',
+    ja:"白はナイトをb3へ下げるよ。白のナイトはb3からd4やc5のマスに利いて、黒のクイーンサイドの動きをけん制するんだ。白はこれから、黒の弱くなったd5のマスをねらう作戦を進めるよ。",
+    en:"White retreats the knight to b3. From b3, White's knight covers d4 and c5 and keeps Black's queenside play in check. White will now work on targeting Black's weakened d5 square.",
+    fox:'normal' },
+  { move:{from:[0,5],to:[1,4]}, moveLabel:{ja:"7...Be7", en:"7...Be7"},
+    ja:"黒はビショップをe7へ進めるよ。黒はf8のマスを空けて、次の手でキャスリングする準備をするんだ。",
+    en:"Black develops the bishop to e7. Black clears the f8 square and gets ready to castle on the next move.",
+    fox:'normal' },
+  { move:{from:[7,4],to:[7,6],castle:{from:[7,7],to:[7,5]}}, moveLabel:{ja:"8. O-O", en:"8. O-O"},
+    ja:"白はキャスリングでキングを安全な場所へ動かすよ。白のキングはg1へ移り、h1にいたルークはf1へ出てくるんだ。",
+    en:"White castles, bringing the king to safety. White's king goes to g1, and the rook from h1 comes to f1.",
+    fox:'normal' },
+  { move:{from:[0,4],to:[0,6],castle:{from:[0,7],to:[0,5]}}, moveLabel:{ja:"8...O-O", en:"8...O-O"},
+    ja:"黒もキャスリングでキングを安全な場所へ動かすよ。黒のキングはg8へ移り、h8にいたルークはf8へ出てくるんだ。",
+    en:"Black also castles, bringing the king to safety. Black's king goes to g8, and the rook from h8 comes to f8.",
+    fox:'normal' },
+  { move:{from:[7,2],to:[5,4]}, moveLabel:{ja:"9. Be3", en:"9. Be3"},
+    ja:"白はビショップをe3へ進めるよ。白のビショップはc5やb6のマスに利いて、黒のクイーンサイドの動きをけん制するんだ。白は、d5のマスをめぐる戦いにも備えているよ。",
+    en:"White develops the bishop to e3. White's bishop covers c5 and b6 and keeps Black's queenside play in check. White is also getting ready for the fight over the d5 square.",
+    fox:'normal' },
+  { move:{from:[0,2],to:[2,4]}, moveLabel:{ja:"9...Be6", en:"9...Be6"},
+    ja:"黒はビショップをe6へ進めるよ。黒のビショップはd5のマスを守り、黒があとでd5と突いて中央を開く準備をするんだ。白はd5のマスを押さえて黒のd6のポーンをねらい、黒はd5と突いて中央を開くか、クイーンサイドで反撃するのが典型的な流れだよ。これで本譜は一段落、続きはぜひ自分で指してみてね！",
+    en:"Black develops the bishop to e6. Black's bishop guards the d5 square and prepares a later ...d5 push to open the center. The typical plan is for White to control d5 and target Black's d6 pawn, while Black either breaks with ...d5 or counterattacks on the queenside. That's the main line — try continuing the game yourself from here!",
     fox:'happy' }
 ];
 
@@ -334,7 +365,19 @@ function renderStep(){
   const step = LESSON_STEPS[currentStep];
   renderBoard(boardSnapshots[currentStep]);
   document.getElementById('moveLabel').textContent = (step.moveLabel && step.moveLabel[currentLang]) || '';
-  document.getElementById('commentaryText').textContent = step[currentLang];
+  const ctEl = document.getElementById('commentaryText');
+  const moreText = step[currentLang + 'More'];
+  ctEl.innerHTML = step[currentLang] + (moreText
+    ? '<details class="more-detail"><summary>' + (currentLang === 'ja' ? '💡 もっと詳しく知りたい方へ' : '💡 Want to know more?') + '</summary><div class="more-body">' + moreText + '</div></details>'
+    : '');
+  ctEl.scrollTop = 0;
+  const moreEl = ctEl.querySelector('details.more-detail');
+  if (moreEl) {
+    moreEl.addEventListener('toggle', function(){
+      if (moreEl.open) { ctEl.scrollTop = moreEl.offsetTop - ctEl.offsetTop; }
+      adjustBottomPadding();
+    });
+  }
   document.getElementById('foxAvatar').src = FOX_BY_MOOD[step.fox] || FOX_BY_MOOD.normal;
   document.getElementById('lessonProgress').textContent = currentStep + ' / ' + (LESSON_STEPS.length - 1);
   document.getElementById('btnPrev').disabled = currentStep === 0;

@@ -103,6 +103,11 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
   font-size: 1rem;
   color: var(--text-sub);
 }
+.commentary-text a, .opening-intro a { color:var(--brown); text-decoration:underline; font-weight:700; }
+.commentary-text a:hover, .opening-intro a:hover { color:var(--brown-dark); }
+.more-detail { margin-top:8px; border-top:1px dashed var(--brown-light); padding-top:6px; }
+.more-detail summary { cursor:pointer; font-weight:700; color:var(--brown); font-size:0.92rem; list-style-position:inside; }
+.more-detail .more-body { margin-top:6px; font-size:0.94rem; }
 </style>
   <script src="board-theme.js"></script>
 </head>
@@ -125,8 +130,8 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
   <h1 class="opening-title lang-element-en">Slav Defense</h1>
 
   <div class="opening-intro">
-    <p class="lang-element-ja">💡 スラブ・ディフェンスはクイーンズ・ギャンビットへの堅実な応手として2...c6と突く守りだよ！フレンチ・ディフェンスのe6と違って、c6はd5を支援しながらキングサイドのビショップをc8-f5の対角線に自由に動かす選択肢を残せるんだ。白がNxd5と取った後にe6と突かずにdxc4と取る変化がメインで、黒はポーンを取り戻しながら積極的に展開できる。20世紀前半の東欧の棋士たちが発展させた実戦的なシステムで、アレヒン、ボトヴィニク、スパスキーといった世界チャンピオンたちが愛用したんだ！</p>
-    <p class="lang-element-en">💡 The Slav Defense plays 2...c6 as a solid response to the Queen's Gambit! Unlike the French Defense's e6, c6 supports d5 while keeping the option to develop the kingside bishop freely. The main line involves Black taking with dxc4 after White plays Nxd5, allowing active development while recovering the pawn. This practical system was developed by Eastern European players, especially Soviet grandmasters. World champions like Alekhine, Botvinnik, and Spassky all used it as a trusted weapon. The Slav Defense requires precise play to gradually build advantages!</p>
+    <p class="lang-element-ja">💡 スラブ・ディフェンスは、1.d4 d5 2.c4 c6と、黒がc6のポーンでd5を支えるオープニングだよ。この形を研究した名人の多くがスラブ系の人たちだったことから、この名前がついたんだ。eのポーンを突かずにd5を支えるので、黒はc8のビショップを外へ出しやすいのが長所だよ。</p>
+    <p class="lang-element-en">💡 The Slav Defense begins 1.d4 d5 2.c4 c6, with Black supporting d5 with the c6 pawn. It got its name because many of the masters who developed it were Slavs. Because Black supports d5 without pushing the e-pawn, the c8 bishop can get out easily.</p>
   </div>
 
   <div class="board-wrap">
@@ -200,60 +205,84 @@ const initialBoard = [
 // ============================================================
 const LESSON_STEPS = [
   { move:null, moveLabel:{ja:"開始局面", en:"Starting Position"},
-    ja:"スラブ・ディフェンスのレッスンを始めるよ！クイーンズ・ギャンビットへの堅実な応手で、ビショップを自由に動かせるのが魅力の定跡だよ。ジーンと一緒に、一手ずつ「なぜその手を指すのか」を学んでいこう。",
-    en:"Let's start the Slav Defense lesson! It's a solid response to the Queen's Gambit, and its biggest perk is keeping the bishop free to develop. Jene will explain why each move is played, one step at a time.",
+    ja:"スラブ・ディフェンスのレッスンを始めるよ！このページでは、黒が4...dxc4とポーンを取ってから5...Bf5とビショップを出す、チェコ・バリエーションを見ていくよ。白がe4と突けるかどうかがポイントなんだ。一手ずつジーンと一緒に、なぜその手を指すのかを学んでいこう。",
+    en:"Let's start the Slav Defense lesson! On this page we follow the Czech Variation, where Black takes the pawn with 4...dxc4 and then develops the bishop with 5...Bf5. The key is whether White can achieve the e4 push. Jene will walk you through why each move is played, one step at a time.",
     fox:'welcome' },
   { move:{from:[6,3],to:[4,3]}, moveLabel:{ja:"1. d4", en:"1. d4"},
-    ja:"白はd4で中央を制圧するよ。",
-    en:"White plays 1.d4, claiming the center.",
+    ja:"白はポーンをd4へ進めるよ。白は中央のマスを押さえながら、c1のビショップの道を開けるんだ。",
+    en:"White pushes the pawn to d4. White takes control of central squares and opens the path for the c1 bishop.",
     fox:'normal' },
   { move:{from:[1,3],to:[3,3]}, moveLabel:{ja:"1...d5", en:"1...d5"},
-    ja:"黒も同じくd5で対抗するよ。",
-    en:"Black mirrors with 1...d5.",
+    ja:"黒はポーンをd5へ進めるよ。黒は中央のマスをポーンで押さえて、c8のビショップの道も開けるんだ。",
+    en:"Black pushes the pawn to d5. Black claims a central square with a pawn and also opens the path for the c8 bishop.",
     fox:'normal' },
   { move:{from:[6,2],to:[4,2]}, moveLabel:{ja:"2. c4", en:"2. c4"},
-    ja:"白はc4でポーンをあえて差し出すよ（クイーンズ・ギャンビット）。",
-    en:"White offers the c-pawn with 2.c4 (the Queen's Gambit).",
+    ja:"白はポーンをc4へ進めて、黒のd5のポーンに挑むよ。白は黒のd5のポーンと交換して、中央をポーンで支配しようとするんだ。白のこの手から始まる形は、<a href='queens_gambit.html'>クイーンズ・ギャンビット</a>と呼ばれているよ。",
+    en:"White pushes the pawn to c4 and challenges Black's d5 pawn. White wants to trade it off and dominate the center with pawns. The line starting with this move by White is called the <a href='queens_gambit.html?lang=en'>Queen's Gambit</a>.",
     fox:'normal' },
-    { move:{from:[1,2],to:[2,2]}, moveLabel:{ja:"2...c6（スラブ！）", en:"2...c6 (Slav!)"},
-    ja:"ここが本題、スラブ・ディフェンスの一手！黒はc6でd5を支えるよ。フレンチ・ディフェンスと似た発想だけど、この先e6を保留しておけば、クイーンサイドのビショップを閉じ込めずに、Bf5やBg4といった良いマスへ自由に出せるようになるんだ。",
-    en:"Here's the Slav Defense move! Black plays 2...c6, supporting d5. It's similar in spirit to the French Defense, but by holding off on ...e6 for now, Black keeps the queenside bishop free to develop actively to squares like f5 or g4.",
+  { move:{from:[1,2],to:[2,2]}, moveLabel:{ja:"2...c6（スラブ！）", en:"2...c6 (Slav!)"},
+    ja:"ここがスラブ・ディフェンスの一手！黒はポーンをc6へ進めて、d5のポーンを支えるよ。黒はeのポーンを突かずにd5を守るので、c8のビショップが外へ出る道をふさがずに済むんだ。",
+    en:"Here's the Slav Defense! Black pushes the pawn to c6 and supports the d5 pawn. Because Black defends d5 without pushing the e-pawn, the c8 bishop's path out stays open.",
+    jaMore:"黒はこの手の代わりに、2...e6でd5のポーンを支える形もよく指されるよ。そのかわり、黒のc8のビショップはe6のポーンに道をふさがれてしまうんだ。",
+    enMore:"Instead of this move, Black often supports the d5 pawn with 2...e6 as well. In that case, though, Black's c8 bishop has its path blocked by the e6 pawn.",
     fox:'happy' },
-   { move:{from:[7,6],to:[5,5]}, moveLabel:{ja:"3. Nf3", en:"3. Nf3"},
-    ja:"白はナイトをf3へ展開するよ。この一手自体は静かだけど、この後Nc3・e3・Bd3(またはc4のポーンを取り返すBxc4)と、駒をスムーズに出し切ってからキャスリングへ向かう、スラブらしいじっくりとしたプランの土台になるんだ。",
-    en:"White develops the knight to f3. It's a quiet move on its own, but it lays the groundwork for a smooth, patient plan typical of the Slav — Nc3, e3, and Bd3 (or recapturing on c4 with Bxc4) will follow before castling.",
+  { move:{from:[7,6],to:[5,5]}, moveLabel:{ja:"3. Nf3", en:"3. Nf3"},
+    ja:"白はナイトをf3へ進めるよ。白のナイトはd4のポーンを守り、e5のマスにも利かせるんだ。",
+    en:"White develops the knight to f3. White's knight defends the d4 pawn and also covers the e5 square.",
     fox:'normal' },
   { move:{from:[0,6],to:[2,5]}, moveLabel:{ja:"3...Nf6", en:"3...Nf6"},
-    ja:"黒もナイトをf6へ展開するよ。駒を出すだけじゃなくて、e4のマスをコントロールして、白が気軽にe2-e4と中央を広げるのを間接的に抑える役割もあるんだ。",
-    en:"Black develops the knight to f6 too. It's not just development — it also stakes a claim on the e4 square, indirectly discouraging White from freely expanding with e2-e4.",
+    ja:"黒はナイトをf6へ進めるよ。黒のナイトはd5のポーンを守り、e4のマスにも利かせるんだ。",
+    en:"Black develops the knight to f6. Black's knight defends the d5 pawn and also covers the e4 square.",
     fox:'normal' },
   { move:{from:[7,1],to:[5,2]}, moveLabel:{ja:"4. Nc3", en:"4. Nc3"},
-    ja:"白はもう一つのナイトをc3へ展開するよ。",
-    en:"White develops the other knight to c3.",
+    ja:"白はナイトをc3へ進めるよ。白のナイトはd5のポーンにもう一つ圧力をかけて、e4のマスにも利かせるんだ。",
+    en:"White develops the knight to c3. White's knight adds more pressure on the d5 pawn and also covers the e4 square.",
     fox:'normal' },
   { move:{from:[3,3],to:[4,2]}, moveLabel:{ja:"4...dxc4", en:"4...dxc4"},
-    ja:"黒はdxc4とポーンを取るよ。スラブのメインラインの一手なんだ。",
-    en:"Black captures with 4...dxc4, the main line of the Slav.",
-    fox:'quiz' },
-  { move:{from:[6,0],to:[4,0]}, moveLabel:{ja:"5. a4", en:"5. a4"},
-    ja:"白はa4で、黒の将来のb5の突きを未然に防ぐよ。",
-    en:"White plays 5.a4, ruling out Black's future ...b5 push.",
-    fox:'wink' },
-  { move:{from:[0,2],to:[3,5]}, moveLabel:{ja:"5...Bf5", en:"5...Bf5"},
-    ja:"黒はビショップをf5へ。これがスラブの最大の魅力、ビショップを自由に展開できる一手だよ。",
-    en:"Black develops the bishop to f5 — the Slav's greatest perk in action.",
-    fox:'happy' },
-   { move:{from:[6,4],to:[5,4]}, moveLabel:{ja:"6. e3", en:"6. e3"},
-    ja:"白はe3を指すよ。これでf1のビショップに逃げ道ができて、次にc4のポーンを取り返しながらキャスリングへ向かう準備が整うんだ。",
-    en:"White plays 6.e3. This gives the bishop on f1 a way out, setting up both the recapture on c4 and castling soon after.",
+    ja:"黒はd5のポーンで、c4のポーンを取るよ。黒はポーンを取って、白に取り返すための時間を使わせるんだ。黒にはb5と突いてc4のポーンを守る作戦もあるので、白は気をつける必要があるよ。",
+    en:"Black's d5 pawn captures the pawn on c4. Black grabs the pawn and makes White spend time winning it back. Black also has the idea of holding the c4 pawn with ...b5, so White has to be careful.",
+    jaMore:"黒はこの手の代わりに、4...e6と突いて<a href='semi_slav.html'>セミ・スラブ</a>の形にすることもできるよ。",
+    enMore:"Instead of this move, Black can also play 4...e6, leading to the <a href='semi_slav.html?lang=en'>Semi-Slav</a>.",
     fox:'normal' },
-   { move:{from:[1,4],to:[2,4]}, moveLabel:{ja:"6...e6", en:"6...e6"},
-    ja:"黒はe6を指すよ。これでf8のビショップに逃げ道ができて、次にBe7かBd6でキャスリングへ向かう準備が整うんだ。",
-    en:"Black plays 6...e6. This gives the bishop on f8 a way out, preparing to castle soon with Be7 or Bd6.",
+  { move:{from:[6,0],to:[4,0]}, moveLabel:{ja:"5. a4", en:"5. a4"},
+    ja:"白はポーンをa4へ進めるよ。白は黒がb5と突いてc4のポーンを守るのを防ぐんだ。そのかわり、白のb4のマスは弱くなってしまうよ。",
+    en:"White pushes the pawn to a4. White stops Black from holding the c4 pawn with ...b5. In return, White's b4 square becomes weak.",
+    fox:'normal' },
+  { move:{from:[0,2],to:[3,5]}, moveLabel:{ja:"5...Bf5", en:"5...Bf5"},
+    ja:"黒はビショップをf5へ進めるよ。黒はeのポーンを突く前に、c8のビショップを外へ出しておくんだ。黒のビショップはf5からe4のマスにも利いて、白がe4と突くのをけん制するよ。",
+    en:"Black develops the bishop to f5. Black gets the c8 bishop outside the pawn chain before pushing the e-pawn. From f5, Black's bishop also covers e4 and discourages White from pushing e4.",
+    fox:'normal' },
+  { move:{from:[6,4],to:[5,4]}, moveLabel:{ja:"6. e3", en:"6. e3"},
+    ja:"白はポーンをe3へ進めるよ。白はf1のビショップの道を開けて、c4のポーンを取り返す準備をするんだ。",
+    en:"White pushes the pawn to e3. White opens the path for the f1 bishop and prepares to win back the c4 pawn.",
+    fox:'normal' },
+  { move:{from:[1,4],to:[2,4]}, moveLabel:{ja:"6...e6", en:"6...e6"},
+    ja:"黒はポーンをe6へ進めるよ。黒はd5のマスを押さえながら、f8のビショップの道を開けるんだ。",
+    en:"Black pushes the pawn to e6. Black controls the d5 square and opens the path for the f8 bishop.",
     fox:'normal' },
   { move:{from:[7,5],to:[4,2]}, moveLabel:{ja:"7. Bxc4", en:"7. Bxc4"},
-    ja:"白はビショップでc4のポーンを取り返すよ。これで本譜は一段落、続きはぜひ自分で指してみてね！",
-    en:"White recaptures the pawn with 7.Bxc4. That's the main line — try continuing the game yourself from here!",
+    ja:"白はビショップでc4のポーンを取り返すよ。これで白と黒の駒の数は同じに戻ったんだ。白のビショップはc4から、黒のe6のポーンにも利いているよ。",
+    en:"White's bishop recaptures the pawn on c4. White and Black now have the same material again. From c4, White's bishop also bears on Black's e6 pawn.",
+    fox:'normal' },
+  { move:{from:[0,5],to:[4,1]}, moveLabel:{ja:"7...Bb4", en:"7...Bb4"},
+    ja:"黒はビショップをb4へ進めるよ。黒のビショップはc3のナイトをピンして、白がナイトの力を借りてe4と突くのを難しくするんだ。黒は、白がa4と突いて弱くなったb4のマスを使っているよ。",
+    en:"Black develops the bishop to b4. Black's bishop pins the c3 knight and makes it harder for White to push e4 with the knight's support. Black is using the b4 square, which became weak after White's a4.",
+    fox:'normal' },
+  { move:{from:[7,4],to:[7,6],castle:{from:[7,7],to:[7,5]}}, moveLabel:{ja:"8. O-O", en:"8. O-O"},
+    ja:"白はキャスリングでキングを安全な場所へ動かすよ。白のキングはg1へ移り、h1にいたルークはf1へ出てくるんだ。白のキングが動いたので、c3のナイトはもうキングに向けてピンされてはいないよ。",
+    en:"White castles, bringing the king to safety. White's king goes to g1, and the rook from h1 comes to f1. Since White's king has moved, the c3 knight is no longer pinned to the king.",
+    fox:'normal' },
+  { move:{from:[0,1],to:[1,3]}, moveLabel:{ja:"8...Nbd7", en:"8...Nbd7"},
+    ja:"黒はナイトをd7へ進めるよ。黒のナイトはe5とc5のマスに利いて、黒があとでe5やc5と突く準備をするんだ。黒のナイトはf6のナイトも守っているよ。",
+    en:"Black develops the knight to d7. Black's knight covers e5 and c5, preparing a later ...e5 or ...c5 push. Black's knight also defends the f6 knight.",
+    fox:'normal' },
+  { move:{from:[7,3],to:[6,4]}, moveLabel:{ja:"9. Qe2", en:"9. Qe2"},
+    ja:"白はクイーンをe2へ動かすよ。白はe4と突いて中央を広げる準備をしながら、c4のビショップも守るんだ。白はクイーンを動かして、d1のマスをルークのために空けているよ。",
+    en:"White moves the queen to e2. White prepares to push e4 and expand in the center, while also defending the c4 bishop. White also clears d1 for a rook.",
+    fox:'normal' },
+  { move:{from:[0,4],to:[0,6],castle:{from:[0,7],to:[0,5]}}, moveLabel:{ja:"9...O-O", en:"9...O-O"},
+    ja:"黒もキャスリングでキングを安全な場所へ動かすよ。黒のキングはg8へ移り、h8にいたルークはf8へ出てくるんだ。白はe4と突いて中央を広げる機会をうかがい、黒はf5とb4のビショップを生かして、白のe4の突きを止めるのが典型的な流れだよ。これで本譜は一段落、続きはぜひ自分で指してみてね！",
+    en:"Black also castles, bringing the king to safety. Black's king goes to g8, and the rook from h8 comes to f8. The typical plan is for White to look for a chance to push e4 and expand in the center, while Black uses the bishops on f5 and b4 to stop that push. That's the main line — try continuing the game yourself from here!",
     fox:'happy' }
 ];
 
@@ -343,7 +372,19 @@ function renderStep(){
   const step = LESSON_STEPS[currentStep];
   renderBoard(boardSnapshots[currentStep]);
   document.getElementById('moveLabel').textContent = (step.moveLabel && step.moveLabel[currentLang]) || '';
-  document.getElementById('commentaryText').textContent = step[currentLang];
+  const ctEl = document.getElementById('commentaryText');
+  const moreText = step[currentLang + 'More'];
+  ctEl.innerHTML = step[currentLang] + (moreText
+    ? '<details class="more-detail"><summary>' + (currentLang === 'ja' ? '💡 もっと詳しく知りたい方へ' : '💡 Want to know more?') + '</summary><div class="more-body">' + moreText + '</div></details>'
+    : '');
+  ctEl.scrollTop = 0;
+  const moreEl = ctEl.querySelector('details.more-detail');
+  if (moreEl) {
+    moreEl.addEventListener('toggle', function(){
+      if (moreEl.open) { ctEl.scrollTop = moreEl.offsetTop - ctEl.offsetTop; }
+      adjustBottomPadding();
+    });
+  }
   document.getElementById('foxAvatar').src = FOX_BY_MOOD[step.fox] || FOX_BY_MOOD.normal;
   document.getElementById('lessonProgress').textContent = currentStep + ' / ' + (LESSON_STEPS.length - 1);
   document.getElementById('btnPrev').disabled = currentStep === 0;

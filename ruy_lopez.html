@@ -103,6 +103,11 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
   font-size: 1rem;
   color: var(--text-sub);
 }
+.commentary-text a, .opening-intro a { color:var(--brown); text-decoration:underline; font-weight:700; }
+.commentary-text a:hover, .opening-intro a:hover { color:var(--brown-dark); }
+.more-detail { margin-top:8px; border-top:1px dashed var(--brown-light); padding-top:6px; }
+.more-detail summary { cursor:pointer; font-weight:700; color:var(--brown); font-size:0.92rem; list-style-position:inside; }
+.more-detail .more-body { margin-top:6px; font-size:0.94rem; }
 </style>
   <script src="board-theme.js"></script>
 </head>
@@ -125,8 +130,8 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
   <h1 class="opening-title lang-element-en">Ruy Lopez</h1>
 
   <div class="opening-intro">
-    <p class="lang-element-ja">💡 ルイ・ロペスは16世紀のスペインの司祭、ルイ・ロペス・デ・セグラが考案した、チェス史上最も歴史あるオープニングのひとつだよ！白がビショップをb5に動かしてc6のナイトをピンするんだ。この手の本当の狙いは、黒のe5ポーンに間接的にプレッシャーをかけ続けること。黒がa6と突いてきたら白はBa4と引いてピンを維持するんだ。その後はO-O、Re1、c3、d4という形が白の基本プランで、中央を少しずつ強化していくよ。カスパロフやフィッシャー、カールセンといった世界チャンピオンたちが長年愛用してきた信頼性バツグンの選択肢だよ！</p>
-    <p class="lang-element-en">💡 The Ruy Lopez was invented by a Spanish priest named Ruy López de Segura in the 16th century, making it one of the oldest openings in chess history! White moves the bishop to b5 to pin Black's knight on c6. The real idea is to put indirect pressure on Black's e5 pawn. After Black plays a6, White usually retreats the bishop to a4 to keep the pin going. White's basic plan involves O-O, Re1, c3, and d4 to gradually strengthen the center. World champions like Kasparov, Fischer, and Carlsen have all trusted this opening. If you want to learn how to make a long-term plan in chess, this is the perfect opening to study!</p>
+    <p class="lang-element-ja">💡 ルイ・ロペスは、1.e4 e5 2.Nf3 Nc6 3.Bb5と、白がビショップでc6のナイトにプレッシャーをかけるオープニングだよ。16世紀のスペインの聖職者、ルイ・ロペス・デ・セグラが本で紹介したことから名前がついていて、スペイン・ゲームとも呼ばれているんだ。何百年も研究が続いている、いちばん古くて奥の深いオープニングのひとつで、世界チャンピオンたちも数多く指してきたよ。</p>
+    <p class="lang-element-en">💡 The Ruy Lopez begins 1.e4 e5 2.Nf3 Nc6 3.Bb5, with White's bishop putting pressure on the c6 knight. It is named after Ruy López de Segura, a 16th-century Spanish priest who wrote about it in his book, and it is also called the Spanish Game. It is one of the oldest and deepest openings, studied for centuries and played by many world champions.</p>
   </div>
 
   <div class="board-wrap">
@@ -199,74 +204,101 @@ const initialBoard = [
 // レッスンステップ（手・解説・ジーンの表情）
 // ============================================================
 const LESSON_STEPS = [
-  { move:null, moveLabel:{ja:'開始局面', en:'Starting Position'},
-    ja:'ルイ・ロペスのレッスンを始めるよ！16世紀からスペインの司祭ルイ・ロペス・デ・セグラの名を冠して指され続けている、チェス史上もっとも古いオープニングの一つなんだ。派手な攻撃ではなく、何十手もかけてじわじわ相手を締め付ける「スパニッシュ・トーチャー(スペインの拷問)」という異名もあるくらい、長期戦略が問われる定跡だよ。',
-    en:'Let\'s start the Ruy Lopez! Named after a 16th-century Spanish priest, it\'s one of the oldest openings still played at the highest level today. It\'s sometimes nicknamed the \'Spanish Torture\' because White\'s pressure often builds slowly over dozens of moves rather than through a quick attack \u2014 this is an opening about long-term strategy.',
+  { move:null, moveLabel:{ja:"開始局面", en:"Starting Position"},
+    ja:"ルイ・ロペスのレッスンを始めるよ！このページでは、黒が3...a6で白のビショップを追う、閉じたルイ・ロペスの本線を見ていくよ。白と黒がゆっくり駒を組み立てながら、中央をめぐって戦うのがポイントなんだ。一手ずつジーンと一緒に、なぜその手を指すのかを学んでいこう。",
+    en:"Let's start the Ruy Lopez lesson! On this page we follow the main line of the Closed Ruy Lopez, where Black chases White's bishop with 3...a6. The key is how both sides slowly build up their pieces and fight for the center. Jene will walk you through why each move is played, one step at a time.",
     fox:'welcome' },
-
-  { move:{from:[6,4],to:[4,4]}, moveLabel:{ja:'1. e4', en:'1. e4'},
-    ja:'白はe4を突いて中央を制圧するよ。ビショップとクイーンの通り道を同時に開く、効率の良い一手だね。',
-    en:'White pushes 1.e4, claiming the center. It also opens lines for the bishop and queen in one move.',
+  { move:{from:[6,4],to:[4,4]}, moveLabel:{ja:"1. e4", en:"1. e4"},
+    ja:"白はポーンをe4へ進めるよ。白は中央のマスを押さえながら、ビショップとクイーンが動く道を開けるんだ。",
+    en:"White pushes the pawn to e4. White takes control of central squares and opens lines for the bishop and queen.",
     fox:'normal' },
-
-  { move:{from:[1,4],to:[3,4]}, moveLabel:{ja:'1...e5', en:'1...e5'},
-    ja:'黒も同じくe5で突き返し、中央の主導権争いを五分に保つよ。',
-    en:'Black mirrors with 1...e5, keeping the fight for the center even.',
+  { move:{from:[1,4],to:[3,4]}, moveLabel:{ja:"1...e5", en:"1...e5"},
+    ja:"黒はポーンをe5へ進めるよ。黒も同じように中央を押さえて、白のポーンと向かい合う形を作るんだ。",
+    en:"Black pushes the pawn to e5. Black also claims the center, setting up a pawn face-off with White.",
     fox:'normal' },
-
-    { move:{from:[7,6],to:[5,5]}, moveLabel:{ja:'2. Nf3', en:'2. Nf3'},
-    ja:'白はナイトをf3へ進め、e5ポーンに狙いをつけるよ。ちなみにこの段階ではまだf1のビショップが自陣に残っているから、キャスリングにはもう一手必要。今はまずe5への圧力とナイトの展開が主な狙いなんだ。',
-    en:'White brings the knight to f3, attacking e5. Note that the bishop on f1 is still at home at this point, so castling isn\'t quite ready yet \u2014 this move is mainly about attacking e5 and developing the knight.',
+  { move:{from:[7,6],to:[5,5]}, moveLabel:{ja:"2. Nf3", en:"2. Nf3"},
+    ja:"白はナイトをf3へ進めるよ。白のナイトは展開しながら、黒のe5のポーンを攻撃しているんだ。",
+    en:"White develops the knight to f3. White's knight develops while attacking Black's e5 pawn.",
     fox:'normal' },
-
-  { move:{from:[0,1],to:[2,2]}, moveLabel:{ja:'2...Nc6', en:'2...Nc6'},
-    ja:'黒もナイトをc6へ進め、e5ポーンをしっかり守るよ。ごく自然な受けの一手だね。',
-    en:'Black develops the knight to c6, defending e5 \u2014 a natural, solid response.',
+  { move:{from:[0,1],to:[2,2]}, moveLabel:{ja:"2...Nc6", en:"2...Nc6"},
+    ja:"黒はナイトをc6へ進めるよ。黒はナイトを展開しながら、e5のポーンを守るんだ。",
+    en:"Black develops the knight to c6. Black develops a piece and defends the e5 pawn at the same time.",
     fox:'normal' },
-
-   { move:{from:[7,5],to:[3,1]}, moveLabel:{ja:'3. Bb5（ルイ・ロペス！）', en:'3. Bb5 (Ruy Lopez!)'},
-    ja:'ここが本題、ルイ・ロペスの一手！白はビショップをb5へ進め、c6のナイトに狙いをつけるよ。よく「キングへのピン」と説明されるけど、実はまだd7にポーンが残っているから、対角線はd7で止まっていて、厳密にはまだ本物のピンじゃないんだ(ナイトを取ってもキングがすぐ晒されるわけではない)。それでも脅威は本物。ナイトがこのまま動かなければBxc6でダブルポーンを強制できるし、将来d7ポーンが動けば本当のピンに変わる。今は「ピンの含みを持った牽制」というのが正確なところだよ。白の狙いは今すぐ何かを得ることではなく、この先c3・d4で中央を強化し、じわじわ圧力を強めていく長期戦略なんだ。',
-    en:'Here\'s the signature move! White plays 3.Bb5, taking aim at the knight on c6. This is often called a "pin" to the king on e8, but technically it isn\'t one yet \u2014 the pawn still sitting on d7 blocks that diagonal, so capturing the knight wouldn\'t immediately expose the king. The pressure is still real, though: if the knight never moves, Bxc6 saddles Black with doubled pawns, and if the d7 pawn later advances, the pin becomes genuine. For now, think of it as a positional squeeze with the threat of a pin, rather than an actual pin. The point isn\'t an immediate gain, but a long-term plan to strengthen the center with moves like c3 and d4 down the road.',
+  { move:{from:[7,5],to:[3,1]}, moveLabel:{ja:"3. Bb5（ルイ・ロペス！）", en:"3. Bb5 (Ruy Lopez!)"},
+    ja:"ここがルイ・ロペスの一手！白はビショップをb5へ進めて、e5のポーンを守っているc6のナイトにプレッシャーをかけるよ。白はc6のナイトに圧力をかけることで、黒のe5のポーンをじわじわと弱らせていくんだ。これでf1のマスも空いて、白は早くキャスリングできるよ。",
+    en:"Here's the Ruy Lopez! White develops the bishop to b5 and puts pressure on the c6 knight, which is defending the e5 pawn. By pressing on the c6 knight, White slowly weakens Black's e5 pawn. This also clears f1, so White can castle early.",
     fox:'happy' },
-
-  { move:{from:[1,0],to:[2,0]}, moveLabel:{ja:'3...a6', en:'3...a6'},
-    ja:'黒はa6でビショップに問いかけるよ。「このまま取るのか、それとも引くのか」ということだね。',
-    en:'Black plays 3...a6, asking the bishop a question: capture on c6, or retreat?',
-    fox:'quiz' },
-
-   { move:{from:[3,1],to:[4,0]}, moveLabel:{ja:'4. Ba4', en:'4. Ba4'},
-    ja:'白はBa4と引いて、c6ナイトへの圧力を維持するよ。ここでBxc6のような即座の交換に踏み切らない理由は、黒にダブルポーンを与える代わりに得られるものが、この局面ではまだ小さいから。将来d7ポーンが動いた瞬間に本物のピンへ変わる可能性を残しつつ、じっくり駒組みを進める「クローズド・ルイ・ロペス」の基本方針なんだ。',
-    en:'White retreats with 4.Ba4, keeping the pressure on c6 alive. Trading immediately with Bxc6 would double Black\'s pawns, but at this early stage that trade doesn\'t gain White much \u2014 so the plan is to maintain the tension (with the pin ready to become real the moment d7 advances) and develop patiently instead. This is the essence of the Closed Ruy Lopez.',
-    fox:'wink' },
-
-   { move:{from:[0,6],to:[2,5]}, moveLabel:{ja:'4...Nf6', en:'4...Nf6'},
-    ja:'黒はもう一つのナイトをf6へ進め、e4ポーンに反撃をかけるよ。ちなみにこの段階ではまだf8のビショップが自陣に残っているから、キャスリングにはもう一手必要。ナイトの展開は、まずはe4への圧力を強めるのが主な狙いなんだ。',
-    en:'Black develops the other knight to f6, adding pressure on e4. Note that the bishop on f8 is still at home at this point, so castling isn\'t quite ready yet \u2014 this move is mainly about reinforcing the attack on e4.',
+  { move:{from:[1,0],to:[2,0]}, moveLabel:{ja:"3...a6", en:"3...a6"},
+    ja:"黒はポーンをa6へ進めて、b5のビショップを攻撃するよ。黒は白のビショップに、c6のナイトを取るのか下がるのかを決めさせるんだ。白がBxc6と取っても、黒はポーンで取り返せるので心配はいらないよ。",
+    en:"Black pushes the pawn to a6 and attacks the b5 bishop. Black makes White decide whether to take the c6 knight or retreat. Even if White plays Bxc6, Black can recapture with a pawn, so there is nothing to worry about.",
+    jaMore:"黒はこの手の代わりに、3...Nf6と白のe4のポーンを攻撃し返す<a href='berlin.html'>ベルリン・ディフェンス</a>を選ぶこともできるよ。ベルリン・ディフェンスは、とても固い守りの形として、トップレベルでもよく指されているんだ。",
+    enMore:"Instead of this move, Black can also counterattack White's e4 pawn with 3...Nf6, the <a href='berlin.html?lang=en'>Berlin Defense</a>. The Berlin is a very solid defensive setup and is often played at the top level.",
     fox:'normal' },
-
-  { move:{from:[7,4],to:[7,6],castle:{from:[7,7],to:[7,5]}}, moveLabel:{ja:'5. O-O', en:'5. O-O'},
-    ja:'白はキャスリングでキングを安全な場所へ移すよ。序盤で最優先すべき「キングの安全確保」がこれで完了。実はこの局面でe4ポーンは黒にNxe4と取られる可能性があるんだけど(それは「オープン・ルイ・ロペス」という、これはこれで本格的な別の変化になる)、今回はより手堅い進め方を見ていくよ。',
-    en:'White castles kingside, securing the king \u2014 opening priority number one is now taken care of. At this point Black could actually grab the e4 pawn with Nxe4 (leading to a whole separate, well-respected line called the Open Ruy Lopez), but here we\'ll follow the calmer path instead.',
-    fox:'happy' },
-
-  { move:{from:[0,5],to:[1,4]}, moveLabel:{ja:'5...Be7', en:'5...Be7'},
-    ja:'黒はビショップをe7へ進め、キャスリングへの準備を整えるよ。派手さはないけど、この後の駒組み全体を支える大事な一手なんだ。',
-    en:'Black plays the quiet 5...Be7, clearing the way to castle. Unremarkable on the surface, but it underpins everything Black does next.',
+  { move:{from:[3,1],to:[4,0]}, moveLabel:{ja:"4. Ba4", en:"4. Ba4"},
+    ja:"白はビショップをa4へ下げるよ。白はビショップを交換せずに残して、a4からc6のナイトへのにらみを続けるんだ。",
+    en:"White retreats the bishop to a4. White keeps the bishop instead of trading it and keeps eyeing the c6 knight from a4.",
+    jaMore:"白はこの手の代わりに、4.Bxc6とビショップをナイトと交換するエクスチェンジ・バリエーションを選ぶこともできるよ。白はビショップを渡す代わりに、黒のcのポーンを2つ縦に並ばせて、黒のポーンの形をくずすんだ。",
+    enMore:"Instead of this move, White can also play 4.Bxc6, the Exchange Variation, trading the bishop for the knight. White gives up the bishop in return for damaging Black's pawn structure, leaving Black with doubled c-pawns.",
     fox:'normal' },
-
-  { move:{from:[7,5],to:[7,4]}, moveLabel:{ja:'6. Re1', en:'6. Re1'},
-    ja:'白はルークをe1へ。e4ポーンをもう一枚の駒で支えながら、将来のd4での中央突破に向けて盤面を整えていくよ。',
-    en:'White plays 6.Re1, adding a second defender to e4 while preparing the ground for a future d4 central break.',
+  { move:{from:[0,6],to:[2,5]}, moveLabel:{ja:"4...Nf6", en:"4...Nf6"},
+    ja:"黒はナイトをf6へ進めるよ。黒のナイトは白のe4のポーンを攻撃して、展開しながら反撃するんだ。",
+    en:"Black develops the knight to f6. Black's knight attacks White's e4 pawn, developing and counterattacking at the same time.",
     fox:'normal' },
-
-  { move:{from:[1,1],to:[3,1]}, moveLabel:{ja:'6...b5', en:'6...b5'},
-    ja:'黒はb5でビショップに「引け」とプレッシャーをかけ、一手分のテンポを稼ぐよ。ただし副作用もある。b5と突いたことで、クイーンサイドのポーン構造がわずかに緩み、これが中盤・終盤で弱点になることもあるんだ。',
-    en:'Black plays 6...b5, gaining a tempo by forcing the bishop to move. There\'s a small trade-off, though: advancing the b-pawn slightly loosens Black\'s queenside structure, which can become a long-term target later in the game.',
-    fox:'wink' },
-
-  { move:{from:[4,0],to:[5,1]}, moveLabel:{ja:'7. Bb3', en:'7. Bb3'},
-    ja:'白はBb3と収め、g8までの長い対角線をそのまま維持するよ。この対角線の先にあるのはf7、黒にとって序盤で一番守りが薄いマスなんだ。ここまでで基本の駒組みは完成。ここから中盤に入ると、白はc3・d4で中央を強化しながらキングサイドで駒を活性化させ、黒はd6・Nb8-d7・c5といった手順でクイーンサイドを整備していく、というのが典型的な流れだよ。',
-    en:'White settles the bishop on 7.Bb3, keeping it aimed along the long diagonal toward f7 \u2014 traditionally the weakest square in Black\'s early position. The opening phase is essentially complete here. In the middlegame that follows, White typically strengthens the center with c3 and d4 while activating pieces on the kingside, while Black regroups on the queenside with moves like d6, Nb8-d7, and c5 \u2014 the classic Ruy Lopez maneuvering battle.',
+  { move:{from:[7,4],to:[7,6],castle:{from:[7,7],to:[7,5]}}, moveLabel:{ja:"5. O-O", en:"5. O-O"},
+    ja:"白はキャスリングでキングを安全な場所へ動かすよ。白のキングはg1へ移り、h1にいたルークはf1へ出てくるんだ。白はe4のポーンを直接守らずに、キャスリングを先にするよ。",
+    en:"White castles, bringing the king to safety. White's king goes to g1, and the rook from h1 comes to f1. White castles first instead of defending the e4 pawn directly.",
+    fox:'normal' },
+  { move:{from:[0,5],to:[1,4]}, moveLabel:{ja:"5...Be7", en:"5...Be7"},
+    ja:"黒はビショップをe7へ進めるよ。黒はf8のマスを空けてキャスリングの準備をしながら、キングの前を固めるんだ。",
+    en:"Black develops the bishop to e7. Black clears the f8 square to prepare castling and shores up the king's position.",
+    jaMore:"黒はこの手の代わりに、5...Nxe4とe4のポーンを取るオープン・バリエーションを選ぶこともできるよ。そのとき白は6.d4と突いて、すぐに中央を開いて駒を取り返しにいくんだ。",
+    enMore:"Instead of this move, Black can also take the e4 pawn with 5...Nxe4, the Open Variation. In that case, White plays 6.d4, opening the center right away to win the material back.",
+    fox:'normal' },
+  { move:{from:[7,5],to:[7,4]}, moveLabel:{ja:"6. Re1", en:"6. Re1"},
+    ja:"白はルークをe1へ動かすよ。白のルークはe4のポーンを守るんだ。白はこれで、Bxc6とナイトを取ってからNxe5とe5のポーンを取るねらいを作っているよ。",
+    en:"White moves the rook to e1. White's rook defends the e4 pawn. White now threatens to take the c6 knight with Bxc6 and then win the e5 pawn with Nxe5.",
+    fox:'normal' },
+  { move:{from:[1,1],to:[3,1]}, moveLabel:{ja:"6...b5", en:"6...b5"},
+    ja:"黒はポーンをb5へ進めて、a4のビショップを攻撃するよ。黒は白のビショップにc6のナイトへのにらみを外させて、白のBxc6からNxe5のねらいを止めるんだ。",
+    en:"Black pushes the pawn to b5 and attacks the a4 bishop. Black forces White's bishop off the c6 knight and stops White's plan of Bxc6 followed by Nxe5.",
+    fox:'normal' },
+  { move:{from:[4,0],to:[5,1]}, moveLabel:{ja:"7. Bb3", en:"7. Bb3"},
+    ja:"白はビショップをb3へ下げるよ。白のビショップはb3から、a2からg8への斜めの列で黒のf7のマスをねらうんだ。",
+    en:"White retreats the bishop to b3. From b3, White's bishop aims at Black's f7 square along the a2–g8 diagonal.",
+    fox:'normal' },
+  { move:{from:[1,3],to:[2,3]}, moveLabel:{ja:"7...d6", en:"7...d6"},
+    ja:"黒はポーンをd6へ進めるよ。黒はe5のポーンをしっかり守り、c8のビショップの道も開けるんだ。",
+    en:"Black pushes the pawn to d6. Black firmly defends the e5 pawn and opens the path for the c8 bishop.",
+    jaMore:"黒はこの手の代わりに、7...O-Oとキャスリングして、8.c3 d5とポーンを捨てて攻めるマーシャル・アタックをねらうこともできるよ。黒はポーンを1つ渡す代わりに、駒を早く働かせて白のキングを攻めるんだ。",
+    enMore:"Instead of this move, Black can also castle with 7...O-O and aim for the Marshall Attack, sacrificing a pawn with 8.c3 d5. Black gives up a pawn in return for quick piece activity and an attack on White's king.",
+    fox:'normal' },
+  { move:{from:[6,2],to:[5,2]}, moveLabel:{ja:"8. c3", en:"8. c3"},
+    ja:"白はポーンをc3へ進めるよ。白はあとでd4と突いて、ポーンで中央を固める準備をするんだ。白は、b3のビショップが追われたときにc2へ下がれる場所も作っているよ。",
+    en:"White pushes the pawn to c3. White prepares to push d4 later and build a pawn center. White also makes room for the b3 bishop to drop back to c2 if it is chased.",
+    fox:'normal' },
+  { move:{from:[0,4],to:[0,6],castle:{from:[0,7],to:[0,5]}}, moveLabel:{ja:"8...O-O", en:"8...O-O"},
+    ja:"黒はキャスリングでキングを安全な場所へ動かすよ。黒のキングはg8へ移り、h8にいたルークはf8へ出てくるんだ。",
+    en:"Black castles, bringing the king to safety. Black's king goes to g8, and the rook from h8 comes to f8.",
+    fox:'normal' },
+  { move:{from:[6,7],to:[5,7]}, moveLabel:{ja:"9. h3", en:"9. h3"},
+    ja:"白はポーンをh3へ進めるよ。白は黒のビショップがg4へ出てきて、f3のナイトをピンするのを防ぐんだ。白は、d4と突いたときにf3のナイトがd4のポーンをしっかり支えられるようにしておくよ。",
+    en:"White pushes the pawn to h3. White stops Black's bishop from coming to g4 and pinning the f3 knight. White wants the f3 knight to stay free to support the d4 pawn after White pushes d4.",
+    fox:'normal' },
+  { move:{from:[2,2],to:[3,0]}, moveLabel:{ja:"9...Na5", en:"9...Na5"},
+    ja:"黒はナイトをa5へ進めて、b3のビショップを攻撃するよ。黒は白のビショップにf7をねらう斜めの列を外させて、クイーンサイドのポーンを前に進める準備をするんだ。黒のこの手から始まる形は、チゴリン・バリエーションと呼ばれているよ。",
+    en:"Black moves the knight to a5 and attacks the b3 bishop. Black drives White's bishop off the diagonal aimed at f7 and prepares to advance the queenside pawns. The line starting with this move by Black is called the Chigorin Variation.",
+    fox:'normal' },
+  { move:{from:[5,1],to:[6,2]}, moveLabel:{ja:"10. Bc2", en:"10. Bc2"},
+    ja:"白はビショップをc2へ下げるよ。白のビショップはc2でe4のポーンを守るんだ。白はビショップを交換されずに残して、あとでキングサイドの攻めに使うつもりだよ。",
+    en:"White retreats the bishop to c2. White's bishop defends the e4 pawn from c2. White keeps the bishop out of reach of trades and plans to use it later in a kingside attack.",
+    fox:'normal' },
+  { move:{from:[1,2],to:[3,2]}, moveLabel:{ja:"10...c5", en:"10...c5"},
+    ja:"黒はポーンをc5へ進めるよ。黒はd4のマスに利かせて、白がd4と突いて中央を固めるのをけん制するんだ。黒はクイーンサイドのポーンを前に出して、スペースを広げようとしているよ。",
+    en:"Black pushes the pawn to c5. Black covers the d4 square and makes it harder for White to build the center with d4. Black is advancing the queenside pawns to gain space.",
+    fox:'normal' },
+  { move:{from:[6,3],to:[4,3]}, moveLabel:{ja:"11. d4", en:"11. d4"},
+    ja:"白はポーンをd4へ進めるよ。白は中央で黒のe5とc5のポーンに挑み、ポーンの中央を作るんだ。白は中央とキングサイドでじっくり攻める準備を進め、黒はクイーンサイドのポーンでスペースを広げて反撃するのが、閉じたルイ・ロペスの典型的な流れだよ。これで本譜は一段落、続きはぜひ自分で指してみてね！",
+    en:"White pushes the pawn to d4. White challenges Black's e5 and c5 pawns in the center and builds a pawn center. The typical plan in the Closed Ruy Lopez is for White to prepare a slow attack in the center and on the kingside, while Black gains space and counterattacks with the queenside pawns. That's the main line — try continuing the game yourself from here!",
     fox:'happy' }
 ];
 
@@ -356,7 +388,19 @@ function renderStep(){
   const step = LESSON_STEPS[currentStep];
   renderBoard(boardSnapshots[currentStep]);
   document.getElementById('moveLabel').textContent = (step.moveLabel && step.moveLabel[currentLang]) || '';
-  document.getElementById('commentaryText').textContent = step[currentLang];
+  const ctEl = document.getElementById('commentaryText');
+  const moreText = step[currentLang + 'More'];
+  ctEl.innerHTML = step[currentLang] + (moreText
+    ? '<details class="more-detail"><summary>' + (currentLang === 'ja' ? '💡 もっと詳しく知りたい方へ' : '💡 Want to know more?') + '</summary><div class="more-body">' + moreText + '</div></details>'
+    : '');
+  ctEl.scrollTop = 0;
+  const moreEl = ctEl.querySelector('details.more-detail');
+  if (moreEl) {
+    moreEl.addEventListener('toggle', function(){
+      if (moreEl.open) { ctEl.scrollTop = moreEl.offsetTop - ctEl.offsetTop; }
+      adjustBottomPadding();
+    });
+  }
   document.getElementById('foxAvatar').src = FOX_BY_MOOD[step.fox] || FOX_BY_MOOD.normal;
   document.getElementById('lessonProgress').textContent = currentStep + ' / ' + (LESSON_STEPS.length - 1);
   document.getElementById('btnPrev').disabled = currentStep === 0;

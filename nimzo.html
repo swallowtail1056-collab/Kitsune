@@ -103,6 +103,11 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
   font-size: 1rem;
   color: var(--text-sub);
 }
+.commentary-text a, .opening-intro a { color:var(--brown); text-decoration:underline; font-weight:700; }
+.commentary-text a:hover, .opening-intro a:hover { color:var(--brown-dark); }
+.more-detail { margin-top:8px; border-top:1px dashed var(--brown-light); padding-top:6px; }
+.more-detail summary { cursor:pointer; font-weight:700; color:var(--brown); font-size:0.92rem; list-style-position:inside; }
+.more-detail .more-body { margin-top:6px; font-size:0.94rem; }
 </style>
   <script src="board-theme.js"></script>
 </head>
@@ -125,8 +130,8 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
   <h1 class="opening-title lang-element-en">Nimzo-Indian Defense</h1>
 
   <div class="opening-intro">
-    <p class="lang-element-ja">💡 ニムゾ・インディアンは3...Bb4とビショップを出してc3のナイトをピンする革命的なオープニングだよ！ピンすることで白がe4と突いてセンターを広げることを妨害できるんだ。白がBxc3と取ればダブルポーンが残り、黒はポーンを失った代わりに白のポーン構造に長期的な弱点を作れるというコンセプトなんだ。物質より構造的優位を重視するこの発想は、アーロン・ニムゾヴィッチが1920年代に提唱したもので当時のチェス界に革命をもたらしたよ。カスパロフ、カールセン、アナンドも採用し続けている現代チェスの礎だよ！</p>
-    <p class="lang-element-en">💡 The Nimzo-Indian Defense plays 3...Bb4, pinning the knight on c3 in a revolutionary way! By pinning the knight, Black prevents White from easily expanding with e4. If White takes with Bxc3, Black accepts doubled pawns in exchange for creating long-term weaknesses in White's pawn structure. This concept of prioritizing positional factors over pawns was proposed by Aaron Nimzowitsch in the 1920s and caused a revolution in chess thinking. Top players like Kasparov, Carlsen, and Anand still use it regularly today!</p>
+    <p class="lang-element-ja">💡 ニムゾ・インディアンは、1.d4 Nf6 2.c4 e6 3.Nc3 Bb4と、ビショップでc3のナイトをピンするオープニングだよ。20世紀の初め、アーロン・ニムゾヴィッチが強豪どうしの対局で使い始め、カパブランカ以降のすべての世界チャンピオンが指してきたんだ。黒はビショップとナイトを交換して白のc列のポーンをダブルポーンにすることが多いけれど、このページの4.Qc2では、白がクイーンで取り返してダブルポーンを避け、ビショップペアを手に入れるよ。そのかわり白はクイーンを2回動かすので、黒は展開で先を行くことができるんだ。</p>
+    <p class="lang-element-en">💡 The Nimzo-Indian Defense begins 1.d4 Nf6 2.c4 e6 3.Nc3 Bb4, with Black's bishop pinning the knight on c3. Aron Nimzowitsch brought it into master-level play in the early 20th century, and every world champion since Capablanca has played it. Black often trades the bishop for the knight to give White doubled c-pawns, but in the 4.Qc2 line on this page, White recaptures with the queen, avoids doubled pawns, and gains the bishop pair. In return, White moves the queen twice, so Black can get ahead in development.</p>
   </div>
 
   <div class="board-wrap">
@@ -200,67 +205,92 @@ const initialBoard = [
 // ============================================================
 const LESSON_STEPS = [
   { move:null, moveLabel:{ja:"開始局面", en:"Starting Position"},
-    ja:"ニムゾ・インディアンのレッスンを始めるよ!ビショップで白のナイトをピンして、中央拡大を妨害する革命的なオープニングだよ。20世紀初頭、アーロン・ニムゾウィッチが提唱した「駒の力で中央を間接的に支配する」という考え方(ハイパーモダン理論)を代表する定跡で、カルポフ、カスパロフ、カールセンら歴代の世界チャンピオンが好んで指してきたんだ。ジーンと一緒に、一手ずつ「なぜその手を指すのか」を学んでいこう。",
-    en:"Let's start the Nimzo-Indian Defense lesson! Black pins White's knight with the bishop to hold back central expansion — a truly revolutionary idea. Pioneered by Aron Nimzowitsch in the early 20th century, it embodies the hypermodern philosophy of controlling the center with piece pressure rather than pawns alone. World champions from Karpov to Kasparov to Carlsen have all trusted this opening. Jene will explain why each move is played, one step at a time.",
+    ja:"ニムゾ・インディアンのレッスンを始めるよ！このページでは、白が4.Qc2でダブルポーンを避ける、クラシカル・バリエーション（カパブランカ・バリエーション）を見ていくよ。白のビショップペアと、黒の早い展開のどちらが生きるかがポイントなんだ。一手ずつジーンと一緒に、なぜその手を指すのかを学んでいこう。",
+    en:"Let's start the Nimzo-Indian Defense lesson! On this page we follow the Classical Variation (also called the Capablanca Variation), where White avoids doubled pawns with 4.Qc2. The key question is whether White's bishop pair or Black's quicker development will matter more. Jene will walk you through why each move is played, one step at a time.",
     fox:'welcome' },
-
   { move:{from:[6,3],to:[4,3]}, moveLabel:{ja:"1. d4", en:"1. d4"},
-    ja:"白はd4で中央を制圧するよ。",
-    en:"White plays 1.d4, claiming the center.",
+    ja:"白はポーンをd4へ進めるよ。白は中央のマスを押さえながら、c1のビショップの道を開けるんだ。",
+    en:"White pushes the pawn to d4. White takes control of central squares and opens the path for the c1 bishop.",
     fox:'normal' },
-
   { move:{from:[0,6],to:[2,5]}, moveLabel:{ja:"1...Nf6", en:"1...Nf6"},
-    ja:"黒はナイトをf6へ展開するよ。まだ何色のインディアン・ディフェンスになるか決めていない、柔軟な一手なんだ。",
-    en:"Black develops the knight to f6 — a flexible move that doesn't yet commit to which Indian Defense this will become.",
+    ja:"黒はナイトをf6へ進めるよ。黒はナイトを展開しながら、白がe4と突くのをけん制するんだ。",
+    en:"Black develops the knight to f6. Black develops while discouraging White from pushing e4.",
     fox:'normal' },
-
   { move:{from:[6,2],to:[4,2]}, moveLabel:{ja:"2. c4", en:"2. c4"},
-    ja:"白はc4でさらに中央を広げるよ。次にNc3、そしてe4と続けば、理想的な大きなポーンセンターが完成することになる。",
-    en:"White expands the center further with 2.c4. If White follows up with Nc3 and then e4, it would complete an ideal, dominant pawn center.",
+    ja:"白はポーンをc4へ進めるよ。白はこれでd5のマスにも利かせて、中央を広げるんだ。",
+    en:"White pushes the pawn to c4. White adds control of d5 and expands in the center.",
     fox:'normal' },
-
   { move:{from:[1,4],to:[2,4]}, moveLabel:{ja:"2...e6", en:"2...e6"},
-    ja:"黒はe6で柔軟に展開を準備するよ。このマスを選ぶことで、次にBb4と出すビショップの通り道を確保しつつ、まだd5にもb6にも進める余地を残しているんだ。",
-    en:"Black plays 2...e6, keeping development flexible. This opens the path for the bishop to reach b4 next, while still leaving open the option of playing ...d5 or ...b6 later.",
+    ja:"黒はポーンをe6へ進めるよ。黒はd5のマスを押さえながら、f8のビショップの道を開けるんだ。",
+    en:"Black pushes the pawn to e6. Black controls the d5 square and opens the path for the f8 bishop.",
     fox:'normal' },
-
   { move:{from:[7,1],to:[5,2]}, moveLabel:{ja:"3. Nc3", en:"3. Nc3"},
-    ja:"白はナイトをc3へ展開するよ。これで次にe4と突けば、d4・e4・c4という理想的な大きなポーンセンターがいよいよ完成してしまう。",
-    en:"White develops the knight to c3. If White gets to play e4 next, the ideal pawn center (d4-e4-c4) would be complete.",
+    ja:"白はナイトをc3へ進めるよ。白のナイトはe4のマスに利いていて、白は次にe4と突いて、c4・d4・e4の大きなポーンの中央を作る準備をするんだ。",
+    en:"White develops the knight to c3. White's knight covers the e4 square, and White prepares to push e4 next to build a big pawn center on c4, d4, and e4.",
+    jaMore:"白はこの手の代わりに、3.Nf3と指すこともできるよ。そのとき黒は、3...Bb4+の<a href='bogo_indian.html'>ボゴ・インディアン</a>や、3...b6の<a href='queens_indian.html'>クイーンズ・インディアン</a>を選ぶことが多いんだ。",
+    enMore:"Instead of this move, White can also play 3.Nf3. In that case, Black often chooses the <a href='bogo_indian.html?lang=en'>Bogo-Indian</a> with 3...Bb4+ or the <a href='queens_indian.html?lang=en'>Queen's Indian</a> with 3...b6.",
     fox:'normal' },
-
   { move:{from:[0,5],to:[4,1]}, moveLabel:{ja:"3...Bb4（ニムゾ！）", en:"3...Bb4 (Nimzo!)"},
-    ja:"ここが本題、ニムゾ・インディアンの一手!黒はビショップをb4へ出して、c3のナイトを完全にピンするよ。この瞬間、b4からe1までの対角線上に他の駒は何もなく、その先には白キングがいる。だからこのナイトは動こうにも動けない、正真正銘のピンなんだ。これで白は安心してe4と突けなくなり、ハイパーモダンの理念、「駒の力で中央進出を間接的に止める」が体現されるよ。",
-    en:"Here's the Nimzo-Indian move! Black develops the bishop to b4, fully pinning the knight on c3. At this moment, nothing stands between b4 and e1 except the king itself, so the knight simply cannot move at all — a real pin, not just pressure. This makes it awkward for White to simply push e4, which is exactly the hypermodern idea: restrain the center with piece power rather than confront it with pawns.",
+    ja:"ここがニムゾ・インディアンの一手！黒はビショップをb4へ進めて、c3のナイトをピンするよ。b4からe1までの斜めの列では、c3のナイトの後ろに白のキングがいるので、白のナイトは動くことができないんだ。黒はこうして、白がナイトの力を借りてe4と突くのを難しくするよ。",
+    en:"Here's the Nimzo-Indian move! Black develops the bishop to b4 and pins the knight on c3. On the diagonal from b4 to e1, White's king stands right behind the c3 knight, so White's knight cannot move at all. In this way, Black makes it hard for White to push e4 with the knight's support.",
     fox:'happy' },
-
-    { move:{from:[6,4],to:[5,4]}, moveLabel:{ja:"4. e3", en:"4. e3"},
-    ja:"白はe3で控えめに対応するよ。よくあるBxc3+ bxc3のような交換を今すぐ迫られる展開(サミッシュ変化)を避けて、じっくり駒を展開していく現代的なプランなんだ。この一手はまた、次にBd3とビショップを出す通り道も作っているよ。",
-    en:"White responds modestly with 4.e3, sidestepping an immediate ...Bxc3+ bxc3 trade (the Sämisch Variation) in favor of a more patient, modern setup. This move also opens the path for the bishop to come out to d3 next.",
-    fox:'wink' },
+  { move:{from:[7,3],to:[6,2]}, moveLabel:{ja:"4. Qc2", en:"4. Qc2"},
+    ja:"白はクイーンをc2へ動かすよ。白のクイーンはc3のナイトを守っていて、黒がBxc3+と取ってきても、白はクイーンで取り返せるんだ。こうすれば、白はc列にポーンが2つ縦に並ぶ「ダブルポーン」を作らずに済むよ。白のクイーンはe4のマスにも利いていて、白はe4と突く準備も続けているんだ。",
+    en:"White moves the queen to c2. White's queen defends the c3 knight, so if Black plays ...Bxc3+, White can recapture with the queen. This way, White avoids getting doubled pawns, two pawns stacked on the c-file. White's queen also covers the e4 square, so White keeps preparing the e4 push.",
+    jaMore:"白はこの手の代わりに、4.e3と突いて落ち着いて駒を展開する<a href='nimzo_rubinstein.html'>ルビンシュタイン・バリエーション</a>も、同じくらいよく指されているよ。また白は、4.a3と突いてすぐにビショップを交換させ、bxc3とポーンで取り返すサミッシュ・バリエーションを選ぶこともできるんだ。そのとき白はダブルポーンを受け入れる代わりに、ビショップ2つと中央のポーンを手に入れるよ。",
+    enMore:"Instead of this move, White can also play 4.e3 and develop calmly — the <a href='nimzo_rubinstein.html?lang=en'>Rubinstein Variation</a>, which is just as popular. White can also play 4.a3, forcing the bishop trade right away and recapturing with bxc3 — the Sämisch Variation. In that case, White accepts doubled pawns in return for the two bishops and extra central pawns.",
+    fox:'normal' },
   { move:{from:[0,4],to:[0,6],castle:{from:[0,7],to:[0,5]}}, moveLabel:{ja:"4...O-O", en:"4...O-O"},
-    ja:"黒はキャスリングでキングを安全な場所へ。",
-    en:"Black castles kingside, tucking the king away safely.",
+    ja:"黒はキャスリングでキングを安全な場所へ動かすよ。黒のキングはg8へ移り、h8にいたルークはf8へ出てくるんだ。黒は中央のポーンをどう動かすか決める前に、まずキングの安全を確保しておくよ。",
+    en:"Black castles, bringing the king to safety. Black's king goes to g8, and the rook from h8 comes to f8. Black secures the king first, before deciding how to arrange the central pawns.",
     fox:'normal' },
-  { move:{from:[7,5],to:[5,3]}, moveLabel:{ja:"5. Bd3", en:"5. Bd3"},
-    ja:"白はビショップをd3へ展開するよ。",
-    en:"White develops the bishop to d3.",
+  { move:{from:[6,0],to:[5,0]}, moveLabel:{ja:"5. a3", en:"5. a3"},
+    ja:"白はポーンをa3へ進めるよ。白はb4のビショップを攻撃して、黒にビショップをどうするか決めさせるんだ。白はビショップを交換させて、ビショップを2つ持つ形（ビショップペア）を手に入れたいんだよ。",
+    en:"White pushes the pawn to a3. White attacks the b4 bishop and forces Black to decide what to do with it. White wants to provoke the trade and get the two bishops, known as the bishop pair.",
     fox:'normal' },
-  { move:{from:[1,3],to:[3,3]}, moveLabel:{ja:"5...d5", en:"5...d5"},
-    ja:"黒はd5で中央に挑むよ。",
-    en:"Black challenges the center with 5...d5.",
+  { move:{from:[4,1],to:[5,2]}, moveLabel:{ja:"5...Bxc3+", en:"5...Bxc3+"},
+    ja:"黒はビショップでc3のナイトを取って、チェックをかけるよ。黒のビショップがここで下がると、黒は手順をむだにしてしまうので、ナイトと交換するのがふつうなんだ。黒はビショップペアを白にゆずる代わりに、展開を進めることを選ぶよ。",
+    en:"Black's bishop captures the knight on c3 with check. If Black's bishop retreated here, Black would simply lose time, so trading it for the knight is the normal choice. Black hands White the bishop pair and chooses to get ahead in development instead.",
     fox:'normal' },
-  { move:{from:[7,6],to:[5,5]}, moveLabel:{ja:"6. Nf3", en:"6. Nf3"},
-    ja:"白はナイトをf3へ展開するよ。",
-    en:"White develops the other knight to f3.",
+  { move:{from:[6,2],to:[5,2]}, moveLabel:{ja:"6. Qxc3", en:"6. Qxc3"},
+    ja:"白はクイーンでc3のビショップを取り返すよ。白はダブルポーンを作らずに、ビショップペアを手に入れたんだ。ただし白のクイーンはもう2回動いていて、そのぶん白のキングサイドの駒の展開は遅れているよ。",
+    en:"White's queen recaptures the bishop on c3. White has gained the bishop pair without getting doubled pawns. However, White's queen has already moved twice, so White's kingside development is behind.",
     fox:'normal' },
-  { move:{from:[1,2],to:[3,2]}, moveLabel:{ja:"6...c5", en:"6...c5"},
-    ja:"黒はc5でさらに中央に圧力をかけるよ。",
-    en:"Black adds more central pressure with 6...c5.",
-    fox:'wink' },
-  { move:{from:[7,4],to:[7,6],castle:{from:[7,7],to:[7,5]}}, moveLabel:{ja:"7. O-O", en:"7. O-O"},
-    ja:"白はキャスリングでキングを安全な場所へ。これで本譜は一段落、続きはぜひ自分で指してみてね！",
-    en:"White castles kingside, tucking the king away safely. That's the main line — try continuing the game yourself from here!",
+  { move:{from:[1,1],to:[2,1]}, moveLabel:{ja:"6...b6", en:"6...b6"},
+    ja:"黒はポーンをb6へ進めるよ。黒はc8のビショップをb7へ出す準備をして、長い斜めの列からe4のマスを押さえにいくんだ。黒は白がe4と突いて中央を広げるのを、ポーンではなく駒の力で止めようとしているよ。",
+    en:"Black pushes the pawn to b6. Black prepares to bring the c8 bishop to b7 and control the e4 square from the long diagonal. Black is trying to stop White's e4 push with pieces rather than pawns.",
+    fox:'normal' },
+  { move:{from:[7,2],to:[3,6]}, moveLabel:{ja:"7. Bg5", en:"7. Bg5"},
+    ja:"白はビショップをg5へ進めるよ。白のビショップはf6のナイトをピンしていて、黒のナイトが動くと、後ろにいるd8のクイーンが取られてしまうんだ。白はこうして、e4やd5のマスを守っているf6のナイトの働きを弱めるよ。",
+    en:"White develops the bishop to g5. White's bishop pins the f6 knight, so if Black's knight moves, the queen behind it on d8 can be captured. In this way, White weakens the f6 knight, which is guarding the e4 and d5 squares.",
+    fox:'normal' },
+  { move:{from:[0,2],to:[1,1]}, moveLabel:{ja:"7...Bb7", en:"7...Bb7"},
+    ja:"黒はビショップをb7へ進めるよ。黒のビショップはa8からh1への長い斜めの列に入り、f6のナイトと合わせて2つでe4のマスに利かせるんだ。黒のビショップの斜めの列の先には、白のg2のポーンもあるよ。",
+    en:"Black develops the bishop to b7. Black's bishop takes up the long a8–h1 diagonal and, together with the f6 knight, covers the e4 square twice. Further along Black's diagonal sits White's g2 pawn.",
+    fox:'normal' },
+  { move:{from:[6,5],to:[5,5]}, moveLabel:{ja:"8. f3", en:"8. f3"},
+    ja:"白はポーンをf3へ進めるよ。白はe4のマスに利かせて、次にe4と突いて大きなポーンの中央を作る準備をするんだ。白のf3のポーンは、黒のb7のビショップの長い斜めの列もふさいでいるよ。そのかわり、白はg1のナイトをf3へ出せなくなり、キングサイドの展開がさらに遅れるんだ。",
+    en:"White pushes the pawn to f3. White takes control of the e4 square and prepares to push e4 next to build a big pawn center. White's f3 pawn also blocks the long diagonal of Black's b7 bishop. In return, White can no longer develop the g1 knight to f3, so White's kingside development falls even further behind.",
+    fox:'normal' },
+  { move:{from:[1,7],to:[2,7]}, moveLabel:{ja:"8...h6", en:"8...h6"},
+    ja:"黒はポーンをh6へ進めるよ。黒はg5のビショップを攻撃して、白にビショップを下げるか、f6のナイトと交換するかを決めさせるんだ。",
+    en:"Black pushes the pawn to h6. Black attacks the g5 bishop and makes White decide whether to retreat it or trade it for the f6 knight.",
+    fox:'normal' },
+  { move:{from:[3,6],to:[4,7]}, moveLabel:{ja:"9. Bh4", en:"9. Bh4"},
+    ja:"白はビショップをh4へ下げるよ。白はビショップを交換せずに残して、f6のナイトへのピンを続けるんだ。白は、ビショップを2つ持っている長所をそのまま生かそうとしているよ。",
+    en:"White retreats the bishop to h4. White keeps the bishop instead of trading it and maintains the pin on the f6 knight. White wants to keep the advantage of having two bishops.",
+    fox:'normal' },
+  { move:{from:[1,3],to:[3,3]}, moveLabel:{ja:"9...d5", en:"9...d5"},
+    ja:"黒はポーンをd5へ進めるよ。黒は中央で白のc4のポーンを攻撃しながら、白がe4と突くのを直接止めるんだ。白が今e4と突いても、黒はd5のポーンでそのポーンを取ることができるよ。",
+    en:"Black pushes the pawn to d5. Black attacks White's c4 pawn in the center and directly stops White's e4 push. Even if White pushed e4 now, Black could simply capture it with the d5 pawn.",
+    fox:'normal' },
+  { move:{from:[6,4],to:[5,4]}, moveLabel:{ja:"10. e3", en:"10. e3"},
+    ja:"白はポーンをe3へ進めるよ。白はd4のポーンを支えながら、f1のビショップが動く道を開けるんだ。白はこれで、キングサイドの駒を展開してキャスリングする準備に入るよ。",
+    en:"White pushes the pawn to e3. White supports the d4 pawn and opens the path for the f1 bishop. White can now start developing the kingside pieces and get ready to castle.",
+    fox:'normal' },
+  { move:{from:[0,1],to:[1,3]}, moveLabel:{ja:"10...Nbd7", en:"10...Nbd7"},
+    ja:"黒はナイトをd7へ進めるよ。黒のナイトはピンされているf6のナイトを守り、c5のマスにも利いて、あとでc5と突く準備も整えるんだ。白はビショップペアと中央のポーンを生かしてe4と突く機会をうかがい、黒は早い展開とc5の突きで白の中央に挑むのが典型的な流れだよ。これで本譜は一段落、続きはぜひ自分で指してみてね！",
+    en:"Black develops the knight to d7. Black's knight defends the pinned f6 knight and also covers c5, preparing a later ...c5 push. The typical plan is for White to use the bishop pair and central pawns to look for a chance to push e4, while Black challenges White's center with quick development and the ...c5 push. That's the main line — try continuing the game yourself from here!",
     fox:'happy' }
 ];
 
@@ -350,7 +380,19 @@ function renderStep(){
   const step = LESSON_STEPS[currentStep];
   renderBoard(boardSnapshots[currentStep]);
   document.getElementById('moveLabel').textContent = (step.moveLabel && step.moveLabel[currentLang]) || '';
-  document.getElementById('commentaryText').textContent = step[currentLang];
+  const ctEl = document.getElementById('commentaryText');
+  const moreText = step[currentLang + 'More'];
+  ctEl.innerHTML = step[currentLang] + (moreText
+    ? '<details class="more-detail"><summary>' + (currentLang === 'ja' ? '💡 もっと詳しく知りたい方へ' : '💡 Want to know more?') + '</summary><div class="more-body">' + moreText + '</div></details>'
+    : '');
+  ctEl.scrollTop = 0;
+  const moreEl = ctEl.querySelector('details.more-detail');
+  if (moreEl) {
+    moreEl.addEventListener('toggle', function(){
+      if (moreEl.open) { ctEl.scrollTop = moreEl.offsetTop - ctEl.offsetTop; }
+      adjustBottomPadding();
+    });
+  }
   document.getElementById('foxAvatar').src = FOX_BY_MOOD[step.fox] || FOX_BY_MOOD.normal;
   document.getElementById('lessonProgress').textContent = currentStep + ' / ' + (LESSON_STEPS.length - 1);
   document.getElementById('btnPrev').disabled = currentStep === 0;

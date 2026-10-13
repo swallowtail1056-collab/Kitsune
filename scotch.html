@@ -103,6 +103,11 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
   font-size: 1rem;
   color: var(--text-sub);
 }
+.commentary-text a, .opening-intro a { color:var(--brown); text-decoration:underline; font-weight:700; }
+.commentary-text a:hover, .opening-intro a:hover { color:var(--brown-dark); }
+.more-detail { margin-top:8px; border-top:1px dashed var(--brown-light); padding-top:6px; }
+.more-detail summary { cursor:pointer; font-weight:700; color:var(--brown); font-size:0.92rem; list-style-position:inside; }
+.more-detail .more-body { margin-top:6px; font-size:0.94rem; }
 </style>
   <script src="board-theme.js"></script>
 </head>
@@ -125,8 +130,8 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
   <h1 class="opening-title lang-element-en">Scotch Game</h1>
 
   <div class="opening-intro">
-    <p class="lang-element-ja">💡 スコッチゲームは3手目にd4と突いて黒のe5ポーンを直接攻撃する積極的なオープニングだよ！d4に対してexd4と取れば白はNxd4と取り返してナイトをd4という強力な中央のマスに配置できるんだ。ポーン交換後はオープンな局面になって両サイドのピースが活発に動けるようになるよ。ルイ・ロペスに比べて複雑な理論が少なく、早い段階から戦いを起こせるのが魅力。ガルリ・カスパロフがトップレベルで頻繁に採用して現代のオープニングとして復活させたんだ。鋭い戦いが好きなプレイヤーにはたまらない選択肢だよ！</p>
-    <p class="lang-element-en">💡 The Scotch Game strikes with d4 on move 3, directly attacking Black's e5 pawn! After Black takes with exd4, White recaptures with Nxd4, placing the knight on the powerful central square d4. The pawn exchange opens up the position early, allowing both sides to develop pieces actively. Compared to the Ruy Lopez, it involves less complex theory and starts the fight much earlier. Garry Kasparov famously revived this opening at the top level. If you enjoy sharp, open battles, the Scotch Game is a great choice!</p>
+    <p class="lang-element-ja">💡 スコッチ・ゲームは、1.e4 e5 2.Nf3 Nc6 3.d4と、白が3手目ですぐに中央を開くオープニングだよ。1824年にエディンバラとロンドンのあいだで行われた通信対局で指されたことから、この名前がついたんだ。カスパロフが1990年の世界チャンピオン戦などで使って、ふたたび人気が高まったよ。</p>
+    <p class="lang-element-en">💡 The Scotch Game begins 1.e4 e5 2.Nf3 Nc6 3.d4, with White opening the center on the third move. It takes its name from a correspondence match played between Edinburgh and London in 1824. Kasparov brought it back into fashion, including in his 1990 World Championship match.</p>
   </div>
 
   <div class="board-wrap">
@@ -200,60 +205,80 @@ const initialBoard = [
 // ============================================================
 const LESSON_STEPS = [
   { move:null, moveLabel:{ja:"開始局面", en:"Starting Position"},
-    ja:"スコッチゲームのレッスンを始めるよ！3手目から即座にe5ポーンを攻める、テンポの良いオープニングだよ。ジーンと一緒に、一手ずつ「なぜその手を指すのか」を学んでいこう。",
-    en:"Let's start the Scotch Game lesson! It strikes at Black's e5 pawn right from move 3 for a fast-paced fight. Jene will explain why each move is played, one step at a time.",
+    ja:"スコッチ・ゲームのレッスンを始めるよ！このページでは、白がナイトを交換してからe5と突く、ミーゼス・バリエーションを見ていくよ。白の中央のスペースと、黒の駒の働きのどちらが生きるかがポイントなんだ。一手ずつジーンと一緒に、なぜその手を指すのかを学んでいこう。",
+    en:"Let's start the Scotch Game lesson! On this page we follow the Mieses Variation, where White trades knights and then pushes e5. The key is whether White's central space or Black's active pieces will matter more. Jene will walk you through why each move is played, one step at a time.",
     fox:'welcome' },
-   { move:{from:[6,4],to:[4,4]}, moveLabel:{ja:"1. e4", en:"1. e4"},
-    ja:"白はe4で中央を制圧するよ。ビショップとクイーンの通り道を同時に開く、効率の良い一手だね。",
-    en:"White claims the center with 1.e4, opening lines for the bishop and queen in the same move.",
+  { move:{from:[6,4],to:[4,4]}, moveLabel:{ja:"1. e4", en:"1. e4"},
+    ja:"白はポーンをe4へ進めるよ。白は中央のマスを押さえながら、ビショップとクイーンが動く道を開けるんだ。",
+    en:"White pushes the pawn to e4. White takes control of central squares and opens lines for the bishop and queen.",
     fox:'normal' },
   { move:{from:[1,4],to:[3,4]}, moveLabel:{ja:"1...e5", en:"1...e5"},
-    ja:"黒も同じくe5で対抗。中央の取り合いはお互い様、というバランスを保つよ。",
-    en:"Black mirrors with 1...e5, keeping the fight for the center balanced.",
+    ja:"黒はポーンをe5へ進めるよ。黒も同じように中央を押さえて、白のポーンと向かい合う形を作るんだ。",
+    en:"Black pushes the pawn to e5. Black also claims the center, setting up a pawn face-off with White.",
     fox:'normal' },
   { move:{from:[7,6],to:[5,5]}, moveLabel:{ja:"2. Nf3", en:"2. Nf3"},
-    ja:"白はナイトをf3に展開。e5ポーンに狙いをつけながら、キングサイドの守りも整えていくよ。",
-    en:"White develops the knight to f3, eyeing the e5 pawn while preparing kingside safety.",
+    ja:"白はナイトをf3へ進めるよ。白のナイトは展開しながら、黒のe5のポーンを攻撃しているんだ。",
+    en:"White develops the knight to f3. White's knight develops while attacking Black's e5 pawn.",
     fox:'normal' },
   { move:{from:[0,1],to:[2,2]}, moveLabel:{ja:"2...Nc6", en:"2...Nc6"},
-    ja:"黒もナイトをc6へ。e5ポーンをしっかり守る、自然な一手だよ。",
-    en:"Black develops the knight to c6, defending the e5 pawn.",
+    ja:"黒はナイトをc6へ進めるよ。黒はナイトを展開しながら、e5のポーンを守るんだ。",
+    en:"Black develops the knight to c6. Black develops a piece and defends the e5 pawn at the same time.",
     fox:'normal' },
   { move:{from:[6,3],to:[4,3]}, moveLabel:{ja:"3. d4（スコッチ！）", en:"3. d4 (Scotch!)"},
-    ja:"ここが本題、スコッチゲームの一手！d4と突いて、黒のe5ポーンに直接挑戦するよ。ルイ・ロペスより早く、激しい戦いに持ち込めるんだ。",
-    en:"Here's the Scotch Game move! White strikes directly at Black's e5 pawn with 3.d4, opening the position much earlier than the Ruy Lopez.",
+    ja:"ここがスコッチ・ゲームの一手！白はポーンをd4へ進めて、すぐに黒のe5のポーンに挑むよ。白は早い段階で中央を開いて、駒を自由に動かせる形をめざすんだ。",
+    en:"Here's the Scotch Game! White pushes the pawn to d4 and challenges Black's e5 pawn right away. White opens the center early and aims for a position where the pieces can move freely.",
     fox:'happy' },
   { move:{from:[3,4],to:[4,3]}, moveLabel:{ja:"3...exd4", en:"3...exd4"},
-    ja:"黒はexd4とポーンを取るよ。これで局面が一気にオープンになるんだ。",
-    en:"Black captures with 3...exd4, immediately opening up the position.",
-    fox:'quiz' },
+    ja:"黒はe5のポーンで、d4に来た白のポーンを取るよ。黒はe5のポーンを守り続けるのがむずかしいので、ここで交換するのがふつうなんだ。",
+    en:"Black's e5 pawn captures White's pawn on d4. Black would have trouble holding the e5 pawn, so trading here is the normal choice.",
+    fox:'normal' },
   { move:{from:[5,5],to:[4,3]}, moveLabel:{ja:"4. Nxd4", en:"4. Nxd4"},
-    ja:"白はナイトで取り返して、d4という強力な中央のマスに陣取るよ。",
-    en:"White recaptures with the knight, landing on the powerful central square d4.",
+    ja:"白はナイトでd4のポーンを取り返すよ。白のナイトは中央のd4に入り、黒のc6のナイトとにらみ合う形になったんだ。",
+    en:"White's knight recaptures the pawn on d4. White's knight now stands in the center on d4, facing Black's knight on c6.",
+    jaMore:"白はこの手の代わりに、4.Bc4とポーンを取り返さずに展開を急ぐ<a href='scotch_gambit.html'>スコッチ・ギャンビット</a>を選ぶこともできるよ。白はポーンを渡す代わりに、早く駒を働かせて攻めようとするんだ。",
+    enMore:"Instead of this move, White can also play 4.Bc4, the <a href='scotch_gambit.html?lang=en'>Scotch Gambit</a>, hurrying development instead of recapturing the pawn. White gives up the pawn in return for fast piece activity and attacking chances.",
     fox:'normal' },
   { move:{from:[0,6],to:[2,5]}, moveLabel:{ja:"4...Nf6", en:"4...Nf6"},
-    ja:"黒はナイトをf6へ。e4のマスをにらみながら展開するよ。",
-    en:"Black develops the knight to f6, eyeing the e4 square.",
+    ja:"黒はナイトをf6へ進めるよ。黒のナイトは白のe4のポーンを攻撃して、展開しながら反撃するんだ。",
+    en:"Black develops the knight to f6. Black's knight attacks White's e4 pawn, developing and counterattacking at the same time.",
+    jaMore:"黒はこの手の代わりに、4...Bc5とビショップを出して、d4のナイトを攻撃することもできるよ。黒のビショップは、展開しながら白の中央のナイトに圧力をかけるんだ。",
+    enMore:"Instead of this move, Black can also play 4...Bc5, attacking the d4 knight. Black's bishop develops while putting pressure on White's central knight.",
     fox:'normal' },
-   { move:{from:[7,1],to:[5,2]}, moveLabel:{ja:"5. Nc3", en:"5. Nc3"},
-    ja:"白はもう一つのナイトをc3へ展開するよ。駒を出しながら、e4のポーンも間接的に支える一手なんだ。",
-    en:"White develops the other knight to c3, developing a piece while also lending support to the e4 pawn.",
+  { move:{from:[4,3],to:[2,2]}, moveLabel:{ja:"5. Nxc6", en:"5. Nxc6"},
+    ja:"白はナイトでc6のナイトを取るよ。白は駒を交換して、黒のbのポーンをc6へ引き寄せ、黒のポーンの形をくずすんだ。",
+    en:"White's knight captures the knight on c6. White trades pieces and pulls Black's b-pawn to c6, damaging Black's pawn structure.",
     fox:'normal' },
-  { move:{from:[0,5],to:[4,1]}, moveLabel:{ja:"5...Bb4", en:"5...Bb4"},
-    ja:"黒はビショップをb4へ。c3のナイトをピンして、白の駒を縛るよ。",
-    en:"Black develops the bishop to b4, pinning the knight on c3.",
-    fox:'wink' },
-  { move:{from:[4,3],to:[2,2]}, moveLabel:{ja:"6. Nxc6", en:"6. Nxc6"},
-    ja:"白はナイトでc6を取るよ。",
-    en:"White captures on c6 with the knight.",
+  { move:{from:[1,1],to:[2,2]}, moveLabel:{ja:"5...bxc6", en:"5...bxc6"},
+    ja:"黒はbのポーンでc6のナイトを取り返すよ。黒のcのポーンは2つ縦に並んだけれど、黒のポーンは中央寄りになり、d5のマスを支えられるようになったんだ。",
+    en:"Black's b-pawn recaptures the knight on c6. Black's c-pawns are now doubled, but Black's pawns have moved toward the center and can support the d5 square.",
     fox:'normal' },
-  { move:{from:[1,1],to:[2,2]}, moveLabel:{ja:"6...bxc6", en:"6...bxc6"},
-    ja:"黒はポーンで取り返すよ。",
-    en:"Black recaptures with the pawn.",
+  { move:{from:[4,4],to:[3,4]}, moveLabel:{ja:"6. e5", en:"6. e5"},
+    ja:"白はポーンをe5へ進めて、f6のナイトを攻撃するよ。白は黒のナイトを追い払いながら、中央にスペースを広げるんだ。白のこの手から始まる形は、ミーゼス・バリエーションと呼ばれているよ。",
+    en:"White pushes the pawn to e5 and attacks the f6 knight. White drives Black's knight away and gains space in the center. The line starting with this move by White is called the Mieses Variation.",
     fox:'normal' },
-  { move:{from:[7,5],to:[5,3]}, moveLabel:{ja:"7. Bd3", en:"7. Bd3"},
-    ja:"白はビショップをd3へ。これで本譜は一段落、続きはぜひ自分で指してみてね！",
-    en:"White develops the bishop to d3. That's the main line — try continuing the game yourself from here!",
+  { move:{from:[0,3],to:[1,4]}, moveLabel:{ja:"6...Qe7", en:"6...Qe7"},
+    ja:"黒はクイーンをe7へ動かすよ。黒のクイーンはe列で白のe5のポーンをピンしていて、白のポーンはf6のナイトを取ることができないんだ。黒のクイーンは、e5のポーンそのものも攻撃しているよ。",
+    en:"Black moves the queen to e7. Black's queen pins White's e5 pawn on the e-file, so White's pawn cannot capture the f6 knight. Black's queen also attacks the e5 pawn itself.",
+    fox:'normal' },
+  { move:{from:[7,3],to:[6,4]}, moveLabel:{ja:"7. Qe2", en:"7. Qe2"},
+    ja:"白はクイーンをe2へ動かすよ。白のクイーンはe5のポーンを守りながら、e列のピンも外すんだ。これで白は、e5のポーンでf6のナイトを取れるようになったよ。",
+    en:"White moves the queen to e2. White's queen defends the e5 pawn and also breaks the pin on the e-file. Now White threatens to capture the f6 knight with the e5 pawn.",
+    fox:'normal' },
+  { move:{from:[2,5],to:[3,3]}, moveLabel:{ja:"7...Nd5", en:"7...Nd5"},
+    ja:"黒はナイトをd5へ動かすよ。黒のナイトは取られる前に中央の強いマスへ移り、白のc3やb4のマスにも利かせるんだ。",
+    en:"Black moves the knight to d5. Black's knight escapes to a strong central square before it can be taken, and it also covers White's c3 and b4 squares.",
+    fox:'normal' },
+  { move:{from:[6,2],to:[4,2]}, moveLabel:{ja:"8. c4", en:"8. c4"},
+    ja:"白はポーンをc4へ進めて、d5のナイトを攻撃するよ。白は黒のナイトを中央から追い払いながら、クイーンサイドのスペースも広げるんだ。",
+    en:"White pushes the pawn to c4 and attacks the knight on d5. White drives Black's knight out of the center and also gains space on the queenside.",
+    fox:'normal' },
+  { move:{from:[0,2],to:[2,0]}, moveLabel:{ja:"8...Ba6", en:"8...Ba6"},
+    ja:"黒はビショップをa6へ進めるよ。黒のビショップはc4のポーンをピンしていて、白のポーンが動くと、後ろにいるe2のクイーンが取られてしまうんだ。黒はこうして、d5のナイトが取られないようにしているよ。",
+    en:"Black develops the bishop to a6. Black's bishop pins the c4 pawn, so if White's pawn moves, the queen behind it on e2 can be captured. In this way, Black keeps the d5 knight from being taken.",
+    fox:'normal' },
+  { move:{from:[6,1],to:[5,1]}, moveLabel:{ja:"9. b3", en:"9. b3"},
+    ja:"白はポーンをb3へ進めるよ。白のポーンはc4のポーンを守り、白はあとでビショップをb2へ出す準備もするんだ。白はe5のポーンと中央のスペースを生かして攻め、黒はc4のポーンへのピンや駒の働きで反撃するのが典型的な流れだよ。これで本譜は一段落、続きはぜひ自分で指してみてね！",
+    en:"White pushes the pawn to b3. White's pawn defends the c4 pawn, and White also prepares to bring the bishop to b2 later. The typical plan is for White to use the e5 pawn and the space in the center to attack, while Black counters with the pin on the c4 pawn and active pieces. That's the main line — try continuing the game yourself from here!",
     fox:'happy' }
 ];
 
@@ -343,7 +368,19 @@ function renderStep(){
   const step = LESSON_STEPS[currentStep];
   renderBoard(boardSnapshots[currentStep]);
   document.getElementById('moveLabel').textContent = (step.moveLabel && step.moveLabel[currentLang]) || '';
-  document.getElementById('commentaryText').textContent = step[currentLang];
+  const ctEl = document.getElementById('commentaryText');
+  const moreText = step[currentLang + 'More'];
+  ctEl.innerHTML = step[currentLang] + (moreText
+    ? '<details class="more-detail"><summary>' + (currentLang === 'ja' ? '💡 もっと詳しく知りたい方へ' : '💡 Want to know more?') + '</summary><div class="more-body">' + moreText + '</div></details>'
+    : '');
+  ctEl.scrollTop = 0;
+  const moreEl = ctEl.querySelector('details.more-detail');
+  if (moreEl) {
+    moreEl.addEventListener('toggle', function(){
+      if (moreEl.open) { ctEl.scrollTop = moreEl.offsetTop - ctEl.offsetTop; }
+      adjustBottomPadding();
+    });
+  }
   document.getElementById('foxAvatar').src = FOX_BY_MOOD[step.fox] || FOX_BY_MOOD.normal;
   document.getElementById('lessonProgress').textContent = currentStep + ' / ' + (LESSON_STEPS.length - 1);
   document.getElementById('btnPrev').disabled = currentStep === 0;

@@ -103,6 +103,11 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
   font-size: 1rem;
   color: var(--text-sub);
 }
+.commentary-text a, .opening-intro a { color:var(--brown); text-decoration:underline; font-weight:700; }
+.commentary-text a:hover, .opening-intro a:hover { color:var(--brown-dark); }
+.more-detail { margin-top:8px; border-top:1px dashed var(--brown-light); padding-top:6px; }
+.more-detail summary { cursor:pointer; font-weight:700; color:var(--brown); font-size:0.92rem; list-style-position:inside; }
+.more-detail .more-body { margin-top:6px; font-size:0.94rem; }
 </style>
   <script src="board-theme.js"></script>
 </head>
@@ -125,8 +130,8 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
   <h1 class="opening-title lang-element-en">Pirc Defense</h1>
 
   <div class="opening-intro">
-    <p class="lang-element-ja">💡 ピルツ・ディフェンスは白の中央支配を積極的に許しながらフィアンケットから反撃を狙うモダンな守りだよ！1...d6 2...Nf6 3...g6 4...Bg7という形でビショップをg7に配置するんだ。白がe4-d4-Nc3-f4と強力なポーンセンターを作っても、黒はg7のビショップで長い対角線から白の中央を牽制し続けるよ。表面上は受け身に見えるけど、e5やc5と突いて白のポーンセンターを崩す反撃のタイミングを常に狙っているんだ。柔軟性が高くて個性的な戦いを好むプレイヤーに人気だよ！</p>
-    <p class="lang-element-en">💡 The Pirc Defense is a modern hypermodern opening where Black deliberately allows White to build a big center, then plans to undermine it with a fianchetto! Black develops with d6, Nf6, g6, and Bg7. Even if White builds a powerful pawn center, the Bg7 bishop constantly pressures White's center from a distance. While it looks passive on the surface, Black is always looking for the right moment to strike back with e5 or c5. The Pirc is not really a passive defense — it's an active counter-attacking strategy!</p>
+    <p class="lang-element-ja">💡 ピルツ・ディフェンスは、1.e4 d6 2.d4 Nf6 3.Nc3 g6と、黒が中央のポーンをすぐには前に出さず、ビショップをg7へ出して白の中央をあとからねらうオープニングだよ。名前はユーゴスラビア（今のスロベニア）のグランドマスター、ヴァスヤ・ピルツから来ていて、ピルツは1940年代の終わりからこのオープニングをよく指したんだ。ロシアなどでは、アナトリー・ウフィムツェフの名前から「ウフィムツェフ・ディフェンス」とも呼ばれているよ。</p>
+    <p class="lang-element-en">💡 The Pirc Defense begins 1.e4 d6 2.d4 Nf6 3.Nc3 g6: instead of pushing central pawns right away, Black puts the bishop on g7 and targets White's center later. It is named after Vasja Pirc, a grandmaster from Yugoslavia (now Slovenia), who played it often from the late 1940s onward. In Russia and other former Soviet countries, it is also called the Ufimtsev Defense, after Anatoly Ufimtsev.</p>
   </div>
 
   <div class="board-wrap">
@@ -200,60 +205,84 @@ const initialBoard = [
 // ============================================================
 const LESSON_STEPS = [
   { move:null, moveLabel:{ja:"開始局面", en:"Starting Position"},
-    ja:"ピルツ・ディフェンスのレッスンを始めるよ！白に中央を譲りながら、フィアンケットから反撃を狙うモダンな守りだよ。ジーンと一緒に、一手ずつ「なぜその手を指すのか」を学んでいこう。",
-    en:"Let's start the Pirc Defense lesson! Black hands White the center at first, then counter-attacks it with a fianchetto — a modern hypermodern idea. Jene will explain why each move is played, one step at a time.",
+    ja:"ピルツ・ディフェンスのレッスンを始めるよ！このページでは、白が4.Nf3と落ち着いて駒を展開するクラシカル・システムを見ていくよ。黒が白の大きな中央を、あとからどうやってねらうのかがポイントなんだ。一手ずつジーンと一緒に、なぜその手を指すのかを学んでいこう。",
+    en:"Let's start the Pirc Defense lesson! On this page we follow the Classical System, where White develops calmly with 4.Nf3. The key is how Black targets White's big center later on. Jene will walk you through why each move is played, one step at a time.",
     fox:'welcome' },
-   { move:{from:[6,4],to:[4,4]}, moveLabel:{ja:"1. e4", en:"1. e4"},
-    ja:"白はe4で中央を制圧するよ。ビショップとクイーンの通り道を同時に開く、効率の良い一手だね。",
-    en:"White claims the center with 1.e4, opening lines for the bishop and queen in the same move.",
+  { move:{from:[6,4],to:[4,4]}, moveLabel:{ja:"1. e4", en:"1. e4"},
+    ja:"白はポーンをe4へ進めるよ。白は中央のマスを押さえながら、ビショップとクイーンが動く道を開けるんだ。",
+    en:"White pushes the pawn to e4. White takes control of central squares and opens lines for the bishop and queen.",
     fox:'normal' },
   { move:{from:[1,3],to:[2,3]}, moveLabel:{ja:"1...d6（ピルツ！）", en:"1...d6 (Pirc!)"},
-    ja:"ここが本題、ピルツ・ディフェンスの一手！黒は中央への挑戦を後回しにして、まずフィアンケットの準備をするよ。",
-    en:"Here's the Pirc Defense move! Black delays challenging the center, preparing a fianchetto setup instead.",
+    ja:"ここがピルツ・ディフェンスの一手！黒はポーンをd6へ進めて、e5のマスに利かせながら、c8のビショップの道を開けるよ。黒はすぐに中央のポーンで張り合わず、まず駒を展開してから、あとで白の中央に反撃するんだ。",
+    en:"Here's the Pirc Defense! Black pushes the pawn to d6, covering the e5 square and opening the path for the c8 bishop. Black does not fight for the center with pawns right away, but develops the pieces first and counterattacks White's center later.",
+    jaMore:"黒はこの手の代わりに、1...g6と先にビショップを出す準備をする<a href='modern_defense.html'>モダン・ディフェンス</a>を選ぶこともできるよ。モダン・ディフェンスでは、黒はf6へのナイトの展開をあとに回すんだ。",
+    enMore:"Instead of this move, Black can also choose the <a href='modern_defense.html?lang=en'>Modern Defense</a> with 1...g6, preparing the bishop first. In the Modern Defense, Black delays developing the knight to f6.",
     fox:'happy' },
   { move:{from:[6,3],to:[4,3]}, moveLabel:{ja:"2. d4", en:"2. d4"},
-    ja:"白はd4で中央をさらに広げるよ。",
-    en:"White further expands the center with 2.d4.",
+    ja:"白はポーンをd4へ進めるよ。白はe4とd4の2つのポーンで、中央に大きな形を作るんだ。白はc1のビショップの道も開けているよ。",
+    en:"White pushes the pawn to d4. White builds a big center with the two pawns on e4 and d4. White also opens the path for the c1 bishop.",
     fox:'normal' },
   { move:{from:[0,6],to:[2,5]}, moveLabel:{ja:"2...Nf6", en:"2...Nf6"},
-    ja:"黒はナイトをf6へ展開するよ。",
-    en:"Black develops the knight to f6.",
+    ja:"黒はナイトをf6へ進めるよ。黒のナイトは白のe4のポーンを攻撃していて、白にe4のポーンを守らせるんだ。",
+    en:"Black develops the knight to f6. Black's knight attacks White's e4 pawn and makes White spend a move defending it.",
     fox:'normal' },
   { move:{from:[7,1],to:[5,2]}, moveLabel:{ja:"3. Nc3", en:"3. Nc3"},
-    ja:"白はナイトをc3へ展開するよ。",
-    en:"White develops the knight to c3.",
+    ja:"白はナイトをc3へ進めるよ。白のナイトはe4のポーンを守りながら、d5のマスにも利かせるんだ。",
+    en:"White develops the knight to c3. White's knight defends the e4 pawn and also covers the d5 square.",
     fox:'normal' },
   { move:{from:[1,6],to:[2,6]}, moveLabel:{ja:"3...g6", en:"3...g6"},
-    ja:"黒はg6でフィアンケットの準備を進めるよ。",
-    en:"Black continues the fianchetto plan with 3...g6.",
-    fox:'wink' },
-  { move:{from:[6,5],to:[4,5]}, moveLabel:{ja:"4. f4", en:"4. f4"},
-    ja:"白はf4でさらに中央とキングサイドを強化するよ（オーストリアン・アタック）。",
-    en:"White reinforces the center and kingside with 4.f4 (the Austrian Attack).",
+    ja:"黒はポーンをg6へ進めるよ。黒はf8のビショップをg7へ出す準備をするんだ。黒のビショップがg7に出ると、a1からh8への長い斜めの列から、白の中央をねらえるようになるよ。",
+    en:"Black pushes the pawn to g6. Black prepares to bring the f8 bishop to g7. Once Black's bishop is on g7, it can aim at White's center from the long a1–h8 diagonal.",
+    fox:'normal' },
+  { move:{from:[7,6],to:[5,5]}, moveLabel:{ja:"4. Nf3", en:"4. Nf3"},
+    ja:"白はナイトをf3へ進めるよ。白はfのポーンを突かずに、落ち着いて駒を展開するクラシカル・システムを選んだんだ。白のナイトはd4のポーンを守り、e5のマスにも利いているよ。",
+    en:"White develops the knight to f3. White chooses the Classical System, developing calmly without pushing the f-pawn. White's knight defends the d4 pawn and also covers the e5 square.",
+    jaMore:"白はこの手の代わりに、4.f4と突いて、ポーンでさらに中央を広げるオーストリアン・アタックを選ぶこともできるよ。白はあとでe5と突いて黒の陣地に食い込もうとする、いちばん積極的な作戦なんだ。",
+    enMore:"Instead of this move, White can also play 4.f4, the Austrian Attack, expanding the center even further with pawns. It is White's most ambitious plan, aiming to push e5 later and break into Black's position.",
     fox:'normal' },
   { move:{from:[0,5],to:[1,6]}, moveLabel:{ja:"4...Bg7", en:"4...Bg7"},
-    ja:"黒はビショップをg7へ。長い対角線から白の中央を牽制し続けるよ。",
-    en:"Black completes the fianchetto with 4...Bg7, pressuring White's center from a distance.",
-    fox:'happy' },
-   { move:{from:[7,6],to:[5,5]}, moveLabel:{ja:"4. Nf3", en:"4. Nf3"},
-    ja:"白はナイトをf3へ展開するよ。中央を支えながら、この先のキャスリングへ向けて駒を出していくんだ。",
-    en:"White develops the other knight to f3, supporting the center while continuing to develop toward castling.",
+    ja:"黒はビショップをg7へ進めるよ。黒のビショップは長い斜めの列に入り、f6のナイトが動けば、d4のポーンや白のクイーンサイドまで利くようになるんだ。これでf8のマスが空いて、黒は次の手でキャスリングできるよ。",
+    en:"Black develops the bishop to g7. Black's bishop takes up the long diagonal, and once the f6 knight moves, it will reach the d4 pawn and White's queenside. This also clears f8, so Black can castle on the next move.",
+    fox:'normal' },
+  { move:{from:[7,5],to:[6,4]}, moveLabel:{ja:"5. Be2", en:"5. Be2"},
+    ja:"白はビショップをe2へ進めるよ。白はf1のマスを空けて、次の手でキャスリングする準備をするんだ。",
+    en:"White develops the bishop to e2. White clears the f1 square and gets ready to castle on the next move.",
     fox:'normal' },
   { move:{from:[0,4],to:[0,6],castle:{from:[0,7],to:[0,5]}}, moveLabel:{ja:"5...O-O", en:"5...O-O"},
-    ja:"黒はキャスリングでキングを安全な場所へ。",
-    en:"Black castles kingside, tucking the king away safely.",
+    ja:"黒はキャスリングでキングを安全な場所へ動かすよ。黒のキングはg8へ移り、h8にいたルークはf8へ出てくるんだ。",
+    en:"Black castles, bringing the king to safety. Black's king goes to g8, and the rook from h8 comes to f8.",
     fox:'normal' },
-   { move:{from:[7,5],to:[5,3]}, moveLabel:{ja:"6. Bd3", en:"6. Bd3"},
-    ja:"白はキングサイドのビショップをd3へ。中央への影響力を保ちながら、攻撃的な位置に構えるんだ。",
-    en:"White develops the kingside bishop to d3, keeping an eye on the center from an active square.",
+  { move:{from:[7,4],to:[7,6],castle:{from:[7,7],to:[7,5]}}, moveLabel:{ja:"6. O-O", en:"6. O-O"},
+    ja:"白もキャスリングでキングを安全な場所へ動かすよ。白のキングはg1へ移り、h1にいたルークはf1へ出てくるんだ。",
+    en:"White also castles, bringing the king to safety. White's king goes to g1, and the rook from h1 comes to f1.",
     fox:'normal' },
-  { move:{from:[1,2],to:[3,2]}, moveLabel:{ja:"6...c5", en:"6...c5"},
-    ja:"黒はc5！表面上は受け身だったけど、ここで白のポーンセンターを崩す反撃を仕掛けるよ。",
-    en:"Black strikes with 6...c5 — the counter-attack against White's pawn center begins.",
-    fox:'wink' },
-  { move:{from:[4,4],to:[3,4]}, moveLabel:{ja:"7. e5", en:"7. e5"},
-    ja:"白はe5でスペースを広げるよ。これで本譜は一段落、続きはぜひ自分で指してみてね！",
-    en:"White grabs more space with 7.e5. That's the main line — try continuing the game yourself from here!",
+  { move:{from:[0,2],to:[4,6]}, moveLabel:{ja:"6...Bg4", en:"6...Bg4"},
+    ja:"黒はビショップをg4へ進めるよ。黒のビショップはf3のナイトに圧力をかけて、d4のポーンを守っているナイトの働きを弱めるんだ。黒はこのあとナイトをc6へ出して、d4のポーンをもっと攻める準備をしているよ。",
+    en:"Black develops the bishop to g4. Black's bishop puts pressure on the f3 knight and weakens the knight that is defending the d4 pawn. Black is preparing to bring the other knight to c6 next and attack the d4 pawn even more.",
+    fox:'normal' },
+  { move:{from:[7,2],to:[5,4]}, moveLabel:{ja:"7. Be3", en:"7. Be3"},
+    ja:"白はビショップをe3へ進めるよ。白のビショップはd4のポーンを守って、黒の攻撃に備えるんだ。白は次にクイーンをd2へ出して、2つのルークをつなげる準備もしているよ。",
+    en:"White develops the bishop to e3. White's bishop defends the d4 pawn and prepares for Black's attack. White is also getting ready to bring the queen to d2 next and connect the two rooks.",
+    fox:'normal' },
+  { move:{from:[0,1],to:[2,2]}, moveLabel:{ja:"7...Nc6", en:"7...Nc6"},
+    ja:"黒はナイトをc6へ進めるよ。黒のナイトは白のd4のポーンを攻撃して、g4のビショップと合わせて白の中央に圧力をかけるんだ。黒は、次にe5と突いて中央で戦う準備もしているよ。",
+    en:"Black develops the knight to c6. Black's knight attacks White's d4 pawn and, together with the g4 bishop, puts pressure on White's center. Black is also preparing to push e5 next and fight in the center.",
+    fox:'normal' },
+  { move:{from:[7,3],to:[6,3]}, moveLabel:{ja:"8. Qd2", en:"8. Qd2"},
+    ja:"白はクイーンをd2へ動かすよ。白のクイーンはe3のビショップを守り、a1とf1の2つのルークの間をつなげるんだ。白は、あとでルークをd1へ動かして、d4のポーンを支える準備もしているよ。",
+    en:"White moves the queen to d2. White's queen defends the e3 bishop and connects the two rooks on a1 and f1. White is also preparing to bring a rook to d1 later to support the d4 pawn.",
+    fox:'normal' },
+  { move:{from:[1,4],to:[3,4]}, moveLabel:{ja:"8...e5", en:"8...e5"},
+    ja:"黒はポーンをe5へ進めるよ。黒は白のd4のポーンを攻撃して、中央で正面から戦うんだ。白のd4のポーンは、今c6のナイトとe5のポーンの2つから攻撃されているよ。",
+    en:"Black pushes the pawn to e5. Black attacks White's d4 pawn and fights head-on in the center. White's d4 pawn is now attacked twice, by the c6 knight and the e5 pawn.",
+    fox:'normal' },
+  { move:{from:[4,3],to:[3,3]}, moveLabel:{ja:"9. d5", en:"9. d5"},
+    ja:"白はポーンをd5へ進めるよ。白はc6のナイトを攻撃してナイトを下がらせながら、中央のスペースを広げるんだ。これで中央のポーンの形が固まり、白はクイーンサイド、黒はキングサイドで戦うことが多くなるよ。",
+    en:"White pushes the pawn to d5. White attacks the c6 knight, forcing it to retreat, and gains space in the center. This locks the central pawn structure, and White often plays on the queenside while Black plays on the kingside.",
+    fox:'normal' },
+  { move:{from:[2,2],to:[1,4]}, moveLabel:{ja:"9...Ne7", en:"9...Ne7"},
+    ja:"黒はナイトをe7へ下げるよ。黒のナイトはd5のポーンに利かせながら、キングサイドへ回る準備をするんだ。白は中央とクイーンサイドのスペースを生かして攻め、黒はあとでf5と突いて白のe4のポーンに挑むのが典型的な流れだよ。これで本譜は一段落、続きはぜひ自分で指してみてね！",
+    en:"Black retreats the knight to e7. Black's knight eyes the d5 pawn and prepares to head toward the kingside. The typical plan is for White to use the space in the center and on the queenside to attack, while Black later pushes ...f5 to challenge White's e4 pawn. That's the main line — try continuing the game yourself from here!",
     fox:'happy' }
 ];
 
@@ -343,7 +372,19 @@ function renderStep(){
   const step = LESSON_STEPS[currentStep];
   renderBoard(boardSnapshots[currentStep]);
   document.getElementById('moveLabel').textContent = (step.moveLabel && step.moveLabel[currentLang]) || '';
-  document.getElementById('commentaryText').textContent = step[currentLang];
+  const ctEl = document.getElementById('commentaryText');
+  const moreText = step[currentLang + 'More'];
+  ctEl.innerHTML = step[currentLang] + (moreText
+    ? '<details class="more-detail"><summary>' + (currentLang === 'ja' ? '💡 もっと詳しく知りたい方へ' : '💡 Want to know more?') + '</summary><div class="more-body">' + moreText + '</div></details>'
+    : '');
+  ctEl.scrollTop = 0;
+  const moreEl = ctEl.querySelector('details.more-detail');
+  if (moreEl) {
+    moreEl.addEventListener('toggle', function(){
+      if (moreEl.open) { ctEl.scrollTop = moreEl.offsetTop - ctEl.offsetTop; }
+      adjustBottomPadding();
+    });
+  }
   document.getElementById('foxAvatar').src = FOX_BY_MOOD[step.fox] || FOX_BY_MOOD.normal;
   document.getElementById('lessonProgress').textContent = currentStep + ' / ' + (LESSON_STEPS.length - 1);
   document.getElementById('btnPrev').disabled = currentStep === 0;

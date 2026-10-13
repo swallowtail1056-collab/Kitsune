@@ -103,6 +103,11 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
   font-size: 1rem;
   color: var(--text-sub);
 }
+.commentary-text a, .opening-intro a { color:var(--brown); text-decoration:underline; font-weight:700; }
+.commentary-text a:hover, .opening-intro a:hover { color:var(--brown-dark); }
+.more-detail { margin-top:8px; border-top:1px dashed var(--brown-light); padding-top:6px; }
+.more-detail summary { cursor:pointer; font-weight:700; color:var(--brown); font-size:0.92rem; list-style-position:inside; }
+.more-detail .more-body { margin-top:6px; font-size:0.94rem; }
 </style>
   <script src="board-theme.js"></script>
 </head>
@@ -125,8 +130,8 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
   <h1 class="opening-title lang-element-en">Russian Defense (Petrov)</h1>
 
   <div class="opening-intro">
-    <p class="lang-element-ja">💡 ロシアン・ディフェンス、別名ペトロフ・ディフェンスは、黒が2...Nf6と即座に反撃する堅実なオープニングだよ！ルイ・ロペスやイタリアンのように受け身になるのではなく、黒もすぐに白のe4ポーンを攻撃するんだ。3.Nxe5に対して、実はすぐにNxe4と取り返してはいけないんだ——4.Qe2!という有名なトラップにかかって駒を失ってしまうよ。だから黒はまずd6でナイトを追い返し、白がNf3と引いてから初めてNxe4と安全に取り返すんだ。この変化は非常に対称的な局面になりやすく、どちらの側も大きなアドバンテージを得にくい。カルポフやクラムニクといったトップ棋士たちが長年信頼してきた鉄壁の守りで、ドローを許容できる黒のプレイヤーにとって最高の選択肢だよ！</p>
-    <p class="lang-element-en">💡 The Russian Defense, also known as the Petrov Defense, is Black's way of fighting back immediately with 2...Nf6! Instead of defending passively, Black attacks White's e4 pawn right away. After 3.Nxe5, Black must NOT recapture immediately with Nxe4 — that runs straight into the famous 4.Qe2! trap and loses material. Instead, Black plays d6 first to chase the knight away, and only recaptures with Nxe4 once White has retreated to f3. This leads to very symmetrical positions where it is genuinely difficult for either side to gain a significant advantage. Top players like Karpov and Kramnik have trusted this defense for decades. If you want a reliable, rock-solid defense as Black, the Petrov is one of the best choices!</p>
+    <p class="lang-element-ja">💡 ロシアン・ディフェンスは、1.e4 e5 2.Nf3 Nf6と、黒がe5のポーンを守らずに、白のe4のポーンを攻撃し返すオープニングだよ。ペトロフ・ディフェンスとも呼ばれていて、19世紀のロシアの指し手、アレクサンドル・ペトロフらが研究したことから名前がついたんだ。黒が左右対称に近い、とても固い形を作れるので、堅実なオープニングとしてトップレベルの大会でもよく指されているよ。</p>
+    <p class="lang-element-en">💡 The Russian Defense begins 1.e4 e5 2.Nf3 Nf6, with Black leaving the e5 pawn undefended and counterattacking White's e4 pawn instead. It is also called the Petrov Defense, named after the 19th-century Russian player Alexander Petrov, who studied it along with others. Because Black can build a very solid, nearly symmetrical position, it is often played as a reliable opening even at the top level.</p>
   </div>
 
   <div class="board-wrap">
@@ -197,60 +202,90 @@ const initialBoard = [
 // ============================================================
 const LESSON_STEPS = [
   { move:null, moveLabel:{ja:"開始局面", en:"Starting Position"},
-    ja:"ロシアン・ディフェンス（ペトロフ・ディフェンス）のレッスンを始めるよ！受け身にならず、黒もすぐにe4ポーンを攻撃する堅実な一手だよ。ジーンと一緒に、一手ずつ「なぜその手を指すのか」を学んでいこう。",
-    en:"Let's start the Russian Defense (Petrov Defense) lesson! Instead of defending passively, Black immediately fights back against the e4 pawn. Jene will explain why each move is played, one step at a time.",
+    ja:"ロシアン・ディフェンスのレッスンを始めるよ！このページでは、白が3.Nxe5とポーンを取る本線を見ていくよ。黒がどうやってポーンを取り返して、中央を固めるのかがポイントなんだ。一手ずつジーンと一緒に、なぜその手を指すのかを学んでいこう。",
+    en:"Let's start the Russian Defense lesson! On this page we follow the main line, where White takes the pawn with 3.Nxe5. The key is how Black wins the pawn back and secures the center. Jene will walk you through why each move is played, one step at a time.",
     fox:'welcome' },
   { move:{from:[6,4],to:[4,4]}, moveLabel:{ja:"1. e4", en:"1. e4"},
-    ja:"白はe4で中央を制圧するよ。",
-    en:"White plays 1.e4, claiming the center.",
+    ja:"白はポーンをe4へ進めるよ。白は中央のマスを押さえながら、ビショップとクイーンが動く道を開けるんだ。",
+    en:"White pushes the pawn to e4. White takes control of central squares and opens lines for the bishop and queen.",
     fox:'normal' },
   { move:{from:[1,4],to:[3,4]}, moveLabel:{ja:"1...e5", en:"1...e5"},
-    ja:"黒も同じくe5で対抗。中央の取り合いはお互い様、というバランスを保つよ。",
-    en:"Black mirrors with 1...e5, keeping the fight for the center balanced.",
+    ja:"黒はポーンをe5へ進めるよ。黒も同じように中央を押さえて、白のポーンと向かい合う形を作るんだ。",
+    en:"Black pushes the pawn to e5. Black also claims the center, setting up a pawn face-off with White.",
     fox:'normal' },
   { move:{from:[7,6],to:[5,5]}, moveLabel:{ja:"2. Nf3", en:"2. Nf3"},
-    ja:"白はナイトをf3に展開。e5ポーンに狙いをつけるよ。",
-    en:"White develops the knight to f3, eyeing the e5 pawn.",
+    ja:"白はナイトをf3へ進めるよ。白のナイトは展開しながら、黒のe5のポーンを攻撃しているんだ。",
+    en:"White develops the knight to f3. White's knight develops while attacking Black's e5 pawn.",
     fox:'normal' },
   { move:{from:[0,6],to:[2,5]}, moveLabel:{ja:"2...Nf6（ロシアン！）", en:"2...Nf6 (Russian!)"},
-    ja:"ここが本題、ロシアン・ディフェンスの一手！黒も受け身にならず、すぐにe4ポーンを攻撃するよ。",
-    en:"Here's the Russian Defense move! Instead of defending passively, Black immediately counter-attacks the e4 pawn.",
+    ja:"ここがロシアン・ディフェンス（ペトロフ・ディフェンス）の一手！黒はe5のポーンを守らずに、ナイトをf6へ出して白のe4のポーンを攻撃し返すよ。黒は白と同じような形で反撃して、左右対称に近い、落ち着いた展開をめざすんだ。",
+    en:"Here's the Russian Defense, also called the Petrov Defense! Black does not defend the e5 pawn, but develops the knight to f6 and counterattacks White's e4 pawn. Black mirrors White's setup and aims for a calm, nearly symmetrical game.",
     fox:'happy' },
   { move:{from:[5,5],to:[3,4]}, moveLabel:{ja:"3. Nxe5", en:"3. Nxe5"},
-    ja:"白はNxe5とポーンを取るよ。黒はどう取り返す？",
-    en:"White captures the pawn with 3.Nxe5. How will Black respond?",
-    fox:'quiz' },
+    ja:"白はナイトでe5のポーンを取るよ。白のナイトは中央のe5に入り、黒のf7のマスもねらっているんだ。",
+    en:"White's knight captures the pawn on e5. White's knight lands in the center on e5 and also eyes Black's f7 square.",
+    fox:'normal' },
   { move:{from:[1,3],to:[2,3]}, moveLabel:{ja:"3...d6", en:"3...d6"},
-    ja:"黒はd6でナイトを追い返すよ。ここですぐにNxe4と取り返したくなるけど、それは罠なんだ！4.Qe2!とされると黒のナイトは逃げ場を失い、駒を失ってしまう（例えば4...Nf6??には5.Nc6+で王手と同時にクイーンも取られてしまうよ）。だから焦らずd6を先に指すのが正解なんだ。",
-    en:"Black plays 3...d6, chasing the knight away. It's tempting to recapture immediately with Nxe4, but that's a trap! After 4.Qe2!, Black's knight has nowhere safe to go and loses material (for example 4...Nf6?? runs into 5.Nc6+, a discovered check that wins the queen). So Black patiently plays d6 first instead.",
-    fox:'wink' },
+    ja:"黒はポーンをd6へ進めて、e5のナイトを攻撃するよ。黒はすぐにe4のポーンを取り返さず、まず白のナイトを追い払うんだ。黒が3...Nxe4とすぐに取り返すと、白は4.Qe2とクイーンをe列に出して、黒のナイトが動いた瞬間にチェックをかけるねらいを作れるよ。たとえば黒が4...Nf6??と下がると、白は5.Nc6+とナイトを動かしてチェックをかけながら、d8のクイーンを取ってしまうんだ。",
+    en:"Black pushes the pawn to d6 and attacks the e5 knight. Black does not recapture on e4 right away, but first drives White's knight back. If Black recaptures at once with 3...Nxe4, White can play 4.Qe2, lining up the queen on the e-file so that any knight move would expose Black's king to check. For example, if Black retreats with 4...Nf6??, White plays 5.Nc6+, giving a discovered check while the knight attacks Black's queen on d8.",
+    fox:'normal' },
   { move:{from:[3,4],to:[5,5]}, moveLabel:{ja:"4. Nf3", en:"4. Nf3"},
-    ja:"白はナイトをf3へ引くよ。d6で追われたので、これ以上e5に留まれないんだ。",
-    en:"White retreats the knight to f3, since it can no longer stay on e5 after being chased by d6.",
+    ja:"白はナイトをf3へ下げるよ。白のナイトは安全な場所へ戻り、d4のマスにも利かせるんだ。",
+    en:"White retreats the knight to f3. White's knight returns to safety and also covers the d4 square.",
+    jaMore:"白はこの手の代わりに、4.Nxf7とナイトを捨ててf7を取る<a href='cochrane_gambit.html'>コクラン・ギャンビット</a>を選ぶこともできるよ。白はナイトを渡す代わりに、黒のキングを引き出して攻めようとするんだ。",
+    enMore:"Instead of this move, White can also sacrifice the knight on f7 with 4.Nxf7, the <a href='cochrane_gambit.html?lang=en'>Cochrane Gambit</a>. White gives up the knight to draw Black's king out and attack it.",
     fox:'normal' },
   { move:{from:[2,5],to:[4,4]}, moveLabel:{ja:"4...Nxe4", en:"4...Nxe4"},
-    ja:"黒もNxe4とポーンを取り返して、均衡を保つよ。d6を先に指してあったおかげで、今度はQe2の罠にかからず安全に取れるんだ。",
-    en:"Black recaptures with 4...Nxe4, restoring the balance. Because d6 was played first, the Qe2 trick no longer works, so this capture is now safe.",
+    ja:"黒はナイトでe4のポーンを取り返すよ。これで白と黒の駒の数は同じに戻ったんだ。黒のナイトはe4で中央に入り、白の陣地に利いているよ。",
+    en:"Black's knight recaptures the pawn on e4. White and Black now have the same material again. Black's knight sits in the center on e4 and bears on White's position.",
     fox:'normal' },
   { move:{from:[6,3],to:[4,3]}, moveLabel:{ja:"5. d4", en:"5. d4"},
-    ja:"白はd4で中央を強化するよ。",
-    en:"White strengthens the center with 5.d4.",
+    ja:"白はポーンをd4へ進めるよ。白は中央のマスを押さえながら、c1のビショップとd1のクイーンの道を開けるんだ。白は次にビショップをd3へ出して、e4のナイトに挑む準備をしているよ。",
+    en:"White pushes the pawn to d4. White claims a central square and opens lines for the c1 bishop and the d1 queen. White is preparing to bring the bishop to d3 next and challenge the e4 knight.",
     fox:'normal' },
   { move:{from:[2,3],to:[3,3]}, moveLabel:{ja:"5...d5", en:"5...d5"},
-    ja:"黒もd5で中央を支えるよ。",
-    en:"Black supports the center with 5...d5.",
+    ja:"黒はポーンをd5へ進めるよ。黒はe4のナイトをポーンで支えて、中央にしっかりとどめるんだ。黒はc8のビショップの道も開けているよ。",
+    en:"Black pushes the pawn to d5. Black supports the e4 knight with a pawn and keeps it firmly in the center. Black also opens the path for the c8 bishop.",
     fox:'normal' },
   { move:{from:[7,5],to:[5,3]}, moveLabel:{ja:"6. Bd3", en:"6. Bd3"},
-    ja:"白はビショップをd3へ展開するよ。b1-h7の対角線を睨んで、黒キングサイドへの圧力を準備するんだ。",
-    en:"White develops the bishop to d3, eyeing the b1-h7 diagonal and preparing pressure toward Black's kingside.",
+    ja:"白はビショップをd3へ進めるよ。白のビショップはe4のナイトに挑み、黒に中央のナイトをどうするか考えさせるんだ。これでf1のマスが空いて、白は次の手でキャスリングできるよ。",
+    en:"White develops the bishop to d3. White's bishop challenges the e4 knight and makes Black think about what to do with it. This clears f1, so White can castle on the next move.",
     fox:'normal' },
   { move:{from:[0,1],to:[2,2]}, moveLabel:{ja:"6...Nc6", en:"6...Nc6"},
-    ja:"黒はもう一つのナイトをc6へ展開するよ。",
-    en:"Black develops the other knight to c6.",
+    ja:"黒はナイトをc6へ進めるよ。黒のナイトはd4のポーンを攻撃して、白の中央に圧力をかけるんだ。黒は次にビショップをe7へ出して、キャスリングの準備も進めるよ。",
+    en:"Black develops the knight to c6. Black's knight attacks the d4 pawn and puts pressure on White's center. Black will bring the bishop to e7 next and prepare to castle.",
     fox:'normal' },
   { move:{from:[7,4],to:[7,6],castle:{from:[7,7],to:[7,5]}}, moveLabel:{ja:"7. O-O", en:"7. O-O"},
-    ja:"白はキャスリングでキングを安全な場所へ。これで本譜は一段落、続きはぜひ自分で指してみてね！",
-    en:"White castles kingside, tucking the king away safely. That's the main line — try continuing the game yourself from here!",
+    ja:"白はキャスリングでキングを安全な場所へ動かすよ。白のキングはg1へ移り、h1にいたルークはf1へ出てくるんだ。",
+    en:"White castles, bringing the king to safety. White's king goes to g1, and the rook from h1 comes to f1.",
+    fox:'normal' },
+  { move:{from:[0,5],to:[1,4]}, moveLabel:{ja:"7...Be7", en:"7...Be7"},
+    ja:"黒はビショップをe7へ進めるよ。黒はf8のマスを空けて、次の手でキャスリングする準備をするんだ。",
+    en:"Black develops the bishop to e7. Black clears the f8 square and gets ready to castle on the next move.",
+    fox:'normal' },
+  { move:{from:[6,2],to:[4,2]}, moveLabel:{ja:"8. c4", en:"8. c4"},
+    ja:"白はポーンをc4へ進めるよ。白はd5のポーンに横から挑んで、e4のナイトを支えているd5のポーンを崩そうとするんだ。白がcxd5と取れば、黒のe4のナイトはポーンの支えを失ってしまうよ。",
+    en:"White pushes the pawn to c4. White challenges the d5 pawn from the side and tries to undermine the pawn that supports the e4 knight. If White captures with cxd5, Black's e4 knight loses its pawn support.",
+    fox:'normal' },
+  { move:{from:[2,2],to:[4,1]}, moveLabel:{ja:"8...Nb4", en:"8...Nb4"},
+    ja:"黒はナイトをb4へ進めるよ。黒のナイトはd3のビショップを攻撃して、白にビショップをどかすか、交換するかを決めさせるんだ。黒は、e4のナイトに挑んでいる白のビショップを追い払いたいんだよ。",
+    en:"Black moves the knight to b4. Black's knight attacks the d3 bishop and makes White decide whether to move it or allow a trade. Black wants to drive away the White bishop that is challenging the e4 knight.",
+    fox:'normal' },
+  { move:{from:[5,3],to:[6,4]}, moveLabel:{ja:"9. Be2", en:"9. Be2"},
+    ja:"白はビショップをe2へ下げるよ。白はビショップを交換せずに残して、あとで使えるようにするんだ。白は、あとでa3と突いてb4のナイトを追い払う準備もしているよ。",
+    en:"White retreats the bishop to e2. White keeps the bishop instead of trading it, saving it for later. White is also preparing to push a3 later and drive away the b4 knight.",
+    fox:'normal' },
+  { move:{from:[0,4],to:[0,6],castle:{from:[0,7],to:[0,5]}}, moveLabel:{ja:"9...O-O", en:"9...O-O"},
+    ja:"黒はキャスリングでキングを安全な場所へ動かすよ。黒のキングはg8へ移り、h8にいたルークはf8へ出てくるんだ。",
+    en:"Black castles, bringing the king to safety. Black's king goes to g8, and the rook from h8 comes to f8.",
+    fox:'normal' },
+  { move:{from:[7,1],to:[5,2]}, moveLabel:{ja:"10. Nc3", en:"10. Nc3"},
+    ja:"白はナイトをc3へ進めるよ。白のナイトはe4のナイトとd5のポーンの両方に圧力をかけるんだ。白はe4で駒を交換させて、黒の中央を弱めようとしているよ。",
+    en:"White develops the knight to c3. White's knight puts pressure on both the e4 knight and the d5 pawn. White wants to force trades on e4 and weaken Black's center.",
+    fox:'normal' },
+  { move:{from:[0,2],to:[3,5]}, moveLabel:{ja:"10...Bf5", en:"10...Bf5"},
+    ja:"黒はビショップをf5へ進めるよ。黒のビショップはe4のナイトを支えて、中央の守りを固めるんだ。白はa3と突いてb4のナイトを追い払いながら中央を崩す機会をうかがい、黒は中央のナイトとポーンを守りながら駒を働かせるのが典型的な流れだよ。これで本譜は一段落、続きはぜひ自分で指してみてね！",
+    en:"Black develops the bishop to f5. Black's bishop supports the e4 knight and strengthens the defense of the center. The typical plan is for White to push a3 to drive away the b4 knight and look for ways to break up the center, while Black holds the central knight and pawn and activates the pieces. That's the main line — try continuing the game yourself from here!",
     fox:'happy' }
 ];
 
@@ -345,7 +380,19 @@ function renderStep(){
   const step = LESSON_STEPS[currentStep];
   renderBoard(boardSnapshots[currentStep]);
   document.getElementById('moveLabel').textContent = (step.moveLabel && step.moveLabel[currentLang]) || '';
-  document.getElementById('commentaryText').textContent = step[currentLang];
+  const ctEl = document.getElementById('commentaryText');
+  const moreText = step[currentLang + 'More'];
+  ctEl.innerHTML = step[currentLang] + (moreText
+    ? '<details class="more-detail"><summary>' + (currentLang === 'ja' ? '💡 もっと詳しく知りたい方へ' : '💡 Want to know more?') + '</summary><div class="more-body">' + moreText + '</div></details>'
+    : '');
+  ctEl.scrollTop = 0;
+  const moreEl = ctEl.querySelector('details.more-detail');
+  if (moreEl) {
+    moreEl.addEventListener('toggle', function(){
+      if (moreEl.open) { ctEl.scrollTop = moreEl.offsetTop - ctEl.offsetTop; }
+      adjustBottomPadding();
+    });
+  }
   document.getElementById('foxAvatar').src = FOX_BY_MOOD[step.fox] || FOX_BY_MOOD.normal;
   document.getElementById('lessonProgress').textContent = currentStep + ' / ' + (LESSON_STEPS.length - 1);
   document.getElementById('btnPrev').disabled = currentStep === 0;

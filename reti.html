@@ -103,6 +103,11 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
   font-size: 1rem;
   color: var(--text-sub);
 }
+.commentary-text a, .opening-intro a { color:var(--brown); text-decoration:underline; font-weight:700; }
+.commentary-text a:hover, .opening-intro a:hover { color:var(--brown-dark); }
+.more-detail { margin-top:8px; border-top:1px dashed var(--brown-light); padding-top:6px; }
+.more-detail summary { cursor:pointer; font-weight:700; color:var(--brown); font-size:0.92rem; list-style-position:inside; }
+.more-detail .more-body { margin-top:6px; font-size:0.94rem; }
 </style>
   <script src="board-theme.js"></script>
 </head>
@@ -125,8 +130,8 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
   <h1 class="opening-title lang-element-en">Réti Opening</h1>
 
   <div class="opening-intro">
-    <p class="lang-element-ja">💡 レティ・オープニングは1.Nf3と開始する超モダンなオープニングだよ！中央へのポーン前進を遅らせてナイトで間接的にd5とe5を牽制するのが狙いなんだ。その後g3-Bg2のフィアンケットで長距離から中央を支配するポジションを目指すよ。1920年代にリヒャルト・レティとアーロン・ニムゾヴィッチが提唱した「超モダン理論」の核心で、「中央はポーンで占領しなくてもピースで遠くからコントロールできる」という革命的なアイデアを体現しているんだ。柔軟な思考を好む戦略家に愛されるオープニングだよ！</p>
-    <p class="lang-element-en">💡 The Réti Opening starts with 1.Nf3, a hyper-modern approach that delays central pawn advances! The knight on f3 indirectly controls d5 and e5 without occupying the center with pawns. White then aims to control the center from a distance with the g3-Bg2 fianchetto. Developed by Richard Réti and Aaron Nimzowitsch in the 1920s as the core of hyper-modern theory, it embodies the revolutionary idea that the center can be controlled from afar with pieces. Loved by strategic players who enjoy flexible, original thinking!</p>
+    <p class="lang-element-ja">💡 レティ・オープニングは、1.Nf3 d5 2.c4と、白がナイトとcのポーンで中央に横から挑むオープニングだよ。名前はチェコスロバキアのグランドマスター、リヒャルト・レティから来ているんだ。レティはニムゾヴィッチらと並ぶ「ハイパーモダン」の代表的な指し手で、中央をポーンで占めるのではなく、離れた駒で中央に利かせる考え方を広めたよ。1924年のニューヨーク大会では、レティはこのオープニングで、当時の世界チャンピオンのカパブランカに勝っているんだ。</p>
+    <p class="lang-element-en">💡 The Réti Opening begins 1.Nf3 d5 2.c4, with White challenging the center from the side using the knight and the c-pawn. It is named after Richard Réti, a grandmaster from Czechoslovakia. Along with Nimzowitsch, Réti was one of the leading “hypermodern” players, who spread the idea of controlling the center with pieces from a distance instead of occupying it with pawns. At New York 1924, Réti used this opening to defeat the reigning world champion, Capablanca.</p>
   </div>
 
   <div class="board-wrap">
@@ -200,60 +205,84 @@ const initialBoard = [
 // ============================================================
 const LESSON_STEPS = [
   { move:null, moveLabel:{ja:"開始局面", en:"Starting Position"},
-    ja:"レティ・オープニングのレッスンを始めるよ！中央をポーンで占領せず、駒で遠くからコントロールする、超モダン理論の核心となる定跡だよ。ジーンと一緒に、一手ずつ「なぜその手を指すのか」を学んでいこう。",
-    en:"Let's start the Réti Opening lesson! White controls the center from afar with pieces instead of occupying it with pawns — the core idea of hypermodern theory. Jene will explain why each move is played, one step at a time.",
+    ja:"レティ・オープニングのレッスンを始めるよ！このページでは、黒がc6・d5・e6とポーンを並べて固く受ける形を見ていくよ。白が2つのビショップで、長い斜めの列から中央をねらうのがポイントなんだ。一手ずつジーンと一緒に、なぜその手を指すのかを学んでいこう。",
+    en:"Let's start the Réti Opening lesson! On this page we follow a line where Black meets it with a solid pawn chain on c6, d5, and e6. The key is how White aims at the center with two bishops on the long diagonals. Jene will walk you through why each move is played, one step at a time.",
     fox:'welcome' },
-   { move:{from:[7,6],to:[5,5]}, moveLabel:{ja:"1. Nf3（レティ！）", en:"1. Nf3 (Réti!)"},
-    ja:"ここが本題、レティ・オープニングの一手！白はポーンを進めず、まずナイトでd4とe5を間接的に牽制するよ。",
-    en:"Here's the Réti Opening move! Instead of advancing a pawn, White indirectly eyes d4 and e5 with the knight.",
+  { move:{from:[7,6],to:[5,5]}, moveLabel:{ja:"1. Nf3（レティ！）", en:"1. Nf3 (R\u00e9ti!)"},
+    ja:"ここがレティ・オープニングの一手！白はナイトをf3へ進めて、d4とe5のマスに利かせるよ。白はすぐに中央へポーンを出さず、まず駒を展開してから、あとでcのポーンなどで横から中央に挑むんだ。",
+    en:"Here's the Réti Opening! White develops the knight to f3, covering the d4 and e5 squares. White does not occupy the center with pawns right away, but develops first and later challenges the center from the side, for example with the c-pawn.",
     fox:'happy' },
   { move:{from:[1,3],to:[3,3]}, moveLabel:{ja:"1...d5", en:"1...d5"},
-    ja:"黒はd5で中央を取るよ。",
-    en:"Black takes the center with 1...d5.",
+    ja:"黒はポーンをd5へ進めるよ。黒は中央のマスをポーンで押さえて、c8のビショップの道も開けるんだ。",
+    en:"Black pushes the pawn to d5. Black claims a central square with a pawn and also opens the path for the c8 bishop.",
     fox:'normal' },
   { move:{from:[6,2],to:[4,2]}, moveLabel:{ja:"2. c4", en:"2. c4"},
-    ja:"白はc4で間接的に中央へ圧力をかけるよ。",
-    en:"White indirectly pressures the center with 2.c4.",
+    ja:"白はポーンをc4へ進めるよ。白は黒のd5のポーンに横から挑んで、中央を外側から崩そうとするんだ。白のこの考え方が、レティ・オープニングの基本なんだよ。",
+    en:"White pushes the pawn to c4. White challenges Black's d5 pawn from the side and tries to undermine the center from the outside. This idea is the heart of the Réti Opening.",
+    jaMore:"白はこの手の代わりに、2.g3と先にビショップをg2へ出す準備をすることもできるよ。白はcのポーンを突く前に、キングサイドの展開を済ませておくんだ。",
+    enMore:"Instead of this move, White can also play 2.g3, preparing to put the bishop on g2 first. White finishes developing the kingside before pushing the c-pawn.",
     fox:'normal' },
   { move:{from:[1,2],to:[2,2]}, moveLabel:{ja:"2...c6", en:"2...c6"},
-    ja:"黒はc6でd5ポーンを支えるよ。",
-    en:"Black supports the d5 pawn with 2...c6.",
+    ja:"黒はポーンをc6へ進めるよ。黒はd5のポーンをc6のポーンで支えて、中央をしっかり守るんだ。黒はd5で取り合いになっても、ポーンで取り返せる形を作ったよ。",
+    en:"Black pushes the pawn to c6. Black supports the d5 pawn with the c6 pawn and holds the center firmly. If there is a trade on d5, Black can now recapture with a pawn.",
+    jaMore:"黒はこの手の代わりに、2...d4と突いて白の陣地へスペースを広げたり、2...e6と落ち着いてd5のポーンを支えたりすることもできるよ。",
+    enMore:"Instead of this move, Black can also push 2...d4 to gain space in White's half of the board, or calmly support the d5 pawn with 2...e6.",
     fox:'normal' },
   { move:{from:[6,1],to:[5,1]}, moveLabel:{ja:"3. b3", en:"3. b3"},
-    ja:"白はb3でクイーンサイドのフィアンケットを準備するよ。",
-    en:"White prepares a queenside fianchetto with 3.b3.",
-    fox:'wink' },
-   { move:{from:[0,6],to:[2,5]}, moveLabel:{ja:"2...Nf6", en:"2...Nf6"},
-    ja:"黒もナイトをf6へ展開するよ。白と同じように、まずは自然な駒の展開を優先しているんだ。",
-    en:"Black develops the knight to f6, mirroring White's approach of prioritizing natural development first.",
+    ja:"白はポーンをb3へ進めるよ。白はc4のポーンを支えながら、c1のビショップをb2へ出す準備をするんだ。白のビショップはb2に出ると、a1からh8への長い斜めの列で中央をねらえるよ。",
+    en:"White pushes the pawn to b3. White supports the c4 pawn and prepares to bring the c1 bishop to b2. Once White's bishop is on b2, it can aim at the center along the long a1–h8 diagonal.",
+    fox:'normal' },
+  { move:{from:[0,6],to:[2,5]}, moveLabel:{ja:"3...Nf6", en:"3...Nf6"},
+    ja:"黒はナイトをf6へ進めるよ。黒のナイトはd5のポーンを守り、e4のマスにも利かせるんだ。",
+    en:"Black develops the knight to f6. Black's knight defends the d5 pawn and also covers the e4 square.",
     fox:'normal' },
   { move:{from:[6,6],to:[5,6]}, moveLabel:{ja:"4. g3", en:"4. g3"},
-    ja:"白はg3でキングサイドのフィアンケットも準備するよ。両翼から中央を遠くから支配する作戦だよ。",
-    en:"White also prepares a kingside fianchetto with 4.g3, controlling the center from both wings.",
+    ja:"白はポーンをg3へ進めるよ。白はf1のビショップをg2へ出す準備をするんだ。白はb2とg2の2つのビショップで、両側から中央をねらう形を作ろうとしているよ。",
+    en:"White pushes the pawn to g3. White prepares to bring the f1 bishop to g2. White wants to aim at the center from both sides with two bishops, on b2 and g2.",
     fox:'normal' },
   { move:{from:[0,2],to:[3,5]}, moveLabel:{ja:"4...Bf5", en:"4...Bf5"},
-    ja:"黒はビショップをf5へ。閉じ込められる前に活発に展開するよ。",
-    en:"Black develops the bishop actively to f5, before it can get trapped.",
+    ja:"黒はビショップをf5へ進めるよ。黒はeのポーンを突く前に、c8のビショップを外へ出しておくんだ。黒のビショップはf5からe4やd3のマスにも利いて、白の中央の動きをけん制できるよ。",
+    en:"Black develops the bishop to f5. Black gets the c8 bishop outside the pawn chain before pushing the e-pawn. From f5, Black's bishop also covers e4 and d3 and keeps White's central moves in check.",
     fox:'normal' },
   { move:{from:[7,5],to:[6,6]}, moveLabel:{ja:"5. Bg2", en:"5. Bg2"},
-    ja:"白はビショップをg2へ展開するよ。",
-    en:"White completes the kingside fianchetto with 5.Bg2.",
+    ja:"白はビショップをg2へ進めるよ。白のビショップは長い斜めの列から、d5のポーンとその先のクイーンサイドをねらうんだ。これでf1のマスが空いて、白は次の手でキャスリングできるよ。",
+    en:"White develops the bishop to g2. White's bishop aims at the d5 pawn and Black's queenside beyond it along the long diagonal. This clears f1, so White can castle on the next move.",
     fox:'normal' },
-   { move:{from:[1,4],to:[2,4]}, moveLabel:{ja:"3...e6", en:"3...e6"},
-    ja:"黒はe6を指すよ。これでf8のビショップに逃げ道ができて、この先のキャスリングへ向けた準備が整うんだ。",
-    en:"Black plays 3...e6. This gives the bishop on f8 a way out, paving the way to castle soon.",
+  { move:{from:[1,4],to:[2,4]}, moveLabel:{ja:"5...e6", en:"5...e6"},
+    ja:"黒はポーンをe6へ進めるよ。黒はd5のポーンをもう一つ支えて、f8のビショップの道も開けるんだ。黒のポーンはc6・d5・e6と並び、とても固い形になったよ。",
+    en:"Black pushes the pawn to e6. Black adds another defender to the d5 pawn and opens the path for the f8 bishop. Black's pawns on c6, d5, and e6 now form a very solid structure.",
     fox:'normal' },
   { move:{from:[7,2],to:[6,1]}, moveLabel:{ja:"6. Bb2", en:"6. Bb2"},
-    ja:"白はビショップをb2へ展開して、両翼のフィアンケットが完成するよ。",
-    en:"White completes the queenside fianchetto with 6.Bb2.",
+    ja:"白はビショップをb2へ進めるよ。白のビショップは長い斜めの列に入り、e5のマスやf6のナイトをねらうんだ。白のビショップは2つとも、斜めの列から中央に利いているよ。",
+    en:"White develops the bishop to b2. White's bishop takes up the long diagonal and aims at the e5 square and the f6 knight. Both of White's bishops now bear on the center from the diagonals.",
     fox:'normal' },
-   { move:{from:[0,5],to:[1,4]}, moveLabel:{ja:"4...Be7", en:"4...Be7"},
-    ja:"黒はキングサイドのビショップをe7へ。これでキングサイドの駒がすべて動き終わり、いよいよキャスリングできる態勢が整ったんだ。",
-    en:"Black develops the kingside bishop to e7. With the kingside setup now complete, Black is finally ready to castle.",
+  { move:{from:[0,1],to:[1,3]}, moveLabel:{ja:"6...Nbd7", en:"6...Nbd7"},
+    ja:"黒はナイトをd7へ進めるよ。黒のナイトはe5のマスに利かせて、白のb2のビショップの働きを弱めるんだ。黒のナイトはf6のナイトも守っているよ。",
+    en:"Black develops the knight to d7. Black's knight covers the e5 square and blunts White's b2 bishop. Black's knight also defends the f6 knight.",
     fox:'normal' },
   { move:{from:[7,4],to:[7,6],castle:{from:[7,7],to:[7,5]}}, moveLabel:{ja:"7. O-O", en:"7. O-O"},
-    ja:"白はキャスリングでキングを安全な場所へ。これで本譜は一段落、続きはぜひ自分で指してみてね！",
-    en:"White castles kingside, tucking the king away safely. That's the main line — try continuing the game yourself from here!",
+    ja:"白はキャスリングでキングを安全な場所へ動かすよ。白のキングはg1へ移り、h1にいたルークはf1へ出てくるんだ。",
+    en:"White castles, bringing the king to safety. White's king goes to g1, and the rook from h1 comes to f1.",
+    fox:'normal' },
+  { move:{from:[1,7],to:[2,7]}, moveLabel:{ja:"7...h6", en:"7...h6"},
+    ja:"黒はポーンをh6へ進めるよ。黒はf5のビショップが逃げられるh7のマスを用意して、白がナイトをh4へ出してビショップを追い回すのに備えるんだ。黒はg5のマスにも利かせて、白の駒が入ってこないようにしているよ。",
+    en:"Black pushes the pawn to h6. Black makes room on h7 for the f5 bishop to retreat, in case White brings a knight to h4 to chase it. Black also covers the g5 square to keep White's pieces out.",
+    fox:'normal' },
+  { move:{from:[6,3],to:[5,3]}, moveLabel:{ja:"8. d3", en:"8. d3"},
+    ja:"白はポーンをd3へ進めるよ。白はe4のマスに利かせて、黒の駒がe4に入ってくるのを防ぐんだ。白は、あとでe4と突いて中央に挑む準備もしているよ。",
+    en:"White pushes the pawn to d3. White covers the e4 square and keeps Black's pieces from landing there. White is also preparing to push e4 later and challenge the center.",
+    fox:'normal' },
+  { move:{from:[0,5],to:[1,4]}, moveLabel:{ja:"8...Be7", en:"8...Be7"},
+    ja:"黒はビショップをe7へ進めるよ。黒はf8のマスを空けて、次の手でキャスリングする準備をするんだ。",
+    en:"Black develops the bishop to e7. Black clears the f8 square and gets ready to castle on the next move.",
+    fox:'normal' },
+  { move:{from:[7,1],to:[6,3]}, moveLabel:{ja:"9. Nbd2", en:"9. Nbd2"},
+    ja:"白はナイトをd2へ進めるよ。白のナイトはe4のマスに利かせて、白があとでe4と突くのを支えるんだ。白のナイトはc4のポーンも守っているよ。",
+    en:"White develops the knight to d2. White's knight covers the e4 square and supports a later e4 push. White's knight also defends the c4 pawn.",
+    fox:'normal' },
+  { move:{from:[0,4],to:[0,6],castle:{from:[0,7],to:[0,5]}}, moveLabel:{ja:"9...O-O", en:"9...O-O"},
+    ja:"黒もキャスリングでキングを安全な場所へ動かすよ。黒のキングはg8へ移り、h8にいたルークはf8へ出てくるんだ。白は2つのビショップで長い斜めの列から中央をねらってe4と突く機会をうかがい、黒は固いポーンの形を保ちながら反撃のチャンスを待つのが典型的な流れだよ。これで本譜は一段落、続きはぜひ自分で指してみてね！",
+    en:"Black also castles, bringing the king to safety. Black's king goes to g8, and the rook from h8 comes to f8. The typical plan is for White to aim at the center with both bishops on the long diagonals and look for a chance to push e4, while Black keeps a solid pawn structure and waits for a chance to counterattack. That's the main line — try continuing the game yourself from here!",
     fox:'happy' }
 ];
 
@@ -343,7 +372,19 @@ function renderStep(){
   const step = LESSON_STEPS[currentStep];
   renderBoard(boardSnapshots[currentStep]);
   document.getElementById('moveLabel').textContent = (step.moveLabel && step.moveLabel[currentLang]) || '';
-  document.getElementById('commentaryText').textContent = step[currentLang];
+  const ctEl = document.getElementById('commentaryText');
+  const moreText = step[currentLang + 'More'];
+  ctEl.innerHTML = step[currentLang] + (moreText
+    ? '<details class="more-detail"><summary>' + (currentLang === 'ja' ? '💡 もっと詳しく知りたい方へ' : '💡 Want to know more?') + '</summary><div class="more-body">' + moreText + '</div></details>'
+    : '');
+  ctEl.scrollTop = 0;
+  const moreEl = ctEl.querySelector('details.more-detail');
+  if (moreEl) {
+    moreEl.addEventListener('toggle', function(){
+      if (moreEl.open) { ctEl.scrollTop = moreEl.offsetTop - ctEl.offsetTop; }
+      adjustBottomPadding();
+    });
+  }
   document.getElementById('foxAvatar').src = FOX_BY_MOOD[step.fox] || FOX_BY_MOOD.normal;
   document.getElementById('lessonProgress').textContent = currentStep + ' / ' + (LESSON_STEPS.length - 1);
   document.getElementById('btnPrev').disabled = currentStep === 0;
