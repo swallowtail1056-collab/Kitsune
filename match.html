@@ -405,9 +405,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 </details>
 
 <button id="loginBtn" data-ja="Googleでログイン" data-en="Sign in with Google">Googleでログイン</button>
-<div id="guestLoginRow" style="margin-top:14px;"><button id="guestLoginBtn" data-ja="🦊 ゲストとして始める" data-en="🦊 Continue as Guest">🦊 ゲストとして始める</button></div>
+<div id="guestLoginRow" style="margin-top:14px;"><button id="guestLoginBtn" data-ja="🦊 ゲストとして始める" data-en="🦊 Continue as Guest">🦊 ゲストとして始める</button>
+<p style="font-size:0.78rem;color:var(--text-muted);margin-top:4px;" data-ja="ゲストログインはメールアドレスなどの入力は不要です。ただしこの端末・ブラウザだけで使えるアカウントになるため、機種変更やブラウザのデータ削除でアカウントが失われる点にご注意ください。" data-en="Guest login requires no email or personal info. Note that this account is tied to this device/browser only — clearing browser data or switching devices will lose access to it.">ゲストログインはメールアドレスなどの入力は不要です。ただしこの端末・ブラウザだけで使えるアカウントになるため、機種変更やブラウザのデータ削除でアカウントが失われる点にご注意ください。</p></div>
 <button id="logoutBtn" style="display:none;" data-ja="ログアウト" data-en="Log out">ログアウト</button>
-<p style="font-size:0.78rem;color:var(--text-muted);margin-top:4px;" data-ja="ゲストログインはメールアドレスなどの入力は不要です。ただしこの端末・ブラウザだけで使えるアカウントになるため、機種変更やブラウザのデータ削除でアカウントが失われる点にご注意ください。" data-en="Guest login requires no email or personal info. Note that this account is tied to this device/browser only — clearing browser data or switching devices will lose access to it.">ゲストログインはメールアドレスなどの入力は不要です。ただしこの端末・ブラウザだけで使えるアカウントになるため、機種変更やブラウザのデータ削除でアカウントが失われる点にご注意ください。</p>
   <div id="profileArea" style="display:none;">
   <div id="lobbyArea">
   <div class="box" id="activeMatchesBox" style="display:none;">
@@ -424,6 +424,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
   <div class="box">
     <p><strong data-ja="現在のプロフィール" data-en="Current Profile">現在のプロフィール</strong></p>
+    <p style="font-size:0.85rem;"><span data-ja="ログイン中: " data-en="Signed in as: ">ログイン中: </span><span id="profileAccount">-</span></p>
     <p><span data-ja="ユーザー名: " data-en="Username: ">ユーザー名: </span><span id="profileUsername">-</span></p>
     <p><span data-ja="レーティング: " data-en="Rating: ">レーティング: </span><span id="profileRating">1200</span></p>
     <p><span data-ja="先行登録者特典: " data-en="Founding Member: ">先行登録者特典: </span><span id="profileFounder">-</span></p>
@@ -2280,11 +2281,23 @@ applyBoardTheme();
           : 'Are you sure you want to delete your account? All your data — friends, match history, rating — will be permanently erased.');
     // Googleアカウントは、ログインから時間がたっていると削除できないため、先に本人確認をし直す。
     // iPhoneでは、ボタンを押した直後でないとGoogleの確認画面が開かないので、確認ダイアログより先に行う
-    if (!user.isAnonymous) {
+    // ログインしてから4分以内なら、本人確認は不要(Googleの決まりで5分以内なら削除できる)
+    const kcRecentLogin = (Date.now() - new Date(user.metadata.lastSignInTime || 0).getTime()) < 4 * 60 * 1000;
+    if (!user.isAnonymous && !kcRecentLogin && KC_STANDALONE) {
+      // ホーム画面から開いたときは、Googleの確認画面(ポップアップ)が開けないため、ログインし直してもらう
+      alert(LANG === 'ja'
+        ? '安全のため、削除の前にログインし直す必要があります。\n「ログアウト」→「Googleでログイン」でログインし直してから、すぐにもう一度「アカウントを削除する」を押してください。\n(アカウントは削除されていません)'
+        : 'For your security, please sign in again before deleting.\nTap "Log out" → "Sign in with Google", then tap "Delete My Account" again right away.\n(Your account was not deleted.)');
+      return false;
+    }
+    if (!user.isAnonymous && !kcRecentLogin) {
       try {
         await reauthenticateWithPopup(user, provider);
       } catch (e) {
-        alert(LANG === 'ja' ? '本人確認ができなかったため、削除を中止しました。(アカウントは削除されていません)' : 'Could not confirm your identity, so the deletion was cancelled. (Your account was not deleted.)');
+        const mismatch = e && e.code === 'auth/user-mismatch';
+        alert(LANG === 'ja'
+          ? (mismatch ? '今ログインしているのと違うGoogleアカウントが選ばれたため、削除を中止しました。(アカウントは削除されていません)' : '本人確認ができなかったため、削除を中止しました。(アカウントは削除されていません)') + '\n\nログアウト→ログインし直してから、すぐに「アカウントを削除する」を押すと、本人確認なしで削除できます。' + (e && e.code ? '\n(' + e.code + ')' : '')
+          : (mismatch ? 'A different Google account was chosen, so the deletion was cancelled. (Your account was not deleted.)' : 'Could not confirm your identity, so the deletion was cancelled. (Your account was not deleted.)') + '\n\nIf you log out, sign in again, and tap "Delete My Account" right away, no extra confirmation is needed.' + (e && e.code ? '\n(' + e.code + ')' : ''));
         return false;
       }
     }
@@ -5532,6 +5545,7 @@ function startClockTicker(user) {
       }
       document.getElementById('profilePhoto').src = myPhotoURL;
       document.getElementById('profileUsername').textContent = currentName;
+      { const pa = document.getElementById('profileAccount'); if (pa) pa.textContent = user.isAnonymous ? (LANG === 'ja' ? '👤 ゲスト' : '👤 Guest') : ('Google（' + (user.email || '') + '）'); }
       document.getElementById('usernameInput').value = currentName;
       onValue(ref(db, 'publicProfiles/' + user.uid), (s) => {
         const p = s.val() || {};
