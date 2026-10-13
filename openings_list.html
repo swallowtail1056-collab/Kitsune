@@ -213,8 +213,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
   <!-- ヘッダータイトル -->
 <div class="search-box-wrap">
-    <input type="text" id="openingSearch" class="search-box" placeholder="定跡名で検索 / Search by name" oninput="filterOpenings(this.value)">
-    <div class="search-hint">最初の2文字だけ入れて検索してください / Try searching with just the first 2 characters</div>
+    <input type="text" id="openingSearch" class="search-box" placeholder="Search by name" oninput="filterOpenings(this.value)">
+    <div class="search-hint lang-element-ja">最初の2文字だけ入れて検索してください</div>
+    <div class="search-hint lang-element-en" style="display:none">Try searching with just the first 2 characters</div>
   </div>
   <h2 class="section-title lang-element-ja">白のオープニング</h2>
   <h2 class="section-title lang-element-en">White Openings</h2>
@@ -1232,10 +1233,12 @@ function updateLanguageDisplay(lang) {
     document.querySelectorAll('.lang-element-en').forEach(el => el.style.display = 'block');
     document.querySelectorAll('.lang-element-ja').forEach(el => el.style.display = 'none');
     document.getElementById('langToggle').textContent = '日本語';
+    var sb=document.getElementById('openingSearch'); if(sb) sb.placeholder='Search by name';
   } else {
     document.querySelectorAll('.lang-element-ja').forEach(el => el.style.display = 'block');
     document.querySelectorAll('.lang-element-en').forEach(el => el.style.display = 'none');
     document.getElementById('langToggle').textContent = 'English';
+    var sb=document.getElementById('openingSearch'); if(sb) sb.placeholder='定跡名で検索';
   }
 }
 

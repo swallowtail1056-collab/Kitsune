@@ -38,13 +38,16 @@
   .en-mode .lang-ja { display: none; }
   .en-mode .lang-en { display: block; }
   .en-mode button.lang-en { display: inline-block; }
+  .lang-ja.kc-inline { display: inline; }
+  .en-mode .lang-ja.kc-inline { display: none; }
+  .en-mode .lang-en.kc-inline { display: inline; }
 </style>
 <!-- 変更後 -->
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1034556404852942" crossorigin="anonymous"></script>
 </head>
 <body>
 <div class="container">
-  <a href="info.html" class="back-link">← Back to Info / 一覧へ戻る</a>
+  <span class="lang-ja kc-inline"><a href="info.html" class="back-link">← 一覧へ戻る</a>&nbsp;&nbsp;<a href="index.html" class="back-link">🏠 ホームへ</a></span><span class="lang-en kc-inline"><a href="info.html" class="back-link">← Back to Info</a>&nbsp;&nbsp;<a href="index.html" class="back-link">🏠 Home</a></span>
 
   <div class="lang-switch">
     <button class="lang-btn lang-ja" onclick="toggleLanguage()">English (英語へ)</button>
@@ -106,7 +109,7 @@
     <div class="faq-a">いいえ。弱点は「そこを狙えば有利に働きやすい目標」であって、即座の敗北を意味するわけではありません。弱点を抱えている側も、駒の活動性やキングの安全で埋め合わせができれば、十分に戦えます。</div>
 
     <div class="footer">
-      <a href="info.html">🦊 Info一覧へ戻る</a>
+      <a href="info.html">🦊 Info一覧へ戻る</a>&nbsp;&nbsp;｜&nbsp;&nbsp;<a href="index.html">🏠 ホームへ戻る</a>
     </div>
   </div>
 
@@ -165,7 +168,7 @@
     <div class="faq-a">No. A weakness is a target the opponent can press — not an automatic loss. A side with a weak pawn can still be perfectly fine if it compensates with active pieces or a safer king.</div>
 
     <div class="footer">
-      <a href="info.html">🦊 Back to Info</a>
+      <a href="info.html">🦊 Back to Info</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="index.html?lang=en">🏠 Back to Home</a>
     </div>
   </div>
 </div>

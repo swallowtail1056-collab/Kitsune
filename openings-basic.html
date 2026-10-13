@@ -38,13 +38,16 @@
   .en-mode .lang-ja { display: none; }
   .en-mode .lang-en { display: block; }
   .en-mode button.lang-en { display: inline-block; }
+  .lang-ja.kc-inline { display: inline; }
+  .en-mode .lang-ja.kc-inline { display: none; }
+  .en-mode .lang-en.kc-inline { display: inline; }
 </style>
 <!-- 変更後 -->
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1034556404852942" crossorigin="anonymous"></script>
 </head>
 <body>
 <div class="container">
-  <a href="info.html" class="back-link">← Back to Info / 一覧へ戻る</a>
+  <span class="lang-ja kc-inline"><a href="info.html" class="back-link">← 一覧へ戻る</a>&nbsp;&nbsp;<a href="index.html" class="back-link">🏠 ホームへ</a></span><span class="lang-en kc-inline"><a href="info.html" class="back-link">← Back to Info</a>&nbsp;&nbsp;<a href="index.html" class="back-link">🏠 Home</a></span>
 
   <div class="lang-switch">
     <button class="lang-btn lang-ja" onclick="toggleLanguage()">English (英語へ)</button>
@@ -117,7 +120,7 @@
     <div class="faq-a">より速い展開と、中央や相手の王様への速いアクセスを、ポーン1枚と引き換えに手に入れるためです。その結果得られる駒の活発さが失ったポーンの価値を上回っている限り、それは何かのルール違反ではなく、まっとうな戦略的トレードです。</div>
 
     <div class="footer">
-      <a href="info.html">🦊 Info一覧へ戻る</a>
+      <a href="info.html">🦊 Info一覧へ戻る</a>&nbsp;&nbsp;｜&nbsp;&nbsp;<a href="index.html">🏠 ホームへ戻る</a>
     </div>
   </div>
 
@@ -187,7 +190,7 @@
     <div class="faq-a">They're trading material for faster development and quicker access to the center or the enemy king. As long as the resulting lead in activity outweighs the missing pawn, it's a sound strategic trade rather than a violation of anything.</div>
 
     <div class="footer">
-      <a href="info.html">🦊 Back to Info</a>
+      <a href="info.html">🦊 Back to Info</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="index.html?lang=en">🏠 Back to Home</a>
     </div>
   </div>
 </div>
