@@ -200,10 +200,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <button id="langBtn">English</button>
   </div>
   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
-    <span data-ja="音" data-en="Sound" style="font-size:0.85rem;color:var(--text);">音</span>
-    <button id="soundToggleBtn" type="button">🔊</button>
-  </div>
-  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
     <span data-ja="ナイトモード" data-en="Night Mode" style="font-size:0.85rem;color:var(--text);">ナイトモード</span>
     <button id="themeBtn">🌙</button>
   </div>
@@ -436,8 +432,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <div class="box">
     <p><strong data-ja="📊 自分の対局分析(自分にだけ見えます)" data-en="📊 Your Game Analysis (visible only to you)">📊 自分の対局分析(自分にだけ見えます)</strong></p>
     <div id="analysisArea"></div>
-    <p style="margin-top:14px;"><strong data-ja="📈 レーティングの推移" data-en="📈 Rating History">📈 レーティングの推移</strong></p>
-    <div id="ratingGraph"></div>
   </div>
 
   <div class="box" id="randomMatchBox">
@@ -501,16 +495,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <p id="oppPresence" style="font-size:0.8rem;color:var(--text-muted);"></p>
     <p id="gameClock" style="font-weight:700;color:var(--brown-dark);"></p>
     <p id="clockWarn" style="display:none;font-weight:700;font-size:0.9rem;margin:2px 0 6px;padding:6px 10px;border-radius:8px;"></p>
-    <p id="discWarn" style="display:none;font-weight:700;font-size:0.9rem;margin:2px 0 6px;padding:6px 10px;border-radius:8px;background:#e8f0fe;color:#1a4fa0;"></p>
-    <div style="text-align:right;margin:-4px 0 4px;"><button id="soundToggleBtnGame" type="button" style="padding:4px 10px;font-size:0.8rem;">🔊</button></div>
     <p id="capturedArea" style="font-size:1.1rem;min-height:56px;"></p>
     <div id="miniBoard"></div>
     <div id="matchLikeArea" style="margin-top:6px;"></div>
-    <div id="matchEndExtras" style="display:none;margin-top:10px;padding:10px;border:1px solid rgba(124,74,30,0.3);border-radius:8px;background:var(--input-bg);">
-      <p id="openingInfo" style="margin:0 0 8px;font-size:0.9rem;"></p>
-      <button id="copyPgnBtn" type="button" data-ja="📋 棋譜(PGN)をコピー" data-en="📋 Copy Game (PGN)">📋 棋譜(PGN)をコピー</button>
-      <span id="copyPgnMsg" style="font-size:0.8rem;margin-left:6px;"></span>
-    </div>
     <div id="boardNavRow" style="display:none;text-align:center;margin-top:6px;">
       <button id="boardNavPrevBtn">◀</button>
       <span id="boardNavLabel" style="font-size:0.85rem;color:var(--text-muted);margin:0 8px;"></span>
@@ -763,7 +750,6 @@ import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithRedirect, getRe
     document.querySelectorAll('[data-ja]').forEach(el => { el.textContent = LANG === 'ja' ? el.dataset.ja : el.dataset.en; });
     document.querySelectorAll('[data-ja-ph]').forEach(el => { el.placeholder = LANG === 'ja' ? el.dataset.jaPh : el.dataset.enPh; });
     document.getElementById('langBtn').textContent = LANG === 'ja' ? 'English' : '日本語';
-    try { kcUpdateSoundBtns(); } catch (e) {}
   }
   document.getElementById('langBtn').onclick = () => {
     LANG = LANG === 'ja' ? 'en' : 'ja';
@@ -936,27 +922,7 @@ applyBoardTheme();
 
   // 共有AudioContext（毎回newしない）
   let _sharedAudioCtx = null;
-  // 🔊 音のオン・オフ(前回の設定を覚えておく)
-  let kcSoundOn = true;
-  try { kcSoundOn = localStorage.getItem('kcSound') !== 'off'; } catch (e) {}
-  function kcUpdateSoundBtns() {
-    ['soundToggleBtn', 'soundToggleBtnGame'].forEach(id => {
-      const b = document.getElementById(id);
-      if (!b) return;
-      const ja = (typeof LANG === 'undefined') ? true : LANG === 'ja';
-      b.textContent = kcSoundOn ? (ja ? '🔊 音:オン' : '🔊 Sound: On') : (ja ? '🔇 音:オフ' : '🔇 Sound: Off');
-    });
-  }
-  ['soundToggleBtn', 'soundToggleBtnGame'].forEach(id => {
-    const b = document.getElementById(id);
-    if (b) b.addEventListener('click', () => {
-      kcSoundOn = !kcSoundOn;
-      try { localStorage.setItem('kcSound', kcSoundOn ? 'on' : 'off'); } catch (e) {}
-      kcUpdateSoundBtns();
-    });
-  });
   function getAudioCtx() {
-    if (!kcSoundOn) throw new Error('sound off'); // 音がオフのときは鳴らさない(呼び出し側はすべてtry/catchで囲んである)
     if (!_sharedAudioCtx || _sharedAudioCtx.state === 'closed') {
       _sharedAudioCtx = new (window.AudioContext || window.webkitAudioContext)();
     }
@@ -3333,7 +3299,6 @@ await set(ref(db, 'matches/' + matchId), {
   function closeOpenedMatch() {
     if (openedMatchUnsub) { openedMatchUnsub(); openedMatchUnsub = null; }
     if (oppPresenceUnsub) { oppPresenceUnsub(); oppPresenceUnsub = null; }
-    kcOppOfflineSince = null;
     document.getElementById('gameBox').style.display = 'none';
     document.getElementById('lobbyArea').style.display = 'block';
     document.getElementById('matchChatPanel').style.display = 'none';
@@ -3347,7 +3312,6 @@ await set(ref(db, 'matches/' + matchId), {
     if (!user || !matchId) return;
     if (openedMatchUnsub) { openedMatchUnsub(); openedMatchUnsub = null; }
     if (oppPresenceUnsub) { oppPresenceUnsub(); oppPresenceUnsub = null; }
-    kcOppOfflineSince = null;
     myMatchId = matchId;
     boardPly = null;
     const oppAvatarReset = document.getElementById('oppAvatarImg');
@@ -3365,13 +3329,8 @@ await set(ref(db, 'matches/' + matchId), {
       if (!oppPresenceAttached) {
         oppPresenceAttached = true;
         const oppUid = myColor === 'w' ? m.black : m.white;
-        kcOppOfflineSince = null;
         oppPresenceUnsub = onValue(ref(db, 'presence/' + oppUid), (presenceSnap) => {
-          const pv = presenceSnap.val();
-          // 📶 相手の接続が切れたら時刻を覚えておく(戻ってきたらリセット)
-          if (pv && pv.online === false) { if (!kcOppOfflineSince) kcOppOfflineSince = Date.now(); }
-          else kcOppOfflineSince = null;
-          const label = formatPresenceLabel(pv);
+          const label = formatPresenceLabel(presenceSnap.val());
           const el = document.getElementById('oppPresence');
           if (el) el.innerHTML = label.dot + label.text;
         });
@@ -3530,221 +3489,6 @@ const PIECE_IMG = {
     { san: ['e4'], name: { ja: 'キングス・ポーン・オープニング', en: "King's Pawn Opening" } },
   ];
 
-  // ===== 対局のオープニング → KitsuneChess の解説ページ =====
-  const KC_OPENING_PAGES = [
-    ['e4 e5 Nf3 Nc6 Bc4', 'italian', 'イタリアン・ゲーム', 'Italian Game'],
-    ['e4 e5 Nf3 Nc6 Bc4 Bc5 b4', 'evans_gambit', 'エヴァンズ・ギャンビット', 'Evans Gambit'],
-    ['e4 e5 Nf3 Nc6 Bc4 Nf6', 'two_knights', 'ツー・ナイツ・ディフェンス', 'Two Knights Defense'],
-    ['e4 e5 Nf3 Nc6 Bc4 Nf6 Ng5 d5 exd5 Nxd5 Nxf7', 'fried_liver_attack', 'フライド・リバー・アタック', 'Fried Liver Attack'],
-    ['e4 e5 Nf3 Nc6 Bc4 Nf6 Ng5 Bc5', 'traxler_counterattack', 'トラクスラー・カウンターアタック', 'Traxler Counterattack'],
-    ['e4 e5 Nf3 Nc6 Bc4 Be7', 'hungarian_defense', 'ハンガリアン・ディフェンス', 'Hungarian Defense'],
-    ['e4 e5 Nf3 Nc6 Bc4 Nd4', 'blackburne_shilling_gambit', 'ブラックバーン・シリング・ギャンビット', 'Blackburne Shilling Gambit'],
-    ['e4 e5 Nf3 Nc6 Bb5', 'ruy_lopez', 'ルイ・ロペス', 'Ruy Lopez'],
-    ['e4 e5 Nf3 Nc6 Bb5 Nf6', 'berlin', 'ベルリン・ディフェンス', 'Berlin Defense'],
-    ['e4 e5 Nf3 Nc6 d4', 'scotch', 'スコッチ・ゲーム', 'Scotch Game'],
-    ['e4 e5 Nf3 Nc6 d4 exd4 Bc4', 'scotch_gambit', 'スコッチ・ギャンビット', 'Scotch Gambit'],
-    ['e4 e5 Nf3 Nc6 Nc3', 'three_knights', 'スリー・ナイツ・ゲーム', 'Three Knights Game'],
-    ['e4 e5 Nf3 Nc6 Nc3 Nf6', 'four_knights', 'フォー・ナイツ・ゲーム', 'Four Knights Game'],
-    ['e4 e5 Nf3 Nc6 Nc3 Nf6 Nxe5', 'halloween_gambit', 'ハロウィン・ギャンビット', 'Halloween Gambit'],
-    ['e4 e5 Nf3 Nc6 c3', 'ponziani', 'ポンツィアーニ・オープニング', 'Ponziani Opening'],
-    ['e4 e5 Nf3 Nf6', 'russian', 'ロシアン・ディフェンス', 'Russian Defense'],
-    ['e4 e5 Nf3 Nf6 Nxe5 Nc6', 'stafford_gambit', 'スタッフォード・ギャンビット', 'Stafford Gambit'],
-    ['e4 e5 Nf3 Nf6 Nxe5 d6 Nxf7', 'cochrane_gambit', 'コクラン・ギャンビット', 'Cochrane Gambit'],
-    ['e4 e5 Nf3 d6', 'philidor', 'フィリドール・ディフェンス', 'Philidor Defense'],
-    ['e4 e5 Nf3 f5', 'latvian_gambit', 'ラトビアン・ギャンビット', 'Latvian Gambit'],
-    ['e4 e5 Nf3 d5', 'elephant_gambit', 'エレファント・ギャンビット', 'Elephant Gambit'],
-    ['e4 e5 f4', 'kings_gambit_declined', 'キングズ・ギャンビット', "King's Gambit"],
-    ['e4 e5 f4 exf4', 'kings_gambit', 'キングズ・ギャンビット', "King's Gambit"],
-    ['e4 e5 f4 d5', 'falkbeer_countergambit', 'ファルクベアー・カウンターギャンビット', 'Falkbeer Countergambit'],
-    ['e4 e5 Nc3', 'vienna', 'ウィーン・ゲーム', 'Vienna Game'],
-    ['e4 e5 Nc3 Nf6 f4', 'vienna_gambit', 'ウィーン・ギャンビット', 'Vienna Gambit'],
-    ['e4 e5 Bc4', 'bishops_opening', 'ビショップス・オープニング', "Bishop's Opening"],
-    ['e4 e5 d4 exd4 Qxd4', 'center_game', 'センター・ゲーム', 'Center Game'],
-    ['e4 e5 d4 exd4 c3', 'danish_gambit', 'デニッシュ・ギャンビット', 'Danish Gambit'],
-    ['e4 c5', 'sicilian', 'シシリアン・ディフェンス', 'Sicilian Defense'],
-    ['e4 c5 c3', 'alapin_sicilian', 'アラピン・シシリアン', 'Alapin Sicilian'],
-    ['e4 c5 Nc3', 'closed_sicilian', 'クローズド・シシリアン', 'Closed Sicilian'],
-    ['e4 c5 Nc3 Nc6 f4', 'grand_prix', 'グランプリ・アタック', 'Grand Prix Attack'],
-    ['e4 c5 f4', 'grand_prix', 'グランプリ・アタック', 'Grand Prix Attack'],
-    ['e4 c5 d4 cxd4 c3', 'smithmorra', 'スミス・モーラ・ギャンビット', 'Smith-Morra Gambit'],
-    ['e4 c5 Nf3 Nc6 Bb5', 'rossolimo_attack', 'ロッソリモ・アタック', 'Rossolimo Attack'],
-    ['e4 c5 Nf3 d6 Bb5+', 'moscow_sicilian', 'モスクワ・バリエーション', 'Moscow Variation'],
-    ['e4 c5 Nf3 g6', 'hyperaccelerated_dragon', 'ハイパー・アクセラレーテッド・ドラゴン', 'Hyperaccelerated Dragon'],
-    ['e4 c5 Nf3 d6 d4 cxd4 Nxd4', 'open_sicilian', 'オープン・シシリアン', 'Open Sicilian'],
-    ['e4 c5 Nf3 d6 d4 cxd4 Nxd4 Nf6 Nc3 a6', 'najdorf', 'ナイドルフ・バリエーション', 'Najdorf Variation'],
-    ['e4 c5 Nf3 d6 d4 cxd4 Nxd4 Nf6 Nc3 g6', 'dragon', 'ドラゴン・バリエーション', 'Dragon Variation'],
-    ['e4 c5 Nf3 d6 d4 cxd4 Nxd4 Nf6 Nc3 g6 Be3 Bg7 f3', 'yugoslav_attack', 'ユーゴスラフ・アタック', 'Yugoslav Attack'],
-    ['e4 c5 Nf3 d6 d4 cxd4 Nxd4 Nf6 Nc3 Nc6', 'classical_sicilian', 'クラシカル・シシリアン', 'Classical Sicilian'],
-    ['e4 c5 Nf3 d6 d4 cxd4 Nxd4 Nf6 Nc3 e6', 'scheveningen', 'スケベニンゲン・バリエーション', 'Scheveningen Variation'],
-    ['e4 c5 Nf3 Nc6 d4 cxd4 Nxd4 g6', 'accelerated_dragon', 'アクセラレーテッド・ドラゴン', 'Accelerated Dragon'],
-    ['e4 c5 Nf3 Nc6 d4 cxd4 Nxd4 Nf6 Nc3 e5', 'sveshnikov_sicilian', 'スヴェシニコフ・バリエーション', 'Sveshnikov Variation'],
-    ['e4 c5 Nf3 e6 d4 cxd4 Nxd4 a6', 'kan_sicilian', 'カン・バリエーション', 'Kan Variation'],
-    ['e4 c5 Nf3 e6 d4 cxd4 Nxd4 Nc6', 'taimanov_sicilian', 'タイマノフ・バリエーション', 'Taimanov Variation'],
-    ['e4 c5 Nf3 e6 d4 cxd4 Nxd4 Nf6 Nc3 Nc6', 'four_knights_sicilian', 'フォー・ナイツ・シシリアン', 'Four Knights Sicilian'],
-    ['e4 e6', 'french', 'フレンチ・ディフェンス', 'French Defense'],
-    ['e4 e6 d4 d5 e5', 'french_advance', 'フレンチ・アドバンス変化', 'French Advance'],
-    ['e4 c6', 'caro_kann', 'カロ・カン・ディフェンス', 'Caro-Kann Defense'],
-    ['e4 c6 d4 d5 e5', 'caro_advance', 'カロ・カン・アドバンス変化', 'Caro-Kann Advance'],
-    ['e4 d5', 'scandinavian', 'スカンジナビアン・ディフェンス', 'Scandinavian Defense'],
-    ['e4 Nf6', 'alekhine', 'アレヒン・ディフェンス', "Alekhine's Defense"],
-    ['e4 d6', 'pirc', 'ピルツ・ディフェンス', 'Pirc Defense'],
-    ['e4 g6', 'modern_defense', 'モダン・ディフェンス', 'Modern Defense'],
-    ['e4 Nc6', 'nimzowitsch_defense', 'ニムゾヴィッチ・ディフェンス', 'Nimzowitsch Defense'],
-    ['e4 b6', 'owen_defense', 'オーウェン・ディフェンス', "Owen's Defense"],
-    ['d4 d5 c4', 'queens_gambit', 'クイーンズ・ギャンビット', "Queen's Gambit"],
-    ['d4 d5 c4 dxc4', 'queens_gambit_accepted', 'クイーンズ・ギャンビット・アクセプテッド', "Queen's Gambit Accepted"],
-    ['d4 d5 c4 e6 Nc3 Nf6 cxd5', 'exchange_qg', 'クイーンズ・ギャンビット交換変化', "Queen's Gambit Exchange"],
-    ['d4 d5 c4 e6 Nc3 c5', 'tarrasch', 'タラッシュ・ディフェンス', 'Tarrasch Defense'],
-    ['d4 d5 c4 c6', 'slav', 'スラブ・ディフェンス', 'Slav Defense'],
-    ['d4 d5 c4 c6 Nf3 Nf6 Nc3 e6', 'semi_slav', 'セミ・スラブ・ディフェンス', 'Semi-Slav Defense'],
-    ['d4 d5 c4 e6 Nc3 Nf6 Nf3 c6', 'semi_slav', 'セミ・スラブ・ディフェンス', 'Semi-Slav Defense'],
-    ['d4 d5 c4 Nc6', 'chigorin_defense', 'チゴリン・ディフェンス', 'Chigorin Defense'],
-    ['d4 d5 Bf4', 'london', 'ロンドン・システム', 'London System'],
-    ['d4 d5 Nf3 Nf6 Bf4', 'london', 'ロンドン・システム', 'London System'],
-    ['d4 Nf6 Bf4', 'london', 'ロンドン・システム', 'London System'],
-    ['d4 Nf6 Nf3 d5 Bf4', 'london', 'ロンドン・システム', 'London System'],
-    ['d4 d5 Nf3 Nf6 e3', 'colle_system', 'コレ・システム', 'Colle System'],
-    ['d4 d5 Nc3 Nf6 Bg5', 'veresov_attack', 'ヴェレソフ・アタック', 'Veresov Attack'],
-    ['d4 d5 e4', 'blackmar_diemer', 'ブラックマー・ディーマー・ギャンビット', 'Blackmar-Diemer Gambit'],
-    ['d4 Nf6 Bg5', 'trompowsky', 'トロンポウスキー・アタック', 'Trompowsky Attack'],
-    ['d4 Nf6 Nf3 e6 Bg5', 'torre_attack', 'トーレ・アタック', 'Torre Attack'],
-    ['d4 Nf6 c4 e5', 'budapest_gambit', 'ブダペスト・ギャンビット', 'Budapest Gambit'],
-    ['d4 Nf6 c4 c5', 'benoni', 'ベノニ・ディフェンス', 'Benoni Defense'],
-    ['d4 Nf6 c4 c5 d5 b5', 'benko_gambit', 'ベンコ・ギャンビット', 'Benko Gambit'],
-    ['d4 Nf6 c4 g6', 'kings_indian', 'キングズ・インディアン・ディフェンス', "King's Indian Defense"],
-    ['d4 Nf6 c4 g6 Nc3 Bg7 e4 d6 Nf3 O-O Be2', 'kings_indian_classical', 'キングズ・インディアン・クラシカル', "King's Indian Classical"],
-    ['d4 Nf6 c4 g6 Nc3 d5', 'grunfeld', 'グリュンフェルト・ディフェンス', 'Grünfeld Defense'],
-    ['d4 Nf6 c4 e6 Nc3 Bb4', 'nimzo', 'ニムゾ・インディアン・ディフェンス', 'Nimzo-Indian Defense'],
-    ['d4 Nf6 c4 e6 Nc3 Bb4 e3', 'nimzo_rubinstein', 'ニムゾ・インディアン(ルビンシュタイン)', 'Nimzo-Indian Rubinstein'],
-    ['d4 Nf6 c4 e6 Nf3 b6', 'queens_indian', 'クイーンズ・インディアン・ディフェンス', "Queen's Indian Defense"],
-    ['d4 Nf6 c4 e6 Nf3 Bb4+', 'bogo_indian', 'ボゴ・インディアン・ディフェンス', 'Bogo-Indian Defense'],
-    ['d4 Nf6 c4 e6 g3', 'catalan', 'カタロニアン・オープニング', 'Catalan Opening'],
-    ['d4 Nf6 c4 e6 g3 d5 Bg2 dxc4', 'catalan_open', 'オープン・カタロニアン', 'Open Catalan'],
-    ['d4 Nf6 c4 d6', 'old_indian', 'オールド・インディアン・ディフェンス', 'Old Indian Defense'],
-    ['d4 f5', 'dutch', 'ダッチ・ディフェンス', 'Dutch Defense'],
-    ['d4 f5 c4 Nf6 g3 e6 Bg2 Be7', 'classical_dutch', 'クラシカル・ダッチ', 'Classical Dutch'],
-    ['d4 f5 c4 Nf6 g3 e6 Bg2 d5', 'stonewall_dutch', 'ストーンウォール・ダッチ', 'Stonewall Dutch'],
-    ['d4 e5', 'englund_gambit', 'イングルンド・ギャンビット', 'Englund Gambit'],
-    ['c4', 'english', 'イングリッシュ・オープニング', 'English Opening'],
-    ['c4 c5', 'symmetrical_english', 'シンメトリカル・イングリッシュ', 'Symmetrical English'],
-    ['Nf3', 'reti', 'レティ・オープニング', 'Réti Opening'],
-    ['Nf3 d5 g3', 'kings_indian_attack', 'キングズ・インディアン・アタック', "King's Indian Attack"],
-    ['g3', 'kings_fianchetto', 'キングズ・フィアンケット・オープニング', "King's Fianchetto Opening"],
-    ['b3', 'nimzo_larsen', 'ニムゾ・ラーセン・アタック', 'Nimzo-Larsen Attack'],
-    ['f4', 'bird_opening', 'バード・オープニング', "Bird's Opening"],
-    ['b4', 'polish_opening', 'ポーリッシュ・オープニング', 'Polish Opening'],
-    ['g4', 'grobs_attack', 'グロブ・アタック', "Grob's Attack"],
-  ].map(([seq, page, ja, en]) => ({ san: seq.split(' '), page, ja, en }));
-  function kcFindOpeningPage(sanList) {
-    let best = null;
-    KC_OPENING_PAGES.forEach((e) => {
-      if (e.san.length > sanList.length) return;
-      if (e.san.every((s, i) => sanList[i] === s) && (!best || e.san.length > best.san.length)) best = e;
-    });
-    return best;
-  }
-
-  // 📋 棋譜(PGN)を作る
-  function kcBuildPgn(m) {
-    const moves = (m.moves || []).map(x => x.san);
-    let result = '*';
-    try {
-      const g = new Chess(m.fen);
-      if (m.status === 'resigned' || m.status === 'timeout') result = m.winner === 'w' ? '1-0' : '0-1';
-      else if (m.status === 'draw_agreed') result = '1/2-1/2';
-      else if (g.in_checkmate()) result = g.turn() === 'w' ? '0-1' : '1-0';
-      else if (g.game_over()) result = '1/2-1/2';
-    } catch (e) {}
-    const d = new Date(m.createdAt || Date.now());
-    const pad = (n) => String(n).padStart(2, '0');
-    const tags = [
-      ['Event', 'KitsuneChess Online'], ['Site', 'https://kitsunechess.com/match.html'],
-      ['Date', d.getFullYear() + '.' + pad(d.getMonth() + 1) + '.' + pad(d.getDate())],
-      ['White', m.whiteName || 'White'], ['Black', m.blackName || 'Black'], ['Result', result]
-    ];
-    let body = '';
-    moves.forEach((san, i) => { body += (i % 2 === 0 ? ((i / 2 + 1) + '. ') : '') + san + ' '; });
-    return tags.map(([k, v]) => '[' + k + ' "' + String(v).replace(/"/g, "'") + '"]').join('\n') + '\n\n' + (body + result).trim() + '\n';
-  }
-  async function kcCopyText(text) {
-    try { await navigator.clipboard.writeText(text); return true; } catch (e) {}
-    try {
-      const ta = document.createElement('textarea');
-      ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
-      document.body.appendChild(ta); ta.select();
-      const ok = document.execCommand('copy');
-      document.body.removeChild(ta);
-      return ok;
-    } catch (e) { return false; }
-  }
-  // 対局が終わったら、オープニングの解説リンクと棋譜コピーを出す
-  function kcRenderMatchEndExtras(m, finished) {
-    const box = document.getElementById('matchEndExtras');
-    if (!box) return;
-    const sanList = (m.moves || []).map(x => x.san);
-    if (!finished || sanList.length === 0) { box.style.display = 'none'; return; }
-    box.style.display = 'block';
-    const info = document.getElementById('openingInfo');
-    const op = kcFindOpeningPage(sanList);
-    if (op) {
-      const ja = LANG === 'ja';
-      info.style.display = 'block';
-      info.innerHTML = '';
-      info.appendChild(document.createTextNode(ja ? '🦊 この対局のオープニング：' : '🦊 Opening of this game: '));
-      const b = document.createElement('strong'); b.textContent = ja ? op.ja : op.en; info.appendChild(b);
-      info.appendChild(document.createTextNode(' '));
-      const a = document.createElement('a');
-      a.href = op.page + '.html' + (ja ? '' : '?lang=en');
-      a.target = '_blank'; a.rel = 'noopener';
-      a.textContent = ja ? '→ 解説を見る' : '→ Learn this opening';
-      info.appendChild(a);
-    } else {
-      info.style.display = 'none';
-    }
-    const btn = document.getElementById('copyPgnBtn');
-    const msg = document.getElementById('copyPgnMsg');
-    btn.onclick = async () => {
-      const ok = await kcCopyText(kcBuildPgn(m));
-      msg.textContent = ok ? (LANG === 'ja' ? 'コピーしました！' : 'Copied!') : (LANG === 'ja' ? 'コピーできませんでした' : 'Could not copy');
-      setTimeout(() => { msg.textContent = ''; }, 2500);
-    };
-  }
-  // 📈 レーティングの推移グラフ(レーティング対局の記録から作る)
-  function kcRenderRatingGraph(historyObj) {
-    const el = document.getElementById('ratingGraph');
-    if (!el) return;
-    const rows = Object.values(historyObj || {}).filter(r => typeof r.myRatingAfter === 'number').sort((a, b) => (a.endedAt || 0) - (b.endedAt || 0)).slice(-30);
-    if (rows.length === 0) {
-      el.innerHTML = '';
-      const p = document.createElement('p');
-      p.style.fontSize = '0.85rem'; p.style.color = 'var(--text-muted)';
-      p.textContent = LANG === 'ja' ? 'レーティング対局をすると、ここにグラフが表示されます。' : 'Play rated games to see your rating graph here.';
-      el.appendChild(p);
-      return;
-    }
-    const pts = [];
-    if (typeof rows[0].myRatingBefore === 'number') pts.push(rows[0].myRatingBefore);
-    rows.forEach(r => pts.push(r.myRatingAfter));
-    const W = 300, H = 120, P = 18;
-    let min = Math.min(...pts), max = Math.max(...pts);
-    if (max - min < 20) { min -= 10; max += 10; }
-    const x = (i) => P + (pts.length === 1 ? (W - 2 * P) / 2 : i * (W - 2 * P) / (pts.length - 1));
-    const y = (v) => H - P - (v - min) * (H - 2 * P) / (max - min);
-    const line = pts.map((v, i) => x(i).toFixed(1) + ',' + y(v).toFixed(1)).join(' ');
-    const last = pts[pts.length - 1], first = pts[0];
-    const diff = last - first;
-    el.innerHTML = '<svg viewBox="0 0 ' + W + ' ' + H + '" style="width:100%;max-width:420px;height:auto;display:block;background:var(--input-bg);border:1px solid rgba(124,74,30,0.3);border-radius:8px;">'
-      + '<text x="' + P + '" y="12" font-size="10" fill="currentColor" opacity="0.6">' + Math.round(max) + '</text>'
-      + '<text x="' + P + '" y="' + (H - 4) + '" font-size="10" fill="currentColor" opacity="0.6">' + Math.round(min) + '</text>'
-      + '<polyline points="' + line + '" fill="none" stroke="#c0782b" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>'
-      + pts.map((v, i) => '<circle cx="' + x(i).toFixed(1) + '" cy="' + y(v).toFixed(1) + '" r="2.5" fill="#7c4a1e"/>').join('')
-      + '</svg>';
-    const p = document.createElement('p');
-    p.style.fontSize = '0.85rem'; p.style.margin = '6px 0 0';
-    p.textContent = (LANG === 'ja' ? '最近' + rows.length + '局：' : 'Last ' + rows.length + ' games: ') + first + ' → ' + last + ' (' + (diff >= 0 ? '+' : '') + diff + ')';
-    el.appendChild(p);
-  }
-
   function detectOpening(moves) {
     const sanList = (moves || []).map((m) => m.san);
     let best = null;
@@ -3829,9 +3573,7 @@ const PIECE_IMG = {
       result: myResult === 1 ? 'win' : (myResult === 0.5 ? 'draw' : 'loss'),
       endReason: endReason || 'unknown',
       timeControl: tc,
-      endedAt: Date.now(),
-      myRatingBefore: myRating,
-      myRatingAfter: newRating
+      endedAt: Date.now()
     });
     const deltaField = myColor === 'w' ? 'eloDeltaWhite' : 'eloDeltaBlack';
     await update(ref(db, 'matches/' + matchId), { [flagField]: true, [deltaField]: newRating - myRating });
@@ -4459,15 +4201,10 @@ const PIECE_IMG = {
       document.getElementById('reportToggleBtn').style.display = 'inline-block';
     } else if (m.status === 'resigned') {
       const iWonByResign = m.winner === myColor;
-      statusEl.textContent = m.abandonedBy
-        ? (iWonByResign
-            ? (LANG === 'ja' ? '相手の接続が切れて戻らなかったため、あなたの勝ちです！' : 'Your opponent disconnected and did not return. You won!')
-            : (LANG === 'ja' ? '接続が切れて戻らなかったため、負けになりました。' : 'You were disconnected and did not return in time. You lost.'))
-        : (iWonByResign
-            ? (LANG === 'ja' ? '相手が投了しました。あなたの勝ちです！' : 'Your opponent resigned. You won!')
-            : (LANG === 'ja' ? '投了しました。負けです。' : 'You resigned. You lost.'));
-      { const de = document.getElementById('discWarn'); if (de) de.style.display = 'none'; }
-      applyEloIfNeeded(matchId, m, user, iWonByResign ? 1 : 0, m.abandonedBy ? 'abandon' : 'resign');
+      statusEl.textContent = iWonByResign
+        ? (LANG === 'ja' ? '相手が投了しました。あなたの勝ちです！' : 'Your opponent resigned. You won!')
+        : (LANG === 'ja' ? '投了しました。負けです。' : 'You resigned. You lost.');
+      applyEloIfNeeded(matchId, m, user, iWonByResign ? 1 : 0, 'resign');
       applyAnalysisIfNeeded(matchId, m, user, iWonByResign ? 1 : 0);
       document.getElementById('reportToggleBtn').style.display = 'inline-block';
     } else if (m.status === 'draw_agreed') {
@@ -4584,9 +4321,6 @@ const PIECE_IMG = {
       cheatBtnEl.style.display = (finished && amPlayer) ? 'inline-block' : 'none';
       cheatBtnEl.onclick = () => openCheatReport(m, user, matchId);
     }
-
-    // 🦊 オープニング解説リンク・📋 棋譜コピー
-    kcRenderMatchEndExtras(m, ['timeout', 'resigned', 'draw_agreed'].includes(m.status) || (m.status === 'active' && gameChess.game_over()));
 
     // 👋 対局が終わったら、まだ友達でない相手に友達申請を送れるボタン
     {
@@ -4796,7 +4530,7 @@ const PIECE_IMG = {
       if (displayChess.in_checkmate()) {
         setWinLose(displayChess.turn() === 'w' ? 'b' : 'w', ja ? 'チェックメイト' : 'Checkmate');
       } else if (m.status === 'resigned' && m.winner) {
-        setWinLose(m.winner, m.abandonedBy ? (ja ? '📶 切断' : '📶 Disconnected') : (ja ? '🏳️ 投了' : '🏳️ Resigned'));
+        setWinLose(m.winner, ja ? '🏳️ 投了' : '🏳️ Resigned');
       } else if (m.status === 'timeout' && m.winner) {
         setWinLose(m.winner, ja ? '⏰ 時間切れ' : '⏰ Time out');
       } else if (displayChess.in_stalemate()) {
@@ -5066,8 +4800,6 @@ const PIECE_IMG = {
   }
 
   let clockInterval = null;
-  let kcOppOfflineSince = null;
-  const DISCONNECT_LIMIT_MS = 60 * 1000; // 相手の接続が切れてから、この時間戻らなければ勝ち
   function updateClockDisplay(m) {
   const clockEl = document.getElementById('gameClock');
   if (!clockEl || !m) return;
@@ -5147,31 +4879,6 @@ function startClockTicker(user) {
         });
       } catch (e) { console.error('対局の中止に失敗:', e); }
       return;
-    }
-    // 📶 相手の接続が切れたまま戻らない場合
-    const discEl = document.getElementById('discWarn');
-    if (m.timeControl !== 'correspondence' && (m.moves || []).length >= 2 && kcOppOfflineSince && myColor) {
-      const leftMs = DISCONNECT_LIMIT_MS - (Date.now() - kcOppOfflineSince);
-      if (leftMs <= 0) {
-        const myC = myColor;
-        try {
-          await runTransaction(ref(db, 'matches/' + matchId), (cur) => {
-            if (!cur || cur.status !== 'active') return;
-            return { ...cur, status: 'resigned', winner: myC, abandonedBy: myC === 'w' ? 'b' : 'w', drawOfferBy: null, takebackRequestBy: null };
-          });
-        } catch (e) { console.error('切断勝ちの処理に失敗:', e); }
-        kcOppOfflineSince = null;
-        if (discEl) discEl.style.display = 'none';
-        return;
-      }
-      if (discEl) {
-        discEl.style.display = 'block';
-        discEl.textContent = LANG === 'ja'
-          ? '📶 相手の接続が切れました。あと' + Math.ceil(leftMs / 1000) + '秒で戻らなければ、あなたの勝ちになります。'
-          : '📶 Your opponent disconnected. If they do not return within ' + Math.ceil(leftMs / 1000) + 's, you win.';
-      }
-    } else if (discEl) {
-      discEl.style.display = 'none';
     }
     if (remaining <= 0) {
       await set(ref(db, 'matches/' + matchId), {
@@ -5438,7 +5145,6 @@ function startClockTicker(user) {
       onValue(ref(db, 'matchInvites/' + user.uid), (s) => { latestMatchInvitesData = s.val(); renderMatchInvites(user, latestMatchInvitesData); });
       startMatchListener(user);
       buildRandomMatchUI(user);
-      onValue(ref(db, 'matchHistory/' + user.uid), (s) => { kcRenderRatingGraph(s.val()); });
 
       onValue(ref(db, 'publicProfiles'), (s) => { allUsersMap = s.val() || {}; renderUserSearchResults(); });
       onValue(ref(db, 'friends/' + user.uid), (s) => { myFriendsSet = new Set(Object.keys(s.val() || {})); renderUserSearchResults(); });
