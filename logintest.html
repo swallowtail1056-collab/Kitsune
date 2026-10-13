@@ -29,6 +29,7 @@
   });
   const auth = getAuth(app);
   const provider = new GoogleAuthProvider();
+  provider.setCustomParameters({ prompt: 'select_account' }); // 毎回アカウントを選べるようにする
   const logEl = document.getElementById('log');
   const log = (m) => { logEl.textContent = new Date().toLocaleTimeString() + '  ' + m + '\n' + logEl.textContent; };
   const standalone = (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) || window.navigator.standalone === true;
