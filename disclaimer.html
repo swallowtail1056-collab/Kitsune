@@ -119,12 +119,17 @@
   }
 </style>
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1034556404852942" crossorigin="anonymous"></script>
+<script>
+(function(){try{var q=new URLSearchParams(location.search).get('lang');
+if(q==='ja'){localStorage.setItem('selectedLang','ja');return;}
+if(q==='en'||localStorage.getItem('selectedLang')==='en'){location.replace('disclaimer-en.html');}}catch(e){}})();
+</script>
 </head>
 <body>
 <div class="container">
 <!-- 変更後(disclaimer.html) -->
 <button class="lang-btn-active">日本語</button>
-<a href="disclaimer-en.html"><button class="lang-btn-inactive">ENGLISH</button></a>
+<a href="disclaimer-en.html" onclick="try{localStorage.setItem('selectedLang','en')}catch(e){}"><button class="lang-btn-inactive">ENGLISH</button></a>
     <h1>免責事項 / DISCLAIMER</h1>
 
     <h2>1. アプリの目的</h2>
@@ -158,6 +163,7 @@
    
 
    <a href="info.html" class="back-btn">🦊 Info一覧へ戻る</a>
+   <a href="index.html" class="back-btn" style="margin-left:8px;">🏠 ホームへ戻る</a>
 </div>
 
 <div class="footer-copy">
