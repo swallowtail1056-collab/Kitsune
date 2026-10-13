@@ -156,6 +156,8 @@ img#profilePhoto { border:2px solid var(--brown); border-radius:50%; width:60px;
   box-shadow: inset 0 0 14px rgba(255,255,255,0.75);
 }
 .sq.recommend-move { outline:3px solid #2d8a3e; outline-offset:-3px; }
+.sq.pending-move { box-shadow: inset 0 0 0 4px #2f80ed; }
+body.kc-no-hints .sq.hint-move::after, body.kc-no-hints .sq.hint-capture::after { display:none; }
 .sq.hint-move::after { content:''; position:absolute; width:28%; height:28%; border-radius:50%; background:rgba(80,40,0,0.35); pointer-events:none; }
 .sq.beginner-dot::after { content:''; position:absolute; width:26%; height:26%; border-radius:50%; background:rgba(180,120,20,0.75); pointer-events:none; z-index:3; }
 .sq.hint-capture::after { content:''; position:absolute; width:100%; height:100%; border-radius:50%; box-sizing:border-box; border:4px solid rgba(80,40,0,0.35); pointer-events:none; }
@@ -193,7 +195,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <div class="lang-switch">
   <button id="settingsBtn" title="設定" data-ja="⚙️ 設定" data-en="⚙️ Settings">⚙️</button>
 </div>
-<div id="settingsPanel" style="display:none;position:absolute;right:8px;top:40px;z-index:3000;background:var(--card);border:2px solid var(--brown);border-radius:10px;padding:14px;box-shadow:0 4px 12px rgba(0,0,0,0.25);min-width:200px;">
+<div id="settingsPanel" style="display:none;position:absolute;right:8px;top:40px;z-index:3000;max-height:80vh;overflow-y:auto;background:var(--card);border:2px solid var(--brown);border-radius:10px;padding:14px;box-shadow:0 4px 12px rgba(0,0,0,0.25);min-width:200px;">
   <p style="margin:0 0 10px;font-weight:700;color:var(--text);" data-ja="⚙️ 設定" data-en="⚙️ Settings">⚙️ 設定</p>
   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
     <span data-ja="言語" data-en="Language" style="font-size:0.85rem;color:var(--text);">言語</span>
@@ -202,6 +204,14 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
     <span data-ja="音" data-en="Sound" style="font-size:0.85rem;color:var(--text);">音</span>
     <button id="soundToggleBtn" type="button">🔊</button>
+  </div>
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;gap:8px;">
+    <span data-ja="動けるマスの表示" data-en="Show legal moves" style="font-size:0.85rem;color:var(--text);">動けるマスの表示</span>
+    <button id="hintsToggleBtn" type="button">●</button>
+  </div>
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;gap:8px;">
+    <span data-ja="指す前に確認" data-en="Confirm moves" style="font-size:0.85rem;color:var(--text);">指す前に確認</span>
+    <button id="confirmMovesBtn" type="button">✔</button>
   </div>
   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
     <span data-ja="ナイトモード" data-en="Night Mode" style="font-size:0.85rem;color:var(--text);">ナイトモード</span>
@@ -258,7 +268,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <div id="blockedUsersList" style="margin-top:8px;display:flex;flex-direction:column;gap:6px;"></div>
   </div>
 </div>
-<a class="back-link" href="index.html" data-ja="🦊 KitsuneChessトップへ" data-en="🦊 KitsuneChess Home">🦊 KitsuneChessトップへ</a>
+<a class="back-link" href="index.html" data-ja="🏠 ホームへ戻る" data-en="🏠 Back to Home">🏠 ホームへ戻る</a>
 <a href="https://kitsunechess.com" target="_blank" rel="noopener" style="display:block;margin:-4px 0 10px;font-size:0.78rem;color:var(--brown-light);text-decoration:none;font-weight:600;">kitsunechess.com</a>
 
 <h1 data-ja="♟ 対局モード" data-en="♟ Match Mode">♟ 対局モード</h1>
@@ -505,6 +515,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <div style="text-align:right;margin:-4px 0 4px;"><button id="soundToggleBtnGame" type="button" style="padding:4px 10px;font-size:0.8rem;">🔊</button></div>
     <p id="capturedArea" style="font-size:1.1rem;min-height:56px;"></p>
     <div id="miniBoard"></div>
+    <div id="moveConfirmBar" style="display:none;justify-content:center;gap:12px;margin:8px 0;">
+      <button id="moveConfirmOk" type="button" style="background:#2e7d32;font-size:1rem;padding:10px 22px;" data-ja="✔ 決定" data-en="✔ Confirm">✔ 決定</button>
+      <button id="moveConfirmCancel" type="button" style="background:#8a3b2e;font-size:1rem;padding:10px 22px;" data-ja="✖ 取り消し" data-en="✖ Cancel">✖ 取り消し</button>
+    </div>
     <div id="matchLikeArea" style="margin-top:6px;"></div>
     <div id="matchEndExtras" style="display:none;margin-top:10px;padding:10px;border:1px solid rgba(124,74,30,0.3);border-radius:8px;background:var(--input-bg);">
       <p id="openingInfo" style="margin:0 0 8px;font-size:0.9rem;"></p>
@@ -764,6 +778,8 @@ import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithRedirect, getRe
     document.querySelectorAll('[data-ja-ph]').forEach(el => { el.placeholder = LANG === 'ja' ? el.dataset.jaPh : el.dataset.enPh; });
     document.getElementById('langBtn').textContent = LANG === 'ja' ? 'English' : '日本語';
     try { kcUpdateSoundBtns(); } catch (e) {}
+    try { kcApplyHints(); } catch (e) {}
+    try { kcApplyConfirmBtn(); } catch (e) {}
   }
   document.getElementById('langBtn').onclick = () => {
     LANG = LANG === 'ja' ? 'en' : 'ja';
@@ -955,6 +971,42 @@ applyBoardTheme();
       kcUpdateSoundBtns();
     });
   });
+  // ● 動けるマスの表示(オン/オフ・前回の設定を覚えておく)
+  let kcShowHints = true;
+  try { kcShowHints = localStorage.getItem('kcMoveHints') !== 'off'; } catch (e) {}
+  function kcApplyHints() {
+    document.body.classList.toggle('kc-no-hints', !kcShowHints);
+    const b = document.getElementById('hintsToggleBtn');
+    if (b) {
+      let ja = false; try { ja = localStorage.getItem('selectedLang') === 'ja'; } catch (e) {}
+      b.textContent = kcShowHints ? (ja ? '● 表示する' : '● On') : (ja ? '○ 表示しない' : '○ Off');
+    }
+  }
+  { const hb = document.getElementById('hintsToggleBtn');
+    if (hb) hb.addEventListener('click', () => {
+      kcShowHints = !kcShowHints;
+      try { localStorage.setItem('kcMoveHints', kcShowHints ? 'on' : 'off'); } catch (e) {}
+      kcApplyHints();
+    });
+    try { kcApplyHints(); } catch (e) {}
+  }
+  // ✔ 指す前に確認(誤タップ防止・前回の設定を覚えておく)
+  let kcConfirmMoves = true;
+  try { kcConfirmMoves = localStorage.getItem('kcConfirmMoves') !== 'off'; } catch (e) {}
+  function kcApplyConfirmBtn() {
+    const b = document.getElementById('confirmMovesBtn');
+    if (!b) return;
+    let ja = false; try { ja = localStorage.getItem('selectedLang') === 'ja'; } catch (e) {}
+    b.textContent = kcConfirmMoves ? (ja ? '✔ 確認する' : '✔ On') : (ja ? '確認しない' : 'Off');
+  }
+  { const cb = document.getElementById('confirmMovesBtn');
+    if (cb) cb.addEventListener('click', () => {
+      kcConfirmMoves = !kcConfirmMoves;
+      try { localStorage.setItem('kcConfirmMoves', kcConfirmMoves ? 'on' : 'off'); } catch (e) {}
+      kcApplyConfirmBtn();
+    });
+    try { kcApplyConfirmBtn(); } catch (e) {}
+  }
   function getAudioCtx() {
     if (!kcSoundOn) throw new Error('sound off'); // 音がオフのときは鳴らさない(呼び出し側はすべてtry/catchで囲んである)
     if (!_sharedAudioCtx || _sharedAudioCtx.state === 'closed') {
@@ -4740,6 +4792,15 @@ const PIECE_IMG = {
     const viewingHistory = boardPly !== null;
     let displayChess = gameChess;
     let displayLastMove = m.lastMove;
+    // 確認待ちの手:相手の番になった・対局が終わった・別の対局なら取り消す
+    if (kcPendingMove && (kcPendingMove.matchId !== matchId || m.status !== 'active' || m.turn !== myColor)) kcPendingMove = null;
+    const confirmBar = document.getElementById('moveConfirmBar');
+    if (confirmBar) confirmBar.style.display = (kcPendingMove && !viewingHistory) ? 'flex' : 'none';
+    if (kcPendingMove && !viewingHistory) {
+      const preview = new Chess(gameChess.fen());
+      const pmv = preview.move({ from: kcPendingMove.from, to: kcPendingMove.to, promotion: 'q' });
+      if (pmv) { displayChess = preview; displayLastMove = null; } else { kcPendingMove = null; if (confirmBar) confirmBar.style.display = 'none'; }
+    }
     if (viewingHistory) {
       displayChess = new Chess();
       for (let i = 0; i < boardPly; i++) displayChess.move(m.moves[i].san);
@@ -4816,6 +4877,7 @@ const PIECE_IMG = {
         if (selectedSquare === sq) cell.classList.add('selected');
         if (legalTargets.has(sq)) cell.classList.add(piece ? 'hint-capture' : 'hint-move');
         if (displayLastMove && (displayLastMove.from === sq || displayLastMove.to === sq)) cell.classList.add('last-move');
+        if (kcPendingMove && !viewingHistory && (kcPendingMove.from === sq || kcPendingMove.to === sq)) cell.classList.add('pending-move');
         if (checkmateKingSq === sq) cell.classList.add('checkmate-king');
         if (colOrder.indexOf(c) === 0) {
           const rankLabel = document.createElement('span');
@@ -5028,12 +5090,50 @@ const PIECE_IMG = {
     if (!m || m.status !== 'active') return;
     if (m.turn !== myColor) return;
 
+    // 確認待ちの手があるときに盤をタップしたら、その手は取り消して選び直す
+    if (kcPendingMove) {
+      kcPendingMove = null;
+      selectedSquare = null;
+      const p0 = gameChess.get(sq);
+      if (p0 && p0.color === myColor) selectedSquare = sq;
+      renderMiniBoard(m, user, matchId);
+      return;
+    }
+
     if (!selectedSquare) {
       const piece = gameChess.get(sq);
       if (piece && piece.color === myColor) selectedSquare = sq;
       renderMiniBoard(m, user, matchId);
     } else {
-      const move = gameChess.move({ from: selectedSquare, to: sq, promotion: 'q' });
+      // 自分の別の駒をタップしたら、選び直し
+      const tapped = gameChess.get(sq);
+      if (tapped && tapped.color === myColor && sq !== selectedSquare) {
+        selectedSquare = sq;
+        renderMiniBoard(m, user, matchId);
+        return;
+      }
+      if (kcConfirmMoves) {
+        // ✔ 決定 / ✖ 取り消し で一呼吸おく
+        const test = new Chess(gameChess.fen());
+        const tmv = test.move({ from: selectedSquare, to: sq, promotion: 'q' });
+        const fromSq = selectedSquare;
+        selectedSquare = null;
+        if (tmv) kcPendingMove = { from: fromSq, to: sq, matchId };
+        renderMiniBoard(m, user, matchId);
+        return;
+      }
+      await kcCommitMove(user, selectedSquare, sq);
+    }
+  }
+
+  // 実際に手を指してデータベースに保存する
+  let kcPendingMove = null;
+  async function kcCommitMove(user, fromSq, toSq) {
+    const matchId = myMatchId;
+    const m = latestMatchData;
+    if (!gameChess || !m || m.status !== 'active' || m.turn !== myColor) return;
+    {
+      const move = gameChess.move({ from: fromSq, to: toSq, promotion: 'q' });
       selectedSquare = null;
       if (move) {
         const elapsed = Date.now() - (m.turnStartedAt || Date.now());
@@ -5064,6 +5164,19 @@ const PIECE_IMG = {
       }
     }
   }
+  document.getElementById('moveConfirmOk').addEventListener('click', async () => {
+    const pm = kcPendingMove;
+    kcPendingMove = null;
+    document.getElementById('moveConfirmBar').style.display = 'none';
+    if (!pm || pm.matchId !== myMatchId || !auth.currentUser) return;
+    await kcCommitMove(auth.currentUser, pm.from, pm.to);
+  });
+  document.getElementById('moveConfirmCancel').addEventListener('click', () => {
+    kcPendingMove = null;
+    selectedSquare = null;
+    document.getElementById('moveConfirmBar').style.display = 'none';
+    if (latestMatchData && auth.currentUser) renderMiniBoard(latestMatchData, auth.currentUser, myMatchId);
+  });
 
   let clockInterval = null;
   let kcOppOfflineSince = null;
