@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>キャスリングはどっち？キングサイドとクイーンサイドの選び方 - KitsuneChess</title>
+<link rel="canonical" href="https://kitsunechess.com/castling.html">
+<meta name="description" content="キングサイドとクイーンサイド、どちらにキャスリングすればいい？それぞれの長所と短所、判断するときに見るポイント、よくある失敗を、実際のオープニングの盤面で分かりやすく解説します。">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Crimson+Pro:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root { --bg: #f5edd6; --brown: #7c4a1e; --brown-dark: #4a2a0e; --text: #111; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: var(--bg); color: var(--text); font-family: 'Crimson Pro', serif; font-weight: 600; line-height: 1.8; padding: 40px 20px; }
+  .container { max-width: 720px; margin: 0 auto; background: transparent; border: none; padding: 20px 10px; }
+  .lang-en, .lang-ja { text-align: left !important; word-break: break-word !important; }
+  .lang-switch { text-align: right; margin-bottom: 25px; }
+  .lang-btn { background: #f7ebd3; border: 1px solid #c4b193; color: var(--brown-dark); padding: 6px 14px; border-radius: 4px; cursor: pointer; font-weight: 700; font-size: 0.85rem; transition: all 0.2s; }
+  .lang-btn:hover { background: var(--brown); color: #fff; }
+  .back-link { color: var(--brown); text-decoration: none; font-weight: 700; font-size: 0.9rem; }
+  .top-links { margin-bottom: 18px; }
+  h1 { font-family: 'Cinzel', serif; color: var(--brown-dark); font-size: 1.8rem; text-align: center; margin-bottom: 24px; border-bottom: 2px solid rgba(184,134,11,0.3); padding-bottom: 12px; }
+  h2 { font-family: 'Cinzel', serif; color: var(--brown); font-size: 1.1rem; margin: 30px 0 12px; border-left: 4px solid var(--brown); padding-left: 10px; }
+  p { font-size: 1.05rem; margin-bottom: 18px; }
+  ul, ol { margin: 0 0 18px 1.4em; font-size: 1.02rem; }
+  li { margin-bottom: 8px; }
+  a { color: var(--brown-dark); }
+  .card { background: #fff8e8; border: 2px solid var(--brown); border-radius: 16px; padding: 22px 26px; margin: 20px 0; box-shadow: 2px 3px 8px rgba(0,0,0,0.05); }
+  .card-label { display: inline-block; background: var(--brown); color: #fff; font-family: 'Cinzel', serif; font-size: 0.75rem; padding: 3px 12px; border-radius: 4px; margin-bottom: 12px; letter-spacing: 1px; }
+  .board { display:block; width:100%; max-width:300px; height:auto; margin:16px auto 6px; border:2px solid var(--brown); border-radius:8px; }
+  .caption { text-align:center; font-size:0.88rem; color:#555; margin-bottom:16px; }
+  .fix-box { background: rgba(124,74,30,0.15); border-left: 4px solid var(--brown); padding: 12px 16px; margin-top: 14px; border-radius: 0 8px 8px 0; font-size: 0.95rem; }
+  .fix-label { font-weight: 700; color: var(--brown-dark); font-size: 0.85rem; margin-bottom: 4px; }
+  .footer { text-align: center; margin-top: 45px; font-size: 0.9rem; }
+  .footer a { color: var(--brown); text-decoration: none; font-weight: 700; border: 1px solid var(--brown); padding: 8px 18px; border-radius: 6px; transition: all 0.2s; display:inline-block; margin:4px; }
+  .footer a:hover { background: var(--brown); color: #fff; }
+  .lang-en { display: none; }
+  .en-mode .lang-ja { display: none; }
+  .en-mode .lang-en { display: block; }
+  .en-mode button.lang-en { display: inline-block; }
+</style>
+
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1034556404852942" crossorigin="anonymous"></script>
+</head>
+<body>
+<div class="container">
+  <div class="lang-switch">
+    <button class="lang-btn lang-ja" onclick="toggleLanguage()">English</button>
+    <button class="lang-btn lang-en" onclick="toggleLanguage()">日本語</button>
+  </div>
+
+  <!-- ================= 日本語 ================= -->
+  <div class="lang-ja">
+    <div class="top-links"><a href="info.html" class="back-link">← 一覧へ戻る</a>&nbsp;&nbsp;<a href="index.html" class="back-link">🏠 ホームへ</a></div>
+    <h1>🏰 キャスリングはどっち？<br>キングサイドとクイーンサイドの選び方</h1>
+    <p>キャスリングは、キングを安全な場所に移しながら、ルークを戦いに参加させられる特別な一手です。チェスにはキングサイド（O-O）とクイーンサイド（O-O-O）の2種類のキャスリングがありますが、「どちらを選べばいいの？」と迷う方も多いはずです。この記事では、それぞれの長所と短所、判断するときに見るポイント、よくある失敗を、実際のオープニングの盤面を使って解説します。</p>
+
+    <h2>キャスリングのおさらい</h2>
+    <p>キングサイドのキャスリングでは、白のキングはe1からg1へ、h1のルークはf1へ移ります。クイーンサイドのキャスリングでは、白のキングはe1からc1へ、a1のルークはd1へ移ります。黒も同じように、8段目で行います。</p>
+    <p>キャスリングができるのは、次の条件をすべて満たしているときだけです。</p>
+    <ul>
+      <li>キングと、使うほうのルークが、まだ一度も動いていない</li>
+      <li>キングとルークの間に、駒が1つもない</li>
+      <li>キングがチェックされていない</li>
+      <li>キングが通るマスと、移った先のマスが、相手の駒に利かされていない</li>
+    </ul>
+    <p>ルークが通るマスは、相手に利かされていてもかまいません。たとえば白のクイーンサイドのキャスリングでは、ルークが通るb1のマスが相手に利かされていても、キャスリングできます。</p>
+
+    <h2>キングサイドが基本になる理由</h2>
+    <div class="card">
+      <span class="card-label">KINGSIDE O-O</span>
+      <p>実戦では、キングサイドのキャスリングがいちばんよく使われます。理由は大きく2つあります。</p>
+      <p><strong>1つ目は、早くできることです。</strong>白がキングサイドにキャスリングするには、間にいるf1のビショップとg1のナイトの2つを動かすだけで済みます。クイーンサイドでは、b1のナイト、c1のビショップ、d1のクイーンの3つを動かす必要があります。</p>
+      <p><strong>2つ目は、キングが守りやすいことです。</strong>キングサイドにキャスリングしたキングはg1の隅に入り、f2・g2・h2のポーンが前の壁になります。キングのすぐそばに守りの駒が集まるので、相手に攻められにくくなります。</p>
+      <img class="board" src="castle_kingside.svg" alt="イタリアン・ゲームで白と黒がどちらもキングサイドにキャスリングした局面">
+      <div class="caption">イタリアン・ゲーム（1.e4 e5 2.Nf3 Nc6 3.Bc4 Bc5 4.c3 Nf6 5.d3 d6 6.O-O O-O）</div>
+      <p>上の図は<a href="italian.html">イタリアン・ゲーム</a>の一例です。白も黒も、ナイトとビショップを1つずつ出したあと、6手目でキングサイドにキャスリングしています。どちらのキングもポーンの壁の後ろに入り、ルークもf列に出てきました。</p>
+    </div>
+
+    <h2>クイーンサイドを選ぶとき</h2>
+    <div class="card">
+      <span class="card-label">QUEENSIDE O-O-O</span>
+      <p>クイーンサイドのキャスリングは準備に時間がかかりますが、キングサイドにはない長所があります。</p>
+      <p><strong>ルークがすぐに中央で働きます。</strong>クイーンサイドにキャスリングすると、白のルークはd1に入ります。d列は盤の中央の列なので、キャスリングした瞬間から、ルークが相手の陣地や中央のポーンに圧力をかけられます。</p>
+      <p><strong>キングサイドのポーンを攻めに使えます。</strong>キングをクイーンサイドに逃がしておけば、白はキングサイドのgやhのポーンを前に進めても、自分のキングが危なくなりません。</p>
+      <img class="board" src="castle_queenside.svg" alt="カロ・カン・ディフェンスで白がクイーンサイドにキャスリングした局面">
+      <div class="caption">カロ・カン・ディフェンス（…10.Qxd3 e6 11.Bd2 Ngf6 12.O-O-O）</div>
+      <p>上の図は<a href="caro_kann.html">カロ・カン・ディフェンス</a>の本線です。白はhのポーンをh5まで進めているので、キングサイドにキャスリングすると、キングの前の壁が薄くなってしまいます。そこで白は、クイーンサイドにキャスリングして、キングを反対側に置きました。</p>
+      <p>ただし、クイーンサイドのキャスリングには弱点もあります。白のキングがc1に入ると、a2のポーンはキングに守られていない状態になります。そのため白は、あとでKb1と一手かけて、キングを隅に寄せることがよくあります。</p>
+    </div>
+
+    <h2>反対側にキャスリングして攻め合う</h2>
+    <div class="card">
+      <span class="card-label">OPPOSITE-SIDE CASTLING</span>
+      <p>白と黒が反対側にキャスリングすると、局面は一気に激しくなります。お互いに、相手のキングがいる側のポーンを前に進めても、自分のキングが危なくならないからです。</p>
+      <img class="board" src="castle_opposite.svg" alt="ユーゴスラフ・アタックで白がクイーンサイド、黒がキングサイドにキャスリングした局面">
+      <div class="caption">ユーゴスラフ・アタック（…8.Qd2 Nc6 9.Bc4 Bd7 10.O-O-O）</div>
+      <p>上の図は、シシリアン・ディフェンスの<a href="dragon.html">ドラゴン・バリエーション</a>に対する<a href="yugoslav_attack.html">ユーゴスラフ・アタック</a>です。白はクイーンサイドに、黒はキングサイドにキャスリングしています。白は矢印のように、h4・h5やg4とキングサイドのポーンを進めて、黒のキングの前の列をこじ開けにいきます。白はBh6でg7のビショップを交換して、黒のキングの守りを弱める作戦もよく使います。</p>
+      <p>一方の黒は、c列やクイーンサイドの駒を使って、白のキングに反撃します。反対側にキャスリングした局面では、どちらの攻めが先に届くかの速さ比べになるので、一手のむだが勝敗を分けます。</p>
+    </div>
+
+    <h2>判断するときに見る4つのポイント</h2>
+    <ol>
+      <li><strong>ポーンの壁が崩れていないのはどちらか</strong>：すでに前に突いたポーンがある側にキャスリングすると、キングの前にすき間ができて危険です。</li>
+      <li><strong>相手の駒がどちらを狙っているか</strong>：相手のビショップやクイーンがにらんでいる側や、列が開いている側は避けましょう。</li>
+      <li><strong>自分が攻めたいのはどちらか</strong>：ポーンで攻めたい側とは反対にキングを置くと、遠慮なくポーンを進められます。</li>
+      <li><strong>何手でキャスリングできるか</strong>：中央が開いている局面では、少しでも早くキャスリングできるほうが安全です。</li>
+    </ol>
+    <p>迷ったときは、まずキングサイドを考えてみるのがおすすめです。そのうえで、上のポイントのどれかがクイーンサイドを指しているときに、クイーンサイドを選ぶとよいでしょう。</p>
+
+    <h2>よくある失敗</h2>
+    <div class="card">
+      <span class="card-label">COMMON MISTAKES</span>
+      <p><strong>失敗① キャスリングを後回しにして、権利をなくしてしまう</strong></p>
+      <img class="board" src="castle_lost_rights.svg" alt="フライド・リバー・アタックで黒のキングがf7に引き出され、キャスリングの権利をなくした局面">
+      <div class="caption">フライド・リバー・アタック（1.e4 e5 2.Nf3 Nc6 3.Bc4 Nf6 4.Ng5 d5 5.exd5 Nxd5 6.Nxf7 Kxf7）</div>
+      <p>上の図は<a href="fried_liver_attack.html">フライド・リバー・アタック</a>です。黒はKxf7とキングで取り返したので、キングが一度動いたことになります。キングが一度でも動くと、そのあとはキャスリングができません。黒のキングは安全な隅に入れないまま、白の攻撃を受け続けることになります。</p>
+      <p><strong>失敗② キャスリングしたあとに、キングの前のポーンを突いてしまう</strong></p>
+      <p>キャスリングしたあとに、キングの前のgやhのポーンをむやみに進めると、せっかくの壁にすき間ができてしまいます。キングの前のポーンは、はっきりした理由があるときだけ動かしましょう。</p>
+      <p><strong>失敗③ 相手の攻めが集まっている側にキャスリングする</strong></p>
+      <p>相手の駒がすでに狙っている側にキャスリングすると、キングが自分から危険な場所に入ることになります。キャスリングの前に、相手の駒がどこを向いているかを確かめましょう。</p>
+      <div class="fix-box">
+        <div class="fix-label">✅ 改善法</div>
+        序盤はナイトとビショップを出したら、早めにキャスリングしてキングを安全にしましょう。<a href="beginner_mistakes.html">初心者がやりがちなミス10選</a>や<a href="openings-basic.html">オープニングの3大原則</a>もあわせて読むと、キャスリングの大切さがよく分かります。
+      </div>
+    </div>
+
+    <h2>まとめ</h2>
+    <p>ふだんはキングサイドのキャスリングが基本で、早くできて、キングも守りやすいのが長所です。クイーンサイドのキャスリングは、ルークをすぐ中央で働かせたいときや、キングサイドのポーンで攻めたいときに選びます。どちらにするか迷ったら、ポーンの壁、相手の狙い、自分の攻めたい側、キャスリングまでの手数の4つを見て判断しましょう。</p>
+
+    <div class="footer"><a href="info.html">🦊 Info一覧へ戻る</a><a href="index.html">🏠 ホームへ戻る</a></div>
+  </div>
+
+  <!-- ================= English ================= -->
+  <div class="lang-en">
+    <div class="top-links"><a href="info.html" class="back-link">← Back to Info</a>&nbsp;&nbsp;<a href="index.html?lang=en" class="back-link">🏠 Home</a></div>
+    <h1>🏰 Kingside or Queenside?<br>How to Decide Where to Castle</h1>
+    <p>Castling is a special move that tucks your king into safety while bringing a rook into the game. There are two kinds of castling — kingside (O-O) and queenside (O-O-O) — and many players wonder which one to choose. This article explains the strengths and weaknesses of each, the points to check when deciding, and common mistakes, using positions from real openings.</p>
+
+    <h2>A Quick Review of Castling</h2>
+    <p>When White castles kingside, the king moves from e1 to g1 and the h1 rook moves to f1. When White castles queenside, the king moves from e1 to c1 and the a1 rook moves to d1. Black castles the same way on the 8th rank.</p>
+    <p>You can castle only when all of the following are true:</p>
+    <ul>
+      <li>Neither the king nor the rook you are castling with has moved yet</li>
+      <li>There are no pieces between the king and the rook</li>
+      <li>The king is not in check</li>
+      <li>The king does not pass through or land on a square attacked by an enemy piece</li>
+    </ul>
+    <p>The squares the rook passes over may be attacked. For example, White can still castle queenside even if the b1 square, which only the rook crosses, is attacked.</p>
+
+    <h2>Why Kingside Castling Is the Default</h2>
+    <div class="card">
+      <span class="card-label">KINGSIDE O-O</span>
+      <p>In practice, kingside castling is by far the most common. There are two main reasons.</p>
+      <p><strong>First, it is fast.</strong> To castle kingside, White only needs to move the two pieces in the way: the f1 bishop and the g1 knight. To castle queenside, White has to move three pieces: the b1 knight, the c1 bishop, and the d1 queen.</p>
+      <p><strong>Second, the king is easier to defend.</strong> After kingside castling, the king sits in the g1 corner behind the f2, g2, and h2 pawns, which act as a shield. With defenders gathered close to the king, it is harder for the opponent to attack.</p>
+      <img class="board" src="castle_kingside.svg" alt="Italian Game position where both White and Black have castled kingside">
+      <div class="caption">Italian Game (1.e4 e5 2.Nf3 Nc6 3.Bc4 Bc5 4.c3 Nf6 5.d3 d6 6.O-O O-O)</div>
+      <p>The diagram above shows a line from the <a href="italian.html?lang=en">Italian Game</a>. White and Black each develop a knight and a bishop, then both castle kingside on move 6. Both kings are now behind their pawn shields, and the rooks have arrived on the f-file.</p>
+    </div>
+
+    <h2>When to Castle Queenside</h2>
+    <div class="card">
+      <span class="card-label">QUEENSIDE O-O-O</span>
+      <p>Queenside castling takes longer to prepare, but it has strengths that kingside castling does not.</p>
+      <p><strong>The rook goes to work in the center right away.</strong> After queenside castling, White's rook lands on d1. The d-file is a central file, so from the moment White castles, the rook can put pressure on the center and on the opponent's position.</p>
+      <p><strong>The kingside pawns are free to attack.</strong> With the king safely on the queenside, White can push the g- and h-pawns forward without exposing the king.</p>
+      <img class="board" src="castle_queenside.svg" alt="Caro-Kann Defense position where White has castled queenside">
+      <div class="caption">Caro-Kann Defense (…10.Qxd3 e6 11.Bd2 Ngf6 12.O-O-O)</div>
+      <p>The diagram above shows the main line of the <a href="caro_kann.html?lang=en">Caro-Kann Defense</a>. White has already pushed the h-pawn to h5, so castling kingside would leave the king behind a thinned-out shield. That is why White castles queenside and places the king on the other side.</p>
+      <p>Queenside castling has a weakness too. With White's king on c1, the a2 pawn is not protected by the king. For this reason, White often spends a move later on Kb1 to tuck the king into the corner.</p>
+    </div>
+
+    <h2>Opposite-Side Castling: A Race to Attack</h2>
+    <div class="card">
+      <span class="card-label">OPPOSITE-SIDE CASTLING</span>
+      <p>When White and Black castle on opposite sides, the game becomes sharp very quickly. Each side can push the pawns on the side where the enemy king lives without weakening their own king.</p>
+      <img class="board" src="castle_opposite.svg" alt="Yugoslav Attack position with White castled queenside and Black castled kingside">
+      <div class="caption">Yugoslav Attack (…8.Qd2 Nc6 9.Bc4 Bd7 10.O-O-O)</div>
+      <p>The diagram above shows the <a href="yugoslav_attack.html?lang=en">Yugoslav Attack</a> against the Sicilian <a href="dragon.html?lang=en">Dragon Variation</a>. White has castled queenside and Black has castled kingside. As the arrows show, White pushes the kingside pawns with h4, h5, and g4 to pry open the files in front of Black's king. White also often plays Bh6 to trade off Black's g7 bishop and weaken the defense around Black's king.</p>
+      <p>Black, for their part, counterattacks White's king using the c-file and the queenside pieces. In opposite-side castling positions, the game becomes a race to see whose attack lands first, so a single wasted move can decide the result.</p>
+    </div>
+
+    <h2>Four Points to Check When Deciding</h2>
+    <ol>
+      <li><strong>Which side's pawn shield is still intact?</strong> If you have already pushed pawns on one side, castling there leaves gaps in front of your king.</li>
+      <li><strong>Which side are the enemy pieces aiming at?</strong> Avoid the side where the opponent's bishops or queen are pointing, or where files are already open.</li>
+      <li><strong>Which side do you want to attack?</strong> Put your king on the opposite side from where you plan a pawn attack, so you can push those pawns freely.</li>
+      <li><strong>How many moves does it take to castle?</strong> When the center is open, the side you can castle on sooner is usually safer.</li>
+    </ol>
+    <p>When in doubt, start by considering kingside castling. Then choose queenside castling when one of the points above clearly favors it.</p>
+
+    <h2>Common Mistakes</h2>
+    <div class="card">
+      <span class="card-label">COMMON MISTAKES</span>
+      <p><strong>Mistake 1: Delaying castling and losing the right to castle</strong></p>
+      <img class="board" src="castle_lost_rights.svg" alt="Fried Liver Attack position where Black's king was drawn to f7 and lost the right to castle">
+      <div class="caption">Fried Liver Attack (1.e4 e5 2.Nf3 Nc6 3.Bc4 Nf6 4.Ng5 d5 5.exd5 Nxd5 6.Nxf7 Kxf7)</div>
+      <p>The diagram above shows the <a href="fried_liver_attack.html?lang=en">Fried Liver Attack</a>. Black recaptured with Kxf7, so Black's king has now moved. Once the king has moved even once, castling is no longer allowed. Black's king can never reach the safety of the corner and has to keep facing White's attack.</p>
+      <p><strong>Mistake 2: Pushing the pawns in front of your king after castling</strong></p>
+      <p>If you push the g- or h-pawn in front of your castled king without a reason, you create gaps in the very shield that protects it. Move those pawns only when you have a clear purpose.</p>
+      <p><strong>Mistake 3: Castling into the opponent's attack</strong></p>
+      <p>If you castle on the side the enemy pieces are already aiming at, your king walks straight into danger. Before castling, check where the opponent's pieces are pointing.</p>
+      <div class="fix-box">
+        <div class="fix-label">✅ How to Fix It</div>
+        In the opening, develop your knights and bishops, then castle early to make your king safe. Reading <a href="beginner_mistakes.html?lang=en">10 Common Beginner Mistakes</a> and <a href="openings-basic.html?lang=en">Three Core Opening Principles</a> will also show why castling matters so much.
+      </div>
+    </div>
+
+    <h2>Summary</h2>
+    <p>Kingside castling is the default: it is fast, and the king is easy to defend. Queenside castling is the choice when you want your rook working in the center right away, or when you want to attack with your kingside pawns. When you can't decide, look at four things — your pawn shield, the opponent's targets, the side you want to attack, and how many moves it takes to castle.</p>
+
+    <div class="footer"><a href="info.html">🦊 Back to Info</a><a href="index.html?lang=en">🏠 Back to Home</a></div>
+  </div>
+</div>
+<script>
+  function toggleLanguage() {
+    const isNowEn = !document.body.classList.contains('en-mode');
+    document.body.classList.toggle('en-mode');
+    localStorage.setItem('selectedLang', isNowEn ? 'en' : 'ja');
+  }
+  (function applyStoredLanguage() {
+    let stored = null;
+    try {
+      const q = new URLSearchParams(location.search).get('lang');
+      stored = (q === 'en' || q === 'ja') ? q : localStorage.getItem('selectedLang');
+    } catch (e) {}
+    if (stored === 'ja') {
+      document.body.classList.remove('en-mode');
+    } else {
+      document.body.classList.add('en-mode');
+    }
+  })();
+</script>
+</body>
+</html>
