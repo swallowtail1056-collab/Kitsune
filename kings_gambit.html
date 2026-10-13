@@ -115,8 +115,12 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
 
 <nav>
   <div class="nav-inner">
+    <span style="display:inline-flex;align-items:center;gap:16px;">
     <a href="openings_list.html" class="back-link lang-element-ja">← 一覧へ戻る</a>
     <a href="openings_list.html" class="back-link lang-element-en">← Back to List</a>
+    <a href="index.html" class="back-link lang-element-ja">🏠 ホーム</a>
+    <a href="index.html?lang=en" class="back-link lang-element-en">🏠 Home</a>
+    </span>
     <button id="langToggle" class="lang-switch-btn">English</button>
   </div>
 </nav>
@@ -219,8 +223,8 @@ const LESSON_STEPS = [
   { move:{from:[3,4],to:[4,5]}, moveLabel:{ja:"2...exf4", en:"2...exf4"},
     ja:"黒はe5のポーンで、f4にいた白のポーンを取るよ。黒はポーンを1つ多く持ち、白は中央のe4のポーンだけが残る形になるんだ。",
     en:"Black's e5 pawn captures White's pawn on f4. Black is now a pawn up, and White is left with only the e4 pawn in the center.",
-    jaMore:"黒はこの手の代わりに、ポーンを取らずに2...Bc5などで駒を展開する<a href='kings_gambit_declined.html'>キングズ・ギャンビット辞退</a>や、2...d5と中央で反撃する<a href='falkbeer.html'>ファルクベアー・カウンターギャンビット</a>を選ぶこともできるよ。",
-    enMore:"Instead of this move, Black can decline the pawn and develop with 2...Bc5, the <a href='kings_gambit_declined.html?lang=en'>King's Gambit Declined</a>, or counterattack in the center with 2...d5, the <a href='falkbeer.html?lang=en'>Falkbeer Countergambit</a>.",
+    jaMore:"黒はこの手の代わりに、ポーンを取らずに2...Bc5などで駒を展開する<a href='kings_gambit_declined.html'>キングズ・ギャンビット辞退</a>や、2...d5と中央で反撃する<a href='falkbeer_countergambit.html'>ファルクベアー・カウンターギャンビット</a>を選ぶこともできるよ。",
+    enMore:"Instead of this move, Black can decline the pawn and develop with 2...Bc5, the <a href='kings_gambit_declined.html?lang=en'>King's Gambit Declined</a>, or counterattack in the center with 2...d5, the <a href='falkbeer_countergambit.html?lang=en'>Falkbeer Countergambit</a>.",
     fox:'normal' },
   { move:{from:[7,6],to:[5,5]}, moveLabel:{ja:"3. Nf3", en:"3. Nf3"},
     ja:"白はナイトをf3へ進めるよ。白はナイトを展開しながら、まだ空いているh4のマスに利かせて、黒のクイーンがh4へ来てチェックするのを防ぐんだ。",
