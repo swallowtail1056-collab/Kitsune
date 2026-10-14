@@ -687,7 +687,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithRedirect, getRedirectResult, signInAnonymously, signOut, deleteUser, reauthenticateWithPopup, linkWithPopup, linkWithRedirect, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
   import { getDatabase, ref, set, get, push, update, remove, onValue, onDisconnect, serverTimestamp, runTransaction } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
   import { getMessaging, getToken, onMessage } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-messaging.js";
-  import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-storage.js";
+  import { getStorage, ref as storageRef, uploadBytes, getDownloadURL, deleteObject } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-storage.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyDR6vsVq2uePiFRUmoqYB4LjdGZJiRM4eE",
@@ -2354,6 +2354,11 @@ applyBoardTheme();
       if (myUsername) await remove(ref(db, 'usernames/' + normName(myUsername)));
 
       await remove(ref(db, 'fcmTokens/' + myUid)).catch(() => {});
+      // 自分だけのデータも消す（権限などで消せなくても、削除自体は続ける）
+      for (const path of ['matchHistory/', 'privateStats/', 'blocks/', 'dmReadStatus/', 'currentMatch/', 'presence/']) {
+        await remove(ref(db, path + myUid)).catch(() => {});
+      }
+      try { await deleteObject(storageRef(storage, 'avatars/' + myUid)); } catch (e) {}
 
       // Firebase認証アカウント自体も削除
       closeOpenedMatch();
