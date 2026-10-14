@@ -47,7 +47,7 @@ body:not(.en) .en { display:none !important; }
 </head>
 <body><div class="lang-switch"><button class="on" id="btnJa" type="button">日本語</button><button id="btnEn" type="button">ENGLISH</button></div>
 <h1><span class="ja">🦊 プライバシーポリシー</span><span class="en">🦊 Privacy Policy</span></h1>
-<p class="updated"><span class="ja">最終更新日：2026年10月12日</span><span class="en">Last updated: October 12, 2026</span></p>
+<p class="updated"><span class="ja">最終更新日：2026年10月14日</span><span class="en">Last updated: October 14, 2026</span></p>
 <div class="section">
 <p class="ja">本ページは、KitsuneChess 対局モード(match.html、以下「本サービス」)におけるユーザーの個人情報の取り扱いについて説明するものです。</p>
 <p class="en">This page explains how KitsuneChess Match Mode (match.html, the "Service") collects, uses, and protects your personal information.</p>
@@ -60,7 +60,8 @@ body:not(.en) .en { display:none !important; }
 <li>ユーザーが設定した表示名(ユーザーネーム)</li>
 <li>友達リスト、友達申請の送受信履歴</li>
 <li>対局の記録(手順、勝敗、レーティング、対局相手)</li>
-<li>チャットメッセージの内容(友達間のメッセージ機能を利用した場合)</li>
+<li>プロフィールに書いた一言メッセージ</li>
+<li>チャットメッセージの内容（チャット機能は現在停止しています。再開したあとに利用した場合のみ）</li>
 <li>オンライン状態および最終ログイン時刻</li>
 <li>通知を許可した場合、通知を送るための情報(通知用トークン)</li>
 <li>公正な対局のための記録(1手ごとの考慮時間、対局中に別の画面へ移った回数・時間)</li>
@@ -72,7 +73,8 @@ body:not(.en) .en { display:none !important; }
 <li>The username you set within the Service</li>
 <li>Your friends list and friend request history</li>
 <li>Match records (moves, results, rating, opponents)</li>
-<li>Chat message content (if you use the friend chat feature)</li>
+<li>The short bio you write in your profile</li>
+<li>Chat message content (the chat feature is currently turned off; only if it is turned back on and you use it)</li>
 <li>Online/offline status and last-seen timestamp</li>
 <li>If you allow notifications, the information needed to send them (a notification token)</li>
 <li>Fair-play records (time spent on each move, and how often and how long you switched to another screen during a game)</li>
@@ -86,7 +88,7 @@ body:not(.en) .en { display:none !important; }
 <li>友達とのオンライン対局機能を提供するため</li>
 <li>友達検索・友達申請機能を提供するため</li>
 <li>レーティング・対局成績・対局分析を表示するため</li>
-<li>チャットメッセージを表示・自動翻訳するため</li>
+<li>一言メッセージやチャットメッセージを表示・自動翻訳するため</li>
 <li>オンライン状態を友達に表示するため</li>
 <li>対局の申し込みなどを通知でお知らせするため</li>
 <li>不正行為や迷惑行為を防ぎ、公正な対局を保つため</li>
@@ -96,7 +98,7 @@ body:not(.en) .en { display:none !important; }
 <li>Provide real-time online chess matches with friends</li>
 <li>Provide user search and friend request features</li>
 <li>Display ratings, match records, and game analysis</li>
-<li>Display and auto-translate chat messages</li>
+<li>Display and auto-translate profile bios and chat messages</li>
 <li>Show your online status to your friends</li>
 <li>Notify you of match challenges and similar events</li>
 <li>Prevent cheating and abuse and keep games fair</li>
@@ -107,13 +109,13 @@ body:not(.en) .en { display:none !important; }
 <p class="ja">本サービスは以下の第三者サービスを利用しています。</p>
 <ul class="ja">
 <li><strong>Google Firebase(Authentication / Realtime Database / Cloud Messaging)</strong>: ログイン認証、対局データ・ユーザーデータの保存、通知の送信に使用</li>
-<li><strong>MyMemory Translation API</strong>: チャットメッセージの自動翻訳に使用(送信されたメッセージのテキストが翻訳のため外部APIに送信されます)</li>
+<li><strong>Google Cloud Translation API</strong>: 一言メッセージやチャットメッセージの自動翻訳に使用（翻訳のため、その文章が Google に送信されます）</li>
 <li><strong>Google アナリティクス（Google タグ マネージャー経由）</strong>: 利用状況の分析に使用（ページの表示や操作、おおよその地域、端末やブラウザの種類などの情報が、Cookie などの識別子とともに Google に送信されます。個人を特定する情報は送信しません）</li>
 </ul>
 <p class="en">The Service uses the following third-party services:</p>
 <ul class="en">
 <li><strong>Google Firebase (Authentication / Realtime Database / Cloud Messaging)</strong>: used for login authentication, storing match and user data, and sending notifications</li>
-<li><strong>MyMemory Translation API</strong>: used to auto-translate chat messages (message text is sent to this external API for translation)</li>
+<li><strong>Google Cloud Translation API</strong>: used to auto-translate profile bios and chat messages (the text is sent to Google for translation)</li>
 <li><strong>Google Analytics (via Google Tag Manager)</strong>: used to analyze how the Service is used (information such as page views and interactions, approximate region, and device and browser type is sent to Google together with identifiers such as cookies; we do not send information that directly identifies you)</li>
 </ul>
 </div>
