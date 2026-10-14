@@ -10,7 +10,18 @@
 <link rel="icon" type="image/png" href="/match_icon_192.png">
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Crimson+Pro:wght@400;600;700&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/chess.js/0.10.3/chess.min.js"></script>
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1034556404852942" crossorigin="anonymous"></script>
+<script>
+// アプリ（ホーム画面・Google Play のアプリ）として開いたときは広告を読み込まない。ブラウザで開いたときだけ読み込む
+(function(){
+  var isApp = (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) || window.navigator.standalone === true || (document.referrer || '').indexOf('android-app://') === 0;
+  try { if (isApp) sessionStorage.setItem('kcIsApp', '1'); if (sessionStorage.getItem('kcIsApp') === '1') isApp = true; } catch (e) {}
+  if (isApp) return;
+  var s = document.createElement('script');
+  s.async = true; s.crossOrigin = 'anonymous';
+  s.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1034556404852942';
+  document.head.appendChild(s);
+})();
+</script>
 <style>
 :root {
   --bg:#f5edd6; --brown:#7c4a1e; --brown-dark:#4a2a0e; --brown-light:#a3692d;
