@@ -1,7 +1,9 @@
 {
-  "name": "KitsuneChess 対局モード",
-  "short_name": "KitsuneChess対局",
-  "description": "友達とリアルタイムでオンライン対局ができる、KitsuneChessの対局モードです。",
+  "id": "/match.html",
+  "name": "KitsuneChess - Play Chess Online",
+  "short_name": "KitsuneChess",
+  "description": "Play real-time online chess with friends on KitsuneChess. / KitsuneChessで友達とリアルタイムのオンライン対局ができます。",
+  "lang": "en",
   "start_url": "/match.html",
   "scope": "/match.html",
   "display": "standalone",
