@@ -1211,11 +1211,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <script>
 
   function filterOpenings(query) {
-  const q = query.trim().toLowerCase();
+  const norm = function(t){ return t.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase(); };
+  const q = norm(query.trim());
   document.querySelectorAll('.opening-card').forEach(function(card) {
     const names = card.querySelectorAll('.opening-name');
     let text = '';
-    names.forEach(function(n) { text += n.textContent.toLowerCase() + ' '; });
+    names.forEach(function(n) { text += norm(n.textContent) + ' '; });
     if (q === '' || text.includes(q)) {
       card.classList.remove('search-hidden');
     } else {
