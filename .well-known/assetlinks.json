@@ -1,9 +1,22 @@
-
-[{
-      "relation": ["delegate_permission/common.handle_all_urls"],
-      "target": {
-        "namespace": "android_app",
-        "package_name": "com.kitsunechess.match",
-        "sha256_cert_fingerprints": ["8E:C4:4A:39:1B:B9:15:BE:C6:71:C9:61:E1:C4:F5:18:18:22:9D:85:61:78:05:E5:82:53:41:DE:FD:B8:04:4B"]
-      }
-    }]
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.kitsunechess.chess",
+      "sha256_cert_fingerprints": [
+        "62:C1:89:5C:60:7F:86:F1:49:94:80:50:08:C7:FA:6E:66:67:BE:87:90:EC:AC:72:8B:16:2A:DA:EB:E3:9C:CE"
+      ]
+    }
+  },
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.kitsunechess.match",
+      "sha256_cert_fingerprints": [
+        "8E:C4:4A:39:1B:B9:15:BE:C6:71:C9:61:E1:C4:F5:18:18:22:9D:85:61:78:05:E5:82:53:41:DE:FD:B8:04:4B"
+      ]
+    }
+  }
+]
