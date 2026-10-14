@@ -5,7 +5,8 @@
       "namespace": "android_app",
       "package_name": "com.kitsunechess.chess",
       "sha256_cert_fingerprints": [
-        "62:C1:89:5C:60:7F:86:F1:49:94:80:50:08:C7:FA:6E:66:67:BE:87:90:EC:AC:72:8B:16:2A:DA:EB:E3:9C:CE"
+        "62:C1:89:5C:60:7F:86:F1:49:94:80:50:08:C7:FA:6E:66:67:BE:87:90:EC:AC:72:8B:16:2A:DA:EB:E3:9C:CE",
+        "82:AF:82:5F:9E:8D:8A:8F:27:75:2B:BC:57:A4:AD:11:79:75:B9:60:2F:63:DC:70:75:E1:C3:EA:DB:5E:62:6E"
       ]
     }
   },
