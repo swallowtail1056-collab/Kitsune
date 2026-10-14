@@ -715,7 +715,7 @@ import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithRedirect, getRe
   // fromButton = true のときだけ、通知の許可を求める(iPhoneはボタンを押したときしか許可の確認を出せないため)
   async function setupPushNotifications(user, fromButton) {
       const statusEl = document.getElementById('pushNotifStatus');
-    const setStatus = (msg, ok) => { if (statusEl) { statusEl.textContent = msg; statusEl.style.color = ok === false ? '#e63946' : (ok === true ? '#4caf50' : ''); } };
+    const setStatus = (msg, ok) => { if (statusEl) { kcSetText(statusEl, msg); statusEl.style.color = ok === false ? '#e63946' : (ok === true ? '#4caf50' : ''); } };
     const notifBtn = document.getElementById('enableNotifBtn');
     const iosHint = document.getElementById('iosNotifHint');
     const showBtn = (on) => { if (notifBtn) notifBtn.style.display = on ? 'inline-block' : 'none'; };
@@ -725,10 +725,10 @@ import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithRedirect, getRe
       if (!('serviceWorker' in navigator) || !('Notification' in window)) {
         showBtn(false);
         if (isIOS && !isStandalone) {
-          setStatus(LANG === 'ja' ? 'iPhoneはホーム画面に追加すると使えます' : 'On iPhone, add to Home Screen to use notifications', false);
+          setStatus(() => (LANG === 'ja' ? 'iPhoneはホーム画面に追加すると使えます' : 'On iPhone, add to Home Screen to use notifications'), false);
           if (iosHint) iosHint.style.display = 'block';
         } else {
-          setStatus(LANG === 'ja' ? 'このブラウザは通知に対応していません' : 'Not supported in this browser', false);
+          setStatus(() => (LANG === 'ja' ? 'このブラウザは通知に対応していません' : 'Not supported in this browser'), false);
         }
         return;
       }
@@ -736,37 +736,37 @@ import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithRedirect, getRe
       let permission = Notification.permission;
       if (permission === 'denied') {
         showBtn(false);
-        setStatus(LANG === 'ja' ? '通知が許可されていません(端末やブラウザの設定で許可してください)' : 'Notifications blocked (allow them in your device or browser settings)', false);
+        setStatus(() => (LANG === 'ja' ? '通知が許可されていません(端末やブラウザの設定で許可してください)' : 'Notifications blocked (allow them in your device or browser settings)'), false);
         return;
       }
       if (permission !== 'granted') {
         if (!fromButton) {
           showBtn(true);
-          setStatus(LANG === 'ja' ? 'オフ(下のボタンでオンにできます)' : 'Off (use the button below to turn on)');
+          setStatus(() => (LANG === 'ja' ? 'オフ(下のボタンでオンにできます)' : 'Off (use the button below to turn on)'));
           return;
         }
         // ボタンを押した直後に、すぐ許可の確認を出す
-        setStatus(LANG === 'ja' ? '通知の許可を確認中...' : 'Checking notification permission...');
+        setStatus(() => (LANG === 'ja' ? '通知の許可を確認中...' : 'Checking notification permission...'));
         permission = await Notification.requestPermission();
         if (permission !== 'granted') {
           showBtn(permission !== 'denied');
-          setStatus(LANG === 'ja' ? '通知が許可されていません(端末やブラウザの設定で許可してください)' : 'Notifications not allowed (check your device or browser settings)', false);
+          setStatus(() => (LANG === 'ja' ? '通知が許可されていません(端末やブラウザの設定で許可してください)' : 'Notifications not allowed (check your device or browser settings)'), false);
           return;
         }
       }
       showBtn(false);
-      setStatus(LANG === 'ja' ? 'Service Workerの準備を待っています...' : 'Waiting for service worker...');
+      setStatus(() => (LANG === 'ja' ? 'Service Workerの準備を待っています...' : 'Waiting for service worker...'));
       // firebase-messaging-sw.js は単独で登録しない(match-sw.jsと同じスコープ'/'で競合するため)。
       // 代わりに、すでに登録・稼働中のmatch-sw.jsのregistrationをそのままFCM用に再利用する
       const swReg = await navigator.serviceWorker.ready;
       const messaging = getMessaging(app);
-      setStatus(LANG === 'ja' ? 'トークンを取得中...' : 'Getting token...');
+      setStatus(() => (LANG === 'ja' ? 'トークンを取得中...' : 'Getting token...'));
       const token = await getToken(messaging, { vapidKey: FCM_VAPID_KEY, serviceWorkerRegistration: swReg });
       if (token) {
        await set(ref(db, 'fcmTokens/' + user.uid + '/' + token), true);
-        setStatus(LANG === 'ja' ? '✅ 有効です(通知が届きます)' : '✅ Active (notifications enabled)', true);
+        setStatus(() => (LANG === 'ja' ? '✅ 有効です(通知が届きます)' : '✅ Active (notifications enabled)'), true);
       } else {
-        setStatus(LANG === 'ja' ? 'トークンの取得に失敗しました' : 'Failed to get token', false);
+        setStatus(() => (LANG === 'ja' ? 'トークンの取得に失敗しました' : 'Failed to get token'), false);
       }
       // フォアグラウンド(アプリを開いている間)に届いた通知の表示
       onMessage(messaging, (payload) => {
@@ -778,7 +778,7 @@ import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithRedirect, getRe
       });
     } catch (e) {
       console.error('プッシュ通知の設定に失敗:', e);
-      setStatus((LANG === 'ja' ? '❌ エラー: ' : '❌ Error: ') + e.message, false);
+      setStatus(() => ((LANG === 'ja' ? '❌ エラー: ' : '❌ Error: ') + e.message), false);
     }
   }
   document.getElementById('enableNotifBtn').addEventListener('click', () => {
@@ -789,6 +789,23 @@ import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithRedirect, getRe
 
  const FOUNDER_CUTOFF = new Date('2027-01-01T00:00:00+09:00').getTime();
   let LANG = localStorage.getItem('selectedLang') === 'ja' ? 'ja' : 'en';
+  // 言語を切り替えたときに、あとから表示した文も書き直せるように覚えておく
+  // (文の代わりに「文を作る関数」を渡すと、切り替えのときにもう一度呼び出して書き直す)
+  const kcLangTexts = new Map();
+  function kcSetText(el, msg) {
+    if (!el) return;
+    const text = typeof msg === 'function' ? msg() : msg;
+    el.textContent = text;
+    if (typeof msg === 'function') kcLangTexts.set(el, { fn: msg, last: text });
+    else kcLangTexts.delete(el);
+  }
+  function kcReapplyLangTexts() {
+    kcLangTexts.forEach((v, el) => {
+      // ほかの処理で書きかえられた文や、画面から消えた部分はそのままにする
+      if (!el.isConnected || el.textContent !== v.last) { kcLangTexts.delete(el); return; }
+      try { const t = v.fn(); el.textContent = t; v.last = t; } catch (e) {}
+    });
+  }
   function applyLang() {
     document.querySelectorAll('[data-ja]').forEach(el => { el.textContent = LANG === 'ja' ? el.dataset.ja : el.dataset.en; });
     document.querySelectorAll('[data-ja-ph]').forEach(el => { el.placeholder = LANG === 'ja' ? el.dataset.jaPh : el.dataset.enPh; });
@@ -801,8 +818,13 @@ import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithRedirect, getRe
     LANG = LANG === 'ja' ? 'en' : 'ja';
     localStorage.setItem('selectedLang', LANG);
     applyLang();
-   
+    kcReapplyLangTexts();
+    // 表示中の画面を、切り替えた言語で作り直す
+    try { if (aiChess) renderAiBoard(); } catch (e) {}
+    try { if (latestMatchData && auth.currentUser && myMatchId && document.getElementById('gameBox').style.display !== 'none') renderMiniBoard(latestMatchData, auth.currentUser, myMatchId); } catch (e) {}
     if (curUser) {
+      try { buildRandomMatchUI(curUser); } catch (e) {}
+      try { renderActiveMatchesList(); } catch (e) {}
       renderIncomingRequests(curUser, latestIncomingData);
       renderFriendsList(curUser, latestFriendsData);
       renderMatchInvites(curUser, latestMatchInvitesData);
@@ -811,11 +833,12 @@ import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithRedirect, getRe
     }
     if (typeof beginnerChess !== 'undefined' && beginnerChess && !beginnerChess.game_over()) {
       if (beginnerChess.turn() === beginnerState.myColor) {
-        setBeginnerStatus(LANG === 'ja' ? 'あなたの番です!' : 'Your move!');
+        setBeginnerStatus(() => (LANG === 'ja' ? 'あなたの番です!' : 'Your move!'));
         showBeginnerHint();
         renderBeginnerBoard();
       } else {
-        setBeginnerStatus(LANG === 'ja' ? 'ジーンが考え中…' : 'Jene is thinking…');
+        setBeginnerStatus(() => (LANG === 'ja' ? 'ジーンが考え中…' : 'Jene is thinking…'));
+        try { renderBeginnerBoard(); } catch (e) {}
       }
     }
   };
@@ -5564,14 +5587,14 @@ function startClockTicker(user) {
       }
       document.getElementById('profilePhoto').src = myPhotoURL;
       document.getElementById('profileUsername').textContent = currentName;
-      { const pa = document.getElementById('profileAccount'); if (pa) pa.textContent = user.isAnonymous ? (LANG === 'ja' ? '👤 ゲスト' : '👤 Guest') : ('Google（' + (user.email || '') + '）'); }
+      { const pa = document.getElementById('profileAccount'); if (pa) kcSetText(pa, () => (user.isAnonymous ? (LANG === 'ja' ? '👤 ゲスト' : '👤 Guest') : ('Google（' + (user.email || '') + '）'))); }
       document.getElementById('usernameInput').value = currentName;
       onValue(ref(db, 'publicProfiles/' + user.uid), (s) => {
         const p = s.val() || {};
         document.getElementById('profileRating').textContent = p.rating || 1200;
-        document.getElementById('profileFounder').textContent = p.founderMember
+        kcSetText(document.getElementById('profileFounder'), () => (p.founderMember
           ? (LANG === 'ja' ? '有効です ✓' : 'Active ✓')
-          : (LANG === 'ja' ? '未設定' : 'Not set');
+          : (LANG === 'ja' ? '未設定' : 'Not set')));
         latestAnalysisData = p.analysis || {};
         latestRatingData = p.rating || 1200;
         renderAnalysis(latestAnalysisData, latestRatingData);
@@ -5705,7 +5728,7 @@ function startClockTicker(user) {
   function setPuzzleStatus(msg, cls) {
     const el = document.getElementById('puzzleStatusMsg');
     if (!el) return;
-    el.textContent = msg;
+    kcSetText(el, msg);
     el.style.color = cls === 'bad' ? 'var(--status-bad)' : (cls === 'good' ? 'var(--status-good)' : 'var(--brown-dark)');
   }
 
@@ -5727,9 +5750,10 @@ function startClockTicker(user) {
 if (banner) banner.style.visibility = p.superhard ? 'visible' : 'hidden';
     clearPuzzleArrows();
     renderPuzzleBoard();
-    setPuzzleStatus(LANG === 'ja'
-      ? (puzzleChess.turn() === 'w' ? '白番です。正解の手を指してください。' : '黒番です。正解の手を指してください。')
-      : (puzzleChess.turn() === 'w' ? 'White to move. Find the winning move.' : 'Black to move. Find the winning move.'));
+    const pzTurn = puzzleChess.turn(); // 言語を切り替えたときも、問題の最初の手番で表示する
+    setPuzzleStatus(() => (LANG === 'ja'
+      ? (pzTurn === 'w' ? '白番です。正解の手を指してください。' : '黒番です。正解の手を指してください。')
+      : (pzTurn === 'w' ? 'White to move. Find the winning move.' : 'Black to move. Find the winning move.')));
   }
 
   function onPuzzleCellClick(sq) {
@@ -5784,7 +5808,7 @@ if (banner) banner.style.visibility = p.superhard ? 'visible' : 'hidden';
         puzzleState.animating = false;
         renderPuzzleBoard();
         if (puzzleState.moveIndex >= p.moves.length) { onPuzzleSolved(); }
-        else { setPuzzleStatus(LANG === 'ja' ? '続きの正解の手を指してください。' : 'Find the next move.'); }
+        else { setPuzzleStatus(() => (LANG === 'ja' ? '続きの正解の手を指してください。' : 'Find the next move.')); }
       });
     }, 500);
   }
@@ -5796,10 +5820,10 @@ if (banner) banner.style.visibility = p.superhard ? 'visible' : 'hidden';
     const sv = document.getElementById('puzzleStreakVal'); if (sv) sv.textContent = puzzleState.streak;
     const p = currentPuzzle();
     if (p.superhard) {
-      setPuzzleStatus(LANG === 'ja' ? '⚡ 激ムズ正解!素晴らしい!⚡' : '⚡ Super-hard SOLVED! Amazing! ⚡', 'good');
+      setPuzzleStatus(() => (LANG === 'ja' ? '⚡ 激ムズ正解!素晴らしい!⚡' : '⚡ Super-hard SOLVED! Amazing! ⚡'), 'good');
       flashPuzzleSuperhard();
     } else {
-      setPuzzleStatus(LANG === 'ja' ? '正解!🎉' : 'Correct! 🎉', 'good');
+      setPuzzleStatus(() => (LANG === 'ja' ? '正解!🎉' : 'Correct! 🎉'), 'good');
     }
     playPuzzleCorrect();
     removeWrongPuzzle(p.order);
@@ -5813,7 +5837,7 @@ if (banner) banner.style.visibility = p.superhard ? 'visible' : 'hidden';
     puzzleState.streak = 0;
     const sv = document.getElementById('puzzleStreakVal'); if (sv) sv.textContent = 0;
     addWrongPuzzle(currentPuzzle().order);
-    setPuzzleStatus(LANG === 'ja' ? '不正解。ストリークが途切れました。もう一度試してください。' : 'Wrong. Streak reset. Try again.', 'bad');
+    setPuzzleStatus(() => (LANG === 'ja' ? '不正解。ストリークが途切れました。もう一度試してください。' : 'Wrong. Streak reset. Try again.'), 'bad');
     playPuzzleWrong();
     puzzleState.selected = null; puzzleState.validTargets = [];
     const cell = getPuzzleCellEl(sq);
@@ -5891,7 +5915,7 @@ if (banner) banner.style.visibility = p.superhard ? 'visible' : 'hidden';
     const mv = legalNow.find(m => m.san === nextSan);
     clearPuzzleArrows();
     if (mv) drawPuzzleArrow(mv.from, mv.to);
-    setPuzzleStatus((LANG === 'ja' ? '正解: ' : 'Answer: ') + remainingMoves.join(' '), 'bad');
+    setPuzzleStatus(() => ((LANG === 'ja' ? '正解: ' : 'Answer: ') + remainingMoves.join(' ')), 'bad');
     const ansBtn = document.getElementById('btnPuzzleAnswer'); if (ansBtn) ansBtn.style.display = 'none';
     const nextRow = document.getElementById('puzzleNextRow'); if (nextRow) nextRow.style.display = '';
     puzzleState.awaitingNext = true;
@@ -5950,7 +5974,7 @@ if (banner) banner.style.visibility = p.superhard ? 'visible' : 'hidden';
   function startPuzzleReview() {
     const wrong = loadWrongPuzzles();
     if (wrong.length === 0) {
-      setPuzzleStatus(LANG === 'ja' ? 'まだ間違えた問題はありません。' : 'No missed puzzles yet.', 'good');
+      setPuzzleStatus(() => (LANG === 'ja' ? 'まだ間違えた問題はありません。' : 'No missed puzzles yet.'), 'good');
       return;
     }
     puzzleState.reviewMode = true;
@@ -5964,7 +5988,7 @@ if (banner) banner.style.visibility = p.superhard ? 'visible' : 'hidden';
     puzzleState.reviewPos++;
     if (puzzleState.reviewPos >= puzzleState.reviewList.length) {
       puzzleState.reviewMode = false;
-      setPuzzleStatus(LANG === 'ja' ? '間違えた問題をすべて復習しました!' : 'You reviewed all missed puzzles!', 'good');
+      setPuzzleStatus(() => (LANG === 'ja' ? '間違えた問題をすべて復習しました!' : 'You reviewed all missed puzzles!'), 'good');
       return;
     }
     const order = puzzleState.reviewList[puzzleState.reviewPos];
@@ -6103,7 +6127,7 @@ if (banner) banner.style.visibility = p.superhard ? 'visible' : 'hidden';
   function setBeginnerStatus(msg, cls) {
     const el = document.getElementById('beginnerStatusMsg');
     if (!el) return;
-    el.textContent = msg;
+    kcSetText(el, msg);
     el.style.color = cls === 'bad' ? 'var(--status-bad)' : (cls === 'good' ? 'var(--status-good)' : 'var(--brown-dark)');
   }
 
@@ -6408,14 +6432,14 @@ if (banner) banner.style.visibility = p.superhard ? 'visible' : 'hidden';
       const iWon = beginnerChess.turn() !== beginnerState.myColor;
       beginnerState.hintFrom = null; beginnerState.hintTo = null;
       renderBeginnerBoard();
-      setBeginnerStatus(iWon ? (LANG === 'ja' ? 'チェックメイト!あなたの勝ちです🎉' : 'Checkmate! You win! 🎉') : (LANG === 'ja' ? 'チェックメイトされました。' : 'Checkmate — you lost.'), iWon ? 'good' : 'bad');
+      setBeginnerStatus(() => (iWon ? (LANG === 'ja' ? 'チェックメイト!あなたの勝ちです🎉' : 'Checkmate! You win! 🎉') : (LANG === 'ja' ? 'チェックメイトされました。' : 'Checkmate — you lost.')), iWon ? 'good' : 'bad');
       hideBeginnerJeneSpeech();
       return;
     }
     if (beginnerChess.in_draw() || beginnerChess.in_stalemate() || beginnerChess.in_threefold_repetition()) {
       beginnerState.hintFrom = null; beginnerState.hintTo = null;
       renderBeginnerBoard();
-      setBeginnerStatus(LANG === 'ja' ? '引き分けです。' : "It's a draw.");
+      setBeginnerStatus(() => (LANG === 'ja' ? '引き分けです。' : "It's a draw."));
       hideBeginnerJeneSpeech();
       return;
     }
@@ -6424,11 +6448,11 @@ if (banner) banner.style.visibility = p.superhard ? 'visible' : 'hidden';
     if (beginnerChess.turn() === beginnerState.myColor) {
       showBeginnerHint();
       renderBeginnerBoard();
-      setBeginnerStatus(LANG === 'ja' ? 'あなたの番です!' : 'Your move!');
+      setBeginnerStatus(() => (LANG === 'ja' ? 'あなたの番です!' : 'Your move!'));
     } else {
       beginnerState.hintFrom = null; beginnerState.hintTo = null;
       renderBeginnerBoard();
-      setBeginnerStatus(LANG === 'ja' ? 'ジーンが考え中…' : 'Jene is thinking…');
+      setBeginnerStatus(() => (LANG === 'ja' ? 'ジーンが考え中…' : 'Jene is thinking…'));
       hideBeginnerJeneSpeech();
       setTimeout(() => {
         const aiMove = pickBeginnerAiMove(beginnerChess);
