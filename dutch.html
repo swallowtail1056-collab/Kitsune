@@ -103,6 +103,11 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
   font-size: 1rem;
   color: var(--text-sub);
 }
+.commentary-text a, .opening-intro a { color:var(--brown); text-decoration:underline; font-weight:700; }
+.commentary-text a:hover, .opening-intro a:hover { color:var(--brown-dark); }
+.more-detail { margin-top:8px; border-top:1px dashed var(--brown-light); padding-top:6px; }
+.more-detail summary { cursor:pointer; font-weight:700; color:var(--brown); font-size:0.92rem; list-style-position:inside; }
+.more-detail .more-body { margin-top:6px; font-size:0.94rem; }
 </style>
   <script src="board-theme.js"></script>
 </head>
@@ -125,8 +130,8 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
   <h1 class="opening-title lang-element-en">Dutch Defense</h1>
 
   <div class="opening-intro">
-    <p class="lang-element-ja">💡 ダッチ・ディフェンスは1...f5と応じることでキングサイドにスペースを確保する独特なオープニングだよ！f5の手はe4のマスをコントロールしてキングサイドでの活動を準備するんだ。主な変化はストーンウォール変化、レニングラード変化、クラシック変化の三種類があるよ。白のd4システムに対して黒が積極的に戦う姿勢を見せる個性的なオープニングで、ダイナミックな局面が生まれやすいんだ。ただしキングの安全に注意が必要で、f5と突いたことでg5-h5の攻撃を受けやすくなることもあるよ！</p>
-    <p class="lang-element-en">💡 The Dutch Defense plays 1...f5, immediately securing kingside space in a truly unique way! The f5 pawn controls the e4 square and prepares for active kingside play. There are three main variations: the Stonewall, the Leningrad, and the Classical variation. The Dutch shows Black's aggressive, fighting spirit against White's d4 systems and naturally creates dynamic unbalanced positions. However, it requires careful attention to king safety. A perfect choice for players who love creative, fighting chess against d4!</p>
+    <p class="lang-element-ja">💡 ダッチ・ディフェンスは、1.d4 f5と、黒が1手目からfのポーンでe4のマスを押さえるオープニングだよ。オランダのハーグに住んでいたエリアス・スタインが、1789年に出した本の中で、1.d4へのいちばん良い応手として勧めたんだ。1951年の世界チャンピオン戦では、ボトヴィニクと挑戦者のブロンシュテインが、どちらもこのオープニングを指しているよ。</p>
+    <p class="lang-element-en">💡 The Dutch Defense begins 1.d4 f5, with Black controlling the e4 square with the f-pawn from the very first move. Elias Stein, who lived in The Hague, recommended it in his 1789 book as the best reply to 1.d4. In the 1951 World Championship match, both Botvinnik and his challenger Bronstein played it.</p>
   </div>
 
   <div class="board-wrap">
@@ -200,60 +205,76 @@ const initialBoard = [
 // ============================================================
 const LESSON_STEPS = [
   { move:null, moveLabel:{ja:"開始局面", en:"Starting Position"},
-    ja:"ダッチ・ディフェンスのレッスンを始めるよ！1手目からキングサイドのスペースを確保する、個性的で積極的な定跡だよ。ジーンと一緒に、一手ずつ「なぜその手を指すのか」を学んでいこう。",
-    en:"Let's start the Dutch Defense lesson! Black secures kingside space right from move one in this unique, aggressive opening. Jene will explain why each move is played, one step at a time.",
+    ja:"ダッチ・ディフェンスのレッスンを始めるよ！このページでは、黒がg6と突いてビショップをg7へ出す、レニングラード・バリエーションを見ていくよ。白の中央のスペースと、黒のキングサイドの駒の働きのどちらが生きるかがポイントなんだ。一手ずつジーンと一緒に、なぜその手を指すのかを学んでいこう。",
+    en:"Let's start the Dutch Defense lesson! On this page we follow the Leningrad Variation, where Black pushes g6 and puts the bishop on g7. The key is whether White's central space or Black's active kingside pieces will matter more. Jene will walk you through why each move is played, one step at a time.",
     fox:'welcome' },
   { move:{from:[6,3],to:[4,3]}, moveLabel:{ja:"1. d4", en:"1. d4"},
-    ja:"白はd4で中央を制圧するよ。",
-    en:"White plays 1.d4, claiming the center.",
+    ja:"白はポーンをd4へ進めるよ。白は中央のマスを押さえながら、c1のビショップの道を開けるんだ。",
+    en:"White pushes the pawn to d4. White takes control of central squares and opens the path for the c1 bishop.",
     fox:'normal' },
   { move:{from:[1,5],to:[3,5]}, moveLabel:{ja:"1...f5（ダッチ！）", en:"1...f5 (Dutch!)"},
-    ja:"ここが本題、ダッチ・ディフェンスの一手！黒はf5でe4のマスをコントロールし、キングサイドでの活動を準備するよ。",
-    en:"Here's the Dutch Defense move! Black plays 1...f5, controlling the e4 square and preparing active kingside play.",
+    ja:"ここがダッチ・ディフェンスの一手！黒はポーンをf5へ進めて、e4のマスに横から利かせるよ。黒は白がe4と突いて中央を広げるのを防ぎながら、キングサイドにスペースを広げるんだ。そのかわり、黒のキングの前のポーンが1つ前に出るので、黒はキングの守りに少し気をつける必要があるよ。",
+    en:"Here's the Dutch Defense! Black pushes the pawn to f5 and covers the e4 square from the side. Black stops White from expanding with e4 and gains space on the kingside. In return, one of the pawns in front of Black's king has moved forward, so Black has to be a little careful about king safety.",
     fox:'happy' },
   { move:{from:[6,6],to:[5,6]}, moveLabel:{ja:"2. g3", en:"2. g3"},
-    ja:"白はg3でフィアンケットを準備するよ。",
-    en:"White prepares a fianchetto with 2.g3.",
+    ja:"白はポーンをg3へ進めるよ。白はf1のビショップをg2へ出す準備をして、長い斜めの列からe4やd5のマスをねらうんだ。",
+    en:"White pushes the pawn to g3. White prepares to bring the f1 bishop to g2 and aim at the e4 and d5 squares from the long diagonal.",
+    jaMore:"白はこの手の代わりに、2.e4とポーンを捨てて攻めるスタントン・ギャンビットを選ぶこともできるよ。白はポーンを1つ渡す代わりに、早く駒を働かせて黒のキングサイドを攻めるんだ。",
+    enMore:"Instead of this move, White can also play 2.e4, the Staunton Gambit, sacrificing a pawn to attack. White gives up a pawn in return for quick piece activity and an attack on Black's kingside.",
     fox:'normal' },
   { move:{from:[0,6],to:[2,5]}, moveLabel:{ja:"2...Nf6", en:"2...Nf6"},
-    ja:"黒はナイトをf6へ展開するよ。e4のマスをしっかり見張りながら、駒を自然に出していくんだ。",
-    en:"Black develops the knight to f6, keeping a firm eye on the e4 square while continuing natural development.",
+    ja:"黒はナイトをf6へ進めるよ。黒のナイトはe4のマスに利かせて、f5のポーンと合わせて2つでe4を押さえるんだ。",
+    en:"Black develops the knight to f6. Black's knight covers the e4 square, so Black now controls e4 twice together with the f5 pawn.",
     fox:'normal' },
   { move:{from:[7,5],to:[6,6]}, moveLabel:{ja:"3. Bg2", en:"3. Bg2"},
-    ja:"白はビショップをg2へ展開するよ。",
-    en:"White completes the fianchetto with 3.Bg2.",
+    ja:"白はビショップをg2へ進めるよ。白のビショップは長い斜めの列から、e4のマスや黒のクイーンサイドをねらうんだ。これでf1のマスも空いて、白は早くキャスリングできるよ。",
+    en:"White develops the bishop to g2. White's bishop aims at the e4 square and Black's queenside from the long diagonal. This also clears f1, so White can castle early.",
     fox:'normal' },
-   { move:{from:[1,4],to:[2,4]}, moveLabel:{ja:"3...e6", en:"3...e6"},
-    ja:"黒はe6を指すよ。これでf8のビショップに逃げ道ができて、この先のキャスリングへ向けた準備が整うんだ。",
-    en:"Black plays 3...e6. This gives the bishop on f8 a way out, paving the way to castle soon.",
+  { move:{from:[1,6],to:[2,6]}, moveLabel:{ja:"3...g6", en:"3...g6"},
+    ja:"黒はポーンをg6へ進めるよ。黒はf8のビショップをg7へ出す準備をするんだ。黒のこのg6と突いてビショップをg7へ出す形は、レニングラード・バリエーションと呼ばれているよ。",
+    en:"Black pushes the pawn to g6. Black prepares to bring the f8 bishop to g7. This setup, where Black pushes g6 and puts the bishop on g7, is called the Leningrad Variation.",
+    jaMore:"黒はこの手の代わりに、3...e6と突いて<a href='classical_dutch.html'>クラシカル・ダッチ</a>や<a href='stonewall_dutch.html'>ストーンウォール・ダッチ</a>の形にすることもできるよ。",
+    enMore:"Instead of this move, Black can also play 3...e6, heading for the <a href='classical_dutch.html?lang=en'>Classical Dutch</a> or the <a href='stonewall_dutch.html?lang=en'>Stonewall Dutch</a>.",
     fox:'normal' },
   { move:{from:[7,6],to:[5,5]}, moveLabel:{ja:"4. Nf3", en:"4. Nf3"},
-    ja:"白はナイトをf3へ展開するよ。",
-    en:"White develops the knight to f3.",
+    ja:"白はナイトをf3へ進めるよ。白のナイトはd4のポーンを守り、e5のマスにも利かせるんだ。",
+    en:"White develops the knight to f3. White's knight defends the d4 pawn and also covers the e5 square.",
     fox:'normal' },
-    { move:{from:[0,5],to:[1,4]}, moveLabel:{ja:"4...Be7", en:"4...Be7"},
-    ja:"黒はキングサイドのビショップをe7へ。これでキングサイドの駒がすべて動き終わり、いよいよキャスリングできる態勢が整ったんだ。",
-    en:"Black develops the kingside bishop to e7. With the kingside setup now complete, Black is finally ready to castle.",
+  { move:{from:[0,5],to:[1,6]}, moveLabel:{ja:"4...Bg7", en:"4...Bg7"},
+    ja:"黒はビショップをg7へ進めるよ。黒のビショップは長い斜めの列に入り、f6のナイトが動けば、d4のポーンや白のクイーンサイドまで利くようになるんだ。これでf8のマスが空いて、黒は次の手でキャスリングできるよ。",
+    en:"Black develops the bishop to g7. Black's bishop takes up the long diagonal, and once the f6 knight moves, it will reach the d4 pawn and White's queenside. This also clears f8, so Black can castle on the next move.",
     fox:'normal' },
   { move:{from:[7,4],to:[7,6],castle:{from:[7,7],to:[7,5]}}, moveLabel:{ja:"5. O-O", en:"5. O-O"},
-    ja:"白はキャスリングでキングを安全な場所へ。",
-    en:"White castles kingside, tucking the king away safely.",
+    ja:"白はキャスリングでキングを安全な場所へ動かすよ。白のキングはg1へ移り、h1にいたルークはf1へ出てくるんだ。",
+    en:"White castles, bringing the king to safety. White's king goes to g1, and the rook from h1 comes to f1.",
     fox:'normal' },
   { move:{from:[0,4],to:[0,6],castle:{from:[0,7],to:[0,5]}}, moveLabel:{ja:"5...O-O", en:"5...O-O"},
-    ja:"黒も同じくキャスリング。両者ともキングの安全を確保したよ。",
-    en:"Black castles too, and both kings are now safely tucked away.",
+    ja:"黒もキャスリングでキングを安全な場所へ動かすよ。黒のキングはg8へ移り、h8にいたルークはf8へ出てくるんだ。",
+    en:"Black also castles, bringing the king to safety. Black's king goes to g8, and the rook from h8 comes to f8.",
     fox:'normal' },
-   { move:{from:[6,2],to:[4,2]}, moveLabel:{ja:"6. c4", en:"6. c4"},
-    ja:"白はc4でさらに中央を広げるよ。両者キャスリングが終わったこのタイミングで、ようやく積極的に主導権を握りにいくんだ。",
-    en:"White expands the center with 6.c4. Now that both sides have castled, White starts pressing for the initiative.",
+  { move:{from:[6,2],to:[4,2]}, moveLabel:{ja:"6. c4", en:"6. c4"},
+    ja:"白はポーンをc4へ進めるよ。白はd5のマスに利かせて、中央とクイーンサイドのスペースを広げるんだ。白は駒の展開とキャスリングを先に済ませてから、ポーンで中央を広げているよ。",
+    en:"White pushes the pawn to c4. White covers the d5 square and gains space in the center and on the queenside. White finished developing and castling first, and only now expands with pawns.",
     fox:'normal' },
   { move:{from:[1,3],to:[2,3]}, moveLabel:{ja:"6...d6", en:"6...d6"},
-    ja:"黒はd6で柔軟に陣形を整えるよ。これでクラシカル・ダッチの基本形が完成するんだ。",
-    en:"Black plays 6...d6, completing the flexible Classical Dutch setup.",
-    fox:'wink' },
-    { move:{from:[7,1],to:[5,2]}, moveLabel:{ja:"7. Nc3", en:"7. Nc3"},
-    ja:"白はナイトをc3へ展開するよ。d5のマスへの影響力を強めながら、駒を出していくんだ。これで本譜は一段落、続きはぜひ自分で指してみてね！",
-    en:"White develops the other knight to c3, reinforcing control over d5 while continuing development. That's the main line — try continuing the game yourself from here!",
+    ja:"黒はポーンをd6へ進めるよ。黒はe5のマスに利かせて、あとでe5と突いて中央で戦う準備をするんだ。黒はc8のビショップの道も開けているよ。",
+    en:"Black pushes the pawn to d6. Black covers the e5 square and prepares to push e5 later and fight in the center. Black also opens the path for the c8 bishop.",
+    fox:'normal' },
+  { move:{from:[7,1],to:[5,2]}, moveLabel:{ja:"7. Nc3", en:"7. Nc3"},
+    ja:"白はナイトをc3へ進めるよ。白のナイトはd5とe4のマスに利かせて、黒がe4に駒を置くのをけん制するんだ。",
+    en:"White develops the knight to c3. White's knight covers the d5 and e4 squares and discourages Black from putting a piece on e4.",
+    fox:'normal' },
+  { move:{from:[0,3],to:[0,4]}, moveLabel:{ja:"7...Qe8", en:"7...Qe8"},
+    ja:"黒はクイーンをe8へ動かすよ。黒のクイーンはe8から、あとでe5と突いたときにそのポーンを支えられるんだ。黒のクイーンは、あとでf7などへ動いてキングサイドの戦いに加わることもできるよ。",
+    en:"Black moves the queen to e8. From e8, Black's queen can support the pawn once Black pushes e5. Black's queen can also later move to squares like f7 and join the fight on the kingside.",
+    fox:'normal' },
+  { move:{from:[4,3],to:[3,3]}, moveLabel:{ja:"8. d5", en:"8. d5"},
+    ja:"白はポーンをd5へ進めるよ。白は中央のスペースを広げて、黒がe5と突いて中央で戦うのをけん制するんだ。白のd5のポーンは、黒のc6とe6のマスにも利いているよ。",
+    en:"White pushes the pawn to d5. White gains space in the center and makes it harder for Black to fight there with e5. White's d5 pawn also covers Black's c6 and e6 squares.",
+    fox:'normal' },
+  { move:{from:[1,0],to:[3,0]}, moveLabel:{ja:"8...a5", en:"8...a5"},
+    ja:"黒はポーンをa5へ進めるよ。黒は白がb4と突いてクイーンサイドを広げるのを防ぎ、あとでナイトをa6からc5へ出す準備をするんだ。白は中央とクイーンサイドのスペースを生かして攻め、黒はc5に出すナイトとキングサイドの駒で反撃をねらうのが典型的な流れだよ。これで本譜は一段落、続きはぜひ自分で指してみてね！",
+    en:"Black pushes the pawn to a5. Black stops White from expanding on the queenside with b4 and prepares to bring a knight to c5 via a6 later. The typical plan is for White to attack using the space in the center and on the queenside, while Black looks for counterplay with a knight on c5 and the kingside pieces. That's the main line — try continuing the game yourself from here!",
     fox:'happy' }
 ];
 
@@ -343,7 +364,19 @@ function renderStep(){
   const step = LESSON_STEPS[currentStep];
   renderBoard(boardSnapshots[currentStep]);
   document.getElementById('moveLabel').textContent = (step.moveLabel && step.moveLabel[currentLang]) || '';
-  document.getElementById('commentaryText').textContent = step[currentLang];
+  const ctEl = document.getElementById('commentaryText');
+  const moreText = step[currentLang + 'More'];
+  ctEl.innerHTML = step[currentLang] + (moreText
+    ? '<details class="more-detail"><summary>' + (currentLang === 'ja' ? '💡 もっと詳しく知りたい方へ' : '💡 Want to know more?') + '</summary><div class="more-body">' + moreText + '</div></details>'
+    : '');
+  ctEl.scrollTop = 0;
+  const moreEl = ctEl.querySelector('details.more-detail');
+  if (moreEl) {
+    moreEl.addEventListener('toggle', function(){
+      if (moreEl.open) { ctEl.scrollTop = moreEl.offsetTop - ctEl.offsetTop; }
+      adjustBottomPadding();
+    });
+  }
   document.getElementById('foxAvatar').src = FOX_BY_MOOD[step.fox] || FOX_BY_MOOD.normal;
   document.getElementById('lessonProgress').textContent = currentStep + ' / ' + (LESSON_STEPS.length - 1);
   document.getElementById('btnPrev').disabled = currentStep === 0;
