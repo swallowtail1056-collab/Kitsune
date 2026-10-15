@@ -13,7 +13,7 @@
 <script>
 // アプリ（ホーム画面・Google Play のアプリ）として開いたときは広告を読み込まない。ブラウザで開いたときだけ読み込む
 (function(){
-  var isApp = (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) || window.navigator.standalone === true || (document.referrer || '').indexOf('android-app://') === 0;
+  var isApp = (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) || window.navigator.standalone === true || (document.referrer || '').indexOf('android-app://') === 0 || (navigator.userAgent || '').indexOf('KitsuneChessApp') >= 0 || !!(window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform());
   try { if (isApp) sessionStorage.setItem('kcIsApp', '1'); if (sessionStorage.getItem('kcIsApp') === '1') isApp = true; } catch (e) {}
   if (isApp) return;
   var s = document.createElement('script');
@@ -708,7 +708,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithRedirect, getRedirectResult, signInAnonymously, signOut, deleteUser, reauthenticateWithPopup, linkWithPopup, linkWithRedirect, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithRedirect, getRedirectResult, signInAnonymously, signOut, deleteUser, reauthenticateWithPopup, linkWithPopup, linkWithRedirect, onAuthStateChanged, signInWithCredential, linkWithCredential, reauthenticateWithCredential } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
   import { getDatabase, ref, set, get, push, update, remove, onValue, onDisconnect, serverTimestamp, runTransaction } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
   import { getMessaging, getToken, onMessage } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-messaging.js";
   import { getStorage, ref as storageRef, uploadBytes, getDownloadURL, deleteObject } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-storage.js";
@@ -2222,7 +2222,23 @@ applyBoardTheme();
 
   // ホーム画面に追加したとき(iPhone)やアプリの中では、ポップアップが使えないので「画面ごと切り替わる」ログインにする
   const KC_STANDALONE = (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) || window.navigator.standalone === true;
-  document.getElementById('loginBtn').onclick = () => {
+  // Android アプリ(Capacitor)の中では、アプリの中の画面(WebView)で Google ログインができないので、
+  // スマホに入っている Google アカウントでログインして、その結果を Firebase に渡す
+  const KC_NATIVE = !!(window.Capacitor && typeof window.Capacitor.isNativePlatform === 'function' && window.Capacitor.isNativePlatform());
+  async function kcNativeGoogleCredential() {
+    const FA = window.Capacitor.Plugins.FirebaseAuthentication;
+    try { await FA.signOut(); } catch (e) {} // 毎回アカウントを選べるようにする
+    const res = await FA.signInWithGoogle();
+    const idToken = res && res.credential && res.credential.idToken;
+    if (!idToken) throw new Error(LANG === 'ja' ? 'Googleアカウントの確認ができませんでした' : 'Could not verify the Google account');
+    return GoogleAuthProvider.credential(idToken);
+  }
+  document.getElementById('loginBtn').onclick = async () => {
+    if (KC_NATIVE) {
+      try { await signInWithCredential(auth, await kcNativeGoogleCredential()); }
+      catch (err) { document.getElementById('status').textContent = 'Error: ' + (err && err.message ? err.message : err); }
+      return;
+    }
     if (KC_STANDALONE) {
       signInWithRedirect(auth, provider).catch(err => { document.getElementById('status').textContent = 'Error: ' + err.message; });
       return;
@@ -2281,13 +2297,15 @@ applyBoardTheme();
     const msgEl = document.getElementById('linkGoogleMsg');
     msgEl.className = '';
     msgEl.textContent = '';
-    if (KC_STANDALONE) {
+    if (KC_STANDALONE && !KC_NATIVE) {
       try { await linkWithRedirect(auth.currentUser, provider); }
       catch (err) { msgEl.className = 'err'; msgEl.textContent = (LANG === 'ja' ? 'エラー: ' : 'Error: ') + err.message; }
       return;
     }
     try {
-      const result = await linkWithPopup(auth.currentUser, provider);
+      const result = KC_NATIVE
+        ? await linkWithCredential(auth.currentUser, await kcNativeGoogleCredential())
+        : await linkWithPopup(auth.currentUser, provider);
       await update(ref(db, 'publicProfiles/' + result.user.uid), { isAnonymous: false });
       msgEl.className = 'msg';
       msgEl.textContent = LANG === 'ja' ? '連携が完了しました!' : 'Linked successfully!';
@@ -2342,14 +2360,25 @@ applyBoardTheme();
     // iPhoneでは、ボタンを押した直後でないとGoogleの確認画面が開かないので、確認ダイアログより先に行う
     // ログインしてから4分以内なら、本人確認は不要(Googleの決まりで5分以内なら削除できる)
     const kcRecentLogin = (Date.now() - new Date(user.metadata.lastSignInTime || 0).getTime()) < 4 * 60 * 1000;
-    if (!user.isAnonymous && !kcRecentLogin && KC_STANDALONE) {
+    if (!user.isAnonymous && !kcRecentLogin && KC_NATIVE) {
+      // Android アプリでは、スマホの Google アカウントで本人確認をする
+      try {
+        await reauthenticateWithCredential(user, await kcNativeGoogleCredential());
+      } catch (e) {
+        const mismatch = e && e.code === 'auth/user-mismatch';
+        alert(LANG === 'ja'
+          ? (mismatch ? '今ログインしているのと違うGoogleアカウントが選ばれたため、削除を中止しました。(アカウントは削除されていません)' : '本人確認ができなかったため、削除を中止しました。(アカウントは削除されていません)')
+          : (mismatch ? 'A different Google account was chosen, so the deletion was cancelled. (Your account was not deleted.)' : 'Could not confirm your identity, so the deletion was cancelled. (Your account was not deleted.)'));
+        return false;
+      }
+    } else if (!user.isAnonymous && !kcRecentLogin && KC_STANDALONE) {
       // ホーム画面から開いたときは、Googleの確認画面(ポップアップ)が開けないため、ログインし直してもらう
       alert(LANG === 'ja'
         ? '安全のため、削除の前にログインし直す必要があります。\n「ログアウト」→「Googleでログイン」でログインし直してから、すぐにもう一度「アカウントを削除する」を押してください。\n(アカウントは削除されていません)'
         : 'For your security, please sign in again before deleting.\nTap "Log out" → "Sign in with Google", then tap "Delete My Account" again right away.\n(Your account was not deleted.)');
       return false;
     }
-    if (!user.isAnonymous && !kcRecentLogin) {
+    if (!user.isAnonymous && !kcRecentLogin && !KC_NATIVE) {
       try {
         await reauthenticateWithPopup(user, provider);
       } catch (e) {
