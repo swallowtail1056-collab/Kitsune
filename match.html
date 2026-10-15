@@ -2215,6 +2215,8 @@ applyBoardTheme();
   document.getElementById('aiMediumBtn').onclick = () => startAiGame('medium');
   document.getElementById('aiHardBtn').onclick = () => startAiGame('hard');
   document.getElementById('aiQuitBtn').onclick = () => {
+    // 対局をやめたときも区切りなので広告を出す(ある程度指したときだけ。テスト中はすぐ出す)
+    try { if (aiChess && (KC_AD_TEST || aiChess.history().length >= 10)) kcShowGameEndAd(aiChess); } catch (e) {}
     aiChess = null;
     document.getElementById('aiGameArea').style.display = 'none';
     document.getElementById('aiDifficultyPanel').style.display = 'block';
