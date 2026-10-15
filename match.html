@@ -91,6 +91,7 @@ img#profilePhoto { border:2px solid var(--brown); border-radius:50%; width:60px;
 .sq.light { background:var(--sq-light,#d4b87a); }
 .sq.dark { background:var(--sq-dark,#7a5230); }
  .sq { touch-action: none; }
+.sq.drag-over { box-shadow: inset 0 0 0 4px rgba(255, 196, 0, 0.95); }
 .drag-lift-piece {
   position: fixed;
   z-index: 9999;
@@ -6835,12 +6836,13 @@ if (banner) banner.style.visibility = p.superhard ? 'visible' : 'hidden';
 
   let dragCtx = null;
   const DRAG_MOVE_THRESHOLD = 8;
-  const DRAG_LIFT_OFFSET_Y = 46;
+  const DRAG_LIFT_OFFSET_Y = 30; // 指で駒が隠れないように少しだけ浮かせる
 
   function cleanupDrag() {
     if (!dragCtx) return;
     if (dragCtx.cloneEl && dragCtx.cloneEl.parentNode) dragCtx.cloneEl.parentNode.removeChild(dragCtx.cloneEl);
     if (dragCtx.origImg) dragCtx.origImg.style.opacity = '';
+    if (dragCtx.overCell) dragCtx.overCell.classList.remove('drag-over');
     document.removeEventListener('pointermove', onDragPointerMove);
     document.removeEventListener('pointerup', onDragPointerUp);
     document.removeEventListener('pointercancel', onDragPointerUp);
@@ -6853,6 +6855,18 @@ if (banner) banner.style.visibility = p.superhard ? 'visible' : 'hidden';
     const dx = e.clientX - dragCtx.startX;
     const dy = e.clientY - dragCtx.startY;
     if (Math.abs(dx) > DRAG_MOVE_THRESHOLD || Math.abs(dy) > DRAG_MOVE_THRESHOLD) dragCtx.moved = true;
+    // 指の下の、駒が置かれるマスを光らせる
+    if (dragCtx.moved) {
+      const under = document.elementFromPoint(e.clientX, e.clientY);
+      const cellUnder = under ? under.closest('.sq[data-sq]') : null;
+      const boardEl = document.getElementById(dragCtx.boardId);
+      const target = (cellUnder && boardEl && boardEl.contains(cellUnder)) ? cellUnder : null;
+      if (target !== dragCtx.overCell) {
+        if (dragCtx.overCell) dragCtx.overCell.classList.remove('drag-over');
+        if (target) target.classList.add('drag-over');
+        dragCtx.overCell = target;
+      }
+    }
     if (dragCtx.cloneEl) {
       const w = dragCtx.cloneEl.offsetWidth || 40;
       const h = dragCtx.cloneEl.offsetHeight || 40;
