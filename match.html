@@ -529,8 +529,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <p id="capturedArea" style="font-size:1.1rem;min-height:56px;"></p>
     <div id="miniBoard"></div>
     <div id="moveConfirmBar" style="display:none;justify-content:center;gap:12px;margin:8px 0;">
-      <button id="moveConfirmOk" type="button" style="background:#2e7d32;font-size:1rem;padding:10px 22px;" data-ja="✔ 決定" data-en="✔ Confirm">✔ 決定</button>
       <button id="moveConfirmCancel" type="button" style="background:#8a3b2e;font-size:1rem;padding:10px 22px;" data-ja="✖ 取り消し" data-en="✖ Cancel">✖ 取り消し</button>
+      <button id="moveConfirmOk" type="button" style="background:#2e7d32;font-size:1rem;padding:10px 22px;" data-ja="✔ 決定" data-en="✔ Confirm">✔ 決定</button>
     </div>
     <div id="matchLikeArea" style="margin-top:6px;"></div>
     <div id="matchEndExtras" style="display:none;margin-top:10px;padding:10px;border:1px solid rgba(124,74,30,0.3);border-radius:8px;background:var(--input-bg);">
@@ -6426,7 +6426,8 @@ if (banner) banner.style.visibility = p.superhard ? 'visible' : 'hidden';
   function afterBeginnerMove() {
     const playerJustMoved = beginnerChess.turn() !== beginnerState.myColor;
     const announcedOpening = checkOpeningRecognition();
-    if (playerJustMoved && !announcedOpening) checkForkPattern();
+    // チェックメイトのときは、フォークより「チェックメイト」を伝えるので、フォークの吹き出しは出さない
+    if (playerJustMoved && !announcedOpening && !beginnerChess.in_checkmate()) checkForkPattern();
     if (beginnerChess.in_checkmate()) {
       playCheckmateSound();
       const iWon = beginnerChess.turn() !== beginnerState.myColor;
