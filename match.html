@@ -1461,6 +1461,7 @@ applyBoardTheme();
     boardEl.className = 'chessboard';
 
     if (aiChess.game_over()) {
+      try { kcShowGameEndAd(aiChess); } catch (e) {}
       if (aiChess.in_checkmate()) {
         const iWon = aiChess.turn() === 'b'; // AI(黒)が手詰まり=プレイヤーの勝ち
         statusEl.textContent = iWon ? (LANG === 'ja' ? 'あなたの勝ちです！' : 'You won!') : (LANG === 'ja' ? 'AIの勝ちです。' : 'The AI won.');
@@ -2228,11 +2229,54 @@ applyBoardTheme();
   async function kcNativeGoogleCredential() {
     const FA = window.Capacitor.Plugins.FirebaseAuthentication;
     try { await FA.signOut(); } catch (e) {} // 毎回アカウントを選べるようにする
-    const res = await FA.signInWithGoogle();
+    // Android の新しいログイン画面(Credential Manager)が出ない端末があるため、昔からあるアカウント選択画面を使う
+    const res = await FA.signInWithGoogle({ useCredentialManager: false });
     const idToken = res && res.credential && res.credential.idToken;
     if (!idToken) throw new Error(LANG === 'ja' ? 'Googleアカウントの確認ができませんでした' : 'Could not verify the Google account');
     return GoogleAuthProvider.credential(idToken);
   }
+
+  // ===== 広告(Android アプリの中だけ・AdMob) =====
+  // ブラウザやホーム画面で開いたときは何もしない。対局が終わったときだけ、全画面広告を出す
+  const KC_AD_TEST = true; // テスト中は true(テスト広告)。公開前に false にして本番の広告にする
+  const KC_AD_UNIT = KC_AD_TEST ? 'ca-app-pub-3940256099942544/1033173712' : 'ca-app-pub-1034556404852942/7283368228';
+  const KC_AD_MIN_GAP = 3 * 60 * 1000; // 広告は3分に1回まで
+  let kcAdReady = false, kcAdLastShown = 0;
+  const kcAdDoneKeys = new Set(), kcAdDoneObjs = new WeakSet();
+  function kcAdMob() { return (KC_NATIVE && window.Capacitor && window.Capacitor.Plugins) ? window.Capacitor.Plugins.AdMob : null; }
+  async function kcAdPrepare() {
+    const A = kcAdMob(); if (!A) return;
+    try { await A.prepareInterstitial({ adId: KC_AD_UNIT, isTesting: KC_AD_TEST }); kcAdReady = true; }
+    catch (e) { kcAdReady = false; }
+  }
+  async function kcAdsInit() {
+    const A = kcAdMob(); if (!A) return;
+    try {
+      await A.initialize({ tagForChildDirectedTreatment: false, tagForUnderAgeOfConsent: false, maxAdContentRating: 'Teen' });
+      // ヨーロッパなど、同意が必要な地域では、広告の前に同意の画面を出す
+      try {
+        const ci = await A.requestConsentInfo();
+        if (ci && ci.isConsentFormAvailable && ci.status === 'REQUIRED') await A.showConsentForm();
+      } catch (e) {}
+      await kcAdPrepare();
+    } catch (e) { console.warn('AdMob init failed', e); }
+  }
+  // 対局が終わったときに呼ぶ。同じ対局で2回は出さない
+  function kcShowGameEndAd(key) {
+    const A = kcAdMob(); if (!A || !key) return;
+    if (typeof key === 'object') { if (kcAdDoneObjs.has(key)) return; kcAdDoneObjs.add(key); }
+    else { if (kcAdDoneKeys.has(key)) return; kcAdDoneKeys.add(key); }
+    if (!kcAdReady || Date.now() - kcAdLastShown < KC_AD_MIN_GAP) return;
+    kcAdReady = false;
+    kcAdLastShown = Date.now();
+    // 結果の画面を少し見てもらってから出す
+    setTimeout(async () => {
+      try { await A.showInterstitial(); } catch (e) {}
+      setTimeout(kcAdPrepare, 1000);
+    }, 1500);
+  }
+  kcAdsInit();
+  // ===== ここまで広告 =====
   document.getElementById('loginBtn').onclick = async () => {
     if (KC_NATIVE) {
       try { await signInWithCredential(auth, await kcNativeGoogleCredential()); }
@@ -3843,6 +3887,7 @@ const PIECE_IMG = {
     const sanList = (m.moves || []).map(x => x.san);
     if (!finished || sanList.length === 0) { box.style.display = 'none'; return; }
     box.style.display = 'block';
+    try { kcShowGameEndAd('match:' + myMatchId); } catch (e) {}
     const info = document.getElementById('openingInfo');
     const op = kcFindOpeningPage(sanList);
     if (op) {
@@ -6663,6 +6708,7 @@ if (banner) banner.style.visibility = p.superhard ? 'visible' : 'hidden';
     // チェックメイトのときは、フォークより「チェックメイト」を伝えるので、フォークの吹き出しは出さない
     if (playerJustMoved && !announcedOpening && !beginnerChess.in_checkmate()) checkForkPattern();
     if (beginnerChess.in_checkmate()) {
+      try { kcShowGameEndAd(beginnerChess); } catch (e) {}
       playCheckmateSound();
       const iWon = beginnerChess.turn() !== beginnerState.myColor;
       beginnerState.hintFrom = null; beginnerState.hintTo = null;
@@ -6774,13 +6820,14 @@ if (banner) banner.style.visibility = p.superhard ? 'visible' : 'hidden';
   }
   // ===== ここまではじめてモード =====
     // ===== 駒をドラッグで動かす(指に追従して持ち上がる演出) =====
-  const DRAG_BOARD_IDS = ['miniBoard', 'aiBoard', 'beginnerBoard', 'puzzleBoard', 'analysisBoard'];
+  const DRAG_BOARD_IDS = ['miniBoard', 'aiBoard', 'beginnerBoard', 'puzzleBoard', 'analysisBoard', 'midBoard'];
   function getSelectedSquareForBoard(boardId) {
     if (boardId === 'miniBoard') return selectedSquare;
     if (boardId === 'aiBoard') return aiSelectedSquare;
     if (boardId === 'beginnerBoard') return beginnerState.selected;
     if (boardId === 'puzzleBoard') return puzzleState.selected;
     if (boardId === 'analysisBoard') return analysisSelectedSquare;
+    if (boardId === 'midBoard') return midState.selected;
     return null;
   }
 
@@ -6839,6 +6886,7 @@ if (banner) banner.style.visibility = p.superhard ? 'visible' : 'hidden';
     if (typeof cell.onclick !== 'function') return;
     const sq = cell.dataset.sq;
     cell.onclick();
+    kcBoardPointerAt = Date.now();
     const nowSelected = getSelectedSquareForBoard(boardEl.id);
     if (nowSelected !== sq) return;
     const freshCell = document.getElementById(boardEl.id).querySelector('.sq[data-sq="' + sq + '"]');
@@ -6858,6 +6906,18 @@ if (banner) banner.style.visibility = p.superhard ? 'visible' : 'hidden';
     document.addEventListener('pointerup', onDragPointerUp);
     document.addEventListener('pointercancel', onDragPointerUp);
   }, { passive: false });
+  // 盤のマスは「押した瞬間」に反応させているので、指を離したあとに届く click は無視する。
+  // (アプリの中の画面(WebView)では、この click が届いて、選んだ駒がすぐ取り消されてしまうため)
+  var kcBoardPointerAt = 0;
+  document.addEventListener('click', (e) => {
+    if (Date.now() - kcBoardPointerAt > 700) return;
+    const cell = e.target && e.target.closest ? e.target.closest('.sq[data-sq]') : null;
+    if (!cell) return;
+    if (DRAG_BOARD_IDS.some(id => { const b = document.getElementById(id); return b && b.contains(cell); })) {
+      e.stopPropagation();
+      e.preventDefault();
+    }
+  }, true);
   // ===== ここまでドラッグ演出 =====
 </script>
 <script>
