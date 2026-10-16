@@ -113,10 +113,10 @@ img#profilePhoto { border:2px solid var(--brown); border-radius:50%; width:60px;
 .thumb-card { display:flex; flex-direction:column; align-items:center; gap:4px; background:var(--card); border:2px solid var(--brown); border-radius:8px; padding:8px; cursor:pointer; width:150px; }
 .thumb-card:hover { opacity:0.85; }
 .thumb-board { display:grid; grid-template-columns:repeat(8,minmax(0,1fr)); grid-template-rows:repeat(8,minmax(0,1fr)); width:130px; height:130px; border:2px solid var(--board-border,var(--brown)); }
-.thumb-sq { position:relative; }
+.thumb-sq { position:relative; overflow:hidden; line-height:0; min-width:0; min-height:0; }
 .thumb-sq.light { background:#d4b87a; }
 .thumb-sq.dark { background:#7a5230; }
-.thumb-sq img { width:100%; height:100%; }
+.thumb-sq img { position:absolute; top:0; left:0; width:100%; height:100%; display:block; object-fit:contain; }
 .thumb-sq .sq-label { font-size:0.5rem; }
 .thumb-names { text-align:center; }
 .thumb-name { font-size:0.75rem; font-weight:700; word-break:break-all; }
@@ -3623,6 +3623,7 @@ await set(ref(db, 'matches/' + matchId), {
       if (!m) return;
       myColor = (m.white === user.uid) ? 'w' : 'b';
       gameChess = new Chess(m.fen);
+      kcMarkMatchDevice(matchId, m, myColor);
 
       if (!oppPresenceAttached) {
         oppPresenceAttached = true;
@@ -3656,8 +3657,12 @@ await set(ref(db, 'matches/' + matchId), {
             readyBtn = document.createElement('button');
             readyBtn.id = 'matchReadyBtn';
             readyBtn.style.marginTop = '10px';
+            readyBtn.style.display = 'block';
+            readyBtn.style.width = '100%';
+            // 名前とメッセージの横に並べると文字が縦に細くつぶれるので、その行の下に置く
             const statusElForBtn = document.getElementById('gameStatus');
-            if (statusElForBtn) statusElForBtn.parentNode.insertBefore(readyBtn, statusElForBtn.nextSibling);
+            const statusRow = statusElForBtn ? statusElForBtn.parentNode : null;
+            if (statusRow && statusRow.parentNode) statusRow.parentNode.insertBefore(readyBtn, statusRow.nextSibling);
           }
           readyBtn.textContent = LANG === 'ja' ? '▶ 対局を始める(準備ができたら押してください)' : '▶ Start Match (press when ready)';
           readyBtn.onclick = async () => {
@@ -3670,7 +3675,11 @@ await set(ref(db, 'matches/' + matchId), {
         }
       }
       if (m.status === 'waiting' && m.whiteJoined && m.blackJoined) {
+        // 「対局中」に切り替えたら、ここでは古い(待ち状態の)データで描き直さない。
+        // 切り替えた結果は、すぐに届く新しいデータで描き直される。
+        // (以前はここで古いデータを描き直していたため、「まもなく開始します」のまま駒が動かせなくなっていた)
         await update(ref(db, 'matches/' + matchId), { status: 'active', turnStartedAt: Date.now() });
+        return;
       }
 
       renderMiniBoard(m, user, matchId);
@@ -3947,6 +3956,17 @@ const PIECE_IMG = {
     if (!finished || sanList.length === 0) { box.style.display = 'none'; return; }
     box.style.display = 'block';
     try { kcShowGameEndAd('match:' + myMatchId); } catch (e) {}
+    let noteEl = document.getElementById('kcRatingNote');
+    if (!noteEl) {
+      noteEl = document.createElement('p');
+      noteEl.id = 'kcRatingNote';
+      noteEl.style.cssText = 'margin:0 0 8px;font-size:0.85rem;color:var(--text-muted);';
+      box.insertBefore(noteEl, box.firstChild);
+    }
+    const kcReason = m[myColor === 'w' ? 'ratingNoteWhite' : 'ratingNoteBlack'];
+    const kcNote = (m.rated === false) ? '' : kcRatingNoteText(kcReason);
+    noteEl.textContent = kcNote;
+    noteEl.style.display = kcNote ? 'block' : 'none';
     const info = document.getElementById('openingInfo');
     const op = kcFindOpeningPage(sanList);
     if (op) {
@@ -4020,6 +4040,61 @@ const PIECE_IMG = {
     return LANG === 'ja' ? best.name.ja : best.name.en;
   }
 
+  // ===== レートの水増し(わざと負けるなど)の対策 =====
+  const KC_MIN_RATED_PLIES = 20;      // お互い10手未満で終わった対局はノーレート
+  const KC_PAIR_DAILY_LIMIT = 3;      // 同じ相手とのレート戦は1日3局まで
+  const KC_PROVISIONAL_GAMES = 5;     // レート戦5局未満の相手との対局では、自分のレートは動かない
+  function kcDeviceId() {
+    try {
+      let id = localStorage.getItem('kcDeviceId');
+      if (!id) {
+        id = (window.crypto && crypto.randomUUID) ? crypto.randomUUID().replace(/-/g, '') : (Date.now().toString(36) + Math.random().toString(36).slice(2, 12));
+        localStorage.setItem('kcDeviceId', id);
+      }
+      return id;
+    } catch (e) { return null; }
+  }
+  function kcJstDay(t) { return new Date((t || Date.now()) + 9 * 3600 * 1000).toISOString().slice(0, 10); }
+  const kcDeviceMarked = new Set();
+  // 対局を開いた端末を、その対局の記録に残す(同じ端末の2つのアカウントどうしの対局を見分けるため)
+  function kcMarkMatchDevice(matchId, m, color) {
+    const id = kcDeviceId();
+    if (!id || !matchId || !m) return;
+    if (['active', 'waiting'].indexOf(m.status) === -1) return;
+    const key = matchId + '_' + color;
+    if (kcDeviceMarked.has(key)) return;
+    kcDeviceMarked.add(key);
+    if (m.devices && m.devices[color] && m.devices[color][id]) return;
+    update(ref(db, 'matches/' + matchId + '/devices/' + color), { [id]: true }).catch(() => {});
+  }
+  async function kcRatingFairness(matchId, m, user, oppUid) {
+    const plies = (m.moves || []).length;
+    if (plies < KC_MIN_RATED_PLIES) return { rated: false, reason: 'short' };
+    const dw = Object.keys((m.devices && m.devices.w) || {});
+    const dbk = Object.keys((m.devices && m.devices.b) || {});
+    if (dw.some(d => dbk.indexOf(d) !== -1)) return { rated: false, reason: 'device' };
+    try {
+      const histSnap = await get(ref(db, 'matchHistory/' + user.uid));
+      const hist = histSnap.val() || {};
+      const today = kcJstDay(Date.now());
+      let count = 0;
+      Object.keys(hist).forEach(k => {
+        const h = hist[k];
+        if (k !== matchId && h && h.opponentUid === oppUid && kcJstDay(h.endedAt) === today) count++;
+      });
+      if (count >= KC_PAIR_DAILY_LIMIT) return { rated: false, reason: 'daily' };
+    } catch (e) {}
+    return { rated: true };
+  }
+  function kcRatingNoteText(reason) {
+    const ja = LANG === 'ja';
+    if (reason === 'short') return ja ? 'お互いの手数が少ない(10手未満)ため、この対局はレートに反映されません。' : 'This game was too short (under 10 moves each), so it does not affect ratings.';
+    if (reason === 'device') return ja ? '同じ端末のアカウントどうしの対局のため、レートに反映されません。' : 'Both accounts were used on the same device, so this game does not affect ratings.';
+    if (reason === 'daily') return ja ? '同じ相手とのレート戦は1日' + KC_PAIR_DAILY_LIMIT + '局までのため、この対局はレートに反映されません。' : 'Rated games against the same opponent are limited to ' + KC_PAIR_DAILY_LIMIT + ' per day, so this game does not affect ratings.';
+    if (reason === 'provisional') return ja ? '相手のレート戦がまだ' + KC_PROVISIONAL_GAMES + '局未満のため、あなたのレートは変わりません。' : 'Your opponent has played fewer than ' + KC_PROVISIONAL_GAMES + ' rated games, so your rating did not change.';
+    return '';
+  }
+
   async function applyEloIfNeeded(matchId, m, user, myResult, endReason) {
     // myResult: 1 = win, 0.5 = draw, 0 = loss (from my own perspective)
     const dedupeKey = matchId + '_' + myColor;
@@ -4039,6 +4114,12 @@ const PIECE_IMG = {
     }
 
     const oppUid = myColor === 'w' ? m.black : m.white;
+    const noteField = myColor === 'w' ? 'ratingNoteWhite' : 'ratingNoteBlack';
+    const fair = await kcRatingFairness(matchId, m, user, oppUid);
+    if (!fair.rated) {
+      await update(ref(db, 'matches/' + matchId), { [flagField]: true, [noteField]: fair.reason });
+      return;
+    }
     const [myProfileSnap, oppProfileSnap] = await Promise.all([
       get(ref(db, 'publicProfiles/' + user.uid)),
       get(ref(db, 'publicProfiles/' + oppUid))
@@ -4049,7 +4130,14 @@ const PIECE_IMG = {
     const oppRating = oppProfile.rating || 1200;
 
     const expected = 1 / (1 + Math.pow(10, (oppRating - myRating) / 400));
-    const newRating = Math.round(myRating + K_FACTOR * (myResult - expected));
+    let newRating = Math.round(myRating + K_FACTOR * (myResult - expected));
+    // 作ったばかりのアカウント(レート戦5局未満)との対局では、自分のレートは動かさない(サブアカウントを使った水増し対策)
+    const kcGames = (p) => (p.wins || 0) + (p.losses || 0) + (p.draws || 0);
+    let kcProvisionalNote = false;
+    if (kcGames(oppProfile) < KC_PROVISIONAL_GAMES && kcGames(myProfile) >= KC_PROVISIONAL_GAMES) {
+      newRating = myRating;
+      kcProvisionalNote = true;
+    }
 
     const wins = (myProfile.wins || 0) + (myResult === 1 ? 1 : 0);
     const losses = (myProfile.losses || 0) + (myResult === 0 ? 1 : 0);
@@ -4097,7 +4185,9 @@ const PIECE_IMG = {
       myRatingAfter: newRating
     });
     const deltaField = myColor === 'w' ? 'eloDeltaWhite' : 'eloDeltaBlack';
-    await update(ref(db, 'matches/' + matchId), { [flagField]: true, [deltaField]: newRating - myRating });
+    const kcEndUpdate = { [flagField]: true, [deltaField]: newRating - myRating };
+    if (kcProvisionalNote) kcEndUpdate[noteField] = 'provisional';
+    await update(ref(db, 'matches/' + matchId), kcEndUpdate);
   }
 
  
