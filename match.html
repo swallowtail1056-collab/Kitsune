@@ -735,6 +735,58 @@ import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithRedirect, getRe
  const FCM_VAPID_KEY = 'BGwVB9qTXi18RFwgXmqXUAIL9nsPsvGKuS98mla74CXTlotu7wOfF5nqy1AYS8zjozqcNN-8qlmxw6wdalMkJpA';
   const CHAT_ENABLED = false; // trueに戻せばチャット機能が復活します
   // fromButton = true のときだけ、通知の許可を求める(iPhoneはボタンを押したときしか許可の確認を出せないため)
+  // ===== アプリ（Capacitor）のプッシュ通知 =====
+  // アプリの中（WebView）ではウェブの通知が使えないので、Android の通知の仕組み（FCM）でトークンを取る
+  let kcNativePushListeners = false;
+  async function kcSetupNativePush(user, fromButton, setStatus, showBtn) {
+    const FM = window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.FirebaseMessaging;
+    if (!FM) {
+      showBtn(false);
+      setStatus(() => (LANG === 'ja' ? 'このアプリの版は通知に対応していません' : 'This app version does not support notifications'), false);
+      return;
+    }
+    let perm = (await FM.checkPermissions()).receive;
+    if (perm === 'denied') {
+      showBtn(false);
+      setStatus(() => (LANG === 'ja' ? '通知が許可されていません(端末の設定 → アプリ → KitsuneChess → 通知 で許可してください)' : 'Notifications blocked (allow them in Settings → Apps → KitsuneChess → Notifications)'), false);
+      return;
+    }
+    if (perm !== 'granted') {
+      if (!fromButton) {
+        showBtn(true);
+        setStatus(() => (LANG === 'ja' ? 'オフ(下のボタンでオンにできます)' : 'Off (use the button below to turn on)'));
+        return;
+      }
+      setStatus(() => (LANG === 'ja' ? '通知の許可を確認中...' : 'Checking notification permission...'));
+      perm = (await FM.requestPermissions()).receive;
+      if (perm !== 'granted') {
+        showBtn(perm !== 'denied');
+        setStatus(() => (LANG === 'ja' ? '通知が許可されていません(端末の設定で許可してください)' : 'Notifications not allowed (check your device settings)'), false);
+        return;
+      }
+    }
+    showBtn(false);
+    setStatus(() => (LANG === 'ja' ? 'トークンを取得中...' : 'Getting token...'));
+    const res = await FM.getToken();
+    const token = res && res.token;
+    if (!token) {
+      setStatus(() => (LANG === 'ja' ? 'トークンの取得に失敗しました' : 'Failed to get token'), false);
+      return;
+    }
+    await set(ref(db, 'fcmTokens/' + user.uid + '/' + token), true);
+    setStatus(() => (LANG === 'ja' ? '✅ 有効です(通知が届きます)' : '✅ Active (notifications enabled)'), true);
+    if (!kcNativePushListeners) {
+      kcNativePushListeners = true;
+      // トークンが新しくなったときも保存し直す
+      FM.addListener('tokenReceived', async (ev) => {
+        try {
+          const u = auth.currentUser;
+          if (u && ev && ev.token) await set(ref(db, 'fcmTokens/' + u.uid + '/' + ev.token), true);
+        } catch (e) {}
+      });
+    }
+  }
+
   async function setupPushNotifications(user, fromButton) {
       const statusEl = document.getElementById('pushNotifStatus');
     const setStatus = (msg, ok) => { if (statusEl) { kcSetText(statusEl, msg); statusEl.style.color = ok === false ? '#e63946' : (ok === true ? '#4caf50' : ''); } };
@@ -742,6 +794,10 @@ import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithRedirect, getRe
     const iosHint = document.getElementById('iosNotifHint');
     const showBtn = (on) => { if (notifBtn) notifBtn.style.display = on ? 'inline-block' : 'none'; };
     try {
+      if (window.Capacitor && typeof window.Capacitor.isNativePlatform === 'function' && window.Capacitor.isNativePlatform()) {
+        await kcSetupNativePush(user, fromButton, setStatus, showBtn);
+        return;
+      }
       const isIOS = /iPhone|iPad|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
       const isStandalone = (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) || window.navigator.standalone === true;
       if (!('serviceWorker' in navigator) || !('Notification' in window)) {
