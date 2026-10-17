@@ -4932,7 +4932,8 @@ const PIECE_IMG = {
           });
           rematchBtn.textContent = LANG === 'ja' ? '✅ 再戦を申し込みました。相手の返答をお待ちください。' : '✅ Rematch requested. Waiting for opponent.';
         };
-        statusEl.parentNode.insertBefore(rematchBtn, statusEl.nextSibling);
+        // 名前とメッセージの行の中に入れると文字が縦につぶれるので、その行の下に置く
+        { const row = statusEl.parentNode; row.parentNode.insertBefore(rematchBtn, row.nextSibling); }
       }
 
       // 相手から再戦申し込みが来ている場合
@@ -4973,7 +4974,7 @@ const PIECE_IMG = {
           acceptArea.appendChild(msg);
           acceptArea.appendChild(acceptBtn);
           acceptArea.appendChild(declineBtn);
-          statusEl.parentNode.insertBefore(acceptArea, statusEl.nextSibling);
+          { const row = statusEl.parentNode; row.parentNode.insertBefore(acceptArea, row.nextSibling); }
         }
       }
     } else {
