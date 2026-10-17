@@ -30,6 +30,14 @@
   .en-mode .lang-ja { display: none; }
   .en-mode .lang-en { display: block; }
   .en-mode button.lang-en { display: inline-block; }
+  /* 🦊 ジーンの吹き出し */
+  .jene { display: flex; align-items: flex-start; gap: 12px; margin: 18px 0 22px; }
+  .jene-face { flex-shrink: 0; width: 64px; text-align: center; }
+  .jene-face img { width: 64px; height: 64px; object-fit: contain; display: block; }
+  .jene-name { font-size: 0.7rem; color: #7c4a1e; font-weight: 700; }
+  .bubble { position: relative; background: #fff; border: 2px solid #7c4a1e; border-radius: 14px; padding: 10px 14px; font-size: 0.98rem; line-height: 1.7; color: #3a2410; text-align: left; }
+  .bubble::before { content: ""; position: absolute; left: -10px; top: 18px; border: 5px solid transparent; border-right: 8px solid #7c4a1e; }
+  .bubble::after { content: ""; position: absolute; left: -6px; top: 19px; border: 4px solid transparent; border-right: 6px solid #fff; }
 </style>
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1034556404852942" crossorigin="anonymous"></script>
 </head>
@@ -43,6 +51,11 @@
   <div class="lang-ja">
     <h1>🏆 チェス史に残る名局10選</h1>
     <p>チェスの歴史は、単なる勝敗の記録ではありません。盤上に刻まれた天才たちの思考は、何百年もの時を超えて今もなお私たちを驚かせ、感動させ、そして深く考えさせてくれます。ここでは、チェスの歴史を変えた伝説の名局を10局選び、その背景と意義をご紹介します。</p>
+
+        <div class="jene">
+      <div class="jene-face"><img src="jene_welcome_s.webp" alt="ジーン" loading="lazy"><div class="jene-name">ジーン</div></div>
+      <div class="bubble">歴史を変えた名局を10局集めたよ。天才たちのひらめきを一緒にのぞいてみよう！</div>
+    </div>
 
     <h2>1. 不死の対局（1851年）</h2>
     <div class="game-card">
@@ -138,12 +151,22 @@
     <p>これら10局に共通するのは、単に「強い手を指した」という事実ではありません。それぞれの棋士が盤上に自分の哲学を表現し、チェスというゲームの可能性を押し広げた点にあります。アンダーセンの攻撃美学、モルフィーの展開理論、フィッシャーの完璧主義、カスパロフの火力、カールセンの忍耐——これらはチェスという芸術の多様な側面を示しています。</p>
     <p>チェスを学ぶということは、こうした先人たちの思考に触れることでもあります。定跡を覚えるだけでなく、「なぜその手が良いのか」という問いを持ち続けることが、チェスの本当の楽しさへの扉を開いてくれます。</p>
 
-   <div class="footer"><a href="info.html">🦊 Info一覧へ戻る</a><a href="index.html">🏠 ホームへ戻る</a></div>
+       <div class="jene">
+      <div class="jene-face"><img src="jene_happy_s.webp" alt="ジーン" loading="lazy"><div class="jene-name">ジーン</div></div>
+      <div class="bubble">「なぜその手がいいのか」を考えながら並べると、名局はもっと楽しくなるよ！</div>
+    </div>
+
+    <div class="footer"><a href="info.html">🦊 Info一覧へ戻る</a><a href="index.html">🏠 ホームへ戻る</a></div>
   </div>
 
   <div class="lang-en">
     <h1>🏆 10 Legendary Chess Games That Changed History</h1>
     <p>Chess history is more than a record of wins and losses. The thoughts of geniuses etched onto the board continue to surprise, move, and inspire deep reflection across centuries. Here we present ten legendary games that changed the course of chess history, exploring their background and lasting significance.</p>
+
+        <div class="jene">
+      <div class="jene-face"><img src="jene_welcome_s.webp" alt="Jene" loading="lazy"><div class="jene-name">Jene</div></div>
+      <div class="bubble">Here are 10 games that changed chess history. Let's take a peek at the brilliant ideas of the greats!</div>
+    </div>
 
     <h2>1. The Immortal Game (1851)</h2>
     <div class="game-card">
@@ -239,7 +262,12 @@
     <p>What these ten games share is not simply that brilliant moves were played. Each player expressed their own philosophy on the board and expanded the possibilities of chess as a game. Anderssen's attacking beauty, Morphy's development theory, Fischer's perfectionism, Kasparov's firepower, Carlsen's patience — all reveal different facets of chess as art.</p>
     <p>To study chess is to encounter the thinking of these great predecessors. Going beyond memorizing openings and always asking "why is this move good?" is the key that opens the door to the true joy of chess.</p>
 
-   <div class="footer"><a href="info.html">🦊 Back to Info</a><a href="index.html?lang=en">🏠 Back to Home</a></div>
+       <div class="jene">
+      <div class="jene-face"><img src="jene_happy_s.webp" alt="Jene" loading="lazy"><div class="jene-name">Jene</div></div>
+      <div class="bubble">Replay these games while asking "why is this move good?" and they become even more fun!</div>
+    </div>
+
+    <div class="footer"><a href="info.html">🦊 Back to Info</a><a href="index.html?lang=en">🏠 Back to Home</a></div>
   </div>
 </div>
 <script>

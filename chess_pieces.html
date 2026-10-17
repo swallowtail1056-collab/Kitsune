@@ -37,6 +37,14 @@
   .en-mode .lang-ja { display: none; }
   .en-mode .lang-en { display: block; }
   .en-mode button.lang-en { display: inline-block; }
+  /* 🦊 ジーンの吹き出し */
+  .jene { display: flex; align-items: flex-start; gap: 12px; margin: 18px 0 22px; }
+  .jene-face { flex-shrink: 0; width: 64px; text-align: center; }
+  .jene-face img { width: 64px; height: 64px; object-fit: contain; display: block; }
+  .jene-name { font-size: 0.7rem; color: #7c4a1e; font-weight: 700; }
+  .bubble { position: relative; background: #fff; border: 2px solid #7c4a1e; border-radius: 14px; padding: 10px 14px; font-size: 0.98rem; line-height: 1.7; color: #3a2410; text-align: left; }
+  .bubble::before { content: ""; position: absolute; left: -10px; top: 18px; border: 5px solid transparent; border-right: 8px solid #7c4a1e; }
+  .bubble::after { content: ""; position: absolute; left: -6px; top: 19px; border: 4px solid transparent; border-right: 6px solid #fff; }
 </style>
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1034556404852942" crossorigin="anonymous"></script>
 </head>
@@ -50,6 +58,11 @@
   <div class="lang-ja">
     <h1>♟ チェスの駒——<br>それぞれの個性と使いこなし方</h1>
     <p>チェスには6種類の駒があります。それぞれ動き方が異なり、得意な局面・不得意な局面も違います。「どの駒がどんな場面で輝くか」を理解することが、チェス上達の根本となります。ここでは各駒の個性を深く掘り下げ、実戦での使いこなし方を解説します。</p>
+
+        <div class="jene">
+      <div class="jene-face"><img src="jene_welcome_s.webp" alt="ジーン" loading="lazy"><div class="jene-name">ジーン</div></div>
+      <div class="bubble">チェスの駒は6種類。それぞれの得意なこと、苦手なことを知って、駒と仲良くなろう！</div>
+    </div>
 
     <h2>キング（King）</h2>
     <div class="piece-card">
@@ -167,12 +180,22 @@
     <p>各駒の個性を理解した上で重要なのは、「駒の組み合わせ」です。ルーク同士の連携、ビショップとナイトの補完関係、クイーンとルークのコンビネーション——これらの組み合わせによって、個々の駒の力の合計を超えた力が生まれます。</p>
     <p>チェスの上達とは、こうした駒の相互作用を直感的に理解できるようになることです。KitsuneChessの定跡レッスンでは、各オープニングで各駒がどのような役割を担うかを解説しています。定跡を学ぶことは、駒の使い方を学ぶことでもあります。</p>
 
-     <div class="footer"><a href="info.html">🦊 Info一覧へ戻る</a><a href="index.html">🏠 ホームへ戻る</a></div>
+         <div class="jene">
+      <div class="jene-face"><img src="jene_happy_s.webp" alt="ジーン" loading="lazy"><div class="jene-name">ジーン</div></div>
+      <div class="bubble">駒どうしが力を合わせると、1つずつのときより強くなるんだ。組み合わせを意識してみてね！</div>
+    </div>
+
+    <div class="footer"><a href="info.html">🦊 Info一覧へ戻る</a><a href="index.html">🏠 ホームへ戻る</a></div>
   </div>
 
   <div class="lang-en">
     <h1>♟ Chess Pieces —<br>Their Characters and How to Use Them</h1>
     <p>Chess has six types of pieces. Each moves differently and shines in different types of positions. Understanding "which piece excels in which situation" is the foundation of chess improvement. Here we take a deep look at each piece's character and explain how to use them effectively in real games.</p>
+
+        <div class="jene">
+      <div class="jene-face"><img src="jene_welcome_s.webp" alt="Jene" loading="lazy"><div class="jene-name">Jene</div></div>
+      <div class="bubble">There are six kinds of chess pieces. Let's learn what each one is good and bad at, and make friends with them!</div>
+    </div>
 
     <h2>King</h2>
     <div class="piece-card">
@@ -243,6 +266,11 @@
     <h2>The Power Born from Piece Combinations</h2>
     <p>Understanding each piece individually is important, but how pieces work together matters just as much. Rooks cooperating on open files, the complementary relationship between bishops and knights, the queen-rook combination — these synergies create force that exceeds the sum of the individual parts.</p>
     <p>Improving at chess means developing an intuitive understanding of these piece interactions. KitsuneChess opening lessons explain the role each piece plays in each opening system. Learning openings is simultaneously learning how to use each piece effectively.</p>
+
+        <div class="jene">
+      <div class="jene-face"><img src="jene_happy_s.webp" alt="Jene" loading="lazy"><div class="jene-name">Jene</div></div>
+      <div class="bubble">When pieces work together, they become stronger than they are alone. Keep their teamwork in mind!</div>
+    </div>
 
     <div class="footer"><a href="info.html">🦊 Back to Info</a><a href="index.html?lang=en">🏠 Back to Home</a></div>
   </div>

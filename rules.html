@@ -97,6 +97,14 @@ p, div, span, li, h1, h2, h3 {
     word-break: break-word !important;
     color: #2b2b2b !important;          
 }
+  /* 🦊 ジーンの吹き出し */
+  .jene { display: flex; align-items: flex-start; gap: 12px; margin: 18px 0 22px; }
+  .jene-face { flex-shrink: 0; width: 64px; text-align: center; }
+  .jene-face img { width: 64px; height: 64px; object-fit: contain; display: block; }
+  .jene-name { font-size: 0.7rem; color: #7c4a1e; font-weight: 700; }
+  .bubble { position: relative; background: #fff; border: 2px solid #7c4a1e; border-radius: 14px; padding: 10px 14px; font-size: 0.98rem; line-height: 1.7; color: #3a2410; text-align: left; }
+  .bubble::before { content: ""; position: absolute; left: -10px; top: 18px; border: 5px solid transparent; border-right: 8px solid #7c4a1e; }
+  .bubble::after { content: ""; position: absolute; left: -6px; top: 19px; border: 4px solid transparent; border-right: 6px solid #fff; }
 </style>
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1034556404852942" crossorigin="anonymous"></script>
 </head>
@@ -114,6 +122,11 @@ p, div, span, li, h1, h2, h3 {
     <!-- 👇 「私たちの脳内」を「脳内」に修正しました -->
     <p>初心者から達人に至るまでの上達のプロセスにおいて、脳内に自然と構築されていく「チェス脳（Chess Brain）」の驚くべきメカニズムと、それを最も効率的に引き出すための3つのコア・アプローチについて詳しく解説します。</p>
     
+        <div class="jene">
+      <div class="jene-face"><img src="jene_welcome_s.webp" alt="ジーン" loading="lazy"><div class="jene-name">ジーン</div></div>
+      <div class="bubble">チェスは頭のトレーニングにもなるんだよ。どんな力が育つのか見てみよう！</div>
+    </div>
+
     <h2>1. 脳内に多次元盤面を構築する「空間認知力」と「先読み力」</h2>
     <p>チェスの実力が向上するにつれて、プレイヤーは実際の目の前にある物理的な駒を動かす前に、頭の中に精密な「バーチャルなチェス盤」を構築できるようになります。</p>
     <p>強いプレイヤーはこの脳内盤面の上で、「自分がここにナイトを跳ねたら、相手はビショップで受けるか、それともポーンを突いて反撃してくるか？」という複雑な未来の論理分岐を何手も先までシミュレーションしています。</p>
@@ -136,6 +149,11 @@ p, div, span, li, h1, h2, h3 {
       <!-- 👇 「私たちは」を排除し、「KitsuneChessは〜全力でサポートします」に統一しました -->
       <p>KitsuneChessは、退屈な暗記作業をエキサイティングな知の探求へと昇華させ、プレイヤーが一歩一歩確実にステップアップしていく知的成長の喜びを、革新的なシステムと美しいデザインを通じて全力でサポートし続けます。</p>
     </div>
+        <div class="jene">
+      <div class="jene-face"><img src="jene_happy_s.webp" alt="ジーン" loading="lazy"><div class="jene-name">ジーン</div></div>
+      <div class="bubble">答えを丸暗記するより、「なぜその手がいいのか」を考えるのが一番の近道だよ！</div>
+    </div>
+
     <div class="footer"><a href="info.html">🦊 Info一覧へ戻る</a><a href="index.html">🏠 ホームへ戻る</a></div>
   </div>
 
@@ -146,6 +164,11 @@ p, div, span, li, h1, h2, h3 {
     <!-- 👇 your mind を the mind に変更して一人称・二人称の依存度を調整 -->
     <p>As progression is made from a beginner to a seasoned player, the mind constructs a specialized "Chess Brain." Let's delve into the fascinating neurological mechanics behind this cognitive development and examine the three core approaches to training it efficiently.</p>
     
+        <div class="jene">
+      <div class="jene-face"><img src="jene_welcome_s.webp" alt="Jene" loading="lazy"><div class="jene-name">Jene</div></div>
+      <div class="bubble">Chess is great training for your brain, too! Let's see what kinds of skills it builds.</div>
+    </div>
+
     <h2>1. Constructing a Virtual Board: "Spatial Awareness" and "Foresight"</h2>
     <p>As chess skills improve, the ability to construct a highly precise, interactive "virtual chessboard" entirely within the mind before moving a physical piece is gained.</p>
     <p>Strong players utilize this mental matrix to simulate complex branches of logic multiple moves ahead, asking themselves: "If I leap my knight here, will my opponent parry with a bishop or counterattack by pushing a pawn?"</p>
@@ -169,7 +192,12 @@ p, div, span, li, h1, h2, h3 {
       <!-- 👇 We are dedicated を KitsuneChess is dedicated に変更しました -->
       <p>KitsuneChess is dedicated to turning tedious study into an exciting journey of discovery, leveraging an innovative training system and elegant aesthetics to fully support intellectual growth every single step of the way.</p>
     </div>
-     <div class="footer"><a href="info.html">🦊 Back to Info</a><a href="index.html?lang=en">🏠 Back to Home</a></div>
+         <div class="jene">
+      <div class="jene-face"><img src="jene_happy_s.webp" alt="Jene" loading="lazy"><div class="jene-name">Jene</div></div>
+      <div class="bubble">Rather than memorizing answers, thinking about "why is this move good?" is the best shortcut!</div>
+    </div>
+
+    <div class="footer"><a href="info.html">🦊 Back to Info</a><a href="index.html?lang=en">🏠 Back to Home</a></div>
   </div>
 </div>
 <script>

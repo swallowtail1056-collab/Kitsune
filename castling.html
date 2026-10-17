@@ -37,6 +37,14 @@
   .en-mode .lang-ja { display: none; }
   .en-mode .lang-en { display: block; }
   .en-mode button.lang-en { display: inline-block; }
+  /* 🦊 ジーンの吹き出し */
+  .jene { display: flex; align-items: flex-start; gap: 12px; margin: 18px 0 22px; }
+  .jene-face { flex-shrink: 0; width: 64px; text-align: center; }
+  .jene-face img { width: 64px; height: 64px; object-fit: contain; display: block; }
+  .jene-name { font-size: 0.7rem; color: #7c4a1e; font-weight: 700; }
+  .bubble { position: relative; background: #fff; border: 2px solid #7c4a1e; border-radius: 14px; padding: 10px 14px; font-size: 0.98rem; line-height: 1.7; color: #3a2410; text-align: left; }
+  .bubble::before { content: ""; position: absolute; left: -10px; top: 18px; border: 5px solid transparent; border-right: 8px solid #7c4a1e; }
+  .bubble::after { content: ""; position: absolute; left: -6px; top: 19px; border: 4px solid transparent; border-right: 6px solid #fff; }
 </style>
 
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1034556404852942" crossorigin="anonymous"></script>
@@ -53,6 +61,11 @@
     <div class="top-links"><a href="info.html" class="back-link">← 一覧へ戻る</a>&nbsp;&nbsp;<a href="index.html" class="back-link">🏠 ホームへ</a></div>
     <h1>🏰 キャスリングはどっち？<br>キングサイドとクイーンサイドの選び方</h1>
     <p>キャスリングは、キングを安全な場所に移しながら、ルークを戦いに参加させられる特別な一手です。チェスにはキングサイド（O-O）とクイーンサイド（O-O-O）の2種類のキャスリングがありますが、「どちらを選べばいいの？」と迷う方も多いはずです。この記事では、それぞれの長所と短所、判断するときに見るポイント、よくある失敗を、実際のオープニングの盤面を使って解説します。</p>
+
+        <div class="jene">
+      <div class="jene-face"><img src="jene_welcome_s.webp" alt="ジーン" loading="lazy"><div class="jene-name">ジーン</div></div>
+      <div class="bubble">キングサイドとクイーンサイド、どっちにキャスリングする？選び方のコツを教えるね！</div>
+    </div>
 
     <h2>キャスリングのおさらい</h2>
     <p>キングサイドのキャスリングでは、白のキングはe1からg1へ、h1のルークはf1へ移ります。クイーンサイドのキャスリングでは、白のキングはe1からc1へ、a1のルークはd1へ移ります。黒も同じように、8段目で行います。</p>
@@ -127,6 +140,11 @@
     <h2>まとめ</h2>
     <p>ふだんはキングサイドのキャスリングが基本で、早くできて、キングも守りやすいのが長所です。クイーンサイドのキャスリングは、ルークをすぐ中央で働かせたいときや、キングサイドのポーンで攻めたいときに選びます。どちらにするか迷ったら、ポーンの壁、相手の狙い、自分の攻めたい側、キャスリングまでの手数の4つを見て判断しましょう。</p>
 
+        <div class="jene">
+      <div class="jene-face"><img src="jene_happy_s.webp" alt="ジーン" loading="lazy"><div class="jene-name">ジーン</div></div>
+      <div class="bubble">迷ったら、まずはキングサイドを考えてみよう。ポーンの壁と相手のねらいも確かめてね！</div>
+    </div>
+
     <div class="footer"><a href="info.html">🦊 Info一覧へ戻る</a><a href="index.html">🏠 ホームへ戻る</a></div>
   </div>
 
@@ -135,6 +153,11 @@
     <div class="top-links"><a href="info.html" class="back-link">← Back to Info</a>&nbsp;&nbsp;<a href="index.html?lang=en" class="back-link">🏠 Home</a></div>
     <h1>🏰 Kingside or Queenside?<br>How to Decide Where to Castle</h1>
     <p>Castling is a special move that tucks your king into safety while bringing a rook into the game. There are two kinds of castling — kingside (O-O) and queenside (O-O-O) — and many players wonder which one to choose. This article explains the strengths and weaknesses of each, the points to check when deciding, and common mistakes, using positions from real openings.</p>
+
+        <div class="jene">
+      <div class="jene-face"><img src="jene_welcome_s.webp" alt="Jene" loading="lazy"><div class="jene-name">Jene</div></div>
+      <div class="bubble">Kingside or queenside — which way should you castle? Let me share some tips for choosing!</div>
+    </div>
 
     <h2>A Quick Review of Castling</h2>
     <p>When White castles kingside, the king moves from e1 to g1 and the h1 rook moves to f1. When White castles queenside, the king moves from e1 to c1 and the a1 rook moves to d1. Black castles the same way on the 8th rank.</p>
@@ -208,6 +231,11 @@
 
     <h2>Summary</h2>
     <p>Kingside castling is the default: it is fast, and the king is easy to defend. Queenside castling is the choice when you want your rook working in the center right away, or when you want to attack with your kingside pawns. When you can't decide, look at four things — your pawn shield, the opponent's targets, the side you want to attack, and how many moves it takes to castle.</p>
+
+        <div class="jene">
+      <div class="jene-face"><img src="jene_happy_s.webp" alt="Jene" loading="lazy"><div class="jene-name">Jene</div></div>
+      <div class="bubble">If you can't decide, think about kingside castling first. And check your pawn shield and your opponent's targets, too!</div>
+    </div>
 
     <div class="footer"><a href="info.html">🦊 Back to Info</a><a href="index.html?lang=en">🏠 Back to Home</a></div>
   </div>

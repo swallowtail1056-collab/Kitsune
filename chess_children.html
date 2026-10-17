@@ -34,6 +34,14 @@
   .en-mode .lang-en { display: block; }
   .en-mode button.lang-en { display: inline-block; }
   @media(max-width:500px){ .age-grid{ grid-template-columns:1fr; } }
+  /* 🦊 ジーンの吹き出し */
+  .jene { display: flex; align-items: flex-start; gap: 12px; margin: 18px 0 22px; }
+  .jene-face { flex-shrink: 0; width: 64px; text-align: center; }
+  .jene-face img { width: 64px; height: 64px; object-fit: contain; display: block; }
+  .jene-name { font-size: 0.7rem; color: #7c4a1e; font-weight: 700; }
+  .bubble { position: relative; background: #fff; border: 2px solid #7c4a1e; border-radius: 14px; padding: 10px 14px; font-size: 0.98rem; line-height: 1.7; color: #3a2410; text-align: left; }
+  .bubble::before { content: ""; position: absolute; left: -10px; top: 18px; border: 5px solid transparent; border-right: 8px solid #7c4a1e; }
+  .bubble::after { content: ""; position: absolute; left: -6px; top: 19px; border: 4px solid transparent; border-right: 6px solid #fff; }
 </style>
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1034556404852942" crossorigin="anonymous"></script>
 </head>
@@ -47,6 +55,11 @@
   <div class="lang-ja">
     <h1>♟ 子どもとチェス<br>知育・教育効果の最前線</h1>
     <p>チェスは単なるゲームではありません。世界100カ国以上で学校教育に取り入れられ、子どもの知能・集中力・社会性を育む「知育ツール」として注目されています。なぜチェスが子どもの成長に良いのでしょうか——最新の研究と世界の教育現場の声を踏まえながら、その理由を探っていきます。</p>
+
+        <div class="jene">
+      <div class="jene-face"><img src="jene_welcome_s.webp" alt="ジーン" loading="lazy"><div class="jene-name">ジーン</div></div>
+      <div class="bubble">チェスは、世界中の学校でも取り入れられているんだって。子どもにどんないいことがあるのか、一緒に見ていこう！</div>
+    </div>
 
     <h2>チェスが子どもの脳に与える影響</h2>
     <p>チェスをプレイすることは、脳の複数の領域を同時に活性化させます。イタリアやアルゼンチンで行われた研究では、チェスを定期的にプレイする子どもは、そうでない子どもに比べて数学・読解力・問題解決能力のテスト結果が有意に高いことが報告されています。</p>
@@ -97,12 +110,22 @@
     <p>子どもにチェスを教える際に最も大切なのは、「楽しさを最優先にすること」です。勝ち負けにこだわりすぎると、子どもはチェスに対してネガティブな感情を持ってしまいます。最初は一緒に遊ぶ感覚で始め、子ども自身が「もっと強くなりたい」と思ったタイミングで本格的な学習に移行するのが理想的です。</p>
     <p>KitsuneChessは、そんな最初の一歩を踏み出す子どもたちのために作られたサイトです。75種類のオープニング解説を、かわいいキツネのキャラクターが一手ずつ丁寧に解説します。はじめてチェスを学ぶ子どもも、安心して使える設計になっています。</p>
 
-   <div class="footer"><a href="info.html">🦊 Info一覧へ戻る</a><a href="index.html">🏠 ホームへ戻る</a></div>
+       <div class="jene">
+      <div class="jene-face"><img src="jene_happy_s.webp" alt="ジーン" loading="lazy"><div class="jene-name">ジーン</div></div>
+      <div class="bubble">いちばん大切なのは、楽しく遊ぶこと！オープニングのページでは、一手ずつやさしく案内するね。</div>
+    </div>
+
+    <div class="footer"><a href="info.html">🦊 Info一覧へ戻る</a><a href="index.html">🏠 ホームへ戻る</a></div>
   </div>
 
   <div class="lang-en">
     <h1>♟ Chess and Children<br>The Cutting Edge of Educational Benefits</h1>
     <p>Chess is more than a game. Adopted into school curricula in over 100 countries, it has gained recognition as an educational tool that develops children's intellect, concentration, and social skills. Why is chess so beneficial for children's development? Drawing on the latest research and voices from educational settings around the world, we explore the reasons.</p>
+
+        <div class="jene">
+      <div class="jene-face"><img src="jene_welcome_s.webp" alt="Jene" loading="lazy"><div class="jene-name">Jene</div></div>
+      <div class="bubble">Chess is part of school lessons all over the world. Let's see how it helps children grow!</div>
+    </div>
 
     <h2>How Chess Affects the Developing Brain</h2>
     <p>Playing chess simultaneously activates multiple regions of the brain. Studies conducted in Italy and Argentina have found that children who regularly play chess score significantly higher on tests of mathematics, reading comprehension, and problem-solving compared to those who do not.</p>
@@ -153,7 +176,12 @@
     <p>The most important thing when teaching chess to a child is to prioritize fun above all else. If winning and losing are emphasized too much, children can develop negative feelings toward chess. Ideally, start by playing together casually, and transition to more serious study when the child themselves expresses a desire to "get stronger."</p>
     <p>KitsuneChess was created for children taking their very first steps into chess. A friendly fox character guides learners through 75 opening explanations, explaining each move one step at a time. It is designed to be a comfortable starting point even for complete beginners.</p>
 
-   <div class="footer"><a href="info.html">🦊 Back to Info</a><a href="index.html?lang=en">🏠 Back to Home</a></div>
+       <div class="jene">
+      <div class="jene-face"><img src="jene_happy_s.webp" alt="Jene" loading="lazy"><div class="jene-name">Jene</div></div>
+      <div class="bubble">The most important thing is to have fun! On our opening pages, I'll guide you gently, one move at a time.</div>
+    </div>
+
+    <div class="footer"><a href="info.html">🦊 Back to Info</a><a href="index.html?lang=en">🏠 Back to Home</a></div>
   </div>
 </div>
 <script>

@@ -41,6 +41,14 @@
   .lang-ja.kc-inline { display: inline; }
   .en-mode .lang-ja.kc-inline { display: none; }
   .en-mode .lang-en.kc-inline { display: inline; }
+  /* 🦊 ジーンの吹き出し */
+  .jene { display: flex; align-items: flex-start; gap: 12px; margin: 18px 0 22px; }
+  .jene-face { flex-shrink: 0; width: 64px; text-align: center; }
+  .jene-face img { width: 64px; height: 64px; object-fit: contain; display: block; }
+  .jene-name { font-size: 0.7rem; color: #7c4a1e; font-weight: 700; }
+  .bubble { position: relative; background: #fff; border: 2px solid #7c4a1e; border-radius: 14px; padding: 10px 14px; font-size: 0.98rem; line-height: 1.7; color: #3a2410; text-align: left; }
+  .bubble::before { content: ""; position: absolute; left: -10px; top: 18px; border: 5px solid transparent; border-right: 8px solid #7c4a1e; }
+  .bubble::after { content: ""; position: absolute; left: -6px; top: 19px; border: 4px solid transparent; border-right: 6px solid #fff; }
 </style>
 <!-- 変更後 -->
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1034556404852942" crossorigin="anonymous"></script>
@@ -60,6 +68,11 @@
 
     <div class="lead-box">
       <p style="margin:0;">序盤が終わった瞬間、急に手が止まってしまう人は多いです。定跡はもう外れているし、詰みも遠い。そういうときに頼りになるのは「今、自分は良いのか悪いのか」を判断する簡単な物差しです。派手な計算力よりも先に、この物差しを持っているかどうかで中盤の安定感がまったく変わってきます。</p>
+    </div>
+
+        <div class="jene">
+      <div class="jene-face"><img src="jene_welcome_s.webp" alt="ジーン" loading="lazy"><div class="jene-name">ジーン</div></div>
+      <div class="bubble">定跡が終わったら、何を考えればいいのかな？形勢を判断する物差しを手に入れよう！</div>
     </div>
 
     <h2>なぜ「形勢判断」を鍛えるべきなのか</h2>
@@ -108,6 +121,11 @@
     <div class="faq-q">弱いポーンが1つあるだけで、負けが決まってしまうのですか?</div>
     <div class="faq-a">いいえ。弱点は「そこを狙えば有利に働きやすい目標」であって、即座の敗北を意味するわけではありません。弱点を抱えている側も、駒の活動性やキングの安全で埋め合わせができれば、十分に戦えます。</div>
 
+        <div class="jene">
+      <div class="jene-face"><img src="jene_happy_s.webp" alt="ジーン" loading="lazy"><div class="jene-name">ジーン</div></div>
+      <div class="bubble">駒の損得、キングの安全、駒の働き、ポーンの形。この4つを順番に確かめるくせをつけようね！</div>
+    </div>
+
     <div class="footer">
       <a href="info.html">🦊 Info一覧へ戻る</a><a href="index.html">🏠 ホームへ戻る</a>
     </div>
@@ -119,6 +137,11 @@
 
     <div class="lead-box">
       <p style="margin:0;">A lot of players hit a wall the moment the opening ends. The theory has run out, checkmate is nowhere in sight, and suddenly every move feels like a guess. What actually helps in that moment isn't deep calculation — it's a simple set of questions for figuring out who's actually doing better. Get comfortable with that before anything else, and the rest of the middlegame gets a lot less overwhelming.</p>
+    </div>
+
+        <div class="jene">
+      <div class="jene-face"><img src="jene_welcome_s.webp" alt="Jene" loading="lazy"><div class="jene-name">Jene</div></div>
+      <div class="bubble">What should you think about once the opening is over? Let's get a simple yardstick for judging the position!</div>
     </div>
 
     <h2>Why Position Evaluation Matters More Than It Seems</h2>
@@ -166,6 +189,11 @@
 
     <div class="faq-q">Does having one weak pawn mean I'm losing?</div>
     <div class="faq-a">No. A weakness is a target the opponent can press — not an automatic loss. A side with a weak pawn can still be perfectly fine if it compensates with active pieces or a safer king.</div>
+
+        <div class="jene">
+      <div class="jene-face"><img src="jene_happy_s.webp" alt="Jene" loading="lazy"><div class="jene-name">Jene</div></div>
+      <div class="bubble">Material, king safety, piece activity and pawn structure — make a habit of checking these four in turn!</div>
+    </div>
 
     <div class="footer">
       <a href="info.html">🦊 Back to Info</a><a href="index.html?lang=en">🏠 Back to Home</a>

@@ -52,6 +52,14 @@
   .en-mode .lang-ja { display: none; }
   .en-mode .lang-en { display: block; }
   .en-mode button.lang-en { display: inline-block; }
+  /* 🦊 ジーンの吹き出し */
+  .jene { display: flex; align-items: flex-start; gap: 12px; margin: 18px 0 22px; }
+  .jene-face { flex-shrink: 0; width: 64px; text-align: center; }
+  .jene-face img { width: 64px; height: 64px; object-fit: contain; display: block; }
+  .jene-name { font-size: 0.7rem; color: #7c4a1e; font-weight: 700; }
+  .bubble { position: relative; background: #fff; border: 2px solid #7c4a1e; border-radius: 14px; padding: 10px 14px; font-size: 0.98rem; line-height: 1.7; color: #3a2410; text-align: left; }
+  .bubble::before { content: ""; position: absolute; left: -10px; top: 18px; border: 5px solid transparent; border-right: 8px solid #7c4a1e; }
+  .bubble::after { content: ""; position: absolute; left: -6px; top: 19px; border: 4px solid transparent; border-right: 6px solid #fff; }
 </style>
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1034556404852942" crossorigin="anonymous"></script>
 </head>
@@ -67,6 +75,11 @@
     <p>チェスは、1500年以上の壮大な歴史を持つ、世界で最も古く、かつ最も洗練されたボードゲームの一つです。</p>
     <p>それは単なる暇つぶしの娯楽の枠を完全に超え、ある時代には国家の命運を占う戦争のシミュレーションとして、またある時代には高度な数学的パズル、そこで時には人間の知性を表現する「芸術」として、人類の文明の発展とともに劇的な進化を遂げてきました。</p>
     
+        <div class="jene">
+      <div class="jene-face"><img src="jene_welcome_s.webp" alt="ジーン" loading="lazy"><div class="jene-name">ジーン</div></div>
+      <div class="bubble">チェスは1500年以上も前から遊ばれてきたんだ。どんなふうに今の形になったのか、一緒にたどってみよう！</div>
+    </div>
+
     <h2>1. 古代インドの源流「チャトランガ」</h2>
     <p>チェスの最古の先祖を辿ると、6世紀頃の古代インドの北西部で広く遊ばれていた「チャトランガ（Chaturanga）」という盤上ゲームに行き着きます。</p>
     <p>サンスクリット語で「4つの手足」を意味するこのゲームは、当時のインドの軍隊を構成していた4つの兵科、すなわちラージャ（王）、歩兵、騎兵、象兵、戦車兵を模した駒を8×8のマスの間で動かすものでした。</p>
@@ -89,13 +102,23 @@
       <p>今、盤上で指されているその1手には、1500年分の人類の知恵のドラマが凝縮されているのです。歴史の重みを知ることで、ただのゲームだったチェスが、より深く美しいものへと変わります。</p>
       <p>KitsuneChessのビジョンは、この素晴らしい伝統ある知的遺産の魅力を、現代の洗練された美しいデジタルインターフェースを通じて、世界中の次世代のプレイヤーたちへと正しく継承していくことです。歴史のバトンを受け継ぎ、あなたもこの偉大な物語の一部となりましょう。</p>
     </div>
-     <div class="footer"><a href="info.html">🦊 Info一覧へ戻る</a><a href="index.html">🏠 ホームへ戻る</a></div>
+         <div class="jene">
+      <div class="jene-face"><img src="jene_happy_s.webp" alt="ジーン" loading="lazy"><div class="jene-name">ジーン</div></div>
+      <div class="bubble">今きみが指している一手にも、長い歴史がつまっているんだね。オープニングのページで、先人たちの知恵にふれてみてね！</div>
+    </div>
+
+    <div class="footer"><a href="info.html">🦊 Info一覧へ戻る</a><a href="index.html">🏠 ホームへ戻る</a></div>
   </div>
   <div class="lang-en">
     <h1>📜 History of Chess</h1>
     <p>Chess is one of the oldest and most sophisticated board games in existence, with an epic history spanning over 1,500 years.</p>
     <p>Transcending the boundaries of mere casual entertainment, it has dramatically evolved alongside human civilization—serving as a war simulation deciding the fates of empires, a rigorous mathematical puzzle, and a profound art form expressing human intellect.</p>
     
+        <div class="jene">
+      <div class="jene-face"><img src="jene_welcome_s.webp" alt="Jene" loading="lazy"><div class="jene-name">Jene</div></div>
+      <div class="bubble">Chess has been played for more than 1,500 years! Let's trace how it became the game we know today.</div>
+    </div>
+
     <h2>1. The Ancient Indian Origin: "Chaturanga"</h2>
     <p>To trace the earliest roots of chess, one must travel back to around the 6th century AD to the northwestern region of ancient India, where a board game named "Chaturanga" was widely played.</p>
     <p>Meaning "four limbs" in Sanskrit, this game represented the four branches of the ancient Indian military: infantry, cavalry, elephants, and chariots, all led by a Raja (King) across an 8x8 grid.</p>
@@ -118,6 +141,11 @@
       <p>Every single move played on the digital board today encapsulates 1,500 years of human wisdom and historical drama. Understanding this rich heritage transforms chess from a mere game into a profound, beautiful experience.</p>
       <p>The vision of KitsuneChess is to preserve and pass down the charm of this timeless intellectual legacy to the next generation of global players through an elegant, accessible digital interface. Take up the historical mantle, and become a part of this grand legacy yourself.</p>
     </div>
+        <div class="jene">
+      <div class="jene-face"><img src="jene_happy_s.webp" alt="Jene" loading="lazy"><div class="jene-name">Jene</div></div>
+      <div class="bubble">Every move you play carries a long history. Explore the wisdom of past players on our opening pages!</div>
+    </div>
+
     <div class="footer"><a href="info.html">🦊 Back to Info</a><a href="index.html?lang=en">🏠 Back to Home</a></div>
   </div>
 </div>

@@ -98,6 +98,14 @@ p, div, span, li, h1, h2, h3 {
     word-break: break-word !important;
     color: #2b2b2b !important;          
 }
+  /* 🦊 ジーンの吹き出し */
+  .jene { display: flex; align-items: flex-start; gap: 12px; margin: 18px 0 22px; }
+  .jene-face { flex-shrink: 0; width: 64px; text-align: center; }
+  .jene-face img { width: 64px; height: 64px; object-fit: contain; display: block; }
+  .jene-name { font-size: 0.7rem; color: #7c4a1e; font-weight: 700; }
+  .bubble { position: relative; background: #fff; border: 2px solid #7c4a1e; border-radius: 14px; padding: 10px 14px; font-size: 0.98rem; line-height: 1.7; color: #3a2410; text-align: left; }
+  .bubble::before { content: ""; position: absolute; left: -10px; top: 18px; border: 5px solid transparent; border-right: 8px solid #7c4a1e; }
+  .bubble::after { content: ""; position: absolute; left: -6px; top: 19px; border: 4px solid transparent; border-right: 6px solid #fff; }
 </style>
 <!-- 変更後 -->
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1034556404852942" crossorigin="anonymous"></script>
@@ -115,6 +123,11 @@ p, div, span, li, h1, h2, h3 {
     <p>チェスの実戦、特にゲームが始まって間もない序盤戦（オープニング）において、わずか数手で勝負の天秤を劇的に傾け、相手を壊滅状態に追い込むための有名な「絶対の急所」が存在します。</p>
     <p>それこそが、黒陣の「f7」のマス（黒側から見た白陣の急所は「f2」）です。なぜこのわずか1マスのポーンがこれほどまでに過激に狙われるのか、その構造的な理由と、実戦で大活躍する具体的な応用戦術、転ばぬ先の正しい防ぎ方について深く解説します。</p>
     
+        <div class="jene">
+      <div class="jene-face"><img src="jene_welcome_s.webp" alt="ジーン" loading="lazy"><div class="jene-name">ジーン</div></div>
+      <div class="bubble">序盤には、f7という大事な急所があるんだ。ねらい方と守り方を一緒に覚えよう！</div>
+    </div>
+
     <h2>なぜ「f7」は盤上最大の脆い弱点なのか？</h2>
     <p>チェスの初期配置を眺めてみると、陣形を形成するほとんどのポーンは、背後にいる何らかの強力な駒によって最初から二重三重にバックアップされていることが分かります。</p>
     <p>例えば、dポーンはクイーンやビショップ、キングが守っており、eポーンもクイーンやキングなどの射線が通っています。しかし、f7（白陣のf2）のポーンだけは、なんと「キング1枚」だけしか守っている駒が存在しません。</p>
@@ -138,6 +151,11 @@ p, div, span, li, h1, h2, h3 {
       <p>攻撃を組み立てるスリルと、それを正確な知識で鮮やかにいなす防御の快感をひとたび体感すれば、チェスの楽しさは何倍にも膨れ上がります。</p>
       <p>KitsuneChessのビジョンは、こうした実戦に直結するエキサイティングな本格的戦術を、誰もがパズルを解き明かすように、楽しく、そして圧倒的に効率よく習得できる最高のトレーニング環境を提供し続けることです。定跡の急所をマスターし、次の対局で華麗な勝利を掴み取りましょう。</p>
     </div>
+        <div class="jene">
+      <div class="jene-face"><img src="jene_happy_s.webp" alt="ジーン" loading="lazy"><div class="jene-name">ジーン</div></div>
+      <div class="bubble">相手のビショップがc4に出てきたら、f7に注意のサインだよ。早めのキャスリングも忘れずにね！</div>
+    </div>
+
     <div class="footer"><a href="info.html">🦊 Info一覧へ戻る</a><a href="index.html">🏠 ホームへ戻る</a></div>
   </div>
 
@@ -148,6 +166,11 @@ p, div, span, li, h1, h2, h3 {
     <p>In practical chess, particularly during the critical opening phase, there exists a legendary tactical weak point capable of tilting the evaluation bar drastically in just a few moves.</p>
     <p>That position is the infamous "f7" square in Black's camp (and conversely, the "f2" square in White's territory). Let's conduct a deep analysis of why this single pawn is so aggressively targeted, explore its real-world tactical applications, and look at the proper defensive measures required to defuse the threat.</p>
     
+        <div class="jene">
+      <div class="jene-face"><img src="jene_welcome_s.webp" alt="Jene" loading="lazy"><div class="jene-name">Jene</div></div>
+      <div class="bubble">In the opening, f7 is a very important weak point. Let's learn how to attack it and how to defend it!</div>
+    </div>
+
     <h2>Why is the "f7" Square the Absolute Weakest Link on the Board?</h2>
     <p>If you carefully examine the initial chess setup, you will notice that almost every single pawn forming the front lines is securely backed up by one or more powerful major pieces from behind.</p>
     <p>For instance, the d-pawn is guarded by the Queen, the Bishop, and the King, while the e-pawn sits safely within the defensive sightlines of the Queen and King. However, the f7 pawn (and White's f2 pawn) is uniquely vulnerable because it is protected "exclusively by the King."</p>
@@ -171,6 +194,11 @@ p, div, span, li, h1, h2, h3 {
       <!-- 👇 Our vision at を The vision of に修正し、一人称を完全に排除しました -->
       <p>The vision of KitsuneChess is to cultivate a premier training space where these essential, practical tactics can be mastered efficiently and enjoyably, as if solving an engaging puzzle. Master the vital pressure points of opening theory, and seize a brilliant victory in your next encounter.</p>
     </div>
+        <div class="jene">
+      <div class="jene-face"><img src="jene_happy_s.webp" alt="Jene" loading="lazy"><div class="jene-name">Jene</div></div>
+      <div class="bubble">When your opponent's bishop lands on c4, that's your signal to watch f7. And don't forget to castle early!</div>
+    </div>
+
     <div class="footer"><a href="info.html">🦊 Back to Info</a><a href="index.html?lang=en">🏠 Back to Home</a></div>
   </div>
 </div>

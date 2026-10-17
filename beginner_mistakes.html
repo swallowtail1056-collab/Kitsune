@@ -30,6 +30,14 @@
   .en-mode .lang-ja { display: none; }
   .en-mode .lang-en { display: block; }
   .en-mode button.lang-en { display: inline-block; }
+  /* 🦊 ジーンの吹き出し */
+  .jene { display: flex; align-items: flex-start; gap: 12px; margin: 18px 0 22px; }
+  .jene-face { flex-shrink: 0; width: 64px; text-align: center; }
+  .jene-face img { width: 64px; height: 64px; object-fit: contain; display: block; }
+  .jene-name { font-size: 0.7rem; color: #7c4a1e; font-weight: 700; }
+  .bubble { position: relative; background: #fff; border: 2px solid #7c4a1e; border-radius: 14px; padding: 10px 14px; font-size: 0.98rem; line-height: 1.7; color: #3a2410; text-align: left; }
+  .bubble::before { content: ""; position: absolute; left: -10px; top: 18px; border: 5px solid transparent; border-right: 8px solid #7c4a1e; }
+  .bubble::after { content: ""; position: absolute; left: -6px; top: 19px; border: 4px solid transparent; border-right: 6px solid #fff; }
 </style>
 
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1034556404852942" crossorigin="anonymous"></script>
@@ -44,6 +52,11 @@
   <div class="lang-ja">
     <h1>⚠ 初心者がやりがちな<br>ミス10選と改善法</h1>
     <p>チェスを始めたばかりの頃、誰もが同じようなミスを繰り返すものです。これは決して恥ずかしいことではなく、すべての上級者が通ってきた道です。大切なのは、そのミスのパターンを知り、意識して直していくことです。ここでは初心者に最もよく見られるミス10選と、その具体的な改善方法をご紹介します。</p>
+
+        <div class="jene">
+      <div class="jene-face"><img src="jene_welcome_s.webp" alt="ジーン" loading="lazy"><div class="jene-name">ジーン</div></div>
+      <div class="bubble">ミスは誰でもするものだよ。よくあるパターンを知って、少しずつ直していこう！</div>
+    </div>
 
     <h2>ミス① クイーンを早く出しすぎる</h2>
     <div class="mistake-card">
@@ -169,12 +182,22 @@
     <p>これら10のミスに共通するのは、「焦り」と「見落とし」です。チェスは時間をかけて考えるほど良い手が見つかるゲームです。焦らず、相手の意図を考え、自分の駒の安全を確認する——このシンプルな習慣を身につけるだけで、チェスは確実に上達していきます。</p>
     <p>KitsuneChessの定跡レッスンでは、各手の意図を一手ずつ解説しています。「なぜその手が良いのか」を理解することが、こうしたミスを減らす最も効果的な道です。</p>
 
+        <div class="jene">
+      <div class="jene-face"><img src="jene_happy_s.webp" alt="ジーン" loading="lazy"><div class="jene-name">ジーン</div></div>
+      <div class="bubble">焦らずに、相手のねらいと自分の駒の安全を確かめる。これだけで、ぐんと強くなれるよ！</div>
+    </div>
+
     <div class="footer"><a href="info.html">🦊 Info一覧へ戻る</a><a href="index.html">🏠 ホームへ戻る</a></div>
   </div>
 
   <div class="lang-en">
     <h1>⚠ 10 Common Beginner Mistakes<br>and How to Fix Them</h1>
     <p>When starting out in chess, everyone makes the same types of mistakes. This is nothing to be ashamed of — every advanced player has walked this same road. What matters is recognizing these mistake patterns and consciously working to correct them. Here we present the 10 most common beginner mistakes and concrete ways to fix them.</p>
+
+        <div class="jene">
+      <div class="jene-face"><img src="jene_welcome_s.webp" alt="Jene" loading="lazy"><div class="jene-name">Jene</div></div>
+      <div class="bubble">Everyone makes mistakes! Let's learn the common patterns and fix them little by little.</div>
+    </div>
 
     <h2>Mistake #1: Bringing the Queen Out Too Early</h2>
     <div class="mistake-card">
@@ -264,6 +287,11 @@
     <h2>Summary — The Essence of Improvement</h2>
     <p>What these 10 mistakes share is "rushing" and "overlooking." Chess rewards taking time to think. Not rushing, thinking about the opponent's intentions, and verifying the safety of your pieces — simply building these habits will reliably improve your chess.</p>
     <p>KitsuneChess's opening lessons explain the purpose behind each move, one step at a time. Understanding "why a move is good" is the most effective way to reduce these kinds of mistakes.</p>
+
+        <div class="jene">
+      <div class="jene-face"><img src="jene_happy_s.webp" alt="Jene" loading="lazy"><div class="jene-name">Jene</div></div>
+      <div class="bubble">Don't rush — check your opponent's idea and the safety of your own pieces. That alone will make you much stronger!</div>
+    </div>
 
     <div class="footer"><a href="info.html">🦊 Back to Info</a><a href="index.html?lang=en">🏠 Back to Home</a></div>
   </div>

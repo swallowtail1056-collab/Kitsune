@@ -41,6 +41,14 @@
   .lang-ja.kc-inline { display: inline; }
   .en-mode .lang-ja.kc-inline { display: none; }
   .en-mode .lang-en.kc-inline { display: inline; }
+  /* 🦊 ジーンの吹き出し */
+  .jene { display: flex; align-items: flex-start; gap: 12px; margin: 18px 0 22px; }
+  .jene-face { flex-shrink: 0; width: 64px; text-align: center; }
+  .jene-face img { width: 64px; height: 64px; object-fit: contain; display: block; }
+  .jene-name { font-size: 0.7rem; color: #7c4a1e; font-weight: 700; }
+  .bubble { position: relative; background: #fff; border: 2px solid #7c4a1e; border-radius: 14px; padding: 10px 14px; font-size: 0.98rem; line-height: 1.7; color: #3a2410; text-align: left; }
+  .bubble::before { content: ""; position: absolute; left: -10px; top: 18px; border: 5px solid transparent; border-right: 8px solid #7c4a1e; }
+  .bubble::after { content: ""; position: absolute; left: -6px; top: 19px; border: 4px solid transparent; border-right: 6px solid #fff; }
 </style>
 <!-- 変更後 -->
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1034556404852942" crossorigin="anonymous"></script>
@@ -60,6 +68,11 @@
 
     <div class="lead-box">
       <p style="margin:0;">序盤・中盤をどれだけ上手く指しても、最後にはっきりメイトの形を知らないと、勝ちを勝ちとして終わらせられないことがあります。逆に、いくつかの基本パターンさえ体に染み込ませておけば、駒がほとんど残っていない局面でも迷わず終わらせられるようになります。この記事では、実戦で本当によく出てくるメイトパターンだけを厳選して紹介します。</p>
+    </div>
+
+        <div class="jene">
+      <div class="jene-face"><img src="jene_welcome_s.webp" alt="ジーン" loading="lazy"><div class="jene-name">ジーン</div></div>
+      <div class="bubble">せっかく有利になっても、メイトの形を知らないと勝ちきれないんだ。基本のパターンを覚えよう！</div>
     </div>
 
     <h2>なぜ基本メイトパターンを覚える必要があるのか</h2>
@@ -105,6 +118,11 @@
     <div class="faq-q">ビショップ+ナイトのメイトは覚える必要がありますか?</div>
     <div class="faq-a">実戦での出現頻度は低いので、初心者や中級者のうちは優先度を下げても構いません。まずは頻出パターンを固めてから、余裕があれば挑戦してみるくらいで十分です。</div>
 
+        <div class="jene">
+      <div class="jene-face"><img src="jene_happy_s.webp" alt="ジーン" loading="lazy"><div class="jene-name">ジーン</div></div>
+      <div class="bubble">まずはクイーンのメイトと、バックランクメイトの2つから覚えてみてね。ステイルメイトには気をつけて！</div>
+    </div>
+
     <div class="footer">
       <a href="info.html">🦊 Info一覧へ戻る</a><a href="index.html">🏠 ホームへ戻る</a>
     </div>
@@ -116,6 +134,11 @@
 
     <div class="lead-box">
       <p style="margin:0;">Playing a great opening and middlegame doesn't mean much if you can't actually finish the game once you get there. On the other hand, once a handful of basic mating patterns are second nature, closing out even the barest of endgames stops being stressful. This article covers only the patterns that actually come up again and again in real games.</p>
+    </div>
+
+        <div class="jene">
+      <div class="jene-face"><img src="jene_welcome_s.webp" alt="Jene" loading="lazy"><div class="jene-name">Jene</div></div>
+      <div class="bubble">Even with a winning position, you can't finish the game if you don't know the mating patterns. Let's learn the basics!</div>
     </div>
 
     <h2>Why Bother Memorizing Basic Mates?</h2>
@@ -160,6 +183,11 @@
 
     <div class="faq-q">Do I really need to learn the bishop-and-knight mate?</div>
     <div class="faq-a">Not urgently. It comes up rarely in practice, so beginners and intermediate players can safely deprioritize it until the more common patterns are solid.</div>
+
+        <div class="jene">
+      <div class="jene-face"><img src="jene_happy_s.webp" alt="Jene" loading="lazy"><div class="jene-name">Jene</div></div>
+      <div class="bubble">Start with two patterns: the queen mate and the back-rank mate. And watch out for stalemate!</div>
+    </div>
 
     <div class="footer">
       <a href="info.html">🦊 Back to Info</a><a href="index.html?lang=en">🏠 Back to Home</a>
