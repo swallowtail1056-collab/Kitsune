@@ -6981,7 +6981,16 @@ if (banner) banner.style.visibility = p.superhard ? 'visible' : 'hidden';
     if (beginnerChess.in_draw() || beginnerChess.in_stalemate() || beginnerChess.in_threefold_repetition()) {
       beginnerState.hintFrom = null; beginnerState.hintTo = null;
       renderBeginnerBoard();
-      setBeginnerStatus(() => (LANG === 'ja' ? '引き分けです。' : "It's a draw."));
+      const ja = LANG === 'ja';
+      const reasonJa = beginnerChess.in_stalemate() ? '(ステイルメイト:動ける手がなくなりました)'
+        : beginnerChess.in_threefold_repetition() ? '(同じ局面が3回出ました)'
+        : beginnerChess.insufficient_material() ? '(メイトできる駒が残っていません)'
+        : '(50手のあいだ、駒も取らずポーンも動きませんでした)';
+      const reasonEn = beginnerChess.in_stalemate() ? ' (stalemate: no legal moves)'
+        : beginnerChess.in_threefold_repetition() ? ' (the same position appeared three times)'
+        : beginnerChess.insufficient_material() ? ' (not enough pieces left to checkmate)'
+        : ' (50 moves without a capture or pawn move)';
+      setBeginnerStatus(() => (LANG === 'ja' ? '引き分けです。' + reasonJa : "It's a draw." + reasonEn));
       hideBeginnerJeneSpeech();
       return;
     }
@@ -7070,6 +7079,74 @@ if (banner) banner.style.visibility = p.superhard ? 'visible' : 'hidden';
     document.getElementById('beginnerGameArea').style.display = 'none';
     document.getElementById('beginnerColorPanel').style.display = 'block';
   };
+
+  // 📜 はじめてモード:局面を見返す(ポップアップで1手ずつ戻したり進めたりできる。今の対局はそのまま)
+  let kcBhPly = 0;
+  function kcBhMoves() { return beginnerChess ? beginnerChess.history({ verbose: true }) : []; }
+  function kcRenderBeginnerHistory() {
+    const boardEl = document.getElementById('beginnerHistoryBoard');
+    const label = document.getElementById('beginnerHistoryLabel');
+    if (!boardEl) return;
+    const moves = kcBhMoves();
+    if (kcBhPly < 0) kcBhPly = 0;
+    if (kcBhPly > moves.length) kcBhPly = moves.length;
+    const c = new Chess();
+    for (let i = 0; i < kcBhPly; i++) c.move(moves[i].san);
+    const last = kcBhPly > 0 ? moves[kcBhPly - 1] : null;
+    boardEl.innerHTML = '';
+    const files = ['a','b','c','d','e','f','g','h'];
+    const ranks = [8,7,6,5,4,3,2,1];
+    const flip = beginnerState.myColor === 'b';
+    const order = [...Array(8).keys()];
+    const rowOrder = flip ? [...order].reverse() : order;
+    const colOrder = flip ? [...order].reverse() : order;
+    for (let vr = 0; vr < 8; vr++) {
+      for (let vc = 0; vc < 8; vc++) {
+        const row = rowOrder[vr], col = colOrder[vc];
+        const sq = files[col] + ranks[row];
+        const cell = document.createElement('div');
+        cell.className = 'sq ' + ((col + row) % 2 === 0 ? 'light' : 'dark');
+        if (last && (last.from === sq || last.to === sq)) cell.classList.add('last-move');
+        if (vc === 0) { const l = document.createElement('span'); l.className = 'sq-label rank-label'; l.textContent = ranks[row]; cell.appendChild(l); }
+        if (vr === 7) { const l = document.createElement('span'); l.className = 'sq-label file-label'; l.textContent = files[col]; cell.appendChild(l); }
+        const piece = c.get(sq);
+        if (piece) {
+          const img = document.createElement('img');
+          img.src = PIECE_IMG[piece.color + piece.type.toUpperCase()];
+          img.style.width = '100%'; img.style.height = '100%'; img.style.pointerEvents = 'none';
+          cell.appendChild(img);
+        }
+        boardEl.appendChild(cell);
+      }
+    }
+    if (label) {
+      const ja = LANG === 'ja';
+      if (kcBhPly === 0) label.textContent = ja ? '最初の局面 (全' + moves.length + '手)' : 'Starting position (' + moves.length + ' moves)';
+      else {
+        const moveNo = Math.ceil(kcBhPly / 2) + (last.color === 'w' ? '.' : '...');
+        label.textContent = moveNo + ' ' + last.san + (ja ? ' (' + kcBhPly + ' / ' + moves.length + ')' : ' (' + kcBhPly + ' / ' + moves.length + ')');
+      }
+    }
+    const prev = document.getElementById('beginnerHistoryPrevBtn');
+    const next = document.getElementById('beginnerHistoryNextBtn');
+    if (prev) prev.disabled = kcBhPly === 0;
+    if (next) next.disabled = kcBhPly === moves.length;
+  }
+  function kcCloseBeginnerHistory() {
+    const ov = document.getElementById('beginnerHistoryOverlay');
+    if (ov) ov.style.display = 'none';
+  }
+  document.getElementById('btnBeginnerReviewHistory').onclick = () => {
+    if (!beginnerChess) return;
+    kcBhPly = kcBhMoves().length; // いちばん新しい局面から見返す
+    const ov = document.getElementById('beginnerHistoryOverlay');
+    if (ov) ov.style.display = 'flex';
+    kcRenderBeginnerHistory();
+  };
+  document.getElementById('beginnerHistoryPrevBtn').onclick = () => { kcBhPly--; kcRenderBeginnerHistory(); };
+  document.getElementById('beginnerHistoryNextBtn').onclick = () => { kcBhPly++; kcRenderBeginnerHistory(); };
+  document.getElementById('beginnerHistoryCloseBtn').onclick = kcCloseBeginnerHistory;
+  document.getElementById('beginnerHistoryOverlay').addEventListener('click', (e) => { if (e.target.id === 'beginnerHistoryOverlay') kcCloseBeginnerHistory(); });
 
   // トップページの「初めての方はこちら」リンクから来た時、確実に開いてスクロールする
   if (window.location.hash === '#beginnerModeBox') {
