@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>シシリアンを安全に指すコツ（初級〜中級編） - KitsuneChess</title>
+<link rel="canonical" href="https://kitsunechess.com/safe_sicilian.html">
+<meta name="description" content="シシリアン・ディフェンスを黒で指すときに、大きな失敗をせずに戦うためのコツを解説します。3つの約束、おすすめの「小さな中央」の形、白の作戦別の受け方、よくある失敗を、実際の盤面で分かりやすく紹介します。">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Crimson+Pro:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root { --bg: #f5edd6; --brown: #7c4a1e; --brown-dark: #4a2a0e; --text: #111; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: var(--bg); color: var(--text); font-family: 'Crimson Pro', serif; font-weight: 600; line-height: 1.8; padding: 40px 20px; }
+  .container { max-width: 720px; margin: 0 auto; background: transparent; border: none; padding: 20px 10px; }
+  .lang-en, .lang-ja { text-align: left !important; word-break: break-word !important; }
+  .lang-switch { text-align: right; margin-bottom: 25px; }
+  .lang-btn { background: #f7ebd3; border: 1px solid #c4b193; color: var(--brown-dark); padding: 6px 14px; border-radius: 4px; cursor: pointer; font-weight: 700; font-size: 0.85rem; transition: all 0.2s; }
+  .lang-btn:hover { background: var(--brown); color: #fff; }
+  .back-link { color: var(--brown); text-decoration: none; font-weight: 700; font-size: 0.9rem; }
+  .top-links { margin-bottom: 18px; }
+  h1 { font-family: 'Cinzel', serif; color: var(--brown-dark); font-size: 1.8rem; text-align: center; margin-bottom: 24px; border-bottom: 2px solid rgba(184,134,11,0.3); padding-bottom: 12px; }
+  h2 { font-family: 'Cinzel', serif; color: var(--brown); font-size: 1.1rem; margin: 30px 0 12px; border-left: 4px solid var(--brown); padding-left: 10px; }
+  p { font-size: 1.05rem; margin-bottom: 18px; }
+  ul, ol { margin: 0 0 18px 1.4em; font-size: 1.02rem; }
+  li { margin-bottom: 8px; }
+  a { color: var(--brown-dark); }
+  .card { background: #fff8e8; border: 2px solid var(--brown); border-radius: 16px; padding: 22px 26px; margin: 20px 0; box-shadow: 2px 3px 8px rgba(0,0,0,0.05); }
+  .card-label { display: inline-block; background: var(--brown); color: #fff; font-family: 'Cinzel', serif; font-size: 0.75rem; padding: 3px 12px; border-radius: 4px; margin-bottom: 12px; letter-spacing: 1px; }
+  .board { display:block; width:100%; max-width:300px; height:auto; margin:16px auto 6px; border:2px solid var(--brown); border-radius:8px; }
+  .caption { text-align:center; font-size:0.88rem; color:#555; margin-bottom:16px; }
+  .fix-box { background: rgba(124,74,30,0.15); border-left: 4px solid var(--brown); padding: 12px 16px; margin-top: 14px; border-radius: 0 8px 8px 0; font-size: 0.95rem; }
+  .fix-label { font-weight: 700; color: var(--brown-dark); font-size: 0.85rem; margin-bottom: 4px; }
+  details.more { margin: 6px 0 16px; border: 1px dashed rgba(124,74,30,0.5); border-radius: 10px; padding: 8px 14px; background: rgba(255,255,255,0.4); }
+  details.more summary { cursor: pointer; font-weight: 700; color: var(--brown-dark); font-size: 0.95rem; }
+  details.more p { font-size: 0.98rem; margin: 10px 0 6px; }
+  /* 🦊 ジーンの吹き出し */
+  .jene { display: flex; align-items: flex-start; gap: 12px; margin: 18px 0 22px; }
+  .jene-face { flex-shrink: 0; width: 64px; text-align: center; }
+  .jene-face img { width: 64px; height: 64px; object-fit: contain; display: block; }
+  .jene-name { font-size: 0.7rem; color: var(--brown); font-weight: 700; }
+  .bubble { position: relative; background: #fff; border: 2px solid var(--brown); border-radius: 14px; padding: 10px 14px; font-size: 0.98rem; line-height: 1.7; color: #3a2410; }
+  .bubble::before { content: ""; position: absolute; left: -10px; top: 18px; border: 5px solid transparent; border-right: 8px solid var(--brown); }
+  .bubble::after { content: ""; position: absolute; left: -6px; top: 19px; border: 4px solid transparent; border-right: 6px solid #fff; }
+  .footer { text-align: center; margin-top: 45px; font-size: 0.9rem; }
+  .footer a { color: var(--brown); text-decoration: none; font-weight: 700; border: 1px solid var(--brown); padding: 8px 18px; border-radius: 6px; transition: all 0.2s; display:inline-block; margin:4px; }
+  .footer a:hover { background: var(--brown); color: #fff; }
+  .lang-en { display: none; }
+  .en-mode .lang-ja { display: none; }
+  .en-mode .lang-en { display: block; }
+  .en-mode button.lang-en { display: inline-block; }
+</style>
+
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1034556404852942" crossorigin="anonymous"></script>
+</head>
+<body>
+<div class="container">
+  <div class="lang-switch">
+    <button class="lang-btn lang-ja" onclick="toggleLanguage()">English</button>
+    <button class="lang-btn lang-en" onclick="toggleLanguage()">日本語</button>
+  </div>
+
+  <!-- ================= 日本語 ================= -->
+  <div class="lang-ja">
+    <div class="top-links"><a href="info.html" class="back-link">← 一覧へ戻る</a>&nbsp;&nbsp;<a href="index.html" class="back-link">🏠 ホームへ</a></div>
+    <h1>🛡️ シシリアンを安全に指すコツ<br>初級〜中級編</h1>
+    <p><a href="sicilian.html">シシリアン・ディフェンス</a>（1.e4 c5）は、白の1.e4に対して黒が選ぶ応手の中で、最もよく指されるものの1つです。黒は最初から左右の形が違う局面を作るので、勝ちを狙いやすい反面、白の鋭い攻めや落とし穴も多いオープニングです。この記事では、初級〜中級の方が黒でシシリアンを指すときに、大きな失敗をせずに戦うためのコツを、実際の盤面を使って解説します。</p>
+
+    <div class="jene">
+      <div class="jene-face"><img src="jene_welcome_s.webp" alt="ジーン" loading="lazy"><div class="jene-name">ジーン</div></div>
+      <div class="bubble">シシリアンは強いけど、落とし穴も多いんだ。安全な指し方を一緒に見ていこう！</div>
+    </div>
+
+    <h2>シシリアンはどんなオープニング？</h2>
+    <img class="board" src="sic_start.svg" alt="1.e4 c5の局面。黒のcのポーンがd4のマスを利かせている">
+    <div class="caption">1.e4 c5（矢印は黒のc5のポーンが利かせているd4のマス）</div>
+    <p>黒は1...c5で白が使いたいd4のマスをcのポーンから利かせます。白は中央にeとdのポーンを並べたいのですが、黒はそれを横からじゃましているわけです。</p>
+    <p>白がd4と突いてくると、黒はふつうcxd4とポーンを交換します。黒はcのポーンを白のdのポーンと交換するので、中央のポーンは黒のほうが1つ多く残ります。さらに黒は、あいたc列をルークやクイーンで使って、クイーンサイドから反撃できます。</p>
+    <p>その代わり、白は駒の展開が早くなり、キングサイドへ攻めてくることがよくあります。黒はこの攻めを受け止めながら反撃するので、局面が激しくなりやすいのです。</p>
+
+    <h2>安全に指すための3つの約束</h2>
+    <div class="card">
+      <span class="card-label">RULE 1</span>
+      <p><strong>約束① キングサイドの駒を早く出して、早めにキャスリングする</strong></p>
+      <p>シシリアンでは、黒がcxd4とポーンを交換するので、早い段階で中央が開きます。中央が開いた局面で黒のキングがe8に残っていると、白のビショップやルーク、ナイトに狙われやすくなります。</p>
+      <p>黒はナイトをf6に、ビショップをe7（またはg7）に出したら、早めにキャスリングしましょう。クイーンサイドのポーンを進める作戦は、黒がキングを安全にしてからでも間に合います。</p>
+      <div class="jene">
+        <div class="jene-face"><img src="jene_wink_s.webp" alt="ジーン" loading="lazy"><div class="jene-name">ジーン</div></div>
+        <div class="bubble">キャスリングは早めにね。中央が開くと、キングが狙われやすくなるよ。</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <span class="card-label">RULE 2</span>
+      <p><strong>約束② 欲張ってポーンを取りに行かない</strong></p>
+      <p>シシリアンでは、白がポーンを差し出して、そのあいだに駒を早く展開する作戦がよく出てきます。代表的なのが<a href="smithmorra.html">スミス・モラ・ギャンビット</a>で、白は1.e4 c5 2.d4 cxd4 3.c3とcのポーンも差し出します。</p>
+      <p>ポーンを取ること自体が悪いわけではありません。しかし、黒が取ったポーンを守ることに手を使いすぎると、そのあいだに白の駒がどんどん攻めてきます。自信がないうちは、黒は無理にポーンを取りに行かず、駒の展開とキングの安全を先に考えましょう。</p>
+      <p>黒のクイーンが早く出ていって、b2のポーンなどを取りに行く手にも注意が必要です。黒のクイーンが盤の端でポーンを取っているあいだに、白は駒を展開して攻めの準備を進められるからです。</p>
+    </div>
+
+    <div class="card">
+      <span class="card-label">RULE 3</span>
+      <p><strong>約束③ d5のマスとf7のマスに気をつける</strong></p>
+      <p>白のナイトは、c3からd5のマスに飛び込んで、黒の駒やキングの近くをにらむことがよくあります。黒がeのポーンをe6に置いておくと、e6のポーンがd5を利かせるので、白のナイトはd5に入りにくくなります。</p>
+      <p>白のビショップがc4に出てきたときは、f7のマスに注意しましょう。キャスリングする前の黒のf7は、キングしか守っていないので、白のビショップとナイトやクイーンに狙われやすいマスです。黒はe6と突くと、c4のビショップからf7への道をふさげます。f7の弱点については、<a href="tactics.html">初心者必見!f7地点の崩し方と対策</a>でも詳しく解説しています。</p>
+      <details class="more">
+        <summary>💡 もっと詳しく知りたい方へ</summary>
+        <p>黒がeのポーンをe5まで進める形もあります。<a href="sveshnikov_sicilian.html">スベシニコフ・バリエーション</a>や、<a href="najdorf.html">ナイドルフ・バリエーション</a>の一部の形がそうです。黒はd5のマスが弱くなる代わりに中央を強く押さえるので、d5をどう守るかをよく知っている人向けの作戦です。</p>
+      </details>
+    </div>
+
+    <h2>おすすめの形：「小さな中央」</h2>
+    <div class="card">
+      <span class="card-label">SCHEVENINGEN SETUP</span>
+      <img class="board" src="sic_scheveningen.svg" alt="シェベニンゲンの形。黒のポーンがd6とe6に並び、黒はキングサイドにキャスリングしている">
+      <div class="caption">シェベニンゲンの形（1.e4 c5 2.Nf3 d6 3.d4 cxd4 4.Nxd4 Nf6 5.Nc3 e6 6.Be2 Be7 7.O-O O-O）</div>
+      <p>初級〜中級の方におすすめなのが、黒がdのポーンをd6に、eのポーンをe6に置く形です。この形は<a href="scheveningen.html">シェベニンゲン・バリエーション</a>と呼ばれ、黒のd6のポーンはe5を、e6のポーンはd5を利かせて、白の駒が中央に入りこむのを防ぎます。</p>
+      <p>黒はビショップをe7に出せば、すぐにキャスリングできます。図の局面では、黒はすでにキャスリングを終えていて、約束①も守れています。</p>
+      <p>このあと黒は、a6・Qc7・b5と、クイーンサイドのポーンと駒を使って反撃するのが代表的な作戦です。準備ができたら、黒はd5と突いて中央をこじ開ける手もあります。</p>
+      <details class="more">
+        <summary>💡 もっと詳しく知りたい方へ</summary>
+        <p>5...e6のあと、白が6.g4と突いてくる<strong>ケレス・アタック</strong>という攻め方もあります。白はg5と突いてf6のナイトを追い払おうとするので、黒は6...h6と突いて、白のポーンがg5に来たらhのポーンで取れるようにしておくのがよく指される受け方です。</p>
+        <p>黒がgのポーンをg6に突いてビショップをg7に出す<a href="dragon.html">ドラゴン・バリエーション</a>は、白に<a href="yugoslav_attack.html">ユーゴスラフ・アタック</a>で激しく攻められやすい形です。黒は慣れるまでは、ここで紹介した「小さな中央」の形から始めるほうが安全です。</p>
+      </details>
+    </div>
+
+    <h2>白の作戦別・安全な受け方</h2>
+    <p>白は2.Nf3と3.d4で中央を開く<a href="open_sicilian.html">オープン・シシリアン</a>のほかに、2手目や3手目で別の作戦をとることがあります。ここでは、よく出てくる白の作戦と、黒の安全な受け方を紹介します。</p>
+    <div class="card">
+      <span class="card-label">ANTI-SICILIANS</span>
+      <ul>
+        <li><strong><a href="alapin_sicilian.html">アラピン・バリエーション</a>（2.c3）</strong>：白はc3と突いて、次にd4と突き、中央にポーンを2つ並べようとします。黒は2...Nf6でe4のポーンを攻めるか、2...d5と突いて中央のポーンを交換するのが安全です。2...d5 3.exd5 Qxd5のあと、白はc3にポーンがいるのでナイトをc3に出せず、黒のクイーンはd5から追い払われにくいのです。</li>
+        <li><strong><a href="smithmorra.html">スミス・モラ・ギャンビット</a>（2.d4 cxd4 3.c3）</strong>：黒が3...dxc3とポーンを取るのも、悪い手ではありません。黒が取らずに戦いたいときは、3...Nf6（4.e5 Nd5）や3...d5と突くと、アラピンに近い落ち着いた形になります。</li>
+        <li><strong><a href="grand_prix.html">グランプリ・アタック</a>（2.Nc3と3.f4）</strong>：白はfのポーンをf4に突いてキングサイドから攻め、ビショップをc4やb5に出してきます。白のビショップがc4に来たら、黒はe6と突いて、ビショップの道をふさぐのが安全です。</li>
+        <li><strong><a href="moscow_sicilian.html">モスクワ・バリエーション</a>（2.Nf3 d6 3.Bb5+）</strong>：黒は3...Bd7とビショップを出してチェックを防ぎます。黒はビショップどうしを交換すれば、落ち着いた局面で戦えます。</li>
+        <li><strong><a href="rossolimo_attack.html">ロッソリモ・アタック</a>（2.Nf3 Nc6 3.Bb5）</strong>：白はc6のナイトとビショップを交換して、黒のcのポーンを二重にしようとすることがあります。黒は3...e6や3...g6と突いて、キングサイドの駒を早く出しましょう。</li>
+      </ul>
+    </div>
+
+    <h2>よくある失敗</h2>
+    <div class="card">
+      <span class="card-label">COMMON MISTAKES</span>
+      <p><strong>失敗① 守られているe4のポーンを取ってしまう</strong></p>
+      <img class="board" src="sic_nxe4.svg" alt="オープン・シシリアンで白がNc3と出し、e4のポーンを守っている局面">
+      <div class="caption">1.e4 c5 2.Nf3 d6 3.d4 cxd4 4.Nxd4 Nf6 5.Nc3</div>
+      <p>図の局面で、黒が5...Nxe4とポーンを取るのは失敗です。白のe4のポーンはc3のナイトに守られているので、白は6.Nxe4とナイトで取り返します。黒はポーン1つと引き換えに、ナイトを失ってしまいます。</p>
+      <p>白のNc3は、ナイトを展開するだけでなく、e4のポーンを守る手でもあります。黒は相手の駒を取る前に、その駒がほかの駒に守られていないかを確かめましょう。</p>
+
+      <p><strong>失敗② スミス・モラで、f7の弱さを忘れてナイトを出す</strong></p>
+      <img class="board" src="sic_morra_trap.svg" alt="スミス・モラ・ギャンビットで白がe5と突き、c4のビショップがf7を狙っている局面">
+      <div class="caption">1.e4 c5 2.d4 cxd4 3.c3 dxc3 4.Nxc3 Nc6 5.Nf3 d6 6.Bc4 Nf6 7.e5</div>
+      <p>黒は6...Nf6とナイトを出しました。自然な展開に見えますが、白は7.e5とポーンを突いて、f6のナイトとd6のポーンを同時に攻めてきます。</p>
+      <p>ここで黒が7...Nxe5と取ると、白は8.Nxe5 dxe5 9.Bxf7+とビショップを捨てます。黒はキングで9...Kxf7と取るしかなく、白は10.Qxd8とd8のクイーンを取ります。黒はビショップ1つと引き換えに、クイーンを失ってしまいます。</p>
+      <p>黒が7...dxe5と取っても、白は8.Qxd8+ Nxd8 9.Nb5と攻めてきます。白は次にNc7+と飛びこんで、e8のキングとa8のルークを同時に攻める手を狙っているので、黒は守るのに苦労します。</p>
+      <div class="jene">
+        <div class="jene-face"><img src="jene_confused_s.webp" alt="ジーン" loading="lazy"><div class="jene-name">ジーン</div></div>
+        <div class="bubble">ここでNf6と出すと、白のe5が来て困っちゃうんだ…。先にe6と突いて、ビショップの道をふさいでおこうね。</div>
+      </div>
+      <div class="fix-box">
+        <div class="fix-label">✅ 改善法</div>
+        黒は6...Nf6の代わりに6...e6と突いて、c4のビショップからf7への道を先にふさいでおくのが安全です。
+      </div>
+      <details class="more">
+        <summary>💡 もっと詳しく知りたい方へ</summary>
+        <p>実は7.e5のあと、黒は7...Ng4とナイトを逃がせば、まだ戦える局面になります。ただし複雑な局面なので、黒は慣れないうちは6...e6でこの形を避けておくのがおすすめです。</p>
+      </details>
+
+      <p style="margin-top:18px;"><strong>失敗③ キングを中央に残したまま、クイーンサイドのポーンばかり進める</strong></p>
+      <p>黒がa6・b5とクイーンサイドのポーンを進めるのは、シシリアンでよく出てくる作戦です。しかし、黒がキャスリングをしないまま続けると、中央が開いたときにキングが逃げ遅れてしまいます。</p>
+      <p>白は、Nd5やBxe6のように駒を捨てる手でe8に残った黒のキングを攻めてくることがあります。黒はポーンを進める前に、キングが安全かどうかを確かめましょう。</p>
+      <div class="fix-box">
+        <div class="fix-label">✅ 改善法</div>
+        黒はまずキングサイドの駒を出してキャスリングし、それからクイーンサイドで反撃しましょう。キャスリングの選び方は<a href="castling.html">キャスリングはどっち？キングサイドとクイーンサイドの選び方</a>で、序盤の基本は<a href="openings-basic.html">知っておくべきチェス・オープニングの3大原則</a>で詳しく解説しています。
+      </div>
+    </div>
+
+    <h2>まとめ</h2>
+    <p>シシリアンを安全に指すには、①キングサイドの駒を早く出して早めにキャスリングする、②欲張ってポーンを取りに行かない、③d5とf7のマスに気をつける、の3つの約束が大切です。形に迷ったら、黒のポーンをd6とe6に置く「小さな中央」から始めてみましょう。白が2手目や3手目で別の作戦をとってきたときも、黒は落ち着いて駒を展開し、キングを安全にすることを優先すれば、大きな失敗は防げます。</p>
+    <div class="jene">
+      <div class="jene-face"><img src="jene_happy_s.webp" alt="ジーン" loading="lazy"><div class="jene-name">ジーン</div></div>
+      <div class="bubble">3つの約束を守れば、シシリアンはこわくないよ！<a href="sicilian.html">シシリアンのページ</a>で、手順も一つずつ確かめてみてね。</div>
+    </div>
+
+    <div class="footer"><a href="info.html">🦊 Info一覧へ戻る</a><a href="index.html">🏠 ホームへ戻る</a></div>
+  </div>
+
+  <!-- ================= English ================= -->
+  <div class="lang-en">
+    <div class="top-links"><a href="info.html" class="back-link">← Back to Info</a>&nbsp;&nbsp;<a href="index.html?lang=en" class="back-link">🏠 Home</a></div>
+    <h1>🛡️ How to Play the Sicilian Safely<br>Beginner to Intermediate</h1>
+    <p>The <a href="sicilian.html?lang=en">Sicilian Defense</a> (1.e4 c5) is one of Black's most popular replies to 1.e4. Black creates an unbalanced position from the very first move, which gives good winning chances — but it also means sharp attacks and plenty of traps. This article explains how beginner and intermediate players can play the Sicilian as Black without falling into big mistakes, using positions from real games.</p>
+
+    <div class="jene">
+      <div class="jene-face"><img src="jene_welcome_s.webp" alt="Jene" loading="lazy"><div class="jene-name">Jene</div></div>
+      <div class="bubble">The Sicilian is strong, but it's full of traps too. Let's learn how to play it safely together!</div>
+    </div>
+
+    <h2>What Kind of Opening Is the Sicilian?</h2>
+    <img class="board" src="sic_start.svg" alt="The position after 1.e4 c5. Black's c-pawn controls the d4 square">
+    <div class="caption">1.e4 c5 (the arrow shows the d4 square controlled by Black's c5-pawn)</div>
+    <p>With 1...c5, Black controls the d4 square — the square White wants to use — with the c-pawn. White would like to line up the e- and d-pawns in the center, and Black is interfering from the side.</p>
+    <p>When White pushes d4, Black usually trades with cxd4. Because Black gives up the c-pawn for White's d-pawn, Black keeps one more central pawn than White. Black can also use the half-open c-file with a rook or the queen to counterattack on the queenside.</p>
+    <p>In return, White gets faster development and often attacks on the kingside. Black has to absorb that attack while counterattacking, so the positions tend to get sharp.</p>
+
+    <h2>Three Rules for Playing It Safely</h2>
+    <div class="card">
+      <span class="card-label">RULE 1</span>
+      <p><strong>Rule 1: Develop your kingside pieces quickly and castle early</strong></p>
+      <p>In the Sicilian, Black trades with cxd4, so the center opens early. If Black's king is still on e8 when the center opens, White's bishops, rooks and knights can easily target it.</p>
+      <p>Once Black has developed the knight to f6 and the bishop to e7 (or g7), Black should castle soon. Black's queenside pawn play can wait until the king is safe.</p>
+      <div class="jene">
+        <div class="jene-face"><img src="jene_wink_s.webp" alt="Jene" loading="lazy"><div class="jene-name">Jene</div></div>
+        <div class="bubble">Castle early! When the center opens, your king becomes an easy target.</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <span class="card-label">RULE 2</span>
+      <p><strong>Rule 2: Don't get greedy with pawns</strong></p>
+      <p>In the Sicilian, White often offers a pawn to gain time for fast development. The best-known example is the <a href="smithmorra.html?lang=en">Smith-Morra Gambit</a>, where White gives up the c-pawn as well with 1.e4 c5 2.d4 cxd4 3.c3.</p>
+      <p>Taking a pawn is not bad in itself. But if Black spends too many moves defending the extra pawn, White's pieces will pour into the attack. Until Black feels confident, Black should not grab pawns at all costs, and should think about development and king safety first.</p>
+      <p>Black should also be careful about sending the queen out early to grab pawns such as the one on b2. While Black's queen is collecting a pawn on the edge of the board, White can develop and prepare an attack.</p>
+    </div>
+
+    <div class="card">
+      <span class="card-label">RULE 3</span>
+      <p><strong>Rule 3: Watch the d5 and f7 squares</strong></p>
+      <p>White's knight often jumps from c3 to d5, where it eyes Black's pieces and the area around the king. If Black keeps the e-pawn on e6, that pawn controls d5, making it harder for White's knight to land there.</p>
+      <p>When White's bishop comes to c4, watch the f7 square. Before Black castles, f7 is defended only by the king, so it is an easy target for White's bishop together with a knight or the queen. By pushing ...e6, Black blocks the c4-bishop's path to f7. For more on this weak point, see <a href="tactics.html?lang=en">Targeting f7: A Beginner's Guide to a Classic Weak Point</a>.</p>
+      <details class="more">
+        <summary>💡 Want to know more?</summary>
+        <p>Black can also push the e-pawn all the way to e5. The <a href="sveshnikov_sicilian.html?lang=en">Sveshnikov Variation</a> and some lines of the <a href="najdorf.html?lang=en">Najdorf Variation</a> use this idea. Black accepts a weak d5 square in exchange for strong control of the center, so it suits players who know how to hold d5.</p>
+      </details>
+    </div>
+
+    <h2>A Recommended Setup: The "Small Center"</h2>
+    <div class="card">
+      <span class="card-label">SCHEVENINGEN SETUP</span>
+      <img class="board" src="sic_scheveningen.svg" alt="The Scheveningen setup. Black's pawns stand on d6 and e6, and Black has castled kingside">
+      <div class="caption">Scheveningen setup (1.e4 c5 2.Nf3 d6 3.d4 cxd4 4.Nxd4 Nf6 5.Nc3 e6 6.Be2 Be7 7.O-O O-O)</div>
+      <p>For beginner and intermediate players, we recommend a setup with Black's d-pawn on d6 and e-pawn on e6. This is called the <a href="scheveningen.html?lang=en">Scheveningen Variation</a>: Black's d6-pawn controls e5, the e6-pawn controls d5, and together they keep White's pieces out of the center.</p>
+      <p>Once Black develops the bishop to e7, Black can castle right away. In the diagram, Black has already castled, so Rule 1 is taken care of too.</p>
+      <p>From here, Black's typical plan is to counterattack on the queenside with ...a6, ...Qc7 and ...b5. When Black is ready, Black can also push ...d5 to break open the center.</p>
+      <details class="more">
+        <summary>💡 Want to know more?</summary>
+        <p>After 5...e6, White can also play 6.g4, known as the <strong>Keres Attack</strong>. White wants to push g5 to drive away the f6-knight, so a common reply is 6...h6, letting Black capture with the h-pawn if White's pawn arrives on g5.</p>
+        <p>In the <a href="dragon.html?lang=en">Dragon Variation</a>, where Black pushes the g-pawn to g6 and puts the bishop on g7, White can launch a fierce attack with the <a href="yugoslav_attack.html?lang=en">Yugoslav Attack</a>. Until Black is comfortable, starting with the "small center" setup shown here is the safer choice.</p>
+      </details>
+    </div>
+
+    <h2>Safe Answers to White's Different Systems</h2>
+    <p>Besides the <a href="open_sicilian.html?lang=en">Open Sicilian</a>, where White opens the center with 2.Nf3 and 3.d4, White sometimes chooses a different plan on move 2 or 3. Here are the systems you will meet most often, along with safe answers for Black.</p>
+    <div class="card">
+      <span class="card-label">ANTI-SICILIANS</span>
+      <ul>
+        <li><strong><a href="alapin_sicilian.html?lang=en">Alapin Variation</a> (2.c3)</strong>: White pushes c3 and then d4, aiming to build a two-pawn center. Black can safely answer with 2...Nf6, attacking the e4-pawn, or 2...d5, trading central pawns. After 2...d5 3.exd5 Qxd5, White cannot bring a knight to c3 because the pawn is there, so Black's queen is hard to chase away from d5.</li>
+        <li><strong><a href="smithmorra.html?lang=en">Smith-Morra Gambit</a> (2.d4 cxd4 3.c3)</strong>: Taking with 3...dxc3 is not a bad move. If Black prefers not to take, 3...Nf6 (4.e5 Nd5) or 3...d5 leads to a calmer position similar to the Alapin.</li>
+        <li><strong><a href="grand_prix.html?lang=en">Grand Prix Attack</a> (2.Nc3 and 3.f4)</strong>: White pushes the f-pawn to f4 to attack on the kingside and develops the bishop to c4 or b5. When White's bishop comes to c4, Black can safely push ...e6 to block its path.</li>
+        <li><strong><a href="moscow_sicilian.html?lang=en">Moscow Variation</a> (2.Nf3 d6 3.Bb5+)</strong>: Black blocks the check with 3...Bd7. Once the bishops are traded, Black can play a calm position.</li>
+        <li><strong><a href="rossolimo_attack.html?lang=en">Rossolimo Attack</a> (2.Nf3 Nc6 3.Bb5)</strong>: White sometimes trades the bishop for the c6-knight to double Black's c-pawns. Black should play 3...e6 or 3...g6 and develop the kingside pieces quickly.</li>
+      </ul>
+    </div>
+
+    <h2>Common Mistakes</h2>
+    <div class="card">
+      <span class="card-label">COMMON MISTAKES</span>
+      <p><strong>Mistake 1: Taking the e4-pawn when it is defended</strong></p>
+      <img class="board" src="sic_nxe4.svg" alt="An Open Sicilian position where White's Nc3 defends the e4-pawn">
+      <div class="caption">1.e4 c5 2.Nf3 d6 3.d4 cxd4 4.Nxd4 Nf6 5.Nc3</div>
+      <p>In the diagram, taking the pawn with 5...Nxe4 is a mistake. White's e4-pawn is defended by the knight on c3, so White recaptures with 6.Nxe4. Black loses a knight for a single pawn.</p>
+      <p>White's Nc3 not only develops a knight but also defends the e4-pawn. Before Black captures anything, Black should check whether that piece is defended by another one.</p>
+
+      <p><strong>Mistake 2: Forgetting about f7 in the Smith-Morra</strong></p>
+      <img class="board" src="sic_morra_trap.svg" alt="A Smith-Morra Gambit position where White has pushed e5 and the c4-bishop eyes f7">
+      <div class="caption">1.e4 c5 2.d4 cxd4 3.c3 dxc3 4.Nxc3 Nc6 5.Nf3 d6 6.Bc4 Nf6 7.e5</div>
+      <p>Black has developed with 6...Nf6. It looks natural, but White pushes 7.e5, attacking the f6-knight and the d6-pawn at the same time.</p>
+      <p>If Black captures with 7...Nxe5, White plays 8.Nxe5 dxe5 9.Bxf7+, sacrificing the bishop. Black has to take with the king, 9...Kxf7, and White wins Black's queen with 10.Qxd8. Black has lost the queen for just a bishop.</p>
+      <p>Even if Black captures with 7...dxe5, White continues 8.Qxd8+ Nxd8 9.Nb5. White is threatening to jump in with Nc7+, attacking the king on e8 and the rook on a8 at once, so Black has a hard time defending.</p>
+      <div class="jene">
+        <div class="jene-face"><img src="jene_confused_s.webp" alt="Jene" loading="lazy"><div class="jene-name">Jene</div></div>
+        <div class="bubble">If you play Nf6 here, White's e5 causes real trouble... Push e6 first to block the bishop's path!</div>
+      </div>
+      <div class="fix-box">
+        <div class="fix-label">✅ How to fix it</div>
+        Instead of 6...Nf6, Black should play 6...e6 first, blocking the path from the c4-bishop to f7.
+      </div>
+      <details class="more">
+        <summary>💡 Want to know more?</summary>
+        <p>In fact, after 7.e5 Black can still fight by retreating the knight with 7...Ng4. The position is complicated, though, so until Black is comfortable, avoiding it with 6...e6 is the better choice.</p>
+      </details>
+
+      <p style="margin-top:18px;"><strong>Mistake 3: Pushing queenside pawns while the king stays in the center</strong></p>
+      <p>Pushing ...a6 and ...b5 on the queenside is a common plan for Black in the Sicilian. But if Black keeps going without castling, the king will be caught in the center when it opens up.</p>
+      <p>White may attack Black's king on e8 with piece sacrifices such as Nd5 or Bxe6. Before pushing pawns, Black should make sure the king is safe.</p>
+      <div class="fix-box">
+        <div class="fix-label">✅ How to fix it</div>
+        Black should first develop the kingside pieces and castle, then counterattack on the queenside. For more on choosing where to castle, see <a href="castling.html?lang=en">Kingside or Queenside? How to Decide Where to Castle</a>, and for opening basics, see <a href="openings-basic.html?lang=en">Three Core Principles Every Chess Opening Should Follow</a>.
+      </div>
+    </div>
+
+    <h2>Summary</h2>
+    <p>To play the Sicilian safely, remember three rules: (1) develop your kingside pieces quickly and castle early, (2) don't get greedy with pawns, and (3) watch the d5 and f7 squares. If you're unsure which setup to choose, start with the "small center," with Black's pawns on d6 and e6. Even when White chooses a different system on move 2 or 3, Black can avoid big mistakes by calmly developing pieces and putting king safety first.</p>
+    <div class="jene">
+      <div class="jene-face"><img src="jene_happy_s.webp" alt="Jene" loading="lazy"><div class="jene-name">Jene</div></div>
+      <div class="bubble">Follow the three rules and the Sicilian won't be scary! Check the moves one by one on the <a href="sicilian.html?lang=en">Sicilian page</a>, too.</div>
+    </div>
+
+    <div class="footer"><a href="info.html">🦊 Back to Info</a><a href="index.html?lang=en">🏠 Back to Home</a></div>
+  </div>
+</div>
+<script>
+  function toggleLanguage() {
+    const isNowEn = !document.body.classList.contains('en-mode');
+    document.body.classList.toggle('en-mode');
+    localStorage.setItem('selectedLang', isNowEn ? 'en' : 'ja');
+  }
+  (function applyStoredLanguage() {
+    let stored = null;
+    try {
+      const q = new URLSearchParams(location.search).get('lang');
+      stored = (q === 'en' || q === 'ja') ? q : localStorage.getItem('selectedLang');
+    } catch (e) {}
+    if (stored === 'ja') {
+      document.body.classList.remove('en-mode');
+    } else {
+      document.body.classList.add('en-mode');
+    }
+  })();
+</script>
+</body>
+</html>
