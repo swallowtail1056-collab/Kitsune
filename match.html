@@ -6646,6 +6646,17 @@ if (banner) banner.style.visibility = p.superhard ? 'visible' : 'hidden';
       capturedEl.innerHTML = '';
       capturedEl.appendChild(buildCapturedRow(LANG === 'ja' ? '自分が取った駒: ' : 'You captured: ', byMe, oppColor, diff > 0 ? diff : 0));
       capturedEl.appendChild(buildCapturedRow(LANG === 'ja' ? 'ジーンが取った駒: ' : 'Jene captured: ', byJene, beginnerState.myColor, diff < 0 ? -diff : 0));
+      // ⚖️ 取った駒の点数の差を、対局中ずっと表示する(同じときは±0)
+      const scoreLine = document.createElement('div');
+      scoreLine.style.cssText = 'font-size:0.9rem;font-weight:700;margin-top:2px;color:var(--brown-dark);';
+      const ja = LANG === 'ja';
+      scoreLine.textContent = '⚖️ ' + (diff > 0
+        ? (ja ? '点数: あなたが +' + diff + ' リード' : 'Score: you lead by +' + diff)
+        : diff < 0
+          ? (ja ? '点数: ジーンが +' + (-diff) + ' リード' : 'Score: Jene leads by +' + (-diff))
+          : (ja ? '点数: 互角 (±0)' : 'Score: even (±0)'));
+      scoreLine.title = ja ? 'ポーン1・ナイト3・ビショップ3・ルーク5・クイーン9で数えています' : 'Pawn 1, Knight 3, Bishop 3, Rook 5, Queen 9';
+      capturedEl.appendChild(scoreLine);
     }
   }
 
@@ -6763,6 +6774,69 @@ if (banner) banner.style.visibility = p.superhard ? 'visible' : 'hidden';
     return best;
   }
 
+  // 🦊 対局中のジーンのアドバイス(取られそうな駒・点数の差)
+  function kcBeginnerMaterialDiff() {
+    let myVal = 0, jeneVal = 0;
+    beginnerChess.history({ verbose: true }).forEach((mv) => {
+      if (!mv.captured) return;
+      const val = PIECE_VALUE[mv.captured] || 0;
+      if (mv.color === beginnerState.myColor) myVal += val; else jeneVal += val;
+    });
+    return myVal - jeneVal;
+  }
+  // 自分の駒のうち、相手にただで(または損な交換で)取られてしまうものを1つ探す
+  function kcFindHangingPiece() {
+    if (beginnerChess.in_check()) return null;
+    const myColor = beginnerState.myColor;
+    const oppColor = myColor === 'w' ? 'b' : 'w';
+    const parts = beginnerChess.fen().split(' ');
+    parts[1] = oppColor; parts[3] = '-';
+    const fen = parts.join(' ');
+    const temp = new Chess();
+    if (!temp.load(fen)) return null;
+    let worst = null;
+    temp.moves({ verbose: true }).forEach((r) => {
+      // ポーンまで毎回知らせると多すぎるので、ナイト・ビショップ・ルーク・クイーンだけを見る
+      if (!r.captured || r.captured === 'k' || r.captured === 'p') return;
+      const gained = PIECE_VALUE[r.captured] || 0;
+      temp.move(r);
+      const canRecapture = temp.moves({ verbose: true }).some((mr) => mr.to === r.to && mr.captured);
+      temp.undo();
+      const net = gained - (canRecapture ? (PIECE_VALUE[r.piece] || 0) : 0);
+      if (net >= 1 && (!worst || net > worst.net)) worst = { square: r.to, type: r.captured, net };
+    });
+    return worst;
+  }
+  function kcShowBeginnerAdvice() {
+    const isJa = LANG === 'ja';
+    const bubble = document.getElementById('beginnerJeneSpeechBubble');
+    const img = document.getElementById('beginnerJeneSpeechImg');
+    const hang = kcFindHangingPiece();
+    if (hang) {
+      const name = PIECE_NAME[isJa ? 'ja' : 'en'][hang.type.toUpperCase()];
+      showBeginnerJeneSpeech('generic', '');
+      if (bubble) bubble.textContent = isJa
+        ? hang.square + 'の' + name + 'が取られそうだよ!守るか、安全なところに動かそう。'
+        : 'Your ' + name + ' on ' + hang.square + ' could be captured! Defend it or move it somewhere safe.';
+      if (img) img.src = '/jene_confused.png';
+      return true;
+    }
+    const diff = kcBeginnerMaterialDiff();
+    if (beginnerState.lastAdviceDiff === undefined) beginnerState.lastAdviceDiff = 0;
+    if (diff !== beginnerState.lastAdviceDiff) {
+      beginnerState.lastAdviceDiff = diff;
+      showBeginnerJeneSpeech('generic', '');
+      if (bubble) bubble.textContent = diff > 0
+        ? (isJa ? 'いま' + diff + '点リードしているよ!この調子で、駒をむだに取られないようにしよう。' : "You're ahead by " + diff + ' point' + (diff > 1 ? 's' : '') + "! Keep it up and don't give pieces away.")
+        : diff < 0
+          ? (isJa ? 'いまはジーンが' + (-diff) + '点リードしているよ。取り返すチャンスを探してみて!' : "I'm ahead by " + (-diff) + ' point' + (-diff > 1 ? 's' : '') + ' right now. Look for a chance to win material back!')
+          : (isJa ? '点数は同じになったよ。ここからが勝負だね!' : "We're even on points now. Here's where it gets exciting!");
+      if (img) img.src = diff > 0 ? '/jene_happy.png' : (diff < 0 ? '/jene_quiz.png' : '/jene_normal.png');
+      return true;
+    }
+    return false;
+  }
+
   function showBeginnerHint() {
     if (beginnerChess.turn() !== beginnerState.myColor || beginnerChess.game_over()) {
       beginnerState.hintFrom = null; beginnerState.hintTo = null;
@@ -6773,7 +6847,8 @@ if (banner) banner.style.visibility = p.superhard ? 'visible' : 'hidden';
     if (!hint) { beginnerState.hintFrom = null; beginnerState.hintTo = null; return; }
     beginnerState.hintFrom = hint.from;
     beginnerState.hintTo = hint.to;
-    showBeginnerJeneSpeech(hint.reason, hint.san);
+    // 取られそうな駒や点数の変化があるときは、そちらを先に伝える(ヒントの点はそのまま表示)
+    if (!kcShowBeginnerAdvice()) showBeginnerJeneSpeech(hint.reason, hint.san);
   }
 
   // ===== ジーン(AI)の一手:オープニングデータに沿う手があればそれを優先、なければ通常のAIロジック =====
