@@ -1450,10 +1450,27 @@ applyBoardTheme();
       return captures[0];
     }
     // hard: 2手先まで簡易ミニマックス(forColor側にとっての最善を探索)
+    // ＋同じ手の行ったり来たり・意味のないキングの移動を避ける工夫
+    const homeRank = forColor === 'w' ? '1' : '8';
+    const hist = chess.history({ verbose: true });
+    let myLast = null;
+    for (let i = hist.length - 1; i >= 0; i--) { if (hist[i].color === forColor) { myLast = hist[i]; break; } }
+    // これまでに出てきた局面を数える(同じ局面のくり返しを避けるため)
+    const posKey = (c) => c.fen().split(' ').slice(0, 4).join(' ');
+    const posCount = {};
+    try {
+      const replay = new Chess();
+      posCount[posKey(replay)] = 1;
+      for (const h of hist) { replay.move(h.san); const k = posKey(replay); posCount[k] = (posCount[k] || 0) + 1; }
+    } catch (e) {}
+    const inCheckNow = chess.in_check();
+    const queensOn = chess.board().some(row => row.some(p => p && p.type === 'q'));
+    const losingNow = sign * aiEvaluateBoard(chess) < -2; // 大きく負けている時は、くり返し(引き分け)をむしろ歓迎する
     let bestMove = moves[0];
     let bestScore = -Infinity;
     moves.forEach(m => {
       chess.move(m);
+      const repeats = posCount[posKey(chess)] || 0;
       let score;
       if (chess.game_over()) {
         score = chess.in_checkmate() ? 1000 : 0;
@@ -1462,13 +1479,33 @@ applyBoardTheme();
         let worstForAI = Infinity;
         oppMoves.forEach(om => {
           chess.move(om);
-          const s = sign * aiEvaluateBoard(chess);
+          let s = sign * aiEvaluateBoard(chess);
+          // 相手が駒を取った手は、こちらが取り返せる分も見てから評価する(取り返せる交換を「損」と思いこまないため)
+          if (om.captured && !chess.game_over()) {
+            const recaps = chess.moves({ verbose: true }).filter(x => x.to === om.to && x.captured);
+            recaps.forEach(rc => {
+              chess.move(rc);
+              const s2 = sign * aiEvaluateBoard(chess);
+              if (s2 > s) s = s2;
+              chess.undo();
+            });
+          }
+          if (chess.in_checkmate()) s = -1000;
           if (s < worstForAI) worstForAI = s;
           chess.undo();
         });
         score = oppMoves.length === 0 ? sign * aiEvaluateBoard(chess) : worstForAI;
       }
       chess.undo();
+      // 同じ局面のくり返しは避ける
+      if (repeats >= 1 && !losingNow) score -= 0.6 * repeats;
+      // 直前に動かした駒を、元のマスにすぐ戻す手は避ける
+      if (myLast && m.from === myLast.to && m.to === myLast.from) score -= 0.4;
+      else if (myLast && m.from === myLast.to && !m.captured && !inCheckNow) score -= 0.15;
+      // チェックされていないのにキングを動かす手(キャスリング以外)は、クイーンが残っている間は控える
+      if (m.piece === 'k' && !inCheckNow && m.flags.indexOf('k') === -1 && m.flags.indexOf('q') === -1 && queensOn) score -= 0.5;
+      // まだ動いていないナイト・ビショップを出す手を少し優先する
+      if ((m.piece === 'n' || m.piece === 'b') && m.from[1] === homeRank && !m.captured) score += 0.15;
       score += Math.random() * 0.15; // 同点の手が続く時に同じ手を無限に繰り返さないよう、ごく僅かにゆらぎを持たせる
       if (score > bestScore) { bestScore = score; bestMove = m; }
     });
