@@ -3659,6 +3659,7 @@ await set(ref(db, 'matches/' + matchId), {
 
   function openMatch(user, matchId) {
     if (!user || !matchId) return;
+    ['rematchBtn', 'rematchAcceptArea', 'matchReadyBtn'].forEach((id) => { const el = document.getElementById(id); if (el) el.remove(); });
     if (openedMatchUnsub) { openedMatchUnsub(); openedMatchUnsub = null; }
     if (oppPresenceUnsub) { oppPresenceUnsub(); oppPresenceUnsub = null; }
     kcOppOfflineSince = null;
@@ -4816,6 +4817,106 @@ const PIECE_IMG = {
     containerEl.appendChild(btn);
   }
 
+  // 🔄 再戦の申し込みボタンと、相手からの再戦申し込み(終局したすべての対局で使う)
+  const kcRematchOpened = new Set();
+  function kcRenderRematch(m, user, matchId, statusEl) {
+      // 相手が再戦を受けたら、申し込んだ人も新しい対局を開く(1回だけ)
+      if (m.rematchMatchId && !kcRematchOpened.has(m.rematchMatchId)) {
+        kcRematchOpened.add(m.rematchMatchId);
+        if (myMatchId === matchId) { setTimeout(() => openMatch(user, m.rematchMatchId), 300); return; }
+      }
+      if (m.rematchMatchId) return; // もう再戦が始まっている対局では、再戦のボタンは出さない
+      // 再戦ボタン
+      const existingRematch = document.getElementById('rematchBtn');
+      if (!existingRematch) {
+        const rematchBtn = document.createElement('button');
+        rematchBtn.id = 'rematchBtn';
+        rematchBtn.textContent = LANG === 'ja' ? '🔄 再戦を申し込む' : '🔄 Request Rematch';
+        rematchBtn.style.cssText = 'margin-top:10px; display:block; width:100%;';
+        const rematchOppUid = myColor === 'w' ? m.black : m.white;
+        const markOppDeleted = () => {
+          rematchBtn.disabled = true;
+          rematchBtn.textContent = LANG === 'ja' ? '相手のアカウントは削除されているため、再戦を申し込めません。' : "Your opponent's account has been deleted, so a rematch isn't possible.";
+        };
+        // 相手が退会していないか確認（退会するとpublicProfilesが消える）
+        get(ref(db, 'publicProfiles/' + rematchOppUid)).then(ps => { if (!ps.exists()) markOppDeleted(); }).catch(() => {});
+        rematchBtn.onclick = async () => {
+          rematchBtn.disabled = true;
+          const oppProf = await get(ref(db, 'publicProfiles/' + rematchOppUid)).catch(() => null);
+          if (oppProf && !oppProf.exists()) { markOppDeleted(); return; }
+          rematchBtn.textContent = LANG === 'ja' ? '申し込み中...' : 'Sending...';
+          await update(ref(db, 'matches/' + matchId), {
+            rematchRequestBy: user.uid,
+            rematchRequestAt: Date.now()
+          });
+          rematchBtn.textContent = LANG === 'ja' ? '✅ 再戦を申し込みました。相手の返答をお待ちください。' : '✅ Rematch requested. Waiting for opponent.';
+        };
+        // 名前とメッセージの行の中に入れると文字が縦につぶれるので、その行の下に置く
+        { const row = statusEl.parentNode; row.parentNode.insertBefore(rematchBtn, row.nextSibling); }
+      }
+
+      // 相手から再戦申し込みが来ている場合
+      if (m.rematchRequestBy && m.rematchRequestBy !== user.uid) {
+        const existingAccept = document.getElementById('rematchAcceptArea');
+        if (!existingAccept) {
+          const acceptArea = document.createElement('div');
+          acceptArea.id = 'rematchAcceptArea';
+          acceptArea.style.marginTop = '10px';
+          const msg = document.createElement('p');
+          msg.style.fontWeight = '700';
+          msg.textContent = LANG === 'ja' ? '相手が再戦を申し込んでいます。' : 'Your opponent wants a rematch.';
+          const acceptBtn = document.createElement('button');
+          acceptBtn.textContent = LANG === 'ja' ? '✅ 受ける' : '✅ Accept';
+          acceptBtn.style.marginRight = '8px';
+          acceptBtn.onclick = async () => {
+            acceptBtn.disabled = true;
+            const oppUid = m.rematchRequestBy;
+            const myUid = user.uid;
+            // 再戦は、白と黒を入れかえて、同じ持ち時間で新しい対局を作る
+            const newMatchId = 'm_' + Date.now();
+            const myColorNew = myColor === 'w' ? 'b' : 'w';
+            const myName = myColor === 'w' ? m.whiteName : m.blackName;
+            const oppName = myColor === 'w' ? m.blackName : m.whiteName;
+            const tc = RM_TC_MS[m.timeControl] ? m.timeControl : 'rapid';
+            const isCorr = tc === 'correspondence';
+            const baseMs = RM_TC_MS[tc].base;
+            await set(ref(db, 'matches/' + newMatchId), {
+              white: myColorNew === 'w' ? myUid : oppUid,
+              black: myColorNew === 'w' ? oppUid : myUid,
+              whiteName: myColorNew === 'w' ? myName : oppName,
+              blackName: myColorNew === 'w' ? oppName : myName,
+              fen: new Chess().fen(),
+              turn: 'w',
+              status: isCorr ? 'active' : 'waiting',
+              timeControl: tc,
+              increment: isCorr ? 0 : (m.increment || 0),
+              whiteTime: baseMs,
+              blackTime: baseMs,
+              whiteJoined: isCorr,
+              blackJoined: isCorr,
+              turnStartedAt: isCorr ? Date.now() : null,
+              rated: m.rated !== false && !(await window.kcInvolvesGuest(myUid, oppUid))
+            });
+            await set(ref(db, 'currentMatches/' + myUid + '/' + newMatchId), true);
+            await set(ref(db, 'currentMatches/' + oppUid + '/' + newMatchId), true);
+            // 申し込んだ人の画面にも、新しい対局を知らせる
+            await update(ref(db, 'matches/' + matchId), { rematchRequestBy: null, rematchMatchId: newMatchId });
+            openMatch(user, newMatchId);
+          };
+          const declineBtn = document.createElement('button');
+          declineBtn.textContent = LANG === 'ja' ? '断る' : 'Decline';
+          declineBtn.onclick = async () => {
+            await update(ref(db, 'matches/' + matchId), { rematchRequestBy: null });
+            acceptArea.remove();
+          };
+          acceptArea.appendChild(msg);
+          acceptArea.appendChild(acceptBtn);
+          acceptArea.appendChild(declineBtn);
+          { const row = statusEl.parentNode; row.parentNode.insertBefore(acceptArea, row.nextSibling); }
+        }
+      }
+  }
+
   function renderMiniBoard(m, user, matchId) {
     latestMatchData = m;
     const boardEl = document.getElementById('miniBoard');
@@ -4862,6 +4963,7 @@ const PIECE_IMG = {
       applyEloIfNeeded(matchId, m, user, wonByTimeout ? 1 : 0, 'timeout');
       applyAnalysisIfNeeded(matchId, m, user, wonByTimeout ? 1 : 0);
       document.getElementById('reportToggleBtn').style.display = 'inline-block';
+      kcRenderRematch(m, user, matchId, statusEl);
     } else if (m.status === 'resigned') {
       const iWonByResign = m.winner === myColor;
       statusEl.textContent = m.abandonedBy
@@ -4875,11 +4977,13 @@ const PIECE_IMG = {
       applyEloIfNeeded(matchId, m, user, iWonByResign ? 1 : 0, m.abandonedBy ? 'abandon' : 'resign');
       applyAnalysisIfNeeded(matchId, m, user, iWonByResign ? 1 : 0);
       document.getElementById('reportToggleBtn').style.display = 'inline-block';
+      kcRenderRematch(m, user, matchId, statusEl);
     } else if (m.status === 'draw_agreed') {
       statusEl.textContent = LANG === 'ja' ? '合意によりドローになりました。' : 'Draw agreed by both players.';
       applyEloIfNeeded(matchId, m, user, 0.5, 'draw_agreed');
       applyAnalysisIfNeeded(matchId, m, user, 0.5);
       document.getElementById('reportToggleBtn').style.display = 'inline-block';
+      kcRenderRematch(m, user, matchId, statusEl);
     } else if (m.status === 'aborted') {
       statusEl.textContent = m.abortedBy === myColor
         ? (LANG === 'ja' ? '最初の1手が指されなかったため、対局は中止になりました。(勝ち負け・レーティングは変わりません)' : 'The game was aborted because the first move was not made in time. (No result, rating unchanged.)')
@@ -4905,76 +5009,7 @@ const PIECE_IMG = {
       statusEl.textContent = resultMsg;
       document.getElementById('reportToggleBtn').style.display = 'inline-block';
 
-      // 再戦ボタン
-      const existingRematch = document.getElementById('rematchBtn');
-      if (!existingRematch) {
-        const rematchBtn = document.createElement('button');
-        rematchBtn.id = 'rematchBtn';
-        rematchBtn.textContent = LANG === 'ja' ? '🔄 再戦を申し込む' : '🔄 Request Rematch';
-        rematchBtn.style.cssText = 'margin-top:10px; display:block; width:100%;';
-        const rematchOppUid = myColor === 'w' ? m.black : m.white;
-        const markOppDeleted = () => {
-          rematchBtn.disabled = true;
-          rematchBtn.textContent = LANG === 'ja' ? '相手のアカウントは削除されているため、再戦を申し込めません。' : "Your opponent's account has been deleted, so a rematch isn't possible.";
-        };
-        // 相手が退会していないか確認（退会するとpublicProfilesが消える）
-        get(ref(db, 'publicProfiles/' + rematchOppUid)).then(ps => { if (!ps.exists()) markOppDeleted(); }).catch(() => {});
-        rematchBtn.onclick = async () => {
-          rematchBtn.disabled = true;
-          const oppProf = await get(ref(db, 'publicProfiles/' + rematchOppUid)).catch(() => null);
-          if (oppProf && !oppProf.exists()) { markOppDeleted(); return; }
-          rematchBtn.textContent = LANG === 'ja' ? '申し込み中...' : 'Sending...';
-          await update(ref(db, 'matches/' + matchId), {
-            rematchRequestBy: user.uid,
-            rematchRequestAt: Date.now()
-          });
-          rematchBtn.textContent = LANG === 'ja' ? '✅ 再戦を申し込みました。相手の返答をお待ちください。' : '✅ Rematch requested. Waiting for opponent.';
-        };
-        // 名前とメッセージの行の中に入れると文字が縦につぶれるので、その行の下に置く
-        { const row = statusEl.parentNode; row.parentNode.insertBefore(rematchBtn, row.nextSibling); }
-      }
-
-      // 相手から再戦申し込みが来ている場合
-      if (m.rematchRequestBy && m.rematchRequestBy !== user.uid) {
-        const existingAccept = document.getElementById('rematchAcceptArea');
-        if (!existingAccept) {
-          const acceptArea = document.createElement('div');
-          acceptArea.id = 'rematchAcceptArea';
-          acceptArea.style.marginTop = '10px';
-          const msg = document.createElement('p');
-          msg.style.fontWeight = '700';
-          msg.textContent = LANG === 'ja' ? '相手が再戦を申し込んでいます。' : 'Your opponent wants a rematch.';
-          const acceptBtn = document.createElement('button');
-          acceptBtn.textContent = LANG === 'ja' ? '✅ 受ける' : '✅ Accept';
-          acceptBtn.style.marginRight = '8px';
-          acceptBtn.onclick = async () => {
-            const oppUid = m.rematchRequestBy;
-            const myUid = user.uid;
-            const newMatchRef = push(ref(db, 'matches'));
-            const newMatchId = newMatchRef.key;
-            const myColorNew = myColor === 'w' ? 'b' : 'w';
-            await set(newMatchRef, {
-              players: { [myUid]: myColorNew === 'w' ? 'white' : 'black', [oppUid]: myColorNew === 'w' ? 'black' : 'white' },
-              white: myColorNew === 'w' ? myUid : oppUid,
-              black: myColorNew === 'w' ? oppUid : myUid,
-              status: 'active', turn: 'w', moves: [], fen: new Chess().fen(),
-              createdAt: Date.now(), timeControl: m.timeControl || 180,
-              rated: m.rated !== false && !(await window.kcInvolvesGuest(myUid, oppUid))
-            });
-            window.location.href = 'match.html?id=' + newMatchId;
-          };
-          const declineBtn = document.createElement('button');
-          declineBtn.textContent = LANG === 'ja' ? '断る' : 'Decline';
-          declineBtn.onclick = async () => {
-            await update(ref(db, 'matches/' + matchId), { rematchRequestBy: null });
-            acceptArea.remove();
-          };
-          acceptArea.appendChild(msg);
-          acceptArea.appendChild(acceptBtn);
-          acceptArea.appendChild(declineBtn);
-          { const row = statusEl.parentNode; row.parentNode.insertBefore(acceptArea, row.nextSibling); }
-        }
-      }
+      kcRenderRematch(m, user, matchId, statusEl);
     } else {
       statusEl.textContent = (LANG === 'ja' ? '対戦相手: ' : 'Opponent: ') + oppName
         + (m.rated === false ? (LANG === 'ja' ? '(ノーレート)' : ' (unrated)') : '') + ' | ' +
