@@ -4843,8 +4843,14 @@ const PIECE_IMG = {
 
   async function renderLikeButton(matchId, containerEl, user) {
     const isJa = LANG === 'ja';
-    const snap = await get(ref(db, 'matchLikes/' + matchId));
-    const data = snap.val() || {};
+    let data = {};
+    try {
+      const snap = await get(ref(db, 'matchLikes/' + matchId));
+      data = snap.val() || {};
+    } catch (e) {
+      // 読み込めなかったときも、ボタンだけは出しておく(数は表示しない)
+      console.error('いいねの読み込みに失敗:', e);
+    }
     const uids = Object.keys(data);
     const count = uids.length;
     const iLiked = !!data[user.uid];
