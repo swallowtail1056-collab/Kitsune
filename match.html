@@ -2346,7 +2346,7 @@ applyBoardTheme();
 
   // ===== 広告(Android アプリの中だけ・AdMob) =====
   // ブラウザやホーム画面で開いたときは何もしない。対局が終わったときだけ、全画面広告を出す
-  const KC_AD_TEST = true; // テスト中は true(テスト広告)。公開前に false にして本番の広告にする
+  const KC_AD_TEST = false; // テスト中は true(テスト広告)。false で本番の広告(公開用)
   const KC_AD_UNIT = KC_AD_TEST ? 'ca-app-pub-3940256099942544/1033173712' : 'ca-app-pub-1034556404852942/7283368228';
   const KC_AD_MIN_GAP = 3 * 60 * 1000; // 広告は3分に1回まで
   let kcAdReady = false, kcAdLastShown = 0;
