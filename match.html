@@ -305,10 +305,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
    友達同士のオンライン対局に加えて、コンピューター(AI)を相手にした一人での対局モードもすでに実装済みです。初級・中級・上級の3段階の難易度から選べ、ログイン不要でいつでもすぐに始められます。初級はランダムに手を指し、中級は駒を取れる手を優先します。上級は本物のチェスエンジン(Stockfish)が指すので、かなり手強いです。友達がまだオンラインでない時間帯でも、AI相手に気軽に実戦形式の練習ができます。オンライン対局の持ち時間(Rapid・Blitz・Bullet、固定時間・インクリメントありから選択可)、対局数・勝敗記録・Eloレーティングもあわせて実装済みで、KitsuneChessの対局モードは今後も少しずつ機能を充実させていく予定です。</p>
 <details style="margin-top:8px;border:1px dashed rgba(124,74,30,0.5);border-radius:10px;padding:6px 12px;">
 <summary style="cursor:pointer;font-weight:700;" data-ja="💡 Eloレーティングとは？(クリックで開く)" data-en="💡 What is an Elo rating? (tap to open)">💡 Eloレーティングとは？(クリックで開く)</summary>
-<p style="font-size:0.92rem;" data-ja="Eloレーティングは、チェスの強さを数字で表す仕組みで、世界中のチェスの大会やサイトで使われています。KitsuneChessでは、はじめは全員1200から始まり、レート戦で勝つと上がり、負けると下がります。" data-en="An Elo rating is a number that shows how strong a chess player is, and it is used by chess tournaments and sites all over the world. On KitsuneChess, everyone starts at 1200. Your rating goes up when you win a rated game and down when you lose.">Eloレーティングは、チェスの強さを数字で表す仕組みで、世界中のチェスの大会やサイトで使われています。KitsuneChessでは、はじめは全員1200から始まり、レート戦で勝つと上がり、負けると下がります。</p>
+<p style="font-size:0.92rem;" data-ja="Eloレーティングは、チェスの強さを数字で表す仕組みで、世界中のチェスの大会やサイトで使われています。KitsuneChessでは、レーティングはBullet・Blitz・Rapid・通信対局の持ち時間ごとに別々で、はじめはどれも1200から始まります。そのタイプのレート戦で勝つと上がり、負けると下がります。" data-en="An Elo rating is a number that shows how strong a chess player is, and it is used by chess tournaments and sites all over the world. On KitsuneChess, you have a separate rating for each time control — Bullet, Blitz, Rapid and Correspondence — and each one starts at 1200. It goes up when you win a rated game of that type and down when you lose.">Eloレーティングは、チェスの強さを数字で表す仕組みで、世界中のチェスの大会やサイトで使われています。KitsuneChessでは、レーティングはBullet・Blitz・Rapid・通信対局の持ち時間ごとに別々で、はじめはどれも1200から始まります。そのタイプのレート戦で勝つと上がり、負けると下がります。</p>
 <p style="font-size:0.92rem;" data-ja="上がり下がりの幅は、相手との差で変わります。自分よりレートが高い相手に勝つと大きく上がり、自分よりレートが低い相手に負けると大きく下がります。1回の対局で動くのは、最大で32点です。" data-en="How much it changes depends on the rating gap. Beating a higher-rated opponent raises your rating a lot, while losing to a lower-rated one lowers it a lot. A single game can move your rating by up to 32 points.">上がり下がりの幅は、相手との差で変わります。自分よりレートが高い相手に勝つと大きく上がり、自分よりレートが低い相手に負けると大きく下がります。1回の対局で動くのは、最大で32点です。</p>
 <p style="font-size:0.92rem;" data-ja="例：同じ1200どうしなら、勝つと+16、負けると−16です。1200の人が1400の人に勝つと+24、1200の人が1000の人に負けると−24になります。引き分けのときは、レートが低いほうが少し上がり、高いほうが少し下がります。" data-en="Examples: between two 1200 players, a win is +16 and a loss is −16. If a 1200 player beats a 1400 player, it's +24; if a 1200 player loses to a 1000 player, it's −24. In a draw, the lower-rated player gains a little and the higher-rated player loses a little.">例：同じ1200どうしなら、勝つと+16、負けると−16です。1200の人が1400の人に勝つと+24、1200の人が1000の人に負けると−24になります。引き分けのときは、レートが低いほうが少し上がり、高いほうが少し下がります。</p>
-<p style="font-size:0.92rem;" data-ja="次の対局は、レートが変わりません：ノーレートで申し込んだ対局、ゲストが参加する対局、お互い10手未満で終わった対局、同じ相手との4局目以降のレート戦(1日3局まで)、同じ端末のアカウントどうしの対局。また、相手のレート戦がまだ5局未満のときは、自分のレートは変わりません。" data-en="Ratings do not change in these games: games challenged as unrated, games involving a guest, games that end before each side has made 10 moves, the 4th and later rated games against the same opponent in one day (the limit is 3), and games between accounts on the same device. Also, if your opponent has played fewer than 5 rated games, your own rating stays the same.">次の対局は、レートが変わりません：ノーレートで申し込んだ対局、ゲストが参加する対局、お互い10手未満で終わった対局、同じ相手との4局目以降のレート戦(1日3局まで)、同じ端末のアカウントどうしの対局。また、相手のレート戦がまだ5局未満のときは、自分のレートは変わりません。</p>
+<p style="font-size:0.92rem;" data-ja="次の対局は、レートが変わりません：ノーレートで申し込んだ対局、ゲストが参加する対局、お互い10手未満で終わった対局、同じ相手との4局目以降のレート戦(1日3局まで)、同じ端末のアカウントどうしの対局。また、相手のそのタイプのレート戦がまだ5局未満のときは、自分のレートは変わりません。" data-en="Ratings do not change in these games: games challenged as unrated, games involving a guest, games that end before each side has made 10 moves, the 4th and later rated games against the same opponent in one day (the limit is 3), and games between accounts on the same device. Also, if your opponent has played fewer than 5 rated games of that type, your own rating stays the same.">次の対局は、レートが変わりません：ノーレートで申し込んだ対局、ゲストが参加する対局、お互い10手未満で終わった対局、同じ相手との4局目以降のレート戦(1日3局まで)、同じ端末のアカウントどうしの対局。また、相手のそのタイプのレート戦がまだ5局未満のときは、自分のレートは変わりません。</p>
 </details>
 <details style="margin-top:8px;border:1px dashed rgba(124,74,30,0.5);border-radius:10px;padding:6px 12px;">
 <summary style="cursor:pointer;font-weight:700;" data-ja="💡 持ち時間とインクリメントとは？(クリックで開く)" data-en="💡 What are time controls and increments? (tap to open)">💡 持ち時間とインクリメントとは？(クリックで開く)</summary>
@@ -1846,7 +1846,7 @@ applyBoardTheme();
     Object.keys(tcStats).forEach((tc) => {
       const s = tcStats[tc];
       tcHtml += '<div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid rgba(255,255,255,0.08);font-size:0.85rem;">'
-        + '<span>' + (TC_LABELS[tc] || tc) + '</span>'
+        + '<span>' + (TC_LABELS[tc] || tc) + ' (' + kcRatingOf(prof, tc) + ')</span>'
         + '<span>' + s.wins + (isJa ? '勝' : 'W') + ' ' + s.losses + (isJa ? '敗' : 'L') + ' ' + s.draws + (isJa ? '分' : 'D') + '</span></div>';
     });
     if (!tcHtml) tcHtml = '<p style="color:#888;font-size:0.85rem;">' + (isJa ? 'まだ対局記録がありません。' : 'No games played yet.') + '</p>';
@@ -1901,7 +1901,8 @@ applyBoardTheme();
       + '<div id="profileBioBox" style="margin-bottom:14px;">' + bioHtml + '</div>'
       + '<div style="display:flex;justify-content:space-between;font-size:0.85rem;color:#888;margin-bottom:14px;">'
       + '<span>' + (isJa ? '登録日: ' : 'Joined: ') + foundedText + '</span></div>'
-      + '<p style="font-weight:700;margin:12px 0 4px;">⭐ ' + (isJa ? 'レーティング' : 'Rating') + ': ' + (prof.rating || 1200) + '</p>'
+      + '<p style="font-weight:700;margin:12px 0 4px;">⭐ ' + (isJa ? 'レーティング' : 'Ratings') + '</p>'
+      + '<p style="font-size:0.85rem;margin:0 0 6px;">' + kcAllRatingsText(prof) + '</p>'
       + '<p style="font-size:0.85rem;color:#ccc;margin-bottom:12px;">' + wld + '</p>'
       + '<p style="font-weight:700;margin:12px 0 4px;">⏱ ' + (isJa ? '持ち時間別成績' : 'Stats by Time Control') + '</p>'
       + tcHtml
@@ -2892,7 +2893,7 @@ applyBoardTheme();
       const snap = await get(ref(db, 'publicProfiles/' + friendUid));
       const friendProfile = snap.val() || {};
       const friendName = friendProfile.username || '(unknown)';
-      const rating = friendProfile.rating || 1200;
+      const rating = kcMainRating(friendProfile).text;
       const wld = (friendProfile.wins || 0) + (LANG === 'ja' ? '勝' : 'W') + (friendProfile.losses || 0) + (LANG === 'ja' ? '敗' : 'L') + (friendProfile.draws || 0) + (LANG === 'ja' ? '分' : 'D');const vsSnap = await get(ref(db, 'publicProfiles/' + user.uid + '/vsRecord/' + friendUid));
       const vs = vsSnap.val() || { wins: 0, losses: 0, draws: 0 };
       const vsLabel = LANG === 'ja'
@@ -3143,7 +3144,7 @@ await set(ref(db, 'matches/' + matchId), {
     if (window.KC_BANNED) { alert(LANG === 'ja' ? 'このアカウントは利用規約に反する行為があったため、オンライン対局を利用できません。' : 'This account has been restricted from online play due to a violation of our rules.'); return; }
     const profSnap = await get(ref(db, 'publicProfiles/' + user.uid));
     const myProfile = profSnap.val() || {};
-    const myRating = myProfile.rating || 1200;
+    const myRating = kcRatingOf(myProfile, timeControl);
     const myName = myProfile.username || user.displayName || '';
     const key = rmKey(timeControl, fixed);
     rmQueueKey = key;
@@ -3328,6 +3329,26 @@ await set(ref(db, 'matches/' + matchId), {
   let latestMatchInvitesData = null;
   let latestAnalysisData = null;
   let latestRatingData = 1200;
+  // ===== 持ち時間ごとのレーティング =====
+  // ratings/{bullet|blitz|rapid|correspondence} に別々に記録する。
+  // 以前の1つだけのレーティング(rating)は、そのタイプのレート戦をしたことがあるタイプにだけ引き継ぐ(したことがないタイプは1200から)
+  const KC_TCS = ['bullet', 'blitz', 'rapid', 'correspondence'];
+  function kcTcLabel(tc) { return tc === 'correspondence' ? (LANG === 'ja' ? '通信対局' : 'Correspondence') : (tc.charAt(0).toUpperCase() + tc.slice(1)); }
+  function kcTcGames(p, tc) { const s = (p && p.tcStats && p.tcStats[tc]) || {}; return (s.wins || 0) + (s.losses || 0) + (s.draws || 0); }
+  function kcRatingOf(p, tc) {
+    if (p && p.ratings && typeof p.ratings[tc] === 'number') return p.ratings[tc];
+    if (p && typeof p.rating === 'number' && kcTcGames(p, tc) > 0) return p.rating;
+    return 1200;
+  }
+  // いちばん多く指しているタイプのレーティング(友達一覧など、1つだけ出す場所で使う)
+  function kcMainRating(p) {
+    let best = null, bestN = -1;
+    KC_TCS.forEach((tc) => { const n = kcTcGames(p, tc); if (n > bestN) { bestN = n; best = tc; } });
+    if (bestN <= 0) return { tc: null, r: 1200, text: '1200' };
+    const r = kcRatingOf(p, best);
+    return { tc: best, r, text: kcTcLabel(best) + ' ' + r };
+  }
+  function kcAllRatingsText(p) { return KC_TCS.map((tc) => kcTcLabel(tc) + ' ' + kcRatingOf(p, tc)).join(' ／ '); }
   let allUsersMap = {};      // uid -> {username, ...}
   let myFriendsSet = new Set();
   let myIncomingSet = new Set();
@@ -3353,7 +3374,7 @@ await set(ref(db, 'matches/' + matchId), {
       const row = document.createElement('div');
       row.className = 'list-item';
       const label = document.createElement('span');
-      const rating = info.rating || 1200;
+      const rating = kcMainRating(info).text;
       const wld = (info.wins || 0) + (LANG === 'ja' ? '勝' : 'W') + (info.losses || 0) + (LANG === 'ja' ? '敗' : 'L') + (info.draws || 0) + (LANG === 'ja' ? '分' : 'D');
       label.textContent = info.username + '（' + rating + '・' + wld + '）';
       row.appendChild(label);
@@ -4046,15 +4067,35 @@ const PIECE_IMG = {
     };
   }
   // 📈 レーティングの推移グラフ(レーティング対局の記録から作る)
+  // 📈 レーティングの推移グラフ(持ち時間のタイプごとに切りかえて表示)
+  let kcGraphHistory = null;
+  let kcGraphTc = null;
   function kcRenderRatingGraph(historyObj) {
+    if (historyObj !== undefined) kcGraphHistory = historyObj || {};
     const el = document.getElementById('ratingGraph');
     if (!el) return;
-    const rows = Object.values(historyObj || {}).filter(r => typeof r.myRatingAfter === 'number').sort((a, b) => (a.endedAt || 0) - (b.endedAt || 0)).slice(-30);
+    const all = Object.values(kcGraphHistory || {}).filter(r => typeof r.myRatingAfter === 'number').sort((a, b) => (a.endedAt || 0) - (b.endedAt || 0));
+    const typeOf = (r) => r.ratingType || r.timeControl || 'rapid';
+    if (!kcGraphTc) kcGraphTc = all.length ? typeOf(all[all.length - 1]) : 'rapid';
+    el.innerHTML = '';
+    // タイプの切りかえボタン
+    const tabs = document.createElement('div');
+    tabs.style.cssText = 'display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px;';
+    KC_TCS.forEach((tc) => {
+      const bt = document.createElement('button');
+      bt.type = 'button';
+      bt.textContent = kcTcLabel(tc);
+      const on = tc === kcGraphTc;
+      bt.style.cssText = 'font-size:0.75rem;padding:4px 10px;' + (on ? '' : 'opacity:0.55;');
+      bt.onclick = () => { kcGraphTc = tc; kcRenderRatingGraph(); };
+      tabs.appendChild(bt);
+    });
+    el.appendChild(tabs);
+    const rows = all.filter(r => typeOf(r) === kcGraphTc).slice(-30);
     if (rows.length === 0) {
-      el.innerHTML = '';
       const p = document.createElement('p');
       p.style.fontSize = '0.85rem'; p.style.color = 'var(--text-muted)';
-      p.textContent = LANG === 'ja' ? 'レーティング対局をすると、ここにグラフが表示されます。' : 'Play rated games to see your rating graph here.';
+      p.textContent = LANG === 'ja' ? kcTcLabel(kcGraphTc) + 'のレート戦をすると、ここにグラフが表示されます。' : 'Play rated ' + kcTcLabel(kcGraphTc) + ' games to see your rating graph here.';
       el.appendChild(p);
       return;
     }
@@ -4069,15 +4110,17 @@ const PIECE_IMG = {
     const line = pts.map((v, i) => x(i).toFixed(1) + ',' + y(v).toFixed(1)).join(' ');
     const last = pts[pts.length - 1], first = pts[0];
     const diff = last - first;
-    el.innerHTML = '<svg viewBox="0 0 ' + W + ' ' + H + '" style="width:100%;max-width:420px;height:auto;display:block;background:var(--input-bg);border:1px solid rgba(124,74,30,0.3);border-radius:8px;">'
+    const box = document.createElement('div');
+    box.innerHTML = '<svg viewBox="0 0 ' + W + ' ' + H + '" style="width:100%;max-width:420px;height:auto;display:block;background:var(--input-bg);border:1px solid rgba(124,74,30,0.3);border-radius:8px;">'
       + '<text x="' + P + '" y="12" font-size="10" fill="currentColor" opacity="0.6">' + Math.round(max) + '</text>'
       + '<text x="' + P + '" y="' + (H - 4) + '" font-size="10" fill="currentColor" opacity="0.6">' + Math.round(min) + '</text>'
       + '<polyline points="' + line + '" fill="none" stroke="#c0782b" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>'
       + pts.map((v, i) => '<circle cx="' + x(i).toFixed(1) + '" cy="' + y(v).toFixed(1) + '" r="2.5" fill="#7c4a1e"/>').join('')
       + '</svg>';
+    el.appendChild(box);
     const p = document.createElement('p');
     p.style.fontSize = '0.85rem'; p.style.margin = '6px 0 0';
-    p.textContent = (LANG === 'ja' ? '最近' + rows.length + '局：' : 'Last ' + rows.length + ' games: ') + first + ' → ' + last + ' (' + (diff >= 0 ? '+' : '') + diff + ')';
+    p.textContent = kcTcLabel(kcGraphTc) + (LANG === 'ja' ? '・最近' + rows.length + '局：' : ' · last ' + rows.length + ' games: ') + first + ' → ' + last + ' (' + (diff >= 0 ? '+' : '') + diff + ')';
     el.appendChild(p);
   }
 
@@ -4144,7 +4187,7 @@ const PIECE_IMG = {
     if (reason === 'short') return ja ? 'お互いの手数が少ない(10手未満)ため、この対局はレートに反映されません。' : 'This game was too short (under 10 moves each), so it does not affect ratings.';
     if (reason === 'device') return ja ? '同じ端末のアカウントどうしの対局のため、レートに反映されません。' : 'Both accounts were used on the same device, so this game does not affect ratings.';
     if (reason === 'daily') return ja ? '同じ相手とのレート戦は1日' + KC_PAIR_DAILY_LIMIT + '局までのため、この対局はレートに反映されません。' : 'Rated games against the same opponent are limited to ' + KC_PAIR_DAILY_LIMIT + ' per day, so this game does not affect ratings.';
-    if (reason === 'provisional') return ja ? '相手のレート戦がまだ' + KC_PROVISIONAL_GAMES + '局未満のため、あなたのレートは変わりません。' : 'Your opponent has played fewer than ' + KC_PROVISIONAL_GAMES + ' rated games, so your rating did not change.';
+    if (reason === 'provisional') return ja ? '相手のこの持ち時間のレート戦がまだ' + KC_PROVISIONAL_GAMES + '局未満のため、あなたのレートは変わりません。' : 'Your opponent has played fewer than ' + KC_PROVISIONAL_GAMES + ' rated games of this time control, so your rating did not change.';
     return '';
   }
 
@@ -4179,15 +4222,15 @@ const PIECE_IMG = {
     ]);
     const myProfile = myProfileSnap.val() || {};
     const oppProfile = oppProfileSnap.val() || {};
-    const myRating = myProfile.rating || 1200;
-    const oppRating = oppProfile.rating || 1200;
+    const tc = m.timeControl || 'rapid';
+    const myRating = kcRatingOf(myProfile, tc);
+    const oppRating = kcRatingOf(oppProfile, tc);
 
     const expected = 1 / (1 + Math.pow(10, (oppRating - myRating) / 400));
     let newRating = Math.round(myRating + K_FACTOR * (myResult - expected));
     // 作ったばかりのアカウント(レート戦5局未満)との対局では、自分のレートは動かさない(サブアカウントを使った水増し対策)
-    const kcGames = (p) => (p.wins || 0) + (p.losses || 0) + (p.draws || 0);
     let kcProvisionalNote = false;
-    if (kcGames(oppProfile) < KC_PROVISIONAL_GAMES && kcGames(myProfile) >= KC_PROVISIONAL_GAMES) {
+    if (kcTcGames(oppProfile, tc) < KC_PROVISIONAL_GAMES && kcTcGames(myProfile, tc) >= KC_PROVISIONAL_GAMES) {
       newRating = myRating;
       kcProvisionalNote = true;
     }
@@ -4205,7 +4248,6 @@ const PIECE_IMG = {
       draws: oppVs.draws + (myResult === 0.5 ? 1 : 0)
     };
 
-    const tc = m.timeControl || 'rapid';
     const tcStats = myProfile.tcStats || {};
     const tcEntry = tcStats[tc] || { wins: 0, losses: 0, draws: 0 };
     const newTcEntry = {
@@ -4215,7 +4257,7 @@ const PIECE_IMG = {
     };
 
     await update(ref(db, 'publicProfiles/' + user.uid), {
-      rating: newRating, wins, losses, draws,
+      ['ratings/' + tc]: newRating, wins, losses, draws,
       ['vsRecord/' + oppUid]: newOppVs,
       ['tcStats/' + tc]: newTcEntry
     });
@@ -4235,7 +4277,8 @@ const PIECE_IMG = {
       timeControl: tc,
       endedAt: Date.now(),
       myRatingBefore: myRating,
-      myRatingAfter: newRating
+      myRatingAfter: newRating,
+      ratingType: tc
     });
     const deltaField = myColor === 'w' ? 'eloDeltaWhite' : 'eloDeltaBlack';
     const kcEndUpdate = { [flagField]: true, [deltaField]: newRating - myRating };
@@ -5924,12 +5967,12 @@ function startClockTicker(user) {
       document.getElementById('usernameInput').value = currentName;
       onValue(ref(db, 'publicProfiles/' + user.uid), (s) => {
         const p = s.val() || {};
-        document.getElementById('profileRating').textContent = p.rating || 1200;
+        document.getElementById('profileRating').textContent = kcAllRatingsText(p);
         kcSetText(document.getElementById('profileFounder'), () => (p.founderMember
           ? (LANG === 'ja' ? '有効です ✓' : 'Active ✓')
           : (LANG === 'ja' ? '未設定' : 'Not set')));
         latestAnalysisData = p.analysis || {};
-        latestRatingData = p.rating || 1200;
+        latestRatingData = kcMainRating(p).r;
         renderAnalysis(latestAnalysisData, latestRatingData);
       });
 
