@@ -152,6 +152,7 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
   </div>
   <div id="shareRow" style="display:none;text-align:center;margin-top:10px;">
     <button id="shareXBtn" style="background:#000;color:#fff;border:none;border-radius:20px;padding:8px 16px;font-family:'Crimson Pro',serif;font-weight:700;font-size:0.85rem;cursor:pointer;">🦊 𝕏でシェアする</button>
+    <div style="margin-top:8px;"><a id="matchCtaLink" href="match.html" style="display:inline-block;background:var(--brown);color:#fff;text-decoration:none;border-radius:20px;padding:8px 16px;font-family:'Crimson Pro',serif;font-weight:700;font-size:0.85rem;">⚔️ 覚えたら対局で試してみよう</a></div>
   </div>
 </div>
 
@@ -373,6 +374,8 @@ function renderStep(){
       const shareBtn = document.getElementById('shareXBtn');
       shareBtn.textContent = currentLang === 'ja' ? '🦊 𝕏でシェアする' : '🦊 Share on 𝕏';
       shareBtn.onclick = function() { shareOnX(msg); };
+      const matchLink = document.getElementById('matchCtaLink');
+      if (matchLink) matchLink.textContent = currentLang === 'ja' ? '⚔️ 覚えたら対局で試してみよう' : '⚔️ Try it in a real game';
       shareRow.style.display = 'block';
     } else {
       shareRow.style.display = 'none';

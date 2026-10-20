@@ -79,6 +79,22 @@ nav h1{font-family:'Crimson Pro',serif;font-size:clamp(0.9rem,3vw,1.4rem);font-w
 
 /* Opening filters */
 .filter-area { display:flex; gap:12px; flex-wrap:wrap; margin-bottom:16px; align-items:center; }
+.opening-search {
+  width: 100%;
+  padding: 8px 14px;
+  margin-bottom: 10px;
+  border: 1px solid rgba(90,58,24,0.3);
+  border-radius: 20px;
+  background: rgba(255,255,255,0.6);
+  font-family: 'Crimson Pro', serif;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text);
+}
+.opening-search:focus { outline: none; border-color: var(--brown); }
+.match-cta-card { text-align: center; }
+.match-cta-card p { font-size: 0.9rem; margin-bottom: 8px; }
+.match-cta-link { display: inline-block; text-decoration: none; }
 .filter-select {
   padding: 4px 10px;
   border: 1px solid rgba(90,58,24,0.25);
@@ -431,6 +447,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <div class="app">
   <details class="box-card" id="openingSelectBox">
     <summary id="filterTitle" style="cursor:pointer;color:var(--brown);font-family:'Cinzel',serif;font-weight:700;font-size:0.9rem;padding:8px 0;list-style:none;">▸ <span class="lang-text" data-ja="オープニングを選択(タップして開く)" data-en="Select Opening (tap to open)">オープニングを選択(タップして開く)</span></summary>
+    <input type="search" id="openingSearch" class="opening-search" placeholder="🔍 オープニング名で検索" autocomplete="off" oninput="buildOpeningTabs()">
     <div class="filter-area">
       <select class="filter-select" id="filterLevel" onchange="applyFilters()">
         <option value="all" data-ja="レベル：全て" data-en="Level: All">レベル：全て</option>
@@ -504,6 +521,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <div class="btn-row">
         <button class="btn btn-secondary" id="btnAuto" onclick="toggleAutoPlay(this)">⏵ オートプレイ</button>
         <button class="btn btn-secondary" id="btnFlip" onclick="flipBoard()">⇅ 反転</button>
+      </div>
+      <div class="box-card match-cta-card">
+        <p class="lang-text" data-ja="覚えたオープニングを、実戦で試してみよう！はじめてモードなら、ジーンと一緒に指せるよ。" data-en="Try your openings in a real game! In Beginner Mode, you can play alongside Jene.">覚えたオープニングを、実戦で試してみよう！はじめてモードなら、ジーンと一緒に指せるよ。</p>
+        <a href="match.html" class="btn btn-primary match-cta-link lang-text" data-ja="⚔️ 対局モードへ" data-en="⚔️ Go to Match Mode">⚔️ 対局モードへ</a>
       </div>
     </div>
   </div>
@@ -589,6 +610,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <div class="btn-row" style="justify-content:center">
       <button class="btn btn-primary" onclick="closeOverlay();restartOpening()">もう一度</button>
       <button class="btn btn-secondary" onclick="closeOverlay()">閉じる</button>
+    </div>
+    <div style="margin-top:12px;">
+      <a href="match.html" class="btn btn-primary match-cta-link lang-text" data-ja="⚔️ 覚えたら対局で試してみよう" data-en="⚔️ Try it in a real game">⚔️ 覚えたら対局で試してみよう</a>
     </div>
   </div>
 </div>
@@ -1684,6 +1708,8 @@ if(navBtns[2]) navBtns[2].textContent=L.navPuzzle;
   const overlayBtns=document.querySelectorAll('.overlay-box .btn');
   if(overlayBtns[0]) overlayBtns[0].textContent=L.btnAgain;
   if(overlayBtns[1]) overlayBtns[1].textContent=L.btnClose;
+  const osb=document.getElementById('openingSearch');
+  if(osb) osb.placeholder = LANG==='ja' ? '🔍 オープニング名で検索' : '🔍 Search openings';
  // フィルターラベル
   const fll = document.getElementById('filterLevelLabel');
   if(fll) fll.textContent = LANG==='ja' ? 'レベル' : 'Level';
@@ -2105,11 +2131,22 @@ function matchesQuizFilter(op) {
   if (f.quizColor !== 'all' && op.color !== f.quizColor && op.color !== 'both') return false;
   return true;
 }
+// 検索窓：日本語名・英語名・IDのどれかに含まれていれば表示
+function normalizeSearchText(str) {
+  return String(str || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase().replace(/[\s\-・'’.()（）]/g, '');
+}
+function matchesSearch(op) {
+  const box = document.getElementById('openingSearch');
+  const q = normalizeSearchText(box ? box.value : '');
+  if (!q) return true;
+  return [op.name, OPENING_NAMES_EN[op.name], op.id].some(v => normalizeSearchText(v).includes(q));
+}
 function buildOpeningTabs() {
   const c = document.getElementById('openingTabs');
   if (!c) return;
   c.innerHTML = '';
-  const filtered = OPENINGS.filter(matchesFilter);
+  const filtered = OPENINGS.filter(op => matchesFilter(op) && matchesSearch(op));
   if (filtered.length === 0) {
     c.innerHTML = '<div style="font-size:0.85rem;color:var(--text-muted);padding:6px;">' +
       (LANG==='ja' ? '該当するオープニングがありません' : 'No openings found') + '</div>';
