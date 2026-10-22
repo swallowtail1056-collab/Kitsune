@@ -540,38 +540,32 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <div class="fox-bubble" id="quizFoxBubble">オープニングを選んでテストを始めよう！🦊</div>
     </div>
   </div>
-  <div class="box-card">
-    <h3>▸ オープニングを選択</h3>
-    <div class="filter-section">
-      <div class="filter-label" id="quizFilterLevelLabel">Level</div>
-      <div class="filter-row" id="quizFilterLevel">
-        <button class="filter-btn active" data-filter="quizLevel" data-value="all" data-ja="全て" data-en="All">All</button>
-        <button class="filter-btn" data-filter="quizLevel" data-value="beginner" data-ja="初級" data-en="Beginner">Beginner</button>
-        <button class="filter-btn" data-filter="quizLevel" data-value="intermediate" data-ja="中級" data-en="Intermediate">Intermediate</button>
-        <button class="filter-btn" data-filter="quizLevel" data-value="advanced" data-ja="上級" data-en="Advanced">Advanced</button>
-      </div>
-    </div>
-    <div class="filter-section">
-      <div class="filter-label" id="quizFilterStyleLabel">Style</div>
-      <div class="filter-row" id="quizFilterStyle">
-        <button class="filter-btn active" data-filter="quizStyle" data-value="all" data-ja="全て" data-en="All">All</button>
-        <button class="filter-btn" data-filter="quizStyle" data-value="attack" data-ja="⚔ 攻撃" data-en="⚔ Attack">⚔ Attack</button>
-        <button class="filter-btn" data-filter="quizStyle" data-value="solid" data-ja="🛡 安定" data-en="🛡 Solid">🛡 Solid</button>
-        <button class="filter-btn" data-filter="quizStyle" data-value="balanced" data-ja="⚖ バランス" data-en="⚖ Balanced">⚖ Balanced</button>
-        <button class="filter-btn" data-filter="quizStyle" data-value="complex" data-ja="🔥 複雑" data-en="🔥 Complex">🔥 Complex</button>
-      </div>
-    </div>
-    <div class="filter-section">
-      <div class="filter-label" id="quizFilterColorLabel">Color</div>
-      <div class="filter-row" id="quizFilterColor">
-        <button class="filter-btn active" data-filter="quizColor" data-value="all" data-ja="全て" data-en="All">All</button>
-        <button class="filter-btn" data-filter="quizColor" data-value="white" data-ja="白番" data-en="White">White</button>
-        <button class="filter-btn" data-filter="quizColor" data-value="black" data-ja="黒番" data-en="Black">Black</button>
-        <button class="filter-btn" data-filter="quizColor" data-value="both" data-ja="両方" data-en="Both">Both</button>
-      </div>
+  <details class="box-card" id="quizOpeningSelectBox">
+    <summary style="cursor:pointer;color:var(--brown);font-family:'Cinzel',serif;font-weight:700;font-size:0.9rem;padding:8px 0;list-style:none;">▸ <span class="lang-text" data-ja="オープニングを選択(タップして開く)" data-en="Select Opening (tap to open)">オープニングを選択(タップして開く)</span></summary>
+    <input type="search" id="quizOpeningSearch" class="opening-search" placeholder="🔍 オープニング名で検索" autocomplete="off" oninput="buildQuizOpeningTabs()">
+    <div class="filter-area">
+      <select class="filter-select" id="quizFilterLevelSel" onchange="applyQuizFilters()">
+        <option value="all" data-ja="レベル：全て" data-en="Level: All">レベル：全て</option>
+        <option value="beginner" data-ja="初級" data-en="Beginner">初級</option>
+        <option value="intermediate" data-ja="中級" data-en="Intermediate">中級</option>
+        <option value="advanced" data-ja="上級" data-en="Advanced">上級</option>
+      </select>
+      <select class="filter-select" id="quizFilterStyleSel" onchange="applyQuizFilters()">
+        <option value="all" data-ja="スタイル：全て" data-en="Style: All">スタイル：全て</option>
+        <option value="attack" data-ja="⚔ 攻撃" data-en="⚔ Attack">⚔ 攻撃</option>
+        <option value="solid" data-ja="○ 安定" data-en="○ Solid">○ 安定</option>
+        <option value="balanced" data-ja="⚖ バランス" data-en="⚖ Balanced">⚖ バランス</option>
+        <option value="complex" data-ja="🔥 複雑" data-en="🔥 Complex">🔥 複雑</option>
+      </select>
+      <select class="filter-select" id="quizFilterColorSel" onchange="applyQuizFilters()">
+        <option value="all" data-ja="手番：全て" data-en="Color: All">手番：全て</option>
+        <option value="white" data-ja="白番" data-en="White">白番</option>
+        <option value="black" data-ja="黒番" data-en="Black">黒番</option>
+        <option value="both" data-ja="両方" data-en="Both">両方</option>
+      </select>
     </div>
     <div class="opening-tabs" id="quizOpeningTabs"></div>
-  </div>
+  </details>
   <div class="quiz-area" id="quizArea" style="display:none;">
     <div class="box-card">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
@@ -1488,7 +1482,7 @@ function buildQuizOpeningTabs() {
   const c = document.getElementById('quizOpeningTabs');
   if (!c) return;
   c.innerHTML = '';
- const filtered = OPENINGS.filter(matchesQuizFilter);
+ const filtered = OPENINGS.filter(op => matchesQuizFilter(op) && matchesQuizSearch(op));
   if (filtered.length === 0) {
     c.innerHTML = '<div style="font-size:0.85rem;color:var(--text-muted);padding:6px;">' +
       (LANG==='ja' ? '該当するオープニングがありません' : 'No openings found') + '</div>';
@@ -1505,6 +1499,8 @@ function buildQuizOpeningTabs() {
 
 function startQuiz(op) {
   currentQuizOpening = op;
+  const qsb = document.getElementById('quizOpeningSelectBox');
+  if (qsb) qsb.open = false;
   buildQuizOpeningTabs();
   quizIndex=0; quizScore=0; quizAnswered=false;
   quizQuestions = QUIZ_QUESTIONS_TEMPLATE.map(tmpl => {
@@ -1710,6 +1706,8 @@ if(navBtns[2]) navBtns[2].textContent=L.navPuzzle;
   if(overlayBtns[1]) overlayBtns[1].textContent=L.btnClose;
   const osb=document.getElementById('openingSearch');
   if(osb) osb.placeholder = LANG==='ja' ? '🔍 オープニング名で検索' : '🔍 Search openings';
+  const qosb=document.getElementById('quizOpeningSearch');
+  if(qosb) qosb.placeholder = LANG==='ja' ? '🔍 オープニング名で検索' : '🔍 Search openings';
  // フィルターラベル
   const fll = document.getElementById('filterLevelLabel');
   if(fll) fll.textContent = LANG==='ja' ? 'レベル' : 'Level';
@@ -1733,7 +1731,7 @@ if(navBtns[2]) navBtns[2].textContent=L.navPuzzle;
     btn.textContent = LANG==='ja' ? btn.dataset.ja : btn.dataset.en;
     });
     // 練習ページのドロップダウン(レベル・スタイル・手番)
-document.querySelectorAll('#filterLevel option, #filterStyle option, #filterColor option').forEach(opt => {
+document.querySelectorAll('#filterLevel option, #filterStyle option, #filterColor option, #quizFilterLevelSel option, #quizFilterStyleSel option, #quizFilterColorSel option').forEach(opt => {
   opt.textContent = LANG==='ja' ? opt.dataset.ja : opt.dataset.en;
 
  // 💡 新設された4つのメニューボタン（.lang-text）を一斉に切り替える処理
@@ -2124,6 +2122,18 @@ function onQuizFilterClick(btn) {
   buildQuizOpeningTabs();
 }
 
+function applyQuizFilters() {
+  activeQuizFilters.quizLevel = document.getElementById('quizFilterLevelSel').value;
+  activeQuizFilters.quizStyle = document.getElementById('quizFilterStyleSel').value;
+  activeQuizFilters.quizColor = document.getElementById('quizFilterColorSel').value;
+  buildQuizOpeningTabs();
+}
+function matchesQuizSearch(op) {
+  const box = document.getElementById('quizOpeningSearch');
+  const q = normalizeSearchText(box ? box.value : '');
+  if (!q) return true;
+  return [op.name, OPENING_NAMES_EN[op.name], op.id].some(v => normalizeSearchText(v).includes(q));
+}
 function matchesQuizFilter(op) {
   const f = activeQuizFilters;
   if (f.quizLevel !== 'all' && op.level !== f.quizLevel) return false;
