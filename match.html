@@ -1100,6 +1100,7 @@ document.getElementById('blockUserBtn').onclick = async () => {
 };
 document.addEventListener('click', (e) => {
   const panel = document.getElementById('settingsPanel');
+  if (!panel) return;
   if (panel.closest && panel.closest('#kcMenuOverlay')) return; // メニューの中にあるときは閉じない
   if (panel.style.display === 'block' && !panel.contains(e.target) && e.target.id !== 'settingsBtn') {
     panel.style.display = 'none';
@@ -3762,6 +3763,7 @@ await set(ref(db, 'matches/' + matchId), {
     document.getElementById('gameBox').style.display = 'none';
     document.getElementById('lobbyArea').style.display = 'block';
     { const ht = document.getElementById('kcHomeTop'); if (ht) ht.classList.remove('kc-in-game'); }
+    try { kcViewClosed('match'); } catch (e) {}
     document.getElementById('matchChatPanel').style.display = 'none';
     matchChatAttached = null;
     myMatchId = null;
@@ -3782,6 +3784,7 @@ await set(ref(db, 'matches/' + matchId), {
     document.getElementById('gameBox').style.display = 'block';
     document.getElementById('lobbyArea').style.display = 'none';
     { const ht = document.getElementById('kcHomeTop'); if (ht) { ht.classList.add('kc-in-game'); try { ht.scrollIntoView({ block: 'start' }); } catch (e) {} } }
+    try { kcPushView('match', () => closeOpenedMatch()); } catch (e) {}
     startClockTicker(user);
     let oppPresenceAttached = false;
     openedMatchUnsub = onValue(ref(db, 'matches/' + matchId), async (matchSnap) => {
@@ -4636,8 +4639,10 @@ const PIECE_IMG = {
     panel.classList.add('kc-fullpanel');
     panel.scrollTop = 0;
     document.body.style.overflow = 'hidden';
+    try { kcPushView('panel', () => kcBackToBoard()); } catch (e) {}
   }
   function kcBackToBoard() {
+    try { kcViewClosed('panel'); } catch (e) {}
     ['analysisPanel', 'historyPanel'].forEach(id => { const p = document.getElementById(id); if (p) { p.classList.remove('kc-fullpanel'); p.style.display = 'none'; } });
     document.body.style.overflow = '';
     const b = document.getElementById('miniBoard');
@@ -5062,6 +5067,7 @@ const PIECE_IMG = {
   async function kcOpenInsights() {
     if (!curUser) return;
     const ov = document.getElementById('kcInsOverlay');
+    kcPushView('insights', () => kcCloseInsights());
     ov.style.display = 'block';
     document.body.style.overflow = 'hidden';
     const body = document.getElementById('kcInsBody');
@@ -5085,6 +5091,7 @@ const PIECE_IMG = {
     kcRenderInsights();
   }
   function kcCloseInsights() {
+    kcViewClosed('insights');
     document.getElementById('kcInsOverlay').style.display = 'none';
     document.body.style.overflow = '';
   }
@@ -5303,6 +5310,43 @@ const PIECE_IMG = {
   { const ib = document.getElementById('kcInsightsBtn'); if (ib) ib.onclick = () => kcOpenInsights(); }
   // ===== ここまで インサイト =====
 
+  // ===== ブラウザ・スマホの「戻る」で、開いている画面だけを閉じる =====
+  // ページの中で開いた画面（各モード・メニュー・振り返りなど）を順番に覚えておき、
+  // 「戻る」が押されたら、ページを離れる代わりに一番上の画面を閉じる。
+  const kcViewStack = [];
+  function kcPushView(id, closeFn) {
+    const top = kcViewStack[kcViewStack.length - 1];
+    if (top && top.id === id && !top.closed) return;
+    kcViewStack.push({ id, closeFn, closed: false });
+    try { history.pushState({ kcView: id }, ''); } catch (e) {}
+  }
+  // ボタンなどで閉じたときは「閉じた」と印を付けるだけ（戻るを押したときに飛ばす）
+  function kcViewClosed(id) {
+    for (let i = kcViewStack.length - 1; i >= 0; i--) {
+      if (kcViewStack[i].id === id && !kcViewStack[i].closed) { kcViewStack[i].closed = true; break; }
+    }
+  }
+  window.addEventListener('popstate', () => {
+    const item = kcViewStack.pop();
+    if (!item) return;
+    if (item.closed) { try { history.back(); } catch (e) {} return; } // すでに閉じた画面は飛ばす
+    item.closed = true;
+    try { item.closeFn(); } catch (e) {}
+  });
+  function kcGoHomeTop() {
+    const ht = document.getElementById('kcHomeTop');
+    try { (ht || document.body).scrollIntoView({ block: 'start' }); } catch (e) { window.scrollTo(0, 0); }
+  }
+  ['beginnerModeBox', 'aiModeBox', 'puzzleModeBox', 'midLessonBox'].forEach((id) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.addEventListener('toggle', () => {
+      if (el.open) kcPushView(id, () => { el.open = false; kcGoHomeTop(); });
+      else kcViewClosed(id);
+    });
+  });
+  // ===== ここまで「戻る」 =====
+
   // ===== ☰ メニュー =====
   function kcMenuGo(fn) { kcCloseMenu(); setTimeout(() => { try { fn(); } catch (e) {} }, 50); }
   function kcScrollToEl(id, openDetails) {
@@ -5365,9 +5409,12 @@ const PIECE_IMG = {
         const h = document.createElement('p');
         h.style.cssText = 'margin:18px 0 6px;font-weight:800;color:var(--text-muted);font-size:0.85rem;';
         h.textContent = T('設定', 'Settings');
+        // 設定の中身は毎回作り直さず、同じものを使い回す（消してしまわないように先に取り出す）
+        if (!window.kcSettingsPanelEl) window.kcSettingsPanelEl = document.getElementById('settingsPanel');
+        const panel = window.kcSettingsPanelEl;
+        if (panel && panel.parentNode) panel.parentNode.removeChild(panel);
         slot.innerHTML = '';
         slot.appendChild(h);
-        const panel = document.getElementById('settingsPanel');
         if (panel) {
           slot.appendChild(panel);
           panel.style.cssText = 'display:block;position:static;background:var(--card);border:1px solid rgba(124,74,30,0.3);border-radius:10px;padding:14px;box-shadow:none;';
@@ -5395,6 +5442,7 @@ const PIECE_IMG = {
     });
   }
   function kcOpenMenu() {
+    kcPushView('menu', () => kcCloseMenu());
     kcRenderMenu();
     const ov = document.getElementById('kcMenuOverlay');
     ov.style.display = 'block';
@@ -5402,6 +5450,7 @@ const PIECE_IMG = {
     document.body.style.overflow = 'hidden';
   }
   function kcCloseMenu() {
+    kcViewClosed('menu');
     document.getElementById('kcMenuOverlay').style.display = 'none';
     document.body.style.overflow = '';
   }
@@ -5684,6 +5733,7 @@ const PIECE_IMG = {
   function kcOpenReview() {
     if (!latestMatchData) return;
     const ov = document.getElementById('rvOverlay');
+    kcPushView('review', () => kcCloseReview());
     ov.style.display = 'flex';
     document.body.style.overflow = 'hidden';
     const m = latestMatchData;
@@ -5729,6 +5779,7 @@ const PIECE_IMG = {
     } catch (e) {}
   }
   function kcCloseReview() {
+    kcViewClosed('review');
     rvRunToken++;
     rvState = null;
     document.getElementById('rvOverlay').style.display = 'none';
