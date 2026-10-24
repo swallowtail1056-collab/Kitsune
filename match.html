@@ -205,7 +205,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <!-- End Google Tag Manager (noscript) -->
 
 <div class="lang-switch">
-  <button id="settingsBtn" title="設定" data-ja="⚙️ 設定" data-en="⚙️ Settings">⚙️</button>
+  <button id="kcMenuBtn" type="button" aria-label="メニュー" style="font-size:1.1rem;padding:6px 14px;">☰</button>
+  <button id="settingsBtn" title="設定" data-ja="⚙️ 設定" data-en="⚙️ Settings" style="display:none;">⚙️</button>
 </div>
 <div id="settingsPanel" style="display:none;position:absolute;right:8px;top:40px;z-index:3000;max-height:80vh;overflow-y:auto;background:var(--card);border:2px solid var(--brown);border-radius:10px;padding:14px;box-shadow:0 4px 12px rgba(0,0,0,0.25);min-width:200px;">
   <p style="margin:0 0 10px;font-weight:700;color:var(--text);" data-ja="⚙️ 設定" data-en="⚙️ Settings">⚙️ 設定</p>
@@ -284,6 +285,17 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <a href="https://kitsunechess.com" target="_blank" rel="noopener" style="display:block;margin:-4px 0 10px;font-size:0.78rem;color:var(--brown-light);text-decoration:none;font-weight:600;">kitsunechess.com</a>
 
 <h1 data-ja="♟ 対局モード" data-en="♟ Match Mode">♟ 対局モード</h1>
+<!-- ホーム：スクロールしなくても、すぐに対局や各モードへ行けるように一番上にまとめる -->
+<div id="kcHomeTop">
+  <div id="kcHomeLoginSlot"></div>
+  <div id="kcHomeGamesSlot"></div>
+  <div id="kcHomeShortcuts" style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:12px 0 4px;"></div>
+  <div id="kcHomeGameSlot"></div>
+</div>
+<style>
+  /* 対局を開いているあいだは、一覧とショートカットを隠して盤を一番上に出す */
+  #kcHomeTop.kc-in-game #kcHomeGamesSlot, #kcHomeTop.kc-in-game #kcHomeShortcuts { display:none; }
+</style>
 
 <p data-ja="友達とリアルタイムでオンライン対局ができる、KitsuneChessの対局モードです。Googleアカウントでログインするか、ゲストとして始めて、好きなユーザー名を登録して友達を追加すれば、いつでもどこからでも一手一手を同期しながら本格的なチェスの対局を楽しめます。ブラウザで開けばインストールなしですぐに始められ、Androidではアプリでも遊べます。アプリ内課金はありません。近くにいる友達と気軽に腕試しをしたい方はもちろん、離れた場所に住むチェス仲間とじっくり対局したい方にもぴったりの機能です。"
    data-en="Match Mode is KitsuneChess's real-time online chess feature for playing against friends. Sign in with Google or start as a guest, set a username, and add a friend — from there you can enjoy a full game of chess with the board syncing move by move, from anywhere. You can start right away in your browser with no installation, and on Android you can also play in the app. There are no in-app purchases. It's great for a quick friendly match with someone nearby, or a proper game with a chess friend who lives far away.">
@@ -414,7 +426,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
  <div id="puzzleSuperhardBanner" style="visibility:hidden;text-align:center;background:linear-gradient(135deg,rgba(184,134,11,0.25),rgba(122,0,122,0.15));border:2px solid #b8860b;border-radius:6px;padding:4px;margin-bottom:6px;min-height:1.6em;">
     <span data-ja="⚡ 激ムズ問題!集中して!⚡" data-en="⚡ SUPER HARD PUZZLE! Focus! ⚡" style="font-family:'Cinzel',serif;font-weight:800;color:var(--brown-dark);">⚡ 激ムズ問題!集中して!⚡</span>
   </div>
-   <p id="puzzleStatusMsg" style="text-align:center;font-weight:700;min-height:2.8em;color:var(--brown-dark);"></p>
+   <p id="puzzleStatusMsg" style="text-align:center;font-weight:700;line-height:1.5;height:4.5em;overflow:hidden;display:flex;align-items:center;justify-content:center;color:var(--brown-dark);"></p>
   <div style="position:relative;display:inline-block;width:100%;">
     <div id="puzzleBoard" class="chessboard"></div>
     <svg id="puzzleArrowSvg" viewBox="0 0 8 8" style="position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:5;"></svg>
@@ -454,7 +466,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <button id="logoutBtn" style="display:none;" data-ja="ログアウト" data-en="Log out">ログアウト</button>
   <div id="profileArea" style="display:none;">
   <div id="lobbyArea">
-  <div class="box" id="activeMatchesBox" style="display:none;">
+  <div class="box" id="activeMatchesBox" style="display:none;margin-top:8px;">
     <p><strong data-ja="⚔ 進行中の対局" data-en="⚔ Games in Progress">⚔ 進行中の対局</strong> <span id="matchCountBadge" style="font-size:0.8rem;color:var(--text-muted);"></span></p>
     <div id="activeMatchesList" style="display:flex;flex-wrap:nowrap;gap:10px;margin-top:8px;overflow-x:auto;padding-bottom:8px;-webkit-overflow-scrolling:touch;"></div>
   </div>
@@ -493,6 +505,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <div id="analysisArea"></div>
     <p style="margin-top:14px;"><strong data-ja="📈 レーティングの推移" data-en="📈 Rating History">📈 レーティングの推移</strong></p>
     <div id="ratingGraph"></div>
+    <button id="kcInsightsBtn" type="button" style="margin-top:12px;background:#5d8a34;" data-ja="💡 インサイト（傾向）を見る" data-en="💡 View Insights">💡 インサイト（傾向）を見る</button>
   </div>
 
   <div class="box" id="randomMatchBox">
@@ -590,7 +603,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <button type="button" class="kc-panel-back" data-ja="← 対局画面に戻る" data-en="← Back to the Game">← 対局画面に戻る</button>
       <p style="font-weight:700;margin-bottom:6px;" data-ja="🔍 局面の分析" data-en="🔍 Position Analysis">🔍 局面の分析</p>
       <p style="font-size:0.8rem;color:var(--text-muted);" data-ja="ここで自由に駒を動かして試せます。本番の対局には影響しません。" data-en="Move pieces freely here to explore ideas. This has no effect on the real game.">ここで自由に駒を動かして試せます。本番の対局には影響しません。</p>
+      <p id="analysisMoveLabel" style="text-align:center;font-weight:700;margin:4px 0;min-height:1.4em;"></p>
       <div id="analysisBoard"></div>
+      <div style="display:flex;gap:8px;margin-top:8px;">
+        <button id="analysisUndoBtn" type="button" style="flex:1;margin:0;" data-ja="◀ 一手戻す" data-en="◀ Undo">◀ 一手戻す</button>
+        <button id="analysisRedoBtn" type="button" style="flex:1;margin:0;" data-ja="一手進める ▶" data-en="Redo ▶">一手進める ▶</button>
+      </div>
       <button id="analysisResetBtn" data-ja="現在の局面に戻す" data-en="Reset to Current Position" style="margin-top:8px;">現在の局面に戻す</button>
       <button id="analysisHintBtn" data-ja="💡 候補手を見る" data-en="💡 Suggest a Move" style="display:none;margin-top:8px;">💡 候補手を見る</button>
       <button id="analysisCloseBtn" data-ja="分析を終える" data-en="Close Analysis" style="margin-top:8px;">分析を終える</button>
@@ -608,7 +626,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       </div>
       <button id="historyCloseBtn" data-ja="履歴を閉じる" data-en="Close History" style="margin-top:8px;">履歴を閉じる</button>
     </div>
-    <button id="reportToggleBtn" style="display:none;margin-top:10px;" data-ja="🔬 詳細な振り返りレポート" data-en="🔬 Detailed Review Report">🔬 詳細な振り返りレポート</button>
+    <button id="reportToggleBtn" style="display:none;margin-top:10px;background:#5d8a34;" data-ja="🦊 ジーンと振り返る" data-en="🦊 Game Review with Jene">🦊 ジーンと振り返る</button>
     <button id="cheatReportBtn" style="display:none;margin-top:10px;margin-left:6px;background:#8a3b2e;" data-ja="🚩 不正・迷惑行為を報告" data-en="🚩 Report Cheating / Abuse">🚩 不正・迷惑行為を報告</button>
     <button id="matchAddFriendBtn" type="button" style="display:none;margin-top:10px;" data-ja="👋 この人に友達申請を送る" data-en="👋 Send a Friend Request">👋 この人に友達申請を送る</button>
     <p id="matchAddFriendMsg" style="font-size:0.85rem;margin-top:4px;"></p>
@@ -618,6 +636,30 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <button id="reportCloseBtn" data-ja="レポートを閉じる" data-en="Close Report" style="margin-top:8px;">レポートを閉じる</button>
     </div>
   </div>
+</div>
+
+<!-- インサイト（傾向） -->
+<div id="kcInsOverlay" style="display:none;position:fixed;inset:0;background:var(--bg);z-index:2950;overflow-y:auto;-webkit-overflow-scrolling:touch;">
+  <div id="kcInsBody" style="max-width:520px;margin:0 auto;padding:calc(6px + env(safe-area-inset-top)) 14px calc(24px + env(safe-area-inset-bottom));"></div>
+</div>
+
+<!-- メニュー（☰） -->
+<div id="kcMenuOverlay" style="display:none;position:fixed;inset:0;background:var(--bg);z-index:2900;overflow-y:auto;-webkit-overflow-scrolling:touch;">
+  <div style="max-width:520px;margin:0 auto;padding:calc(10px + env(safe-area-inset-top)) 14px calc(24px + env(safe-area-inset-bottom));">
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
+      <button id="kcMenuCloseBtn" type="button" style="background:none;color:var(--text);font-size:1.4rem;padding:0 8px;margin:0;" aria-label="閉じる">✕</button>
+      <div style="flex:1;text-align:center;font-family:'Cinzel',serif;font-weight:700;font-size:1.2rem;color:var(--brown-dark);">🦊 KitsuneChess</div>
+      <span style="width:40px;"></span>
+    </div>
+    <div id="kcMenuBody"></div>
+    <div id="kcMenuSettingsSlot"></div>
+    <div id="kcMenuBody2"></div>
+  </div>
+</div>
+
+<!-- ゲームレビュー（ジーンと振り返る） -->
+<div id="rvOverlay" style="display:none;position:fixed;inset:0;background:var(--bg);z-index:3000;overflow-y:auto;-webkit-overflow-scrolling:touch;flex-direction:column;">
+  <div id="rvBody" style="width:100%;max-width:520px;margin:0 auto;padding-bottom:calc(16px + env(safe-area-inset-bottom));padding-top:env(safe-area-inset-top);"></div>
 </div>
 
 <!-- 不正報告モーダル -->
@@ -940,7 +982,7 @@ import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithRedirect, getRe
 }
   applyLang();
   document.getElementById('settingsBlockBtn').onclick = () => {
-  document.getElementById('settingsPanel').style.display = 'none';
+  { const sp = document.getElementById('settingsPanel'); if (!(sp.closest && sp.closest('#kcMenuOverlay'))) sp.style.display = 'none'; }
   openBlockManager();
 };
 document.getElementById('blockManagerCloseBtn').onclick = () => {
@@ -1058,6 +1100,7 @@ document.getElementById('blockUserBtn').onclick = async () => {
 };
 document.addEventListener('click', (e) => {
   const panel = document.getElementById('settingsPanel');
+  if (panel.closest && panel.closest('#kcMenuOverlay')) return; // メニューの中にあるときは閉じない
   if (panel.style.display === 'block' && !panel.contains(e.target) && e.target.id !== 'settingsBtn') {
     panel.style.display = 'none';
   }
@@ -2879,8 +2922,22 @@ applyBoardTheme();
     return { dot: dot, text: isOnline ? (LANG === 'ja' ? 'オンライン' : 'Online') : (LANG === 'ja' ? 'オフライン' : 'Offline') };
   }
 
+  let kcFriendsRenderSeq = 0;      // 新しく描き直し始めたら、古い描き直しは途中でやめる
+  let kcFriendsProfileSig = '';    // 友達のプロフィール（レート・勝敗など）の前回の内容
+  function kcFriendsSignature(user, data) {
+    if (!data || !user) return '';
+    const mine = allUsersMap[user.uid] || {};
+    return Object.keys(data).sort().map((uid) => {
+      const p = Object.assign({}, allUsersMap[uid] || {});
+      delete p.vsRecord;
+      return uid + ':' + JSON.stringify(p) + ':' + JSON.stringify((mine.vsRecord || {})[uid] || null);
+    }).join('|');
+  }
   async function renderFriendsList(user, data) {
+    const seq = ++kcFriendsRenderSeq;
+    kcFriendsProfileSig = kcFriendsSignature(user, data);
     const container = document.getElementById('friendsList');
+    const keepScroll = container.scrollLeft;
     container.innerHTML = '';
     const countBadge = document.getElementById('friendCountBadge');
     const friendCount = data ? Object.keys(data).length : 0;
@@ -2890,6 +2947,7 @@ applyBoardTheme();
       return;
     }
     for (const friendUid of Object.keys(data)) {
+      if (seq !== kcFriendsRenderSeq) return;
       const snap = await get(ref(db, 'publicProfiles/' + friendUid));
       const friendProfile = snap.val() || {};
       const friendName = friendProfile.username || '(unknown)';
@@ -3043,7 +3101,9 @@ applyBoardTheme();
       row.appendChild(challengeBtn);
       row.appendChild(tcPanel);
       row.appendChild(menuWrap);
-      container.appendChild(row);  
+      if (seq !== kcFriendsRenderSeq) return;
+      container.appendChild(row);
+      container.scrollLeft = keepScroll;  
     }
   }
       
@@ -3377,6 +3437,16 @@ await set(ref(db, 'matches/' + matchId), {
       const rating = kcMainRating(info).text;
       const wld = (info.wins || 0) + (LANG === 'ja' ? '勝' : 'W') + (info.losses || 0) + (LANG === 'ja' ? '敗' : 'L') + (info.draws || 0) + (LANG === 'ja' ? '分' : 'D');
       label.textContent = info.username + '（' + rating + '・' + wld + '）';
+      // ゲストかどうかと、登録日を表示（Firebase を開かなくても分かるように）
+      const meta = document.createElement('span');
+      meta.style.cssText = 'display:block;font-size:0.75rem;color:var(--text-muted);margin-top:2px;';
+      const metaParts = [];
+      if (info.isAnonymous) metaParts.push(LANG === 'ja' ? '👤ゲスト' : '👤Guest');
+      if (typeof info.foundedAt === 'number') {
+        const fd = new Date(info.foundedAt);
+        metaParts.push((LANG === 'ja' ? '登録 ' : 'Joined ') + fd.getFullYear() + '/' + (fd.getMonth() + 1) + '/' + fd.getDate());
+      }
+      if (metaParts.length) { meta.textContent = metaParts.join('・'); label.appendChild(meta); }
       row.appendChild(label);
 
       if (myFriendsSet.has(uid)) {
@@ -3532,9 +3602,29 @@ await set(ref(db, 'matches/' + matchId), {
     }
     box.style.display = 'block';
     list.innerHTML = '';
+    // 自分の番の対局を先頭に。次に開始待ち、相手の番、終局の順
+    const rank = (s) => (s.phase === 'active' && s.turn === s.myColor) ? 0 : (s.phase === 'waiting' ? 1 : (s.phase === 'active' ? 2 : 3));
+    entries.sort((a, b) => rank(a[1]) - rank(b[1]));
+    const myTurnCount = entries.filter(([, s]) => rank(s) === 0).length;
+    if (countBadge) {
+      countBadge.textContent = '(' + entries.length + ')';
+      if (myTurnCount) {
+        const pill = document.createElement('span');
+        pill.style.cssText = 'margin-left:6px;background:#e53935;color:#fff;border-radius:10px;padding:1px 8px;font-size:0.75rem;font-weight:800;';
+        pill.textContent = (LANG === 'ja' ? 'あなたの番 ' : 'Your turn ') + myTurnCount;
+        countBadge.appendChild(pill);
+      }
+    }
     entries.forEach(([matchId, s]) => {
       const card = document.createElement('div');
       card.className = 'thumb-card';
+      card.style.position = 'relative';
+      if (rank(s) === 0) {
+        // 自分の番の対局には赤い丸を付ける
+        const dot = document.createElement('span');
+        dot.style.cssText = 'position:absolute;top:4px;right:4px;width:16px;height:16px;border-radius:50%;background:#e53935;border:2px solid var(--card);z-index:3;box-shadow:0 1px 3px rgba(0,0,0,0.3);';
+        card.appendChild(dot);
+      }
       const boardEl = document.createElement('div');
       boardEl.className = 'thumb-board';
       renderThumbBoard(boardEl, s.fen, s.myColor === 'b');
@@ -3671,6 +3761,7 @@ await set(ref(db, 'matches/' + matchId), {
     kcOppOfflineSince = null;
     document.getElementById('gameBox').style.display = 'none';
     document.getElementById('lobbyArea').style.display = 'block';
+    { const ht = document.getElementById('kcHomeTop'); if (ht) ht.classList.remove('kc-in-game'); }
     document.getElementById('matchChatPanel').style.display = 'none';
     matchChatAttached = null;
     myMatchId = null;
@@ -3690,6 +3781,7 @@ await set(ref(db, 'matches/' + matchId), {
     if (oppAvatarReset) oppAvatarReset.style.display = 'none';
     document.getElementById('gameBox').style.display = 'block';
     document.getElementById('lobbyArea').style.display = 'none';
+    { const ht = document.getElementById('kcHomeTop'); if (ht) { ht.classList.add('kc-in-game'); try { ht.scrollIntoView({ block: 'start' }); } catch (e) {} } }
     startClockTicker(user);
     let oppPresenceAttached = false;
     openedMatchUnsub = onValue(ref(db, 'matches/' + matchId), async (matchSnap) => {
@@ -4070,6 +4162,14 @@ const PIECE_IMG = {
   // 📈 レーティングの推移グラフ(持ち時間のタイプごとに切りかえて表示)
   let kcGraphHistory = null;
   let kcGraphTc = null;
+  // 表示する期間（日数。0 は全期間）。前回選んだ期間を覚えておく
+  let kcGraphDays = (() => { try { const v = parseInt(localStorage.getItem('kcGraphDays'), 10); return [30, 90, 365, 0].indexOf(v) !== -1 ? v : 0; } catch (e) { return 0; } })();
+  const KC_GRAPH_PERIODS = [
+    { days: 30, ja: '30日', en: '30 days' },
+    { days: 90, ja: '90日', en: '90 days' },
+    { days: 365, ja: '1年', en: '1 year' },
+    { days: 0, ja: '全期間', en: 'All time' }
+  ];
   function kcRenderRatingGraph(historyObj) {
     if (historyObj !== undefined) kcGraphHistory = historyObj || {};
     const el = document.getElementById('ratingGraph');
@@ -4078,49 +4178,84 @@ const PIECE_IMG = {
     const typeOf = (r) => r.ratingType || r.timeControl || 'rapid';
     if (!kcGraphTc) kcGraphTc = all.length ? typeOf(all[all.length - 1]) : 'rapid';
     el.innerHTML = '';
-    // タイプの切りかえボタン
-    const tabs = document.createElement('div');
-    tabs.style.cssText = 'display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px;';
-    KC_TCS.forEach((tc) => {
-      const bt = document.createElement('button');
-      bt.type = 'button';
-      bt.textContent = kcTcLabel(tc);
-      const on = tc === kcGraphTc;
-      bt.style.cssText = 'font-size:0.75rem;padding:4px 10px;' + (on ? '' : 'opacity:0.55;');
-      bt.onclick = () => { kcGraphTc = tc; kcRenderRatingGraph(); };
-      tabs.appendChild(bt);
-    });
-    el.appendChild(tabs);
-    const rows = all.filter(r => typeOf(r) === kcGraphTc).slice(-30);
-    if (rows.length === 0) {
+    const mkTabs = (items, isOn, onPick) => {
+      const tabs = document.createElement('div');
+      tabs.style.cssText = 'display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px;';
+      items.forEach((it) => {
+        const bt = document.createElement('button');
+        bt.type = 'button';
+        bt.textContent = it.label;
+        bt.style.cssText = 'font-size:0.75rem;padding:4px 10px;margin:0;' + (isOn(it) ? '' : 'opacity:0.55;');
+        bt.onclick = () => onPick(it);
+        tabs.appendChild(bt);
+      });
+      el.appendChild(tabs);
+    };
+    // 持ち時間のタイプの切りかえ
+    mkTabs(KC_TCS.map(tc => ({ tc, label: kcTcLabel(tc) })), it => it.tc === kcGraphTc, it => { kcGraphTc = it.tc; kcRenderRatingGraph(); });
+    // 期間の切りかえ
+    mkTabs(KC_GRAPH_PERIODS.map(p => ({ days: p.days, label: LANG === 'ja' ? p.ja : p.en })), it => it.days === kcGraphDays,
+      it => { kcGraphDays = it.days; try { localStorage.setItem('kcGraphDays', String(it.days)); } catch (e) {} kcRenderRatingGraph(); });
+
+    const typeRows = all.filter(r => typeOf(r) === kcGraphTc);
+    const periodLabel = (KC_GRAPH_PERIODS.find(p => p.days === kcGraphDays) || KC_GRAPH_PERIODS[3])[LANG === 'ja' ? 'ja' : 'en'];
+    if (typeRows.length === 0) {
       const p = document.createElement('p');
       p.style.fontSize = '0.85rem'; p.style.color = 'var(--text-muted)';
       p.textContent = LANG === 'ja' ? kcTcLabel(kcGraphTc) + 'のレート戦をすると、ここにグラフが表示されます。' : 'Play rated ' + kcTcLabel(kcGraphTc) + ' games to see your rating graph here.';
       el.appendChild(p);
       return;
     }
-    const pts = [];
-    if (typeof rows[0].myRatingBefore === 'number') pts.push(rows[0].myRatingBefore);
-    rows.forEach(r => pts.push(r.myRatingAfter));
-    const W = 300, H = 120, P = 18;
-    let min = Math.min(...pts), max = Math.max(...pts);
+    const now = Date.now();
+    const DAY = 24 * 3600 * 1000;
+    const firstT = typeRows[0].endedAt || now;
+    const tStart = kcGraphDays ? now - kcGraphDays * DAY : firstT - DAY / 2;
+    const tEnd = now;
+    const inRange = typeRows.filter(r => (r.endedAt || 0) >= tStart);
+    const before = typeRows.filter(r => (r.endedAt || 0) < tStart);
+    // 期間の始まりのレート（その前の最後の対局のあとのレート、なければ最初の対局の前のレート）
+    const startRating = before.length ? before[before.length - 1].myRatingAfter
+      : (typeof typeRows[0].myRatingBefore === 'number' ? typeRows[0].myRatingBefore : typeRows[0].myRatingAfter);
+    const pts = [{ t: tStart, v: startRating, game: false }];
+    inRange.forEach(r => pts.push({ t: r.endedAt || now, v: r.myRatingAfter, game: true }));
+    pts.push({ t: tEnd, v: pts[pts.length - 1].v, game: false });
+
+    const W = 300, H = 130, P = 18, B = 16;
+    const vals = pts.map(p => p.v);
+    let min = Math.min(...vals), max = Math.max(...vals);
     if (max - min < 20) { min -= 10; max += 10; }
-    const x = (i) => P + (pts.length === 1 ? (W - 2 * P) / 2 : i * (W - 2 * P) / (pts.length - 1));
-    const y = (v) => H - P - (v - min) * (H - 2 * P) / (max - min);
-    const line = pts.map((v, i) => x(i).toFixed(1) + ',' + y(v).toFixed(1)).join(' ');
-    const last = pts[pts.length - 1], first = pts[0];
-    const diff = last - first;
+    const span = Math.max(1, tEnd - tStart);
+    const x = (t) => P + (t - tStart) * (W - 2 * P) / span;
+    const y = (v) => H - B - (v - min) * (H - B - P) / (max - min);
+    // 階段状の線（対局が終わった時点でレートが変わる）
+    let d = '';
+    pts.forEach((p, i) => {
+      if (i === 0) d += 'M' + x(p.t).toFixed(1) + ',' + y(p.v).toFixed(1);
+      else d += ' L' + x(p.t).toFixed(1) + ',' + y(pts[i - 1].v).toFixed(1) + ' L' + x(p.t).toFixed(1) + ',' + y(p.v).toFixed(1);
+    });
+    const fmt = (t) => { const dt = new Date(t); return (kcGraphDays === 0 || kcGraphDays === 365) && (tEnd - tStart) > 180 * DAY ? dt.getFullYear() + '/' + (dt.getMonth() + 1) : (dt.getMonth() + 1) + '/' + dt.getDate(); };
     const box = document.createElement('div');
     box.innerHTML = '<svg viewBox="0 0 ' + W + ' ' + H + '" style="width:100%;max-width:420px;height:auto;display:block;background:var(--input-bg);border:1px solid rgba(124,74,30,0.3);border-radius:8px;">'
       + '<text x="' + P + '" y="12" font-size="10" fill="currentColor" opacity="0.6">' + Math.round(max) + '</text>'
-      + '<text x="' + P + '" y="' + (H - 4) + '" font-size="10" fill="currentColor" opacity="0.6">' + Math.round(min) + '</text>'
-      + '<polyline points="' + line + '" fill="none" stroke="#c0782b" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>'
-      + pts.map((v, i) => '<circle cx="' + x(i).toFixed(1) + '" cy="' + y(v).toFixed(1) + '" r="2.5" fill="#7c4a1e"/>').join('')
+      + '<text x="' + P + '" y="' + (H - B - 2) + '" font-size="10" fill="currentColor" opacity="0.6">' + Math.round(min) + '</text>'
+      + '<text x="' + P + '" y="' + (H - 4) + '" font-size="9" fill="currentColor" opacity="0.6">' + fmt(tStart) + '</text>'
+      + '<text x="' + (W - P) + '" y="' + (H - 4) + '" font-size="9" fill="currentColor" opacity="0.6" text-anchor="end">' + (LANG === 'ja' ? '今日' : 'Today') + '</text>'
+      + '<path d="' + d + '" fill="none" stroke="#c0782b" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/>'
+      + pts.filter(p => p.game).map(p => '<circle cx="' + x(p.t).toFixed(1) + '" cy="' + y(p.v).toFixed(1) + '" r="2.5" fill="#7c4a1e"/>').join('')
       + '</svg>';
     el.appendChild(box);
+    const first = startRating, last = pts[pts.length - 1].v, diff = last - first;
     const p = document.createElement('p');
     p.style.fontSize = '0.85rem'; p.style.margin = '6px 0 0';
-    p.textContent = kcTcLabel(kcGraphTc) + (LANG === 'ja' ? '・最近' + rows.length + '局：' : ' · last ' + rows.length + ' games: ') + first + ' → ' + last + ' (' + (diff >= 0 ? '+' : '') + diff + ')';
+    if (inRange.length === 0) {
+      p.textContent = LANG === 'ja'
+        ? kcTcLabel(kcGraphTc) + '・' + periodLabel + '：この期間のレート戦はありません（今のレート ' + last + '）'
+        : kcTcLabel(kcGraphTc) + ' · ' + periodLabel + ': no rated games in this period (current rating ' + last + ')';
+    } else {
+      p.textContent = LANG === 'ja'
+        ? kcTcLabel(kcGraphTc) + '・' + periodLabel + '（' + inRange.length + '局）：' + first + ' → ' + last + '（' + (diff >= 0 ? '+' : '') + diff + '）'
+        : kcTcLabel(kcGraphTc) + ' · ' + periodLabel + ' (' + inRange.length + ' games): ' + first + ' → ' + last + ' (' + (diff >= 0 ? '+' : '') + diff + ')';
+    }
     el.appendChild(p);
   }
 
@@ -4189,6 +4324,24 @@ const PIECE_IMG = {
     if (reason === 'daily') return ja ? '同じ相手とのレート戦は1日' + KC_PAIR_DAILY_LIMIT + '局までのため、この対局はレートに反映されません。' : 'Rated games against the same opponent are limited to ' + KC_PAIR_DAILY_LIMIT + ' per day, so this game does not affect ratings.';
     if (reason === 'provisional') return ja ? '相手のこの持ち時間のレート戦がまだ' + KC_PROVISIONAL_GAMES + '局未満のため、あなたのレートは変わりません。' : 'Your opponent has played fewer than ' + KC_PROVISIONAL_GAMES + ' rated games of this time control, so your rating did not change.';
     return '';
+  }
+
+  // 対局の手順から、インサイト用の情報を作る
+  function kcGameDetails(moves, color) {
+    const pieces = { p: 0, n: 0, b: 0, r: 0, q: 0, k: 0 };
+    let castle = null, castleMove = null;
+    moves.forEach((mv, i) => {
+      if (mv.color !== color || !mv.san) return;
+      if (mv.san.indexOf('O-O') === 0) {
+        if (!castle) { castle = mv.san.indexOf('O-O-O') === 0 ? 'q' : 'k'; castleMove = Math.floor(i / 2) + 1; }
+        pieces.k++;
+        return;
+      }
+      const c = mv.san[0];
+      const key = 'NBRQK'.indexOf(c) !== -1 ? c.toLowerCase() : 'p';
+      pieces[key]++;
+    });
+    return { color, plies: moves.length, castle, castleMove, pieces, savedAt: Date.now() };
   }
 
   async function applyEloIfNeeded(matchId, m, user, myResult, endReason) {
@@ -4280,6 +4433,8 @@ const PIECE_IMG = {
       myRatingAfter: newRating,
       ratingType: tc
     });
+    // インサイト用：色・キャスリング・駒ごとの手数（自分だけが見られる場所に保存）
+    try { await set(ref(db, 'privateStats/' + user.uid + '/games/' + matchId), kcGameDetails(m.moves || [], myColor)); } catch (e) {}
     const deltaField = myColor === 'w' ? 'eloDeltaWhite' : 'eloDeltaBlack';
     const kcEndUpdate = { [flagField]: true, [deltaField]: newRating - myRating };
     if (kcProvisionalNote) kcEndUpdate[noteField] = 'provisional';
@@ -4349,6 +4504,51 @@ const PIECE_IMG = {
   // ===== 局面分析ボード(本番の対局には影響しない、自由に動かせるプレビュー盤面) =====
   let analysisChess = null;
   let analysisSelectedSquare = null;
+  let analysisRedo = [];        // 戻した手（「一手進める」で指し直せる）
+  let analysisBasePly = 0;      // 対局の今の局面が何手目か
+
+  // 対局の手順をはじめから並べ直して、分析盤を作る（対局の前の手まで戻れるように）
+  function kcBuildAnalysisChess() {
+    const c = new Chess();
+    const moves = (latestMatchData && latestMatchData.moves) || [];
+    let ok = true;
+    for (const mv of moves) { if (!c.move(mv.san)) { ok = false; break; } }
+    const same = (a, b) => a.split(' ').slice(0, 4).join(' ') === b.split(' ').slice(0, 4).join(' ');
+    if (!ok || !gameChess || !same(c.fen(), gameChess.fen())) {
+      // 手順が合わないときは、今の局面だけで始める（その場合、対局の手までは戻れない）
+      const only = new Chess(gameChess ? gameChess.fen() : undefined);
+      analysisBasePly = 0;
+      return only;
+    }
+    analysisBasePly = c.history().length;
+    return c;
+  }
+  function kcResetAnalysis() {
+    analysisChess = kcBuildAnalysisChess();
+    analysisSelectedSquare = null;
+    analysisRedo = [];
+    const h = document.getElementById('analysisHintText'); if (h) h.textContent = '';
+    renderAnalysisBoard();
+  }
+  function kcAnalysisLabel() {
+    const el = document.getElementById('analysisMoveLabel');
+    if (!el || !analysisChess) return;
+    const hist = analysisChess.history({ verbose: true });
+    const ply = hist.length;
+    const last = hist[ply - 1];
+    let txt = last ? (Math.floor((ply - 1) / 2) + 1) + (last.color === 'w' ? '. ' : '... ') + last.san : (LANG === 'ja' ? '開始局面' : 'Start position');
+    // 対局の手順と同じところまで（＝本番の手順の上にいるか）を調べる
+    const gameSans = ((latestMatchData && latestMatchData.moves) || []).map(m => m.san);
+    let same = 0;
+    while (same < ply && same < analysisBasePly && hist[same].san === gameSans[same]) same++;
+    const onGameLine = same === ply;
+    if (onGameLine && ply === analysisBasePly) txt += LANG === 'ja' ? '（対局の今の局面）' : ' (current game position)';
+    else if (onGameLine) txt += LANG === 'ja' ? '（' + (analysisBasePly - ply) + '手前の局面）' : ' (' + (analysisBasePly - ply) + ' moves back)';
+    else txt += LANG === 'ja' ? '（試し指し中）' : ' (trying ideas)';
+    el.textContent = txt;
+    const u = document.getElementById('analysisUndoBtn'); if (u) u.disabled = ply === 0;
+    const r = document.getElementById('analysisRedoBtn'); if (r) r.disabled = analysisRedo.length === 0;
+  }
 
   function renderAnalysisBoard() {
     const boardEl = document.getElementById('analysisBoard');
@@ -4363,6 +4563,9 @@ const PIECE_IMG = {
     const rowOrder = flip ? [...order].reverse() : order;
     const colOrder = flip ? [...order].reverse() : order;
 
+    const aHist = analysisChess.history({ verbose: true });
+    const aLast = aHist.length ? aHist[aHist.length - 1] : null;
+    kcAnalysisLabel();
     let legalTargets = new Set();
     if (analysisSelectedSquare) {
       const legalMoves = analysisChess.moves({ square: analysisSelectedSquare, verbose: true });
@@ -4375,6 +4578,7 @@ const PIECE_IMG = {
         const sq = files[c] + (8 - r);
         const cell = document.createElement('div');
         cell.className = 'sq ' + (((r + c) % 2 === 0) ? 'light' : 'dark');
+        if (aLast && (aLast.from === sq || aLast.to === sq)) cell.classList.add('last-move');
         if (analysisSelectedSquare === sq) cell.classList.add('selected');
         if (legalTargets.has(sq)) cell.classList.add(piece ? 'hint-capture' : 'hint-move');
         if (colOrder.indexOf(c) === 0) {
@@ -4410,6 +4614,11 @@ const PIECE_IMG = {
     } else {
       const move = analysisChess.move({ from: analysisSelectedSquare, to: sq, promotion: 'q' });
       analysisSelectedSquare = null;
+      if (move) {
+        // 新しく指したら、「進める」用に取っておいた手は使えなくなる（指した手で上書き）
+        analysisRedo = [];
+        const h = document.getElementById('analysisHintText'); if (h) h.textContent = '';
+      }
       if (!move) {
         // 移動できなければ、選び直しとして扱う(別の自分の駒を選び直せるように)
         const piece = analysisChess.get(sq);
@@ -4441,9 +4650,7 @@ const PIECE_IMG = {
     panel.style.display = opening ? 'block' : 'none';
     if (opening) {
       document.getElementById('historyPanel').style.display = 'none';
-      analysisChess = new Chess(gameChess.fen());
-      analysisSelectedSquare = null;
-      renderAnalysisBoard();
+      kcResetAnalysis();
       kcScrollTo(panel);
     } else {
       kcBackToBoard();
@@ -4451,8 +4658,22 @@ const PIECE_IMG = {
   };
   document.getElementById('analysisResetBtn').onclick = () => {
     if (!gameChess) return;
-    analysisChess = new Chess(gameChess.fen());
+    kcResetAnalysis();
+  };
+  document.getElementById('analysisUndoBtn').onclick = () => {
+    if (!analysisChess) return;
+    const mv = analysisChess.undo();
+    if (mv) analysisRedo.push(mv);
     analysisSelectedSquare = null;
+    const h = document.getElementById('analysisHintText'); if (h) h.textContent = '';
+    renderAnalysisBoard();
+  };
+  document.getElementById('analysisRedoBtn').onclick = () => {
+    if (!analysisChess || !analysisRedo.length) return;
+    const mv = analysisRedo.pop();
+    analysisChess.move({ from: mv.from, to: mv.to, promotion: mv.promotion });
+    analysisSelectedSquare = null;
+    const h = document.getElementById('analysisHintText'); if (h) h.textContent = '';
     renderAnalysisBoard();
   };
   document.getElementById('analysisCloseBtn').onclick = () => {
@@ -4653,6 +4874,7 @@ const PIECE_IMG = {
   let sfWorkerFailed = false;
   let sfQueue = [];
   let sfLastScore = null;
+  let sfLastMate = null;
 
   function getStockfishWorker() {
     if (sfWorker) return sfWorker;
@@ -4675,17 +4897,19 @@ const PIECE_IMG = {
       if (!line) return;
       if (line.indexOf('score cp') !== -1) {
         const mm = line.match(/score cp (-?\d+)/);
-        if (mm) sfLastScore = parseInt(mm[1], 10);
+        if (mm) { sfLastScore = parseInt(mm[1], 10); sfLastMate = null; }
       } else if (line.indexOf('score mate') !== -1) {
         const mm = line.match(/score mate (-?\d+)/);
-        if (mm) sfLastScore = (parseInt(mm[1], 10) > 0 ? 10000 : -10000);
+        if (mm) { sfLastMate = parseInt(mm[1], 10); sfLastScore = (sfLastMate > 0 ? 10000 : -10000); }
       }
       if (line.indexOf('bestmove') === 0) {
         const bestMoveUci = line.split(' ')[1];
         const score = sfLastScore;
+        const mate = sfLastMate;
         sfLastScore = null;
+        sfLastMate = null;
         const resolver = sfQueue.shift();
-        if (resolver) resolver({ uci: bestMoveUci, score: score });
+        if (resolver) resolver({ uci: bestMoveUci, score: score, mate: mate });
       }
     };
     sfWorker.postMessage('uci');
@@ -4827,6 +5051,951 @@ const PIECE_IMG = {
   document.getElementById('reportCloseBtn').onclick = () => {
     document.getElementById('reportPanel').style.display = 'none';
   };
+
+  // ===== 💡 インサイト（傾向） =====
+  // 有料にするときは KC_INSIGHTS_FREE を false にする（ロック画面になる）
+  const KC_INSIGHTS_FREE = true;
+  let kcInsDays = (() => { try { const v = parseInt(localStorage.getItem('kcInsDays'), 10); return [30, 90, 365, 0].indexOf(v) !== -1 ? v : 0; } catch (e) { return 0; } })();
+  let kcInsData = null;
+  const KC_INS_COLORS = { win: '#81b64c', draw: '#b8b8b8', loss: '#e07a6e' };
+
+  async function kcOpenInsights() {
+    if (!curUser) return;
+    const ov = document.getElementById('kcInsOverlay');
+    ov.style.display = 'block';
+    document.body.style.overflow = 'hidden';
+    const body = document.getElementById('kcInsBody');
+    body.innerHTML = '';
+    kcInsHeader(body);
+    if (!KC_INSIGHTS_FREE) {
+      body.appendChild(kcInsEl('p', 'text-align:center;margin-top:30px;font-size:1rem;', (LANG === 'ja' ? '🔒 インサイトはプレミアムで使えます。' : '🔒 Insights are available with Premium.')));
+      return;
+    }
+    body.appendChild(kcInsEl('p', 'text-align:center;color:var(--text-muted);', LANG === 'ja' ? '読み込み中…' : 'Loading…'));
+    try {
+      const [h, g, r] = await Promise.all([
+        get(ref(db, 'matchHistory/' + curUser.uid)),
+        get(ref(db, 'privateStats/' + curUser.uid + '/games')),
+        get(ref(db, 'privateStats/' + curUser.uid + '/reviews'))
+      ]);
+      kcInsData = { history: h.val() || {}, games: g.val() || {}, reviews: r.val() || {} };
+    } catch (e) {
+      kcInsData = { history: {}, games: {}, reviews: {} };
+    }
+    kcRenderInsights();
+  }
+  function kcCloseInsights() {
+    document.getElementById('kcInsOverlay').style.display = 'none';
+    document.body.style.overflow = '';
+  }
+  function kcInsEl(tag, css, text) { const e = document.createElement(tag); if (css) e.style.cssText = css; if (text != null) e.textContent = text; return e; }
+  function kcInsHeader(body) {
+    const T = (ja, en) => (LANG === 'ja' ? ja : en);
+    const head = kcInsEl('div', 'display:flex;align-items:center;gap:8px;padding:10px 0;border-bottom:1px solid rgba(124,74,30,0.3);margin-bottom:8px;');
+    const close = kcInsEl('button', 'background:none;color:var(--text);font-size:1.4rem;padding:0 6px;margin:0;', '✕');
+    close.type = 'button'; close.onclick = kcCloseInsights;
+    head.appendChild(close);
+    head.appendChild(kcInsEl('div', 'flex:1;font-family:Cinzel,serif;font-weight:700;color:var(--brown-dark);font-size:1.05rem;', T('💡 インサイト（傾向）', '💡 Insights')));
+    body.appendChild(head);
+  }
+  function kcInsSection(body, title, note) {
+    const sec = kcInsEl('div', 'background:var(--card);border:1px solid rgba(124,74,30,0.3);border-radius:10px;padding:12px;margin-top:12px;');
+    sec.appendChild(kcInsEl('p', 'margin:0 0 8px;font-weight:800;color:var(--brown-dark);font-size:1rem;', title));
+    if (note) sec.appendChild(kcInsEl('p', 'margin:-4px 0 8px;font-size:0.75rem;color:var(--text-muted);', note));
+    body.appendChild(sec);
+    return sec;
+  }
+  // 勝ち・引き分け・負けの帯グラフ（1行）
+  function kcInsResultRow(sec, label, rec) {
+    const T = (ja, en) => (LANG === 'ja' ? ja : en);
+    const n = rec.win + rec.draw + rec.loss;
+    const row = kcInsEl('div', 'display:flex;align-items:center;gap:8px;margin:6px 0;');
+    row.appendChild(kcInsEl('div', 'width:96px;flex-shrink:0;font-size:0.85rem;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;', label));
+    const bar = kcInsEl('div', 'flex:1;display:flex;height:22px;border-radius:5px;overflow:hidden;background:rgba(124,74,30,0.12);');
+    if (n) {
+      [['win', rec.win], ['draw', rec.draw], ['loss', rec.loss]].forEach(([k, v]) => {
+        if (!v) return;
+        const pct = v / n * 100;
+        const seg = kcInsEl('div', 'width:' + pct + '%;background:' + KC_INS_COLORS[k] + ';color:#fff;font-size:0.7rem;font-weight:800;display:flex;align-items:center;justify-content:center;overflow:hidden;white-space:nowrap;', pct >= 14 ? Math.round(pct) + '%' : '');
+        bar.appendChild(seg);
+      });
+    }
+    row.appendChild(bar);
+    row.appendChild(kcInsEl('div', 'width:46px;flex-shrink:0;text-align:right;font-size:0.75rem;color:var(--text-muted);', n + T('局', '')));
+    sec.appendChild(row);
+  }
+  function kcInsLegend(sec) {
+    const T = (ja, en) => (LANG === 'ja' ? ja : en);
+    const lg = kcInsEl('div', 'display:flex;gap:12px;justify-content:center;font-size:0.75rem;margin-top:6px;color:var(--text-muted);');
+    [['win', T('勝ち', 'Win')], ['draw', T('引き分け', 'Draw')], ['loss', T('負け', 'Loss')]].forEach(([k, t]) => {
+      const it = kcInsEl('span', '');
+      it.appendChild(kcInsEl('span', 'display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:4px;background:' + KC_INS_COLORS[k] + ';'));
+      it.appendChild(document.createTextNode(t));
+      lg.appendChild(it);
+    });
+    sec.appendChild(lg);
+  }
+  // 数の棒グラフ（1行）
+  function kcInsCountRow(sec, label, value, maxValue, text, color) {
+    const row = kcInsEl('div', 'display:flex;align-items:center;gap:8px;margin:6px 0;');
+    row.appendChild(kcInsEl('div', 'width:96px;flex-shrink:0;font-size:0.85rem;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;', label));
+    const wrap = kcInsEl('div', 'flex:1;height:18px;background:rgba(124,74,30,0.12);border-radius:5px;overflow:hidden;');
+    wrap.appendChild(kcInsEl('div', 'height:100%;width:' + (maxValue ? value / maxValue * 100 : 0) + '%;background:' + (color || '#5c9ed6') + ';'));
+    row.appendChild(wrap);
+    row.appendChild(kcInsEl('div', 'width:54px;flex-shrink:0;text-align:right;font-size:0.8rem;font-weight:700;', text));
+    sec.appendChild(row);
+  }
+  function kcInsEmpty(sec, ja, en) { sec.appendChild(kcInsEl('p', 'font-size:0.85rem;color:var(--text-muted);margin:4px 0;', LANG === 'ja' ? ja : en)); }
+
+  function kcRenderInsights() {
+    const T = (ja, en) => (LANG === 'ja' ? ja : en);
+    const body = document.getElementById('kcInsBody');
+    body.innerHTML = '';
+    kcInsHeader(body);
+    const data = kcInsData || { history: {}, games: {}, reviews: {} };
+    // 期間の切りかえ
+    const tabs = kcInsEl('div', 'display:flex;flex-wrap:wrap;gap:6px;margin:4px 0 4px;');
+    [[30, T('30日', '30 days')], [90, T('90日', '90 days')], [365, T('1年', '1 year')], [0, T('全期間', 'All time')]].forEach(([d, lb]) => {
+      const b = kcInsEl('button', 'font-size:0.8rem;padding:5px 12px;margin:0;' + (d === kcInsDays ? '' : 'opacity:0.55;'), lb);
+      b.type = 'button';
+      b.onclick = () => { kcInsDays = d; try { localStorage.setItem('kcInsDays', String(d)); } catch (e) {} kcRenderInsights(); };
+      tabs.appendChild(b);
+    });
+    body.appendChild(tabs);
+    const since = kcInsDays ? Date.now() - kcInsDays * 86400000 : 0;
+    const rows = Object.entries(data.history).map(([id, r]) => Object.assign({ id }, r))
+      .filter(r => r && r.result && (r.endedAt || 0) >= since);
+    const blank = () => ({ win: 0, draw: 0, loss: 0 });
+    const add = (rec, res) => { if (rec[res] != null) rec[res]++; };
+    body.appendChild(kcInsEl('p', 'font-size:0.75rem;color:var(--text-muted);margin:4px 0 0;', T('※ レート戦の記録から集計しています（ノーレートの対局は入りません）。', '* Based on your rated games (unrated games are not included).')));
+
+    // 1) 全体
+    const sAll = kcInsSection(body, T('📊 全体の成績', '📊 Overall'));
+    if (!rows.length) { kcInsEmpty(sAll, 'この期間のレート戦はまだありません。', 'No rated games in this period yet.'); return; }
+    const total = blank(); rows.forEach(r => add(total, r.result));
+    kcInsResultRow(sAll, T('すべて', 'All'), total);
+    KC_TCS.forEach(tc => {
+      const rec = blank(); rows.filter(r => (r.ratingType || r.timeControl) === tc).forEach(r => add(rec, r.result));
+      if (rec.win + rec.draw + rec.loss) kcInsResultRow(sAll, kcTcLabel(tc), rec);
+    });
+    kcInsLegend(sAll);
+
+    // 2) 曜日
+    const days = T('日月火水木金土', 'SMTWTFS').split('');
+    const dayNames = LANG === 'ja' ? days.map(d => d + '曜') : ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    const jst = (t) => new Date((t || 0) + 9 * 3600000);
+    const byDay = [...Array(7)].map(blank);
+    rows.forEach(r => add(byDay[jst(r.endedAt).getUTCDay()], r.result));
+    const sDay = kcInsSection(body, T('📅 曜日', '📅 Day of the Week'), T('対局数と結果（日本時間）', 'Games and results (Japan time)'));
+    const maxDay = Math.max(...byDay.map(d => d.win + d.draw + d.loss));
+    sDay.appendChild(kcInsEl('p', 'margin:4px 0;font-size:0.85rem;font-weight:700;', T('対局数', 'Games')));
+    byDay.forEach((d, i) => { const n = d.win + d.draw + d.loss; kcInsCountRow(sDay, dayNames[i], n, maxDay, n + T('局', ''), '#5c9ed6'); });
+    sDay.appendChild(kcInsEl('p', 'margin:10px 0 4px;font-size:0.85rem;font-weight:700;', T('結果', 'Results')));
+    byDay.forEach((d, i) => { if (d.win + d.draw + d.loss) kcInsResultRow(sDay, dayNames[i], d); });
+    kcInsLegend(sDay);
+
+    // 3) 時間帯
+    const bands = [
+      { ja: '🌅 朝', en: '🌅 Morning', from: 5, to: 11 },
+      { ja: '☀️ 午後', en: '☀️ Afternoon', from: 11, to: 17 },
+      { ja: '🌇 夕方', en: '🌇 Evening', from: 17, to: 21 },
+      { ja: '🌙 夜', en: '🌙 Night', from: 21, to: 29 }
+    ];
+    const bandOf = (t) => { let hr = jst(t).getUTCHours(); if (hr < 5) hr += 24; return bands.findIndex(b => hr >= b.from && hr < b.to); };
+    const byBand = bands.map(blank);
+    rows.forEach(r => { const i = bandOf(r.endedAt); if (i >= 0) add(byBand[i], r.result); });
+    const sBand = kcInsSection(body, T('🕐 時間帯', '🕐 Time of Day'), T('朝 5〜11時・午後 11〜17時・夕方 17〜21時・夜 21〜5時（日本時間）', 'Morning 5–11 · Afternoon 11–17 · Evening 17–21 · Night 21–5 (Japan time)'));
+    byBand.forEach((d, i) => kcInsResultRow(sBand, LANG === 'ja' ? bands[i].ja : bands[i].en, d));
+    kcInsLegend(sBand);
+
+    // 4) 相手のレート
+    const oppB = { up: blank(), even: blank(), down: blank() };
+    rows.forEach(r => {
+      if (typeof r.opponentRating !== 'number' || typeof r.myRatingBefore !== 'number') return;
+      const diff = r.opponentRating - r.myRatingBefore;
+      add(diff > 50 ? oppB.up : (diff < -50 ? oppB.down : oppB.even), r.result);
+    });
+    const sOpp = kcInsSection(body, T('⚖️ 相手のレート', '⚖️ Opponent Rating'), T('自分との差が50より大きいかどうかで分けています', 'Split by a rating gap of more than 50'));
+    kcInsResultRow(sOpp, T('格上', 'Higher'), oppB.up);
+    kcInsResultRow(sOpp, T('同じくらい', 'Similar'), oppB.even);
+    kcInsResultRow(sOpp, T('格下', 'Lower'), oppB.down);
+    kcInsLegend(sOpp);
+
+    // これから記録する項目（色・キャスリング・駒）
+    const det = rows.map(r => data.games[r.id] ? Object.assign({ result: r.result }, data.games[r.id]) : null).filter(Boolean);
+    const newNote = T('※ この項目は、この機能を入れたあとのレート戦から記録しています。', '* Recorded from rated games played after this feature was added.');
+
+    // 5) 白番・黒番
+    const sCol = kcInsSection(body, T('♟️ 白番・黒番', '♟️ White and Black'), newNote);
+    if (!det.length) kcInsEmpty(sCol, 'まだ記録がありません。次のレート戦から集計されます。', 'No data yet. It will be collected from your next rated games.');
+    else {
+      const cw = blank(), cb = blank();
+      det.forEach(d => add(d.color === 'w' ? cw : cb, d.result));
+      kcInsResultRow(sCol, T('白番', 'White'), cw);
+      kcInsResultRow(sCol, T('黒番', 'Black'), cb);
+      kcInsLegend(sCol);
+    }
+
+    // 6) キャスリング
+    const sCas = kcInsSection(body, T('🏰 キャスリング', '🏰 Castling'), newNote);
+    if (!det.length) kcInsEmpty(sCas, 'まだ記録がありません。', 'No data yet.');
+    else {
+      const phase = { op: blank(), mid: blank(), end: blank(), none: blank() };
+      const side = { k: blank(), q: blank(), none: blank() };
+      det.forEach(d => {
+        const ph = !d.castle ? 'none' : (d.castleMove <= 10 ? 'op' : (d.castleMove <= 25 ? 'mid' : 'end'));
+        add(phase[ph], d.result);
+        add(side[d.castle || 'none'], d.result);
+      });
+      sCas.appendChild(kcInsEl('p', 'margin:4px 0;font-size:0.85rem;font-weight:700;', T('いつキャスリングしたか', 'When you castled')));
+      kcInsResultRow(sCas, T('序盤(〜10手)', 'Opening (≤10)'), phase.op);
+      kcInsResultRow(sCas, T('中盤(11〜25手)', 'Middlegame'), phase.mid);
+      kcInsResultRow(sCas, T('終盤(26手〜)', 'Endgame'), phase.end);
+      kcInsResultRow(sCas, T('しなかった', 'Never'), phase.none);
+      sCas.appendChild(kcInsEl('p', 'margin:10px 0 4px;font-size:0.85rem;font-weight:700;', T('どちら側か', 'Which side')));
+      kcInsResultRow(sCas, T('キングサイド', 'Kingside'), side.k);
+      kcInsResultRow(sCas, T('クイーンサイド', 'Queenside'), side.q);
+      kcInsResultRow(sCas, T('しなかった', 'Never'), side.none);
+      kcInsLegend(sCas);
+    }
+
+    // 7) 駒
+    const pieceNames = { p: T('ポーン', 'Pawn'), n: T('ナイト', 'Knight'), b: T('ビショップ', 'Bishop'), r: T('ルーク', 'Rook'), q: T('クイーン', 'Queen'), k: T('キング', 'King') };
+    const pieceIcon = { p: '♟', n: '♞', b: '♝', r: '♜', q: '♛', k: '♚' };
+    const sPc = kcInsSection(body, T('♞ 駒ごとの手数', '♞ Moves by Piece'), newNote);
+    const pc = { p: 0, n: 0, b: 0, r: 0, q: 0, k: 0 };
+    det.forEach(d => Object.keys(pc).forEach(k => { pc[k] += (d.pieces && d.pieces[k]) || 0; }));
+    const pcTotal = Object.values(pc).reduce((a, b) => a + b, 0);
+    if (!pcTotal) kcInsEmpty(sPc, 'まだ記録がありません。', 'No data yet.');
+    else {
+      const mx = Math.max(...Object.values(pc));
+      Object.keys(pc).forEach(k => kcInsCountRow(sPc, pieceIcon[k] + ' ' + pieceNames[k], pc[k], mx, (pc[k] / pcTotal * 100).toFixed(1) + '%', '#c0782b'));
+    }
+
+    // 8) 正確度と手の評価（振り返りをした対局）
+    const revs = rows.map(r => data.reviews[r.id] ? Object.assign({ endedAt: r.endedAt }, data.reviews[r.id]) : null).filter(Boolean);
+    const revNote = T('※「🦊 ジーンと振り返る」を開いた対局から集計しています（' + revs.length + '局）。', '* Based on games you reviewed with "Game Review with Jene" (' + revs.length + ' games).');
+    const sAcc = kcInsSection(body, T('🎯 正確度と手の評価', '🎯 Accuracy and Move Quality'), revNote);
+    if (!revs.length) kcInsEmpty(sAcc, '対局が終わったあと「🦊 ジーンと振り返る」を開くと、ここに集計されます。', 'Open "Game Review with Jene" after a game to collect data here.');
+    else {
+      const accs = revs.map(r => r.accuracy).filter(a => typeof a === 'number');
+      const avg = accs.length ? accs.reduce((a, b) => a + b, 0) / accs.length : null;
+      sAcc.appendChild(kcInsEl('p', 'margin:4px 0 8px;font-size:1rem;font-weight:800;', T('平均の正確度: ', 'Average accuracy: ') + (avg == null ? '—' : avg.toFixed(1))));
+      const cnt = {}; let ctot = 0;
+      revs.forEach(r => Object.keys(r.counts || {}).forEach(k => { cnt[k] = (cnt[k] || 0) + r.counts[k]; ctot += r.counts[k]; }));
+      const mxc = Math.max(1, ...Object.values(cnt));
+      (typeof RV_CLASSES !== 'undefined' ? RV_CLASSES : []).forEach(c => {
+        const v = cnt[c.key] || 0;
+        kcInsCountRow(sAcc, c.sym + ' ' + (LANG === 'ja' ? c.ja : c.en), v, mxc, (ctot ? v / ctot * 100 : 0).toFixed(1) + '%', c.color);
+      });
+      // 駒ごとの平均正確度
+      const pa = {};
+      revs.forEach(r => Object.keys(r.pieceAcc || {}).forEach(k => { if (!pa[k]) pa[k] = { sum: 0, n: 0 }; pa[k].sum += r.pieceAcc[k].sum || 0; pa[k].n += r.pieceAcc[k].n || 0; }));
+      if (Object.keys(pa).length) {
+        sAcc.appendChild(kcInsEl('p', 'margin:12px 0 4px;font-size:0.85rem;font-weight:700;', T('駒ごとの平均正確度', 'Average accuracy by piece')));
+        ['p', 'n', 'b', 'r', 'q', 'k'].forEach(k => { if (pa[k] && pa[k].n) { const v = pa[k].sum / pa[k].n; kcInsCountRow(sAcc, pieceIcon[k] + ' ' + pieceNames[k], v, 100, v.toFixed(1), '#5c9ed6'); } });
+      }
+    }
+  }
+  document.getElementById('langBtn').addEventListener('click', () => {
+    try { const ov = document.getElementById('kcInsOverlay'); if (ov && ov.style.display !== 'none' && kcInsData) kcRenderInsights(); } catch (e) {}
+  });
+  { const ib = document.getElementById('kcInsightsBtn'); if (ib) ib.onclick = () => kcOpenInsights(); }
+  // ===== ここまで インサイト =====
+
+  // ===== ☰ メニュー =====
+  function kcMenuGo(fn) { kcCloseMenu(); setTimeout(() => { try { fn(); } catch (e) {} }, 50); }
+  function kcScrollToEl(id, openDetails) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    if (openDetails && el.tagName === 'DETAILS') el.open = true;
+    const box = el.closest('.box') || el;
+    try { box.scrollIntoView({ behavior: 'smooth', block: 'start' }); } catch (e) { box.scrollIntoView(); }
+  }
+  function kcMenuItems() {
+    const T = (ja, en) => (LANG === 'ja' ? ja : en);
+    const loggedIn = !!(curUser);
+    const nav = (url) => () => { location.href = url + (LANG === 'en' ? (url.indexOf('?') === -1 ? '?lang=en' : '&lang=en') : ''); };
+    return [
+      { head: T('アカウント', 'Account'), need: true },
+      { icon: '👤', label: T('プロフィール', 'Profile'), need: true, act: () => openProfileModal(curUser, curUser.uid) },
+      { icon: '💡', label: T('インサイト（傾向）', 'Insights'), need: true, act: () => { if (typeof kcOpenInsights === 'function') kcOpenInsights(); } },
+      { icon: '📈', label: T('レーティングの推移', 'Rating History'), need: true, act: () => kcScrollToEl('ratingGraph') },
+      { icon: '👥', label: T('友達', 'Friends'), need: true, act: () => kcScrollToEl('friendsList') },
+      { icon: '🔍', label: T('ユーザーを探す', 'Find Players'), need: true, act: () => kcScrollToEl('userSearchInput') },
+      { icon: '🚫', label: T('ブロック管理', 'Blocked Players'), need: true, act: () => { if (typeof openBlockManager === 'function') openBlockManager(); } },
+      { head: T('対局する', 'Play') },
+      { icon: '⚔️', label: T('進行中の対局', 'Ongoing Games'), need: true, act: () => kcScrollToEl('activeMatchesBox') },
+      { icon: '🎲', label: T('ランダム対局', 'Quick Match'), need: true, act: () => kcScrollToEl('randomMatchBox') },
+      { icon: '🦊', label: T('はじめてモード', 'Beginner Mode'), act: () => kcScrollToEl('beginnerModeBox', true) },
+      { icon: '🤖', label: T('AI対局', 'Play the AI'), act: () => kcScrollToEl('aiModeBox', true) },
+      { head: T('学ぶ', 'Learn') },
+      { icon: '🧩', label: T('パズルストリーク', 'Puzzle Streak'), act: () => kcScrollToEl('puzzleModeBox', true) },
+      { icon: '♟️', label: T('中盤レッスン', 'Middlegame Lessons'), act: () => kcScrollToEl('midLessonBox', true) },
+      { icon: '📖', label: T('定跡の解説（サイト）', 'Opening Guides (site)'), act: nav('openings_list.html') },
+      { icon: '🏋️', label: T('練習モード（サイト）', 'Practice Mode (site)'), act: nav('practice.html') },
+      { icon: '📰', label: T('コラム・記事（サイト）', 'Articles (site)'), act: nav('info.html') },
+      { settings: true },
+      { head: T('サポート', 'Support') },
+      { icon: '✉️', label: T('お問い合わせ', 'Contact'), act: () => { location.href = 'mailto:info@kitsunechess-app.com'; } },
+      { icon: '🔒', label: T('プライバシーポリシー', 'Privacy Policy'), act: nav('match-privacy.html') },
+      { icon: '⚠️', label: T('免責事項', 'Disclaimer'), act: () => { location.href = LANG === 'en' ? 'disclaimer-en.html' : 'disclaimer.html'; } },
+      { icon: '🏠', label: T('KitsuneChess トップページ', 'KitsuneChess Home'), act: nav('index.html') },
+      { icon: '🚪', label: T('ログアウト', 'Log out'), need: true, act: () => { const b = document.getElementById('logoutBtn'); if (b) b.click(); } },
+      { icon: '🗑️', label: T('アカウントを削除する', 'Delete My Account'), need: true, small: true, act: () => { const b = document.getElementById('deleteAccountBtn'); if (b) b.click(); } }
+    ].filter(it => !it.need || loggedIn);
+  }
+  function kcRenderMenu() {
+    const T = (ja, en) => (LANG === 'ja' ? ja : en);
+    const body = document.getElementById('kcMenuBody');
+    const body2 = document.getElementById('kcMenuBody2');
+    const slot = document.getElementById('kcMenuSettingsSlot');
+    body.innerHTML = ''; body2.innerHTML = '';
+    let target = body;
+    kcMenuItems().forEach(it => {
+      if (it.banner) {
+        const b = document.createElement('div');
+        b.style.cssText = 'background:linear-gradient(135deg,#5d8a34,#81b64c);color:#fff;border-radius:12px;padding:12px 16px;margin:4px 0 12px;font-weight:800;line-height:1.4;';
+        b.textContent = T('🎁 いまだけ、すべての機能を無料で使えます！', '🎁 All features are free for now!');
+        target.appendChild(b);
+        return;
+      }
+      if (it.settings) {
+        target = body2;
+        const h = document.createElement('p');
+        h.style.cssText = 'margin:18px 0 6px;font-weight:800;color:var(--text-muted);font-size:0.85rem;';
+        h.textContent = T('設定', 'Settings');
+        slot.innerHTML = '';
+        slot.appendChild(h);
+        const panel = document.getElementById('settingsPanel');
+        if (panel) {
+          slot.appendChild(panel);
+          panel.style.cssText = 'display:block;position:static;background:var(--card);border:1px solid rgba(124,74,30,0.3);border-radius:10px;padding:14px;box-shadow:none;';
+          const ttl = panel.firstElementChild;
+          if (ttl && ttl.tagName === 'P') ttl.style.display = 'none'; // 「⚙️ 設定」の見出しは、メニューの見出しと重なるので隠す
+        }
+        return;
+      }
+      if (it.head) {
+        const h = document.createElement('p');
+        h.style.cssText = 'margin:18px 0 6px;font-weight:800;color:var(--text-muted);font-size:0.85rem;';
+        h.textContent = it.head;
+        target.appendChild(h);
+        return;
+      }
+      const row = document.createElement('button');
+      row.type = 'button';
+      row.style.cssText = 'display:flex;align-items:center;gap:14px;width:100%;margin:0;padding:12px 10px;background:none;color:var(--text);border-radius:8px;text-align:left;font-size:' + (it.small ? '0.85rem' : '1.05rem') + ';font-weight:700;border-bottom:1px solid rgba(124,74,30,0.12);';
+      const ic = document.createElement('span'); ic.style.cssText = 'width:28px;text-align:center;font-size:1.3rem;'; ic.textContent = it.icon;
+      const lb = document.createElement('span'); lb.style.flex = '1'; lb.textContent = it.label;
+      const ar = document.createElement('span'); ar.style.cssText = 'color:var(--text-muted);'; ar.textContent = '›';
+      row.appendChild(ic); row.appendChild(lb); row.appendChild(ar);
+      row.onclick = () => kcMenuGo(it.act);
+      target.appendChild(row);
+    });
+  }
+  function kcOpenMenu() {
+    kcRenderMenu();
+    const ov = document.getElementById('kcMenuOverlay');
+    ov.style.display = 'block';
+    ov.scrollTop = 0;
+    document.body.style.overflow = 'hidden';
+  }
+  function kcCloseMenu() {
+    document.getElementById('kcMenuOverlay').style.display = 'none';
+    document.body.style.overflow = '';
+  }
+  document.getElementById('kcMenuBtn').onclick = kcOpenMenu;
+  document.getElementById('kcMenuCloseBtn').onclick = kcCloseMenu;
+  // 言語を切り替えたら、開いているメニューも書き直す
+  document.getElementById('langBtn').addEventListener('click', () => {
+    try { const ov = document.getElementById('kcMenuOverlay'); if (ov && ov.style.display !== 'none') kcRenderMenu(); } catch (e) {}
+  });
+  // ===== ここまで メニュー =====
+
+  // ===== ホーム（一番上のまとめ） =====
+  (function kcSetupHome() {
+    const loginSlot = document.getElementById('kcHomeLoginSlot');
+    ['loginBtn', 'guestLoginRow'].forEach(id => { const el = document.getElementById(id); if (el && loginSlot) loginSlot.appendChild(el); });
+    const games = document.getElementById('activeMatchesBox');
+    const gamesSlot = document.getElementById('kcHomeGamesSlot');
+    if (games && gamesSlot) gamesSlot.appendChild(games);
+    const gameBox = document.getElementById('gameBox');
+    const gameSlot = document.getElementById('kcHomeGameSlot');
+    if (gameBox && gameSlot) gameSlot.appendChild(gameBox);
+    kcRenderHomeShortcuts();
+  })();
+  function kcRenderHomeShortcuts() {
+    const wrap = document.getElementById('kcHomeShortcuts');
+    if (!wrap) return;
+    const T = (ja, en) => (LANG === 'ja' ? ja : en);
+    const needLogin = (fn) => () => {
+      if (curUser) fn();
+      else { const b = document.getElementById('loginBtn'); if (b) { try { b.scrollIntoView({ behavior: 'smooth', block: 'center' }); } catch (e) {} } }
+    };
+    const items = [
+      { icon: '🎲', label: T('ランダム対局', 'Quick Match'), act: needLogin(() => kcScrollToEl('randomMatchBox')) },
+      { icon: '👥', label: T('友達と対局', 'Play a Friend'), act: needLogin(() => kcScrollToEl('friendsList')) },
+      { icon: '🤖', label: T('AI対局', 'Play the AI'), act: () => kcScrollToEl('aiModeBox', true) },
+      { icon: '🦊', label: T('はじめて', 'Beginner'), act: () => kcScrollToEl('beginnerModeBox', true) },
+      { icon: '🧩', label: T('パズル', 'Puzzles'), act: () => kcScrollToEl('puzzleModeBox', true) },
+      { icon: '☰', label: T('メニュー', 'Menu'), act: () => kcOpenMenu() }
+    ];
+    wrap.innerHTML = '';
+    items.forEach(it => {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.style.cssText = 'margin:0;padding:10px 4px;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:0.8rem;line-height:1.2;';
+      const ic = document.createElement('span'); ic.style.fontSize = '1.4rem'; ic.textContent = it.icon;
+      const lb = document.createElement('span'); lb.textContent = it.label;
+      b.appendChild(ic); b.appendChild(lb);
+      b.onclick = it.act;
+      wrap.appendChild(b);
+    });
+  }
+  document.getElementById('langBtn').addEventListener('click', () => { try { kcRenderHomeShortcuts(); } catch (e) {} });
+  // ===== ここまで ホーム =====
+
+
+  // ===== 🦊 ジーンと振り返る（ゲームレビュー） =====
+  // 有料にするときは KC_REVIEW_FREE を false にする（ロック画面になる）
+  const KC_REVIEW_FREE = true;
+  const RV_MOVETIME = 250; // 1局面あたりの Stockfish の考える時間(ミリ秒)
+  const RV_CLASSES = [
+    { key: 'book',       ja: '定跡',     en: 'Book',       sym: '📖', color: '#a88865' },
+    { key: 'best',       ja: '最善手',   en: 'Best',       sym: '★',  color: '#81b64c' },
+    { key: 'excellent',  ja: '好手',     en: 'Excellent',  sym: '!',  color: '#5c9ed6' },
+    { key: 'good',       ja: '良い手',   en: 'Good',       sym: '✓',  color: '#95b776' },
+    { key: 'inaccuracy', ja: '緩手',     en: 'Inaccuracy', sym: '?!', color: '#f0c15c' },
+    { key: 'mistake',    ja: '間違い',   en: 'Mistake',    sym: '?',  color: '#e6912c' },
+    { key: 'miss',       ja: '逸機',     en: 'Miss',       sym: '✕',  color: '#ee6b55' },
+    { key: 'blunder',    ja: '大悪手',   en: 'Blunder',    sym: '??', color: '#ca3431' }
+  ];
+  const RV_CLS = {}; RV_CLASSES.forEach(c => { RV_CLS[c.key] = c; });
+  const RV_JENE = { book: 'jene_wink', best: 'jene_sparkle', excellent: 'jene_happy', good: 'jene_normal', inaccuracy: 'jene_quiz', mistake: 'jene_confused', miss: 'jene_sad', blunder: 'jene_confused' };
+  const rvT = (ja, en) => (LANG === 'ja' ? ja : en);
+
+  let rvState = null;      // 表示中の振り返り
+  let rvRunToken = 0;      // 閉じたら計算を止めるための番号
+  const rvMemCache = {};
+
+  // Stockfish の答えを「白から見た評価」にそろえる
+  function rvEvalFromResult(res, turn) {
+    const sgn = turn === 'w' ? 1 : -1;
+    if (res && typeof res.mate === 'number') {
+      const m = res.mate * sgn; // 白から見て、+ なら白がメイトできる
+      return { cp: (m > 0 ? 1 : -1) * (100000 - Math.abs(res.mate)), mate: m, uci: res.uci || null };
+    }
+    const sc = (res && typeof res.score === 'number') ? res.score : 0;
+    return { cp: sc * sgn, mate: null, uci: res ? res.uci : null };
+  }
+  // 評価値 → 勝つ見込み(%)（Lichess で公開されている式）
+  function rvWin(cp) {
+    const c = Math.max(-1000, Math.min(1000, cp));
+    return 50 + 50 * (2 / (1 + Math.exp(-0.00368208 * c)) - 1);
+  }
+  function rvMoveAccuracy(drop) {
+    return Math.max(0, Math.min(100, 103.1668 * Math.exp(-0.04354 * drop) - 3.1669));
+  }
+  function rvGameAccuracy(list) {
+    if (!list.length) return null;
+    const mean = list.reduce((a, b) => a + b, 0) / list.length;
+    const harm = list.length / list.reduce((a, b) => a + 1 / Math.max(1, b), 0);
+    return Math.round(((mean + harm) / 2) * 10) / 10;
+  }
+  // 正確度からの大まかな目安（公式な計算方法ではない）
+  function rvEstimateRating(acc, moveCount) {
+    if (acc == null || moveCount < 8) return null;
+    const pts = [[0, 200], [30, 300], [50, 600], [60, 850], [70, 1150], [80, 1500], [88, 1900], [94, 2300], [98, 2700], [100, 2900]];
+    for (let i = 1; i < pts.length; i++) {
+      if (acc <= pts[i][0]) {
+        const [x0, y0] = pts[i - 1], [x1, y1] = pts[i];
+        return Math.round((y0 + (y1 - y0) * (acc - x0) / (x1 - x0)) / 50) * 50;
+      }
+    }
+    return 2900;
+  }
+  function rvEvalLabel(ev) {
+    if (!ev) return '';
+    if (ev.mate === 0) return '#';
+    if (ev.mate != null) return (ev.mate > 0 ? 'M' : '-M') + Math.abs(ev.mate);
+    const v = Math.max(-99, Math.min(99, ev.cp / 100));
+    return (v > 0 ? '+' : '') + v.toFixed(2);
+  }
+
+  async function rvAnalyze(m, onProgress, token) {
+    const moves = m.moves || [];
+    const replay = new Chess();
+    const evals = [];
+    const books = [];
+    const sans = [];
+    const detect = (typeof detectOpeningDeep === 'function') ? detectOpeningDeep : null;
+    // 知っているオープニングの手順の上にまだいるか（どれかの手順の途中まで一致していれば「定跡」）
+    const bookLines = [];
+    try { OPENING_TABLE.forEach(e => bookLines.push(e.san)); } catch (e) {}
+    try { BEGINNER_OPENINGS.forEach(e => bookLines.push(e.moves)); } catch (e) {}
+    const onBook = (seq) => bookLines.some(line => line.length >= seq.length && seq.every((s, k) => line[k] === s));
+    let inBook = true;
+    const evalHere = async () => {
+      if (replay.in_checkmate()) {
+        return { cp: replay.turn() === 'w' ? -100000 : 100000, mate: 0, uci: null, over: true };
+      }
+      if (replay.game_over()) return { cp: 0, mate: null, uci: null, over: true };
+      const res = await stockfishEval(replay.fen(), RV_MOVETIME);
+      return rvEvalFromResult(res, replay.turn());
+    };
+    evals.push(await evalHere());
+    if (onProgress) onProgress(0, moves.length);
+    for (let i = 0; i < moves.length; i++) {
+      if (token !== rvRunToken) return null;
+      const mv = replay.move(moves[i].san);
+      if (!mv) break;
+      sans.push(mv.san);
+      let opening = null;
+      if (inBook && onBook(sans)) {
+        const hit = detect ? detect(sans) : null;
+        opening = hit ? { ja: hit.ja, en: hit.en } : { ja: '', en: '' };
+      } else inBook = false;
+      books.push(opening);
+      evals.push(await evalHere());
+      if (onProgress) onProgress(i + 1, moves.length);
+    }
+    return { evals, books };
+  }
+
+  function rvBuild(m, data) {
+    const moves = m.moves || [];
+    const { evals, books } = data;
+    const replay = new Chess();
+    const items = [];
+    for (let i = 0; i < evals.length - 1; i++) {
+      const before = evals[i], after = evals[i + 1];
+      const mv = replay.move(moves[i].san);
+      if (!mv) break;
+      const color = mv.color;
+      const sgn = color === 'w' ? 1 : -1;
+      const drop = Math.max(0, rvWin(sgn * before.cp) - rvWin(sgn * after.cp));
+      const played = mv.from + mv.to + (mv.promotion || '');
+      const best = before.uci && before.uci !== '(none)' ? before.uci : null;
+      const isBest = !!best && (best === played || (best.length === 4 && played === best + 'q'));
+      const hadMate = before.mate != null && before.mate * sgn > 0;
+      const keepsMate = after.mate != null && after.mate * sgn >= 0;
+      const allowsMate = after.mate != null && after.mate * sgn < 0 && !(before.mate != null && before.mate * sgn < 0);
+      let cls;
+      if (after.mate === 0 && after.over) cls = 'best';
+      else if (books[i]) cls = 'book';
+      else if (isBest) cls = 'best';
+      else if (hadMate && !keepsMate) cls = 'miss';
+      else if (drop >= 15) cls = 'blunder';
+      else if (drop >= 10) cls = 'mistake';
+      else if (drop >= 5) cls = 'inaccuracy';
+      else if (drop >= 2) cls = 'good';
+      else cls = 'excellent';
+      items.push({ ply: i + 1, color, san: mv.san, from: mv.from, to: mv.to, cls, drop, acc: rvMoveAccuracy(drop),
+        best, bestSan: null, hadMate, mateIn: hadMate ? Math.abs(before.mate) : null, allowsMate, opening: books[i] });
+    }
+    // 最善手の表記(SAN)は「指す前の局面」から作る
+    const r2 = new Chess();
+    items.forEach((it, idx) => {
+      if (it.best && it.cls !== 'best' && it.cls !== 'book') it.bestSan = uciToSan(r2.fen(), it.best);
+      r2.move(moves[idx].san);
+    });
+    const sum = { w: { counts: {}, accs: [] }, b: { counts: {}, accs: [] } };
+    RV_CLASSES.forEach(c => { sum.w.counts[c.key] = 0; sum.b.counts[c.key] = 0; });
+    items.forEach(it => { sum[it.color].counts[it.cls]++; sum[it.color].accs.push(it.acc); });
+    ['w', 'b'].forEach(c => {
+      sum[c].accuracy = rvGameAccuracy(sum[c].accs);
+      sum[c].estimate = rvEstimateRating(sum[c].accuracy, sum[c].accs.length);
+    });
+    let opening = null;
+    items.forEach(it => { if (it.opening && it.opening.ja) opening = it.opening; });
+    return { items, evals, sum, opening };
+  }
+
+  function rvExplain(it, isMine) {
+    const who = isMine ? rvT('あなた', 'You') : rvT('相手', 'Your opponent');
+    const whoJa = isMine ? 'あなた' : '相手';
+    const b = it.bestSan || '';
+    let s;
+    switch (it.cls) {
+      case 'book':
+        s = rvT(whoJa + 'の' + it.san + 'は定跡の手だよ。' + (it.opening && it.opening.ja ? '「' + it.opening.ja + '」の形だね。' : ''),
+                (isMine ? 'Your ' : "Your opponent's ") + it.san + ' is a book move.' + (it.opening && it.opening.en ? ' This is the ' + it.opening.en + '.' : ''));
+        break;
+      case 'best':
+        s = (it.ply && rvState && rvState.result.evals[it.ply] && rvState.result.evals[it.ply].mate === 0)
+          ? rvT('チェックメイト！' + whoJa + 'の見事な決め手だね。', 'Checkmate! ' + (isMine ? 'A beautiful finish.' : 'Your opponent found the finish.'))
+          : rvT(whoJa + 'の' + it.san + 'は、この局面で一番の手だよ！', (isMine ? 'Your ' : "Your opponent's ") + it.san + ' is the best move in this position!');
+        break;
+      case 'excellent':
+        s = rvT(whoJa + 'の' + it.san + 'はとても良い手。最善の' + b + 'とほとんど差がないよ。',
+                (isMine ? 'Your ' : "Your opponent's ") + it.san + ' is excellent — almost as good as the best move, ' + b + '.');
+        break;
+      case 'good':
+        s = rvT(whoJa + 'の' + it.san + 'は悪くない手。' + b + 'のほうが少しだけ良かったよ。',
+                (isMine ? 'Your ' : "Your opponent's ") + it.san + ' is a decent move. ' + b + ' was slightly better.');
+        break;
+      case 'inaccuracy':
+        s = rvT(whoJa + 'の' + it.san + 'は少しもったいない手。' + b + 'を指すと、形勢をもっと良く保てたよ。',
+                (isMine ? 'Your ' : "Your opponent's ") + it.san + ' is an inaccuracy. ' + b + ' would have kept a better position.');
+        break;
+      case 'mistake':
+        s = rvT(whoJa + 'の' + it.san + 'は間違い。ここでは' + b + 'が良かったよ。',
+                (isMine ? 'Your ' : "Your opponent's ") + it.san + ' is a mistake. ' + b + ' was the better choice here.');
+        break;
+      case 'miss':
+        s = rvT('メイトのチャンスを逃したよ！' + whoJa + 'は' + b + 'から' + it.mateIn + '手でメイトにできたんだ。',
+                (isMine ? 'You' : 'Your opponent') + ' missed a forced checkmate! ' + b + ' led to mate in ' + it.mateIn + '.');
+        break;
+      default:
+        s = rvT(whoJa + 'の' + it.san + 'は大きなミス！ここは' + b + 'を指すべきだったよ。',
+                (isMine ? 'Your ' : "Your opponent's ") + it.san + ' is a blunder! ' + b + ' should have been played here.');
+    }
+    if (it.allowsMate && it.cls !== 'best') {
+      s += rvT(' この手のあと、' + (isMine ? '相手' : 'あなた') + 'にメイトの手順ができてしまったよ。',
+               ' After this move, ' + (isMine ? 'your opponent' : 'you') + ' had a forced checkmate.');
+    }
+    return s;
+  }
+
+  function rvSummaryComment(acc) {
+    if (acc == null) return rvT('短い対局だったね。次の対局もいっしょに見ていこう！', 'That was a short game. Let\'s review the next one together!');
+    if (acc >= 85) return rvT('すばらしい対局！とても正確に指せていたよ。', 'A wonderful game! You played very accurately.');
+    if (acc >= 70) return rvT('よく指せていたね！いくつかの場面を見直すと、もっと強くなれるよ。', 'Nicely played! Reviewing a few moments will make you even stronger.');
+    if (acc >= 55) return rvT('おつかれさま！大事な場面をいっしょに見直そう。', 'Good effort! Let\'s look back at the key moments together.');
+    return rvT('うまくいかない対局もあるよ。でも、学べるところがきっとある。いっしょに見ていこう！', 'Not every game goes your way, but there is always something to learn. Let\'s look together!');
+  }
+
+  // ---- 画面 ----
+  function rvEl(tag, css, text) {
+    const e = document.createElement(tag);
+    if (css) e.style.cssText = css;
+    if (text != null) e.textContent = text;
+    return e;
+  }
+  function rvBadge(cls, size) {
+    const c = RV_CLS[cls];
+    const b = rvEl('span', 'display:inline-flex;align-items:center;justify-content:center;border-radius:50%;color:#fff;font-weight:800;flex-shrink:0;'
+      + 'width:' + size + 'px;height:' + size + 'px;font-size:' + Math.round(size * 0.48) + 'px;background:' + c.color + ';', c.sym);
+    b.className = 'rv-badge';
+    return b;
+  }
+
+  function kcOpenReview() {
+    if (!latestMatchData) return;
+    const ov = document.getElementById('rvOverlay');
+    ov.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+    const m = latestMatchData;
+    const key = (myMatchId || 'match') + ':' + ((m.moves || []).length);
+    rvState = { m, key, myColor, ply: 0, view: 'summary', result: null };
+    if (!KC_REVIEW_FREE) { rvRenderLocked(); return; }
+    let cached = rvMemCache[key];
+    if (!cached) { try { const s = localStorage.getItem('kcReview:' + key); if (s) cached = JSON.parse(s); } catch (e) {} }
+    if (cached && cached.evals && cached.evals.length === (m.moves || []).length + 1) {
+      rvState.result = rvBuild(m, cached);
+      rvSaveSummary(rvState);
+      rvRender();
+      return;
+    }
+    const token = ++rvRunToken;
+    rvRenderProgress(0, (m.moves || []).length);
+    rvAnalyze(m, (d, t) => { if (token === rvRunToken) rvRenderProgress(d, t); }, token).then(data => {
+      if (!data || token !== rvRunToken) return;
+      rvMemCache[key] = data;
+      try { localStorage.setItem('kcReview:' + key, JSON.stringify(data)); } catch (e) {}
+      rvState.result = rvBuild(m, data);
+      rvSaveSummary(rvState);
+      rvRender();
+    });
+  }
+  // 振り返りの結果（自分の正確度・手の評価・駒ごとの正確度）をインサイト用に保存する
+  function rvSaveSummary(st) {
+    try {
+      if (!st || !st.result || !curUser || !myMatchId) return;
+      const me = st.myColor;
+      const counts = st.result.sum[me].counts;
+      const pieceAcc = {};
+      st.result.items.forEach(it => {
+        if (it.color !== me) return;
+        const c = it.san.indexOf('O-O') === 0 ? 'k' : ('NBRQK'.indexOf(it.san[0]) !== -1 ? it.san[0].toLowerCase() : 'p');
+        if (!pieceAcc[c]) pieceAcc[c] = { sum: 0, n: 0 };
+        pieceAcc[c].sum += it.acc; pieceAcc[c].n++;
+      });
+      Object.keys(pieceAcc).forEach(k => { pieceAcc[k].sum = Math.round(pieceAcc[k].sum * 10) / 10; });
+      set(ref(db, 'privateStats/' + curUser.uid + '/reviews/' + myMatchId), {
+        color: me, accuracy: st.result.sum[me].accuracy, counts, pieceAcc, reviewedAt: Date.now()
+      }).catch(() => {});
+    } catch (e) {}
+  }
+  function kcCloseReview() {
+    rvRunToken++;
+    rvState = null;
+    document.getElementById('rvOverlay').style.display = 'none';
+    document.body.style.overflow = '';
+  }
+
+  function rvHeader(body) {
+    const head = rvEl('div', 'display:flex;align-items:center;gap:8px;padding:10px 12px;border-bottom:1px solid rgba(124,74,30,0.3);flex-shrink:0;');
+    const close = rvEl('button', 'background:none;color:var(--text);font-size:1.4rem;padding:0 6px;margin:0;', '✕');
+    close.setAttribute('aria-label', rvT('閉じる', 'Close'));
+    close.onclick = kcCloseReview;
+    head.appendChild(close);
+    if (rvState && rvState.view === 'moves') {
+      const back = rvEl('button', 'background:none;color:var(--brown);padding:0 4px;margin:0;font-size:0.9rem;', rvT('← まとめ', '← Summary'));
+      back.onclick = () => { rvState.view = 'summary'; rvRender(); };
+      head.appendChild(back);
+    }
+    head.appendChild(rvEl('div', 'flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-family:Cinzel,serif;font-weight:700;color:var(--brown-dark);font-size:' + (rvState && rvState.view === 'moves' ? '0.9rem' : '1.05rem') + ';', rvT('🦊 ジーンと振り返る', '🦊 Game Review')));
+    body.appendChild(head);
+  }
+  function rvJeneBubble(img, text, extra) {
+    const row = rvEl('div', 'display:flex;gap:10px;align-items:flex-start;padding:10px 12px;');
+    const im = rvEl('img', 'width:58px;height:58px;flex-shrink:0;object-fit:contain;');
+    im.src = '/' + img + '.png';
+    im.onerror = () => { im.src = '/jene_normal.png'; };
+    im.alt = 'Jene';
+    row.appendChild(im);
+    const bub = rvEl('div', 'flex:1;background:#fff8ee;border:2px solid var(--brown);border-radius:14px;padding:8px 12px;color:#4a2a0e;font-size:0.95rem;line-height:1.5;min-height:3em;');
+    if (extra) bub.appendChild(extra);
+    bub.appendChild(rvEl('div', '', text));
+    row.appendChild(bub);
+    return row;
+  }
+
+  function rvRenderProgress(done, total) {
+    const ov = document.getElementById('rvOverlay');
+    const body = document.getElementById('rvBody');
+    body.innerHTML = '';
+    rvHeader(body);
+    body.appendChild(rvJeneBubble('jene_quiz', rvT('いま対局を1手ずつ調べているよ。少し待っててね…', 'I\'m checking the game move by move. Just a moment…')));
+    const wrap = rvEl('div', 'padding:10px 20px;');
+    const bar = rvEl('div', 'height:10px;background:rgba(124,74,30,0.2);border-radius:5px;overflow:hidden;');
+    const fill = rvEl('div', 'height:100%;background:#81b64c;transition:width .2s;width:' + (total ? Math.round(done / total * 100) : 0) + '%;');
+    bar.appendChild(fill);
+    wrap.appendChild(bar);
+    wrap.appendChild(rvEl('p', 'text-align:center;margin-top:6px;color:var(--text-muted);font-size:0.85rem;', done + ' / ' + total));
+    body.appendChild(wrap);
+    ov.scrollTop = 0;
+  }
+
+  function rvRenderLocked() {
+    const body = document.getElementById('rvBody');
+    body.innerHTML = '';
+    rvHeader(body);
+    body.appendChild(rvJeneBubble('jene_wink', rvT('振り返り機能は、プレミアムで使えるよ。', 'Game Review is available with Premium.')));
+    body.appendChild(rvEl('p', 'text-align:center;font-size:2.5rem;margin-top:10px;', '🔒'));
+  }
+
+  function rvGraph(result, onPick) {
+    const evs = result.evals;
+    const n = evs.length - 1;
+    const W = Math.max(1, n), H = 100;
+    const NS = 'http://www.w3.org/2000/svg';
+    const svg = document.createElementNS(NS, 'svg');
+    svg.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
+    svg.setAttribute('preserveAspectRatio', 'none');
+    svg.style.cssText = 'width:100%;height:90px;display:block;background:#403d39;border-radius:6px;cursor:pointer;';
+    const y = (ev) => H * (1 - rvWin(ev.cp) / 100);
+    let d = 'M0,' + H;
+    evs.forEach((ev, i) => { d += ' L' + i + ',' + y(ev).toFixed(2); });
+    d += ' L' + n + ',' + H + ' Z';
+    const area = document.createElementNS(NS, 'path');
+    area.setAttribute('d', d); area.setAttribute('fill', '#f2f2f2');
+    svg.appendChild(area);
+    const mid = document.createElementNS(NS, 'line');
+    mid.setAttribute('x1', 0); mid.setAttribute('x2', W); mid.setAttribute('y1', H / 2); mid.setAttribute('y2', H / 2);
+    mid.setAttribute('stroke', '#888'); mid.setAttribute('stroke-width', '0.6'); mid.setAttribute('vector-effect', 'non-scaling-stroke');
+    svg.appendChild(mid);
+    const wrap = rvEl('div', 'position:relative;');
+    wrap.appendChild(svg);
+    result.items.forEach(it => {
+      if (['inaccuracy', 'mistake', 'miss', 'blunder', 'best'].indexOf(it.cls) === -1) return;
+      if (it.cls === 'best' && it.drop > 0.5) return;
+      if (it.cls === 'best') return; // 最善手は多いので点は出さない
+      const dot = rvEl('span', 'position:absolute;width:9px;height:9px;border-radius:50%;transform:translate(-50%,-50%);pointer-events:none;border:1px solid rgba(0,0,0,0.35);background:' + RV_CLS[it.cls].color + ';'
+        + 'left:' + (it.ply / W * 100) + '%;top:' + (y(evs[it.ply]) / H * 90) + 'px;');
+      wrap.appendChild(dot);
+    });
+    if (rvState && rvState.view === 'moves') {
+      const cur = rvEl('span', 'position:absolute;top:0;bottom:0;width:2px;background:#81b64c;pointer-events:none;left:' + (rvState.ply / W * 100) + '%;');
+      wrap.appendChild(cur);
+    }
+    svg.addEventListener('click', (e) => {
+      const r = svg.getBoundingClientRect();
+      const p = Math.round((e.clientX - r.left) / r.width * W);
+      onPick(Math.max(0, Math.min(n, p)));
+    });
+    return wrap;
+  }
+
+  function rvRender() {
+    if (!rvState || !rvState.result) return;
+    if (rvState.view === 'moves') rvRenderMoves(); else rvRenderSummary();
+  }
+
+  function rvRenderSummary() {
+    const st = rvState, res = st.result, m = st.m;
+    const body = document.getElementById('rvBody');
+    body.innerHTML = '';
+    rvHeader(body);
+    const me = st.myColor, op = me === 'w' ? 'b' : 'w';
+    body.appendChild(rvJeneBubble(res.sum[me].accuracy >= 70 ? 'jene_happy' : 'jene_normal', rvSummaryComment(res.sum[me].accuracy)));
+    const sec = rvEl('div', 'padding:0 12px 12px;');
+    sec.appendChild(rvGraph(res, (p) => { st.view = 'moves'; st.ply = p; rvRender(); }));
+    if (res.opening) {
+      sec.appendChild(rvEl('p', 'margin:8px 0 0;font-size:0.85rem;color:var(--text-muted);text-align:center;', rvT('📖 オープニング: ', '📖 Opening: ') + rvT(res.opening.ja, res.opening.en)));
+    }
+    const nameOf = (c) => (c === 'w' ? m.whiteName : m.blackName) || (c === 'w' ? rvT('白', 'White') : rvT('黒', 'Black'));
+    const tbl = rvEl('div', 'display:grid;grid-template-columns:1.3fr 1fr 34px 1fr;gap:8px 6px;align-items:center;margin-top:12px;');
+    const cell = (t, css) => tbl.appendChild(rvEl('div', css || '', t));
+    cell('');
+    cell(rvT('あなた', 'You') + '\n' + nameOf(me), 'text-align:center;font-weight:800;font-size:0.8rem;white-space:pre-line;overflow-wrap:anywhere;');
+    cell('');
+    cell(rvT('相手', 'Opponent') + '\n' + nameOf(op), 'text-align:center;font-weight:800;font-size:0.8rem;white-space:pre-line;overflow-wrap:anywhere;');
+    const boxCss = (mine) => 'text-align:center;font-size:1.5rem;font-weight:800;padding:6px 0;border-radius:6px;' + (mine ? 'background:#fff;color:#111;' : 'background:rgba(124,74,30,0.15);color:var(--text);');
+    cell(rvT('正確度', 'Accuracy'), 'font-weight:800;');
+    cell(res.sum[me].accuracy == null ? '—' : res.sum[me].accuracy.toFixed(1), boxCss(true));
+    cell('');
+    cell(res.sum[op].accuracy == null ? '—' : res.sum[op].accuracy.toFixed(1), boxCss(false));
+    RV_CLASSES.forEach(c => {
+      cell(rvT(c.ja, c.en), 'font-weight:700;');
+      cell(String(res.sum[me].counts[c.key]), 'text-align:center;font-size:1.25rem;font-weight:800;color:' + c.color + ';');
+      const bc = rvEl('div', 'display:flex;justify-content:center;'); bc.appendChild(rvBadge(c.key, 28)); tbl.appendChild(bc);
+      cell(String(res.sum[op].counts[c.key]), 'text-align:center;font-size:1.25rem;font-weight:800;color:' + c.color + ';');
+    });
+    cell(rvT('この対局の\n強さ（目安）', 'Game rating\n(estimate)'), 'font-weight:800;white-space:pre-line;');
+    cell(res.sum[me].estimate == null ? '—' : String(res.sum[me].estimate), boxCss(true));
+    cell('');
+    cell(res.sum[op].estimate == null ? '—' : String(res.sum[op].estimate), boxCss(false));
+    sec.appendChild(tbl);
+    sec.appendChild(rvEl('p', 'font-size:0.75rem;color:var(--text-muted);margin-top:10px;line-height:1.5;',
+      rvT('※ 正確度は、Stockfish の評価をもとに Lichess で公開されている計算方法で出しています。「強さ（目安）」は正確度からの大まかな推定で、レーティングとは関係ありません。短い時間で計算しているので、あくまで参考にしてください。',
+          '* Accuracy is based on Stockfish evaluations using the method published by Lichess. The game rating is only a rough estimate from accuracy and does not affect your rating. Analysis uses short think times, so treat it as a guide.')));
+    const start = rvEl('button', 'display:block;width:100%;margin:12px 0 0;padding:12px;font-size:1.1rem;background:#81b64c;', rvT('振り返りを始める', 'Start Review'));
+    start.onclick = () => { st.view = 'moves'; st.ply = 0; rvRender(); };
+    sec.appendChild(start);
+    body.appendChild(sec);
+    document.getElementById('rvOverlay').scrollTop = 0;
+  }
+
+  function rvRenderBoard(fen, flip, hl, arrow) {
+    const wrap = rvEl('div', 'position:relative;width:100%;max-width:420px;margin:0 auto;');
+    const board = rvEl('div', 'display:grid;grid-template-columns:repeat(8,minmax(0,1fr));grid-template-rows:repeat(8,minmax(0,1fr));width:100%;aspect-ratio:1;border:2px solid var(--board-border,var(--brown));');
+    const ch = new Chess(fen);
+    const arr = ch.board();
+    const files = ['a','b','c','d','e','f','g','h'];
+    const idx = [...Array(8).keys()];
+    const rows = flip ? [...idx].reverse() : idx, cols = flip ? [...idx].reverse() : idx;
+    rows.forEach((r, ri) => cols.forEach((c, ci) => {
+      const sq = files[c] + (8 - r);
+      const cellEl = document.createElement('div');
+      cellEl.className = 'sq ' + (((r + c) % 2 === 0) ? 'light' : 'dark');
+      cellEl.style.cursor = 'default';
+      if (hl && (sq === hl.from || sq === hl.to)) cellEl.style.boxShadow = 'inset 0 0 0 100px ' + hl.color + '88';
+      if (ci === 0) { const l = rvEl('span', '', String(8 - r)); l.className = 'sq-label rank-label'; cellEl.appendChild(l); }
+      if (ri === 7) { const l = rvEl('span', '', files[c]); l.className = 'sq-label file-label'; cellEl.appendChild(l); }
+      const p = arr[r][c];
+      if (p) {
+        const img = document.createElement('img');
+        img.src = PIECE_IMG[p.color + p.type.toUpperCase()];
+        img.style.cssText = 'width:100%;height:100%;pointer-events:none;';
+        cellEl.appendChild(img);
+      }
+      if (hl && sq === hl.to) {
+        const bd = rvBadge(hl.cls, 20);
+        bd.style.position = 'absolute'; bd.style.top = '-6px'; bd.style.right = '-6px'; bd.style.zIndex = '3';
+        bd.style.boxShadow = '0 1px 3px rgba(0,0,0,0.4)';
+        cellEl.appendChild(bd);
+      }
+      board.appendChild(cellEl);
+    }));
+    wrap.appendChild(board);
+    if (arrow) {
+      const pos = (s) => {
+        const f = s.charCodeAt(0) - 97, rk = parseInt(s[1], 10);
+        const x = flip ? 7 - f : f, yy = flip ? rk - 1 : 8 - rk;
+        return [x + 0.5, yy + 0.5];
+      };
+      const [x1, y1] = pos(arrow.slice(0, 2)), [x2, y2] = pos(arrow.slice(2, 4));
+      const NS = 'http://www.w3.org/2000/svg';
+      const svg = document.createElementNS(NS, 'svg');
+      svg.setAttribute('viewBox', '0 0 8 8');
+      svg.style.cssText = 'position:absolute;inset:2px;width:calc(100% - 4px);height:calc(100% - 4px);pointer-events:none;';
+      const len = Math.hypot(x2 - x1, y2 - y1) || 1;
+      const ux = (x2 - x1) / len, uy = (y2 - y1) / len;
+      const ex = x2 - ux * 0.35, ey = y2 - uy * 0.35;
+      const line = document.createElementNS(NS, 'line');
+      line.setAttribute('x1', x1); line.setAttribute('y1', y1); line.setAttribute('x2', ex); line.setAttribute('y2', ey);
+      line.setAttribute('stroke', 'rgba(129,182,76,0.85)'); line.setAttribute('stroke-width', '0.18'); line.setAttribute('stroke-linecap', 'round');
+      svg.appendChild(line);
+      const head = document.createElementNS(NS, 'polygon');
+      const px = -uy, py = ux;
+      head.setAttribute('points', [x2 + ux * 0.05, y2 + uy * 0.05, ex - ux * 0.05 + px * 0.3, ey - uy * 0.05 + py * 0.3, ex - ux * 0.05 - px * 0.3, ey - uy * 0.05 - py * 0.3].map(v => v.toFixed(3)).join(' '));
+      head.setAttribute('fill', 'rgba(129,182,76,0.9)');
+      svg.appendChild(head);
+      wrap.appendChild(svg);
+    }
+    return wrap;
+  }
+
+  function rvRenderMoves() {
+    const st = rvState, res = st.result, m = st.m;
+    const n = res.items.length;
+    st.ply = Math.max(0, Math.min(n, st.ply));
+    const body = document.getElementById('rvBody');
+    body.innerHTML = '';
+    rvHeader(body);
+    const replay = new Chess();
+    for (let i = 0; i < st.ply; i++) replay.move(m.moves[i].san);
+    const it = st.ply > 0 ? res.items[st.ply - 1] : null;
+    if (it) {
+      const isMine = it.color === st.myColor;
+      const title = rvEl('div', 'display:flex;align-items:center;gap:6px;margin-bottom:4px;font-weight:800;');
+      title.appendChild(rvBadge(it.cls, 22));
+      title.appendChild(rvEl('span', 'flex:1;', it.san + rvT(' は' + RV_CLS[it.cls].ja + 'です', ' is ' + (it.cls === 'inaccuracy' || it.cls === 'excellent' ? 'an ' : 'a ') + RV_CLS[it.cls].en.toLowerCase())));
+      title.appendChild(rvEl('span', 'background:#403d39;color:#fff;border-radius:6px;padding:1px 8px;font-size:0.85rem;', rvEvalLabel(res.evals[st.ply])));
+      body.appendChild(rvJeneBubble(RV_JENE[it.cls], rvExplain(it, isMine), title));
+    } else {
+      body.appendChild(rvJeneBubble('jene_welcome', rvT('最初の局面だよ。「次へ」で1手ずつ見ていこう。緑の矢印は、ジーンのおすすめの手だよ。', 'This is the starting position. Tap "Next" to go move by move. The green arrow shows the move I recommend.')));
+    }
+    const showArrow = it && it.best && it.cls !== 'best' && it.cls !== 'book';
+    body.appendChild(rvRenderBoard(replay.fen(), st.myColor === 'b',
+      it ? { from: it.from, to: it.to, color: RV_CLS[it.cls].color, cls: it.cls } : null,
+      showArrow ? it.best : null));
+    const nav = rvEl('div', 'display:flex;align-items:center;justify-content:space-between;gap:6px;padding:8px 12px;');
+    const prev = rvEl('button', 'flex:1;margin:0;padding:10px;', rvT('◀ 前へ', '◀ Prev'));
+    prev.disabled = st.ply === 0;
+    prev.onclick = () => { st.ply--; rvRender(); };
+    const label = rvEl('div', 'flex:1.2;text-align:center;font-weight:800;font-size:0.9rem;',
+      it ? (Math.floor((it.ply - 1) / 2) + 1) + (it.color === 'w' ? '. ' : '... ') + it.san : rvT('開始', 'Start'));
+    const next = rvEl('button', 'flex:1;margin:0;padding:10px;background:#81b64c;', rvT('次へ ▶', 'Next ▶'));
+    next.disabled = st.ply >= n;
+    next.onclick = () => { st.ply++; rvRender(); };
+    nav.appendChild(prev); nav.appendChild(label); nav.appendChild(next);
+    body.appendChild(nav);
+    // 注目したい手だけ飛ばして見られるボタン
+    const jump = rvEl('div', 'display:flex;justify-content:center;gap:6px;padding:0 12px 6px;flex-wrap:wrap;');
+    const findKey = (dir) => {
+      const keys = ['inaccuracy', 'mistake', 'miss', 'blunder'];
+      if (dir > 0) { for (let p = st.ply + 1; p <= n; p++) if (res.items[p - 1].color === st.myColor && keys.indexOf(res.items[p - 1].cls) !== -1) return p; }
+      else { for (let p = st.ply - 1; p >= 1; p--) if (res.items[p - 1].color === st.myColor && keys.indexOf(res.items[p - 1].cls) !== -1) return p; }
+      return null;
+    };
+    const kp = findKey(-1), kn = findKey(1);
+    const jb = (txt, target) => { const b = rvEl('button', 'margin:0;padding:6px 10px;font-size:0.8rem;background:rgba(124,74,30,0.2);color:var(--text);', txt); b.disabled = target == null; b.onclick = () => { st.ply = target; rvRender(); }; return b; };
+    jump.appendChild(jb(rvT('◀ 前の見直しポイント', '◀ Prev key moment'), kp));
+    jump.appendChild(jb(rvT('次の見直しポイント ▶', 'Next key moment ▶'), kn));
+    body.appendChild(jump);
+    const gwrap = rvEl('div', 'padding:4px 12px 16px;');
+    gwrap.appendChild(rvGraph(res, (p) => { st.ply = p; rvRender(); }));
+    body.appendChild(gwrap);
+  }
+
+  // 言語を切り替えたら、開いている振り返りも書き直す
+  document.getElementById('langBtn').addEventListener('click', () => { try { if (rvState) { if (rvState.result) rvRender(); } } catch (e) {} });
+  document.getElementById('reportToggleBtn').onclick = () => kcOpenReview();
+  // ===== ここまで ゲームレビュー =====
 
   function squareToVisualRC(sq, myColor) {
     const files = ['a','b','c','d','e','f','g','h'];
@@ -5992,7 +7161,16 @@ function startClockTicker(user) {
       buildRandomMatchUI(user);
       onValue(ref(db, 'matchHistory/' + user.uid), (s) => { kcRenderRatingGraph(s.val()); });
 
-      onValue(ref(db, 'publicProfiles'), (s) => { allUsersMap = s.val() || {}; renderUserSearchResults(); });
+      onValue(ref(db, 'publicProfiles'), (s) => {
+        allUsersMap = s.val() || {};
+        renderUserSearchResults();
+        // 友達のレートや勝敗が変わったら、友達一覧のカードも描き直す（変わっていなければ何もしない）
+        try {
+          if (curUser && latestFriendsData && kcFriendsSignature(curUser, latestFriendsData) !== kcFriendsProfileSig) {
+            renderFriendsList(curUser, latestFriendsData);
+          }
+        } catch (e) {}
+      });
       onValue(ref(db, 'friends/' + user.uid), (s) => { myFriendsSet = new Set(Object.keys(s.val() || {})); renderUserSearchResults(); });
       onValue(ref(db, 'friendRequests/' + user.uid), (s) => { myIncomingSet = new Set(Object.keys(s.val() || {})); renderUserSearchResults(); });
       onValue(ref(db, 'sentRequests/' + user.uid), (s) => { mySentSet = new Set(Object.keys(s.val() || {})); renderUserSearchResults(); });
@@ -6601,6 +7779,9 @@ if (banner) banner.style.visibility = p.superhard ? 'visible' : 'hidden';
 
   const JENE_PHRASES = {
     ja: {
+      mate: [
+        { text: 'この手でチェックメイトだよ!見のがさないで!', img: 'jene_sparkle.png' }
+      ],
       check: [
         { text: '王手をかけられるよ!相手のキングにプレッシャーをかけよう。', img: 'jene_excited.png' },
         { text: 'ここで王手!相手は防ぐのに精一杯になるよ。', img: 'jene_sparkle.png' }
@@ -6627,6 +7808,9 @@ if (banner) banner.style.visibility = p.superhard ? 'visible' : 'hidden';
       ]
     },
     en: {
+      mate: [
+        { text: 'This move is checkmate! Don\'t miss it!', img: 'jene_sparkle.png' }
+      ],
       check: [
         { text: 'You can put the king in check! Put some pressure on.', img: 'jene_excited.png' },
         { text: 'Check! Your opponent will have to scramble to defend.', img: 'jene_sparkle.png' }
@@ -6793,6 +7977,21 @@ if (banner) banner.style.visibility = p.superhard ? 'visible' : 'hidden';
   const CENTER_SQUARES = ['d4','d5','e4','e5'];
   const PIECE_VALUE = { p: 1, n: 3, b: 3, r: 5, q: 9, k: 0 };
 
+  // そのマスで、手番の側から取り合いを始めたときに得られる点数（得にならなければ取らないので 0 以上）
+  function kcExchangeGain(chess, sq, depth) {
+    depth = depth || 0;
+    if (depth > 6) return 0;
+    const caps = chess.moves({ verbose: true }).filter((m) => m.to === sq && m.captured);
+    if (!caps.length) return 0;
+    caps.sort((a, b) => (PIECE_VALUE[a.piece] || 0) - (PIECE_VALUE[b.piece] || 0));
+    const m = caps[0];
+    const gain = PIECE_VALUE[m.captured] || 0;
+    chess.move(m);
+    const v = gain - kcExchangeGain(chess, sq, depth + 1);
+    chess.undo();
+    return Math.max(0, v);
+  }
+
   function computeBeginnerHint(chess) {
     const legal = chess.moves({ verbose: true });
     if (!legal.length) return null;
@@ -6827,8 +8026,11 @@ if (banner) banner.style.visibility = p.superhard ? 'visible' : 'hidden';
       // この手を指した後、実際に王手になるか/相手がどう応じられるかをシミュレーションして確認
       chess.move(mv.san);
       const inCheck = chess.in_check();
+      const isMate = chess.in_checkmate();
       const oppReplies = chess.moves({ verbose: true });
       const recapture = oppReplies.find((r) => r.to === mv.to && r.captured);
+      // 動かした駒のマスで、取り合いが最後まで続いたときに相手が得する点数
+      const oppExchangeGain = recapture ? kcExchangeGain(chess, mv.to) : 0;
       // この手の直後、盤面のどこかで相手に得な駒取りが生まれていないかも広く確認する
       let worstOppGain = 0;
       oppReplies.forEach((r) => {
@@ -6844,24 +8046,33 @@ if (banner) banner.style.visibility = p.superhard ? 'visible' : 'hidden';
       });
       chess.undo();
 
-      if (inCheck) {
-        score += 3;
-        reason = 'check';
+      // この手での駒の損得（取った駒 − 取り返された駒 ＋ さらに取り返せる駒）
+      const capturedValue = isCapture ? (PIECE_VALUE[mv.captured] || 0) : 0;
+      const materialNet = capturedValue - oppExchangeGain;
+      const losesMaterial = !isMate && (materialNet < 0 || (worstOppGain > 0 && !(isCapture && recapture)));
+
+      if (isMate) {
+        // チェックメイトできるなら、何よりも優先する
+        score += 100;
+        reason = 'mate';
+      } else if (inCheck && !losesMaterial) {
+        // 駒を損しない王手だけをすすめる。王手した駒が取られない王手を一番すすめ、
+        // 取られても差し引きで損しない王手は少しだけ。取られて損する王手はすすめない
+        score += recapture ? 1 : 3;
+        if (!recapture) reason = 'check';
       }
 
       if (isCapture) {
-        const capturedValue = PIECE_VALUE[mv.captured] || 0;
         if (recapture) {
-          // 取り返される場合は、駒交換の純粋な損得(取った駒 - 取られた駒)で評価する
-          // (取り返される=悪い手、ではなく、差し引きで得か損かを見る)
-          score += (capturedValue - movingValue) * 1.5;
+          // 取り返される場合は、駒交換の差し引きの損得で評価する。損をする交換は強めに減点
+          score += materialNet >= 0 ? materialNet * 1.5 : materialNet * 3;
         } else {
           // 取り返されないなら、そのまま丸得
           score += capturedValue * 2 + 2;
         }
       } else if (recapture) {
-        // 取ってもいないのに移動先の駒がただで取られてしまう = 何の見返りもなく駒を失う
-        score -= movingValue * 2;
+        // 取ってもいないのに移動先の駒が取られてしまう（取り返せても差し引きで損なら減点）
+        score += materialNet >= 0 ? 0 : materialNet * 2;
       }
       // 移動先以外の駒も含め、この手の後に相手が得できる駒取りがあれば減点(間接的に駒を危険にさらす手を避ける)
       if (worstOppGain > 0 && !(isCapture && recapture)) {
@@ -6948,7 +8159,8 @@ if (banner) banner.style.visibility = p.superhard ? 'visible' : 'hidden';
     beginnerState.hintFrom = hint.from;
     beginnerState.hintTo = hint.to;
     // 取られそうな駒や点数の変化があるときは、そちらを先に伝える(ヒントの点はそのまま表示)
-    if (!kcShowBeginnerAdvice()) showBeginnerJeneSpeech(hint.reason, hint.san);
+    // チェックメイトできるときは、ほかのアドバイスより先に必ず伝える
+    if (hint.reason === 'mate' || !kcShowBeginnerAdvice()) showBeginnerJeneSpeech(hint.reason, hint.san);
   }
 
   // ===== ジーン(AI)の一手:オープニングデータに沿う手があればそれを優先、なければ通常のAIロジック =====
