@@ -436,6 +436,18 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <button class="wlc-lang-btn active" onclick="setWelcomeLang('ja',this)">日本語</button>
   </div>
 
+  <!-- Androidアプリ（Google Play） -->
+  <div style="max-width:680px;margin:24px auto 0;padding:0 16px;box-sizing:border-box;">
+    <div style="background:#fff8e8;border:2px solid var(--brown);border-radius:16px;padding:18px 16px 14px;text-align:center;box-shadow:2px 3px 8px rgba(0,0,0,0.05);font-family:'Crimson Pro',serif;font-weight:600;color:var(--text);">
+      <div style="font-family:'Cinzel',serif;color:var(--brown-dark);font-size:1rem;margin-bottom:6px;">📱 <span class="lang-text" data-ja="Androidアプリができました" data-en="Now on Android">Androidアプリができました</span></div>
+      <p class="lang-text" style="font-size:0.9rem;line-height:1.6;margin:0 0 4px;" data-ja="オンライン対局・はじめてモード・ジーンとのふり返りを、アプリで手軽に。" data-en="Online games, Beginner Mode and game reviews with Jene, right on your phone.">オンライン対局・はじめてモード・ジーンとのふり返りを、アプリで手軽に。</p>
+      <a href="https://play.google.com/store/apps/details?id=com.kitsunechess.chess" target="_blank" rel="noopener" style="display:inline-block;">
+        <img id="gpBadge" src="https://play.google.com/intl/ja/badges/static/images/badges/ja_badge_web_generic.png" data-src-ja="https://play.google.com/intl/ja/badges/static/images/badges/ja_badge_web_generic.png" data-src-en="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png" data-alt-ja="Google Play で手に入れよう" data-alt-en="Get it on Google Play" alt="Google Play で手に入れよう" width="200" height="77" loading="lazy" style="display:block;width:200px;height:auto;">
+      </a>
+      <p style="font-size:0.82rem;margin:2px 0 0;"><a href="match.html" style="color:var(--brown);" class="lang-text" data-ja="iPhoneの方はブラウザで遊べます →" data-en="On iPhone? Play in your browser →">iPhoneの方はブラウザで遊べます →</a></p>
+    </div>
+  </div>
+
   <!-- サイト紹介コンテンツ（AdSense対策） -->
   <div style="max-width:680px;margin:32px auto 0;padding:0 16px;font-family:'Crimson Pro',serif;font-weight:600;color:var(--text);text-align:left;">
 
@@ -509,6 +521,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       &nbsp;|&nbsp;
       <a href="mailto:info@kitsunechess-app.com" style="color:var(--brown);" class="lang-text" data-ja="お問い合わせ" data-en="Contact">お問い合わせ</a>
     </p>
+    <p class="lang-text" style="text-align:center;font-size:0.72rem;color:var(--brown);opacity:0.8;margin:-20px 0 32px;" data-ja="Google Play および Google Play ロゴは Google LLC の商標です。" data-en="Google Play and the Google Play logo are trademarks of Google LLC.">Google Play および Google Play ロゴは Google LLC の商標です。</p>
   </div>
 </div>
 
@@ -522,6 +535,8 @@ function setWelcomeLang(lang, btn) {
   document.querySelectorAll('#page-welcome .lang-text[data-ja][data-en]').forEach(el => {
     el.textContent = isEn ? el.dataset.en : el.dataset.ja;
   });
+  const gp = document.getElementById('gpBadge');
+  if (gp) { gp.src = isEn ? gp.dataset.srcEn : gp.dataset.srcJa; gp.alt = isEn ? gp.dataset.altEn : gp.dataset.altJa; }
 }
 
 // 保存されている言語設定を読み込み、なければ英語をデフォルトにする
