@@ -5090,7 +5090,8 @@ const PIECE_IMG = {
     }
     kcRenderInsights();
   }
-  function kcCloseInsights() {
+  function kcCloseInsights(e) {
+    if (e && e.type) kcSuppressGhostClick();
     kcViewClosed('insights');
     document.getElementById('kcInsOverlay').style.display = 'none';
     document.body.style.overflow = '';
@@ -5310,6 +5311,16 @@ const PIECE_IMG = {
   { const ib = document.getElementById('kcInsightsBtn'); if (ib) ib.onclick = () => kcOpenInsights(); }
   // ===== ここまで インサイト =====
 
+  // ===== 閉じるボタンを押したとき、下にあるリンクやボタンまで反応しないようにする =====
+  // （スマホでは、全画面を閉じた直後に、同じ指の位置の下の部品が押されたことになることがある）
+  let kcSuppressClickUntil = 0;
+  function kcSuppressGhostClick() { kcSuppressClickUntil = Date.now() + 600; }
+  ['click', 'touchend', 'pointerup'].forEach((type) => {
+    document.addEventListener(type, (e) => {
+      if (Date.now() < kcSuppressClickUntil) { e.preventDefault(); e.stopPropagation(); }
+    }, true);
+  });
+
   // ===== ブラウザ・スマホの「戻る」で、開いている画面だけを閉じる =====
   // ページの中で開いた画面（各モード・メニュー・振り返りなど）を順番に覚えておき、
   // 「戻る」が押されたら、ページを離れる代わりに一番上の画面を閉じる。
@@ -5449,7 +5460,8 @@ const PIECE_IMG = {
     ov.scrollTop = 0;
     document.body.style.overflow = 'hidden';
   }
-  function kcCloseMenu() {
+  function kcCloseMenu(e) {
+    if (e && e.type) kcSuppressGhostClick(); // ✕ を押して閉じたときだけ
     kcViewClosed('menu');
     document.getElementById('kcMenuOverlay').style.display = 'none';
     document.body.style.overflow = '';
@@ -5778,7 +5790,8 @@ const PIECE_IMG = {
       }).catch(() => {});
     } catch (e) {}
   }
-  function kcCloseReview() {
+  function kcCloseReview(e) {
+    if (e && e.type) kcSuppressGhostClick();
     kcViewClosed('review');
     rvRunToken++;
     rvState = null;
