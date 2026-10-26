@@ -5441,6 +5441,7 @@ const PIECE_IMG = {
       { head: T('学ぶ', 'Learn') },
       { icon: '🧩', label: T('パズルストリーク', 'Puzzle Streak'), act: () => kcScrollToEl('puzzleModeBox', true) },
       { icon: '♟️', label: T('中盤レッスン', 'Middlegame Lessons'), act: () => kcScrollToEl('midLessonBox', true) },
+      { icon: '📥', label: T('棋譜を貼ってジーンと振り返る', 'Review a Game from PGN'), act: () => kcOpenPgnImport() },
       { icon: '📖', label: T('定跡の解説（サイト）', 'Opening Guides (site)'), act: nav('openings_list.html') },
       { icon: '🏋️', label: T('練習モード（サイト）', 'Practice Mode (site)'), act: nav('practice.html') },
       { icon: '📰', label: T('コラム・記事（サイト）', 'Articles (site)'), act: nav('info.html') },
@@ -5813,7 +5814,7 @@ const PIECE_IMG = {
     const mid = idArg || myMatchId;
     const col = colorArg || myColor;
     const ov = document.getElementById('rvOverlay');
-    kcPushView('review', () => kcCloseReview());
+    if (ov.style.display !== 'flex') kcPushView('review', () => kcCloseReview()); // 棋譜の貼り付け画面から来たときは、もう開いている
     ov.style.display = 'flex';
     document.body.style.overflow = 'hidden';
     const key = (mid || 'match') + ':' + ((m.moves || []).length);
@@ -5841,7 +5842,7 @@ const PIECE_IMG = {
   // 振り返りの結果（自分の正確度・手の評価・駒ごとの正確度）をインサイト用に保存する
   function rvSaveSummary(st) {
     try {
-      if (!st || !st.result || !curUser || !st.matchId) return;
+      if (!st || !st.result || !curUser || !st.matchId || String(st.matchId).indexOf('import:') === 0) return; // 貼り付けた棋譜はインサイトに入れない
       const me = st.myColor;
       const counts = st.result.sum[me].counts;
       const pieceAcc = {};
@@ -6151,6 +6152,77 @@ const PIECE_IMG = {
     const gwrap = rvEl('div', 'padding:4px 12px 16px;');
     gwrap.appendChild(rvGraph(res, (p) => { st.ply = p; rvRender(); }));
     body.appendChild(gwrap);
+  }
+
+  // ===== 📥 よその棋譜（PGN）を貼って振り返る =====
+  // ほかのサイトの棋譜を読み取る。コメント・変化手順・記号は取り除く
+  function kcParsePgn(text) {
+    const tags = {};
+    String(text || '').replace(/\[(\w+)\s+"([^"]*)"\]/g, (all, k, v) => { tags[k] = v; return ''; });
+    if (tags.FEN || tags.SetUp === '1') return { error: 'fen' };
+    let body = String(text || '').replace(/\[[^\]]*\]/g, ' ');
+    body = body.replace(/\{[^}]*\}/g, ' ').replace(/;[^\n]*/g, ' ');
+    let prev;
+    do { prev = body; body = body.replace(/\([^()]*\)/g, ' '); } while (body !== prev); // 変化手順（入れ子もOK）
+    body = body.replace(/\b0-0-0\b/g, 'O-O-O').replace(/\b0-0\b/g, 'O-O'); // 数字のゼロで書かれたキャスリング
+    body = body.replace(/\$\d+/g, ' ').replace(/\d+\s*\.(\.\.)?/g, ' ').replace(/(1-0|0-1|1\/2-1\/2|½-½|\*)/g, ' ');
+    const tokens = body.split(/\s+/).map(s => s.replace(/[!?]+$/, '').replace(/^\.+/, '')).filter(Boolean);
+    const c = new Chess();
+    const moves = [];
+    for (let i = 0; i < tokens.length; i++) {
+      let mv = null;
+      try { mv = c.move(tokens[i], { sloppy: true }); } catch (e) { mv = null; }
+      if (!mv) return { error: 'move', at: Math.floor(moves.length / 2) + 1, token: tokens[i] };
+      moves.push({ san: mv.san, color: mv.color });
+      if (moves.length > 400) break;
+    }
+    if (!moves.length) return { error: 'empty' };
+    return { moves, whiteName: tags.White || '', blackName: tags.Black || '', fen: c.fen() };
+  }
+  function kcOpenPgnImport() {
+    const T = (ja, en) => (LANG === 'ja' ? ja : en);
+    const ov = document.getElementById('rvOverlay');
+    if (ov.style.display !== 'flex') kcPushView('review', () => kcCloseReview());
+    ov.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+    rvRunToken++;
+    rvState = null;
+    const body = document.getElementById('rvBody');
+    body.innerHTML = '';
+    rvHeader(body);
+    body.appendChild(rvJeneBubble('jene_quiz', T('ほかのサイトやアプリの棋譜（PGN）を貼ってね。ジーンが一手ずつ一緒に振り返るよ！', 'Paste a game (PGN) from another site or app, and I will review it with you move by move!')));
+    const wrap = rvEl('div', 'padding:0 12px 16px;');
+    const ta = document.createElement('textarea');
+    ta.rows = 8;
+    ta.placeholder = '1. e4 e5 2. Nf3 Nc6 3. Bb5 a6 ...';
+    ta.style.cssText = 'width:100%;box-sizing:border-box;font-size:0.9rem;padding:10px;border-radius:8px;border:2px solid var(--brown);background:var(--input-bg);color:var(--text);font-family:monospace;';
+    wrap.appendChild(ta);
+    wrap.appendChild(rvEl('p', 'margin:8px 0;font-size:0.82rem;color:var(--text-muted);line-height:1.6;',
+      T('※ Chess.com や Lichess の「棋譜をコピー（PGN）」で取った棋譜や、「1. e4 e5 2. Nf3」のような手順をそのまま貼れます。\n※ 対局中のゲームの棋譜は貼らないでください。ほかのサイトでも、対局中にエンジンを使うのは不正になります。',
+        '* You can paste a PGN copied from Chess.com or Lichess, or a plain move list like "1. e4 e5 2. Nf3".\n* Do not paste games that are still in progress. Using an engine during a game is cheating on any site.')));
+    wrap.lastChild.style.whiteSpace = 'pre-line';
+    const msg = rvEl('p', 'margin:6px 0;font-size:0.85rem;color:var(--status-bad);min-height:1.2em;', '');
+    wrap.appendChild(msg);
+    wrap.appendChild(rvEl('p', 'margin:10px 0 6px;font-weight:800;', T('どちら側で振り返りますか？', 'Which side did you play?')));
+    const row = rvEl('div', 'display:flex;gap:8px;');
+    const go = (color) => {
+      const r = kcParsePgn(ta.value);
+      if (r.error) {
+        msg.textContent = r.error === 'fen' ? T('途中の局面から始まる棋譜は、まだ読み取れません。', 'Games that start from a custom position are not supported yet.')
+          : r.error === 'empty' ? T('棋譜が見つかりませんでした。貼り付けた内容を確かめてね。', 'No moves found. Please check what you pasted.')
+          : T(r.at + '手目の「' + r.token + '」が読み取れませんでした。', 'Could not read "' + r.token + '" at move ' + r.at + '.');
+        return;
+      }
+      const m = { moves: r.moves, whiteName: r.whiteName, blackName: r.blackName, fen: r.fen, status: 'imported' };
+      let h = 0; const s = r.moves.map(x => x.san).join(' ');
+      for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) | 0;
+      kcOpenReview(m, 'import:' + (h >>> 0).toString(36), color);
+    };
+    const wb = rvEl('button', 'flex:1;margin:0;padding:12px;', T('⚪ 白で振り返る', '⚪ I played White')); wb.onclick = () => go('w');
+    const bb = rvEl('button', 'flex:1;margin:0;padding:12px;background:#403d39;', T('⚫ 黒で振り返る', '⚫ I played Black')); bb.onclick = () => go('b');
+    row.appendChild(wb); row.appendChild(bb);
+    wrap.appendChild(row);
+    body.appendChild(wrap);
   }
 
   // 言語を切り替えたら、開いている振り返りも書き直す
