@@ -332,7 +332,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
 <details class="box" id="beginnerModeBox" style="padding:8px;">
   <summary data-ja="はじめてモード🦊(ログイン不要)" data-en="Beginner Mode🦊 (no login required)">はじめてモード🦊(ログイン不要)</summary>
-  <p style="font-size:0.85rem;color:var(--text-muted);" data-ja="自分で自由に駒を動かしながら、ジーンが次の一手のヒントを教えてくれるよ。あるオープニングの形になったら、それも教えてくれる!" data-en="Move freely and Jene will suggest a next move — and tell you when your moves match a known opening!">自分で自由に駒を動かしながら、ジーンが次の一手のヒントを教えてくれるよ。あるオープニングの形になったら、それも教えてくれる!</p>
+  <p id="beginnerIntroText" style="font-size:0.85rem;color:var(--text-muted);" data-ja="自分で自由に駒を動かしながら、ジーンが次の一手のヒントを教えてくれるよ。あるオープニングの形になったら、それも教えてくれる!" data-en="Move freely and Jene will suggest a next move — and tell you when your moves match a known opening!">自分で自由に駒を動かしながら、ジーンが次の一手のヒントを教えてくれるよ。あるオープニングの形になったら、それも教えてくれる!</p>
   <div id="beginnerColorPanel">
     <button id="beginnerWhiteBtn" data-ja="⚪ 白番で始める" data-en="⚪ Play as White">⚪ 白番で始める</button>
     <button id="beginnerBlackBtn" data-ja="⚫ 黒番で始める" data-en="⚫ Play as Black">⚫ 黒番で始める</button>
@@ -8397,6 +8397,17 @@ if (banner) banner.style.visibility = p.superhard ? 'visible' : 'hidden';
   }
 
   // ===== ジーン(AI)の一手:オープニングデータに沿う手があればそれを優先、なければ通常のAIロジック =====
+  // はじめてモードの説明文は、5回遊んだら出さない（もう分かっている人には長いので）
+  (function kcBeginnerIntro() {
+    const KEY = 'kcBeginnerStarts';
+    const get = () => { try { return parseInt(localStorage.getItem(KEY), 10) || 0; } catch (e) { return 0; } };
+    const intro = document.getElementById('beginnerIntroText');
+    if (intro && get() >= 5) intro.style.display = 'none';
+    ['beginnerWhiteBtn', 'beginnerBlackBtn'].forEach(id => {
+      const b = document.getElementById(id);
+      if (b) b.addEventListener('click', () => { try { localStorage.setItem(KEY, String(get() + 1)); } catch (e) {} });
+    });
+  })();
   // はじめてモードの棋譜をコピー（ジーンの指し手が気になったときに、そのまま送れるように）
   { const cpBtn = document.getElementById('btnBeginnerCopyPgn');
     if (cpBtn) cpBtn.onclick = async () => {
