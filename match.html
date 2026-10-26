@@ -339,9 +339,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   </div>
   <div id="beginnerGameArea" style="display:none;">
     <p id="beginnerStatusMsg" style="text-align:center;font-weight:700;min-height:1.4em;color:var(--brown-dark);"></p>
-    <div id="beginnerJeneSpeechRow" style="display:flex;visibility:hidden;align-items:center;gap:8px;justify-content:center;margin-bottom:8px;min-height:70px;">
+    <div id="beginnerJeneSpeechRow" style="display:flex;visibility:hidden;align-items:center;gap:8px;justify-content:center;margin-bottom:8px;height:calc(4.95rem + 20px);overflow:hidden;">
       <img id="beginnerJeneSpeechImg" src="/jene_wink.png" style="width:36px;height:36px;flex-shrink:0;" onerror="this.src='/jene_wink.png';">
-      <div id="beginnerJeneSpeechBubble" style="background:#fff8ee;border:2px solid var(--brown);border-radius:14px;padding:6px 12px;font-size:0.85rem;color:#4a2a0e;position:relative;max-width:80%;"></div>
+      <div id="beginnerJeneSpeechBubble" style="background:#fff8ee;border:2px solid var(--brown);border-radius:14px;padding:6px 12px;font-size:0.85rem;line-height:1.45;color:#4a2a0e;position:relative;max-width:80%;"></div>
     </div>
     <div id="beginnerBoard" class="chessboard"></div>
     <div id="beginnerCapturedArea" style="font-size:0.85rem;margin-top:6px;"></div>
@@ -1910,7 +1910,10 @@ applyBoardTheme();
         + '<span>' + (h.opponentName || '?') + '<span style="color:#888;"> (' + (TC_LABELS[h.timeControl] || h.timeControl) + ')</span></span>'
         + '<span style="color:' + (resultColor[h.result] || '#aaa') + ';font-weight:700;">' + (resultLabel[h.result] || h.result) + '</span>'
         + '<span style="color:#888;">' + dateText + '</span></div>'
-        + '<div class="history-like-slot" data-match-id="' + h.matchId + '" style="margin-top:4px;"></div>'
+        + '<div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:4px;">'
+        + '<div class="history-like-slot" data-match-id="' + h.matchId + '"></div>'
+        + (isOwn ? '<button type="button" class="kc-hist-review" data-match-id="' + h.matchId + '" style="flex-shrink:0;margin:0;padding:4px 10px;font-size:0.78rem;background:#5d8a34;">' + (isJa ? '🦊 振り返る' : '🦊 Review') + '</button>' : '')
+        + '</div>'
         + '</div>';
     });
     if (!historyHtml) historyHtml = '<p style="color:#888;font-size:0.85rem;">' + (isJa ? 'まだ対局履歴がありません。' : 'No match history yet.') + '</p>';
@@ -1958,6 +1961,27 @@ applyBoardTheme();
 
     body.querySelectorAll('.history-like-slot').forEach((slot) => {
       renderLikeButton(slot.dataset.matchId, slot, user);
+    });
+    // 対局履歴から「ジーンと振り返る」を開く（自分のプロフィールだけ）
+    body.querySelectorAll('.kc-hist-review').forEach((btn) => {
+      btn.onclick = async (e) => {
+        e.stopPropagation();
+        if (btn.disabled) return;
+        const label = btn.textContent;
+        btn.disabled = true;
+        btn.textContent = isJa ? '読み込み中…' : 'Loading…';
+        try {
+          const snap = await get(ref(db, 'matches/' + btn.dataset.matchId));
+          const m = snap.val();
+          if (!m || !(m.moves || []).length) { btn.textContent = isJa ? '記録がありません' : 'No record'; return; }
+          btn.textContent = label;
+          btn.disabled = false;
+          kcOpenReview(m, btn.dataset.matchId, m.white === user.uid ? 'w' : 'b');
+        } catch (err) {
+          console.error('振り返りの読み込みに失敗:', err);
+          btn.textContent = isJa ? '読み込めませんでした' : 'Could not load';
+        }
+      };
     });
 
     if (isOwn) {
@@ -5742,15 +5766,18 @@ const PIECE_IMG = {
     return b;
   }
 
-  function kcOpenReview() {
-    if (!latestMatchData) return;
+  // 引数なし：いま開いている対局。引数あり：対局履歴から（対局データ・対局ID・自分の色）
+  function kcOpenReview(mArg, idArg, colorArg) {
+    const m = mArg || latestMatchData;
+    if (!m) return;
+    const mid = idArg || myMatchId;
+    const col = colorArg || myColor;
     const ov = document.getElementById('rvOverlay');
     kcPushView('review', () => kcCloseReview());
     ov.style.display = 'flex';
     document.body.style.overflow = 'hidden';
-    const m = latestMatchData;
-    const key = (myMatchId || 'match') + ':' + ((m.moves || []).length);
-    rvState = { m, key, myColor, ply: 0, view: 'summary', result: null };
+    const key = (mid || 'match') + ':' + ((m.moves || []).length);
+    rvState = { m, key, matchId: mid, myColor: col, ply: 0, view: 'summary', result: null };
     if (!KC_REVIEW_FREE) { rvRenderLocked(); return; }
     let cached = rvMemCache[key];
     if (!cached) { try { const s = localStorage.getItem('kcReview:' + key); if (s) cached = JSON.parse(s); } catch (e) {} }
@@ -5774,7 +5801,7 @@ const PIECE_IMG = {
   // 振り返りの結果（自分の正確度・手の評価・駒ごとの正確度）をインサイト用に保存する
   function rvSaveSummary(st) {
     try {
-      if (!st || !st.result || !curUser || !myMatchId) return;
+      if (!st || !st.result || !curUser || !st.matchId) return;
       const me = st.myColor;
       const counts = st.result.sum[me].counts;
       const pieceAcc = {};
@@ -5785,7 +5812,7 @@ const PIECE_IMG = {
         pieceAcc[c].sum += it.acc; pieceAcc[c].n++;
       });
       Object.keys(pieceAcc).forEach(k => { pieceAcc[k].sum = Math.round(pieceAcc[k].sum * 10) / 10; });
-      set(ref(db, 'privateStats/' + curUser.uid + '/reviews/' + myMatchId), {
+      set(ref(db, 'privateStats/' + curUser.uid + '/reviews/' + st.matchId), {
         color: me, accuracy: st.result.sum[me].accuracy, counts, pieceAcc, reviewedAt: Date.now()
       }).catch(() => {});
     } catch (e) {}
