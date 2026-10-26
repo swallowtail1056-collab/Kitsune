@@ -348,6 +348,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <div style="text-align:center;margin-top:8px;">
       <button id="btnBeginnerNewGame" data-ja="🔄 新しく始める" data-en="🔄 New Game">🔄 新しく始める</button>
       <button id="btnBeginnerReviewHistory" data-ja="📜 局面を見返す" data-en="📜 Review Position" style="margin-left:8px;">📜 局面を見返す</button>
+      <button id="btnBeginnerCopyPgn" type="button" data-ja="📋 棋譜をコピー" data-en="📋 Copy PGN" style="margin-left:8px;">📋 棋譜をコピー</button>
     </div>
   </div>
 </details>
@@ -8324,6 +8325,21 @@ if (banner) banner.style.visibility = p.superhard ? 'visible' : 'hidden';
   }
 
   // ===== ジーン(AI)の一手:オープニングデータに沿う手があればそれを優先、なければ通常のAIロジック =====
+  // はじめてモードの棋譜をコピー（ジーンの指し手が気になったときに、そのまま送れるように）
+  { const cpBtn = document.getElementById('btnBeginnerCopyPgn');
+    if (cpBtn) cpBtn.onclick = async () => {
+      if (!beginnerChess || !beginnerChess.history().length) return;
+      const meW = beginnerState.myColor === 'w';
+      const pad = (x) => String(x).padStart(2, '0'); const d = new Date();
+      let txt = '';
+      try { txt = beginnerChess.pgn({ max_width: 80 }); } catch (e) { txt = beginnerChess.pgn(); }
+      txt = '[Event "KitsuneChess はじめてモード"]\n[Date "' + d.getFullYear() + '.' + pad(d.getMonth() + 1) + '.' + pad(d.getDate()) + '"]\n[White "' + (meW ? 'You' : 'Jene') + '"]\n[Black "' + (meW ? 'Jene' : 'You') + '"]\n\n' + txt + '\n';
+      const ok = await kcCopyText(txt);
+      const orig = cpBtn.textContent;
+      cpBtn.textContent = ok ? (LANG === 'ja' ? '✅ コピーしました' : '✅ Copied') : (LANG === 'ja' ? 'コピーできませんでした' : 'Could not copy');
+      setTimeout(() => { cpBtn.textContent = orig; }, 2000);
+    };
+  }
   function pickBeginnerAiMove(chess) {
     const historySan = chess.history();
     let bookMove = null;
