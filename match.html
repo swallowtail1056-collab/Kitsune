@@ -1509,7 +1509,9 @@ applyBoardTheme();
     const homeRank = forColor === 'w' ? '1' : '8';
     const hist = chess.history({ verbose: true });
     let myLast = null;
-    for (let i = hist.length - 1; i >= 0; i--) { if (hist[i].color === forColor) { myLast = hist[i]; break; } }
+    const myRecent = []; // 自分の最近の手(新しい順に4手まで)
+    for (let i = hist.length - 1; i >= 0 && myRecent.length < 4; i--) { if (hist[i].color === forColor) myRecent.push(hist[i]); }
+    myLast = myRecent[0] || null;
     // これまでに出てきた局面を数える(同じ局面のくり返しを避けるため)
     const posKey = (c) => c.fen().split(' ').slice(0, 4).join(' ');
     const posCount = {};
@@ -1554,9 +1556,12 @@ applyBoardTheme();
       chess.undo();
       // 同じ局面のくり返しは避ける
       if (repeats >= 1 && !losingNow) score -= 0.6 * repeats;
-      // 直前に動かした駒を、元のマスにすぐ戻す手は避ける
-      if (myLast && m.from === myLast.to && m.to === myLast.from) score -= 0.4;
-      else if (myLast && m.from === myLast.to && !m.captured && !inCheckNow) score -= 0.15;
+      // 同じ駒の行ったり来たりを避ける(直前の手だけでなく、最近4手まで見る)
+      if (!m.captured && !inCheckNow) {
+        if (myRecent.some(h => h.to === m.from && h.from === m.to)) score -= 0.6;        // 最近の手を元に戻す
+        else if (myRecent.some(h => h.piece === m.piece && h.from === m.to)) score -= 0.35; // 最近いたマスに戻る
+        if (myLast && m.from === myLast.to) score -= 0.25;                                  // 同じ駒を続けて動かす
+      }
       // チェックされていないのにキングを動かす手(キャスリング以外)は、クイーンが残っている間は控える
       if (m.piece === 'k' && !inCheckNow && m.flags.indexOf('k') === -1 && m.flags.indexOf('q') === -1 && queensOn) score -= 0.5;
       // まだ動いていないナイト・ビショップを出す手を少し優先する
@@ -1912,7 +1917,10 @@ applyBoardTheme();
         + '<span style="color:#888;">' + dateText + '</span></div>'
         + '<div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:4px;">'
         + '<div class="history-like-slot" data-match-id="' + h.matchId + '"></div>'
-        + (isOwn ? '<button type="button" class="kc-hist-review" data-match-id="' + h.matchId + '" style="flex-shrink:0;margin:0;padding:4px 10px;font-size:0.78rem;background:#5d8a34;">' + (isJa ? '🦊 振り返る' : '🦊 Review') + '</button>' : '')
+        + (isOwn ? '<span style="display:flex;gap:6px;flex-shrink:0;">'
+          + '<button type="button" class="kc-hist-pgn" data-match-id="' + h.matchId + '" style="margin:0;padding:4px 10px;font-size:0.78rem;">' + (isJa ? '📋 棋譜' : '📋 PGN') + '</button>'
+          + '<button type="button" class="kc-hist-review" data-match-id="' + h.matchId + '" style="margin:0;padding:4px 10px;font-size:0.78rem;background:#5d8a34;">' + (isJa ? '🦊 振り返る' : '🦊 Review') + '</button>'
+          + '</span>' : '')
         + '</div>'
         + '</div>';
     });
@@ -1961,6 +1969,27 @@ applyBoardTheme();
 
     body.querySelectorAll('.history-like-slot').forEach((slot) => {
       renderLikeButton(slot.dataset.matchId, slot, user);
+    });
+    // 対局履歴から棋譜（PGN）をコピーする（自分のプロフィールだけ）
+    body.querySelectorAll('.kc-hist-pgn').forEach((btn) => {
+      btn.onclick = async (e) => {
+        e.stopPropagation();
+        if (btn.disabled) return;
+        const label = btn.textContent;
+        btn.disabled = true;
+        try {
+          const snap = await get(ref(db, 'matches/' + btn.dataset.matchId));
+          const m = snap.val();
+          btn.disabled = false;
+          if (!m || !(m.moves || []).length) { btn.textContent = isJa ? '記録がありません' : 'No record'; setTimeout(() => { btn.textContent = label; }, 2000); return; }
+          await kcCopyPgn(m, btn);
+        } catch (err) {
+          console.error('棋譜の読み込みに失敗:', err);
+          btn.disabled = false;
+          btn.textContent = isJa ? '読み込めませんでした' : 'Could not load';
+          setTimeout(() => { btn.textContent = label; }, 2000);
+        }
+      };
     });
     // 対局履歴から「ジーンと振り返る」を開く（自分のプロフィールだけ）
     body.querySelectorAll('.kc-hist-review').forEach((btn) => {
@@ -5542,6 +5571,16 @@ const PIECE_IMG = {
   // ===== ここまで ホーム =====
 
 
+  // 📋 棋譜（PGN）をコピー（振り返り画面・対局履歴から。kcBuildPgn / kcCopyText は上で定義）
+  async function kcCopyPgn(m, btn) {
+    if (!m || !(m.moves || []).length) return;
+    const ok = await kcCopyText(kcBuildPgn(m));
+    if (!btn) return;
+    const orig = btn.textContent;
+    btn.textContent = ok ? (LANG === 'ja' ? '✅ コピーしました' : '✅ Copied') : (LANG === 'ja' ? 'コピーできませんでした' : 'Could not copy');
+    setTimeout(() => { btn.textContent = orig; }, 2000);
+  }
+
   // ===== 🦊 ジーンと振り返る（ゲームレビュー） =====
   // 有料にするときは KC_REVIEW_FREE を false にする（ロック画面になる）
   const KC_REVIEW_FREE = true;
@@ -5838,6 +5877,13 @@ const PIECE_IMG = {
       head.appendChild(back);
     }
     head.appendChild(rvEl('div', 'flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-family:Cinzel,serif;font-weight:700;color:var(--brown-dark);font-size:' + (rvState && rvState.view === 'moves' ? '0.9rem' : '1.05rem') + ';', rvT('🦊 ジーンと振り返る', '🦊 Game Review')));
+    if (rvState && rvState.m) {
+      const cp = rvEl('button', 'margin:0;padding:5px 10px;font-size:0.8rem;flex-shrink:0;', rvT('📋 棋譜', '📋 PGN'));
+      cp.setAttribute('aria-label', rvT('棋譜をコピー', 'Copy PGN'));
+      const m = rvState.m;
+      cp.onclick = () => kcCopyPgn(m, cp);
+      head.appendChild(cp);
+    }
     body.appendChild(head);
   }
   function rvJeneBubble(img, text, extra) {
@@ -6030,6 +6076,20 @@ const PIECE_IMG = {
     return wrap;
   }
 
+  // 振り返りの1手ごとの吹き出し（ply=0 は最初の局面）
+  function rvMoveBubble(st, ply) {
+    const res = st.result;
+    const it = ply > 0 ? res.items[ply - 1] : null;
+    if (!it) {
+      return rvJeneBubble('jene_welcome', rvT('最初の局面だよ。「次へ」で1手ずつ見ていこう。緑の矢印は、ジーンのおすすめの手だよ。', 'This is the starting position. Tap "Next" to go move by move. The green arrow shows the move I recommend.'));
+    }
+    const isMine = it.color === st.myColor;
+    const title = rvEl('div', 'display:flex;align-items:center;gap:6px;margin-bottom:4px;font-weight:800;');
+    title.appendChild(rvBadge(it.cls, 22));
+    title.appendChild(rvEl('span', 'flex:1;', it.san + rvT(' は' + RV_CLS[it.cls].ja + 'です', ' is ' + (it.cls === 'inaccuracy' || it.cls === 'excellent' ? 'an ' : 'a ') + RV_CLS[it.cls].en.toLowerCase())));
+    title.appendChild(rvEl('span', 'background:#403d39;color:#fff;border-radius:6px;padding:1px 8px;font-size:0.85rem;', rvEvalLabel(res.evals[ply])));
+    return rvJeneBubble(RV_JENE[it.cls], rvExplain(it, isMine), title);
+  }
   function rvRenderMoves() {
     const st = rvState, res = st.result, m = st.m;
     const n = res.items.length;
@@ -6040,16 +6100,25 @@ const PIECE_IMG = {
     const replay = new Chess();
     for (let i = 0; i < st.ply; i++) replay.move(m.moves[i].san);
     const it = st.ply > 0 ? res.items[st.ply - 1] : null;
-    if (it) {
-      const isMine = it.color === st.myColor;
-      const title = rvEl('div', 'display:flex;align-items:center;gap:6px;margin-bottom:4px;font-weight:800;');
-      title.appendChild(rvBadge(it.cls, 22));
-      title.appendChild(rvEl('span', 'flex:1;', it.san + rvT(' は' + RV_CLS[it.cls].ja + 'です', ' is ' + (it.cls === 'inaccuracy' || it.cls === 'excellent' ? 'an ' : 'a ') + RV_CLS[it.cls].en.toLowerCase())));
-      title.appendChild(rvEl('span', 'background:#403d39;color:#fff;border-radius:6px;padding:1px 8px;font-size:0.85rem;', rvEvalLabel(res.evals[st.ply])));
-      body.appendChild(rvJeneBubble(RV_JENE[it.cls], rvExplain(it, isMine), title));
-    } else {
-      body.appendChild(rvJeneBubble('jene_welcome', rvT('最初の局面だよ。「次へ」で1手ずつ見ていこう。緑の矢印は、ジーンのおすすめの手だよ。', 'This is the starting position. Tap "Next" to go move by move. The green arrow shows the move I recommend.')));
+    const bubRow = rvMoveBubble(st, st.ply);
+    body.appendChild(bubRow);
+    // 解説の長さで盤が上下しないように、いちばん長い解説に合わせて高さをそろえる
+    const sizeKey = LANG + ':' + body.clientWidth;
+    if (st.bubbleKey !== sizeKey) {
+      const probe = rvEl('div', 'position:absolute;left:0;top:0;visibility:hidden;pointer-events:none;width:' + body.clientWidth + 'px;');
+      body.appendChild(probe);
+      let maxH = 0;
+      for (let p = 0; p <= n; p++) {
+        const r = rvMoveBubble(st, p);
+        probe.appendChild(r);
+        maxH = Math.max(maxH, r.offsetHeight);
+        probe.removeChild(r);
+      }
+      body.removeChild(probe);
+      st.bubbleKey = sizeKey;
+      st.bubbleH = maxH;
     }
+    if (st.bubbleH) bubRow.style.minHeight = st.bubbleH + 'px';
     const showArrow = it && it.best && it.cls !== 'best' && it.cls !== 'book';
     body.appendChild(rvRenderBoard(replay.fen(), st.myColor === 'b',
       it ? { from: it.from, to: it.to, color: RV_CLS[it.cls].color, cls: it.cls } : null,
