@@ -91,6 +91,8 @@ img#profilePhoto { border:2px solid var(--brown); border-radius:50%; width:60px;
 .sq.light { background:var(--sq-light,#d4b87a); }
 .sq.dark { background:var(--sq-dark,#7a5230); }
  .sq { touch-action: none; }
+ /* ボタンを続けて押したときに、iPhone で画面が拡大されないようにする（2本指での拡大はそのまま使える） */
+ html { touch-action: manipulation; }
 .sq.drag-over { box-shadow: inset 0 0 0 4px rgba(255, 196, 0, 0.95); }
 .drag-lift-piece {
   position: fixed;
@@ -2482,6 +2484,53 @@ applyBoardTheme();
     }, 1500);
   }
   kcAdsInit();
+
+  // ===== 画面の下のバナー広告（アプリの中だけ） =====
+  // ホームやメニューを見ているときだけ出す。対局・パズル・振り返りなど、盤を使っている間は隠す
+  const KC_BANNER_UNIT = KC_AD_TEST ? 'ca-app-pub-3940256099942544/9214589741' : 'ca-app-pub-1034556404852942/4015831196';
+  let kcBannerState = 'none'; // none（まだ出していない）/ shown / hidden
+  let kcBannerHeight = 0;
+  function kcIsShown(id) { const el = document.getElementById(id); if (!el || el.offsetParent === null) return false; const d = el.closest('details'); return !d || d.open; } // 閉じた折りたたみの中は「見えていない」
+  function kcBannerWanted() {
+    const ht = document.getElementById('kcHomeTop');
+    if (ht && ht.classList.contains('kc-in-game')) return false;              // オンライン対局の画面
+    if (kcIsShown('aiGameArea') || kcIsShown('beginnerGameArea') || kcIsShown('midGameArea')) return false;
+    const pz = document.getElementById('puzzleModeBox'); if (pz && pz.open) return false;
+    for (const id of ['rvOverlay', 'kcInsOverlay']) { const el = document.getElementById(id); if (el && el.style.display !== 'none' && el.style.display !== '') return false; }
+    if (document.querySelector('.chat-modal-overlay.open')) return false;     // プロフィール・チャット
+    return true;
+  }
+  function kcBannerPad() {
+    const pad = (kcBannerState === 'shown' && kcBannerHeight) ? (kcBannerHeight + 8) + 'px' : '';
+    document.body.style.paddingBottom = pad;
+    const mo = document.getElementById('kcMenuOverlay'); if (mo) mo.style.paddingBottom = pad; // メニューのいちばん下がバナーに隠れないように
+  }
+  async function kcBannerSync() {
+    const A = kcAdMob(); if (!A) return;
+    const want = kcBannerWanted();
+    try {
+      if (want && kcBannerState === 'none') {
+        kcBannerState = 'shown';
+        await A.showBanner({ adId: KC_BANNER_UNIT, adSize: 'ADAPTIVE_BANNER', position: 'BOTTOM_CENTER', margin: 0, isTesting: KC_AD_TEST });
+      } else if (want && kcBannerState === 'hidden') {
+        kcBannerState = 'shown';
+        await A.resumeBanner();
+      } else if (!want && kcBannerState === 'shown') {
+        kcBannerState = 'hidden';
+        await A.hideBanner();
+      }
+    } catch (e) { console.warn('banner', e); }
+    kcBannerPad();
+  }
+  (function kcBannerStart() {
+    const A = kcAdMob(); if (!A) return;
+    try {
+      A.addListener('bannerAdSizeChanged', (s) => { kcBannerHeight = (s && s.height) || 0; kcBannerPad(); });
+      A.addListener('bannerAdFailedToLoad', () => { kcBannerHeight = 0; kcBannerPad(); });
+    } catch (e) {}
+    setTimeout(kcBannerSync, 3000);           // 起動直後は少し待ってから
+    setInterval(kcBannerSync, 1000);          // 画面の切りかえに合わせて出したり隠したりする
+  })();
   // ===== ここまで広告 =====
   document.getElementById('loginBtn').onclick = async () => {
     if (KC_NATIVE) {
@@ -3536,10 +3585,111 @@ await set(ref(db, 'matches/' + matchId), {
     });
   }
 
+  // 対局の申し込みを受ける（一覧のボタンと、上に出る通知の両方から使う）。作った対局のIDを返す
+  async function kcAcceptInvite(user, fromUid, info) {
+    if (window.KC_BANNED) { alert(LANG === 'ja' ? 'このアカウントは利用規約に反する行為があったため、オンライン対局を利用できません。' : 'This account has been restricted from online play due to a violation of our rules.'); return; }
+    const matchId = 'm_' + Date.now();
+    const iAmWhite = Math.random() < 0.5;
+    const myProfile = await get(ref(db, 'users/' + user.uid));
+    const myName = myProfile.exists() ? myProfile.val().username : user.displayName;
+    const TC_MS = {
+      bullet: { base: 2 * 60 * 1000, inc: 1000 },
+      blitz: { base: 5 * 60 * 1000, inc: 3000 },
+      rapid: { base: 10 * 60 * 1000, inc: 5000 },
+      correspondence: { base: 3 * 24 * 60 * 60 * 1000, inc: 0 }
+    };
+    const timeControl = info.timeControl && TC_MS[info.timeControl] ? info.timeControl : 'rapid';
+    const baseMs = TC_MS[timeControl].base;
+    const incMs = info.fixed ? 0 : TC_MS[timeControl].inc;
+    const isCorrespondence = timeControl === 'correspondence';
+    await set(ref(db, 'matches/' + matchId), {
+      white: iAmWhite ? user.uid : fromUid,
+      black: iAmWhite ? fromUid : user.uid,
+      whiteName: iAmWhite ? myName : info.username,
+      blackName: iAmWhite ? info.username : myName,
+      fen: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1',
+      turn: 'w',
+      status: isCorrespondence ? 'active' : 'waiting',
+      timeControl: timeControl,
+      increment: incMs,
+      whiteTime: baseMs,
+      blackTime: baseMs,
+      whiteJoined: isCorrespondence ? true : false,
+      blackJoined: isCorrespondence ? true : false,
+      turnStartedAt: isCorrespondence ? Date.now() : null,
+      rated: info.rated !== false && !(await window.kcInvolvesGuest(user.uid, fromUid))
+    });
+    await set(ref(db, 'currentMatches/' + user.uid + '/' + matchId), true);
+    await set(ref(db, 'currentMatches/' + fromUid + '/' + matchId), true);
+    await remove(ref(db, 'matchInvites/' + user.uid + '/' + fromUid));
+    return matchId;
+  }
+  // 対局の申し込みを断る
+  async function kcDeclineInvite(user, fromUid) {
+    await remove(ref(db, 'matchInvites/' + user.uid + '/' + fromUid));
+  }
+
+  // ===== 対局の申し込みが届いたら、画面の上に通知を出す（受ける／✕で断る） =====
+  const kcToastShown = new Set();
+  function kcInviteToastBox() {
+    let box = document.getElementById('kcInviteToasts');
+    if (!box) {
+      box = document.createElement('div');
+      box.id = 'kcInviteToasts';
+      box.style.cssText = 'position:fixed;top:calc(8px + env(safe-area-inset-top));left:8px;right:8px;z-index:2850;display:flex;flex-direction:column;gap:6px;align-items:center;pointer-events:none;';
+      document.body.appendChild(box);
+    }
+    return box;
+  }
+  function kcUpdateInviteToasts(user, data) {
+    const box = kcInviteToastBox();
+    const live = {};
+    Object.entries(data || {}).forEach(([fromUid, info]) => {
+      const key = fromUid + ':' + (info.sentAt || info.timeControl || '');
+      live[key] = true;
+      if (kcToastShown.has(key)) return;
+      kcToastShown.add(key);
+      const ja = LANG === 'ja';
+      const tc = TC_LABELS[info.timeControl] || (ja ? 'ラピッド' : 'Rapid');
+      const toast = document.createElement('div');
+      toast.dataset.key = key;
+      toast.style.cssText = 'pointer-events:auto;width:100%;max-width:520px;box-sizing:border-box;display:flex;align-items:center;gap:8px;background:var(--card);color:var(--text);border:2px solid var(--brown);border-radius:12px;padding:10px 10px 10px 12px;box-shadow:0 4px 14px rgba(0,0,0,0.3);';
+      const txt = document.createElement('div');
+      txt.style.cssText = 'flex:1;min-width:0;font-size:0.9rem;line-height:1.4;font-weight:700;';
+      txt.textContent = ja
+        ? '⚔️ ' + (info.username || '?') + ' さんから対局の申し込み（' + tc + (info.rated === false ? '・ノーレート' : '') + '）'
+        : '⚔️ ' + (info.username || '?') + ' challenged you (' + tc + (info.rated === false ? ', unrated' : '') + ')';
+      const ok = document.createElement('button');
+      ok.type = 'button';
+      ok.textContent = ja ? '受ける' : 'Accept';
+      ok.style.cssText = 'margin:0;padding:8px 12px;flex-shrink:0;background:#5d8a34;';
+      const no = document.createElement('button');
+      no.type = 'button';
+      no.textContent = '✕';
+      no.setAttribute('aria-label', ja ? '断る' : 'Decline');
+      no.style.cssText = 'margin:0;padding:8px 12px;flex-shrink:0;background:#a0785a;';
+      ok.onclick = async () => {
+        ok.disabled = true; no.disabled = true;
+        toast.remove();
+        try { const id = await kcAcceptInvite(user, fromUid, info); if (id) openMatch(user, id); } catch (e) { console.error('申し込みを受けられませんでした', e); }
+      };
+      no.onclick = async () => {
+        ok.disabled = true; no.disabled = true;
+        toast.remove();
+        try { await kcDeclineInvite(user, fromUid); } catch (e) {}
+      };
+      toast.appendChild(txt); toast.appendChild(ok); toast.appendChild(no);
+      box.appendChild(toast);
+    });
+    // 一覧から受けた・断った・取り消された申し込みの通知は消す
+    [...box.children].forEach(el => { if (!live[el.dataset.key]) el.remove(); });
+  }
+
   function renderMatchInvites(user, data) {
     const box = document.getElementById('matchInviteBox');
     const container = document.getElementById('matchInvitesList');
     container.innerHTML = '';
+    try { kcUpdateInviteToasts(user, data); } catch (e) {}
     if (!data) { box.style.display = 'none'; return; }
     box.style.display = 'block';
     Object.entries(data).forEach(([fromUid, info]) => {
@@ -3551,47 +3701,11 @@ await set(ref(db, 'matches/' + matchId), {
 
       const acceptBtn = document.createElement('button');
       acceptBtn.textContent = LANG === 'ja' ? '受ける' : 'Accept';
-      acceptBtn.onclick = async () => {
-        if (window.KC_BANNED) { alert(LANG === 'ja' ? 'このアカウントは利用規約に反する行為があったため、オンライン対局を利用できません。' : 'This account has been restricted from online play due to a violation of our rules.'); return; }
-        const matchId = 'm_' + Date.now();
-        const iAmWhite = Math.random() < 0.5;
-        const myProfile = await get(ref(db, 'users/' + user.uid));
-        const myName = myProfile.exists() ? myProfile.val().username : user.displayName;
-        const TC_MS = {
-          bullet: { base: 2 * 60 * 1000, inc: 1000 },
-          blitz: { base: 5 * 60 * 1000, inc: 3000 },
-          rapid: { base: 10 * 60 * 1000, inc: 5000 },
-          correspondence: { base: 3 * 24 * 60 * 60 * 1000, inc: 0 }
-        };
-       const timeControl = info.timeControl && TC_MS[info.timeControl] ? info.timeControl : 'rapid';
-        const baseMs = TC_MS[timeControl].base;
-        const incMs = info.fixed ? 0 : TC_MS[timeControl].inc;
-        const isCorrespondence = timeControl === 'correspondence';
-        await set(ref(db, 'matches/' + matchId), {
-          white: iAmWhite ? user.uid : fromUid,
-          black: iAmWhite ? fromUid : user.uid,
-          whiteName: iAmWhite ? myName : info.username,
-          blackName: iAmWhite ? info.username : myName,
-          fen: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1',
-          turn: 'w',
-          status: isCorrespondence ? 'active' : 'waiting',
-          timeControl: timeControl,
-          increment: incMs,
-          whiteTime: baseMs,
-          blackTime: baseMs,
-          whiteJoined: isCorrespondence ? true : false,
-          blackJoined: isCorrespondence ? true : false,
-          turnStartedAt: isCorrespondence ? Date.now() : null,
-          rated: info.rated !== false && !(await window.kcInvolvesGuest(user.uid, fromUid))
-        });
-        await set(ref(db, 'currentMatches/' + user.uid + '/' + matchId), true);
-        await set(ref(db, 'currentMatches/' + fromUid + '/' + matchId), true);
-        await remove(ref(db, 'matchInvites/' + user.uid + '/' + fromUid));
-      };
+      acceptBtn.onclick = () => kcAcceptInvite(user, fromUid, info);
       const declineBtn = document.createElement('button');
       declineBtn.textContent = LANG === 'ja' ? '断る' : 'Decline';
       declineBtn.style.background = '#a0785a';
-      declineBtn.onclick = async () => { await remove(ref(db, 'matchInvites/' + user.uid + '/' + fromUid)); };
+      declineBtn.onclick = () => kcDeclineInvite(user, fromUid);
 
       btnGroup.appendChild(acceptBtn);
       btnGroup.appendChild(declineBtn);
