@@ -108,6 +108,18 @@ img#profilePhoto { border:2px solid var(--brown); border-radius:50%; width:60px;
   -webkit-tap-highlight-color: transparent;
   user-select: none;
 }
+/* 長押しで文字が選ばれて「コピー」のメニューが出ないように、ページ全体で文字の選択を止める（アプリと同じ使い心地に） */
+body, body * {
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+  user-select: none;
+}
+/* 文字を入力・コピーする場所だけは、今までどおり選べるようにする */
+input, textarea, select, [contenteditable="true"], [contenteditable=""], .kc-selectable, .kc-selectable * {
+  -webkit-user-select: text;
+  -webkit-touch-callout: default;
+  user-select: text;
+}
 :root, [data-board-theme="brown"] { --sq-light:#d4b87a; --sq-dark:#7a5230; }
 [data-board-theme="green"] { --sq-light:#eeeed2; --sq-dark:#769656; }
 [data-board-theme="blue"] { --sq-light:#dee3e6; --sq-dark:#4b7399; }
@@ -1589,17 +1601,20 @@ applyBoardTheme();
       dash.textContent = '-';
       row.appendChild(dash);
     } else {
-      entries.forEach(([type, n]) => {
-        const img = document.createElement('img');
-        img.src = PIECE_IMG[iconColor + type.toUpperCase()];
-        img.style.cssText = 'width:17px;height:17px;vertical-align:middle;flex-shrink:0;';
-        row.appendChild(img);
-        if (n > 1) {
-          const cnt = document.createElement('span');
-          cnt.textContent = '×' + n;
-          cnt.style.cssText = 'font-size:0.8rem;margin-right:4px;';
-          row.appendChild(cnt);
+      // チェスサイトのように、同じ種類の駒は少しずつ重ねて並べる（ポーン→ナイト→ビショップ→ルーク→クイーンの順）
+      const ORDER = ['p', 'n', 'b', 'r', 'q', 'k'];
+      entries.sort((x, y) => ORDER.indexOf(x[0]) - ORDER.indexOf(y[0]));
+      entries.forEach(([type, n], gi) => {
+        const group = document.createElement('span');
+        group.style.cssText = 'display:inline-flex;align-items:center;flex-shrink:0;' + (gi > 0 ? 'margin-left:3px;' : '');
+        for (let i = 0; i < n; i++) {
+          const img = document.createElement('img');
+          img.src = PIECE_IMG[iconColor + type.toUpperCase()];
+          img.alt = '';
+          img.style.cssText = 'width:20px;height:20px;flex-shrink:0;' + (i > 0 ? 'margin-left:-12px;' : '');
+          group.appendChild(img);
         }
+        row.appendChild(group);
       });
     }
     if (plusNum > 0) {
@@ -5837,6 +5852,7 @@ const PIECE_IMG = {
     // 最善手の表記(SAN)は「指す前の局面」から作る
     const r2 = new Chess();
     items.forEach((it, idx) => {
+      it.fenBefore = r2.fen();
       if (it.best && it.cls !== 'best' && it.cls !== 'book') it.bestSan = uciToSan(r2.fen(), it.best);
       r2.move(moves[idx].san);
     });
@@ -5850,6 +5866,75 @@ const PIECE_IMG = {
     let opening = null;
     items.forEach(it => { if (it.opening && it.opening.ja) opening = it.opening; });
     return { items, evals, sum, opening };
+  }
+
+  // なぜその手が良い（悪い）のかを、駒の取り合い・ねらい・王手から見つけて、短い文にする
+  function rvWhy(it) {
+    try {
+      if (!it.fenBefore || !it.best) return '';
+      const ja = LANG === 'ja';
+      const PN = PIECE_NAME[ja ? 'ja' : 'en'];
+      const nm = (t) => PN[String(t).toUpperCase()] || t;
+      const val = (t) => PIECE_VALUE[t] || 0;
+      const out = [];
+      // ① おすすめの手のよいところ
+      const c = new Chess(it.fenBefore);
+      const bm = c.move({ from: it.best.slice(0, 2), to: it.best.slice(2, 4), promotion: it.best[4] || 'q' });
+      if (bm) {
+        if (c.in_checkmate()) {
+          out.push(ja ? it.bestSan + 'なら、すぐにチェックメイトだったよ。' : it.bestSan + ' was checkmate right away.');
+        } else {
+          const parts = [];
+          if (bm.captured) {
+            const net = val(bm.captured) - kcExchangeGain(c, bm.to);
+            if (net >= 1) {
+              const traded = c.moves({ verbose: true }).some(x => x.to === bm.to && x.captured);
+              parts.push(ja
+                ? bm.to + 'の' + nm(bm.captured) + 'を取って' + (traded ? '、取り返されても' + nm(bm.captured) + '1つ分得をする' : 'ただで得ができる')
+                : (traded ? 'wins the ' + nm(bm.captured).toLowerCase() + ' on ' + bm.to + ' even after the trade' : 'wins the ' + nm(bm.captured).toLowerCase() + ' on ' + bm.to + ' for free'));
+            }
+          }
+          // 動いた駒が次にねらえる駒（取ったら得になるもの）
+          const fp = c.fen().split(' '); fp[1] = bm.color; fp[3] = '-';
+          let t2 = null; try { t2 = new Chess(fp.join(' ')); } catch (e) {}
+          // 動いた駒が相手にすぐ取られる（交換できる）ときは、ねらいは消されてしまうので言わない
+          const canBeTaken = c.moves({ verbose: true }).some(x => x.to === bm.to && x.captured);
+          if (t2 && !canBeTaken) {
+            const targets = [];
+            t2.moves({ verbose: true }).filter(x => x.from === bm.to && x.captured && x.captured !== 'k').forEach(x => {
+              t2.move(x);
+              const g = val(x.captured) - kcExchangeGain(t2, x.to);
+              t2.undo();
+              if (g >= 2) targets.push(x);
+            });
+            if (targets.length >= 2) {
+              const a1 = targets[0], a2 = targets[1];
+              parts.push(ja ? a1.to + 'の' + nm(a1.captured) + 'と' + a2.to + 'の' + nm(a2.captured) + 'を同時にねらえる（フォーク）' : 'attacks the ' + nm(a1.captured).toLowerCase() + ' on ' + a1.to + ' and the ' + nm(a2.captured).toLowerCase() + ' on ' + a2.to + ' at once (a fork)');
+            } else if (targets.length === 1) {
+              const a1 = targets[0];
+              parts.push(ja ? a1.to + 'の' + nm(a1.captured) + 'もねらえる' : 'also attacks the ' + nm(a1.captured).toLowerCase() + ' on ' + a1.to);
+            }
+          }
+          if (c.in_check()) parts.push(ja ? '王手もかけられる' : 'gives check');
+          if (parts.length) out.push(ja ? it.bestSan + 'なら、' + parts.join('うえに、') + 'んだ。' : it.bestSan + ' ' + parts.join(', and ') + '.');
+        }
+      }
+      // ② 指した手のよくないところ（相手に駒を取られてしまう）
+      if (['inaccuracy', 'mistake', 'blunder'].indexOf(it.cls) !== -1) {
+        const p = new Chess(it.fenBefore);
+        if (p.move(it.san) && !p.game_over()) {
+          let worst = null;
+          p.moves({ verbose: true }).filter(x => x.captured && x.captured !== 'k').forEach(x => {
+            p.move(x);
+            const g = val(x.captured) - kcExchangeGain(p, x.to);
+            p.undo();
+            if (g >= 1 && (!worst || g > worst.g)) worst = { g, x };
+          });
+          if (worst) out.push(ja ? it.san + 'だと、' + worst.x.to + 'の' + nm(worst.x.captured) + 'を取られてしまうんだ。' : 'After ' + it.san + ', the ' + nm(worst.x.captured).toLowerCase() + ' on ' + worst.x.to + ' can be taken.');
+        }
+      }
+      return out.join(' ');
+    } catch (e) { return ''; }
   }
 
   function rvExplain(it, isMine) {
@@ -5891,6 +5976,7 @@ const PIECE_IMG = {
         s = rvT(whoJa + 'の' + it.san + 'は大きなミス！ここは' + b + 'を指すべきだったよ。',
                 (isMine ? 'Your ' : "Your opponent's ") + it.san + ' is a blunder! ' + b + ' should have been played here.');
     }
+    if (['good', 'inaccuracy', 'mistake', 'blunder'].indexOf(it.cls) !== -1) { const w = rvWhy(it); if (w) s += ' ' + w; }
     if (it.allowsMate && it.cls !== 'best') {
       s += rvT(' この手のあと、' + (isMine ? '相手' : 'あなた') + 'にメイトの手順ができてしまったよ。',
                ' After this move, ' + (isMine ? 'your opponent' : 'you') + ' had a forced checkmate.');
@@ -5981,6 +6067,18 @@ const PIECE_IMG = {
     document.body.style.overflow = '';
   }
 
+  // ⇅ 盤の向きを変える。貼り付けた棋譜では「どちらの立場で見るか」も入れかえて、次からその名前の側で開く
+  function kcRvFlip() {
+    const st = rvState; if (!st) return;
+    if (String(st.matchId || '').indexOf('import:') === 0) {
+      st.myColor = st.myColor === 'w' ? 'b' : 'w';
+      const name = st.myColor === 'w' ? st.m.whiteName : st.m.blackName;
+      try { if (name) localStorage.setItem('kcPgnMe', name); } catch (e) {}
+    } else {
+      st.flipView = !st.flipView;
+    }
+    rvRender();
+  }
   function rvHeader(body) {
     const head = rvEl('div', 'display:flex;align-items:center;gap:8px;padding:10px 12px;border-bottom:1px solid rgba(124,74,30,0.3);flex-shrink:0;');
     const close = rvEl('button', 'background:none;color:var(--text);font-size:1.4rem;padding:0 6px;margin:0;', '✕');
@@ -5993,6 +6091,13 @@ const PIECE_IMG = {
       head.appendChild(back);
     }
     head.appendChild(rvEl('div', 'flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-family:Cinzel,serif;font-weight:700;color:var(--brown-dark);font-size:' + (rvState && rvState.view === 'moves' ? '0.9rem' : '1.05rem') + ';', rvT('🦊 ジーンと振り返る', '🦊 Game Review')));
+    if (rvState && rvState.result) {
+      const fl = rvEl('button', 'margin:0;padding:5px 9px;font-size:0.85rem;flex-shrink:0;background:rgba(124,74,30,0.2);color:var(--text);', '⇅');
+      fl.setAttribute('aria-label', rvT('盤の向きを変える', 'Flip board'));
+      fl.title = rvT('盤の向きを変える', 'Flip board');
+      fl.onclick = () => kcRvFlip();
+      head.appendChild(fl);
+    }
     if (rvState && rvState.m) {
       const cp = rvEl('button', 'margin:0;padding:5px 10px;font-size:0.8rem;flex-shrink:0;', rvT('📋 棋譜', '📋 PGN'));
       cp.setAttribute('aria-label', rvT('棋譜をコピー', 'Copy PGN'));
@@ -6219,7 +6324,7 @@ const PIECE_IMG = {
     const bubRow = rvMoveBubble(st, st.ply);
     body.appendChild(bubRow);
     // 解説の長さで盤が上下しないように、いちばん長い解説に合わせて高さをそろえる
-    const sizeKey = LANG + ':' + body.clientWidth;
+    const sizeKey = LANG + ':' + body.clientWidth + ':' + st.myColor;
     if (st.bubbleKey !== sizeKey) {
       const probe = rvEl('div', 'position:absolute;left:0;top:0;visibility:hidden;pointer-events:none;width:' + body.clientWidth + 'px;');
       body.appendChild(probe);
@@ -6236,7 +6341,7 @@ const PIECE_IMG = {
     }
     if (st.bubbleH) bubRow.style.minHeight = st.bubbleH + 'px';
     const showArrow = it && it.best && it.cls !== 'best' && it.cls !== 'book';
-    body.appendChild(rvRenderBoard(replay.fen(), st.myColor === 'b',
+    body.appendChild(rvRenderBoard(replay.fen(), (st.myColor === 'b') !== !!st.flipView,
       it ? { from: it.from, to: it.to, color: RV_CLS[it.cls].color, cls: it.cls } : null,
       showArrow ? it.best : null));
     const nav = rvEl('div', 'display:flex;align-items:center;justify-content:space-between;gap:6px;padding:8px 12px;');
@@ -6312,14 +6417,13 @@ const PIECE_IMG = {
     ta.style.cssText = 'width:100%;box-sizing:border-box;font-size:0.9rem;padding:10px;border-radius:8px;border:2px solid var(--brown);background:var(--input-bg);color:var(--text);font-family:monospace;';
     wrap.appendChild(ta);
     wrap.appendChild(rvEl('p', 'margin:8px 0;font-size:0.82rem;color:var(--text-muted);line-height:1.6;',
-      T('※ Chess.com や Lichess の「棋譜をコピー（PGN）」で取った棋譜や、「1. e4 e5 2. Nf3」のような手順をそのまま貼れます。\n※ 対局中のゲームの棋譜は貼らないでください。ほかのサイトでも、対局中にエンジンを使うのは不正になります。',
-        '* You can paste a PGN copied from Chess.com or Lichess, or a plain move list like "1. e4 e5 2. Nf3".\n* Do not paste games that are still in progress. Using an engine during a game is cheating on any site.')));
+      T('※ Chess.com や Lichess の「棋譜をコピー（PGN）」で取った棋譜や、「1. e4 e5 2. Nf3」のような手順をそのまま貼れます。\n※ 振り返りの画面の右上の「⇅」で、黒の側から見ることもできます。一度選んだ名前は覚えておくので、次からは自動でその側になります。\n※ 対局中のゲームの棋譜は貼らないでください。ほかのサイトでも、対局中にエンジンを使うのは不正になります。',
+        '* You can paste a PGN copied from Chess.com or Lichess, or a plain move list like "1. e4 e5 2. Nf3".\n* Tap "⇅" at the top right of the review to see it from Black\'s side. Your choice is remembered by player name.\n* Do not paste games that are still in progress. Using an engine during a game is cheating on any site.')));
     wrap.lastChild.style.whiteSpace = 'pre-line';
     const msg = rvEl('p', 'margin:6px 0;font-size:0.85rem;color:var(--status-bad);min-height:1.2em;', '');
     wrap.appendChild(msg);
-    wrap.appendChild(rvEl('p', 'margin:10px 0 6px;font-weight:800;', T('どちら側で振り返りますか？', 'Which side did you play?')));
     const row = rvEl('div', 'display:flex;gap:8px;');
-    const go = (color) => {
+    const go = () => {
       const r = kcParsePgn(ta.value);
       if (r.error) {
         msg.textContent = r.error === 'fen' ? T('途中の局面から始まる棋譜は、まだ読み取れません。', 'Games that start from a custom position are not supported yet.')
@@ -6330,11 +6434,13 @@ const PIECE_IMG = {
       const m = { moves: r.moves, whiteName: r.whiteName, blackName: r.blackName, fen: r.fen, status: 'imported' };
       let h = 0; const s = r.moves.map(x => x.san).join(' ');
       for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) | 0;
+      // 前に「自分」として選んだ名前が白か黒にあれば、その側で見る。なければ白から
+      let me = ''; try { me = (localStorage.getItem('kcPgnMe') || '').toLowerCase(); } catch (e) {}
+      const color = (me && (r.blackName || '').toLowerCase() === me) ? 'b' : 'w';
       kcOpenReview(m, 'import:' + (h >>> 0).toString(36), color);
     };
-    const wb = rvEl('button', 'flex:1;margin:0;padding:12px;', T('⚪ 白で振り返る', '⚪ I played White')); wb.onclick = () => go('w');
-    const bb = rvEl('button', 'flex:1;margin:0;padding:12px;background:#403d39;', T('⚫ 黒で振り返る', '⚫ I played Black')); bb.onclick = () => go('b');
-    row.appendChild(wb); row.appendChild(bb);
+    const gb = rvEl('button', 'flex:1;margin:0;padding:12px;background:#5d8a34;', T('🦊 ジーンと振り返る', '🦊 Review with Jene')); gb.onclick = () => go();
+    row.appendChild(gb);
     wrap.appendChild(row);
     body.appendChild(wrap);
   }
