@@ -5937,49 +5937,55 @@ const PIECE_IMG = {
     } catch (e) { return ''; }
   }
 
+  // 貼り付けた棋譜かどうか（自分の対局ではないので「あなた／相手」ではなく「白／黒」で話す）
+  function rvIsImport(st) { return !!(st && String(st.matchId || '').indexOf('import:') === 0); }
   function rvExplain(it, isMine) {
-    const who = isMine ? rvT('あなた', 'You') : rvT('相手', 'Your opponent');
-    const whoJa = isMine ? 'あなた' : '相手';
+    const imp = rvIsImport(rvState);
+    const whoJa = imp ? (it.color === 'w' ? '白' : '黒') : (isMine ? 'あなた' : '相手');
+    const otherJa = imp ? (it.color === 'w' ? '黒' : '白') : (isMine ? '相手' : 'あなた');
+    const posEn = imp ? (it.color === 'w' ? "White's " : "Black's ") : posEn;
+    const subjEn = imp ? (it.color === 'w' ? 'White' : 'Black') : (isMine ? 'You' : 'Your opponent');
+    const otherEn = imp ? (it.color === 'w' ? 'Black' : 'White') : (isMine ? 'your opponent' : 'you');
     const b = it.bestSan || '';
     let s;
     switch (it.cls) {
       case 'book':
         s = rvT(whoJa + 'の' + it.san + 'は定跡の手だよ。' + (it.opening && it.opening.ja ? '「' + it.opening.ja + '」の形だね。' : ''),
-                (isMine ? 'Your ' : "Your opponent's ") + it.san + ' is a book move.' + (it.opening && it.opening.en ? ' This is the ' + it.opening.en + '.' : ''));
+                posEn + it.san + ' is a book move.' + (it.opening && it.opening.en ? ' This is the ' + it.opening.en + '.' : ''));
         break;
       case 'best':
         s = (it.ply && rvState && rvState.result.evals[it.ply] && rvState.result.evals[it.ply].mate === 0)
-          ? rvT('チェックメイト！' + whoJa + 'の見事な決め手だね。', 'Checkmate! ' + (isMine ? 'A beautiful finish.' : 'Your opponent found the finish.'))
-          : rvT(whoJa + 'の' + it.san + 'は、この局面で一番の手だよ！', (isMine ? 'Your ' : "Your opponent's ") + it.san + ' is the best move in this position!');
+          ? rvT('チェックメイト！' + whoJa + 'の見事な決め手だね。', 'Checkmate! ' + (imp ? subjEn + ' found a beautiful finish.' : (isMine ? 'A beautiful finish.' : 'Your opponent found the finish.')))
+          : rvT(whoJa + 'の' + it.san + 'は、この局面で一番の手だよ！', posEn + it.san + ' is the best move in this position!');
         break;
       case 'excellent':
         s = rvT(whoJa + 'の' + it.san + 'はとても良い手。最善の' + b + 'とほとんど差がないよ。',
-                (isMine ? 'Your ' : "Your opponent's ") + it.san + ' is excellent — almost as good as the best move, ' + b + '.');
+                posEn + it.san + ' is excellent — almost as good as the best move, ' + b + '.');
         break;
       case 'good':
         s = rvT(whoJa + 'の' + it.san + 'は悪くない手。' + b + 'のほうが少しだけ良かったよ。',
-                (isMine ? 'Your ' : "Your opponent's ") + it.san + ' is a decent move. ' + b + ' was slightly better.');
+                posEn + it.san + ' is a decent move. ' + b + ' was slightly better.');
         break;
       case 'inaccuracy':
         s = rvT(whoJa + 'の' + it.san + 'は少しもったいない手。' + b + 'を指すと、形勢をもっと良く保てたよ。',
-                (isMine ? 'Your ' : "Your opponent's ") + it.san + ' is an inaccuracy. ' + b + ' would have kept a better position.');
+                posEn + it.san + ' is an inaccuracy. ' + b + ' would have kept a better position.');
         break;
       case 'mistake':
         s = rvT(whoJa + 'の' + it.san + 'は間違い。ここでは' + b + 'が良かったよ。',
-                (isMine ? 'Your ' : "Your opponent's ") + it.san + ' is a mistake. ' + b + ' was the better choice here.');
+                posEn + it.san + ' is a mistake. ' + b + ' was the better choice here.');
         break;
       case 'miss':
         s = rvT('メイトのチャンスを逃したよ！' + whoJa + 'は' + b + 'から' + it.mateIn + '手でメイトにできたんだ。',
-                (isMine ? 'You' : 'Your opponent') + ' missed a forced checkmate! ' + b + ' led to mate in ' + it.mateIn + '.');
+                subjEn + ' missed a forced checkmate! ' + b + ' led to mate in ' + it.mateIn + '.');
         break;
       default:
         s = rvT(whoJa + 'の' + it.san + 'は大きなミス！ここは' + b + 'を指すべきだったよ。',
-                (isMine ? 'Your ' : "Your opponent's ") + it.san + ' is a blunder! ' + b + ' should have been played here.');
+                posEn + it.san + ' is a blunder! ' + b + ' should have been played here.');
     }
     if (['good', 'inaccuracy', 'mistake', 'blunder'].indexOf(it.cls) !== -1) { const w = rvWhy(it); if (w) s += ' ' + w; }
     if (it.allowsMate && it.cls !== 'best') {
-      s += rvT(' この手のあと、' + (isMine ? '相手' : 'あなた') + 'にメイトの手順ができてしまったよ。',
-               ' After this move, ' + (isMine ? 'your opponent' : 'you') + ' had a forced checkmate.');
+      s += rvT(' この手のあと、' + otherJa + 'にメイトの手順ができてしまったよ。',
+               ' After this move, ' + otherEn + ' had a forced checkmate.');
     }
     return s;
   }
@@ -6107,6 +6113,22 @@ const PIECE_IMG = {
     }
     body.appendChild(head);
   }
+  // 1手ずつ見る画面用：吹き出しを横いっぱいに広げ、ジーンは小さく見出しの横に置く（盤が画面に収まるように）
+  function rvJeneBubbleWide(img, text, extra) {
+    const row = rvEl('div', 'padding:8px 10px;');
+    const bub = rvEl('div', 'background:#fff8ee;border:2px solid var(--brown);border-radius:14px;padding:8px 12px;color:#4a2a0e;font-size:0.92rem;line-height:1.5;');
+    const head = rvEl('div', 'display:flex;align-items:center;gap:8px;margin-bottom:4px;');
+    const im = rvEl('img', 'width:38px;height:38px;flex-shrink:0;object-fit:contain;');
+    im.src = '/' + img + '.png';
+    im.onerror = () => { im.src = '/jene_normal.png'; };
+    im.alt = 'Jene';
+    head.appendChild(im);
+    if (extra) { extra.style.marginBottom = '0'; extra.style.flex = '1'; extra.style.minWidth = '0'; head.appendChild(extra); }
+    bub.appendChild(head);
+    bub.appendChild(rvEl('div', '', text));
+    row.appendChild(bub);
+    return row;
+  }
   function rvJeneBubble(img, text, extra) {
     const row = rvEl('div', 'display:flex;gap:10px;align-items:flex-start;padding:10px 12px;');
     const im = rvEl('img', 'width:58px;height:58px;flex-shrink:0;object-fit:contain;');
@@ -6197,8 +6219,15 @@ const PIECE_IMG = {
     const body = document.getElementById('rvBody');
     body.innerHTML = '';
     rvHeader(body);
-    const me = st.myColor, op = me === 'w' ? 'b' : 'w';
-    body.appendChild(rvJeneBubble(res.sum[me].accuracy >= 70 ? 'jene_happy' : 'jene_normal', rvSummaryComment(res.sum[me].accuracy)));
+    const imp = rvIsImport(st);
+    // 貼り付けた棋譜は、どちらが自分か分からないので、いつも「白／黒」の順で並べる
+    const me = imp ? 'w' : st.myColor, op = me === 'w' ? 'b' : 'w';
+    if (imp) {
+      const fa = (v) => v == null ? '—' : v.toFixed(1);
+      body.appendChild(rvJeneBubble('jene_happy', rvT('この対局を振り返ったよ。正確度は 白 ' + fa(res.sum.w.accuracy) + '・黒 ' + fa(res.sum.b.accuracy) + ' だよ。「振り返りを始める」で1手ずつ見ていこう！', 'I reviewed this game. Accuracy: White ' + fa(res.sum.w.accuracy) + ', Black ' + fa(res.sum.b.accuracy) + '. Tap "Start Review" to go move by move!')));
+    } else {
+      body.appendChild(rvJeneBubble(res.sum[me].accuracy >= 70 ? 'jene_happy' : 'jene_normal', rvSummaryComment(res.sum[me].accuracy)));
+    }
     const sec = rvEl('div', 'padding:0 12px 12px;');
     sec.appendChild(rvGraph(res, (p) => { st.view = 'moves'; st.ply = p; rvRender(); }));
     if (res.opening) {
@@ -6208,9 +6237,9 @@ const PIECE_IMG = {
     const tbl = rvEl('div', 'display:grid;grid-template-columns:1.3fr 1fr 34px 1fr;gap:8px 6px;align-items:center;margin-top:12px;');
     const cell = (t, css) => tbl.appendChild(rvEl('div', css || '', t));
     cell('');
-    cell(rvT('あなた', 'You') + '\n' + nameOf(me), 'text-align:center;font-weight:800;font-size:0.8rem;white-space:pre-line;overflow-wrap:anywhere;');
+    cell((imp ? rvT('⚪ 白', '⚪ White') : rvT('あなた', 'You')) + '\n' + nameOf(me), 'text-align:center;font-weight:800;font-size:0.8rem;white-space:pre-line;overflow-wrap:anywhere;');
     cell('');
-    cell(rvT('相手', 'Opponent') + '\n' + nameOf(op), 'text-align:center;font-weight:800;font-size:0.8rem;white-space:pre-line;overflow-wrap:anywhere;');
+    cell((imp ? rvT('⚫ 黒', '⚫ Black') : rvT('相手', 'Opponent')) + '\n' + nameOf(op), 'text-align:center;font-weight:800;font-size:0.8rem;white-space:pre-line;overflow-wrap:anywhere;');
     const boxCss = (mine) => 'text-align:center;font-size:1.5rem;font-weight:800;padding:6px 0;border-radius:6px;' + (mine ? 'background:#fff;color:#111;' : 'background:rgba(124,74,30,0.15);color:var(--text);');
     cell(rvT('正確度', 'Accuracy'), 'font-weight:800;');
     cell(res.sum[me].accuracy == null ? '—' : res.sum[me].accuracy.toFixed(1), boxCss(true));
@@ -6302,14 +6331,14 @@ const PIECE_IMG = {
     const res = st.result;
     const it = ply > 0 ? res.items[ply - 1] : null;
     if (!it) {
-      return rvJeneBubble('jene_welcome', rvT('最初の局面だよ。「次へ」で1手ずつ見ていこう。緑の矢印は、ジーンのおすすめの手だよ。', 'This is the starting position. Tap "Next" to go move by move. The green arrow shows the move I recommend.'));
+      return rvJeneBubbleWide('jene_welcome', rvT('最初の局面だよ。「次へ」で1手ずつ見ていこう。緑の矢印は、ジーンのおすすめの手だよ。', 'This is the starting position. Tap "Next" to go move by move. The green arrow shows the move I recommend.'));
     }
     const isMine = it.color === st.myColor;
     const title = rvEl('div', 'display:flex;align-items:center;gap:6px;margin-bottom:4px;font-weight:800;');
     title.appendChild(rvBadge(it.cls, 22));
     title.appendChild(rvEl('span', 'flex:1;', it.san + rvT(' は' + RV_CLS[it.cls].ja + 'です', ' is ' + (it.cls === 'inaccuracy' || it.cls === 'excellent' ? 'an ' : 'a ') + RV_CLS[it.cls].en.toLowerCase())));
     title.appendChild(rvEl('span', 'background:#403d39;color:#fff;border-radius:6px;padding:1px 8px;font-size:0.85rem;', rvEvalLabel(res.evals[ply])));
-    return rvJeneBubble(RV_JENE[it.cls], rvExplain(it, isMine), title);
+    return rvJeneBubbleWide(RV_JENE[it.cls], rvExplain(it, isMine), title);
   }
   function rvRenderMoves() {
     const st = rvState, res = st.result, m = st.m;
