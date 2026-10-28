@@ -81,6 +81,9 @@ firebase.initializeApp({
 });
 const messaging = firebase.messaging();
 messaging.onBackgroundMessage((payload) => {
+  // 送られてきた通知に「notification」が入っているときは、Firebase が自動で通知を出す。
+  // ここでも出すと同じ通知が2つ並んでしまうので、自動で出ないときだけ自分で出す
+  if (payload && payload.notification) return;
   const title = (payload.notification && payload.notification.title) || 'KitsuneChess';
   const body = (payload.notification && payload.notification.body) || '';
   const link = (payload.data && payload.data.link) || '/match.html';
