@@ -796,6 +796,10 @@ import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithRedirect, getRe
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
   const db = getDatabase(app);
+  // サーバーの時計とのずれ。対局の時計（最初の1手の30秒・持ち時間）は、端末ごとの時計のずれに左右されないよう、サーバーの時刻で数える
+  let kcTimeOffset = 0;
+  try { onValue(ref(db, '.info/serverTimeOffset'), (s) => { kcTimeOffset = Number(s.val()) || 0; }); } catch (e) {}
+  function kcNow() { return Date.now() + kcTimeOffset; }
   const storage = getStorage(app);
 
   // ===== プッシュ通知(FCM)設定 =====
@@ -3300,7 +3304,7 @@ await set(ref(db, 'matches/' + matchId), {
       blackTime: baseMs,
       whiteJoined: isCorrespondence ? true : false,
       blackJoined: isCorrespondence ? true : false,
-      turnStartedAt: isCorrespondence ? Date.now() : null,
+      turnStartedAt: isCorrespondence ? kcNow() : null,
       randomMatch: true,
       rated: !guestInvolved
     });
@@ -3631,7 +3635,7 @@ await set(ref(db, 'matches/' + matchId), {
       blackTime: baseMs,
       whiteJoined: isCorrespondence ? true : false,
       blackJoined: isCorrespondence ? true : false,
-      turnStartedAt: isCorrespondence ? Date.now() : null,
+      turnStartedAt: isCorrespondence ? kcNow() : null,
       rated: info.rated !== false && !(await window.kcInvolvesGuest(user.uid, fromUid))
     });
     await set(ref(db, 'currentMatches/' + user.uid + '/' + matchId), true);
@@ -4030,7 +4034,7 @@ await set(ref(db, 'matches/' + matchId), {
         // 「対局中」に切り替えたら、ここでは古い(待ち状態の)データで描き直さない。
         // 切り替えた結果は、すぐに届く新しいデータで描き直される。
         // (以前はここで古いデータを描き直していたため、「まもなく開始します」のまま駒が動かせなくなっていた)
-        await update(ref(db, 'matches/' + matchId), { status: 'active', turnStartedAt: Date.now() });
+        await update(ref(db, 'matches/' + matchId), { status: 'active', turnStartedAt: kcNow() });
         return;
       }
 
@@ -5916,6 +5920,23 @@ const PIECE_IMG = {
             }
           }
           if (c.in_check()) parts.push(ja ? '王手もかけられる' : 'gives check');
+          // 取られそうだった駒を、取られないようにできたか（ピンで相手の駒を動けなくした場合も）
+          try {
+            const bestCap = (ch) => { let w = null; ch.moves({ verbose: true }).filter(x => x.captured && x.captured !== 'k').forEach(x => { ch.move(x); const g = val(x.captured) - kcExchangeGain(ch, x.to); ch.undo(); if (g >= 2 && (!w || g > w.g)) w = { g, x }; }); return w; };
+            const fb = it.fenBefore.split(' '); fb[1] = fb[1] === 'w' ? 'b' : 'w'; fb[3] = '-';
+            const before = new Chess(fb.join(' '));
+            const threat = bestCap(before);               // 何もしなければ取られてしまう駒
+            if (threat && threat.x.to !== bm.from) {      // 動かして逃げた場合は言わない
+              const after = bestCap(c);
+              if (!after || after.x.to !== threat.x.to) {
+                const att = threat.x.from, attPiece = c.get(att);
+                const pinned = attPiece && attPiece.color !== bm.color && c.moves({ verbose: true }).filter(x => x.from === att).length === 0;
+                parts.push(ja
+                  ? (pinned ? att + 'の' + nm(attPiece.type) + 'を動けなくして（ピン）、' : '') + threat.x.to + 'の' + nm(threat.x.captured) + 'を取られないようにできる'
+                  : (pinned ? 'pins the ' + nm(attPiece.type).toLowerCase() + ' on ' + att + ', which keeps the ' : 'keeps the ') + nm(threat.x.captured).toLowerCase() + ' on ' + threat.x.to + ' safe');
+              }
+            }
+          } catch (e) {}
           if (parts.length) out.push(ja ? it.bestSan + 'なら、' + parts.join('うえに、') + 'んだ。' : it.bestSan + ' ' + parts.join(', and ') + '.');
         }
       }
@@ -6233,7 +6254,7 @@ const PIECE_IMG = {
     if (res.opening) {
       sec.appendChild(rvEl('p', 'margin:8px 0 0;font-size:0.85rem;color:var(--text-muted);text-align:center;', rvT('📖 オープニング: ', '📖 Opening: ') + rvT(res.opening.ja, res.opening.en)));
     }
-    const nameOf = (c) => (c === 'w' ? m.whiteName : m.blackName) || (c === 'w' ? rvT('白', 'White') : rvT('黒', 'Black'));
+    const nameOf = (c) => (c === 'w' ? m.whiteName : m.blackName) || (imp ? rvT('（名前なし）', '(no name)') : (c === 'w' ? rvT('白', 'White') : rvT('黒', 'Black')));
     const tbl = rvEl('div', 'display:grid;grid-template-columns:1.3fr 1fr 34px 1fr;gap:8px 6px;align-items:center;margin-top:12px;');
     const cell = (t, css) => tbl.appendChild(rvEl('div', css || '', t));
     cell('');
@@ -6406,9 +6427,12 @@ const PIECE_IMG = {
   // ほかのサイトの棋譜を読み取る。コメント・変化手順・記号は取り除く
   function kcParsePgn(text) {
     const tags = {};
-    String(text || '').replace(/\[(\w+)\s+"([^"]*)"\]/g, (all, k, v) => { tags[k] = v; return ''; });
+    // 「" 」のほか、スマホで変わりやすい “ ” ＂ も引用符として読む。名前の大文字・小文字も気にしない
+    String(text || '').replace(/[\[［]\s*(\w+)\s+["“”＂]([^"“”＂]*)["“”＂]\s*[\]］]/g, (all, k, v) => { tags[k.charAt(0).toUpperCase() + k.slice(1).toLowerCase()] = v.trim(); return ''; });
+    const clean = (v) => (v && v !== '?' && !/^\?+$/.test(v)) ? v : '';
+    tags.White = clean(tags.White); tags.Black = clean(tags.Black);
     if (tags.FEN || tags.SetUp === '1') return { error: 'fen' };
-    let body = String(text || '').replace(/\[[^\]]*\]/g, ' ');
+    let body = String(text || '').replace(/[\[［][^\]］]*[\]］]/g, ' ');
     body = body.replace(/\{[^}]*\}/g, ' ').replace(/;[^\n]*/g, ' ');
     let prev;
     do { prev = body; body = body.replace(/\([^()]*\)/g, ' '); } while (body !== prev); // 変化手順（入れ子もOK）
@@ -6594,7 +6618,7 @@ const PIECE_IMG = {
               blackTime: baseMs,
               whiteJoined: isCorr,
               blackJoined: isCorr,
-              turnStartedAt: isCorr ? Date.now() : null,
+              turnStartedAt: isCorr ? kcNow() : null,
               rated: m.rated !== false && !(await window.kcInvolvesGuest(myUid, oppUid))
             });
             await set(ref(db, 'currentMatches/' + myUid + '/' + newMatchId), true);
@@ -6840,7 +6864,7 @@ const PIECE_IMG = {
     }
 
     if (clockEl) {
-      const elapsed = (m.status === 'active') ? (Date.now() - (m.turnStartedAt || Date.now())) : 0;
+      const elapsed = (m.status === 'active') ? (kcNow() - (m.turnStartedAt || kcNow())) : 0;
       const wTime = m.whiteTime - (m.turn === 'w' && m.status === 'active' ? elapsed : 0);
       const bTime = m.blackTime - (m.turn === 'b' && m.status === 'active' ? elapsed : 0);
       const myTime = myColor === 'w' ? wTime : bTime;
@@ -7070,7 +7094,7 @@ const PIECE_IMG = {
       turn: replay.turn(),
       moves: newMoves,
       lastMove: newLastMove,
-      turnStartedAt: Date.now(),
+      turnStartedAt: kcNow(),
       takebackRequestBy: null
     });
   }
@@ -7225,7 +7249,7 @@ const PIECE_IMG = {
       const move = gameChess.move({ from: fromSq, to: toSq, promotion: 'q' });
       selectedSquare = null;
       if (move) {
-        const elapsed = Date.now() - (m.turnStartedAt || Date.now());
+        const elapsed = kcNow() - (m.turnStartedAt || kcNow());
         const myTimeKey = myColor === 'w' ? 'whiteTime' : 'blackTime';
         const remainingAfterMove = (m[myTimeKey] || 0) - elapsed;
         if (remainingAfterMove <= 0) {
@@ -7241,7 +7265,7 @@ const PIECE_IMG = {
         const moveHistory = (m.moves || []).concat([{ san: move.san, color: move.color, captured: move.captured || null }]);
         await set(ref(db, 'matches/' + matchId), {
           ...m, fen: gameChess.fen(), turn: gameChess.turn(),
-          [myTimeKey]: newTime, turnStartedAt: Date.now(),
+          [myTimeKey]: newTime, turnStartedAt: kcNow(),
           lastMove: { from: move.from, to: move.to },
           moves: moveHistory,
           drawOfferBy: null, takebackRequestBy: null
@@ -7273,7 +7297,7 @@ const PIECE_IMG = {
   function updateClockDisplay(m) {
   const clockEl = document.getElementById('gameClock');
   if (!clockEl || !m) return;
-  const elapsed = (m.status === 'active') ? (Date.now() - (m.turnStartedAt || Date.now())) : 0;
+  const elapsed = (m.status === 'active') ? (kcNow() - (m.turnStartedAt || kcNow())) : 0;
   const wTime = m.whiteTime - (m.turn === 'w' && m.status === 'active' ? elapsed : 0);
   const bTime = m.blackTime - (m.turn === 'b' && m.status === 'active' ? elapsed : 0);
   const myTime = myColor === 'w' ? wTime : bTime;
@@ -7337,14 +7361,14 @@ function startClockTicker(user) {
     if (!m || m.status !== 'active') return;
     const turnColor = m.turn;
     const timeKey = turnColor === 'w' ? 'whiteTime' : 'blackTime';
-    const elapsed = Date.now() - (m.turnStartedAt || Date.now());
+    const elapsed = kcNow() - (m.turnStartedAt || kcNow());
     const remaining = (m[timeKey] || 0) - elapsed;
     // 最初の1手(白・黒それぞれ)が制限時間内に指されなければ、対局を中止する(勝ち負け・レーティングなし)
     if (m.timeControl !== 'correspondence' && (m.moves || []).length < 2 && m.turnStartedAt && elapsed > FIRST_MOVE_LIMIT_MS) {
       try {
         await runTransaction(ref(db, 'matches/' + matchId), (cur) => {
           if (!cur || cur.status !== 'active' || (cur.moves || []).length >= 2) return;
-          if (Date.now() - (cur.turnStartedAt || Date.now()) <= FIRST_MOVE_LIMIT_MS) return;
+          if (kcNow() - (cur.turnStartedAt || kcNow()) <= FIRST_MOVE_LIMIT_MS) return;
           return { ...cur, status: 'aborted', abortedBy: cur.turn, drawOfferBy: null, takebackRequestBy: null };
         });
       } catch (e) { console.error('対局の中止に失敗:', e); }
