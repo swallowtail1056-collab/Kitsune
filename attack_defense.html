@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>駒は何個で守ればいい？ねらう数と守る数の数え方 - KitsuneChess</title>
+<link rel="canonical" href="https://kitsunechess.com/attack_defense.html">
+<meta name="description" content="駒が取られるかどうかは、ねらっている駒の数と守っている駒の数を比べれば分かります。数え方の手順、守りを増やす方法、数だけでは分からない駒の点数の考え方を、盤面の図で分かりやすく解説します。">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Crimson+Pro:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root { --bg: #f5edd6; --brown: #7c4a1e; --brown-dark: #4a2a0e; --text: #111; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: var(--bg); color: var(--text); font-family: 'Crimson Pro', serif; font-weight: 600; line-height: 1.8; padding: 40px 20px; }
+  .container { max-width: 720px; margin: 0 auto; background: transparent; border: none; padding: 20px 10px; }
+  .lang-en, .lang-ja { text-align: left !important; word-break: break-word !important; }
+  .lang-switch { text-align: right; margin-bottom: 25px; }
+  .lang-btn { background: #f7ebd3; border: 1px solid #c4b193; color: var(--brown-dark); padding: 6px 14px; border-radius: 4px; cursor: pointer; font-weight: 700; font-size: 0.85rem; transition: all 0.2s; }
+  .lang-btn:hover { background: var(--brown); color: #fff; }
+  .back-link { color: var(--brown); text-decoration: none; font-weight: 700; font-size: 0.9rem; }
+  .top-links { margin-bottom: 18px; }
+  h1 { font-family: 'Cinzel', serif; color: var(--brown-dark); font-size: 1.8rem; text-align: center; margin-bottom: 24px; border-bottom: 2px solid rgba(184,134,11,0.3); padding-bottom: 12px; }
+  h2 { font-family: 'Cinzel', serif; color: var(--brown); font-size: 1.1rem; margin: 30px 0 12px; border-left: 4px solid var(--brown); padding-left: 10px; }
+  p { font-size: 1.05rem; margin-bottom: 18px; }
+  ul, ol { margin: 0 0 18px 1.4em; font-size: 1.02rem; }
+  li { margin-bottom: 8px; }
+  a { color: var(--brown-dark); }
+  .card { background: #fff8e8; border: 2px solid var(--brown); border-radius: 16px; padding: 22px 26px; margin: 20px 0; box-shadow: 2px 3px 8px rgba(0,0,0,0.05); }
+  .card-label { display: inline-block; background: var(--brown); color: #fff; font-family: 'Cinzel', serif; font-size: 0.75rem; padding: 3px 12px; border-radius: 4px; margin-bottom: 12px; letter-spacing: 1px; }
+  .board { display:block; width:100%; max-width:300px; height:auto; margin:16px auto 6px; border:2px solid var(--brown); border-radius:8px; }
+  .caption { text-align:center; font-size:0.88rem; color:#555; margin-bottom:16px; }
+  .fix-box { background: rgba(124,74,30,0.15); border-left: 4px solid var(--brown); padding: 12px 16px; margin-top: 14px; border-radius: 0 8px 8px 0; font-size: 0.95rem; }
+  .fix-label { font-weight: 700; color: var(--brown-dark); font-size: 0.85rem; margin-bottom: 4px; }
+  .footer { text-align: center; margin-top: 45px; font-size: 0.9rem; }
+  .footer a { color: var(--brown); text-decoration: none; font-weight: 700; border: 1px solid var(--brown); padding: 8px 18px; border-radius: 6px; transition: all 0.2s; display:inline-block; margin:4px; }
+  .footer a:hover { background: var(--brown); color: #fff; }
+  .lang-en { display: none; }
+  .en-mode .lang-ja { display: none; }
+  .en-mode .lang-en { display: block; }
+  .en-mode button.lang-en { display: inline-block; }
+  /* 🦊 ジーンの吹き出し */
+  .jene { display: flex; align-items: flex-start; gap: 12px; margin: 18px 0 22px; }
+  .jene-face { flex-shrink: 0; width: 64px; text-align: center; }
+  .jene-face img { width: 64px; height: 64px; object-fit: contain; display: block; }
+  .jene-name { font-size: 0.7rem; color: #7c4a1e; font-weight: 700; }
+  .bubble { position: relative; background: #fff; border: 2px solid #7c4a1e; border-radius: 14px; padding: 10px 14px; font-size: 0.98rem; line-height: 1.7; color: #3a2410; text-align: left; }
+  .bubble::before { content: ""; position: absolute; left: -10px; top: 18px; border: 5px solid transparent; border-right: 8px solid #7c4a1e; }
+  .bubble::after { content: ""; position: absolute; left: -6px; top: 19px; border: 4px solid transparent; border-right: 6px solid #fff; }
+</style>
+
+<script src="board-theme.js"></script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1034556404852942" crossorigin="anonymous"></script>
+</head>
+<body>
+<div class="container">
+  <div class="lang-switch">
+    <button class="lang-btn lang-ja" onclick="toggleLanguage()">English</button>
+    <button class="lang-btn lang-en" onclick="toggleLanguage()">日本語</button>
+  </div>
+
+  <!-- ================= 日本語 ================= -->
+  <div class="lang-ja">
+    <div class="top-links"><a href="info.html" class="back-link">← 一覧へ戻る</a>&nbsp;&nbsp;<a href="index.html" class="back-link">🏠 ホームへ</a></div>
+    <h1>🛡️ 駒は何個で守ればいい？<br>ねらう数と守る数の数え方</h1>
+    <p>対局中に「この駒、取られても大丈夫かな？」と迷ったことはありませんか。駒が取られて損をするかどうかは、その駒を<strong>ねらっている相手の駒の数</strong>と、<strong>守っている味方の駒の数</strong>を比べると、かなりの場面で判断できます。この記事では、数え方の手順と、守りを増やす方法、そして数だけでは分からない「駒の点数」の考え方を、盤面の図を使って解説します。</p>
+
+    <div class="jene">
+      <div class="jene-face"><img src="jene_welcome_s.webp" alt="ジーン" loading="lazy"><div class="jene-name">ジーン</div></div>
+      <div class="bubble">駒の取り合いで損をしないコツは、「数える」ことなんだ。一緒に練習してみよう！</div>
+    </div>
+
+    <h2>基本：ねらう数と守る数を比べる</h2>
+    <div class="card">
+      <span class="card-label">COUNTING</span>
+      <p>ある駒が安全かどうかを調べるときは、次の2つを数えます。</p>
+      <ul>
+        <li><strong>ねらう数</strong>：その駒を取れる相手の駒の数</li>
+        <li><strong>守る数</strong>：その駒が取られたときに、取り返せる味方の駒の数</li>
+      </ul>
+      <p>ねらう数が守る数より多いと、取り合いを最後まで続けたときに、守っている側が駒を1つ多く失います。</p>
+      <div class="kc-diagram" role="img" aria-label="白のd4のポーンを、黒のe5のポーンとd8のクイーンがねらい、白のd1のクイーンだけが守っている局面" data-spec='{"p":"3q1rk1/pp3ppp/8/4p3/3P4/8/PP3PPP/3Q1RK1","h":[["d4","#e8c84a",0.55]],"a":[["e5","d4","#cc3333cc"],["d8","d4","#cc3333cc"],["d1","d4","#2f7fd1cc"]]}'></div>
+      <div class="caption">説明のための局面（黒の番）。赤い矢印がねらう駒、青い矢印が守る駒です。</div>
+      <p>上の図で、白のd4のポーンをねらっているのは、黒のe5のポーンとd8のクイーンの2つです。守っているのは、白のd1のクイーンの1つだけです。ねらう数が2、守る数が1なので、このポーンは危ない状態です。</p>
+      <p>実際に、黒がexd4とポーンを取ると、白はQxd4と取り返すことができません。白が取り返すと、黒がQxd4と取って、白はクイーンを失うからです。黒がQxd4から取った場合も、白がQxd4、黒がexd4と取り返して、クイーン同士の交換のあとに、黒がポーン1つ分得をします。どちらの順番でも、白はポーンを1つ失います。</p>
+    </div>
+
+    <h2>守りを増やして安全にする</h2>
+    <div class="card">
+      <span class="card-label">ADD A DEFENDER</span>
+      <p>ねらう数が守る数より多いと分かったら、守りを1つ増やすのがいちばん簡単な対策です。</p>
+      <div class="kc-diagram" role="img" aria-label="白のc3のポーンが加わり、白のd4のポーンを2つの駒で守っている局面" data-spec='{"p":"3q1rk1/pp3ppp/8/4p3/3P4/2P5/PP3PPP/3Q1RK1","h":[["d4","#e8c84a",0.55]],"a":[["e5","d4","#cc3333cc"],["d8","d4","#cc3333cc"],["d1","d4","#2f7fd1cc"],["c3","d4","#2f7fd1cc"]]}'></div>
+      <div class="caption">説明のための局面（黒の番）。白のc3のポーンが、d4の守りに加わりました。</div>
+      <p>上の図では、白のc3のポーンもd4のポーンを守っています。ねらう数が2、守る数も2になりました。黒がexd4と取っても、白はcxd4とポーンで取り返せます。黒がさらにQxd4と取ると、白はQxd4と取り返して、黒はクイーンを失います。なので、黒はd4のポーンを取っても得をすることができません。</p>
+      <p>守りを増やすときは、<strong>ポーンのような点数の低い駒で守る</strong>のがおすすめです。取り合いになったとき、点数の低い駒から差し出せるので、損をしにくくなります。</p>
+    </div>
+
+    <div class="jene">
+      <div class="jene-face"><img src="jene_wink_s.webp" alt="ジーン" loading="lazy"><div class="jene-name">ジーン</div></div>
+      <div class="bubble">取り合いは、点数の低い駒から順番に取っていくと考えるのがコツだよ。ポーン、ナイトとビショップ、ルーク、クイーンの順番だね。</div>
+    </div>
+
+    <h2>数だけでは分からない：駒の点数</h2>
+    <div class="card">
+      <span class="card-label">PIECE VALUE</span>
+      <p>守る数が足りていても、安心できない場面があります。それは、<strong>自分の駒より点数の低い駒にねらわれている</strong>ときです。駒のおおよその点数は、ポーンが1点、ナイトとビショップが3点、ルークが5点、クイーンが9点です。</p>
+      <div class="kc-diagram" role="img" aria-label="白のd5のナイトを黒のc6のポーンがねらい、白のd1のクイーンとe4のポーンが守っている局面" data-spec='{"p":"r4rk1/pp2qppp/2p5/3N4/4P3/8/PPP2PPP/R2Q1RK1","h":[["d5","#e8c84a",0.55]],"a":[["c6","d5","#cc3333cc"],["d1","d5","#2f7fd1cc"],["e4","d5","#2f7fd1cc"]]}'></div>
+      <div class="caption">説明のための局面（黒の番）。白のd5のナイトは2つの駒に守られています。</div>
+      <p>上の図で、白のd5のナイトをねらっているのは、黒のc6のポーンの1つだけです。守っているのは、白のd1のクイーンとe4のポーンの2つです。数だけ見ると、守る数のほうが多く、安全に見えます。</p>
+      <p>ところが、黒がcxd5とナイトを取ると、白はexd5と取り返せても、3点のナイトと1点のポーンの交換になります。白は差し引き2点の損をします。このように、<strong>点数の低い駒にねらわれた駒は、守っていても逃がす必要があります</strong>。</p>
+    </div>
+
+    <h2>数え方の手順</h2>
+    <p>対局中は、相手が指したあとに、次の順番で確かめるくせをつけましょう。</p>
+    <ol>
+      <li>相手の駒にねらわれている自分の駒を探す</li>
+      <li>その駒をねらっている相手の駒を、点数の低い順に数える</li>
+      <li>その駒を守っている自分の駒を、点数の低い順に数える</li>
+      <li>いちばん点数の低い駒から順に取り合ったら、どちらが得をするかを考える</li>
+    </ol>
+    <p>相手の駒を取れそうなときも、同じ手順で数えます。相手の駒をねらう数が、相手の守る数より多ければ、取って得をできるチャンスです。</p>
+
+    <div class="jene">
+      <div class="jene-face"><img src="jene_confused_s.webp" alt="ジーン" loading="lazy"><div class="jene-name">ジーン</div></div>
+      <div class="bubble">クイーンだけで守っている駒は要注意だよ。取り返したクイーンが、すぐ取られてしまうことがあるんだ。</div>
+    </div>
+
+    <h2>よくある失敗</h2>
+    <div class="card">
+      <span class="card-label">COMMON MISTAKES</span>
+      <p><strong>クイーンだけで守っている。</strong>最初の図のように、守りがクイーンだけだと、取り返したクイーンが次に取られてしまい、実際には守りになっていないことがあります。強い駒の守りは、取り合いの最後の一手として数えましょう。</p>
+      <p><strong>ピンされている駒を守りに数えている。</strong>動くと自分のキングがチェックされてしまう駒（ピンされた駒）は、多くの場合、取り返すことができません。そのような駒は、守る数に入れないようにしましょう。ピンについては<a href="pin.html">ピンの解説</a>で詳しく紹介しています。</p>
+      <p><strong>1つの駒に、いくつも守りの仕事をさせている。</strong>1つの駒が2つの駒を同時に守っていると、片方を取り返したときに、もう片方の守りがなくなります。これは<a href="overload.html">オーバーロード</a>と呼ばれる狙い筋です。</p>
+    </div>
+
+    <h2>まとめ</h2>
+    <ul>
+      <li>駒が安全かどうかは、ねらう数と守る数を比べて調べる</li>
+      <li>ねらう数が多いときは、守りを1つ増やす。守りはポーンなどの点数の低い駒がおすすめ</li>
+      <li>点数の低い駒にねらわれたときは、守る数が足りていても逃がす</li>
+      <li>クイーンだけの守りや、ピンされた駒の守りは、あてにしない</li>
+    </ul>
+    <p>KitsuneChessの<a href="match.html">対局モード</a>では、対局のあとに「🦊 ジーンと振り返る」で、取られてしまった駒や、取れたはずの駒をジーンが教えてくれます。実際の対局で、数え方を確かめてみてください。初心者がやりがちなミスについては、<a href="beginner_mistakes.html">初心者がやりがちなミス10選と改善法</a>もあわせて読んでみてください。</p>
+
+    <div class="jene">
+      <div class="jene-face"><img src="jene_happy_s.webp" alt="ジーン" loading="lazy"><div class="jene-name">ジーン</div></div>
+      <div class="bubble">相手が指したら、まず「ねらわれている駒はないかな？」と数えてみてね。それだけで、駒をただで取られることがぐっと減るよ！</div>
+    </div>
+
+    <div class="footer"><a href="info.html">🦊 一覧へ戻る</a><a href="index.html">🏠 ホームへ</a></div>
+  </div>
+
+  <!-- ================= English ================= -->
+  <div class="lang-en">
+    <div class="top-links"><a href="info.html" class="back-link">← Back to Info</a>&nbsp;&nbsp;<a href="index.html?lang=en" class="back-link">🏠 Home</a></div>
+    <h1>🛡️ Is Your Piece Safe?<br>Counting Attackers and Defenders</h1>
+    <p>Have you ever wondered during a game, "Is it okay if this piece gets taken?" In many positions, you can tell whether you will lose material by comparing two numbers: <strong>how many enemy pieces attack</strong> a piece, and <strong>how many of your pieces defend</strong> it. This article explains how to count, how to add defenders, and why piece values matter as much as the numbers, using board diagrams.</p>
+
+    <div class="jene">
+      <div class="jene-face"><img src="jene_welcome_s.webp" alt="Jene" loading="lazy"><div class="jene-name">Jene</div></div>
+      <div class="bubble">The secret to not losing pieces in trades is to count. Let's practice together!</div>
+    </div>
+
+    <h2>The Basics: Compare Attackers and Defenders</h2>
+    <div class="card">
+      <span class="card-label">COUNTING</span>
+      <p>To check whether a piece is safe, count two things:</p>
+      <ul>
+        <li><strong>Attackers</strong>: the enemy pieces that can capture it</li>
+        <li><strong>Defenders</strong>: your pieces that can recapture if it is taken</li>
+      </ul>
+      <p>If there are more attackers than defenders, the defending side ends up one piece short when all the captures are played out.</p>
+      <div class="kc-diagram" role="img" aria-label="White's d4 pawn attacked by Black's e5 pawn and d8 queen, and defended only by White's d1 queen" data-spec='{"p":"3q1rk1/pp3ppp/8/4p3/3P4/8/PP3PPP/3Q1RK1","h":[["d4","#e8c84a",0.55]],"a":[["e5","d4","#cc3333cc"],["d8","d4","#cc3333cc"],["d1","d4","#2f7fd1cc"]]}'></div>
+      <div class="caption">Example position (Black to move). Red arrows show attackers and blue arrows show defenders.</div>
+      <p>In the diagram, White's d4 pawn is attacked twice: by Black's e5 pawn and Black's d8 queen. It is defended only once, by White's d1 queen. Two attackers against one defender means the pawn is in danger.</p>
+      <p>If Black plays exd4, White cannot recapture with Qxd4, because Black would answer Qxd4 and win White's queen. If Black starts with Qxd4 instead, White plays Qxd4 and Black recaptures with exd4. After the queen trade, Black is a pawn up. Either way, White loses a pawn.</p>
+    </div>
+
+    <h2>Add a Defender to Stay Safe</h2>
+    <div class="card">
+      <span class="card-label">ADD A DEFENDER</span>
+      <p>When attackers outnumber defenders, the simplest fix is to add one more defender.</p>
+      <div class="kc-diagram" role="img" aria-label="White's c3 pawn joins the defense, so White's d4 pawn is defended twice" data-spec='{"p":"3q1rk1/pp3ppp/8/4p3/3P4/2P5/PP3PPP/3Q1RK1","h":[["d4","#e8c84a",0.55]],"a":[["e5","d4","#cc3333cc"],["d8","d4","#cc3333cc"],["d1","d4","#2f7fd1cc"],["c3","d4","#2f7fd1cc"]]}'></div>
+      <div class="caption">Example position (Black to move). White's c3 pawn now also defends d4.</div>
+      <p>Here, White's c3 pawn also defends the d4 pawn. Now there are two attackers and two defenders. If Black plays exd4, White recaptures with cxd4. If Black then plays Qxd4, White answers Qxd4 and Black loses the queen. So Black cannot win the d4 pawn.</p>
+      <p>When you add a defender, <strong>use a lower-value piece such as a pawn</strong> if you can. In a trade, you can give up the lower-value piece first, so you are less likely to lose material.</p>
+    </div>
+
+    <div class="jene">
+      <div class="jene-face"><img src="jene_wink_s.webp" alt="Jene" loading="lazy"><div class="jene-name">Jene</div></div>
+      <div class="bubble">Think of a trade as capturing with the lowest-value piece first: pawns, then knights and bishops, then rooks, then the queen.</div>
+    </div>
+
+    <h2>Numbers Are Not Everything: Piece Values</h2>
+    <div class="card">
+      <span class="card-label">PIECE VALUE</span>
+      <p>Even with enough defenders, a piece is not always safe. Watch out when <strong>a piece is attacked by an enemy piece worth less than it</strong>. The usual values are: pawn 1, knight and bishop 3, rook 5, queen 9.</p>
+      <div class="kc-diagram" role="img" aria-label="White's d5 knight attacked by Black's c6 pawn and defended by White's d1 queen and e4 pawn" data-spec='{"p":"r4rk1/pp2qppp/2p5/3N4/4P3/8/PPP2PPP/R2Q1RK1","h":[["d5","#e8c84a",0.55]],"a":[["c6","d5","#cc3333cc"],["d1","d5","#2f7fd1cc"],["e4","d5","#2f7fd1cc"]]}'></div>
+      <div class="caption">Example position (Black to move). White's d5 knight is defended twice.</div>
+      <p>In the diagram, White's d5 knight is attacked only once, by Black's c6 pawn. It is defended twice, by White's d1 queen and e4 pawn. By the numbers, it looks safe.</p>
+      <p>But if Black plays cxd5, White can recapture with exd5, and the result is a 3-point knight traded for a 1-point pawn. White is 2 points down. <strong>A piece attacked by a lower-value enemy piece usually needs to move, even if it is defended.</strong></p>
+    </div>
+
+    <h2>How to Count, Step by Step</h2>
+    <p>After every move your opponent makes, try checking in this order:</p>
+    <ol>
+      <li>Find your pieces that are attacked by enemy pieces</li>
+      <li>Count the attackers, from the lowest value to the highest</li>
+      <li>Count your defenders, from the lowest value to the highest</li>
+      <li>Imagine the trades starting with the lowest-value pieces, and see who comes out ahead</li>
+    </ol>
+    <p>Use the same steps when you want to capture an enemy piece. If you attack it more times than it is defended, you may be able to win material.</p>
+
+    <div class="jene">
+      <div class="jene-face"><img src="jene_confused_s.webp" alt="Jene" loading="lazy"><div class="jene-name">Jene</div></div>
+      <div class="bubble">Be careful with pieces defended only by your queen. Your queen might recapture and then get taken right away!</div>
+    </div>
+
+    <h2>Common Mistakes</h2>
+    <div class="card">
+      <span class="card-label">COMMON MISTAKES</span>
+      <p><strong>Defending with only the queen.</strong> As in the first diagram, if the queen is the only defender, recapturing can lose the queen, so it is not a real defense. Count a strong piece as the last defender in the sequence.</p>
+      <p><strong>Counting a pinned piece as a defender.</strong> A piece that cannot move without exposing its own king to check (a pinned piece) usually cannot recapture. Do not count it as a defender. Learn more in our <a href="pin.html">guide to pins</a>.</p>
+      <p><strong>Giving one piece too many defensive jobs.</strong> If one piece defends two pieces at once, recapturing on one square leaves the other undefended. This tactic is called <a href="overload.html">overloading</a>.</p>
+    </div>
+
+    <h2>Summary</h2>
+    <ul>
+      <li>Check whether a piece is safe by comparing attackers and defenders</li>
+      <li>If attackers outnumber defenders, add a defender, ideally a lower-value piece such as a pawn</li>
+      <li>If a lower-value enemy piece attacks your piece, move it even if it is defended</li>
+      <li>Do not rely on a queen-only defense or on a pinned defender</li>
+    </ul>
+    <p>In KitsuneChess <a href="match.html">Play mode</a>, "🦊 Game Review with Jene" shows you which pieces you lost and which pieces you could have won after each game. Try counting in your own games. For more tips, read <a href="beginner_mistakes.html">10 Common Beginner Mistakes and How to Fix Them</a>.</p>
+
+    <div class="jene">
+      <div class="jene-face"><img src="jene_happy_s.webp" alt="Jene" loading="lazy"><div class="jene-name">Jene</div></div>
+      <div class="bubble">After your opponent moves, ask yourself, "Is anything of mine under attack?" Just counting will save you from losing pieces for free!</div>
+    </div>
+
+    <div class="footer"><a href="info.html">🦊 Back to Info</a><a href="index.html?lang=en">🏠 Back to Home</a></div>
+  </div>
+</div>
+<script>
+  function toggleLanguage() {
+    const isNowEn = !document.body.classList.contains('en-mode');
+    document.body.classList.toggle('en-mode');
+    localStorage.setItem('selectedLang', isNowEn ? 'en' : 'ja');
+  }
+  (function applyStoredLanguage() {
+    let stored = null;
+    try {
+      const q = new URLSearchParams(location.search).get('lang');
+      stored = (q === 'en' || q === 'ja') ? q : localStorage.getItem('selectedLang');
+    } catch (e) {}
+    if (stored === 'ja') {
+      document.body.classList.remove('en-mode');
+    } else {
+      document.body.classList.add('en-mode');
+    }
+  })();
+</script>
+<script src="kc-diagram.js"></script>
+</body>
+</html>
