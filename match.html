@@ -1986,7 +1986,8 @@ applyBoardTheme();
       + (isOwn
           ? '<p style="font-weight:700;margin:16px 0 4px;">♟ ' + (isJa ? '得意なオープニング' : 'Favorite Openings') + ' <span style="font-size:0.7rem;color:#888;font-weight:400;">(' + (isJa ? '自分だけに表示されます' : 'visible only to you') + ')</span></p>' + openingHtml
           : '')
-      + '<p style="font-weight:700;margin:16px 0 4px;">📋 ' + (isJa ? '対局履歴' : 'Match History') + '</p>'
+      + '<p id="kcProfileHistory" style="font-weight:700;margin:16px 0 4px;">📋 ' + (isJa ? '対局履歴' : 'Match History') + '</p>'
+      + (isOwn ? '<p style="font-size:0.78rem;color:#888;margin:0 0 6px;">' + (isJa ? '「🦊 振り返る」で、終わった対局をジーンと振り返れます。' : 'Tap "🦊 Review" to review a finished game with Jene.') + '</p>' : '')
       + historyHtml;
 
     body.querySelectorAll('.history-like-slot').forEach((slot) => {
@@ -5568,6 +5569,7 @@ const PIECE_IMG = {
       { icon: '🚫', label: T('ブロック管理', 'Blocked Players'), need: true, act: () => { if (typeof openBlockManager === 'function') openBlockManager(); } },
       { head: T('対局する', 'Play') },
       { icon: '⚔️', label: T('進行中の対局', 'Ongoing Games'), need: true, act: () => kcScrollToEl('activeMatchesBox') },
+      { icon: '🕘', label: T('終わった対局を振り返る', 'Review Past Games'), need: true, act: async () => { await openProfileModal(curUser, curUser.uid); setTimeout(() => { const h = document.getElementById('kcProfileHistory'); if (h) try { h.scrollIntoView({ behavior: 'smooth', block: 'start' }); } catch (e) { h.scrollIntoView(); } }, 300); } },
       { icon: '🎲', label: T('ランダム対局', 'Quick Match'), need: true, act: () => kcScrollToEl('randomMatchBox') },
       { icon: '🦊', label: T('はじめてモード', 'Beginner Mode'), act: () => kcScrollToEl('beginnerModeBox', true) },
       { icon: '🤖', label: T('AI対局', 'Play the AI'), act: () => kcScrollToEl('aiModeBox', true) },
