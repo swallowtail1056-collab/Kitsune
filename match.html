@@ -5068,6 +5068,7 @@ const PIECE_IMG = {
   let sfQueue = [];
   let sfReady = false;
   let sfReadyWaiters = [];
+  const sfDiag = { err: '', answered: 0, timeouts: 0, ready: 'no', wasm: (typeof WebAssembly === 'object') ? 'yes' : 'no' }; // うまく動かないときの手がかり
   // エンジンの準備（読み込み）ができるまで待つ。遅い端末では最初の読み込みに時間がかかる
   function sfWaitReady(ms) {
     return new Promise((resolve) => {
@@ -5099,8 +5100,9 @@ const PIECE_IMG = {
       sfWorkerFailed = true;
       return null;
     }
-    sfWorker.onerror = () => {
+    sfWorker.onerror = (ev) => {
       sfWorkerFailed = true;
+      try { sfDiag.err = String((ev && (ev.message || ev.type)) || 'error').slice(0, 80); } catch (e) {}
       // 待機中の問い合わせを全て解放し、レポートが止まったままにならないようにする
       while (sfQueue.length) {
         const resolver = sfQueue.shift();
@@ -5110,7 +5112,7 @@ const PIECE_IMG = {
     sfWorker.onmessage = (e) => {
       const line = typeof e.data === 'string' ? e.data : '';
       if (!line) return;
-      if (line === 'readyok') { sfReady = true; const w = sfReadyWaiters.splice(0); w.forEach(f => f(true)); return; }
+      if (line === 'readyok') { sfReady = true; sfDiag.ready = 'yes'; const w = sfReadyWaiters.splice(0); w.forEach(f => f(true)); return; }
       if (line.indexOf('score cp') !== -1) {
         const mm = line.match(/score cp (-?\d+)/);
         if (mm) { sfLastScore = parseInt(mm[1], 10); sfLastMate = null; }
@@ -5125,6 +5127,7 @@ const PIECE_IMG = {
         sfLastScore = null;
         sfLastMate = null;
         const resolver = sfQueue.shift();
+        sfDiag.answered++;
         if (resolver) resolver({ uci: bestMoveUci, score: score, mate: mate });
       }
     };
@@ -5153,6 +5156,7 @@ const PIECE_IMG = {
         const i = sfQueue.indexOf(wrappedResolve);
         if (i !== -1) sfQueue.splice(i, 1);
         try { worker.postMessage('stop'); } catch (e) {}
+        sfDiag.timeouts++;
         wrappedResolve({ uci: null, score: 0 });
       }, (movetimeMs || 250) + 3000);
     });
@@ -6120,6 +6124,9 @@ const PIECE_IMG = {
     const again = rvEl('button', 'display:block;width:calc(100% - 24px);margin:12px;padding:12px;font-size:1.05rem;background:#81b64c;', rvT('🔄 もう一度分析する', '🔄 Try Again'));
     again.onclick = () => { sfReset(); kcOpenReview(m, mid, col); };
     body.appendChild(again);
+    // 原因を調べるための小さな情報（スクショを送ってもらうと原因が分かる）
+    body.appendChild(rvEl('p', 'margin:4px 12px;font-size:0.72rem;color:var(--text-muted);word-break:break-all;',
+      'diag: wasm=' + sfDiag.wasm + ' ready=' + sfDiag.ready + ' answered=' + sfDiag.answered + ' timeouts=' + sfDiag.timeouts + (sfDiag.err ? ' err=' + sfDiag.err : '') + ' ua=' + (navigator.userAgent || '').replace(/^.*?\(/, '(').slice(0, 90)));
   }
   // 振り返りの結果（自分の正確度・手の評価・駒ごとの正確度）をインサイト用に保存する
   function rvSaveSummary(st) {
