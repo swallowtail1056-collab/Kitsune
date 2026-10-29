@@ -5066,6 +5066,28 @@ const PIECE_IMG = {
   let sfWorker = null;
   let sfWorkerFailed = false;
   let sfQueue = [];
+  let sfReady = false;
+  let sfReadyWaiters = [];
+  // エンジンの準備（読み込み）ができるまで待つ。遅い端末では最初の読み込みに時間がかかる
+  function sfWaitReady(ms) {
+    return new Promise((resolve) => {
+      const w = getStockfishWorker();
+      if (!w || sfWorkerFailed) { resolve(false); return; }
+      if (sfReady) { resolve(true); return; }
+      let done = false;
+      const fin = (ok) => { if (done) return; done = true; resolve(ok); };
+      sfReadyWaiters.push(fin);
+      try { w.postMessage('isready'); } catch (e) {}
+      setTimeout(() => fin(false), ms || 20000);
+    });
+  }
+  // エンジンを作り直す（うまく動かなかったときの「もう一度」用）
+  function sfReset() {
+    try { if (sfWorker) sfWorker.terminate(); } catch (e) {}
+    sfWorker = null; sfWorkerFailed = false; sfReady = false;
+    sfQueue.splice(0).forEach(r => { try { r({ uci: null, score: 0 }); } catch (e) {} });
+    sfReadyWaiters.splice(0).forEach(f => { try { f(false); } catch (e) {} });
+  }
   let sfLastScore = null;
   let sfLastMate = null;
 
@@ -5088,6 +5110,7 @@ const PIECE_IMG = {
     sfWorker.onmessage = (e) => {
       const line = typeof e.data === 'string' ? e.data : '';
       if (!line) return;
+      if (line === 'readyok') { sfReady = true; const w = sfReadyWaiters.splice(0); w.forEach(f => f(true)); return; }
       if (line.indexOf('score cp') !== -1) {
         const mm = line.match(/score cp (-?\d+)/);
         if (mm) { sfLastScore = parseInt(mm[1], 10); sfLastMate = null; }
@@ -5124,7 +5147,14 @@ const PIECE_IMG = {
       worker.postMessage('position fen ' + fen);
       worker.postMessage('go movetime ' + (movetimeMs || 250));
       // 安全策:規定時間内に応答がなければ、詰まらせずに諦めて先に進む
-      setTimeout(() => wrappedResolve({ uci: null, score: 0 }), (movetimeMs || 250) + 3000);
+      setTimeout(() => {
+        if (settled) return;
+        // 時間内に答えが来なかった問い合わせは列から外す（外さないと、あとの答えが1つずつずれてしまう）
+        const i = sfQueue.indexOf(wrappedResolve);
+        if (i !== -1) sfQueue.splice(i, 1);
+        try { worker.postMessage('stop'); } catch (e) {}
+        wrappedResolve({ uci: null, score: 0 });
+      }, (movetimeMs || 250) + 3000);
     });
   }
 
@@ -5805,6 +5835,7 @@ const PIECE_IMG = {
       const res = await stockfishEval(replay.fen(), RV_MOVETIME);
       return rvEvalFromResult(res, replay.turn());
     };
+    await sfWaitReady(20000);
     evals.push(await evalHere());
     if (onProgress) onProgress(0, moves.length);
     for (let i = 0; i < moves.length; i++) {
@@ -6051,6 +6082,7 @@ const PIECE_IMG = {
     if (!KC_REVIEW_FREE) { rvRenderLocked(); return; }
     let cached = rvMemCache[key];
     if (!cached) { try { const s = localStorage.getItem('kcReview:' + key); if (s) cached = JSON.parse(s); } catch (e) {} }
+    if (cached && rvLooksFailed(cached)) cached = null; // 前に分析がうまくいかなかった結果は使わない
     if (cached && cached.evals && cached.evals.length === (m.moves || []).length + 1) {
       rvState.result = rvBuild(m, cached);
       rvSaveSummary(rvState);
@@ -6061,12 +6093,33 @@ const PIECE_IMG = {
     rvRenderProgress(0, (m.moves || []).length);
     rvAnalyze(m, (d, t) => { if (token === rvRunToken) rvRenderProgress(d, t); }, token).then(data => {
       if (!data || token !== rvRunToken) return;
+      if (rvLooksFailed(data)) { rvRenderFailed(m, mid, col); return; }
       rvMemCache[key] = data;
       try { localStorage.setItem('kcReview:' + key, JSON.stringify(data)); } catch (e) {}
       rvState.result = rvBuild(m, data);
       rvSaveSummary(rvState);
       rvRender();
     });
+  }
+  // エンジンの答えがほとんど返ってこなかった（＝分析できていない）かどうか
+  function rvLooksFailed(data) {
+    try {
+      const ev = (data && data.evals) || [];
+      const live = ev.filter(e => e && !e.over);
+      if (live.length < 4) return false;
+      const ok = live.filter(e => e.uci && e.uci !== '(none)').length;
+      return ok < live.length * 0.5;
+    } catch (e) { return false; }
+  }
+  // 分析できなかったときの画面（もう一度ためせる）
+  function rvRenderFailed(m, mid, col) {
+    const body = document.getElementById('rvBody');
+    body.innerHTML = '';
+    rvHeader(body);
+    body.appendChild(rvJeneBubble('jene_confused', rvT('ごめんね、この端末ではうまく分析できなかったよ。通信のよい場所で、ほかのアプリを閉じてから、もう一度ためしてみてね。', 'Sorry, I couldn\'t analyze this game on this device. Please close other apps, check your connection, and try again.')));
+    const again = rvEl('button', 'display:block;width:calc(100% - 24px);margin:12px;padding:12px;font-size:1.05rem;background:#81b64c;', rvT('🔄 もう一度分析する', '🔄 Try Again'));
+    again.onclick = () => { sfReset(); kcOpenReview(m, mid, col); };
+    body.appendChild(again);
   }
   // 振り返りの結果（自分の正確度・手の評価・駒ごとの正確度）をインサイト用に保存する
   function rvSaveSummary(st) {
