@@ -6316,7 +6316,7 @@ const PIECE_IMG = {
     if (res.opening) {
       sec.appendChild(rvEl('p', 'margin:8px 0 0;font-size:0.85rem;color:var(--text-muted);text-align:center;', rvT('📖 オープニング: ', '📖 Opening: ') + rvT(res.opening.ja, res.opening.en)));
     }
-    const nameOf = (c) => (c === 'w' ? m.whiteName : m.blackName) || (imp ? rvT('（名前なし）', '(no name)') : (c === 'w' ? rvT('白', 'White') : rvT('黒', 'Black')));
+    const nameOf = (c) => (c === 'w' ? m.whiteName : m.blackName) || (imp ? '' : (c === 'w' ? rvT('白', 'White') : rvT('黒', 'Black')));
     const tbl = rvEl('div', 'display:grid;grid-template-columns:1.3fr 1fr 34px 1fr;gap:8px 6px;align-items:center;margin-top:12px;');
     const cell = (t, css) => tbl.appendChild(rvEl('div', css || '', t));
     cell('');
@@ -6495,7 +6495,7 @@ const PIECE_IMG = {
     String(text || '').replace(/[\[［]\s*(\w+)\s+["“”＂]([^"“”＂]*)["“”＂]\s*[\]］]/g, (all, k, v) => { tags[k.charAt(0).toUpperCase() + k.slice(1).toLowerCase()] = v.trim(); return ''; });
     const clean = (v) => (v && v !== '?' && !/^\?+$/.test(v)) ? v : '';
     tags.White = clean(tags.White); tags.Black = clean(tags.Black);
-    if (tags.FEN || tags.SetUp === '1') return { error: 'fen' };
+    if (tags.Fen || tags.Setup === '1') return { error: 'fen' };
     let body = String(text || '').replace(/[\[［][^\]］]*[\]］]/g, ' ');
     body = body.replace(/\{[^}]*\}/g, ' ').replace(/;[^\n]*/g, ' ');
     let prev;
@@ -6537,11 +6537,22 @@ const PIECE_IMG = {
       T('※ Chess.com や Lichess の「棋譜をコピー（PGN）」で取った棋譜や、「1. e4 e5 2. Nf3」のような手順をそのまま貼れます。\n※ 振り返りの画面の右上の「⇅」で、黒の側から見ることもできます。一度選んだ名前は覚えておくので、次からは自動でその側になります。\n※ 対局中のゲームの棋譜は貼らないでください。ほかのサイトでも、対局中にエンジンを使うのは不正になります。',
         '* You can paste a PGN copied from Chess.com or Lichess, or a plain move list like "1. e4 e5 2. Nf3".\n* Tap "⇅" at the top right of the review to see it from Black\'s side. Your choice is remembered by player name.\n* Do not paste games that are still in progress. Using an engine during a game is cheating on any site.')));
     wrap.lastChild.style.whiteSpace = 'pre-line';
+    // 棋譜に名前が入っていないとき（Chess.com の分析画面からのコピーなど）用に、名前を入れる欄
+    const nameRow = rvEl('div', 'display:flex;gap:8px;margin:4px 0;');
+    const mkName = (ph) => { const i = document.createElement('input'); i.type = 'text'; i.maxLength = 40; i.placeholder = ph; i.style.cssText = 'flex:1;min-width:0;box-sizing:border-box;font-size:0.9rem;padding:8px;border-radius:8px;border:2px solid var(--brown);background:var(--input-bg);color:var(--text);'; nameRow.appendChild(i); return i; };
+    const wIn = mkName(T('⚪ 白の名前（なくてもOK）', '⚪ White name (optional)'));
+    const bIn = mkName(T('⚫ 黒の名前（なくてもOK）', '⚫ Black name (optional)'));
+    wrap.appendChild(nameRow);
+    wrap.appendChild(rvEl('p', 'margin:2px 0 6px;font-size:0.78rem;color:var(--text-muted);line-height:1.5;', T('※ 棋譜に名前が入っていないときだけ使われます。', '* Used only when the PGN has no player names.')));
     const msg = rvEl('p', 'margin:6px 0;font-size:0.85rem;color:var(--status-bad);min-height:1.2em;', '');
     wrap.appendChild(msg);
     const row = rvEl('div', 'display:flex;gap:8px;');
     const go = () => {
       const r = kcParsePgn(ta.value);
+      if (!r.error) {
+        if (!r.whiteName) r.whiteName = wIn.value.trim();
+        if (!r.blackName) r.blackName = bIn.value.trim();
+      }
       if (r.error) {
         msg.textContent = r.error === 'fen' ? T('途中の局面から始まる棋譜は、まだ読み取れません。', 'Games that start from a custom position are not supported yet.')
           : r.error === 'empty' ? T('棋譜が見つかりませんでした。貼り付けた内容を確かめてね。', 'No moves found. Please check what you pasted.')
