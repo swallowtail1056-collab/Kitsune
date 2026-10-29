@@ -6001,7 +6001,7 @@ const PIECE_IMG = {
     const imp = rvIsImport(rvState);
     const whoJa = imp ? (it.color === 'w' ? '白' : '黒') : (isMine ? 'あなた' : '相手');
     const otherJa = imp ? (it.color === 'w' ? '黒' : '白') : (isMine ? '相手' : 'あなた');
-    const posEn = imp ? (it.color === 'w' ? "White's " : "Black's ") : posEn;
+    const posEn = imp ? (it.color === 'w' ? "White's " : "Black's ") : (isMine ? 'Your ' : "Your opponent's ");
     const subjEn = imp ? (it.color === 'w' ? 'White' : 'Black') : (isMine ? 'You' : 'Your opponent');
     const otherEn = imp ? (it.color === 'w' ? 'Black' : 'White') : (isMine ? 'your opponent' : 'you');
     const b = it.bestSan || '';
@@ -6421,7 +6421,9 @@ const PIECE_IMG = {
     title.appendChild(rvBadge(it.cls, 22));
     title.appendChild(rvEl('span', 'flex:1;', it.san + rvT(' は' + RV_CLS[it.cls].ja + 'です', ' is ' + (it.cls === 'inaccuracy' || it.cls === 'excellent' ? 'an ' : 'a ') + RV_CLS[it.cls].en.toLowerCase())));
     title.appendChild(rvEl('span', 'background:#403d39;color:#fff;border-radius:6px;padding:1px 8px;font-size:0.85rem;', rvEvalLabel(res.evals[ply])));
-    return rvJeneBubbleWide(RV_JENE[it.cls], rvExplain(it, isMine), title);
+    let text;
+    try { text = rvExplain(it, isMine); } catch (e) { text = it.san; try { console.warn('rvExplain', e); } catch (_) {} }
+    return rvJeneBubbleWide(RV_JENE[it.cls], text, title);
   }
   function rvRenderMoves() {
     const st = rvState, res = st.result, m = st.m;
