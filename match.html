@@ -219,6 +219,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <!-- End Google Tag Manager (noscript) -->
 
 <div class="lang-switch">
+  <button id="kcLangQuick" type="button" aria-label="Language / 言語" style="font-size:0.85rem;padding:6px 10px;margin-right:6px;">🌐 English</button>
   <button id="kcMenuBtn" type="button" aria-label="メニュー" style="font-size:1.1rem;padding:6px 14px;">☰</button>
   <button id="settingsBtn" title="設定" data-ja="⚙️ 設定" data-en="⚙️ Settings" style="display:none;">⚙️</button>
 </div>
@@ -961,10 +962,13 @@ import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithRedirect, getRe
     document.querySelectorAll('[data-ja]').forEach(el => { el.textContent = LANG === 'ja' ? el.dataset.ja : el.dataset.en; });
     document.querySelectorAll('[data-ja-ph]').forEach(el => { el.placeholder = LANG === 'ja' ? el.dataset.jaPh : el.dataset.enPh; });
     document.getElementById('langBtn').textContent = LANG === 'ja' ? 'English' : '日本語';
+    try { document.getElementById('kcLangQuick').textContent = '🌐 ' + (LANG === 'ja' ? 'English' : '日本語'); } catch (e) {}
     try { kcUpdateSoundBtns(); } catch (e) {}
     try { kcApplyHints(); } catch (e) {}
     try { kcApplyConfirmBtn(); } catch (e) {}
   }
+  // メニューの外の「🌐」ボタンは、設定の言語ボタンと同じ動きをする
+  try { document.getElementById('kcLangQuick').onclick = () => document.getElementById('langBtn').click(); } catch (e) {}
   document.getElementById('langBtn').onclick = () => {
     LANG = LANG === 'ja' ? 'en' : 'ja';
     localStorage.setItem('selectedLang', LANG);
@@ -6538,6 +6542,34 @@ const PIECE_IMG = {
       T('※ Chess.com や Lichess の「棋譜をコピー（PGN）」で取った棋譜や、「1. e4 e5 2. Nf3」のような手順をそのまま貼れます。\n※ Chess.com アプリの「ゲームを共有する」→「コピー」で取った対局のリンクを貼ると、ジーンが棋譜を取ってきます。\n※ 振り返りの画面の右上の「⇅」で、黒の側から見ることもできます。一度選んだ名前は覚えておくので、次からは自動でその側になります。\n※ 対局中のゲームの棋譜は貼らないでください。ほかのサイトでも、対局中にエンジンを使うのは不正になります。',
         '* You can paste a PGN copied from Chess.com or Lichess, or a plain move list like "1. e4 e5 2. Nf3".\n* You can also paste a game link from the Chess.com app (Share Game → Copy), and Jene will get the game for you.\n* Tap "⇅" at the top right of the review to see it from Black\'s side. Your choice is remembered by player name.\n* Do not paste games that are still in progress. Using an engine during a game is cheating on any site.')));
     wrap.lastChild.style.whiteSpace = 'pre-line';
+    // 貼り方の説明（折りたたみ）
+    const how = document.createElement('details');
+    how.style.cssText = 'margin:4px 0 10px;background:rgba(124,74,30,0.08);border:1px solid rgba(124,74,30,0.3);border-radius:8px;padding:8px 12px;font-size:0.85rem;line-height:1.7;color:var(--text);';
+    const hs = document.createElement('summary');
+    hs.style.cssText = 'cursor:pointer;font-weight:700;';
+    hs.textContent = T('📱 Chess.com アプリの対局の貼り方（タップで開く）', '📱 How to paste a game from the Chess.com app (tap to open)');
+    how.appendChild(hs);
+    const ol = document.createElement('ol');
+    ol.style.cssText = 'margin:8px 0 4px;padding-left:1.4em;';
+    (LANG === 'ja' ? [
+      'Chess.com アプリで、振り返りたい対局を開きます（🔍の分析画面ではなく、盤と2人の名前が出ている画面）。',
+      '左下の「≡」を押します。',
+      '「ゲームを共有する」を押します。',
+      '「コピー」を押します。',
+      'この画面の上の欄に、コピーした文章をそのまま貼ります（「この #chess 対戦に注目: …」の文章を全部貼ってOK）。',
+      '「🦊 ジーンと振り返る」を押すと、ジーンが棋譜を取ってきて、名前つきで振り返りが始まります。'
+    ] : [
+      'In the Chess.com app, open the game you want to review (the game screen with the board and both names, not the 🔍 analysis screen).',
+      'Tap "≡" at the bottom left.',
+      'Tap "Share Game".',
+      'Tap "Copy".',
+      'Paste the copied text into the box above as it is (you can paste the whole message, including the link).',
+      'Tap "🦊 Review with Jene". Jene will get the game and start the review with both names.'
+    ]).forEach(t => { const li = document.createElement('li'); li.textContent = t; ol.appendChild(li); });
+    how.appendChild(ol);
+    how.appendChild(rvEl('p', 'margin:4px 0 0;font-size:0.8rem;color:var(--text-muted);', T('※ 対局が終わってすぐだと、まだ取ってこられないことがあります。そのときは少し待ってから、もう一度押してね。\n※ 黒で指した対局は、振り返りの右上の「⇅」を1回押すと、次からは黒の側で開きます。', '* Right after a game ends, it may not be available yet. Wait a little and try again.\n* If you played Black, tap "⇅" at the top right of the review once. Next time it opens from your side.')));
+    how.lastChild.style.whiteSpace = 'pre-line';
+    wrap.appendChild(how);
     // 棋譜に名前が入っていないとき（Chess.com の分析画面からのコピーなど）用に、名前を入れる欄
     const nameRow = rvEl('div', 'display:flex;gap:8px;margin:4px 0;');
     const mkName = (ph) => { const i = document.createElement('input'); i.type = 'text'; i.maxLength = 40; i.placeholder = ph; i.style.cssText = 'flex:1;min-width:0;box-sizing:border-box;font-size:0.9rem;padding:8px;border-radius:8px;border:2px solid var(--brown);background:var(--input-bg);color:var(--text);'; nameRow.appendChild(i); return i; };
