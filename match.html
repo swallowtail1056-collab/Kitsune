@@ -6693,9 +6693,14 @@ const PIECE_IMG = {
     const count = uids.length;
     const iLiked = !!data[user.uid];
     containerEl.innerHTML = '';
+    containerEl._kcLike = { matchId, user }; // 言語を切り替えたときに書き直せるように覚えておく
+    // 「いいね」の代わりに、対局のあいさつ「Good Game」を送るボタン
     const btn = document.createElement('button');
-    btn.style.cssText = 'font-size:0.85rem;padding:4px 12px;background:' + (iLiked ? '#a3692d' : 'transparent') + ';border:1px solid ' + (iLiked ? '#a3692d' : 'rgba(124,74,30,0.3)') + ';border-radius:16px;';
-    btn.textContent = (iLiked ? '❤️' : '🤍') + ' ' + (isJa ? 'いいね' : 'Like') + (count > 0 ? ' (' + count + ')' : '');
+    btn.style.cssText = 'font-size:0.9rem;font-weight:700;padding:6px 16px;border-radius:18px;'
+      + (iLiked ? 'background:#5d8a34;color:#fff;border:2px solid #5d8a34;'
+                : 'background:var(--card,#fff8ee);color:var(--brown-dark,#5a3510);border:2px solid var(--brown,#7c4a1e);');
+    btn.textContent = '🤝 ' + (isJa ? 'グッドゲーム' : 'Good Game') + (iLiked ? ' ✓' : '') + (count > 0 ? ' (' + count + ')' : '');
+    btn.title = isJa ? '対局のあとのあいさつ（GG）を送ります' : 'Send a friendly "GG" after the game';
     btn.onclick = async () => {
       btn.disabled = true;
       await set(ref(db, 'matchLikes/' + matchId + '/' + user.uid), iLiked ? null : true);
@@ -6703,6 +6708,13 @@ const PIECE_IMG = {
     };
     containerEl.appendChild(btn);
   }
+
+  // 言語を切り替えたら、表示中の「Good Game」ボタンも書き直す
+  document.getElementById('langBtn').addEventListener('click', () => {
+    document.querySelectorAll('#matchLikeArea, .history-like-slot').forEach((el) => {
+      const a = el._kcLike; if (a && el.isConnected) { try { renderLikeButton(a.matchId, el, a.user); } catch (e) {} }
+    });
+  });
 
   // 🔄 再戦の申し込みボタンと、相手からの再戦申し込み(終局したすべての対局で使う)
   const kcRematchOpened = new Set();
