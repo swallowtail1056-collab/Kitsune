@@ -363,6 +363,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <button id="btnBeginnerNewGame" data-ja="🔄 新しく始める" data-en="🔄 New Game">🔄 新しく始める</button>
       <button id="btnBeginnerReviewHistory" data-ja="📜 局面を見返す" data-en="📜 Review Position" style="margin-left:8px;">📜 局面を見返す</button>
       <button id="btnBeginnerCopyPgn" type="button" data-ja="📋 棋譜をコピー" data-en="📋 Copy PGN" style="margin-left:8px;">📋 棋譜をコピー</button>
+      <button id="btnBeginnerVoice" type="button" style="margin-left:8px;display:none;"></button>
     </div>
   </div>
 </details>
@@ -6534,8 +6535,8 @@ const PIECE_IMG = {
     ta.style.cssText = 'width:100%;box-sizing:border-box;font-size:0.9rem;padding:10px;border-radius:8px;border:2px solid var(--brown);background:var(--input-bg);color:var(--text);font-family:monospace;';
     wrap.appendChild(ta);
     wrap.appendChild(rvEl('p', 'margin:8px 0;font-size:0.82rem;color:var(--text-muted);line-height:1.6;',
-      T('※ Chess.com や Lichess の「棋譜をコピー（PGN）」で取った棋譜や、「1. e4 e5 2. Nf3」のような手順をそのまま貼れます。\n※ 振り返りの画面の右上の「⇅」で、黒の側から見ることもできます。一度選んだ名前は覚えておくので、次からは自動でその側になります。\n※ 対局中のゲームの棋譜は貼らないでください。ほかのサイトでも、対局中にエンジンを使うのは不正になります。',
-        '* You can paste a PGN copied from Chess.com or Lichess, or a plain move list like "1. e4 e5 2. Nf3".\n* Tap "⇅" at the top right of the review to see it from Black\'s side. Your choice is remembered by player name.\n* Do not paste games that are still in progress. Using an engine during a game is cheating on any site.')));
+      T('※ Chess.com や Lichess の「棋譜をコピー（PGN）」で取った棋譜や、「1. e4 e5 2. Nf3」のような手順をそのまま貼れます。\n※ Chess.com アプリの「ゲームを共有する」→「コピー」で取った対局のリンクを貼ると、ジーンが棋譜を取ってきます。\n※ 振り返りの画面の右上の「⇅」で、黒の側から見ることもできます。一度選んだ名前は覚えておくので、次からは自動でその側になります。\n※ 対局中のゲームの棋譜は貼らないでください。ほかのサイトでも、対局中にエンジンを使うのは不正になります。',
+        '* You can paste a PGN copied from Chess.com or Lichess, or a plain move list like "1. e4 e5 2. Nf3".\n* You can also paste a game link from the Chess.com app (Share Game → Copy), and Jene will get the game for you.\n* Tap "⇅" at the top right of the review to see it from Black\'s side. Your choice is remembered by player name.\n* Do not paste games that are still in progress. Using an engine during a game is cheating on any site.')));
     wrap.lastChild.style.whiteSpace = 'pre-line';
     // 棋譜に名前が入っていないとき（Chess.com の分析画面からのコピーなど）用に、名前を入れる欄
     const nameRow = rvEl('div', 'display:flex;gap:8px;margin:4px 0;');
@@ -6547,8 +6548,63 @@ const PIECE_IMG = {
     const msg = rvEl('p', 'margin:6px 0;font-size:0.85rem;color:var(--status-bad);min-height:1.2em;', '');
     wrap.appendChild(msg);
     const row = rvEl('div', 'display:flex;gap:8px;');
-    const go = () => {
-      const r = kcParsePgn(ta.value);
+    // Chess.com アプリの「ゲームを共有する」→「コピー」の文章（〇〇 vs 〇〇 - https://www.chess.com/game/live/123…）
+    const ccInfo = (text) => {
+      const lm = String(text || '').match(/chess\.com\/(?:[a-z]{2}\/)?game\/(live|daily)\/(\d+)/i);
+      if (!lm) return null;
+      const vm = String(text).match(/([A-Za-z0-9_-]{2,30})\s+vs\.?\s+([A-Za-z0-9_-]{2,30})/);
+      return { type: lm[1].toLowerCase(), id: lm[2], white: vm ? vm[1] : '', black: vm ? vm[2] : '' };
+    };
+    // 共有の文章の行（リンクや「この #chess 対戦に注目」など）を取り除いて、手順だけにする
+    const stripShare = (text) => String(text || '').split('\n').filter(l => !/chess\.com\/|#chess|\svs\.?\s/i.test(l)).join('\n');
+    // Chess.com の公開データから、その対局の棋譜（名前つき）を探してくる
+    const ccFetch = async (info) => {
+      const users = [info.white, info.black].filter(Boolean);
+      for (const u of users) {
+        let months = [];
+        try {
+          const a = await fetch('https://api.chess.com/pub/player/' + encodeURIComponent(u.toLowerCase()) + '/games/archives');
+          if (a.ok) months = ((await a.json()).archives || []).slice(-3).reverse();
+        } catch (e) {}
+        for (const url of months) {
+          try {
+            const g = await fetch(url);
+            if (!g.ok) continue;
+            const hit = ((await g.json()).games || []).find(x => x && x.url && String(x.url).split('/').pop() === info.id);
+            if (hit && hit.pgn) return hit.pgn;
+          } catch (e) {}
+        }
+      }
+      return null;
+    };
+    let busy = false;
+    const go = async () => {
+      if (busy) return;
+      let text = ta.value;
+      const cc = ccInfo(text);
+      if (cc) {
+        const rest = stripShare(text);
+        if (kcParsePgn(rest).error) {
+          // 手順が貼られていないので、Chess.com から取ってくる
+          busy = true; msg.style.color = 'var(--text-muted)';
+          msg.textContent = T('Chess.com から棋譜を取ってきています…', 'Getting the game from Chess.com...');
+          let pgn = null;
+          try { pgn = await ccFetch(cc); } catch (e) { pgn = null; }
+          busy = false; msg.style.color = '';
+          if (!pgn) {
+            msg.textContent = T('Chess.com から棋譜を取ってこられませんでした。対局が終わってすぐだと、まだ取れないことがあります。少し待つか、🔍の画面で棋譜をコピーして、このリンクの文章の下に貼ってね。',
+              'Could not get the game from Chess.com. Right after a game it may not be available yet. Wait a little, or copy the moves from the 🔍 screen and paste them below this link.');
+            return;
+          }
+          text = pgn; ta.value = pgn;
+        } else {
+          text = rest;
+          if (!wIn.value.trim() && cc.white) wIn.value = cc.white;
+          if (!bIn.value.trim() && cc.black) bIn.value = cc.black;
+        }
+        msg.textContent = '';
+      }
+      const r = kcParsePgn(text);
       if (!r.error) {
         if (!r.whiteName) r.whiteName = wIn.value.trim();
         if (!r.blackName) r.blackName = bIn.value.trim();
@@ -8443,7 +8499,86 @@ if (banner) banner.style.visibility = p.superhard ? 'visible' : 'hidden';
   function hideBeginnerJeneSpeech() {
     const row = document.getElementById('beginnerJeneSpeechRow');
     if (row) row.style.visibility = 'hidden';
+    kcVoiceStop();
   }
+
+  // ===== 🔊 はじめてモード：ジーンの吹き出しを読み上げる =====
+  // スマホ・ブラウザに入っている読み上げの声を使う。最初は「オフ」。使えない環境（Androidアプリなど）ではボタンを出さない
+  const kcVoiceOK = typeof window !== 'undefined' && 'speechSynthesis' in window && typeof SpeechSynthesisUtterance !== 'undefined';
+  let kcVoiceOn = false;
+  try { kcVoiceOn = localStorage.getItem('kcBeginnerVoice') === '1'; } catch (e) {}
+  function kcVoicePick(lang) {
+    if (!kcVoiceOK) return null;
+    const vs = speechSynthesis.getVoices() || [];
+    const pre = lang === 'ja' ? 'ja' : 'en';
+    const list = vs.filter(v => String(v.lang || '').toLowerCase().replace('_', '-').indexOf(pre) === 0);
+    if (!list.length) return null;
+    // ジーンは男の子なので、男性の声を先に選ぶ（高めにして、少年っぽくする）
+    const like = lang === 'ja' ? /otoya|hattori|ichiro|keita|daichi|naoki|male|男性/i : /daniel|alex|aaron|fred|arthur|david|guy|mark|rishi|google uk english male|(^|\W)male/i;
+    const boy = list.find(v => like.test(v.name) && !/female|女性/i.test(v.name));
+    return boy || list.find(v => v.localService) || list[0];
+  }
+  function kcVoiceText(t, lang) {
+    let s = String(t || '').replace(/[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}\u{FE0F}]/gu, '');
+    if (lang === 'ja') {
+      const L = { a: 'エー', b: 'ビー', c: 'シー', d: 'ディー', e: 'イー', f: 'エフ', g: 'ジー', h: 'エイチ' };
+      s = s.replace(/\b([a-h])([1-8])\b/g, (all, f, r) => L[f] + r);
+    }
+    return s.trim();
+  }
+  function kcVoiceStop() { try { if (kcVoiceOK) speechSynthesis.cancel(); } catch (e) {} }
+  function kcVoiceSay(text) {
+    if (!kcVoiceOK || !kcVoiceOn) return;
+    const lang = LANG === 'ja' ? 'ja' : 'en';
+    const t = kcVoiceText(text, lang);
+    if (!t) return;
+    try {
+      speechSynthesis.cancel();
+      const u = new SpeechSynthesisUtterance(t);
+      u.lang = lang === 'ja' ? 'ja-JP' : 'en-US';
+      const v = kcVoicePick(lang); if (v) u.voice = v;
+      // 男性の声なら高めにして少年っぽく。見つからず女性の声になったときは、少し低めにする
+      const male = v && /otoya|hattori|ichiro|keita|daichi|naoki|daniel|alex|aaron|fred|arthur|david|guy|mark|rishi|male|男性/i.test(v.name) && !/female|女性/i.test(v.name);
+      u.pitch = male ? 1.3 : 0.9; u.rate = lang === 'ja' ? 1.05 : 1.0; u.volume = 1;
+      speechSynthesis.speak(u);
+    } catch (e) {}
+  }
+  (function kcVoiceSetup() {
+    const btn = document.getElementById('btnBeginnerVoice');
+    const bubble = document.getElementById('beginnerJeneSpeechBubble');
+    const row = document.getElementById('beginnerJeneSpeechRow');
+    if (!btn || !bubble || !kcVoiceOK) return;
+    const label = () => {
+      const ja = LANG === 'ja';
+      btn.textContent = kcVoiceOn ? (ja ? '🔊 ジーンの声：オン' : '🔊 Jene\'s voice: On') : (ja ? '🔇 ジーンの声：オフ' : '🔇 Jene\'s voice: Off');
+    };
+    // 声が1つも入っていない環境（Androidアプリの中など）では、ボタンを出さない
+    const showIfVoices = () => { try { if ((speechSynthesis.getVoices() || []).length) { btn.style.display = ''; label(); } } catch (e) {} };
+    showIfVoices();
+    try { speechSynthesis.addEventListener('voiceschanged', showIfVoices); } catch (e) { try { speechSynthesis.onvoiceschanged = showIfVoices; } catch (_) {} }
+    btn.onclick = () => {
+      kcVoiceOn = !kcVoiceOn;
+      try { localStorage.setItem('kcBeginnerVoice', kcVoiceOn ? '1' : '0'); } catch (e) {}
+      label();
+      if (kcVoiceOn) { if (row && row.style.visibility !== 'hidden') kcVoiceSay(bubble.textContent); }
+      else kcVoiceStop();
+    };
+    const langBtn = document.getElementById('langBtn');
+    if (langBtn) langBtn.addEventListener('click', () => setTimeout(label, 0));
+    // 吹き出しの文が変わったら読む（続けて書きかえられたときは最後の文だけ）
+    let tm = null;
+    new MutationObserver(() => {
+      clearTimeout(tm);
+      tm = setTimeout(() => { if (row && row.style.visibility !== 'hidden') kcVoiceSay(bubble.textContent); }, 60);
+    }).observe(bubble, { childList: true, characterData: true, subtree: true });
+    // 吹き出しをタップすると、もう一度読む
+    bubble.style.cursor = 'pointer';
+    bubble.addEventListener('click', () => kcVoiceSay(bubble.textContent));
+    // ほかの画面に行ったら止める
+    document.addEventListener('visibilitychange', () => { if (document.hidden) kcVoiceStop(); });
+    const box = document.getElementById('beginnerModeBox');
+    if (box) box.addEventListener('toggle', () => { if (!box.open) kcVoiceStop(); });
+  })();
 
   let beginnerChess = null;
   let beginnerState = {
