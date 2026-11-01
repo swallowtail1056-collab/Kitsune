@@ -144,6 +144,8 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
   <section id="moveSummary" style="margin:24px 0 8px;background:var(--card-bg,#fffaf0);border:2px solid var(--brown-light,#d8b88a);border-radius:12px;padding:14px 18px;line-height:1.75;">
     <h2 class="lang-element-ja" style="font-size:1.15rem;margin:0 0 8px;">📜 手順と解説のまとめ</h2>
     <h2 class="lang-element-en" style="font-size:1.15rem;margin:0 0 8px;">📜 All Moves Explained</h2>
+    <p class="lang-element-ja" style="margin:0 0 10px;font-size:0.9rem;color:var(--text-sub,#6b4a2b);">👆 手をタップすると、その局面を盤で見られます。</p>
+    <p class="lang-element-en" style="margin:0 0 10px;font-size:0.9rem;color:var(--text-sub,#6b4a2b);">👆 Tap a move to see that position on the board.</p>
     <p class="lang-element-ja" style="margin:0 0 8px;">フレンチ・アドバンス変化のレッスンを始めるよ！このページでは、黒が5...Qb6で白のd4とb2に圧力をかけ、白が6.a3でクイーンサイドのスペースを広げようとする、現代の本流の形を見ていくよ。白と黒がポーンの鎖をめぐってどう戦うのかがポイントなんだ。一手ずつジーンと一緒に、なぜその手を指すのかを学んでいこう。</p>
     <p class="lang-element-en" style="margin:0 0 8px;">Let's start the French Advance Variation lesson! On this page we follow a modern main line in which Black pressures d4 and b2 with 5...Qb6 and White tries to gain queenside space with 6.a3. The key is how both sides fight over the pawn chain. Jene will walk you through why each move is played, one step at a time.</p>
     <ul class="lang-element-ja" style="margin:0;padding-left:0;list-style:none;">
@@ -184,6 +186,10 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
       <li style="margin:0 0 8px;"><strong>8...Bd7</strong> Black develops the bishop to d7. Black's bishop covers the empty b5 and a4 squares and joins the queenside fight. This clears b8, c8 and d8, so Black could also castle queenside on the next move.</li>
       <li style="margin:0 0 8px;"><strong>9. Be2</strong> White develops the bishop to e2. This clears f1 and g1, so White can castle on the next move. Once the king is safe, White will look to break up the queenside with b3 or b4, or to attack on the kingside. A typical plan for Black is to keep the queenside chain intact while bringing the g8 knight to f5 via e7 to pressure White's d4 pawn. That's the main line — try continuing the game yourself from here!</li>
     </ul>
+    <div style="text-align:center;margin-top:10px;">
+      <button type="button" class="ms-back lang-element-ja" style="margin:0 auto;background:var(--brown,#7c4a1e);color:#fff;border:none;border-radius:20px;padding:8px 18px;font-family:inherit;font-weight:700;cursor:pointer;">⬆ 盤に戻る</button>
+      <button type="button" class="ms-back lang-element-en" style="margin:0 auto;background:var(--brown,#7c4a1e);color:#fff;border:none;border-radius:20px;padding:8px 18px;font-family:inherit;font-weight:700;cursor:pointer;">⬆ Back to the board</button>
+    </div>
   </section>
 
   <footer>© KitsuneChess</footer>
@@ -491,5 +497,25 @@ document.addEventListener('DOMContentLoaded', function(){
 });
 </script>
 
+<script>
+// 📜 手順と解説のまとめ：手をタップすると、その局面を盤に出して盤まで戻る
+(function(){
+  var sec = document.getElementById('moveSummary'); if (!sec) return;
+  var wrap = document.querySelector('.board-wrap');
+  function toBoard(){ if (!wrap) return; var y = wrap.getBoundingClientRect().top + window.pageYOffset - 70; window.scrollTo({ top: Math.max(0, y), behavior: 'smooth' }); }
+  var idx = []; LESSON_STEPS.forEach(function(s, i){ if (s.move) idx.push(i); });
+  sec.querySelectorAll('ul').forEach(function(ul){
+    Array.prototype.forEach.call(ul.children, function(li, k){
+      if (idx[k] == null) return;
+      li.style.cursor = 'pointer';
+      li.addEventListener('click', function(e){
+        if (e.target.closest && e.target.closest('a')) return; // 文中のリンクはそのまま
+        currentStep = idx[k]; renderStep(); toBoard();
+      });
+    });
+  });
+  sec.querySelectorAll('.ms-back').forEach(function(b){ b.addEventListener('click', toBoard); });
+})();
+</script>
 </body>
 </html>

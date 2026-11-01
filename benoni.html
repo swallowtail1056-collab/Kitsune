@@ -144,6 +144,8 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
   <section id="moveSummary" style="margin:24px 0 8px;background:var(--card-bg,#fffaf0);border:2px solid var(--brown-light,#d8b88a);border-radius:12px;padding:14px 18px;line-height:1.75;">
     <h2 class="lang-element-ja" style="font-size:1.15rem;margin:0 0 8px;">📜 手順と解説のまとめ</h2>
     <h2 class="lang-element-en" style="font-size:1.15rem;margin:0 0 8px;">📜 All Moves Explained</h2>
+    <p class="lang-element-ja" style="margin:0 0 10px;font-size:0.9rem;color:var(--text-sub,#6b4a2b);">👆 手をタップすると、その局面を盤で見られます。</p>
+    <p class="lang-element-en" style="margin:0 0 10px;font-size:0.9rem;color:var(--text-sub,#6b4a2b);">👆 Tap a move to see that position on the board.</p>
     <p class="lang-element-ja" style="margin:0 0 8px;">ベノニ・ディフェンスのレッスンを始めるよ！このページでは、黒がe6とexd5で中央のポーンを交換する、モダン・ベノニの形を見ていくよ。白が中央、黒がクイーンサイドで多くのポーンを持つ形になり、お互いにどう戦うのかがポイントなんだ。一手ずつジーンと一緒に、なぜその手を指すのかを学んでいこう。</p>
     <p class="lang-element-en" style="margin:0 0 8px;">Let's start the Benoni Defense lesson! On this page we follow the Modern Benoni, where Black trades in the center with ...e6 and ...exd5. White ends up with more pawns in the center and Black with more on the queenside, and the key is how each side fights from there. Jene will walk you through why each move is played, one step at a time.</p>
     <ul class="lang-element-ja" style="margin:0;padding-left:0;list-style:none;">
@@ -188,6 +190,10 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
       <li style="margin:0 0 8px;"><strong>9...Re8</strong> Black moves the rook to e8. Black's rook hits White's e4 pawn along the e-file (the column of squares from e1 to e8), so Black now attacks e4 twice together with the f6 knight. Right now White is defending e4 only with the c3 knight.</li>
       <li style="margin:0 0 8px;"><strong>10. Nd2</strong> White moves the knight to d2. White's knight defends the e4 pawn, giving White two defenders there. Later, the knight can also go to c4 to put pressure on Black's d6 pawn. The typical plan is for White to use the central space and look for a chance to push e5, while Black counterattacks by advancing the queenside pawns with ...a6 and ...b5. That's the main line — try continuing the game yourself from here!</li>
     </ul>
+    <div style="text-align:center;margin-top:10px;">
+      <button type="button" class="ms-back lang-element-ja" style="margin:0 auto;background:var(--brown,#7c4a1e);color:#fff;border:none;border-radius:20px;padding:8px 18px;font-family:inherit;font-weight:700;cursor:pointer;">⬆ 盤に戻る</button>
+      <button type="button" class="ms-back lang-element-en" style="margin:0 auto;background:var(--brown,#7c4a1e);color:#fff;border:none;border-radius:20px;padding:8px 18px;font-family:inherit;font-weight:700;cursor:pointer;">⬆ Back to the board</button>
+    </div>
   </section>
 
   <footer>© KitsuneChess</footer>
@@ -500,5 +506,25 @@ document.addEventListener('DOMContentLoaded', function(){
 });
 </script>
 
+<script>
+// 📜 手順と解説のまとめ：手をタップすると、その局面を盤に出して盤まで戻る
+(function(){
+  var sec = document.getElementById('moveSummary'); if (!sec) return;
+  var wrap = document.querySelector('.board-wrap');
+  function toBoard(){ if (!wrap) return; var y = wrap.getBoundingClientRect().top + window.pageYOffset - 70; window.scrollTo({ top: Math.max(0, y), behavior: 'smooth' }); }
+  var idx = []; LESSON_STEPS.forEach(function(s, i){ if (s.move) idx.push(i); });
+  sec.querySelectorAll('ul').forEach(function(ul){
+    Array.prototype.forEach.call(ul.children, function(li, k){
+      if (idx[k] == null) return;
+      li.style.cursor = 'pointer';
+      li.addEventListener('click', function(e){
+        if (e.target.closest && e.target.closest('a')) return; // 文中のリンクはそのまま
+        currentStep = idx[k]; renderStep(); toBoard();
+      });
+    });
+  });
+  sec.querySelectorAll('.ms-back').forEach(function(b){ b.addEventListener('click', toBoard); });
+})();
+</script>
 </body>
 </html>

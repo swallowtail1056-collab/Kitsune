@@ -144,6 +144,8 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
   <section id="moveSummary" style="margin:24px 0 8px;background:var(--card-bg,#fffaf0);border:2px solid var(--brown-light,#d8b88a);border-radius:12px;padding:14px 18px;line-height:1.75;">
     <h2 class="lang-element-ja" style="font-size:1.15rem;margin:0 0 8px;">📜 手順と解説のまとめ</h2>
     <h2 class="lang-element-en" style="font-size:1.15rem;margin:0 0 8px;">📜 All Moves Explained</h2>
+    <p class="lang-element-ja" style="margin:0 0 10px;font-size:0.9rem;color:var(--text-sub,#6b4a2b);">👆 手をタップすると、その局面を盤で見られます。</p>
+    <p class="lang-element-en" style="margin:0 0 10px;font-size:0.9rem;color:var(--text-sub,#6b4a2b);">👆 Tap a move to see that position on the board.</p>
     <p class="lang-element-ja" style="margin:0 0 8px;">カタラン・オープン変化のレッスンを始めるよ！このページでは、黒が4...dxc4とc4のポーンを取り、白がクイーンで取り返す形を見ていくよ。白が先に駒を展開してからポーンを取り返す流れと、黒のクイーンサイドにできる弱点がポイントなんだ。一手ずつジーンと一緒に、なぜその手を指すのかを学んでいこう。</p>
     <p class="lang-element-en" style="margin:0 0 8px;">Let's start the Catalan Open Variation lesson! On this page we follow the line where Black takes on c4 with 4...dxc4 and White wins the pawn back with the queen. The key ideas are how White develops first and then recovers the pawn, and the weaknesses that appear on Black's queenside. Jene will walk you through why each move is played, one step at a time.</p>
     <ul class="lang-element-ja" style="margin:0;padding-left:0;list-style:none;">
@@ -188,6 +190,10 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
       <li style="margin:0 0 8px;"><strong>9...Bb7</strong> Black develops the bishop to b7. Black's bishop takes up the long diagonal, hits White's f3 knight, and faces off against the g2 bishop. White's f3 knight is defended by the e2 pawn and the g2 bishop.</li>
       <li style="margin:0 0 8px;"><strong>10. Bd2</strong> White develops the bishop to d2. White's bishop also covers the still-empty a5 square, preparing to go there and put pressure on Black's queenside. Because Black has pushed ...a6 and ...b5, Black can no longer cover squares like c6 with a pawn, and White will aim at them. This position was also reached in a 2007 game between Kramnik and Anand. That's the main line — try continuing the game yourself from here!</li>
     </ul>
+    <div style="text-align:center;margin-top:10px;">
+      <button type="button" class="ms-back lang-element-ja" style="margin:0 auto;background:var(--brown,#7c4a1e);color:#fff;border:none;border-radius:20px;padding:8px 18px;font-family:inherit;font-weight:700;cursor:pointer;">⬆ 盤に戻る</button>
+      <button type="button" class="ms-back lang-element-en" style="margin:0 auto;background:var(--brown,#7c4a1e);color:#fff;border:none;border-radius:20px;padding:8px 18px;font-family:inherit;font-weight:700;cursor:pointer;">⬆ Back to the board</button>
+    </div>
   </section>
 
   <footer>© KitsuneChess</footer>
@@ -504,5 +510,25 @@ document.addEventListener('DOMContentLoaded', function(){
 });
 </script>
 
+<script>
+// 📜 手順と解説のまとめ：手をタップすると、その局面を盤に出して盤まで戻る
+(function(){
+  var sec = document.getElementById('moveSummary'); if (!sec) return;
+  var wrap = document.querySelector('.board-wrap');
+  function toBoard(){ if (!wrap) return; var y = wrap.getBoundingClientRect().top + window.pageYOffset - 70; window.scrollTo({ top: Math.max(0, y), behavior: 'smooth' }); }
+  var idx = []; LESSON_STEPS.forEach(function(s, i){ if (s.move) idx.push(i); });
+  sec.querySelectorAll('ul').forEach(function(ul){
+    Array.prototype.forEach.call(ul.children, function(li, k){
+      if (idx[k] == null) return;
+      li.style.cursor = 'pointer';
+      li.addEventListener('click', function(e){
+        if (e.target.closest && e.target.closest('a')) return; // 文中のリンクはそのまま
+        currentStep = idx[k]; renderStep(); toBoard();
+      });
+    });
+  });
+  sec.querySelectorAll('.ms-back').forEach(function(b){ b.addEventListener('click', toBoard); });
+})();
+</script>
 </body>
 </html>

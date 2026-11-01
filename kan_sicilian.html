@@ -141,6 +141,8 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
   <section id="moveSummary" style="margin:24px 0 8px;background:var(--card-bg,#fffaf0);border:2px solid var(--brown-light,#d8b88a);border-radius:12px;padding:14px 18px;line-height:1.75;">
     <h2 class="lang-element-ja" style="font-size:1.15rem;margin:0 0 8px;">📜 手順と解説のまとめ</h2>
     <h2 class="lang-element-en" style="font-size:1.15rem;margin:0 0 8px;">📜 All Moves Explained</h2>
+    <p class="lang-element-ja" style="margin:0 0 10px;font-size:0.9rem;color:var(--text-sub,#6b4a2b);">👆 手をタップすると、その局面を盤で見られます。</p>
+    <p class="lang-element-en" style="margin:0 0 10px;font-size:0.9rem;color:var(--text-sub,#6b4a2b);">👆 Tap a move to see that position on the board.</p>
     <p class="lang-element-ja" style="margin:0 0 8px;">カン・シシリアンのレッスンを始めるよ！このページでは、白が5.Bd3で落ち着いて構え、黒が5...Bc5で白のナイトに働きかける変化を見ていくよ。お互いの駒の置き場所をめぐる細かな駆け引きがポイントなんだ。一手ずつジーンと一緒に、なぜその手を指すのかを学んでいこう。</p>
     <p class="lang-element-en" style="margin:0 0 8px;">Let's start the Kan Sicilian lesson! On this page we follow the line where White sets up calmly with 5.Bd3 and Black challenges White's knight with 5...Bc5. The key is the subtle battle over where each side's pieces belong. Jene will walk you through why each move is played, one step at a time.</p>
     <ul class="lang-element-ja" style="margin:0;padding-left:0;list-style:none;">
@@ -175,6 +177,10 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
       <li style="margin:0 0 8px;"><strong>7. Qg4</strong> White brings the queen to g4. White's queen attacks the undefended g7 pawn. White brings the queen out early to stir things up on Black's kingside. The trade-off is that moving the queen delays the development of White's other pieces.</li>
       <li style="margin:0 0 8px;"><strong>7...g6</strong> Black pushes the pawn to g6. Black moves the pawn out of the queen's attack, and the g6 pawn is protected by the f7 and h7 pawns. The downside is that the f6 and h6 squares become weak and easier for White's dark-squared bishop to use. A typical continuation is for White to bring the queen back to e2 while Black develops with ...d6 and ...Nd7. That's the main line — try continuing the game yourself from here!</li>
     </ul>
+    <div style="text-align:center;margin-top:10px;">
+      <button type="button" class="ms-back lang-element-ja" style="margin:0 auto;background:var(--brown,#7c4a1e);color:#fff;border:none;border-radius:20px;padding:8px 18px;font-family:inherit;font-weight:700;cursor:pointer;">⬆ 盤に戻る</button>
+      <button type="button" class="ms-back lang-element-en" style="margin:0 auto;background:var(--brown,#7c4a1e);color:#fff;border:none;border-radius:20px;padding:8px 18px;font-family:inherit;font-weight:700;cursor:pointer;">⬆ Back to the board</button>
+    </div>
   </section>
 
   <footer>© KitsuneChess</footer>
@@ -456,5 +462,25 @@ document.addEventListener('DOMContentLoaded', function(){
 });
 </script>
 
+<script>
+// 📜 手順と解説のまとめ：手をタップすると、その局面を盤に出して盤まで戻る
+(function(){
+  var sec = document.getElementById('moveSummary'); if (!sec) return;
+  var wrap = document.querySelector('.board-wrap');
+  function toBoard(){ if (!wrap) return; var y = wrap.getBoundingClientRect().top + window.pageYOffset - 70; window.scrollTo({ top: Math.max(0, y), behavior: 'smooth' }); }
+  var idx = []; LESSON_STEPS.forEach(function(s, i){ if (s.move) idx.push(i); });
+  sec.querySelectorAll('ul').forEach(function(ul){
+    Array.prototype.forEach.call(ul.children, function(li, k){
+      if (idx[k] == null) return;
+      li.style.cursor = 'pointer';
+      li.addEventListener('click', function(e){
+        if (e.target.closest && e.target.closest('a')) return; // 文中のリンクはそのまま
+        currentStep = idx[k]; renderStep(); toBoard();
+      });
+    });
+  });
+  sec.querySelectorAll('.ms-back').forEach(function(b){ b.addEventListener('click', toBoard); });
+})();
+</script>
 </body>
 </html>

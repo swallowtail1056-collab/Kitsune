@@ -137,6 +137,8 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
   <section id="moveSummary" style="margin:24px 0 8px;background:var(--card-bg,#fffaf0);border:2px solid var(--brown-light,#d8b88a);border-radius:12px;padding:14px 18px;line-height:1.75;">
     <h2 class="lang-element-ja" style="font-size:1.15rem;margin:0 0 8px;">📜 手順と解説のまとめ</h2>
     <h2 class="lang-element-en" style="font-size:1.15rem;margin:0 0 8px;">📜 All Moves Explained</h2>
+    <p class="lang-element-ja" style="margin:0 0 10px;font-size:0.9rem;color:var(--text-sub,#6b4a2b);">👆 手をタップすると、その局面を盤で見られます。</p>
+    <p class="lang-element-en" style="margin:0 0 10px;font-size:0.9rem;color:var(--text-sub,#6b4a2b);">👆 Tap a move to see that position on the board.</p>
     <p class="lang-element-ja" style="margin:0 0 8px;">クイーンズ・ギャンビット交換変化のレッスンを始めるよ！今回は最初のポーンの一歩から、各駒がどこをねらって動いているのかを一緒に追いかけていくよ。派手な攻めはないけれど、ポーンの形を読む力がぐんと伸びる変化なんだ。ジーンと一緒に、一手ずつ「なぜその手を指すのか」を学んでいこう。</p>
     <p class="lang-element-en" style="margin:0 0 8px;">Let's start the Queen's Gambit Exchange Variation lesson! We'll follow the game from the very first pawn push and see what each piece is aiming at. There are no flashy attacks here, but this variation will sharpen your ability to read pawn structures. Jene will explain why each move is played, one step at a time.</p>
     <ul class="lang-element-ja" style="margin:0;padding-left:0;list-style:none;">
@@ -169,6 +171,10 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
       <li style="margin:0 0 8px;"><strong>6...c6</strong> Black plays 6...c6, solidly defending the d5 pawn. Now White's d4 and e3 pawns face Black's d5 and c6 pawns, a setup called the "Carlsbad structure." From here, White often plans the "Minority Attack": pushing its smaller number of queenside pawns with b4–b5 to hit Black's pawns and create a weakness in Black's pawn structure.</li>
       <li style="margin:0 0 8px;"><strong>7. Bd3</strong> White develops the bishop to d3. It aims toward the h7 pawn while also getting White ready to castle. That's the main line — from here plans like the b4–b5 Minority Attack begin. Try continuing the game yourself!</li>
     </ul>
+    <div style="text-align:center;margin-top:10px;">
+      <button type="button" class="ms-back lang-element-ja" style="margin:0 auto;background:var(--brown,#7c4a1e);color:#fff;border:none;border-radius:20px;padding:8px 18px;font-family:inherit;font-weight:700;cursor:pointer;">⬆ 盤に戻る</button>
+      <button type="button" class="ms-back lang-element-en" style="margin:0 auto;background:var(--brown,#7c4a1e);color:#fff;border:none;border-radius:20px;padding:8px 18px;font-family:inherit;font-weight:700;cursor:pointer;">⬆ Back to the board</button>
+    </div>
   </section>
 
   <footer>© KitsuneChess</footer>
@@ -436,5 +442,25 @@ document.addEventListener('DOMContentLoaded', function(){
 });
 </script>
 
+<script>
+// 📜 手順と解説のまとめ：手をタップすると、その局面を盤に出して盤まで戻る
+(function(){
+  var sec = document.getElementById('moveSummary'); if (!sec) return;
+  var wrap = document.querySelector('.board-wrap');
+  function toBoard(){ if (!wrap) return; var y = wrap.getBoundingClientRect().top + window.pageYOffset - 70; window.scrollTo({ top: Math.max(0, y), behavior: 'smooth' }); }
+  var idx = []; LESSON_STEPS.forEach(function(s, i){ if (s.move) idx.push(i); });
+  sec.querySelectorAll('ul').forEach(function(ul){
+    Array.prototype.forEach.call(ul.children, function(li, k){
+      if (idx[k] == null) return;
+      li.style.cursor = 'pointer';
+      li.addEventListener('click', function(e){
+        if (e.target.closest && e.target.closest('a')) return; // 文中のリンクはそのまま
+        currentStep = idx[k]; renderStep(); toBoard();
+      });
+    });
+  });
+  sec.querySelectorAll('.ms-back').forEach(function(b){ b.addEventListener('click', toBoard); });
+})();
+</script>
 </body>
 </html>
