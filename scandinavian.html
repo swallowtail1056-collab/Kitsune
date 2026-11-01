@@ -139,6 +139,51 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
     <div class="board-grid" id="boardGrid"></div>
   </div>
 
+
+  <!-- 手順と解説のまとめ（ページを開いたときから全部読めるように） -->
+  <section id="moveSummary" style="margin:24px 0 8px;background:var(--card-bg,#fffaf0);border:2px solid var(--brown-light,#d8b88a);border-radius:12px;padding:14px 18px;line-height:1.75;">
+    <h2 class="lang-element-ja" style="font-size:1.15rem;margin:0 0 8px;">📜 手順と解説のまとめ</h2>
+    <h2 class="lang-element-en" style="font-size:1.15rem;margin:0 0 8px;">📜 All Moves Explained</h2>
+    <p class="lang-element-ja" style="margin:0 0 8px;">スカンジナビアン・ディフェンスのレッスンを始めるよ！このページでは、黒が3...Qa5とクイーンを下げる、いちばんよく指される本線を見ていくよ。早く出た黒のクイーンを白がどう追い回し、黒がどう固めるのかがポイントなんだ。一手ずつジーンと一緒に、なぜその手を指すのかを学んでいこう。</p>
+    <p class="lang-element-en" style="margin:0 0 8px;">Let's start the Scandinavian Defense lesson! On this page we follow the most popular main line, where Black retreats the queen with 3...Qa5. The key is how White chases Black's early queen and how Black builds a solid position. Jene will walk you through why each move is played, one step at a time.</p>
+    <ul class="lang-element-ja" style="margin:0;padding-left:0;list-style:none;">
+      <li style="margin:0 0 8px;"><strong>1. e4</strong> 白はポーンをe4へ進めるよ。白は中央のマスを押さえながら、ビショップとクイーンが動く道を開けるんだ。</li>
+      <li style="margin:0 0 8px;"><strong>1...d5（スカンジナビアン！）</strong> ここがスカンジナビアン・ディフェンスの一手！黒はポーンをd5へ進めて、白のe4のポーンにすぐ挑むよ。黒は1手目から中央で戦いを始めて、白に大きな中央を作らせないんだ。</li>
+      <li style="margin:0 0 8px;"><strong>2. exd5</strong> 白はe4のポーンでd5に来た黒のポーンを取るよ。白はこれで、黒のポーンを1つ取った形になったんだ。</li>
+      <li style="margin:0 0 8px;"><strong>2...Qxd5</strong> 黒はクイーンでd5のポーンを取り返すよ。これで白と黒の駒の数は同じに戻ったんだ。ただし黒のクイーンは早くから盤の真ん中に出たので、白の駒に追われやすくなっているよ。 黒はこの手の代わりに、2...Nf6とナイトを出してから、あとでd5のポーンを取り返すこともできるよ。黒はクイーンを早く出さずに済む代わりに、ポーンを取り返すのに少し時間がかかるんだ。</li>
+      <li style="margin:0 0 8px;"><strong>3. Nc3</strong> 白はナイトをc3へ進めて、d5のクイーンを攻撃するよ。白は駒を展開しながら黒のクイーンを追い回して、そのあいだに展開で先を行こうとするんだ。</li>
+      <li style="margin:0 0 8px;"><strong>3...Qa5</strong> 黒はクイーンをa5へ動かすよ。黒のクイーンはa5に下がって、白の駒に追われにくい場所に落ち着くんだ。黒のクイーンはa5からe1までの斜めの列にも利いていて、白のdのポーンが動くと、c3のナイトをピンできるよ。 黒はこの手の代わりに、3...Qd6や3...Qd8とクイーンを下げることもできるよ。黒はどのマスに下げるかで、そのあとの駒の組み立て方が変わってくるんだ。</li>
+      <li style="margin:0 0 8px;"><strong>4. d4</strong> 白はポーンをd4へ進めるよ。白は中央のマスを押さえながら、c1のビショップの道を開けるんだ。白のd2のポーンが動いたので、c3のナイトは今、a5のクイーンにピンされているよ。</li>
+      <li style="margin:0 0 8px;"><strong>4...c6</strong> 黒はポーンをc6へ進めるよ。黒はb5とd5のマスを押さえて、白のナイトがそこへ入ってくるのを防ぐんだ。黒のポーンの形は、<a href='caro_kann.html'>カロ・カン・ディフェンス</a>に似た固い形になっていくよ。</li>
+      <li style="margin:0 0 8px;"><strong>5. Nf3</strong> 白はナイトをf3へ進めるよ。白のナイトはd4のポーンを守り、e5のマスにも利かせるんだ。</li>
+      <li style="margin:0 0 8px;"><strong>5...Nf6</strong> 黒はナイトをf6へ進めるよ。黒のナイトはd5とe4のマスに利かせて、キングサイドの展開を進めるんだ。</li>
+      <li style="margin:0 0 8px;"><strong>6. Bc4</strong> 白はビショップをc4へ進めるよ。白のビショップはa2からg8への斜めの列で、黒のf7のマスをねらうんだ。これでf1のマスが空いて、白はキャスリングの準備も進めているよ。</li>
+      <li style="margin:0 0 8px;"><strong>6...Bf5</strong> 黒はビショップをf5へ進めるよ。黒はeのポーンを突く前に、c8のビショップを外へ出しておくんだ。黒のビショップはf5から、白のc2のポーンもねらっているよ。</li>
+      <li style="margin:0 0 8px;"><strong>7. Bd2</strong> 白はビショップをd2へ進めるよ。白のビショップはc3のナイトのピンを外して、ナイトが自由に動けるようにするんだ。白のナイトがd5などへ動けば、白はd2のビショップでa5のクイーンをねらえるようになるよ。</li>
+      <li style="margin:0 0 8px;"><strong>7...e6</strong> 黒はポーンをe6へ進めるよ。黒はd5のマスをもう一つ押さえて、白のナイトがd5に入ってくるのを防ぐんだ。黒はf8のビショップの道も開けているよ。</li>
+      <li style="margin:0 0 8px;"><strong>8. Qe2</strong> 白はクイーンをe2へ動かすよ。白はこれで、b1・c1・d1のマスがすべて空いて、クイーンサイドにキャスリングする道も開けたんだ。白のクイーンはe2から、c4のビショップも守っているよ。</li>
+      <li style="margin:0 0 8px;"><strong>8...Bb4</strong> 黒はビショップをb4へ進めるよ。黒のビショップはc3のナイトに圧力をかけて、白のナイトを動きにくくするんだ。これでf8のマスも空いて、黒はキャスリングの準備を進めるよ。白は展開の速さを生かして攻め、黒はカロ・カンに似た固いポーンの形で守りながら反撃をねらうのが典型的な流れだよ。これで本譜は一段落、続きはぜひ自分で指してみてね！</li>
+    </ul>
+    <ul class="lang-element-en" style="margin:0;padding-left:0;list-style:none;">
+      <li style="margin:0 0 8px;"><strong>1. e4</strong> White pushes the pawn to e4. White takes control of central squares and opens lines for the bishop and queen.</li>
+      <li style="margin:0 0 8px;"><strong>1...d5 (Scandinavian!)</strong> Here's the Scandinavian Defense! Black pushes the pawn to d5 and challenges White's e4 pawn right away. Black starts the fight in the center from move one and does not let White build a big center.</li>
+      <li style="margin:0 0 8px;"><strong>2. exd5</strong> White's e4 pawn captures Black's pawn on d5. White is now a pawn up for the moment.</li>
+      <li style="margin:0 0 8px;"><strong>2...Qxd5</strong> Black's queen recaptures the pawn on d5. White and Black now have the same material again. However, Black's queen has come out to the middle of the board early, so it can easily be chased by White's pieces. Instead of this move, Black can also play 2...Nf6 and win the d5 pawn back later. Black avoids bringing the queen out early, but it takes a little longer to regain the pawn.</li>
+      <li style="margin:0 0 8px;"><strong>3. Nc3</strong> White develops the knight to c3 and attacks the queen on d5. White develops while chasing Black's queen, trying to get ahead in development.</li>
+      <li style="margin:0 0 8px;"><strong>3...Qa5</strong> Black moves the queen to a5. Black's queen settles on a5, where it is harder for White's pieces to chase. Black's queen also lies on the diagonal from a5 to e1, so once White's d-pawn moves, it will pin the c3 knight. Instead of this move, Black can also retreat the queen with 3...Qd6 or 3...Qd8. Which square Black chooses changes how Black builds up the pieces afterward.</li>
+      <li style="margin:0 0 8px;"><strong>4. d4</strong> White pushes the pawn to d4. White claims a central square and opens the path for the c1 bishop. Because White's d2 pawn has moved, the c3 knight is now pinned by the queen on a5.</li>
+      <li style="margin:0 0 8px;"><strong>4...c6</strong> Black pushes the pawn to c6. Black covers the b5 and d5 squares and keeps White's knight from jumping there. Black's pawns are heading toward a solid structure similar to the <a href='caro_kann.html?lang=en'>Caro-Kann Defense</a>.</li>
+      <li style="margin:0 0 8px;"><strong>5. Nf3</strong> White develops the knight to f3. White's knight defends the d4 pawn and also covers the e5 square.</li>
+      <li style="margin:0 0 8px;"><strong>5...Nf6</strong> Black develops the knight to f6. Black's knight covers the d5 and e4 squares as Black continues developing the kingside.</li>
+      <li style="margin:0 0 8px;"><strong>6. Bc4</strong> White develops the bishop to c4. White's bishop aims at Black's f7 square along the a2–g8 diagonal. This also clears f1, so White is getting ready to castle.</li>
+      <li style="margin:0 0 8px;"><strong>6...Bf5</strong> Black develops the bishop to f5. Black gets the c8 bishop outside the pawn chain before pushing the e-pawn. From f5, Black's bishop also eyes White's c2 pawn.</li>
+      <li style="margin:0 0 8px;"><strong>7. Bd2</strong> White develops the bishop to d2. White's bishop breaks the pin on the c3 knight so the knight can move freely. If White's knight moves, for example to d5, White's d2 bishop will hit the queen on a5.</li>
+      <li style="margin:0 0 8px;"><strong>7...e6</strong> Black pushes the pawn to e6. Black adds another guard on d5 and keeps White's knight from landing there. Black also opens the path for the f8 bishop.</li>
+      <li style="margin:0 0 8px;"><strong>8. Qe2</strong> White moves the queen to e2. With b1, c1, and d1 all empty, White now has the option of castling queenside. From e2, White's queen also defends the c4 bishop.</li>
+      <li style="margin:0 0 8px;"><strong>8...Bb4</strong> Black develops the bishop to b4. Black's bishop puts pressure on the c3 knight and makes it harder for White's knight to move. This also clears f8, so Black can prepare to castle. The typical plan is for White to use the lead in development to attack, while Black defends with a solid, Caro-Kann-like pawn structure and looks for counterplay. That's the main line — try continuing the game yourself from here!</li>
+    </ul>
+  </section>
+
   <footer>© KitsuneChess</footer>
 </div>
 

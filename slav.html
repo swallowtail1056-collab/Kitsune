@@ -139,6 +139,55 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
     <div class="board-grid" id="boardGrid"></div>
   </div>
 
+
+  <!-- 手順と解説のまとめ（ページを開いたときから全部読めるように） -->
+  <section id="moveSummary" style="margin:24px 0 8px;background:var(--card-bg,#fffaf0);border:2px solid var(--brown-light,#d8b88a);border-radius:12px;padding:14px 18px;line-height:1.75;">
+    <h2 class="lang-element-ja" style="font-size:1.15rem;margin:0 0 8px;">📜 手順と解説のまとめ</h2>
+    <h2 class="lang-element-en" style="font-size:1.15rem;margin:0 0 8px;">📜 All Moves Explained</h2>
+    <p class="lang-element-ja" style="margin:0 0 8px;">スラブ・ディフェンスのレッスンを始めるよ！このページでは、黒が4...dxc4とポーンを取ってから5...Bf5とビショップを出す、チェコ・バリエーションを見ていくよ。白がe4と突けるかどうかがポイントなんだ。一手ずつジーンと一緒に、なぜその手を指すのかを学んでいこう。</p>
+    <p class="lang-element-en" style="margin:0 0 8px;">Let's start the Slav Defense lesson! On this page we follow the Czech Variation, where Black takes the pawn with 4...dxc4 and then develops the bishop with 5...Bf5. The key is whether White can achieve the e4 push. Jene will walk you through why each move is played, one step at a time.</p>
+    <ul class="lang-element-ja" style="margin:0;padding-left:0;list-style:none;">
+      <li style="margin:0 0 8px;"><strong>1. d4</strong> 白はポーンをd4へ進めるよ。白は中央のマスを押さえながら、c1のビショップの道を開けるんだ。</li>
+      <li style="margin:0 0 8px;"><strong>1...d5</strong> 黒はポーンをd5へ進めるよ。黒は中央のマスをポーンで押さえて、c8のビショップの道も開けるんだ。</li>
+      <li style="margin:0 0 8px;"><strong>2. c4</strong> 白はポーンをc4へ進めて、黒のd5のポーンに挑むよ。白は黒のd5のポーンと交換して、中央をポーンで支配しようとするんだ。白のこの手から始まる形は、<a href='queens_gambit.html'>クイーンズ・ギャンビット</a>と呼ばれているよ。</li>
+      <li style="margin:0 0 8px;"><strong>2...c6（スラブ！）</strong> ここがスラブ・ディフェンスの一手！黒はポーンをc6へ進めて、d5のポーンを支えるよ。黒はeのポーンを突かずにd5を守るので、c8のビショップが外へ出る道をふさがずに済むんだ。 黒はこの手の代わりに、2...e6でd5のポーンを支える形もよく指されるよ。そのかわり、黒のc8のビショップはe6のポーンに道をふさがれてしまうんだ。</li>
+      <li style="margin:0 0 8px;"><strong>3. Nf3</strong> 白はナイトをf3へ進めるよ。白のナイトはd4のポーンを守り、e5のマスにも利かせるんだ。</li>
+      <li style="margin:0 0 8px;"><strong>3...Nf6</strong> 黒はナイトをf6へ進めるよ。黒のナイトはd5のポーンを守り、e4のマスにも利かせるんだ。</li>
+      <li style="margin:0 0 8px;"><strong>4. Nc3</strong> 白はナイトをc3へ進めるよ。白のナイトはd5のポーンにもう一つ圧力をかけて、e4のマスにも利かせるんだ。</li>
+      <li style="margin:0 0 8px;"><strong>4...dxc4</strong> 黒はd5のポーンでc4のポーンを取るよ。黒はポーンを取って、白に取り返すための時間を使わせるんだ。黒にはb5と突いてc4のポーンを守る作戦もあるので、白は気をつける必要があるよ。 黒はこの手の代わりに、4...e6と突いて<a href='semi_slav.html'>セミ・スラブ</a>の形にすることもできるよ。</li>
+      <li style="margin:0 0 8px;"><strong>5. a4</strong> 白はポーンをa4へ進めるよ。白は黒がb5と突いてc4のポーンを守るのを防ぐんだ。そのかわり、白のb4のマスは弱くなってしまうよ。</li>
+      <li style="margin:0 0 8px;"><strong>5...Bf5</strong> 黒はビショップをf5へ進めるよ。黒はeのポーンを突く前に、c8のビショップを外へ出しておくんだ。黒のビショップはf5からe4のマスにも利いて、白がe4と突くのをけん制するよ。</li>
+      <li style="margin:0 0 8px;"><strong>6. e3</strong> 白はポーンをe3へ進めるよ。白はf1のビショップの道を開けて、c4のポーンを取り返す準備をするんだ。</li>
+      <li style="margin:0 0 8px;"><strong>6...e6</strong> 黒はポーンをe6へ進めるよ。黒はd5のマスを押さえながら、f8のビショップの道を開けるんだ。</li>
+      <li style="margin:0 0 8px;"><strong>7. Bxc4</strong> 白はビショップでc4のポーンを取り返すよ。これで白と黒の駒の数は同じに戻ったんだ。白のビショップはc4から、黒のe6のポーンにも利いているよ。</li>
+      <li style="margin:0 0 8px;"><strong>7...Bb4</strong> 黒はビショップをb4へ進めるよ。黒のビショップはc3のナイトをピンして、白がナイトの力を借りてe4と突くのを難しくするんだ。黒は、白がa4と突いて弱くなったb4のマスを使っているよ。</li>
+      <li style="margin:0 0 8px;"><strong>8. O-O</strong> 白はキャスリングでキングを安全な場所へ動かすよ。白のキングはg1へ移り、h1にいたルークはf1へ出てくるんだ。白のキングが動いたので、c3のナイトはもうキングに向けてピンされてはいないよ。</li>
+      <li style="margin:0 0 8px;"><strong>8...Nbd7</strong> 黒はナイトをd7へ進めるよ。黒のナイトはe5とc5のマスに利いて、黒があとでe5やc5と突く準備をするんだ。黒のナイトはf6のナイトも守っているよ。</li>
+      <li style="margin:0 0 8px;"><strong>9. Qe2</strong> 白はクイーンをe2へ動かすよ。白はe4と突いて中央を広げる準備をしながら、c4のビショップも守るんだ。白はクイーンを動かして、d1のマスをルークのために空けているよ。</li>
+      <li style="margin:0 0 8px;"><strong>9...O-O</strong> 黒もキャスリングでキングを安全な場所へ動かすよ。黒のキングはg8へ移り、h8にいたルークはf8へ出てくるんだ。白はe4と突いて中央を広げる機会をうかがい、黒はf5とb4のビショップを生かして、白のe4の突きを止めるのが典型的な流れだよ。これで本譜は一段落、続きはぜひ自分で指してみてね！</li>
+    </ul>
+    <ul class="lang-element-en" style="margin:0;padding-left:0;list-style:none;">
+      <li style="margin:0 0 8px;"><strong>1. d4</strong> White pushes the pawn to d4. White takes control of central squares and opens the path for the c1 bishop.</li>
+      <li style="margin:0 0 8px;"><strong>1...d5</strong> Black pushes the pawn to d5. Black claims a central square with a pawn and also opens the path for the c8 bishop.</li>
+      <li style="margin:0 0 8px;"><strong>2. c4</strong> White pushes the pawn to c4 and challenges Black's d5 pawn. White wants to trade it off and dominate the center with pawns. The line starting with this move by White is called the <a href='queens_gambit.html?lang=en'>Queen's Gambit</a>.</li>
+      <li style="margin:0 0 8px;"><strong>2...c6 (Slav!)</strong> Here's the Slav Defense! Black pushes the pawn to c6 and supports the d5 pawn. Because Black defends d5 without pushing the e-pawn, the c8 bishop's path out stays open. Instead of this move, Black often supports the d5 pawn with 2...e6 as well. In that case, though, Black's c8 bishop has its path blocked by the e6 pawn.</li>
+      <li style="margin:0 0 8px;"><strong>3. Nf3</strong> White develops the knight to f3. White's knight defends the d4 pawn and also covers the e5 square.</li>
+      <li style="margin:0 0 8px;"><strong>3...Nf6</strong> Black develops the knight to f6. Black's knight defends the d5 pawn and also covers the e4 square.</li>
+      <li style="margin:0 0 8px;"><strong>4. Nc3</strong> White develops the knight to c3. White's knight adds more pressure on the d5 pawn and also covers the e4 square.</li>
+      <li style="margin:0 0 8px;"><strong>4...dxc4</strong> Black's d5 pawn captures the pawn on c4. Black grabs the pawn and makes White spend time winning it back. Black also has the idea of holding the c4 pawn with ...b5, so White has to be careful. Instead of this move, Black can also play 4...e6, leading to the <a href='semi_slav.html?lang=en'>Semi-Slav</a>.</li>
+      <li style="margin:0 0 8px;"><strong>5. a4</strong> White pushes the pawn to a4. White stops Black from holding the c4 pawn with ...b5. In return, White's b4 square becomes weak.</li>
+      <li style="margin:0 0 8px;"><strong>5...Bf5</strong> Black develops the bishop to f5. Black gets the c8 bishop outside the pawn chain before pushing the e-pawn. From f5, Black's bishop also covers e4 and discourages White from pushing e4.</li>
+      <li style="margin:0 0 8px;"><strong>6. e3</strong> White pushes the pawn to e3. White opens the path for the f1 bishop and prepares to win back the c4 pawn.</li>
+      <li style="margin:0 0 8px;"><strong>6...e6</strong> Black pushes the pawn to e6. Black controls the d5 square and opens the path for the f8 bishop.</li>
+      <li style="margin:0 0 8px;"><strong>7. Bxc4</strong> White's bishop recaptures the pawn on c4. White and Black now have the same material again. From c4, White's bishop also bears on Black's e6 pawn.</li>
+      <li style="margin:0 0 8px;"><strong>7...Bb4</strong> Black develops the bishop to b4. Black's bishop pins the c3 knight and makes it harder for White to push e4 with the knight's support. Black is using the b4 square, which became weak after White's a4.</li>
+      <li style="margin:0 0 8px;"><strong>8. O-O</strong> White castles, bringing the king to safety. White's king goes to g1, and the rook from h1 comes to f1. Since White's king has moved, the c3 knight is no longer pinned to the king.</li>
+      <li style="margin:0 0 8px;"><strong>8...Nbd7</strong> Black develops the knight to d7. Black's knight covers e5 and c5, preparing a later ...e5 or ...c5 push. Black's knight also defends the f6 knight.</li>
+      <li style="margin:0 0 8px;"><strong>9. Qe2</strong> White moves the queen to e2. White prepares to push e4 and expand in the center, while also defending the c4 bishop. White also clears d1 for a rook.</li>
+      <li style="margin:0 0 8px;"><strong>9...O-O</strong> Black also castles, bringing the king to safety. Black's king goes to g8, and the rook from h8 comes to f8. The typical plan is for White to look for a chance to push e4 and expand in the center, while Black uses the bishops on f5 and b4 to stop that push. That's the main line — try continuing the game yourself from here!</li>
+    </ul>
+  </section>
+
   <footer>© KitsuneChess</footer>
 </div>
 

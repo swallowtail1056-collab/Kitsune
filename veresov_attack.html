@@ -137,6 +137,43 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
     <div class="board-grid" id="boardGrid"></div>
   </div>
 
+
+  <!-- 手順と解説のまとめ（ページを開いたときから全部読めるように） -->
+  <section id="moveSummary" style="margin:24px 0 8px;background:var(--card-bg,#fffaf0);border:2px solid var(--brown-light,#d8b88a);border-radius:12px;padding:14px 18px;line-height:1.75;">
+    <h2 class="lang-element-ja" style="font-size:1.15rem;margin:0 0 8px;">📜 手順と解説のまとめ</h2>
+    <h2 class="lang-element-en" style="font-size:1.15rem;margin:0 0 8px;">📜 All Moves Explained</h2>
+    <p class="lang-element-ja" style="margin:0 0 8px;">ヴェレゾフ・アタックのレッスンを始めるよ！このページでは、白がNc3・Bg5・f3・e4で中央を大きく取りにいき、黒がNbd7・c6・e5で反撃する本筋を見ていくよ。白の広い中央と黒の反撃のタイミングがポイントなんだ。一手ずつジーンと一緒に、なぜその手を指すのかを学んでいこう。</p>
+    <p class="lang-element-en" style="margin:0 0 8px;">Let's start the Veresov Attack lesson! On this page we follow the main line where White aims for a big center with Nc3, Bg5, f3 and e4, while Black fights back with ...Nbd7, ...c6 and ...e5. The key is White's broad center and the timing of Black's counterattack. Jene will walk you through why each move is played, one step at a time.</p>
+    <ul class="lang-element-ja" style="margin:0;padding-left:0;list-style:none;">
+      <li style="margin:0 0 8px;"><strong>1. d4</strong> 白はポーンをd4へ進めるよ。白は中央のマスを押さえながら、c1のビショップの道を開けるんだ。</li>
+      <li style="margin:0 0 8px;"><strong>1...Nf6</strong> 黒はナイトをf6へ進めるよ。黒はナイトを展開しながら、白がe4と突くのをけん制するんだ。</li>
+      <li style="margin:0 0 8px;"><strong>2. Nc3</strong> 白はナイトをc3へ進めるよ。白はナイトを展開しながら、e4のマスに利かせて、この先e4と突く準備をするんだ。一般的には2.c4が多いけれど、白はここでcのポーンの前にナイトを置く道を選ぶよ。</li>
+      <li style="margin:0 0 8px;"><strong>2...d5</strong> 黒はポーンをd5へ進めるよ。黒は中央を押さえて、白がe4と突くのを防ぐんだ。</li>
+      <li style="margin:0 0 8px;"><strong>3. Bg5（ヴェレゾフ！）</strong> ここがヴェレゾフ・アタックの一手！白はビショップをg5へ進めて、e4のマスを守っているf6のナイトをねらうよ。白はこの先f3とe4で中央を広げ、クイーンサイドにキャスリングして攻める作戦を目指すんだ。その代わり、白はcのポーンの前にナイトがいるので、c4と突いて中央を攻めることができないよ。</li>
+      <li style="margin:0 0 8px;"><strong>3...Nbd7</strong> 黒はナイトをd7へ進めるよ。黒のd7のナイトはf6のナイトを守っていて、白がBxf6と取ってきても、ナイトで取り返してポーンの形を崩さずにすむんだ。 黒はこの手の代わりに3...Bf5や3...e6と指すこともできて、3...e6からはフレンチ・ディフェンスの形になることもあるよ。</li>
+      <li style="margin:0 0 8px;"><strong>4. f3</strong> 白はポーンをf3へ進めるよ。白は次にe4と突いて、中央を大きく取る準備をするんだ。その代わり、白はキングのそばにあるfのポーンを動かすので、白のキングの守りも少し薄くなるよ。</li>
+      <li style="margin:0 0 8px;"><strong>4...c6</strong> 黒はポーンをc6へ進めるよ。黒はd5のポーンを支えながら、d8のクイーンがa5へ出られる道を開けるんだ。</li>
+      <li style="margin:0 0 8px;"><strong>5. e4</strong> 白はポーンをe4へ進めるよ。白はe4とd4の2つのポーンで中央を大きく取ろうとするんだ。</li>
+      <li style="margin:0 0 8px;"><strong>5...dxe4</strong> 黒はd5のポーンでe4に来た白のポーンを取るよ。黒は白の中央のポーンを1つ減らすんだ。</li>
+      <li style="margin:0 0 8px;"><strong>6. fxe4</strong> 白はfのポーンでe4にいた黒のポーンを取り返すよ。白はe4とd4に2つのポーンを並べて、中央を大きく押さえるんだ。その代わり、白のキングのそばのfファイルが開いて、キングの守りが少し薄くなるよ。</li>
+      <li style="margin:0 0 8px;"><strong>6...e5</strong> 黒はポーンをe5へ進めるよ。黒は白のd4のポーンを攻撃して、白の大きな中央にすぐ反撃するんだ。この後は白がdxe5と取ると、黒は...Qa5と出て、c3のナイトをe1の白のキングにピンしながら、e5のポーンもねらう形が知られているよ。白の広い中央と、黒の素早い反撃がぶつかる局面なんだ。これで本譜は一段落、続きはぜひ自分で指してみてね！</li>
+    </ul>
+    <ul class="lang-element-en" style="margin:0;padding-left:0;list-style:none;">
+      <li style="margin:0 0 8px;"><strong>1. d4</strong> White pushes the pawn to d4. White takes control of central squares and opens the path for the c1 bishop.</li>
+      <li style="margin:0 0 8px;"><strong>1...Nf6</strong> Black develops the knight to f6. Black develops while discouraging White from pushing e4.</li>
+      <li style="margin:0 0 8px;"><strong>2. Nc3</strong> White develops the knight to c3. White develops while covering the e4 square, preparing to push e4 later. White more often plays 2.c4, but here White chooses to put the knight in front of the c-pawn.</li>
+      <li style="margin:0 0 8px;"><strong>2...d5</strong> Black pushes the pawn to d5. Black claims the center and stops White from pushing e4.</li>
+      <li style="margin:0 0 8px;"><strong>3. Bg5 (Veresov!)</strong> Here's the Veresov Attack! White develops the bishop to g5, targeting the f6 knight that guards e4. White plans to expand with f3 and e4, castle queenside and attack. The trade-off is that with the knight in front of the c-pawn, White can't strike at the center with c4.</li>
+      <li style="margin:0 0 8px;"><strong>3...Nbd7</strong> Black develops the knight to d7. Black's d7 knight protects the f6 knight, so if White takes on f6, Black can recapture with the knight and keep the pawn structure intact. Instead of this move, Black can also play 3...Bf5 or 3...e6, and 3...e6 can lead to French Defense structures.</li>
+      <li style="margin:0 0 8px;"><strong>4. f3</strong> White pushes the pawn to f3. White prepares to push e4 next and take a big center. The trade-off is that moving the f-pawn next to the king slightly weakens White's king shelter.</li>
+      <li style="margin:0 0 8px;"><strong>4...c6</strong> Black pushes the pawn to c6. Black supports the d5 pawn and opens a path for the queen on d8 to come out to a5.</li>
+      <li style="margin:0 0 8px;"><strong>5. e4</strong> White pushes the pawn to e4. White tries to take a big center with pawns on e4 and d4.</li>
+      <li style="margin:0 0 8px;"><strong>5...dxe4</strong> Black's d5 pawn captures the white pawn that came to e4. Black removes one of White's central pawns.</li>
+      <li style="margin:0 0 8px;"><strong>6. fxe4</strong> White's f-pawn takes back the black pawn that was on e4. White now has pawns side by side on e4 and d4, taking a big grip on the center. The trade-off is that the f-file next to White's king opens up, thinning out its shelter a little.</li>
+      <li style="margin:0 0 8px;"><strong>6...e5</strong> Black pushes the pawn to e5. Black attacks White's d4 pawn and strikes back at White's big center right away. A known idea is that after White takes with dxe5, Black plays ...Qa5, pinning the c3 knight against White's king on e1 while also eyeing the e5 pawn. It's a clash between White's broad center and Black's quick counterattack. That's the main line — try continuing the game yourself from here!</li>
+    </ul>
+  </section>
+
   <footer>© KitsuneChess</footer>
 </div>
 

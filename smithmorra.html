@@ -139,6 +139,51 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
     <div class="board-grid" id="boardGrid"></div>
   </div>
 
+
+  <!-- 手順と解説のまとめ（ページを開いたときから全部読めるように） -->
+  <section id="moveSummary" style="margin:24px 0 8px;background:var(--card-bg,#fffaf0);border:2px solid var(--brown-light,#d8b88a);border-radius:12px;padding:14px 18px;line-height:1.75;">
+    <h2 class="lang-element-ja" style="font-size:1.15rem;margin:0 0 8px;">📜 手順と解説のまとめ</h2>
+    <h2 class="lang-element-en" style="font-size:1.15rem;margin:0 0 8px;">📜 All Moves Explained</h2>
+    <p class="lang-element-ja" style="margin:0 0 8px;">スミス＝モラ・ギャンビットのレッスンを始めるよ！このページでは、白がポーンを差し出して、Nc3・Nf3・Bc4・O-O・Qe2と素早く展開していく本筋を見ていくよ。ポーンを損した白が、展開のリードと開いたファイルでどう攻めるのかがポイントなんだ。一手ずつジーンと一緒に、なぜその手を指すのかを学んでいこう。</p>
+    <p class="lang-element-en" style="margin:0 0 8px;">Let's start the Smith-Morra Gambit lesson! On this page we follow the main line where White gives up a pawn and develops quickly with Nc3, Nf3, Bc4, O-O and Qe2. The key is how White, a pawn down, attacks using the development lead and open files. Jene will walk you through why each move is played, one step at a time.</p>
+    <ul class="lang-element-ja" style="margin:0;padding-left:0;list-style:none;">
+      <li style="margin:0 0 8px;"><strong>1. e4</strong> 白はポーンをe4へ進めるよ。白は中央のマスを押さえながら、ビショップとクイーンが動く道を開けるんだ。</li>
+      <li style="margin:0 0 8px;"><strong>1...c5</strong> 黒はポーンをc5へ進めるよ。黒はこれで<a href='sicilian.html'>シシリアン・ディフェンス</a>の形に入り、c5のポーンで斜めにd4のマスを押さえるんだ。</li>
+      <li style="margin:0 0 8px;"><strong>2. d4</strong> 白はポーンをd4へ進めるよ。白はすぐに中央でポーンをぶつけて、黒のc5のポーンと交換しようとするんだ。</li>
+      <li style="margin:0 0 8px;"><strong>2...cxd4</strong> 黒はc5のポーンでd4に来た白のポーンを取るよ。黒は中央の白のポーンを減らすんだ。</li>
+      <li style="margin:0 0 8px;"><strong>3. c3（スミス＝モラ！）</strong> ここがスミス＝モラ・ギャンビットの一手！白はポーンをc3へ進めて、もう1つポーンを差し出すよ。一般的には2.Nf3から3.d4と進めて<a href='open_sicilian.html'>オープン・シシリアン</a>に入るけれど、白はここでポーンを差し出す代わりに、駒の展開で大きくリードすることをねらうんだ。その代わり、黒が正しく受ければ、白はポーン1つ損したまま戦うことになるよ。</li>
+      <li style="margin:0 0 8px;"><strong>3...dxc3</strong> 黒はd4のポーンでc3に来た白のポーンを取るよ。黒はこれでポーンを1つ得するんだ。 黒はこの手の代わりに3...Nf6や3...d3と指して、ギャンビットを受け取らない道を選ぶこともできるよ。</li>
+      <li style="margin:0 0 8px;"><strong>4. Nxc3</strong> 白はナイトでc3にいた黒のポーンを取り返すよ。白はポーンを1つ損したけれど、ナイトを展開しながら、cファイルとdファイルを開いたんだ。</li>
+      <li style="margin:0 0 8px;"><strong>4...Nc6</strong> 黒はナイトをc6へ進めるよ。黒はナイトを展開しながら、d4やe5のマスに利かせるんだ。</li>
+      <li style="margin:0 0 8px;"><strong>5. Nf3</strong> 白はナイトをf3へ進めるよ。白はナイトを展開しながら、キャスリングの準備を進めるんだ。</li>
+      <li style="margin:0 0 8px;"><strong>5...d6</strong> 黒はポーンをd6へ進めるよ。黒はe5のマスを押さえ、c8のビショップの道も開けるんだ。</li>
+      <li style="margin:0 0 8px;"><strong>6. Bc4</strong> 白はビショップをc4へ進めるよ。白のビショップは、キングしか守っていない黒のf7のポーンをねらっているんだ。</li>
+      <li style="margin:0 0 8px;"><strong>6...e6</strong> 黒はポーンをe6へ進めるよ。黒はc4のビショップからf7への斜めの線をふさいで、f8のビショップの道も開けるんだ。</li>
+      <li style="margin:0 0 8px;"><strong>7. O-O</strong> 白はキャスリングでキングを安全な場所へ動かすよ。白は展開でリードしていて、この先ルークを開いたファイルに置いて攻める準備をするんだ。</li>
+      <li style="margin:0 0 8px;"><strong>7...Nf6</strong> 黒はナイトをf6へ進めるよ。黒はナイトを展開しながら、白のe4のポーンを攻撃するんだ。</li>
+      <li style="margin:0 0 8px;"><strong>8. Qe2</strong> 白はクイーンをe2へ進めるよ。白のクイーンはe4のポーンを守りながら、この先Rd1とルークをdファイルに置いて、黒のd6のポーンをねらう準備をするんだ。</li>
+      <li style="margin:0 0 8px;"><strong>8...Be7</strong> 黒はビショップをe7へ進めるよ。黒はキングサイドの駒を出し終えて、キャスリングの準備をするんだ。黒はポーンを1つ多く持っていて、白は展開のリードと開いたファイルを生かして攻める形になったよ。この後は白が9.Rd1、黒がキャスリングやe5で守りを固める流れがよく見られるんだ。これで本譜は一段落、続きはぜひ自分で指してみてね！</li>
+    </ul>
+    <ul class="lang-element-en" style="margin:0;padding-left:0;list-style:none;">
+      <li style="margin:0 0 8px;"><strong>1. e4</strong> White pushes the pawn to e4. White takes control of central squares and opens lines for the bishop and queen.</li>
+      <li style="margin:0 0 8px;"><strong>1...c5</strong> Black pushes the pawn to c5. Black enters the <a href='sicilian.html?lang=en'>Sicilian Defense</a> and uses the c5 pawn to control the d4 square diagonally.</li>
+      <li style="margin:0 0 8px;"><strong>2. d4</strong> White pushes the pawn to d4. White immediately strikes in the center, offering to trade with Black's c5 pawn.</li>
+      <li style="margin:0 0 8px;"><strong>2...cxd4</strong> Black's c5 pawn captures the white pawn that came to d4. Black reduces White's central pawns.</li>
+      <li style="margin:0 0 8px;"><strong>3. c3 (Smith-Morra!)</strong> Here's the Smith-Morra Gambit! White pushes the pawn to c3, offering another pawn. White usually heads into the <a href='open_sicilian.html?lang=en'>Open Sicilian</a> with 2.Nf3 and 3.d4, but here White offers a pawn in return for a big lead in development. The trade-off is that if Black defends correctly, White has to play a pawn down.</li>
+      <li style="margin:0 0 8px;"><strong>3...dxc3</strong> Black's d4 pawn captures the white pawn that came to c3. Black wins a pawn. Instead of this move, Black can decline the gambit with moves like 3...Nf6 or 3...d3.</li>
+      <li style="margin:0 0 8px;"><strong>4. Nxc3</strong> White's knight takes back the black pawn that was on c3. White is a pawn down, but White develops the knight and has opened the c- and d-files.</li>
+      <li style="margin:0 0 8px;"><strong>4...Nc6</strong> Black develops the knight to c6. Black develops while covering the d4 and e5 squares.</li>
+      <li style="margin:0 0 8px;"><strong>5. Nf3</strong> White develops the knight to f3. White develops a piece and prepares to castle.</li>
+      <li style="margin:0 0 8px;"><strong>5...d6</strong> Black pushes the pawn to d6. Black controls the e5 square and opens the path for the c8 bishop.</li>
+      <li style="margin:0 0 8px;"><strong>6. Bc4</strong> White develops the bishop to c4. White's bishop aims at Black's f7 pawn, which only the king defends.</li>
+      <li style="margin:0 0 8px;"><strong>6...e6</strong> Black pushes the pawn to e6. Black blocks the c4 bishop's diagonal toward f7 and opens the path for the f8 bishop.</li>
+      <li style="margin:0 0 8px;"><strong>7. O-O</strong> White castles, bringing the king to safety. White is ahead in development and prepares to put the rooks on the open files.</li>
+      <li style="margin:0 0 8px;"><strong>7...Nf6</strong> Black develops the knight to f6. Black develops while attacking White's e4 pawn.</li>
+      <li style="margin:0 0 8px;"><strong>8. Qe2</strong> White brings the queen to e2. White's queen defends the e4 pawn and prepares Rd1, putting a rook on the d-file to target Black's d6 pawn.</li>
+      <li style="margin:0 0 8px;"><strong>8...Be7</strong> Black develops the bishop to e7. Black finishes developing the kingside pieces and gets ready to castle. Black is a pawn up, while White plays on the development lead and the open files. A common continuation is 9.Rd1, with Black shoring up the position by castling or pushing ...e5. That's the main line — try continuing the game yourself from here!</li>
+    </ul>
+  </section>
+
   <footer>© KitsuneChess</footer>
 </div>
 

@@ -139,6 +139,47 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
     <div class="board-grid" id="boardGrid"></div>
   </div>
 
+
+  <!-- 手順と解説のまとめ（ページを開いたときから全部読めるように） -->
+  <section id="moveSummary" style="margin:24px 0 8px;background:var(--card-bg,#fffaf0);border:2px solid var(--brown-light,#d8b88a);border-radius:12px;padding:14px 18px;line-height:1.75;">
+    <h2 class="lang-element-ja" style="font-size:1.15rem;margin:0 0 8px;">📜 手順と解説のまとめ</h2>
+    <h2 class="lang-element-en" style="font-size:1.15rem;margin:0 0 8px;">📜 All Moves Explained</h2>
+    <p class="lang-element-ja" style="margin:0 0 8px;">クイーンズ・インディアンのレッスンを始めるよ！このページでは、白と黒がそれぞれビショップを長い対角線に出し、e4のマスをめぐって駆け引きをする本筋を見ていくよ。黒が中央にポーンを置かずに、ビショップとナイトでe4をどう押さえるのかがポイントなんだ。一手ずつジーンと一緒に、なぜその手を指すのかを学んでいこう。</p>
+    <p class="lang-element-en" style="margin:0 0 8px;">Let's start the Queen's Indian lesson! On this page we follow the main line where both sides put a bishop on the long diagonal and maneuver over the e4 square. The key is how Black controls e4 with the bishop and knight instead of a central pawn. Jene will walk you through why each move is played, one step at a time.</p>
+    <ul class="lang-element-ja" style="margin:0;padding-left:0;list-style:none;">
+      <li style="margin:0 0 8px;"><strong>1. d4</strong> 白はポーンをd4へ進めるよ。白は中央のマスを押さえながら、c1のビショップの道を開けるんだ。</li>
+      <li style="margin:0 0 8px;"><strong>1...Nf6</strong> 黒はナイトをf6へ進めるよ。黒はナイトを展開しながら、白がe4と突くのをけん制するんだ。</li>
+      <li style="margin:0 0 8px;"><strong>2. c4</strong> 白はポーンをc4へ進めるよ。白はこれでd5のマスにも利かせて、中央を広げるんだ。</li>
+      <li style="margin:0 0 8px;"><strong>2...e6</strong> 黒はポーンをe6へ進めるよ。黒はd5のマスを押さえながら、f8のビショップの道を開けるんだ。</li>
+      <li style="margin:0 0 8px;"><strong>3. Nf3</strong> 白はナイトをf3へ進めるよ。白はナイトを展開しながら、3.Nc3と指したときに黒が3...Bb4と出てくる<a href='nimzo.html'>ニムゾ・インディアン</a>を避けているんだ。</li>
+      <li style="margin:0 0 8px;"><strong>3...b6（クイーンズ・インディアン！）</strong> ここがクイーンズ・インディアンの一手！黒はポーンをb6へ進めて、ビショップをb7の長い対角線に出す準備をするよ。黒はこの手の代わりに3...Bb4+の<a href='bogo_indian.html'>ボゴ・インディアン</a>や3...d5を選ぶこともできるけれど、黒はここでビショップを使って、遠くからe4のマスを押さえる道を選ぶんだ。その代わり、黒は中央にポーンを置かないので、白に中央を広く取られやすいよ。</li>
+      <li style="margin:0 0 8px;"><strong>4. g3</strong> 白はポーンをg3へ進めるよ。白はg2のマスを空けて、ビショップを長い対角線に出し、黒のb7のビショップと向かい合わせる準備をするんだ。</li>
+      <li style="margin:0 0 8px;"><strong>4...Bb7</strong> 黒はビショップをb7へ進めるよ。黒のビショップは長い対角線から、e4のマスとf3のナイトをにらんでいるんだ。黒はf6のナイトと一緒に、白がe4と突くのを2つの駒で防いでいるよ。 黒はこの手の代わりに4...Ba6と、白のc4のポーンをねらう形もよく指されるよ。</li>
+      <li style="margin:0 0 8px;"><strong>5. Bg2</strong> 白はビショップをg2へ進めるよ。白のビショップは、長い対角線をめぐって黒のb7のビショップと向かい合うんだ。白はキャスリングの準備も進めているよ。</li>
+      <li style="margin:0 0 8px;"><strong>5...Be7</strong> 黒はビショップをe7へ進めるよ。黒はキングサイドの駒を出し終えて、キャスリングの準備をするんだ。</li>
+      <li style="margin:0 0 8px;"><strong>6. O-O</strong> 白はキャスリングでキングを安全な場所へ動かすよ。白のキングは、g2のビショップとポーンに守られた堅い形に入るんだ。</li>
+      <li style="margin:0 0 8px;"><strong>6...O-O</strong> 黒もキャスリングでキングを安全な場所へ動かすよ。黒はキングの安全を確保して、中央での駆け引きに備えるんだ。</li>
+      <li style="margin:0 0 8px;"><strong>7. Nc3</strong> 白はナイトをc3へ進めるよ。白はナイトを展開しながら、e4のマスに利きを足して、次にe4と突く準備をするんだ。</li>
+      <li style="margin:0 0 8px;"><strong>7...Ne4</strong> 黒はナイトをe4へ進めるよ。黒はナイトを中央のe4のマスに置いて、白のc3のナイトとの交換を迫るんだ。黒のe4のナイトはb7のビショップに守られているよ。黒は駒を交換して、白がe4と突く計画を止めようとしているんだ。この後は白と黒が8.Qc2 Nxc3 9.Qxc3と進む形が、クラシカルな本筋として知られているよ。これで本譜は一段落、続きはぜひ自分で指してみてね！</li>
+    </ul>
+    <ul class="lang-element-en" style="margin:0;padding-left:0;list-style:none;">
+      <li style="margin:0 0 8px;"><strong>1. d4</strong> White pushes the pawn to d4. White takes control of central squares and opens the path for the c1 bishop.</li>
+      <li style="margin:0 0 8px;"><strong>1...Nf6</strong> Black develops the knight to f6. Black develops while discouraging White from pushing e4.</li>
+      <li style="margin:0 0 8px;"><strong>2. c4</strong> White pushes the pawn to c4. White adds control of d5 and expands in the center.</li>
+      <li style="margin:0 0 8px;"><strong>2...e6</strong> Black pushes the pawn to e6. Black controls the d5 square and opens the path for the f8 bishop.</li>
+      <li style="margin:0 0 8px;"><strong>3. Nf3</strong> White develops the knight to f3. By developing this way, White avoids the <a href='nimzo.html?lang=en'>Nimzo-Indian</a>, which arises after 3.Nc3 Bb4.</li>
+      <li style="margin:0 0 8px;"><strong>3...b6 (Queen's Indian!)</strong> Here's the Queen's Indian! Black pushes the pawn to b6, preparing to put the bishop on the long diagonal at b7. Instead of this move, Black can choose 3...Bb4+, the <a href='bogo_indian.html?lang=en'>Bogo-Indian</a>, or 3...d5, but here Black controls the e4 square from a distance with the bishop. The trade-off is that without a pawn in the center, Black lets White take more central space.</li>
+      <li style="margin:0 0 8px;"><strong>4. g3</strong> White pushes the pawn to g3. White clears g2 to put the bishop on the long diagonal, ready to face Black's bishop on b7.</li>
+      <li style="margin:0 0 8px;"><strong>4...Bb7</strong> Black develops the bishop to b7. From the long diagonal, Black's bishop eyes the e4 square and the f3 knight. Together with the f6 knight, Black now stops White's e4 push with two pieces. Instead of this move, Black also often plays 4...Ba6, targeting White's c4 pawn.</li>
+      <li style="margin:0 0 8px;"><strong>5. Bg2</strong> White develops the bishop to g2. White's bishop faces Black's b7 bishop in the battle over the long diagonal. White is also getting ready to castle.</li>
+      <li style="margin:0 0 8px;"><strong>5...Be7</strong> Black develops the bishop to e7. Black finishes developing the kingside pieces and gets ready to castle.</li>
+      <li style="margin:0 0 8px;"><strong>6. O-O</strong> White castles, bringing the king to safety. White's king settles into a solid shelter guarded by the g2 bishop and pawns.</li>
+      <li style="margin:0 0 8px;"><strong>6...O-O</strong> Black also castles, bringing the king to safety. Black secures the king and prepares for the maneuvering in the center.</li>
+      <li style="margin:0 0 8px;"><strong>7. Nc3</strong> White develops the knight to c3. White develops while adding control of the e4 square, preparing to push e4 next.</li>
+      <li style="margin:0 0 8px;"><strong>7...Ne4</strong> Black moves the knight to e4. Black plants the knight on the central e4 square, offering a trade with White's c3 knight. Black's e4 knight is protected by the b7 bishop. Black aims to trade pieces and stop White's plan of pushing e4. The continuation 8.Qc2 Nxc3 9.Qxc3 is known as the classical main line. That's the main line — try continuing the game yourself from here!</li>
+    </ul>
+  </section>
+
   <footer>© KitsuneChess</footer>
 </div>
 

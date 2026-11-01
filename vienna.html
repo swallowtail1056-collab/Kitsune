@@ -139,6 +139,53 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
     <div class="board-grid" id="boardGrid"></div>
   </div>
 
+
+  <!-- 手順と解説のまとめ（ページを開いたときから全部読めるように） -->
+  <section id="moveSummary" style="margin:24px 0 8px;background:var(--card-bg,#fffaf0);border:2px solid var(--brown-light,#d8b88a);border-radius:12px;padding:14px 18px;line-height:1.75;">
+    <h2 class="lang-element-ja" style="font-size:1.15rem;margin:0 0 8px;">📜 手順と解説のまとめ</h2>
+    <h2 class="lang-element-en" style="font-size:1.15rem;margin:0 0 8px;">📜 All Moves Explained</h2>
+    <p class="lang-element-ja" style="margin:0 0 8px;">ウィーン・ゲームのレッスンを始めるよ！このページでは、白がg3と突いてビショップを長い斜めの列に出す、落ち着いた形を見ていくよ。白のg2のビショップと、黒の中央のポーンのどちらが生きるかがポイントなんだ。一手ずつジーンと一緒に、なぜその手を指すのかを学んでいこう。</p>
+    <p class="lang-element-en" style="margin:0 0 8px;">Let's start the Vienna Game lesson! On this page we follow a calm line where White pushes g3 and puts the bishop on the long diagonal. The key is whether White's g2 bishop or Black's central pawn will matter more. Jene will walk you through why each move is played, one step at a time.</p>
+    <ul class="lang-element-ja" style="margin:0;padding-left:0;list-style:none;">
+      <li style="margin:0 0 8px;"><strong>1. e4</strong> 白はポーンをe4へ進めるよ。白は中央のマスを押さえながら、ビショップとクイーンが動く道を開けるんだ。</li>
+      <li style="margin:0 0 8px;"><strong>1...e5</strong> 黒はポーンをe5へ進めるよ。黒も同じように中央を押さえて、白のポーンと向かい合う形を作るんだ。</li>
+      <li style="margin:0 0 8px;"><strong>2. Nc3（ウィーン！）</strong> ここがウィーン・ゲームの一手！白はナイトをc3へ進めて、e4のポーンを守りながら、d5のマスにも利かせるよ。白はfのポーンの前を空けたままにしておくので、あとでf4と突いて攻める作戦も選べるんだ。</li>
+      <li style="margin:0 0 8px;"><strong>2...Nf6</strong> 黒はナイトをf6へ進めるよ。黒のナイトは白のe4のポーンを攻撃して、展開しながら反撃するんだ。黒はd5と突いて、中央で戦う準備もしているよ。</li>
+      <li style="margin:0 0 8px;"><strong>3. g3</strong> 白はポーンをg3へ進めるよ。白はf1のビショップをg2へ出す準備をするんだ。白のビショップはg2に出ると、長い斜めの列からd5のマスや黒のクイーンサイドをねらえるよ。 白はこの手の代わりに、3.f4と突いて攻める<a href='vienna_gambit.html'>ウィーン・ギャンビット</a>や、3.Bc4とビショップを出す形を選ぶこともできるよ。</li>
+      <li style="margin:0 0 8px;"><strong>3...d5</strong> 黒はポーンをd5へ進めて、白のe4のポーンに挑むよ。黒は白のビショップがg2に出てくる前に、中央で戦いを始めるんだ。</li>
+      <li style="margin:0 0 8px;"><strong>4. exd5</strong> 白はe4のポーンでd5に来た黒のポーンを取るよ。白は中央のポーンを交換して、g2に出すビショップの斜めの列を開けるんだ。</li>
+      <li style="margin:0 0 8px;"><strong>4...Nxd5</strong> 黒はナイトでd5のポーンを取り返すよ。これで白と黒の駒の数は同じに戻ったんだ。黒のナイトは中央のd5に入ったけれど、白のc3のナイトとg2に来るビショップにねらわれやすい場所でもあるよ。</li>
+      <li style="margin:0 0 8px;"><strong>5. Bg2</strong> 白はビショップをg2へ進めるよ。白のビショップは長い斜めの列から、d5のナイトに圧力をかけるんだ。これでf1のマスも空いて、白はキャスリングの準備を進めるよ。</li>
+      <li style="margin:0 0 8px;"><strong>5...Nxc3</strong> 黒はナイトでc3のナイトを取るよ。黒は、g2のビショップにねらわれているナイトを白のナイトと交換するんだ。</li>
+      <li style="margin:0 0 8px;"><strong>6. bxc3</strong> 白はbのポーンでc3のナイトを取り返すよ。白のcのポーンは2つ縦に並んだけれど、白のb列が開いて、あとでルークをb1へ出して使えるようになったんだ。白のポーンは中央寄りになり、d4のマスも支えられるよ。</li>
+      <li style="margin:0 0 8px;"><strong>6...Bd6</strong> 黒はビショップをd6へ進めるよ。黒のビショップはe5のポーンを守りながら、キングサイドの展開を進めるんだ。これでf8のマスが空いて、黒はキャスリングの準備をするよ。</li>
+      <li style="margin:0 0 8px;"><strong>7. Nf3</strong> 白はナイトをf3へ進めて、黒のe5のポーンを攻撃するよ。白は展開しながら、黒にe5のポーンを守らせ続けるんだ。</li>
+      <li style="margin:0 0 8px;"><strong>7...O-O</strong> 黒はキャスリングでキングを安全な場所へ動かすよ。黒のキングはg8へ移り、h8にいたルークはf8へ出てくるんだ。</li>
+      <li style="margin:0 0 8px;"><strong>8. O-O</strong> 白もキャスリングでキングを安全な場所へ動かすよ。白のキングはg1へ移り、h1にいたルークはf1へ出てくるんだ。</li>
+      <li style="margin:0 0 8px;"><strong>8...Nc6</strong> 黒はナイトをc6へ進めるよ。黒のナイトはe5のポーンをもう一つ守り、d4のマスにも利かせるんだ。</li>
+      <li style="margin:0 0 8px;"><strong>9. Rb1</strong> 白はルークをb1へ動かすよ。白のルークは開いたb列で、黒のb7のポーンをねらうんだ。白はg2のビショップとb1のルークでクイーンサイドに圧力をかけ、黒は中央のe5のポーンと駒の展開を生かして戦うのが典型的な流れだよ。これで本譜は一段落、続きはぜひ自分で指してみてね！</li>
+    </ul>
+    <ul class="lang-element-en" style="margin:0;padding-left:0;list-style:none;">
+      <li style="margin:0 0 8px;"><strong>1. e4</strong> White pushes the pawn to e4. White takes control of central squares and opens lines for the bishop and queen.</li>
+      <li style="margin:0 0 8px;"><strong>1...e5</strong> Black pushes the pawn to e5. Black also claims the center, setting up a pawn face-off with White.</li>
+      <li style="margin:0 0 8px;"><strong>2. Nc3 (Vienna!)</strong> Here's the Vienna Game! White develops the knight to c3, defending the e4 pawn and covering the d5 square. White keeps the f-pawn free, so White can still choose to attack later with f4.</li>
+      <li style="margin:0 0 8px;"><strong>2...Nf6</strong> Black develops the knight to f6. Black's knight attacks White's e4 pawn, developing and counterattacking at the same time. Black is also getting ready to push d5 and fight in the center.</li>
+      <li style="margin:0 0 8px;"><strong>3. g3</strong> White pushes the pawn to g3. White prepares to bring the f1 bishop to g2. Once White's bishop is on g2, it can aim at the d5 square and Black's queenside from the long diagonal. Instead of this move, White can also attack with 3.f4, the <a href='vienna_gambit.html?lang=en'>Vienna Gambit</a>, or develop the bishop with 3.Bc4.</li>
+      <li style="margin:0 0 8px;"><strong>3...d5</strong> Black pushes the pawn to d5 and challenges White's e4 pawn. Black starts the fight in the center before White's bishop arrives on g2.</li>
+      <li style="margin:0 0 8px;"><strong>4. exd5</strong> White's e4 pawn captures Black's pawn on d5. White trades in the center and opens the diagonal for the bishop that is heading to g2.</li>
+      <li style="margin:0 0 8px;"><strong>4...Nxd5</strong> Black's knight recaptures the pawn on d5. White and Black now have the same material again. Black's knight sits in the center on d5, but it is also exposed to White's c3 knight and the bishop coming to g2.</li>
+      <li style="margin:0 0 8px;"><strong>5. Bg2</strong> White develops the bishop to g2. White's bishop puts pressure on the d5 knight from the long diagonal. This also clears f1, so White can prepare to castle.</li>
+      <li style="margin:0 0 8px;"><strong>5...Nxc3</strong> Black's knight captures the knight on c3. Black trades off the knight that was under fire from the g2 bishop for White's knight.</li>
+      <li style="margin:0 0 8px;"><strong>6. bxc3</strong> White's b-pawn recaptures the knight on c3. White's c-pawns are now doubled, but the b-file has opened, so White can later use it with a rook on b1. White's pawns have also moved toward the center and can support the d4 square.</li>
+      <li style="margin:0 0 8px;"><strong>6...Bd6</strong> Black develops the bishop to d6. Black's bishop defends the e5 pawn as Black continues developing the kingside. This clears f8, so Black can get ready to castle.</li>
+      <li style="margin:0 0 8px;"><strong>7. Nf3</strong> White develops the knight to f3 and attacks Black's e5 pawn. White develops while keeping Black busy defending e5.</li>
+      <li style="margin:0 0 8px;"><strong>7...O-O</strong> Black castles, bringing the king to safety. Black's king goes to g8, and the rook from h8 comes to f8.</li>
+      <li style="margin:0 0 8px;"><strong>8. O-O</strong> White also castles, bringing the king to safety. White's king goes to g1, and the rook from h1 comes to f1.</li>
+      <li style="margin:0 0 8px;"><strong>8...Nc6</strong> Black develops the knight to c6. Black's knight adds another defender to the e5 pawn and also covers the d4 square.</li>
+      <li style="margin:0 0 8px;"><strong>9. Rb1</strong> White moves the rook to b1. White's rook targets Black's b7 pawn along the open b-file. The typical plan is for White to press on the queenside with the g2 bishop and the b1 rook, while Black relies on the central e5 pawn and active development. That's the main line — try continuing the game yourself from here!</li>
+    </ul>
+  </section>
+
   <footer>© KitsuneChess</footer>
 </div>
 

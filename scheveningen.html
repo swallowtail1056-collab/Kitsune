@@ -139,6 +139,51 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
     <div class="board-grid" id="boardGrid"></div>
   </div>
 
+
+  <!-- 手順と解説のまとめ（ページを開いたときから全部読めるように） -->
+  <section id="moveSummary" style="margin:24px 0 8px;background:var(--card-bg,#fffaf0);border:2px solid var(--brown-light,#d8b88a);border-radius:12px;padding:14px 18px;line-height:1.75;">
+    <h2 class="lang-element-ja" style="font-size:1.15rem;margin:0 0 8px;">📜 手順と解説のまとめ</h2>
+    <h2 class="lang-element-en" style="font-size:1.15rem;margin:0 0 8px;">📜 All Moves Explained</h2>
+    <p class="lang-element-ja" style="margin:0 0 8px;">シェベニンゲン・シシリアンのレッスンを始めるよ！このページでは、黒がd6とe6のポーンで中央の手前に堅い形を作り、白がBe2・O-O・f4と組むクラシカルな形を見ていくよ。黒の堅いポーンの形に対して、白がどうキングサイドで準備を進めるのかがポイントなんだ。一手ずつジーンと一緒に、なぜその手を指すのかを学んでいこう。</p>
+    <p class="lang-element-en" style="margin:0 0 8px;">Let's start the Scheveningen Sicilian lesson! On this page we follow the classical setup, where Black builds a solid setup just behind the center with ...d6 and ...e6, and White sets up with Be2, O-O and f4. The key is how White prepares on the kingside against Black's solid pawn structure. Jene will walk you through why each move is played, one step at a time.</p>
+    <ul class="lang-element-ja" style="margin:0;padding-left:0;list-style:none;">
+      <li style="margin:0 0 8px;"><strong>1. e4</strong> 白はポーンをe4へ進めるよ。白は中央のマスを押さえながら、ビショップとクイーンが動く道を開けるんだ。</li>
+      <li style="margin:0 0 8px;"><strong>1...c5</strong> 黒はポーンをc5へ進めるよ。黒はこれで<a href='sicilian.html'>シシリアン・ディフェンス</a>の形に入り、c5のポーンで斜めにd4のマスを押さえるんだ。</li>
+      <li style="margin:0 0 8px;"><strong>2. Nf3</strong> 白はナイトをf3へ進めるよ。白は駒を展開しながら、次にd4と突く準備をしているんだ。</li>
+      <li style="margin:0 0 8px;"><strong>2...d6</strong> 黒はポーンをd6へ進めるよ。黒はe5のマスを押さえ、c8のビショップの道も開けるんだ。</li>
+      <li style="margin:0 0 8px;"><strong>3. d4</strong> 白はポーンをd4へ進めて、<a href='open_sicilian.html'>オープン・シシリアン</a>に入るよ。白は中央でポーンを交換して、駒が動きやすい開いた局面をねらうんだ。</li>
+      <li style="margin:0 0 8px;"><strong>3...cxd4</strong> 黒はc5のポーンでd4に来た白のポーンを取るよ。黒はこれで中央の白のポーンを減らし、cファイルを半分開くんだ。</li>
+      <li style="margin:0 0 8px;"><strong>4. Nxd4</strong> 白はナイトでd4にいた黒のポーンを取り返すよ。白のナイトは中央の強いマスに入るんだ。</li>
+      <li style="margin:0 0 8px;"><strong>4...Nf6</strong> 黒はナイトをf6へ進めるよ。黒はナイトを展開しながら、白のe4のポーンを攻撃するんだ。</li>
+      <li style="margin:0 0 8px;"><strong>5. Nc3</strong> 白はナイトをc3へ進めるよ。白はナイトを展開しながら、e4のポーンを守るんだ。</li>
+      <li style="margin:0 0 8px;"><strong>5...e6（シェベニンゲン！）</strong> ここがシェベニンゲンの一手！黒はポーンをe6へ進めて、d6とe6の2つのポーンを並べるよ。黒のポーンは中央のd5やe5のマスまでは進んでいないけれど、d6のポーンがc5とe5、e6のポーンがd5とf5のマスを押さえていて、白の駒が入りこみにくい堅い形になるんだ。黒のこの形はスモール・センター（小さな中央）と呼ばれているよ。黒はこの手の代わりに5...a6の<a href='najdorf.html'>ナイドルフ</a>や5...g6の<a href='dragon.html'>ドラゴン</a>を選ぶこともできるけれど、黒はここで、中央の手前で守りを固める道を選ぶんだ。その代わり、黒のポーンは前に出ないので、白に広いスペースを与えやすいよ。</li>
+      <li style="margin:0 0 8px;"><strong>6. Be2</strong> 白はビショップをe2へ進めるよ。白は落ち着いて駒を展開し、キャスリングの準備をするんだ。 白はこの手の代わりに6.g4と、すぐにキングサイドのポーンを突いて攻める手もあって、これはケレス・アタックと呼ばれているよ。とても鋭い変化で、シェベニンゲンに対する白の最も強力な作戦の1つとされているんだ。</li>
+      <li style="margin:0 0 8px;"><strong>6...a6</strong> 黒はポーンをa6へ進めるよ。黒は白の駒がb5のマスに入るのを防ぎ、この先b5と突いてクイーンサイドで動く準備をするんだ。</li>
+      <li style="margin:0 0 8px;"><strong>7. O-O</strong> 白はキャスリングでキングを安全な場所へ動かすよ。白はキングの安全を確保して、キングサイドで攻める準備を進めるんだ。</li>
+      <li style="margin:0 0 8px;"><strong>7...Be7</strong> 黒はビショップをe7へ進めるよ。黒はキングサイドの駒を出し終えて、キャスリングの準備をするんだ。</li>
+      <li style="margin:0 0 8px;"><strong>8. f4</strong> 白はポーンをf4へ進めるよ。白はキングサイドでポーンを前に出して、この先e5やf5と突いて黒の中央を崩す準備をするんだ。その代わり、白はキングのそばにあるfのポーンを動かすので、白のキングの守りも少し薄くなるよ。</li>
+      <li style="margin:0 0 8px;"><strong>8...O-O</strong> 黒もキャスリングでキングを安全な場所へ動かすよ。黒は堅いポーンの形に守られて、この先Qc7やNc6、b5でクイーンサイドから反撃する準備をするんだ。白がキングサイド、黒がクイーンサイドで攻め合う、シシリアンらしい展開になるよ。これで本譜は一段落、続きはぜひ自分で指してみてね！</li>
+    </ul>
+    <ul class="lang-element-en" style="margin:0;padding-left:0;list-style:none;">
+      <li style="margin:0 0 8px;"><strong>1. e4</strong> White pushes the pawn to e4. White takes control of central squares and opens lines for the bishop and queen.</li>
+      <li style="margin:0 0 8px;"><strong>1...c5</strong> Black pushes the pawn to c5. Black enters the <a href='sicilian.html?lang=en'>Sicilian Defense</a> and uses the c5 pawn to control the d4 square diagonally.</li>
+      <li style="margin:0 0 8px;"><strong>2. Nf3</strong> White develops the knight to f3. White develops a piece while preparing to push d4 next.</li>
+      <li style="margin:0 0 8px;"><strong>2...d6</strong> Black pushes the pawn to d6. Black controls the e5 square and opens the path for the c8 bishop.</li>
+      <li style="margin:0 0 8px;"><strong>3. d4</strong> White pushes the pawn to d4, entering the <a href='open_sicilian.html?lang=en'>Open Sicilian</a>. White aims to trade pawns in the center and open the position for the pieces.</li>
+      <li style="margin:0 0 8px;"><strong>3...cxd4</strong> Black's c5 pawn captures the white pawn that came to d4. Black removes one of White's central pawns and half-opens the c-file.</li>
+      <li style="margin:0 0 8px;"><strong>4. Nxd4</strong> White's knight takes back the black pawn that was on d4. White's knight lands on a strong central square.</li>
+      <li style="margin:0 0 8px;"><strong>4...Nf6</strong> Black develops the knight to f6. Black develops while attacking White's e4 pawn.</li>
+      <li style="margin:0 0 8px;"><strong>5. Nc3</strong> White develops the knight to c3. White develops while defending the e4 pawn.</li>
+      <li style="margin:0 0 8px;"><strong>5...e6 (Scheveningen!)</strong> Here's the Scheveningen! Black pushes the pawn to e6, lining up pawns on d6 and e6. Black's pawns haven't advanced to the central squares d5 or e5, but the d6 pawn covers c5 and e5 and the e6 pawn covers d5 and f5, creating a solid setup that White's pieces find hard to break into. This structure is called the small center. Instead of this move, Black can also choose 5...a6, the <a href='najdorf.html?lang=en'>Najdorf</a>, or 5...g6, the <a href='dragon.html?lang=en'>Dragon</a>, but here Black chooses to build a solid defensive setup just behind the center. The trade-off is that Black's pawns stay back, giving White plenty of space.</li>
+      <li style="margin:0 0 8px;"><strong>6. Be2</strong> White develops the bishop to e2. White develops calmly and prepares to castle. Instead of this move, White can also launch a kingside pawn storm right away with 6.g4, known as the Keres Attack. It's very sharp and considered one of White's most dangerous tries against the Scheveningen.</li>
+      <li style="margin:0 0 8px;"><strong>6...a6</strong> Black pushes the pawn to a6. Black keeps White's pieces off the b5 square and prepares to push ...b5 for queenside play.</li>
+      <li style="margin:0 0 8px;"><strong>7. O-O</strong> White castles, bringing the king to safety. White secures the king and prepares to attack on the kingside.</li>
+      <li style="margin:0 0 8px;"><strong>7...Be7</strong> Black develops the bishop to e7. Black finishes developing the kingside pieces and gets ready to castle.</li>
+      <li style="margin:0 0 8px;"><strong>8. f4</strong> White pushes the pawn to f4. White advances a kingside pawn, preparing to push e5 or f5 later and break up Black's center. The trade-off is that moving the f-pawn next to the king also thins out the shelter around White's own king.</li>
+      <li style="margin:0 0 8px;"><strong>8...O-O</strong> Black also castles, bringing the king to safety. Protected by the solid pawn structure, Black prepares queenside counterplay with moves like ...Qc7, ...Nc6 and ...b5. It becomes a typical Sicilian race, with White attacking on the kingside and Black on the queenside. That's the main line — try continuing the game yourself from here!</li>
+    </ul>
+  </section>
+
   <footer>© KitsuneChess</footer>
 </div>
 

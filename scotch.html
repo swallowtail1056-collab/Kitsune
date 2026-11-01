@@ -139,6 +139,53 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
     <div class="board-grid" id="boardGrid"></div>
   </div>
 
+
+  <!-- 手順と解説のまとめ（ページを開いたときから全部読めるように） -->
+  <section id="moveSummary" style="margin:24px 0 8px;background:var(--card-bg,#fffaf0);border:2px solid var(--brown-light,#d8b88a);border-radius:12px;padding:14px 18px;line-height:1.75;">
+    <h2 class="lang-element-ja" style="font-size:1.15rem;margin:0 0 8px;">📜 手順と解説のまとめ</h2>
+    <h2 class="lang-element-en" style="font-size:1.15rem;margin:0 0 8px;">📜 All Moves Explained</h2>
+    <p class="lang-element-ja" style="margin:0 0 8px;">スコッチ・ゲームのレッスンを始めるよ！このページでは、白がナイトを交換してからe5と突く、ミーゼス・バリエーションを見ていくよ。白の中央のスペースと、黒の駒の働きのどちらが生きるかがポイントなんだ。一手ずつジーンと一緒に、なぜその手を指すのかを学んでいこう。</p>
+    <p class="lang-element-en" style="margin:0 0 8px;">Let's start the Scotch Game lesson! On this page we follow the Mieses Variation, where White trades knights and then pushes e5. The key is whether White's central space or Black's active pieces will matter more. Jene will walk you through why each move is played, one step at a time.</p>
+    <ul class="lang-element-ja" style="margin:0;padding-left:0;list-style:none;">
+      <li style="margin:0 0 8px;"><strong>1. e4</strong> 白はポーンをe4へ進めるよ。白は中央のマスを押さえながら、ビショップとクイーンが動く道を開けるんだ。</li>
+      <li style="margin:0 0 8px;"><strong>1...e5</strong> 黒はポーンをe5へ進めるよ。黒も同じように中央を押さえて、白のポーンと向かい合う形を作るんだ。</li>
+      <li style="margin:0 0 8px;"><strong>2. Nf3</strong> 白はナイトをf3へ進めるよ。白のナイトは展開しながら、黒のe5のポーンを攻撃しているんだ。</li>
+      <li style="margin:0 0 8px;"><strong>2...Nc6</strong> 黒はナイトをc6へ進めるよ。黒はナイトを展開しながら、e5のポーンを守るんだ。</li>
+      <li style="margin:0 0 8px;"><strong>3. d4（スコッチ！）</strong> ここがスコッチ・ゲームの一手！白はポーンをd4へ進めて、すぐに黒のe5のポーンに挑むよ。白は早い段階で中央を開いて、駒を自由に動かせる形をめざすんだ。</li>
+      <li style="margin:0 0 8px;"><strong>3...exd4</strong> 黒はe5のポーンでd4に来た白のポーンを取るよ。黒はe5のポーンを守り続けるのがむずかしいので、ここで交換するのがふつうなんだ。</li>
+      <li style="margin:0 0 8px;"><strong>4. Nxd4</strong> 白はナイトでd4のポーンを取り返すよ。白のナイトは中央のd4に入り、黒のc6のナイトとにらみ合う形になったんだ。 白はこの手の代わりに、4.Bc4とポーンを取り返さずに展開を急ぐ<a href='scotch_gambit.html'>スコッチ・ギャンビット</a>を選ぶこともできるよ。白はポーンを渡す代わりに、早く駒を働かせて攻めようとするんだ。</li>
+      <li style="margin:0 0 8px;"><strong>4...Nf6</strong> 黒はナイトをf6へ進めるよ。黒のナイトは白のe4のポーンを攻撃して、展開しながら反撃するんだ。 黒はこの手の代わりに、4...Bc5とビショップを出して、d4のナイトを攻撃することもできるよ。黒のビショップは、展開しながら白の中央のナイトに圧力をかけるんだ。</li>
+      <li style="margin:0 0 8px;"><strong>5. Nxc6</strong> 白はナイトでc6のナイトを取るよ。白は駒を交換して、黒のbのポーンをc6へ引き寄せ、黒のポーンの形をくずすんだ。</li>
+      <li style="margin:0 0 8px;"><strong>5...bxc6</strong> 黒はbのポーンでc6のナイトを取り返すよ。黒のcのポーンは2つ縦に並んだけれど、黒のポーンは中央寄りになり、d5のマスを支えられるようになったんだ。</li>
+      <li style="margin:0 0 8px;"><strong>6. e5</strong> 白はポーンをe5へ進めて、f6のナイトを攻撃するよ。白は黒のナイトを追い払いながら、中央にスペースを広げるんだ。白のこの手から始まる形は、ミーゼス・バリエーションと呼ばれているよ。</li>
+      <li style="margin:0 0 8px;"><strong>6...Qe7</strong> 黒はクイーンをe7へ動かすよ。黒のクイーンはe列で白のe5のポーンをピンしていて、白のポーンはf6のナイトを取ることができないんだ。黒のクイーンは、e5のポーンそのものも攻撃しているよ。</li>
+      <li style="margin:0 0 8px;"><strong>7. Qe2</strong> 白はクイーンをe2へ動かすよ。白のクイーンはe5のポーンを守りながら、e列のピンも外すんだ。これで白は、e5のポーンでf6のナイトを取れるようになったよ。</li>
+      <li style="margin:0 0 8px;"><strong>7...Nd5</strong> 黒はナイトをd5へ動かすよ。黒のナイトは取られる前に中央の強いマスへ移り、白のc3やb4のマスにも利かせるんだ。</li>
+      <li style="margin:0 0 8px;"><strong>8. c4</strong> 白はポーンをc4へ進めて、d5のナイトを攻撃するよ。白は黒のナイトを中央から追い払いながら、クイーンサイドのスペースも広げるんだ。</li>
+      <li style="margin:0 0 8px;"><strong>8...Ba6</strong> 黒はビショップをa6へ進めるよ。黒のビショップはc4のポーンをピンしていて、白のポーンが動くと、後ろにいるe2のクイーンが取られてしまうんだ。黒はこうして、d5のナイトが取られないようにしているよ。</li>
+      <li style="margin:0 0 8px;"><strong>9. b3</strong> 白はポーンをb3へ進めるよ。白のポーンはc4のポーンを守り、白はあとでビショップをb2へ出す準備もするんだ。白はe5のポーンと中央のスペースを生かして攻め、黒はc4のポーンへのピンや駒の働きで反撃するのが典型的な流れだよ。これで本譜は一段落、続きはぜひ自分で指してみてね！</li>
+    </ul>
+    <ul class="lang-element-en" style="margin:0;padding-left:0;list-style:none;">
+      <li style="margin:0 0 8px;"><strong>1. e4</strong> White pushes the pawn to e4. White takes control of central squares and opens lines for the bishop and queen.</li>
+      <li style="margin:0 0 8px;"><strong>1...e5</strong> Black pushes the pawn to e5. Black also claims the center, setting up a pawn face-off with White.</li>
+      <li style="margin:0 0 8px;"><strong>2. Nf3</strong> White develops the knight to f3. White's knight develops while attacking Black's e5 pawn.</li>
+      <li style="margin:0 0 8px;"><strong>2...Nc6</strong> Black develops the knight to c6. Black develops a piece and defends the e5 pawn at the same time.</li>
+      <li style="margin:0 0 8px;"><strong>3. d4 (Scotch!)</strong> Here's the Scotch Game! White pushes the pawn to d4 and challenges Black's e5 pawn right away. White opens the center early and aims for a position where the pieces can move freely.</li>
+      <li style="margin:0 0 8px;"><strong>3...exd4</strong> Black's e5 pawn captures White's pawn on d4. Black would have trouble holding the e5 pawn, so trading here is the normal choice.</li>
+      <li style="margin:0 0 8px;"><strong>4. Nxd4</strong> White's knight recaptures the pawn on d4. White's knight now stands in the center on d4, facing Black's knight on c6. Instead of this move, White can also play 4.Bc4, the <a href='scotch_gambit.html?lang=en'>Scotch Gambit</a>, hurrying development instead of recapturing the pawn. White gives up the pawn in return for fast piece activity and attacking chances.</li>
+      <li style="margin:0 0 8px;"><strong>4...Nf6</strong> Black develops the knight to f6. Black's knight attacks White's e4 pawn, developing and counterattacking at the same time. Instead of this move, Black can also play 4...Bc5, attacking the d4 knight. Black's bishop develops while putting pressure on White's central knight.</li>
+      <li style="margin:0 0 8px;"><strong>5. Nxc6</strong> White's knight captures the knight on c6. White trades pieces and pulls Black's b-pawn to c6, damaging Black's pawn structure.</li>
+      <li style="margin:0 0 8px;"><strong>5...bxc6</strong> Black's b-pawn recaptures the knight on c6. Black's c-pawns are now doubled, but Black's pawns have moved toward the center and can support the d5 square.</li>
+      <li style="margin:0 0 8px;"><strong>6. e5</strong> White pushes the pawn to e5 and attacks the f6 knight. White drives Black's knight away and gains space in the center. The line starting with this move by White is called the Mieses Variation.</li>
+      <li style="margin:0 0 8px;"><strong>6...Qe7</strong> Black moves the queen to e7. Black's queen pins White's e5 pawn on the e-file, so White's pawn cannot capture the f6 knight. Black's queen also attacks the e5 pawn itself.</li>
+      <li style="margin:0 0 8px;"><strong>7. Qe2</strong> White moves the queen to e2. White's queen defends the e5 pawn and also breaks the pin on the e-file. Now White threatens to capture the f6 knight with the e5 pawn.</li>
+      <li style="margin:0 0 8px;"><strong>7...Nd5</strong> Black moves the knight to d5. Black's knight escapes to a strong central square before it can be taken, and it also covers White's c3 and b4 squares.</li>
+      <li style="margin:0 0 8px;"><strong>8. c4</strong> White pushes the pawn to c4 and attacks the knight on d5. White drives Black's knight out of the center and also gains space on the queenside.</li>
+      <li style="margin:0 0 8px;"><strong>8...Ba6</strong> Black develops the bishop to a6. Black's bishop pins the c4 pawn, so if White's pawn moves, the queen behind it on e2 can be captured. In this way, Black keeps the d5 knight from being taken.</li>
+      <li style="margin:0 0 8px;"><strong>9. b3</strong> White pushes the pawn to b3. White's pawn defends the c4 pawn, and White also prepares to bring the bishop to b2 later. The typical plan is for White to use the e5 pawn and the space in the center to attack, while Black counters with the pin on the c4 pawn and active pieces. That's the main line — try continuing the game yourself from here!</li>
+    </ul>
+  </section>
+
   <footer>© KitsuneChess</footer>
 </div>
 

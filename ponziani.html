@@ -139,6 +139,45 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
     <div class="board-grid" id="boardGrid"></div>
   </div>
 
+
+  <!-- 手順と解説のまとめ（ページを開いたときから全部読めるように） -->
+  <section id="moveSummary" style="margin:24px 0 8px;background:var(--card-bg,#fffaf0);border:2px solid var(--brown-light,#d8b88a);border-radius:12px;padding:14px 18px;line-height:1.75;">
+    <h2 class="lang-element-ja" style="font-size:1.15rem;margin:0 0 8px;">📜 手順と解説のまとめ</h2>
+    <h2 class="lang-element-en" style="font-size:1.15rem;margin:0 0 8px;">📜 All Moves Explained</h2>
+    <p class="lang-element-ja" style="margin:0 0 8px;">ポンジアーニ・オープニングのレッスンを始めるよ！このページでは、黒が4...Nxe4でポーンを取り、白がd5とNxe5で取り返す、ヤーニッシュ・バリエーションを見ていくよ。白と黒がお互いに駒を攻め合う、鋭い展開の流れがポイントなんだ。一手ずつジーンと一緒に、なぜその手を指すのかを学んでいこう。</p>
+    <p class="lang-element-en" style="margin:0 0 8px;">Let's start the Ponziani Opening lesson! On this page we follow the Jaenisch Variation, where Black grabs a pawn with 4...Nxe4 and White wins it back with d5 and Nxe5. The key is the sharp sequence where both sides attack each other's pieces. Jene will walk you through why each move is played, one step at a time.</p>
+    <ul class="lang-element-ja" style="margin:0;padding-left:0;list-style:none;">
+      <li style="margin:0 0 8px;"><strong>1. e4</strong> 白はポーンをe4へ進めるよ。白は中央のマスを押さえながら、ビショップとクイーンが動く道を開けるんだ。</li>
+      <li style="margin:0 0 8px;"><strong>1...e5</strong> 黒はポーンをe5へ進めるよ。黒も同じように中央を押さえて、白のポーンと向かい合う形を作るんだ。</li>
+      <li style="margin:0 0 8px;"><strong>2. Nf3</strong> 白はナイトをf3へ進めるよ。白のナイトは展開しながら、黒のe5のポーンを攻撃しているんだ。</li>
+      <li style="margin:0 0 8px;"><strong>2...Nc6</strong> 黒はナイトをc6へ進めるよ。黒はナイトを展開しながら、e5のポーンを守るんだ。</li>
+      <li style="margin:0 0 8px;"><strong>3. c3（ポンジアーニ！）</strong> ここがポンジアーニ・オープニングの一手！白はポーンをc3へ進めて、次にd4と突いたときにポーンで支えられるように準備するよ。一般的には3.Bb5や3.Bc4でビショップを出すけれど、白はここで中央に大きなポーンの形を作る道を選ぶんだ。その代わり、白はナイトの自然な行き先であるc3のマスを自分のポーンでふさぎ、展開も1手遅れることになるよ。</li>
+      <li style="margin:0 0 8px;"><strong>3...Nf6</strong> 黒はナイトをf6へ進めるよ。黒はナイトを展開しながら、守りのない白のe4のポーンを攻撃するんだ。白がc3と突いたので、e4を守るためにナイトをc3に出すことはもうできないよ。 黒はこの手の代わりに3...d5と、すぐに中央で反撃することもできるよ。</li>
+      <li style="margin:0 0 8px;"><strong>4. d4</strong> 白はポーンをd4へ進めるよ。白はe4を守らずに中央へポーンを進めて、黒のe5のポーンに働きかけるんだ。</li>
+      <li style="margin:0 0 8px;"><strong>4...Nxe4</strong> 黒はナイトでe4にいた白のポーンを取るよ。黒はこれでポーンを1つ得するんだ。この形はヤーニッシュ・バリエーションと呼ばれていて、黒のいちばん人気のある応じ方だよ。 黒はこの手の代わりに4...exd4と中央のポーンを交換することもできて、こちらも互角に戦える形になるよ。</li>
+      <li style="margin:0 0 8px;"><strong>5. d5</strong> 白はポーンをd5へ進めるよ。白はc6のナイトを攻撃して追い払い、黒の陣地に食い込むんだ。</li>
+      <li style="margin:0 0 8px;"><strong>5...Ne7</strong> 黒はナイトをe7へ下げるよ。黒のナイトは攻撃をかわしながら、この先g6へ回ってキングサイドを守る準備をするんだ。</li>
+      <li style="margin:0 0 8px;"><strong>6. Nxe5</strong> 白はナイトでe5にいた黒のポーンを取るよ。白はこれで取られたポーンを取り返し、ポーンの数は互角に戻るんだ。</li>
+      <li style="margin:0 0 8px;"><strong>6...Ng6</strong> 黒はナイトをg6へ動かすよ。黒のナイトは白のe5のナイトを攻撃して、白に下がる手か交換する手を迫るんだ。</li>
+      <li style="margin:0 0 8px;"><strong>7. Qd4</strong> 白はクイーンをd4へ進めるよ。白のクイーンはe5のナイトを守りながら、守りのない黒のe4のナイトをねらっているんだ。白のクイーンはa7のポーンにも利いているけれど、a7は黒のa8のルークに守られているので、取るとクイーンを取り返されてしまうよ。その代わり、白はクイーンを早く中央に出すので、黒の駒に攻撃されやすくなるよ。この後は黒が7...Qf6などでe4のナイトを守りながら反撃し、激しい駆け引きが続くんだ。これで本譜は一段落、続きはぜひ自分で指してみてね！</li>
+    </ul>
+    <ul class="lang-element-en" style="margin:0;padding-left:0;list-style:none;">
+      <li style="margin:0 0 8px;"><strong>1. e4</strong> White pushes the pawn to e4. White takes control of central squares and opens lines for the bishop and queen.</li>
+      <li style="margin:0 0 8px;"><strong>1...e5</strong> Black pushes the pawn to e5. Black also claims the center, setting up a pawn face-off with White.</li>
+      <li style="margin:0 0 8px;"><strong>2. Nf3</strong> White develops the knight to f3. White's knight develops while attacking Black's e5 pawn.</li>
+      <li style="margin:0 0 8px;"><strong>2...Nc6</strong> Black develops the knight to c6. Black develops a piece and defends the e5 pawn at the same time.</li>
+      <li style="margin:0 0 8px;"><strong>3. c3 (Ponziani!)</strong> Here's the Ponziani Opening! White pushes the pawn to c3, preparing to support a d4 push with a pawn. White usually develops a bishop with 3.Bb5 or 3.Bc4, but here White aims to build a big pawn center. The trade-off is that White takes away c3, the knight's natural square, with its own pawn and falls a move behind in development.</li>
+      <li style="margin:0 0 8px;"><strong>3...Nf6</strong> Black develops the knight to f6. Black develops while attacking White's undefended e4 pawn. Since White has played c3, the knight can no longer go to c3 to defend e4. Instead of this move, Black can also strike back in the center right away with 3...d5.</li>
+      <li style="margin:0 0 8px;"><strong>4. d4</strong> White pushes the pawn to d4. Instead of defending e4, White pushes into the center and challenges Black's e5 pawn.</li>
+      <li style="margin:0 0 8px;"><strong>4...Nxe4</strong> Black's knight captures the white pawn that was on e4. Black wins a pawn. This line is called the Jaenisch Variation, and it's Black's most popular reply. Instead of this move, Black can also trade in the center with 4...exd4, which also gives Black a fair game.</li>
+      <li style="margin:0 0 8px;"><strong>5. d5</strong> White pushes the pawn to d5. White attacks and chases away the c6 knight, pushing into Black's camp.</li>
+      <li style="margin:0 0 8px;"><strong>5...Ne7</strong> Black retreats the knight to e7. Black's knight escapes the attack and prepares to reroute to g6 to guard the kingside.</li>
+      <li style="margin:0 0 8px;"><strong>6. Nxe5</strong> White's knight takes the black pawn that was on e5. White wins back the pawn, and material is level again.</li>
+      <li style="margin:0 0 8px;"><strong>6...Ng6</strong> Black moves the knight to g6. Black's knight attacks White's e5 knight, asking White to retreat or trade.</li>
+      <li style="margin:0 0 8px;"><strong>7. Qd4</strong> White brings the queen to d4. White's queen defends the e5 knight while attacking Black's undefended knight on e4. The queen also reaches the a7 pawn, but a7 is protected by Black's rook on a8, so taking it would cost White the queen. The trade-off is that bringing the queen to the center early makes it a target for Black's pieces. From here, Black often defends the e4 knight while counterattacking with moves like 7...Qf6, and a sharp battle follows. That's the main line — try continuing the game yourself from here!</li>
+    </ul>
+  </section>
+
   <footer>© KitsuneChess</footer>
 </div>
 

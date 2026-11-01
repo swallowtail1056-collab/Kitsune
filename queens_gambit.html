@@ -139,6 +139,59 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
     <div class="board-grid" id="boardGrid"></div>
   </div>
 
+
+  <!-- 手順と解説のまとめ（ページを開いたときから全部読めるように） -->
+  <section id="moveSummary" style="margin:24px 0 8px;background:var(--card-bg,#fffaf0);border:2px solid var(--brown-light,#d8b88a);border-radius:12px;padding:14px 18px;line-height:1.75;">
+    <h2 class="lang-element-ja" style="font-size:1.15rem;margin:0 0 8px;">📜 手順と解説のまとめ</h2>
+    <h2 class="lang-element-en" style="font-size:1.15rem;margin:0 0 8px;">📜 All Moves Explained</h2>
+    <p class="lang-element-ja" style="margin:0 0 8px;">クイーンズ・ギャンビットのレッスンを始めるよ！このページでは、黒が2...e6でc4のポーンを取らずに中央を守り、6...h6と7...b6でビショップを生かす、タルタコワ・バリエーションの形を見ていくよ。白と黒が中央でどう駒を交換し、どんな形が残るのかがポイントなんだ。一手ずつジーンと一緒に、なぜその手を指すのかを学んでいこう。</p>
+    <p class="lang-element-en" style="margin:0 0 8px;">Let's start the Queen's Gambit lesson! On this page we follow the Tartakower Variation, where Black declines the pawn with 2...e6 and then activates the bishop with 6...h6 and 7...b6. The key is how White and Black trade pieces in the center and what structure remains. Jene will walk you through why each move is played, one step at a time.</p>
+    <ul class="lang-element-ja" style="margin:0;padding-left:0;list-style:none;">
+      <li style="margin:0 0 8px;"><strong>1. d4</strong> 白はポーンをd4へ進めるよ。白は中央のマスを押さえながら、c1のビショップの道を開けるんだ。</li>
+      <li style="margin:0 0 8px;"><strong>1...d5</strong> 黒はポーンをd5へ進めるよ。黒も中央のマスを押さえて、白のd4のポーンと向かい合う形を作るんだ。</li>
+      <li style="margin:0 0 8px;"><strong>2. c4（クイーンズ・ギャンビット！）</strong> ここがクイーンズ・ギャンビットの一手！白はポーンをc4へ進めて、黒のd5のポーンに取らせるように差し出すよ。白のねらいはポーンを損することではなく、黒のd5のポーンを中央からどかして、白が中央を広く押さえることなんだ。黒がc4のポーンを取っても、白はたいてい取り返せるので、本当の意味でのギャンビットではないと言われているよ。</li>
+      <li style="margin:0 0 8px;"><strong>2...e6（ディクラインド）</strong> 黒はポーンをe6へ進めて、クイーンズ・ギャンビット・ディクラインドに入るよ。黒はc4のポーンを取らずに、d5のポーンをe6のポーンで守って、中央を保つんだ。その代わり、黒のc8のビショップはe6とb7のポーンにふさがれて、外に出にくくなるよ。 黒はこの手の代わりに2...dxc4とc4のポーンを取る<a href='queens_gambit_accepted.html'>クイーンズ・ギャンビット・アクセプテッド</a>や、2...c6でd5を守る<a href='slav.html'>スラブ・ディフェンス</a>を選ぶこともできるよ。</li>
+      <li style="margin:0 0 8px;"><strong>3. Nc3</strong> 白はナイトをc3へ進めるよ。白のナイトはd5のポーンに利いて、白はc4のポーンと合わせて2つでd5を攻撃する形になるんだ。黒もe6のポーンとd8のクイーンの2つでd5を守っているよ。</li>
+      <li style="margin:0 0 8px;"><strong>3...Nf6</strong> 黒はナイトをf6へ進めるよ。黒のナイトもd5のポーンを守って、黒はd5を守る駒を3つに増やすんだ。</li>
+      <li style="margin:0 0 8px;"><strong>4. Bg5</strong> 白はビショップをg5へ進めるよ。白のビショップはf6のナイトをピンしていて、黒のナイトは動くとd8のクイーンが取られてしまうので、動きにくいんだ。白はこうして、d5を守っている黒のナイトの働きを弱めるよ。</li>
+      <li style="margin:0 0 8px;"><strong>4...Be7</strong> 黒はビショップをe7へ進めるよ。黒のビショップはf6のナイトとd8のクイーンの間に入って、クイーンが取られる心配をなくすんだ。これでf8とg8のマスが空いて、黒は次の手でキャスリングできるよ。</li>
+      <li style="margin:0 0 8px;"><strong>5. e3</strong> 白はポーンをe3へ進めるよ。白はd4のポーンを守りながら、f1のビショップの道を開けるんだ。</li>
+      <li style="margin:0 0 8px;"><strong>5...O-O</strong> 黒はキャスリングでキングを安全な場所へ動かすよ。黒のキングはg8へ移り、h8にいたルークはf8へ出てくるんだ。</li>
+      <li style="margin:0 0 8px;"><strong>6. Nf3</strong> 白はナイトをf3へ進めるよ。白のナイトはd4のポーンを守りながら、キングサイドの展開を進めるんだ。</li>
+      <li style="margin:0 0 8px;"><strong>6...h6</strong> 黒はポーンをh6へ進めるよ。黒はg5にいる白のビショップを攻撃して、ビショップを下がらせるか、f6のナイトと交換するかを白に決めさせるんだ。</li>
+      <li style="margin:0 0 8px;"><strong>7. Bh4</strong> 白はビショップをh4へ下げるよ。白のビショップはh4からもf6のナイトに利き続けて、ピンを保つんだ。</li>
+      <li style="margin:0 0 8px;"><strong>7...b6</strong> 黒はポーンをb6へ進めるよ。黒はc8のビショップをb7へ出す道を作って、e6のポーンにふさがれていたビショップを、長い斜めの列で働かせようとするんだ。黒のこの形は、タルタコワ・バリエーションと呼ばれているよ。</li>
+      <li style="margin:0 0 8px;"><strong>8. cxd5</strong> 白はc4のポーンでd5にいた黒のポーンを取るよ。白は中央のポーンを交換して、黒に取り返し方を選ばせるんだ。</li>
+      <li style="margin:0 0 8px;"><strong>8...Nxd5</strong> 黒はf6のナイトでd5に入った白のポーンを取り返すよ。黒は駒を交換して、窮屈な形をやわらげようとするんだ。</li>
+      <li style="margin:0 0 8px;"><strong>9. Bxe7</strong> 白はh4のビショップでe7にいた黒のビショップを取るよ。f6のナイトが動いたので、白のビショップはe7まで利くようになっていたんだ。</li>
+      <li style="margin:0 0 8px;"><strong>9...Qxe7</strong> 黒はクイーンでe7に入った白のビショップを取り返すよ。これで白と黒は、ビショップを1つずつ交換したんだ。</li>
+      <li style="margin:0 0 8px;"><strong>10. Nxd5</strong> 白はc3のナイトでd5にいた黒のナイトを取るよ。白はナイトも交換して、黒の中央のポーンの形を決めにいくんだ。</li>
+      <li style="margin:0 0 8px;"><strong>10...exd5</strong> 黒はe6のポーンでd5に入った白のナイトを取り返すよ。黒のc8のビショップは、e6のポーンがいなくなったので、c8からh3への斜めの列でも動けるようになったんだ。この後は白がcファイル（c1からc8の縦のマス）を使って黒のクイーンサイドに圧力をかけ、黒はc5と突いて中央で反撃するのが典型的な流れだよ。白と黒のこの形は、1972年の世界選手権の第6局で、フィッシャーがスパスキーに勝った対局でも現れたんだ。これで本譜は一段落、続きはぜひ自分で指してみてね！</li>
+    </ul>
+    <ul class="lang-element-en" style="margin:0;padding-left:0;list-style:none;">
+      <li style="margin:0 0 8px;"><strong>1. d4</strong> White pushes the pawn to d4. White takes control of central squares and opens the path for the c1 bishop.</li>
+      <li style="margin:0 0 8px;"><strong>1...d5</strong> Black pushes the pawn to d5. Black also claims the center and sets up a face-off with White's d4 pawn.</li>
+      <li style="margin:0 0 8px;"><strong>2. c4 (Queen's Gambit!)</strong> Here's the Queen's Gambit! White pushes the pawn to c4, offering it to Black's d5 pawn. White's goal isn't to lose a pawn but to lure Black's d5 pawn away from the center so White can control it. Even if Black takes on c4, White can usually win it back, so it's said not to be a true gambit.</li>
+      <li style="margin:0 0 8px;"><strong>2...e6 (Declined)</strong> Black pushes the pawn to e6, entering the Queen's Gambit Declined. Black doesn't take the c4 pawn and instead defends d5 with the e6 pawn, holding the center. The trade-off is that Black's c8 bishop is hemmed in by the pawns on e6 and b7 and has trouble getting out. Instead of this move, Black can also take the pawn with 2...dxc4, the <a href='queens_gambit_accepted.html?lang=en'>Queen's Gambit Accepted</a>, or defend d5 with 2...c6, the <a href='slav.html?lang=en'>Slav Defense</a>.</li>
+      <li style="margin:0 0 8px;"><strong>3. Nc3</strong> White develops the knight to c3. White's knight hits the d5 pawn, so White now attacks d5 twice together with the c4 pawn. Black also defends d5 twice, with the e6 pawn and the d8 queen.</li>
+      <li style="margin:0 0 8px;"><strong>3...Nf6</strong> Black develops the knight to f6. Black's knight also defends the d5 pawn, raising Black's defenders of d5 to three.</li>
+      <li style="margin:0 0 8px;"><strong>4. Bg5</strong> White develops the bishop to g5. White's bishop pins the f6 knight: if the knight moved, Black's d8 queen would be captured, so the knight is hard to move. In this way White weakens the knight that is defending d5.</li>
+      <li style="margin:0 0 8px;"><strong>4...Be7</strong> Black develops the bishop to e7. Black's bishop steps in between the f6 knight and the d8 queen, so the queen is no longer in danger. This also clears f8 and g8, so Black can castle on the next move.</li>
+      <li style="margin:0 0 8px;"><strong>5. e3</strong> White pushes the pawn to e3. White defends the d4 pawn and opens the path for the f1 bishop.</li>
+      <li style="margin:0 0 8px;"><strong>5...O-O</strong> Black castles, bringing the king to safety. Black's king goes to g8, and the rook from h8 comes to f8.</li>
+      <li style="margin:0 0 8px;"><strong>6. Nf3</strong> White develops the knight to f3. White's knight defends the d4 pawn while continuing kingside development.</li>
+      <li style="margin:0 0 8px;"><strong>6...h6</strong> Black pushes the pawn to h6. Black attacks White's bishop on g5 and makes White decide whether to retreat it or trade it for the f6 knight.</li>
+      <li style="margin:0 0 8px;"><strong>7. Bh4</strong> White retreats the bishop to h4. From h4, White's bishop keeps hitting the f6 knight and maintains the pin.</li>
+      <li style="margin:0 0 8px;"><strong>7...b6</strong> Black pushes the pawn to b6. Black opens a path for the c8 bishop to b7, so the bishop that was blocked by the e6 pawn can work along the long diagonal instead. This setup for Black is called the Tartakower Variation.</li>
+      <li style="margin:0 0 8px;"><strong>8. cxd5</strong> White's c4 pawn captures Black's pawn on d5. White trades in the center and makes Black choose how to recapture.</li>
+      <li style="margin:0 0 8px;"><strong>8...Nxd5</strong> Black's f6 knight recaptures White's pawn on d5. Black looks to trade pieces and ease the cramped position.</li>
+      <li style="margin:0 0 8px;"><strong>9. Bxe7</strong> White's h4 bishop captures Black's bishop on e7. Since the f6 knight moved, White's bishop could now reach all the way to e7.</li>
+      <li style="margin:0 0 8px;"><strong>9...Qxe7</strong> Black's queen recaptures White's bishop on e7. White and Black have now traded one bishop each.</li>
+      <li style="margin:0 0 8px;"><strong>10. Nxd5</strong> White's c3 knight captures Black's knight on d5. White trades the knights too, fixing Black's central pawn structure.</li>
+      <li style="margin:0 0 8px;"><strong>10...exd5</strong> Black's e6 pawn recaptures White's knight on d5. With the e6 pawn gone, Black's c8 bishop can now also use the c8–h3 diagonal. From here, White typically uses the c-file (the column of squares from c1 to c8) to pressure Black's queenside, while Black hits back in the center with ...c5. This position also arose in Game 6 of the 1972 World Championship, which Fischer won against Spassky. That's the main line — try continuing the game yourself from here!</li>
+    </ul>
+  </section>
+
   <footer>© KitsuneChess</footer>
 </div>
 

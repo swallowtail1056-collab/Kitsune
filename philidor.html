@@ -139,6 +139,45 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
     <div class="board-grid" id="boardGrid"></div>
   </div>
 
+
+  <!-- 手順と解説のまとめ（ページを開いたときから全部読めるように） -->
+  <section id="moveSummary" style="margin:24px 0 8px;background:var(--card-bg,#fffaf0);border:2px solid var(--brown-light,#d8b88a);border-radius:12px;padding:14px 18px;line-height:1.75;">
+    <h2 class="lang-element-ja" style="font-size:1.15rem;margin:0 0 8px;">📜 手順と解説のまとめ</h2>
+    <h2 class="lang-element-en" style="font-size:1.15rem;margin:0 0 8px;">📜 All Moves Explained</h2>
+    <p class="lang-element-ja" style="margin:0 0 8px;">フィリドール・ディフェンスのレッスンを始めるよ！このページでは、黒がd6・Nf6・Nbd7でe5のポーンを守る、ハンハム・バリエーションの形を見ていくよ。黒がどうやって堅い守りの形を作るのかがポイントなんだ。一手ずつジーンと一緒に、なぜその手を指すのかを学んでいこう。</p>
+    <p class="lang-element-en" style="margin:0 0 8px;">Let's start the Philidor Defense lesson! On this page we follow the Hanham Variation, where Black defends the e5 pawn with ...d6, ...Nf6 and ...Nbd7. The key is how Black builds a solid defensive setup. Jene will walk you through why each move is played, one step at a time.</p>
+    <ul class="lang-element-ja" style="margin:0;padding-left:0;list-style:none;">
+      <li style="margin:0 0 8px;"><strong>1. e4</strong> 白はポーンをe4へ進めるよ。白は中央のマスを押さえながら、ビショップとクイーンが動く道を開けるんだ。</li>
+      <li style="margin:0 0 8px;"><strong>1...e5</strong> 黒はポーンをe5へ進めるよ。黒も同じように中央を押さえて、白のポーンと向かい合う形を作るんだ。</li>
+      <li style="margin:0 0 8px;"><strong>2. Nf3</strong> 白はナイトをf3へ進めるよ。白のナイトは展開しながら、黒のe5のポーンを攻撃しているんだ。</li>
+      <li style="margin:0 0 8px;"><strong>2...d6（フィリドール！）</strong> ここがフィリドール・ディフェンスの一手！黒はポーンをd6へ進めて、e5のポーンを守るよ。一般的には2...Nc6でナイトを展開しながら守るけれど、黒はここでポーンで守って、堅い形を作る道を選ぶんだ。その代わり、黒のd6のポーンはf8のビショップの道をふさぐので、黒の駒の動きは少し窮屈になるよ。</li>
+      <li style="margin:0 0 8px;"><strong>3. d4</strong> 白はポーンをd4へ進めるよ。白はこれでe5のポーンをd4のポーンとf3のナイトの2つで攻撃し、中央を広げるんだ。</li>
+      <li style="margin:0 0 8px;"><strong>3...Nf6</strong> 黒はナイトをf6へ進めるよ。黒はe5を守る代わりに、守りのない白のe4のポーンを攻撃し返すんだ。 黒はこの手の代わりに3...exd4と中央のポーンを交換することもできるよ。</li>
+      <li style="margin:0 0 8px;"><strong>4. Nc3</strong> 白はナイトをc3へ進めるよ。白はナイトを展開しながら、e4のポーンを守るんだ。</li>
+      <li style="margin:0 0 8px;"><strong>4...Nbd7</strong> 黒はナイトをd7へ進めるよ。黒のd7のナイトはe5のポーンを守っていて、黒はe5をd6のポーンとd7のナイトの2つで守る形になるんだ。黒のこの形はハンハム・バリエーションと呼ばれているよ。その代わり、黒のd7のナイトはc8のビショップの道をふさいでしまうんだ。</li>
+      <li style="margin:0 0 8px;"><strong>5. Bc4</strong> 白はビショップをc4へ進めるよ。白のビショップは、キングしか守っていない黒のf7のポーンをねらっているんだ。</li>
+      <li style="margin:0 0 8px;"><strong>5...Be7</strong> 黒はビショップをe7へ進めるよ。黒はキングサイドの駒を出し終えて、キャスリングでf7の弱さをカバーする準備をするんだ。</li>
+      <li style="margin:0 0 8px;"><strong>6. O-O</strong> 白はキャスリングでキングを安全な場所へ動かすよ。白はキングの安全を確保して、ルークを中央へ動かす準備をするんだ。</li>
+      <li style="margin:0 0 8px;"><strong>6...O-O</strong> 黒もキャスリングでキングを安全な場所へ動かすよ。黒のf8のルークがf7のポーンを守るようになり、f7の弱さが少しやわらぐんだ。</li>
+      <li style="margin:0 0 8px;"><strong>7. Re1</strong> 白はルークをe1へ動かすよ。白のルークはeファイルでe4のポーンを守り、中央での戦いに備えるんだ。白はスペースで少しリードしていて、黒は堅い守りから反撃のチャンスを待つ形だよ。この後は黒がc6やa5、白がa4などで、少しずつ形を整えていく流れがよく見られるんだ。これで本譜は一段落、続きはぜひ自分で指してみてね！</li>
+    </ul>
+    <ul class="lang-element-en" style="margin:0;padding-left:0;list-style:none;">
+      <li style="margin:0 0 8px;"><strong>1. e4</strong> White pushes the pawn to e4. White takes control of central squares and opens lines for the bishop and queen.</li>
+      <li style="margin:0 0 8px;"><strong>1...e5</strong> Black pushes the pawn to e5. Black also claims the center, setting up a pawn face-off with White.</li>
+      <li style="margin:0 0 8px;"><strong>2. Nf3</strong> White develops the knight to f3. White's knight develops while attacking Black's e5 pawn.</li>
+      <li style="margin:0 0 8px;"><strong>2...d6 (Philidor!)</strong> Here's the Philidor Defense! Black pushes the pawn to d6, defending the e5 pawn. Black usually defends with 2...Nc6 while developing a knight, but here Black uses a pawn to build a solid structure. The trade-off is that the d6 pawn blocks the f8 bishop's path, leaving Black's pieces a bit cramped.</li>
+      <li style="margin:0 0 8px;"><strong>3. d4</strong> White pushes the pawn to d4. White now attacks the e5 pawn twice, with the d4 pawn and the f3 knight, and expands in the center.</li>
+      <li style="margin:0 0 8px;"><strong>3...Nf6</strong> Black develops the knight to f6. Instead of defending e5 again, Black counterattacks White's undefended e4 pawn. Instead of this move, Black can also trade in the center with 3...exd4.</li>
+      <li style="margin:0 0 8px;"><strong>4. Nc3</strong> White develops the knight to c3. White develops while defending the e4 pawn.</li>
+      <li style="margin:0 0 8px;"><strong>4...Nbd7</strong> Black develops the knight to d7. Black's d7 knight defends the e5 pawn, so Black now guards e5 twice, with the d6 pawn and the d7 knight. This setup is called the Hanham Variation. The downside is that the d7 knight blocks the c8 bishop's path.</li>
+      <li style="margin:0 0 8px;"><strong>5. Bc4</strong> White develops the bishop to c4. White's bishop aims at Black's f7 pawn, which only the king defends.</li>
+      <li style="margin:0 0 8px;"><strong>5...Be7</strong> Black develops the bishop to e7. Black finishes developing the kingside pieces and prepares to castle, covering the weakness on f7.</li>
+      <li style="margin:0 0 8px;"><strong>6. O-O</strong> White castles, bringing the king to safety. White secures the king and gets ready to bring the rook to the center.</li>
+      <li style="margin:0 0 8px;"><strong>6...O-O</strong> Black also castles, bringing the king to safety. Black's rook on f8 now guards the f7 pawn, easing the weakness there.</li>
+      <li style="margin:0 0 8px;"><strong>7. Re1</strong> White moves the rook to e1. White's rook defends the e4 pawn along the e-file and prepares for the central fight. White has a small space advantage, while Black waits for counterplay from a solid position. A common continuation is for Black to play ...c6 or ...a5 and White a4, gradually improving their setups. That's the main line — try continuing the game yourself from here!</li>
+    </ul>
+  </section>
+
   <footer>© KitsuneChess</footer>
 </div>
 

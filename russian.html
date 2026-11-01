@@ -139,6 +139,59 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
     <div class="board-grid" id="boardGrid"></div>
   </div>
 
+
+  <!-- 手順と解説のまとめ（ページを開いたときから全部読めるように） -->
+  <section id="moveSummary" style="margin:24px 0 8px;background:var(--card-bg,#fffaf0);border:2px solid var(--brown-light,#d8b88a);border-radius:12px;padding:14px 18px;line-height:1.75;">
+    <h2 class="lang-element-ja" style="font-size:1.15rem;margin:0 0 8px;">📜 手順と解説のまとめ</h2>
+    <h2 class="lang-element-en" style="font-size:1.15rem;margin:0 0 8px;">📜 All Moves Explained</h2>
+    <p class="lang-element-ja" style="margin:0 0 8px;">ロシアン・ディフェンスのレッスンを始めるよ！このページでは、白が3.Nxe5とポーンを取る本線を見ていくよ。黒がどうやってポーンを取り返して、中央を固めるのかがポイントなんだ。一手ずつジーンと一緒に、なぜその手を指すのかを学んでいこう。</p>
+    <p class="lang-element-en" style="margin:0 0 8px;">Let's start the Russian Defense lesson! On this page we follow the main line, where White takes the pawn with 3.Nxe5. The key is how Black wins the pawn back and secures the center. Jene will walk you through why each move is played, one step at a time.</p>
+    <ul class="lang-element-ja" style="margin:0;padding-left:0;list-style:none;">
+      <li style="margin:0 0 8px;"><strong>1. e4</strong> 白はポーンをe4へ進めるよ。白は中央のマスを押さえながら、ビショップとクイーンが動く道を開けるんだ。</li>
+      <li style="margin:0 0 8px;"><strong>1...e5</strong> 黒はポーンをe5へ進めるよ。黒も同じように中央を押さえて、白のポーンと向かい合う形を作るんだ。</li>
+      <li style="margin:0 0 8px;"><strong>2. Nf3</strong> 白はナイトをf3へ進めるよ。白のナイトは展開しながら、黒のe5のポーンを攻撃しているんだ。</li>
+      <li style="margin:0 0 8px;"><strong>2...Nf6（ロシアン！）</strong> ここがロシアン・ディフェンス（ペトロフ・ディフェンス）の一手！黒はe5のポーンを守らずに、ナイトをf6へ出して白のe4のポーンを攻撃し返すよ。黒は白と同じような形で反撃して、左右対称に近い、落ち着いた展開をめざすんだ。</li>
+      <li style="margin:0 0 8px;"><strong>3. Nxe5</strong> 白はナイトでe5のポーンを取るよ。白のナイトは中央のe5に入り、黒のf7のマスもねらっているんだ。</li>
+      <li style="margin:0 0 8px;"><strong>3...d6</strong> 黒はポーンをd6へ進めて、e5のナイトを攻撃するよ。黒はすぐにe4のポーンを取り返さず、まず白のナイトを追い払うんだ。黒が3...Nxe4とすぐに取り返すと、白は4.Qe2とクイーンをe列に出して、黒のナイトが動いた瞬間にチェックをかけるねらいを作れるよ。たとえば黒が4...Nf6??と下がると、白は5.Nc6+とナイトを動かしてチェックをかけながら、d8のクイーンを取ってしまうんだ。</li>
+      <li style="margin:0 0 8px;"><strong>4. Nf3</strong> 白はナイトをf3へ下げるよ。白のナイトは安全な場所へ戻り、d4のマスにも利かせるんだ。 白はこの手の代わりに、4.Nxf7とナイトを捨ててf7を取る<a href='cochrane_gambit.html'>コクラン・ギャンビット</a>を選ぶこともできるよ。白はナイトを渡す代わりに、黒のキングを引き出して攻めようとするんだ。</li>
+      <li style="margin:0 0 8px;"><strong>4...Nxe4</strong> 黒はナイトでe4のポーンを取り返すよ。これで白と黒の駒の数は同じに戻ったんだ。黒のナイトはe4で中央に入り、白の陣地に利いているよ。</li>
+      <li style="margin:0 0 8px;"><strong>5. d4</strong> 白はポーンをd4へ進めるよ。白は中央のマスを押さえながら、c1のビショップとd1のクイーンの道を開けるんだ。白は次にビショップをd3へ出して、e4のナイトに挑む準備をしているよ。</li>
+      <li style="margin:0 0 8px;"><strong>5...d5</strong> 黒はポーンをd5へ進めるよ。黒はe4のナイトをポーンで支えて、中央にしっかりとどめるんだ。黒はc8のビショップの道も開けているよ。</li>
+      <li style="margin:0 0 8px;"><strong>6. Bd3</strong> 白はビショップをd3へ進めるよ。白のビショップはe4のナイトに挑み、黒に中央のナイトをどうするか考えさせるんだ。これでf1のマスが空いて、白は次の手でキャスリングできるよ。</li>
+      <li style="margin:0 0 8px;"><strong>6...Nc6</strong> 黒はナイトをc6へ進めるよ。黒のナイトはd4のポーンを攻撃して、白の中央に圧力をかけるんだ。黒は次にビショップをe7へ出して、キャスリングの準備も進めるよ。</li>
+      <li style="margin:0 0 8px;"><strong>7. O-O</strong> 白はキャスリングでキングを安全な場所へ動かすよ。白のキングはg1へ移り、h1にいたルークはf1へ出てくるんだ。</li>
+      <li style="margin:0 0 8px;"><strong>7...Be7</strong> 黒はビショップをe7へ進めるよ。黒はf8のマスを空けて、次の手でキャスリングする準備をするんだ。</li>
+      <li style="margin:0 0 8px;"><strong>8. c4</strong> 白はポーンをc4へ進めるよ。白はd5のポーンに横から挑んで、e4のナイトを支えているd5のポーンを崩そうとするんだ。白がcxd5と取れば、黒のe4のナイトはポーンの支えを失ってしまうよ。</li>
+      <li style="margin:0 0 8px;"><strong>8...Nb4</strong> 黒はナイトをb4へ進めるよ。黒のナイトはd3のビショップを攻撃して、白にビショップをどかすか、交換するかを決めさせるんだ。黒は、e4のナイトに挑んでいる白のビショップを追い払いたいんだよ。</li>
+      <li style="margin:0 0 8px;"><strong>9. Be2</strong> 白はビショップをe2へ下げるよ。白はビショップを交換せずに残して、あとで使えるようにするんだ。白は、あとでa3と突いてb4のナイトを追い払う準備もしているよ。</li>
+      <li style="margin:0 0 8px;"><strong>9...O-O</strong> 黒はキャスリングでキングを安全な場所へ動かすよ。黒のキングはg8へ移り、h8にいたルークはf8へ出てくるんだ。</li>
+      <li style="margin:0 0 8px;"><strong>10. Nc3</strong> 白はナイトをc3へ進めるよ。白のナイトはe4のナイトとd5のポーンの両方に圧力をかけるんだ。白はe4で駒を交換させて、黒の中央を弱めようとしているよ。</li>
+      <li style="margin:0 0 8px;"><strong>10...Bf5</strong> 黒はビショップをf5へ進めるよ。黒のビショップはe4のナイトを支えて、中央の守りを固めるんだ。白はa3と突いてb4のナイトを追い払いながら中央を崩す機会をうかがい、黒は中央のナイトとポーンを守りながら駒を働かせるのが典型的な流れだよ。これで本譜は一段落、続きはぜひ自分で指してみてね！</li>
+    </ul>
+    <ul class="lang-element-en" style="margin:0;padding-left:0;list-style:none;">
+      <li style="margin:0 0 8px;"><strong>1. e4</strong> White pushes the pawn to e4. White takes control of central squares and opens lines for the bishop and queen.</li>
+      <li style="margin:0 0 8px;"><strong>1...e5</strong> Black pushes the pawn to e5. Black also claims the center, setting up a pawn face-off with White.</li>
+      <li style="margin:0 0 8px;"><strong>2. Nf3</strong> White develops the knight to f3. White's knight develops while attacking Black's e5 pawn.</li>
+      <li style="margin:0 0 8px;"><strong>2...Nf6 (Russian!)</strong> Here's the Russian Defense, also called the Petrov Defense! Black does not defend the e5 pawn, but develops the knight to f6 and counterattacks White's e4 pawn. Black mirrors White's setup and aims for a calm, nearly symmetrical game.</li>
+      <li style="margin:0 0 8px;"><strong>3. Nxe5</strong> White's knight captures the pawn on e5. White's knight lands in the center on e5 and also eyes Black's f7 square.</li>
+      <li style="margin:0 0 8px;"><strong>3...d6</strong> Black pushes the pawn to d6 and attacks the e5 knight. Black does not recapture on e4 right away, but first drives White's knight back. If Black recaptures at once with 3...Nxe4, White can play 4.Qe2, lining up the queen on the e-file so that any knight move would expose Black's king to check. For example, if Black retreats with 4...Nf6??, White plays 5.Nc6+, giving a discovered check while the knight attacks Black's queen on d8.</li>
+      <li style="margin:0 0 8px;"><strong>4. Nf3</strong> White retreats the knight to f3. White's knight returns to safety and also covers the d4 square. Instead of this move, White can also sacrifice the knight on f7 with 4.Nxf7, the <a href='cochrane_gambit.html?lang=en'>Cochrane Gambit</a>. White gives up the knight to draw Black's king out and attack it.</li>
+      <li style="margin:0 0 8px;"><strong>4...Nxe4</strong> Black's knight recaptures the pawn on e4. White and Black now have the same material again. Black's knight sits in the center on e4 and bears on White's position.</li>
+      <li style="margin:0 0 8px;"><strong>5. d4</strong> White pushes the pawn to d4. White claims a central square and opens lines for the c1 bishop and the d1 queen. White is preparing to bring the bishop to d3 next and challenge the e4 knight.</li>
+      <li style="margin:0 0 8px;"><strong>5...d5</strong> Black pushes the pawn to d5. Black supports the e4 knight with a pawn and keeps it firmly in the center. Black also opens the path for the c8 bishop.</li>
+      <li style="margin:0 0 8px;"><strong>6. Bd3</strong> White develops the bishop to d3. White's bishop challenges the e4 knight and makes Black think about what to do with it. This clears f1, so White can castle on the next move.</li>
+      <li style="margin:0 0 8px;"><strong>6...Nc6</strong> Black develops the knight to c6. Black's knight attacks the d4 pawn and puts pressure on White's center. Black will bring the bishop to e7 next and prepare to castle.</li>
+      <li style="margin:0 0 8px;"><strong>7. O-O</strong> White castles, bringing the king to safety. White's king goes to g1, and the rook from h1 comes to f1.</li>
+      <li style="margin:0 0 8px;"><strong>7...Be7</strong> Black develops the bishop to e7. Black clears the f8 square and gets ready to castle on the next move.</li>
+      <li style="margin:0 0 8px;"><strong>8. c4</strong> White pushes the pawn to c4. White challenges the d5 pawn from the side and tries to undermine the pawn that supports the e4 knight. If White captures with cxd5, Black's e4 knight loses its pawn support.</li>
+      <li style="margin:0 0 8px;"><strong>8...Nb4</strong> Black moves the knight to b4. Black's knight attacks the d3 bishop and makes White decide whether to move it or allow a trade. Black wants to drive away the White bishop that is challenging the e4 knight.</li>
+      <li style="margin:0 0 8px;"><strong>9. Be2</strong> White retreats the bishop to e2. White keeps the bishop instead of trading it, saving it for later. White is also preparing to push a3 later and drive away the b4 knight.</li>
+      <li style="margin:0 0 8px;"><strong>9...O-O</strong> Black castles, bringing the king to safety. Black's king goes to g8, and the rook from h8 comes to f8.</li>
+      <li style="margin:0 0 8px;"><strong>10. Nc3</strong> White develops the knight to c3. White's knight puts pressure on both the e4 knight and the d5 pawn. White wants to force trades on e4 and weaken Black's center.</li>
+      <li style="margin:0 0 8px;"><strong>10...Bf5</strong> Black develops the bishop to f5. Black's bishop supports the e4 knight and strengthens the defense of the center. The typical plan is for White to push a3 to drive away the b4 knight and look for ways to break up the center, while Black holds the central knight and pawn and activates the pieces. That's the main line — try continuing the game yourself from here!</li>
+    </ul>
+  </section>
+
   <footer>© KitsuneChess</footer>
 </div>
 

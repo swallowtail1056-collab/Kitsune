@@ -137,6 +137,45 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
     <div class="board-grid" id="boardGrid"></div>
   </div>
 
+
+  <!-- 手順と解説のまとめ（ページを開いたときから全部読めるように） -->
+  <section id="moveSummary" style="margin:24px 0 8px;background:var(--card-bg,#fffaf0);border:2px solid var(--brown-light,#d8b88a);border-radius:12px;padding:14px 18px;line-height:1.75;">
+    <h2 class="lang-element-ja" style="font-size:1.15rem;margin:0 0 8px;">📜 手順と解説のまとめ</h2>
+    <h2 class="lang-element-en" style="font-size:1.15rem;margin:0 0 8px;">📜 All Moves Explained</h2>
+    <p class="lang-element-ja" style="margin:0 0 8px;">ロッソリモ・アタックのレッスンを始めるよ！このページでは、白が4.Bxc6ですぐにビショップとナイトを交換し、黒のポーンの形を崩す本筋を見ていくよ。白のポーンの形のよさと、黒の2つのビショップがどう対立するのかがポイントなんだ。一手ずつジーンと一緒に、なぜその手を指すのかを学んでいこう。</p>
+    <p class="lang-element-en" style="margin:0 0 8px;">Let's start the Rossolimo Attack lesson! On this page we follow the main line where White immediately trades bishop for knight with 4.Bxc6 to damage Black's pawn structure. The key is how White's healthier pawns compete with Black's bishop pair. Jene will walk you through why each move is played, one step at a time.</p>
+    <ul class="lang-element-ja" style="margin:0;padding-left:0;list-style:none;">
+      <li style="margin:0 0 8px;"><strong>1. e4</strong> 白はポーンをe4へ進めるよ。白は中央のマスを押さえながら、ビショップとクイーンが動く道を開けるんだ。</li>
+      <li style="margin:0 0 8px;"><strong>1...c5</strong> 黒はポーンをc5へ進めるよ。黒はこれで<a href='sicilian.html'>シシリアン・ディフェンス</a>の形に入り、c5のポーンで斜めにd4のマスを押さえるんだ。</li>
+      <li style="margin:0 0 8px;"><strong>2. Nf3</strong> 白はナイトをf3へ進めるよ。白は駒を展開しながら、次にd4と突く準備をしているんだ。</li>
+      <li style="margin:0 0 8px;"><strong>2...Nc6</strong> 黒はナイトをc6へ進めるよ。黒はナイトを展開しながら、d4とe5のマスに利かせるんだ。</li>
+      <li style="margin:0 0 8px;"><strong>3. Bb5（ロッソリモ！）</strong> ここがロッソリモ・アタックの一手！白はビショップをb5へ進めて、d4とe5に利いているc6のナイトを攻撃するよ。一般的には3.d4と中央を開くけれど、白はここでオープン・シシリアンの膨大な定跡を避けて、黒のポーンの形を崩すことをねらうんだ。その代わり、白はこのビショップをナイトと交換することが多く、2つのビショップを持つ利点を黒に渡しやすいよ。 白がこの手の代わりに3.d4と中央を開くと、<a href='open_sicilian.html'>オープン・シシリアン</a>になるよ。黒が2手目で2...d6と指したときに白が3.Bb5+と出る形は、<a href='moscow_sicilian.html'>モスクワ・バリエーション</a>と呼ばれているんだ。</li>
+      <li style="margin:0 0 8px;"><strong>3...g6</strong> 黒はポーンをg6へ進めるよ。黒はビショップをg7に出す準備をして、長い対角線から中央をにらむ形を目指すんだ。黒の応じ方の中で、これがいちばん多く指される手だよ。 黒はこの手の代わりに3...e6や3...d6と指すこともできるよ。</li>
+      <li style="margin:0 0 8px;"><strong>4. Bxc6</strong> 白はビショップでc6にいた黒のナイトを取るよ。白はすぐに交換して、黒のポーンの形を崩しにいくんだ。</li>
+      <li style="margin:0 0 8px;"><strong>4...dxc6</strong> 黒はdのポーンでc6に入った白のビショップを取り返すよ。黒はcのポーンが2つ縦に並ぶ形になるけれど、dファイルが開いて、c8のビショップの道も通るんだ。 黒はこの手の代わりに4...bxc6と取り返すこともできるよ。こちらは中央にポーンが残る代わりに、黒の展開が少し遅れやすいんだ。</li>
+      <li style="margin:0 0 8px;"><strong>5. d3</strong> 白はポーンをd3へ進めるよ。白はe4のポーンを守り、c1のビショップの道も開けるんだ。</li>
+      <li style="margin:0 0 8px;"><strong>5...Bg7</strong> 黒はビショップをg7へ進めるよ。黒のビショップは長い対角線から中央をにらみ、2つのビショップの力を生かす準備をするんだ。</li>
+      <li style="margin:0 0 8px;"><strong>6. h3</strong> 白はポーンをh3へ進めるよ。白はg4のマスを押さえて、黒のc8のビショップがg4へ出て、f3のナイトにピンをかけるのを防ぐんだ。</li>
+      <li style="margin:0 0 8px;"><strong>6...Nf6</strong> 黒はナイトをf6へ進めるよ。黒はナイトを展開しながら、白のe4のポーンを攻撃するんだ。</li>
+      <li style="margin:0 0 8px;"><strong>7. Nc3</strong> 白はナイトをc3へ進めるよ。白はナイトを展開しながら、e4のポーンの守りを2つにするんだ。白はビショップを手放した代わりに、黒のポーンの形の弱さと、e5のマスを使える展開をねらっているよ。黒は2つのビショップとdファイルを生かして戦う、じっくりした展開になるんだ。これで本譜は一段落、続きはぜひ自分で指してみてね！</li>
+    </ul>
+    <ul class="lang-element-en" style="margin:0;padding-left:0;list-style:none;">
+      <li style="margin:0 0 8px;"><strong>1. e4</strong> White pushes the pawn to e4. White takes control of central squares and opens lines for the bishop and queen.</li>
+      <li style="margin:0 0 8px;"><strong>1...c5</strong> Black pushes the pawn to c5. Black enters the <a href='sicilian.html?lang=en'>Sicilian Defense</a> and uses the c5 pawn to control the d4 square diagonally.</li>
+      <li style="margin:0 0 8px;"><strong>2. Nf3</strong> White develops the knight to f3. White develops a piece while preparing to push d4 next.</li>
+      <li style="margin:0 0 8px;"><strong>2...Nc6</strong> Black develops the knight to c6. Black develops while covering the d4 and e5 squares.</li>
+      <li style="margin:0 0 8px;"><strong>3. Bb5 (Rossolimo!)</strong> Here's the Rossolimo Attack! White develops the bishop to b5, attacking the c6 knight, which covers d4 and e5. White usually opens the center with 3.d4, but here White avoids the huge theory of the Open Sicilian and aims to damage Black's pawn structure. The trade-off is that White often trades this bishop for the knight, handing Black the bishop pair. If White opens the center with 3.d4 instead of this move, the game becomes an <a href='open_sicilian.html?lang=en'>Open Sicilian</a>. When Black plays 2...d6 instead and White answers 3.Bb5+, it's called the <a href='moscow_sicilian.html?lang=en'>Moscow Variation</a>.</li>
+      <li style="margin:0 0 8px;"><strong>3...g6</strong> Black pushes the pawn to g6. Black prepares to put the bishop on g7 and aims to eye the center along the long diagonal. This is Black's most popular reply. Instead of this move, Black can also play 3...e6 or 3...d6.</li>
+      <li style="margin:0 0 8px;"><strong>4. Bxc6</strong> White's bishop captures the black knight that was on c6. White trades right away to damage Black's pawn structure.</li>
+      <li style="margin:0 0 8px;"><strong>4...dxc6</strong> Black's d-pawn takes back the white bishop that landed on c6. Black ends up with doubled c-pawns, but the d-file opens and the c8 bishop's path is cleared. Instead of this move, Black can also recapture with 4...bxc6. That keeps more pawns in the center but tends to slow Black's development a little.</li>
+      <li style="margin:0 0 8px;"><strong>5. d3</strong> White pushes the pawn to d3. White defends the e4 pawn and opens the path for the c1 bishop.</li>
+      <li style="margin:0 0 8px;"><strong>5...Bg7</strong> Black develops the bishop to g7. From the long diagonal, Black's bishop eyes the center, getting ready to make use of the bishop pair.</li>
+      <li style="margin:0 0 8px;"><strong>6. h3</strong> White pushes the pawn to h3. White controls the g4 square, stopping Black's c8 bishop from coming to g4 and pinning the f3 knight.</li>
+      <li style="margin:0 0 8px;"><strong>6...Nf6</strong> Black develops the knight to f6. Black develops while attacking White's e4 pawn.</li>
+      <li style="margin:0 0 8px;"><strong>7. Nc3</strong> White develops the knight to c3. White develops while defending the e4 pawn a second time. Having given up a bishop, White aims to exploit Black's weakened pawn structure and the e5 square. Black plays on the bishop pair and the d-file, leading to a slow, strategic game. That's the main line — try continuing the game yourself from here!</li>
+    </ul>
+  </section>
+
   <footer>© KitsuneChess</footer>
 </div>
 

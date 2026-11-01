@@ -137,6 +137,51 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
     <div class="board-grid" id="boardGrid"></div>
   </div>
 
+
+  <!-- 手順と解説のまとめ（ページを開いたときから全部読めるように） -->
+  <section id="moveSummary" style="margin:24px 0 8px;background:var(--card-bg,#fffaf0);border:2px solid var(--brown-light,#d8b88a);border-radius:12px;padding:14px 18px;line-height:1.75;">
+    <h2 class="lang-element-ja" style="font-size:1.15rem;margin:0 0 8px;">📜 手順と解説のまとめ</h2>
+    <h2 class="lang-element-en" style="font-size:1.15rem;margin:0 0 8px;">📜 All Moves Explained</h2>
+    <p class="lang-element-ja" style="margin:0 0 8px;">スヴェシニコフ・シシリアンのレッスンを始めるよ！このページでは、黒が5...e5で白のナイトを追い払い、白がd5のマスをめぐって駒を動かす本筋を見ていくよ。黒が手に入れた中央のスペースと、そのせいで弱くなったd5のマスがどうぶつかるのかがポイントなんだ。一手ずつジーンと一緒に、なぜその手を指すのかを学んでいこう。</p>
+    <p class="lang-element-en" style="margin:0 0 8px;">Let's start the Sveshnikov Sicilian lesson! On this page we follow the main line where Black chases away White's knight with 5...e5, and White maneuvers for control of the d5 square. The key is how Black's central space clashes with the weakened d5 square. Jene will walk you through why each move is played, one step at a time.</p>
+    <ul class="lang-element-ja" style="margin:0;padding-left:0;list-style:none;">
+      <li style="margin:0 0 8px;"><strong>1. e4</strong> 白はポーンをe4へ進めるよ。白は中央のマスを押さえながら、ビショップとクイーンが動く道を開けるんだ。</li>
+      <li style="margin:0 0 8px;"><strong>1...c5</strong> 黒はポーンをc5へ進めるよ。黒はこれで<a href='sicilian.html'>シシリアン・ディフェンス</a>の形に入り、c5のポーンで斜めにd4のマスを押さえるんだ。</li>
+      <li style="margin:0 0 8px;"><strong>2. Nf3</strong> 白はナイトをf3へ進めるよ。白は駒を展開しながら、次にd4と突く準備をしているんだ。</li>
+      <li style="margin:0 0 8px;"><strong>2...Nc6</strong> 黒はナイトをc6へ進めるよ。黒はナイトを展開しながら、d4とe5のマスに利かせるんだ。</li>
+      <li style="margin:0 0 8px;"><strong>3. d4</strong> 白はポーンをd4へ進めて、<a href='open_sicilian.html'>オープン・シシリアン</a>に入るよ。白は中央でポーンを交換して、駒が動きやすい開いた局面をねらうんだ。</li>
+      <li style="margin:0 0 8px;"><strong>3...cxd4</strong> 黒はc5のポーンでd4に来た白のポーンを取るよ。黒はこれで中央の白のポーンを減らし、cファイルを半分開くんだ。</li>
+      <li style="margin:0 0 8px;"><strong>4. Nxd4</strong> 白はナイトでd4にいた黒のポーンを取り返すよ。白のナイトは中央の強いマスに入るんだ。</li>
+      <li style="margin:0 0 8px;"><strong>4...Nf6</strong> 黒はナイトをf6へ進めるよ。黒はナイトを展開しながら、白のe4のポーンを攻撃するんだ。</li>
+      <li style="margin:0 0 8px;"><strong>5. Nc3</strong> 白はナイトをc3へ進めるよ。白はナイトを展開しながら、e4のポーンを守るんだ。</li>
+      <li style="margin:0 0 8px;"><strong>5...e5（スヴェシニコフ！）</strong> ここがスヴェシニコフの一手！黒はポーンをe5へ進めて、d4の白のナイトを攻撃して追い払うよ。黒はこの手の代わりに5...e6や5...d6と落ち着いて構えることもできるけれど、黒はここで時間をかけずに中央のスペースを取る、積極的な道を選ぶんだ。その代わり、黒のd5のマスはポーンで守れなくなり、d6のポーンも後ろに取り残された弱点になりやすいよ。</li>
+      <li style="margin:0 0 8px;"><strong>6. Ndb5</strong> 白はナイトをb5へ動かすよ。白のナイトは攻撃をかわしながら、黒の陣地のd6のマスと、c7のマスをねらっているんだ。</li>
+      <li style="margin:0 0 8px;"><strong>6...d6</strong> 黒はポーンをd6へ進めるよ。黒はd6のマスを自分のポーンで埋めて、白のナイトがd6に入りこむのを防ぐんだ。</li>
+      <li style="margin:0 0 8px;"><strong>7. Bg5</strong> 白はビショップをg5へ進めるよ。白のビショップはf6のナイトをねらっていて、ナイトが動くとd8の黒のクイーンが取られる形（クイーンへのピン）になっているんだ。f6のナイトはd5のマスを守っている大事な駒なので、白はこのナイトの働きを弱めて、d5を自分のものにしようとしているよ。</li>
+      <li style="margin:0 0 8px;"><strong>7...a6</strong> 黒はポーンをa6へ進めるよ。黒はb5の白のナイトを攻撃して、白に下がる手を強いるんだ。</li>
+      <li style="margin:0 0 8px;"><strong>8. Na3</strong> 白はナイトをa3へ下げるよ。白のナイトは盤の端に下がるけれど、この先c4やc2を通ってd5を目指す準備をしているんだ。その代わり、白のナイトはしばらく働きが限られるよ。</li>
+      <li style="margin:0 0 8px;"><strong>8...b5</strong> 黒はポーンをb5へ進めるよ。黒はc4のマスを押さえて、a3の白のナイトがc4へ出てくるのを防ぐんだ。黒はクイーンサイドでスペースを広げて、白のナイトを盤の端に閉じ込めるよ。その代わり、黒のクイーンサイドのポーンが前に出ることで、白にa4と突かれて揺さぶられやすくもなるんだ。これで本譜は一段落、続きはぜひ自分で指してみてね！ この後は9.Bxf6 gxf6 10.Nd5と、白がd5のマスにナイトを置く流れがよく知られているよ。黒はキングサイドのポーンが崩れる代わりに、2つのビショップを手に入れて戦うんだ。</li>
+    </ul>
+    <ul class="lang-element-en" style="margin:0;padding-left:0;list-style:none;">
+      <li style="margin:0 0 8px;"><strong>1. e4</strong> White pushes the pawn to e4. White takes control of central squares and opens lines for the bishop and queen.</li>
+      <li style="margin:0 0 8px;"><strong>1...c5</strong> Black pushes the pawn to c5. Black enters the <a href='sicilian.html?lang=en'>Sicilian Defense</a> and uses the c5 pawn to control the d4 square diagonally.</li>
+      <li style="margin:0 0 8px;"><strong>2. Nf3</strong> White develops the knight to f3. White develops a piece while preparing to push d4 next.</li>
+      <li style="margin:0 0 8px;"><strong>2...Nc6</strong> Black develops the knight to c6. Black develops while covering the d4 and e5 squares.</li>
+      <li style="margin:0 0 8px;"><strong>3. d4</strong> White pushes the pawn to d4, entering the <a href='open_sicilian.html?lang=en'>Open Sicilian</a>. White aims to trade pawns in the center and open the position for the pieces.</li>
+      <li style="margin:0 0 8px;"><strong>3...cxd4</strong> Black's c5 pawn captures the white pawn that came to d4. Black removes one of White's central pawns and half-opens the c-file.</li>
+      <li style="margin:0 0 8px;"><strong>4. Nxd4</strong> White's knight takes back the black pawn that was on d4. White's knight lands on a strong central square.</li>
+      <li style="margin:0 0 8px;"><strong>4...Nf6</strong> Black develops the knight to f6. Black develops while attacking White's e4 pawn.</li>
+      <li style="margin:0 0 8px;"><strong>5. Nc3</strong> White develops the knight to c3. White develops while defending the e4 pawn.</li>
+      <li style="margin:0 0 8px;"><strong>5...e5 (Sveshnikov!)</strong> Here's the Sveshnikov! Black pushes the pawn to e5, attacking and chasing away White's d4 knight. Instead of this move, Black can also set up calmly with 5...e6 or 5...d6, but here Black takes central space without wasting time. The trade-off is that Black can no longer guard d5 with a pawn, and the d6 pawn tends to become a backward weakness.</li>
+      <li style="margin:0 0 8px;"><strong>6. Ndb5</strong> White moves the knight to b5. White's knight escapes the attack and eyes the d6 and c7 squares in Black's camp.</li>
+      <li style="margin:0 0 8px;"><strong>6...d6</strong> Black pushes the pawn to d6. Black fills the d6 square with a pawn, stopping White's knight from jumping in.</li>
+      <li style="margin:0 0 8px;"><strong>7. Bg5</strong> White develops the bishop to g5. White's bishop targets the f6 knight, and if the knight moved, Black's queen on d8 would be captured — a pin against the queen. The f6 knight is an important defender of the d5 square, so White is trying to weaken it and take control of d5.</li>
+      <li style="margin:0 0 8px;"><strong>7...a6</strong> Black pushes the pawn to a6. Black attacks White's knight on b5, forcing it to retreat.</li>
+      <li style="margin:0 0 8px;"><strong>8. Na3</strong> White retreats the knight to a3. White's knight drops back to the edge, but it plans to head for d5 via c4 or c2. The trade-off is that its activity is limited for a while.</li>
+      <li style="margin:0 0 8px;"><strong>8...b5</strong> Black pushes the pawn to b5. Black controls c4, stopping White's a3 knight from jumping to c4. Black gains space on the queenside and keeps White's knight stuck on the edge. The trade-off is that the advanced queenside pawns can be targeted by White with a4. That's the main line — try continuing the game yourself from here! A well-known continuation is 9.Bxf6 gxf6 10.Nd5, with White planting a knight on d5. Black's kingside pawns get broken up, but in return Black gets the bishop pair.</li>
+    </ul>
+  </section>
+
   <footer>© KitsuneChess</footer>
 </div>
 

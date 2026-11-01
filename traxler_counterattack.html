@@ -137,6 +137,51 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
     <div class="board-grid" id="boardGrid"></div>
   </div>
 
+
+  <!-- 手順と解説のまとめ（ページを開いたときから全部読めるように） -->
+  <section id="moveSummary" style="margin:24px 0 8px;background:var(--card-bg,#fffaf0);border:2px solid var(--brown-light,#d8b88a);border-radius:12px;padding:14px 18px;line-height:1.75;">
+    <h2 class="lang-element-ja" style="font-size:1.15rem;margin:0 0 8px;">📜 手順と解説のまとめ</h2>
+    <h2 class="lang-element-en" style="font-size:1.15rem;margin:0 0 8px;">📜 All Moves Explained</h2>
+    <p class="lang-element-ja" style="margin:0 0 8px;">トラクスラー・カウンターアタックのレッスンを始めるよ！このページでは、黒がf7を守らずに4...Bc5で反撃し、駒を差し出しながら白のキングを攻め続ける流れを見ていくよ。白のキングがどう追い回されるのか、白がどう受ければよいのかがポイントなんだ。一手ずつジーンと一緒に、なぜその手を指すのかを学んでいこう。</p>
+    <p class="lang-element-en" style="margin:0 0 8px;">Let's start the Traxler Counterattack lesson! On this page we follow how Black ignores the threat to f7 and counterattacks with 4...Bc5, giving up material to keep attacking White's king. The key is how White's king gets chased around and how White should defend. Jene will walk you through why each move is played, one step at a time.</p>
+    <ul class="lang-element-ja" style="margin:0;padding-left:0;list-style:none;">
+      <li style="margin:0 0 8px;"><strong>1. e4</strong> 白はポーンをe4へ進めるよ。白は中央のマスを押さえながら、ビショップとクイーンが動く道を開けるんだ。</li>
+      <li style="margin:0 0 8px;"><strong>1...e5</strong> 黒はポーンをe5へ進めるよ。黒も同じように中央を押さえて、白のポーンと向かい合う形を作るんだ。</li>
+      <li style="margin:0 0 8px;"><strong>2. Nf3</strong> 白はナイトをf3へ進めるよ。白のナイトは展開しながら、黒のe5のポーンを攻撃しているんだ。</li>
+      <li style="margin:0 0 8px;"><strong>2...Nc6</strong> 黒はナイトをc6へ進めるよ。黒はナイトを展開しながら、e5のポーンを守るんだ。</li>
+      <li style="margin:0 0 8px;"><strong>3. Bc4</strong> 白はビショップをc4へ進めるよ。白のビショップは、キングしか守っていない黒のf7のポーンをねらっているんだ。</li>
+      <li style="margin:0 0 8px;"><strong>3...Nf6</strong> 黒はナイトをf6へ進めて、<a href='two_knights.html'>トゥー・ナイツ・ディフェンス</a>に入るよ。黒はナイトを展開しながら、白のe4のポーンを攻撃するんだ。</li>
+      <li style="margin:0 0 8px;"><strong>4. Ng5</strong> 白はナイトをg5へ進めるよ。白のナイトはc4のビショップと一緒に、黒のf7のポーンを2つの駒で攻撃しているんだ。黒のf7はキングにしか守られていないよ。</li>
+      <li style="margin:0 0 8px;"><strong>4...Bc5!?（トラクスラー！）</strong> ここがトラクスラー・カウンターアタックの一手！黒はf7を守らずに、ビショップをc5へ進めて、白のf2のマスに反撃するよ。一般的には4...d5でビショップの通り道をふさぐけれど、黒はここで駒を差し出してでも、白のキングに攻めかかる道を選ぶんだ。その代わり、白が正確に応じると、黒は駒を損したまま苦しい形になりやすいよ。</li>
+      <li style="margin:0 0 8px;"><strong>5. Nxf7</strong> 白はナイトでf7にいた黒のポーンを取るよ。白のナイトはd8の黒のクイーンとh8のルークを同時に攻撃しているんだ。 白はこの手の代わりに5.Bxf7+と、ビショップで取ってチェックをかけることもできるよ。</li>
+      <li style="margin:0 0 8px;"><strong>5...Bxf2+</strong> 黒はビショップでf2にいた白のポーンを取ってチェックをかけるよ。黒はクイーンとルークを取られる前に、白のキングを先に攻めるんだ。</li>
+      <li style="margin:0 0 8px;"><strong>6. Kxf2</strong> 白はキングでf2に入った黒のビショップを取るよ。白はビショップを取って駒得するけれど、キングが盤の中央に出てきてしまうんだ。 白はこの手の代わりに6.Kf1と逃げることもできて、エンジンの評価ではそちらのほうが白にとって良いんだ。</li>
+      <li style="margin:0 0 8px;"><strong>6...Nxe4+</strong> 黒はナイトでe4にいた白のポーンを取ってチェックをかけるよ。黒は白のキングにチェックをかけ続けて、白に落ち着く時間を与えないんだ。</li>
+      <li style="margin:0 0 8px;"><strong>7. Kg1</strong> 白はキングをg1へ動かすよ。白のキングは隅に逃げて、黒のチェックの連続から抜け出そうとするんだ。</li>
+      <li style="margin:0 0 8px;"><strong>7...Qh4</strong> 黒はクイーンをh4へ進めるよ。黒のクイーンはf2のマスをねらっていて、e4のナイトと一緒にQf2#のチェックメイトをねらっているんだ。</li>
+      <li style="margin:0 0 8px;"><strong>8. g3</strong> 白はポーンをg3へ進めるよ。白はクイーンを攻撃して、チェックメイトのねらいを止めようとするんだ。</li>
+      <li style="margin:0 0 8px;"><strong>8...Nxg3</strong> 黒はナイトでg3にいた白のポーンを取るよ。黒のナイトはh1の白のルークを攻撃していて、黒は駒を損しながらも、白のキングへの攻めを続けているんだ。この後は9.hxg3 Qxg3+と、黒がチェックを続けて引き分けをねらう流れがよく知られていて、白はクイーンを動かして受けきれば有利を保てるよ。これで本譜は一段落、続きはぜひ自分で指してみてね！</li>
+    </ul>
+    <ul class="lang-element-en" style="margin:0;padding-left:0;list-style:none;">
+      <li style="margin:0 0 8px;"><strong>1. e4</strong> White pushes the pawn to e4. White takes control of central squares and opens lines for the bishop and queen.</li>
+      <li style="margin:0 0 8px;"><strong>1...e5</strong> Black pushes the pawn to e5. Black also claims the center, setting up a pawn face-off with White.</li>
+      <li style="margin:0 0 8px;"><strong>2. Nf3</strong> White develops the knight to f3. White's knight develops while attacking Black's e5 pawn.</li>
+      <li style="margin:0 0 8px;"><strong>2...Nc6</strong> Black develops the knight to c6. Black develops a piece and defends the e5 pawn at the same time.</li>
+      <li style="margin:0 0 8px;"><strong>3. Bc4</strong> White develops the bishop to c4. White's bishop aims at Black's f7 pawn, which only the king defends.</li>
+      <li style="margin:0 0 8px;"><strong>3...Nf6</strong> Black develops the knight to f6, entering the <a href='two_knights.html?lang=en'>Two Knights Defense</a>. Black develops while attacking White's e4 pawn.</li>
+      <li style="margin:0 0 8px;"><strong>4. Ng5</strong> White moves the knight to g5. Together with the c4 bishop, White's knight attacks Black's f7 pawn with two pieces. Black's f7 is defended only by the king.</li>
+      <li style="margin:0 0 8px;"><strong>4...Bc5!? (Traxler!)</strong> Here's the Traxler Counterattack! Instead of defending f7, Black develops the bishop to c5 and counterattacks White's f2 square. Black usually plays 4...d5 to block the bishop, but here Black is willing to give up material to attack White's king. The trade-off is that if White responds accurately, Black tends to end up worse with less material.</li>
+      <li style="margin:0 0 8px;"><strong>5. Nxf7</strong> White's knight captures the black pawn that was on f7. White's knight now attacks Black's queen on d8 and rook on h8 at the same time. Instead of this move, White can also capture with the bishop, 5.Bxf7+, giving check.</li>
+      <li style="margin:0 0 8px;"><strong>5...Bxf2+</strong> Black's bishop captures the white pawn that was on f2, giving check. Black attacks White's king first, before losing the queen or rook.</li>
+      <li style="margin:0 0 8px;"><strong>6. Kxf2</strong> White's king captures the black bishop that landed on f2. White wins the bishop, but the king comes out toward the center of the board. Instead of this move, White can also step aside with 6.Kf1, which engines rate as better for White.</li>
+      <li style="margin:0 0 8px;"><strong>6...Nxe4+</strong> Black's knight captures the white pawn that was on e4, giving check. Black keeps checking White's king, giving White no time to settle.</li>
+      <li style="margin:0 0 8px;"><strong>7. Kg1</strong> White moves the king to g1. White's king runs to the corner to escape the stream of checks.</li>
+      <li style="margin:0 0 8px;"><strong>7...Qh4</strong> Black brings the queen to h4. Black's queen eyes the f2 square, threatening checkmate on f2 together with the e4 knight.</li>
+      <li style="margin:0 0 8px;"><strong>8. g3</strong> White pushes the pawn to g3. White attacks the queen to stop the mating threat.</li>
+      <li style="margin:0 0 8px;"><strong>8...Nxg3</strong> Black's knight captures the white pawn that was on g3. Black's knight now attacks White's rook on h1, and Black keeps attacking White's king despite being down material. A well-known continuation is 9.hxg3 Qxg3+, with Black giving repeated checks to aim for a draw, while White can keep the advantage by defending accurately. That's the main line — try continuing the game yourself from here!</li>
+    </ul>
+  </section>
+
   <footer>© KitsuneChess</footer>
 </div>
 

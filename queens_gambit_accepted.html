@@ -139,6 +139,51 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
     <div class="board-grid" id="boardGrid"></div>
   </div>
 
+
+  <!-- 手順と解説のまとめ（ページを開いたときから全部読めるように） -->
+  <section id="moveSummary" style="margin:24px 0 8px;background:var(--card-bg,#fffaf0);border:2px solid var(--brown-light,#d8b88a);border-radius:12px;padding:14px 18px;line-height:1.75;">
+    <h2 class="lang-element-ja" style="font-size:1.15rem;margin:0 0 8px;">📜 手順と解説のまとめ</h2>
+    <h2 class="lang-element-en" style="font-size:1.15rem;margin:0 0 8px;">📜 All Moves Explained</h2>
+    <p class="lang-element-ja" style="margin:0 0 8px;">クイーンズ・ギャンビット・アクセプテッドのレッスンを始めるよ！このページでは、黒がc4のポーンを受け取り、白がそれを取り返してから、両者が展開を進めるクラシカル・バリエーションを見ていくよ。黒がc5とb5で白の中央とビショップにどう働きかけるのかがポイントなんだ。一手ずつジーンと一緒に、なぜその手を指すのかを学んでいこう。</p>
+    <p class="lang-element-en" style="margin:0 0 8px;">Let's start the Queen's Gambit Accepted lesson! On this page we follow the Classical Variation, where Black accepts the c4 pawn, White wins it back, and both sides develop. The key is how Black challenges White's center and bishop with ...c5 and ...b5. Jene will walk you through why each move is played, one step at a time.</p>
+    <ul class="lang-element-ja" style="margin:0;padding-left:0;list-style:none;">
+      <li style="margin:0 0 8px;"><strong>1. d4</strong> 白はポーンをd4へ進めるよ。白は中央のマスを押さえながら、c1のビショップの道を開けるんだ。</li>
+      <li style="margin:0 0 8px;"><strong>1...d5</strong> 黒はポーンをd5へ進めるよ。黒も同じように中央を押さえて、白のポーンと向かい合う形を作るんだ。</li>
+      <li style="margin:0 0 8px;"><strong>2. c4</strong> 白はポーンをc4へ進めて、クイーンズ・ギャンビットに入るよ。白はc4のポーンを差し出して、黒のd5のポーンを中央からどかすことをねらっているんだ。</li>
+      <li style="margin:0 0 8px;"><strong>2...dxc4（アクセプテッド！）</strong> ここがクイーンズ・ギャンビット・アクセプテッドの一手！黒はd5のポーンでc4に来た白のポーンを取るよ。黒はここでポーンを受け取って、駒を自由に動かせる形を選ぶんだ。その代わり、黒は中央のd5のポーンを手放すので、白に中央を広く取られやすくなるよ。 黒はこの手の代わりに2...e6の<a href='queens_gambit.html'>クイーンズ・ギャンビット・ディクラインド</a>や、2...c6の<a href='slav.html'>スラブ・ディフェンス</a>でd5を守ることのほうが多いよ。</li>
+      <li style="margin:0 0 8px;"><strong>3. Nf3</strong> 白はナイトをf3へ進めるよ。白はナイトを展開しながら、黒がe5と突いて中央で反撃するのを防ぐんだ。</li>
+      <li style="margin:0 0 8px;"><strong>3...Nf6</strong> 黒はナイトをf6へ進めるよ。黒はナイトを展開しながら、白がe4と突くのをけん制するんだ。</li>
+      <li style="margin:0 0 8px;"><strong>4. e3</strong> 白はポーンをe3へ進めるよ。白はf1のビショップの道を開けて、次にc4のポーンを取り返す準備をするんだ。</li>
+      <li style="margin:0 0 8px;"><strong>4...e6</strong> 黒はポーンをe6へ進めるよ。黒はf8のビショップの道を開けて、キングサイドの展開を進めるんだ。その代わり、黒のc8のビショップはe6のポーンの内側に入り、出口が少なくなるよ。</li>
+      <li style="margin:0 0 8px;"><strong>5. Bxc4</strong> 白はビショップでc4にいた黒のポーンを取り返すよ。白はこれで差し出したポーンを取り返し、ポーンの数は互角に戻るんだ。</li>
+      <li style="margin:0 0 8px;"><strong>5...c5</strong> 黒はポーンをc5へ進めるよ。黒はc5のポーンとd8のクイーンで白のd4のポーンを攻撃するんだ。黒はこの手で、白の中央に反撃を始めるよ。</li>
+      <li style="margin:0 0 8px;"><strong>6. O-O</strong> 白はキャスリングでキングを安全な場所へ動かすよ。白のd4はd1のクイーン、e3のポーン、f3のナイトの3つに守られているので、白は落ち着いてキャスリングできるんだ。</li>
+      <li style="margin:0 0 8px;"><strong>6...a6</strong> 黒はポーンをa6へ進めるよ。黒はb5のマスを押さえて、次にb5と突いてc4のビショップを追い払う準備をするんだ。</li>
+      <li style="margin:0 0 8px;"><strong>7. Qe2</strong> 白はクイーンをe2へ進めるよ。白のクイーンはc4のビショップを守りながら、この先Rd1とdファイルにルークを並べる準備をするんだ。この形はクラシカル・バリエーションと呼ばれていて、白のいちばん代表的な組み方だよ。</li>
+      <li style="margin:0 0 8px;"><strong>7...b5</strong> 黒はポーンをb5へ進めるよ。黒はc4の白のビショップを攻撃して、クイーンサイドでスペースを広げるんだ。</li>
+      <li style="margin:0 0 8px;"><strong>8. Bb3</strong> 白はビショップをb3へ下げるよ。白のビショップはb3から、黒のe6のポーンとその先をにらみ続けるんだ。</li>
+      <li style="margin:0 0 8px;"><strong>8...Bb7</strong> 黒はビショップをb7へ進めるよ。黒のビショップは長い対角線から、白のf3のナイトと中央をにらんでいるんだ。黒は4...e6のときに心配だった「ビショップがポーンの内側に閉じ込められる」問題を、これで解消できたんだ。この後は白がRd1やNc3で中央を固め、黒はNbd7やQc7で展開を終える流れが多いんだ。これで本譜は一段落、続きはぜひ自分で指してみてね！</li>
+    </ul>
+    <ul class="lang-element-en" style="margin:0;padding-left:0;list-style:none;">
+      <li style="margin:0 0 8px;"><strong>1. d4</strong> White pushes the pawn to d4. White takes control of central squares and opens the path for the c1 bishop.</li>
+      <li style="margin:0 0 8px;"><strong>1...d5</strong> Black pushes the pawn to d5. Black also claims the center, setting up a pawn face-off with White.</li>
+      <li style="margin:0 0 8px;"><strong>2. c4</strong> White pushes the pawn to c4, entering the Queen's Gambit. White offers the c4 pawn, aiming to lure Black's d5 pawn away from the center.</li>
+      <li style="margin:0 0 8px;"><strong>2...dxc4 (Accepted!)</strong> Here's the Queen's Gambit Accepted! Black's d5 pawn captures the white pawn that came to c4. Here Black accepts the pawn and aims for free piece play. The trade-off is that Black gives up the central d5 pawn, making it easier for White to take a big center. Instead of this move, Black more often defends d5 with 2...e6, the <a href='queens_gambit.html?lang=en'>Queen's Gambit Declined</a>, or with 2...c6, the <a href='slav.html?lang=en'>Slav Defense</a>.</li>
+      <li style="margin:0 0 8px;"><strong>3. Nf3</strong> White develops the knight to f3. White develops while stopping Black from striking back in the center with ...e5.</li>
+      <li style="margin:0 0 8px;"><strong>3...Nf6</strong> Black develops the knight to f6. Black develops while discouraging White from pushing e4.</li>
+      <li style="margin:0 0 8px;"><strong>4. e3</strong> White pushes the pawn to e3. White opens the f1 bishop's path and prepares to win back the c4 pawn.</li>
+      <li style="margin:0 0 8px;"><strong>4...e6</strong> Black pushes the pawn to e6. Black opens the f8 bishop's path and continues kingside development. The trade-off is that the c8 bishop ends up behind the e6 pawn with fewer ways out.</li>
+      <li style="margin:0 0 8px;"><strong>5. Bxc4</strong> White's bishop takes back the black pawn that was on c4. White wins back the pawn it offered, and material is level again.</li>
+      <li style="margin:0 0 8px;"><strong>5...c5</strong> Black pushes the pawn to c5. Black attacks White's d4 pawn with the c5 pawn and the queen on d8. With this move, Black starts counterattacking White's center.</li>
+      <li style="margin:0 0 8px;"><strong>6. O-O</strong> White castles, bringing the king to safety. White's d4 is defended three times, by the queen on d1, the e3 pawn and the f3 knight, so White can calmly castle.</li>
+      <li style="margin:0 0 8px;"><strong>6...a6</strong> Black pushes the pawn to a6. Black controls the b5 square and prepares to push ...b5 next to chase away the c4 bishop.</li>
+      <li style="margin:0 0 8px;"><strong>7. Qe2</strong> White brings the queen to e2. White's queen protects the c4 bishop and prepares to line up a rook on the d-file with Rd1. This setup is called the Classical Variation and is White's most typical approach.</li>
+      <li style="margin:0 0 8px;"><strong>7...b5</strong> Black pushes the pawn to b5. Black attacks White's bishop on c4 and gains space on the queenside.</li>
+      <li style="margin:0 0 8px;"><strong>8. Bb3</strong> White retreats the bishop to b3. From b3, White's bishop keeps eyeing Black's e6 pawn and beyond.</li>
+      <li style="margin:0 0 8px;"><strong>8...Bb7</strong> Black develops the bishop to b7. From the long diagonal, Black's bishop eyes White's f3 knight and the center. This solves the problem Black had after 4...e6, when the bishop risked being shut in behind its own pawns. Typically, White strengthens the center with Rd1 and Nc3 while Black completes development with ...Nbd7 and ...Qc7. That's the main line — try continuing the game yourself from here!</li>
+    </ul>
+  </section>
+
   <footer>© KitsuneChess</footer>
 </div>
 

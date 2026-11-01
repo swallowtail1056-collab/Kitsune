@@ -139,6 +139,51 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
     <div class="board-grid" id="boardGrid"></div>
   </div>
 
+
+  <!-- 手順と解説のまとめ（ページを開いたときから全部読めるように） -->
+  <section id="moveSummary" style="margin:24px 0 8px;background:var(--card-bg,#fffaf0);border:2px solid var(--brown-light,#d8b88a);border-radius:12px;padding:14px 18px;line-height:1.75;">
+    <h2 class="lang-element-ja" style="font-size:1.15rem;margin:0 0 8px;">📜 手順と解説のまとめ</h2>
+    <h2 class="lang-element-en" style="font-size:1.15rem;margin:0 0 8px;">📜 All Moves Explained</h2>
+    <p class="lang-element-ja" style="margin:0 0 8px;">タラッシュ・ディフェンスのレッスンを始めるよ！このページでは、黒が3...c5で中央を開き、白がg3とBg2でd5のポーンをねらう、ルビンシュタインの作戦を見ていくよ。黒の駒の活発さと、取り残されやすいd5のポーンがポイントなんだ。一手ずつジーンと一緒に、なぜその手を指すのかを学んでいこう。</p>
+    <p class="lang-element-en" style="margin:0 0 8px;">Let's start the Tarrasch Defense lesson! On this page we follow Rubinstein's plan, where Black opens the center with 3...c5 and White targets the d5 pawn with g3 and Bg2. The key is Black's active pieces versus the d5 pawn, which tends to become isolated. Jene will walk you through why each move is played, one step at a time.</p>
+    <ul class="lang-element-ja" style="margin:0;padding-left:0;list-style:none;">
+      <li style="margin:0 0 8px;"><strong>1. d4</strong> 白はポーンをd4へ進めるよ。白は中央のマスを押さえながら、c1のビショップの道を開けるんだ。</li>
+      <li style="margin:0 0 8px;"><strong>1...d5</strong> 黒はポーンをd5へ進めるよ。黒も同じように中央を押さえて、白のポーンと向かい合う形を作るんだ。</li>
+      <li style="margin:0 0 8px;"><strong>2. c4</strong> 白はポーンをc4へ進めて、<a href='queens_gambit.html'>クイーンズ・ギャンビット</a>に入るよ。白はc4のポーンで黒のd5のポーンに働きかけるんだ。</li>
+      <li style="margin:0 0 8px;"><strong>2...e6</strong> 黒はポーンをe6へ進めるよ。黒はd5のポーンを支えながら、f8のビショップの道を開けるんだ。</li>
+      <li style="margin:0 0 8px;"><strong>3. Nc3</strong> 白はナイトをc3へ進めるよ。白はナイトを展開しながら、黒のd5のポーンへの圧力を強めるんだ。</li>
+      <li style="margin:0 0 8px;"><strong>3...c5（タラッシュ！）</strong> ここがタラッシュ・ディフェンスの一手！黒はポーンをc5へ進めて、白のd4のポーンに反撃し、中央を開いて駒を自由に動かす道を選ぶよ。その代わり、黒はこの先dのポーンが1つだけ取り残された形（孤立ポーン）になりやすいよ。 黒はこの手の代わりに3...Nf6（クイーンズ・ギャンビット・ディクラインド）や3...c6で落ち着いて守ることのほうが多いよ。</li>
+      <li style="margin:0 0 8px;"><strong>4. cxd5</strong> 白はc4のポーンでd5にいた黒のポーンを取るよ。白は黒の中央のポーンを交換して、黒のポーンの形を崩しにいくんだ。</li>
+      <li style="margin:0 0 8px;"><strong>4...exd5</strong> 黒はe6のポーンでd5に入った白のポーンを取り返すよ。黒はこれでc8のビショップの道が開くけれど、黒のd5のポーンの両隣のcとeのファイルに、黒のポーンがいない形に近づいていくんだ。</li>
+      <li style="margin:0 0 8px;"><strong>5. Nf3</strong> 白はナイトをf3へ進めるよ。白はナイトを展開しながら、黒のc5のポーンやd5のマスに働きかける準備をするんだ。</li>
+      <li style="margin:0 0 8px;"><strong>5...Nc6</strong> 黒はナイトをc6へ進めるよ。黒はナイトを展開しながら、d4のマスに利きを足すんだ。</li>
+      <li style="margin:0 0 8px;"><strong>6. g3（ルビンシュタイン！）</strong> ここがルビンシュタインの作戦の一手！白はポーンをg3へ進めて、ビショップをg2に出す準備をするよ。白のビショップは長い対角線から、黒のd5のポーンをねらう形を作るんだ。</li>
+      <li style="margin:0 0 8px;"><strong>6...Nf6</strong> 黒はナイトをf6へ進めるよ。黒はナイトを展開しながら、d5のポーンの守りを増やすんだ。</li>
+      <li style="margin:0 0 8px;"><strong>7. Bg2</strong> 白はビショップをg2へ進めるよ。白のビショップは今はf3のナイトの後ろにいるけれど、ナイトが動いたあとは長い対角線で黒のd5のポーンをにらむんだ。</li>
+      <li style="margin:0 0 8px;"><strong>7...Be7</strong> 黒はビショップをe7へ進めるよ。黒はこれでf8とg8のマスが空いて、次の手でキャスリングできるようになるんだ。</li>
+      <li style="margin:0 0 8px;"><strong>8. O-O</strong> 白はキャスリングでキングを安全な場所へ動かすよ。白のキングは、g2のビショップとポーンに守られた堅い形に入るんだ。</li>
+      <li style="margin:0 0 8px;"><strong>8...O-O</strong> 黒もキャスリングでキングを安全な場所へ動かすよ。この後は、黒がcxd4やc4、白がdxc5などで中央のポーンの形を決めていき、黒のd5のポーンが孤立ポーンになることが多いんだ。白はそのポーンをねらい、黒は駒の活発さを生かして戦う局面だよ。これで本譜は一段落、続きはぜひ自分で指してみてね！</li>
+    </ul>
+    <ul class="lang-element-en" style="margin:0;padding-left:0;list-style:none;">
+      <li style="margin:0 0 8px;"><strong>1. d4</strong> White pushes the pawn to d4. White takes control of central squares and opens the path for the c1 bishop.</li>
+      <li style="margin:0 0 8px;"><strong>1...d5</strong> Black pushes the pawn to d5. Black also claims the center, setting up a pawn face-off with White.</li>
+      <li style="margin:0 0 8px;"><strong>2. c4</strong> White pushes the pawn to c4, entering the <a href='queens_gambit.html?lang=en'>Queen's Gambit</a>. White uses the c4 pawn to challenge Black's d5 pawn.</li>
+      <li style="margin:0 0 8px;"><strong>2...e6</strong> Black pushes the pawn to e6. Black supports the d5 pawn and opens the path for the f8 bishop.</li>
+      <li style="margin:0 0 8px;"><strong>3. Nc3</strong> White develops the knight to c3. White develops while increasing the pressure on Black's d5 pawn.</li>
+      <li style="margin:0 0 8px;"><strong>3...c5 (Tarrasch!)</strong> Here's the Tarrasch Defense! Black pushes the pawn to c5, striking back at White's d4 pawn and opening the center for free piece play. The trade-off is that Black often ends up with an isolated d-pawn. Instead of this move, Black more often defends calmly with 3...Nf6 (the Queen's Gambit Declined) or 3...c6.</li>
+      <li style="margin:0 0 8px;"><strong>4. cxd5</strong> White's c4 pawn captures the black pawn that was on d5. White trades off Black's central pawn to damage Black's pawn structure.</li>
+      <li style="margin:0 0 8px;"><strong>4...exd5</strong> Black's e6 pawn takes back the white pawn that landed on d5. This opens the c8 bishop's path, but Black is heading toward a structure where the d5 pawn has no neighboring pawns on the c- and e-files.</li>
+      <li style="margin:0 0 8px;"><strong>5. Nf3</strong> White develops the knight to f3. White develops while preparing to put pressure on Black's c5 pawn and the d5 square.</li>
+      <li style="margin:0 0 8px;"><strong>5...Nc6</strong> Black develops the knight to c6. Black develops while adding control of the d4 square.</li>
+      <li style="margin:0 0 8px;"><strong>6. g3 (Rubinstein!)</strong> Here's Rubinstein's plan! White pushes the pawn to g3, preparing to put the bishop on g2. From the long diagonal, the bishop will aim at Black's d5 pawn.</li>
+      <li style="margin:0 0 8px;"><strong>6...Nf6</strong> Black develops the knight to f6. Black develops while adding another defender to the d5 pawn.</li>
+      <li style="margin:0 0 8px;"><strong>7. Bg2</strong> White develops the bishop to g2. White's bishop sits behind the f3 knight for now, but once the knight moves it will eye Black's d5 pawn along the long diagonal.</li>
+      <li style="margin:0 0 8px;"><strong>7...Be7</strong> Black develops the bishop to e7. With f8 and g8 now clear, Black can castle on the next move.</li>
+      <li style="margin:0 0 8px;"><strong>8. O-O</strong> White castles, bringing the king to safety. White's king settles into a solid shelter guarded by the g2 bishop and pawns.</li>
+      <li style="margin:0 0 8px;"><strong>8...O-O</strong> Black also castles, bringing the king to safety. From here, the central pawn structure is usually settled with moves like ...cxd4 or ...c4 for Black and dxc5 for White, and Black's d5 pawn often becomes isolated. White targets that pawn, while Black relies on active pieces. That's the main line — try continuing the game yourself from here!</li>
+    </ul>
+  </section>
+
   <footer>© KitsuneChess</footer>
 </div>
 

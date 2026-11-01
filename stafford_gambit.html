@@ -137,6 +137,45 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
     <div class="board-grid" id="boardGrid"></div>
   </div>
 
+
+  <!-- 手順と解説のまとめ（ページを開いたときから全部読めるように） -->
+  <section id="moveSummary" style="margin:24px 0 8px;background:var(--card-bg,#fffaf0);border:2px solid var(--brown-light,#d8b88a);border-radius:12px;padding:14px 18px;line-height:1.75;">
+    <h2 class="lang-element-ja" style="font-size:1.15rem;margin:0 0 8px;">📜 手順と解説のまとめ</h2>
+    <h2 class="lang-element-en" style="font-size:1.15rem;margin:0 0 8px;">📜 All Moves Explained</h2>
+    <p class="lang-element-ja" style="margin:0 0 8px;">スタッフォード・ギャンビットのレッスンを始めるよ！このページでは、黒がポーンを1つ差し出して、Bc5とh5で白のキングサイドに攻めかかる本筋を見ていくよ。白がどうやって黒の罠を避けながら受け止めるのかがポイントなんだ。一手ずつジーンと一緒に、なぜその手を指すのかを学んでいこう。</p>
+    <p class="lang-element-en" style="margin:0 0 8px;">Let's start the Stafford Gambit lesson! On this page we follow the main line where Black gives up a pawn and goes after White's kingside with ...Bc5 and ...h5. The key is how White avoids Black's traps while holding firm. Jene will walk you through why each move is played, one step at a time.</p>
+    <ul class="lang-element-ja" style="margin:0;padding-left:0;list-style:none;">
+      <li style="margin:0 0 8px;"><strong>1. e4</strong> 白はポーンをe4へ進めるよ。白は中央のマスを押さえながら、ビショップとクイーンが動く道を開けるんだ。</li>
+      <li style="margin:0 0 8px;"><strong>1...e5</strong> 黒はポーンをe5へ進めるよ。黒も同じように中央を押さえて、白のポーンと向かい合う形を作るんだ。</li>
+      <li style="margin:0 0 8px;"><strong>2. Nf3</strong> 白はナイトをf3へ進めるよ。白のナイトは展開しながら、黒のe5のポーンを攻撃しているんだ。</li>
+      <li style="margin:0 0 8px;"><strong>2...Nf6</strong> 黒はナイトをf6へ進めるよ。黒はe5のポーンを守らずに、白のe4のポーンを攻撃し返すんだ。黒のこの形は<a href='russian.html'>ペトロフ・ディフェンス（ロシアン・ディフェンス）</a>と呼ばれているよ。</li>
+      <li style="margin:0 0 8px;"><strong>3. Nxe5</strong> 白はナイトでe5にいた黒のポーンを取るよ。白はこれでポーンを1つ得するんだ。</li>
+      <li style="margin:0 0 8px;"><strong>3...Nc6（スタッフォード！）</strong> ここがスタッフォード・ギャンビットの一手！黒はナイトをc6へ進めて、e5の白のナイトに交換を迫るよ。一般的には3...d6でナイトを追い払ってからe4のポーンを取り返すけれど、黒はここでポーンを取り返さずに、駒の展開を急ぐ道を選ぶんだ。その代わり、白が正しく応じると、黒はポーンを1つ損したままになってしまうよ。</li>
+      <li style="margin:0 0 8px;"><strong>4. Nxc6</strong> 白はナイトでc6にいた黒のナイトを取るよ。白はポーン1つ得のまま、駒を交換するんだ。</li>
+      <li style="margin:0 0 8px;"><strong>4...dxc6</strong> 黒はdのポーンでc6に入った白のナイトを取り返すよ。黒はdファイルを開いて、c8のビショップとクイーンの道を一気に広げるんだ。黒はポーンを1つ損した代わりに、駒の展開で大きくリードしているよ。</li>
+      <li style="margin:0 0 8px;"><strong>5. d3</strong> 白はポーンをd3へ進めるよ。白はe4のポーンを守り、c1のビショップの道も開けるんだ。 白はこの手の代わりに5.Nc3と指すこともできて、こちらのほうが安全だという意見もあるよ。</li>
+      <li style="margin:0 0 8px;"><strong>5...Bc5</strong> 黒はビショップをc5へ進めるよ。黒のビショップは、キングしか守っていない白のf2のマスをねらっているんだ。黒はこの先Ng4と出て、f2にもう一度攻めかかる準備をしているよ。</li>
+      <li style="margin:0 0 8px;"><strong>6. Be2</strong> 白はビショップをe2へ進めるよ。白のビショップはg4のマスを押さえて、黒のナイトがg4へ出てくるのを防ぐんだ。白がもしこの手の代わりに6.Bg5と指すと、黒に有名な罠を仕掛けられてしまうので注意してね。 白が6.Bg5とf6のナイトをピンしにいくと、黒にはピンを無視して6...Nxe4とポーンを取り、自分のクイーンを差し出す手があるよ。白が喜んで7.Bxd8とクイーンを取ると、黒は7...Bxf2+とチェックをかけ、白のキングはe2にしか逃げられず、8...Bg4#で残った駒だけでチェックメイトになるんだ。黒がピンされた駒をあえて動かし、クイーンを差し出して詰ませるこの考え方は、<a href='legals_trap.html'>レガールのトラップ</a>と同じだよ。</li>
+      <li style="margin:0 0 8px;"><strong>6...h5</strong> 黒はポーンをh5へ進めるよ。黒のh5のポーンは、まだ空いているg4のマスに利いていて、e2のビショップがいてもNg4と出たナイトを守れるようにするんだ。黒はhファイルを開いて、ルークも攻めに使う準備をしているよ。その代わり、黒はキングサイドのポーンを前に出すので、黒のキングの守りも少し薄くなるんだ。</li>
+      <li style="margin:0 0 8px;"><strong>7. c3</strong> 白はポーンをc3へ進めるよ。白はd4とb4のマスを押さえて、この先d4やb4と突いて、黒のc5のビショップを追い払う準備をするんだ。白はポーンを1つ多く持っていて、黒の攻めを正確に受け止めれば有利になるけれど、黒も攻めのチャンスが多い、鋭い局面だよ。これで本譜は一段落、続きはぜひ自分で指してみてね！</li>
+    </ul>
+    <ul class="lang-element-en" style="margin:0;padding-left:0;list-style:none;">
+      <li style="margin:0 0 8px;"><strong>1. e4</strong> White pushes the pawn to e4. White takes control of central squares and opens lines for the bishop and queen.</li>
+      <li style="margin:0 0 8px;"><strong>1...e5</strong> Black pushes the pawn to e5. Black also claims the center, setting up a pawn face-off with White.</li>
+      <li style="margin:0 0 8px;"><strong>2. Nf3</strong> White develops the knight to f3. White's knight develops while attacking Black's e5 pawn.</li>
+      <li style="margin:0 0 8px;"><strong>2...Nf6</strong> Black develops the knight to f6. Instead of defending the e5 pawn, Black counterattacks White's e4 pawn. This setup is called the <a href='russian.html?lang=en'>Petrov Defense (Russian Defense)</a>.</li>
+      <li style="margin:0 0 8px;"><strong>3. Nxe5</strong> White's knight takes the black pawn that was on e5. White wins a pawn.</li>
+      <li style="margin:0 0 8px;"><strong>3...Nc6 (Stafford!)</strong> Here's the Stafford Gambit! Black develops the knight to c6, offering a trade with White's knight on e5. Black usually plays 3...d6 to chase the knight away and then wins back the e4 pawn, but here Black skips winning back the pawn and hurries development instead. The trade-off is that if White responds correctly, Black just stays a pawn down.</li>
+      <li style="margin:0 0 8px;"><strong>4. Nxc6</strong> White's knight captures the black knight that was on c6. White trades pieces while staying a pawn up.</li>
+      <li style="margin:0 0 8px;"><strong>4...dxc6</strong> Black's d-pawn takes back the white knight that landed on c6. Black opens the d-file, freeing the c8 bishop and the queen in one go. Black is a pawn down but well ahead in development.</li>
+      <li style="margin:0 0 8px;"><strong>5. d3</strong> White pushes the pawn to d3. White defends the e4 pawn and opens the path for the c1 bishop. Instead of this move, White can also play 5.Nc3, which some consider even safer.</li>
+      <li style="margin:0 0 8px;"><strong>5...Bc5</strong> Black develops the bishop to c5. Black's bishop aims at White's f2 square, which only the king defends. Black is preparing ...Ng4 to attack f2 a second time.</li>
+      <li style="margin:0 0 8px;"><strong>6. Be2</strong> White develops the bishop to e2. White's bishop covers g4, stopping Black's knight from jumping there. Be careful: if White played 6.Bg5 instead of this move, Black could spring a famous trap. If White tried to pin the f6 knight with 6.Bg5 instead of this move, Black has a famous trap: ignore the pin with 6...Nxe4, grabbing a pawn and offering the queen. If White happily takes with 7.Bxd8, Black checks with 7...Bxf2+, White's king can only go to e2, and 8...Bg4# delivers mate with the remaining pieces. Moving a pinned piece on purpose and sacrificing the queen to deliver mate is the same idea as the <a href='legals_trap.html?lang=en'>Légal Trap</a>.</li>
+      <li style="margin:0 0 8px;"><strong>6...h5</strong> Black pushes the pawn to h5. Black's h5 pawn covers the still-empty g4 square, so a knight landing on g4 would be protected despite White's e2 bishop. Black is also preparing to use the rook in the attack via the h-file. The trade-off is that pushing a kingside pawn thins out Black's own king shelter a little.</li>
+      <li style="margin:0 0 8px;"><strong>7. c3</strong> White pushes the pawn to c3. White covers d4 and b4, preparing to push d4 or b4 later to chase away Black's c5 bishop. White is a pawn up and should be better with accurate defense, but Black still has plenty of attacking chances in this sharp position. That's the main line — try continuing the game yourself from here!</li>
+    </ul>
+  </section>
+
   <footer>© KitsuneChess</footer>
 </div>
 
