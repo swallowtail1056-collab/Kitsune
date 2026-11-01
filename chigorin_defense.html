@@ -132,6 +132,39 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
     <div class="board-grid" id="boardGrid"></div>
   </div>
 
+
+  <!-- 手順と解説のまとめ（ページを開いたときから全部読めるように） -->
+  <section id="moveSummary" style="margin:24px 0 8px;background:var(--card-bg,#fffaf0);border:2px solid var(--brown-light,#d8b88a);border-radius:12px;padding:14px 18px;line-height:1.75;">
+    <h2 class="lang-element-ja" style="font-size:1.15rem;margin:0 0 8px;">📜 手順と解説のまとめ</h2>
+    <h2 class="lang-element-en" style="font-size:1.15rem;margin:0 0 8px;">📜 All Moves Explained</h2>
+    <p class="lang-element-ja" style="margin:0 0 8px;">チゴーリン・ディフェンスのレッスンを始めるよ！ポーン構造より駒の活動性を重視する、実戦的な戦法だよ。一手ずつジーンと一緒に、なぜその手を指すのかを学んでいこう。</p>
+    <p class="lang-element-en" style="margin:0 0 8px;">Let's start the Chigorin Defense lesson! It prioritizes piece activity over pawn structure. Jene will walk you through why each move is played, one step at a time.</p>
+    <ul class="lang-element-ja" style="margin:0;padding-left:0;list-style:none;">
+      <li style="margin:0 0 8px;"><strong>1. d4</strong> 白はポーンをd4へ進めるよ。中央を制圧するんだ。</li>
+      <li style="margin:0 0 8px;"><strong>1...d5</strong> 黒もポーンをd5へ進めて、中央を分け合うよ。</li>
+      <li style="margin:0 0 8px;"><strong>2. c4</strong> 白はポーンをc4へ進めるよ（クイーンズ・ギャンビット）。d5ポーンをc4と交換に誘って、中央でより自由に動けるようにする狙いなんだ。</li>
+      <li style="margin:0 0 8px;"><strong>2...Nc6（チゴーリン！）</strong> ここが本題、チゴーリン・ディフェンスを定義する一手！黒はd5ポーンを守る代わりにナイトを展開するよ。定跡通りの...e6や...c6より駒の活動性を優先する、個性的な選択なんだ。</li>
+      <li style="margin:0 0 8px;"><strong>3. Nf3</strong> 白はナイトをf3へ進めるよ。駒を育てながら、この先のキャスリングに備えるんだ。</li>
+      <li style="margin:0 0 8px;"><strong>3...Bg4</strong> 黒はビショップをg4へ！f3のナイトにピンをかけて、d4のポーンへの圧力を強めるよ。</li>
+      <li style="margin:0 0 8px;"><strong>4. cxd5</strong> 白はポーンでd5の駒を取るよ。</li>
+      <li style="margin:0 0 8px;"><strong>4...Bxf3</strong> 黒はすぐにd5を取り返さず、先にビショップでf3のナイトを取るよ。この後gxf3と取らせて、白のキングサイドのポーン構造を崩すのが狙いなんだ。</li>
+      <li style="margin:0 0 8px;"><strong>5. gxf3</strong> 白はポーンでf3の駒を取り返すよ。これで白はビショップペアを得るけど、キングサイドのポーンが崩れてしまうんだ。</li>
+      <li style="margin:0 0 8px;"><strong>5...Qxd5</strong> 黒はクイーンでd5の駒を取り返すよ。これで一連の駒組みが完成、白のポーン構造を崩しながら黒は活発な駒の展開を手に入れたんだ。これで本譜は一段落、続きはぜひ自分で指してみてね！</li>
+    </ul>
+    <ul class="lang-element-en" style="margin:0;padding-left:0;list-style:none;">
+      <li style="margin:0 0 8px;"><strong>1. d4</strong> White develops the pawn to d4, claiming the center.</li>
+      <li style="margin:0 0 8px;"><strong>1...d5</strong> Black mirrors with 1...d5, contesting the center equally.</li>
+      <li style="margin:0 0 8px;"><strong>2. c4</strong> White plays 2.c4, the Queen's Gambit, offering to trade the c-pawn for greater central freedom.</li>
+      <li style="margin:0 0 8px;"><strong>2...Nc6 (Chigorin!)</strong> Here's the move that defines the Chigorin Defense! Instead of defending the d5 pawn, Black develops the knight — prioritizing piece activity over the more standard ...e6 or ...c6.</li>
+      <li style="margin:0 0 8px;"><strong>3. Nf3</strong> White develops the knight to f3, continuing development while preparing to castle.</li>
+      <li style="margin:0 0 8px;"><strong>3...Bg4</strong> Black plays 3...Bg4, pinning the f3 knight and adding pressure on the d4 pawn.</li>
+      <li style="margin:0 0 8px;"><strong>4. cxd5</strong> White captures on d5 with the pawn.</li>
+      <li style="margin:0 0 8px;"><strong>4...Bxf3</strong> Black doesn't recapture on d5 right away — first taking the knight on f3, aiming to force gxf3 and damage White's kingside pawn structure.</li>
+      <li style="margin:0 0 8px;"><strong>5. gxf3</strong> White recaptures with the pawn, gaining the bishop pair but ending up with a damaged kingside pawn structure.</li>
+      <li style="margin:0 0 8px;"><strong>5...Qxd5</strong> Black finally recaptures on d5 with the queen, completing the plan — Black has traded a bishop for a knight to wreck White's structure while gaining active piece play. That's the main line — try continuing the game yourself from here!</li>
+    </ul>
+  </section>
+
   <footer>© KitsuneChess</footer>
 </div>
 

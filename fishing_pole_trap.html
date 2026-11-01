@@ -132,6 +132,47 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
     <div class="board-grid" id="boardGrid"></div>
   </div>
 
+
+  <!-- 手順と解説のまとめ（ページを開いたときから全部読めるように） -->
+  <section id="moveSummary" style="margin:24px 0 8px;background:var(--card-bg,#fffaf0);border:2px solid var(--brown-light,#d8b88a);border-radius:12px;padding:14px 18px;line-height:1.75;">
+    <h2 class="lang-element-ja" style="font-size:1.15rem;margin:0 0 8px;">📜 手順と解説のまとめ</h2>
+    <h2 class="lang-element-en" style="font-size:1.15rem;margin:0 0 8px;">📜 All Moves Explained</h2>
+    <p class="lang-element-ja" style="margin:0 0 8px;">フィッシングポール・トラップのレッスンを始めるよ！釣りにたとえて、罠の「餌」と「つり針」にあたる駒が盤上のどれなのかを、一手ずつ探していくよ。ジーンと一緒に、なぜその手を指すのかを学んでいこう。</p>
+    <p class="lang-element-en" style="margin:0 0 8px;">Let's start the Fishing Pole Trap lesson! Like fishing, this trap has a bait and a hook, and we'll find out which pieces play those roles, one move at a time. Jene will explain why each move is played.</p>
+    <ul class="lang-element-ja" style="margin:0;padding-left:0;list-style:none;">
+      <li style="margin:0 0 8px;"><strong>1. e4</strong> 白はポーンをe4へ進めて、中央を制圧するよ。この一手で白は、ビショップとクイーンが動く道も開けられるんだ。</li>
+      <li style="margin:0 0 8px;"><strong>1...e5</strong> 黒も同じくポーンをe5へ進めて、中央を分け合うよ。これで黒は、白のe4のポーンと真正面から向き合う対称的な形にするんだ。</li>
+      <li style="margin:0 0 8px;"><strong>2. Nf3</strong> 白はナイトをf3へ進めるよ。白はこれで黒のe5のポーンを攻撃しながら、駒の展開も進められるんだ。</li>
+      <li style="margin:0 0 8px;"><strong>2...Nc6</strong> 黒はナイトをc6へ進めるよ。黒はこれで、白のナイトにねらわれているe5のポーンを守りながら、駒を展開できるんだ。</li>
+      <li style="margin:0 0 8px;"><strong>3. Bb5</strong> 白はビショップをb5へ進めるよ（ルイ・ロペス）。このビショップは、e5のポーンを守っている黒のc6のナイトをねらって、e5への圧力を高めるんだ。</li>
+      <li style="margin:0 0 8px;"><strong>3...Nf6</strong> 黒はナイトをf6へ進めるよ（ベルリン・ディフェンス）。このナイトは、白のe4のポーンをねらいながら黒の展開を進める、自然な一手なんだ。実はこのナイトが、あとで罠の「餌」になる大事な駒だよ。</li>
+      <li style="margin:0 0 8px;"><strong>4. O-O</strong> 白はキングサイドにキャスリングするよ。白はこれでキングを安全な位置に動かして、ルークも使いやすくするんだ。この罠は、白がこうして短くキャスリングしたあとに効いてくるよ。</li>
+      <li style="margin:0 0 8px;"><strong>4...Ng4（餌！）</strong> ここが本題、フィッシングポール・トラップの一手！黒はf6のナイトをg4へ進めて、あえて白の目の前にナイトを置くよ。これが罠の「餌」で、白がこのナイトを取りたくなるように誘っているんだ。</li>
+      <li style="margin:0 0 8px;"><strong>5. h3</strong> 白はポーンをh3へ進めて、g4のナイトを追い払おうとするよ。白は、ポーンでナイトを攻撃してテンポを稼ぎたいんだ。</li>
+      <li style="margin:0 0 8px;"><strong>5...h5（つり針！）</strong> 黒はポーンをh5へ進めて、g4のナイトをポーンで守るよ。これが罠の「つり針」で、ナイトを守りながら、あとでh筋を開く準備にもなっているんだ。白はナイトが取れそうに見えるけれど、そこが黒のねらいなんだよ。</li>
+      <li style="margin:0 0 8px;"><strong>6. hxg4（食いついた！）</strong> 白はh3のポーンでg4のナイトを取るよ。白はナイトを1つ得したように見えるけれど、これが黒の罠にかかった一手なんだ。白がこのナイトを取らなければ、罠は成立しなかったんだよ。</li>
+      <li style="margin:0 0 8px;"><strong>6...hxg4</strong> 黒はh5のポーンでg4を取り返すよ。これでh筋が開いて、h8のルークが白キングのすぐ近くまで通るようになるんだ。しかも、g4に来た黒のポーンが、白のf3のナイトをねらっているよ。</li>
+      <li style="margin:0 0 8px;"><strong>7. Ne1</strong> 白はナイトをe1へ逃がすよ。g4のポーンにねらわれたナイトを助けるための手だけど、これでh2とh4を守っていたf3のナイトがいなくなってしまうんだ。</li>
+      <li style="margin:0 0 8px;"><strong>7...Qh4</strong> 黒はクイーンをh4へ進めるよ。これで黒はh筋にクイーンとルークを並べて、次のQh2#（チェックメイト）をねらえるんだ。白のe1のナイトはh2を守れないので、白はとても苦しい状況になるよ。これで本譜は一段落、続きはぜひ自分で指してみてね！</li>
+    </ul>
+    <ul class="lang-element-en" style="margin:0;padding-left:0;list-style:none;">
+      <li style="margin:0 0 8px;"><strong>1. e4</strong> White pushes the pawn to e4, claiming the center. This move also opens lines for White's bishop and queen.</li>
+      <li style="margin:0 0 8px;"><strong>1...e5</strong> Black mirrors with 1...e5, staking an equal claim to the center. This creates a symmetrical structure, with Black's pawn facing White's e4 pawn head-on.</li>
+      <li style="margin:0 0 8px;"><strong>2. Nf3</strong> White develops the knight to f3, attacking Black's e5 pawn while continuing development.</li>
+      <li style="margin:0 0 8px;"><strong>2...Nc6</strong> Black develops the knight to c6, defending the e5 pawn that White's knight is attacking while also developing a piece.</li>
+      <li style="margin:0 0 8px;"><strong>3. Bb5</strong> White develops the bishop to b5 (the Ruy Lopez). This bishop targets Black's c6 knight, which is defending the e5 pawn, increasing the pressure on e5.</li>
+      <li style="margin:0 0 8px;"><strong>3...Nf6</strong> Black develops the knight to f6 (the Berlin Defence). This knight attacks White's e4 pawn while developing naturally. It will also become the "bait" of the trap later on.</li>
+      <li style="margin:0 0 8px;"><strong>4. O-O</strong> White castles kingside. This moves White's king to safety and brings the rook into play. This trap works after White has castled short like this.</li>
+      <li style="margin:0 0 8px;"><strong>4...Ng4 (Bait!)</strong> Here's the Fishing Pole Trap move! Black moves the knight from f6 to g4, deliberately placing it right in front of White. This is the "bait", tempting White to capture it.</li>
+      <li style="margin:0 0 8px;"><strong>5. h3</strong> White pushes the pawn to h3, trying to chase the knight away from g4. White wants to gain a tempo by attacking the knight with a pawn.</li>
+      <li style="margin:0 0 8px;"><strong>5...h5 (Hook!)</strong> Black pushes the pawn to h5, defending the knight on g4 with a pawn. This is the "hook": it protects the knight and also prepares to open the h-file later. White may think it can win the knight, but that's exactly what Black wants.</li>
+      <li style="margin:0 0 8px;"><strong>6. hxg4 (Took the bait!)</strong> White captures the knight on g4 with the h3 pawn. White seems to win a knight, but this is the move that falls into Black's trap. If White had not captured the knight, the trap would not have worked.</li>
+      <li style="margin:0 0 8px;"><strong>6...hxg4</strong> Black recaptures on g4 with the h5 pawn. This opens the h-file, so Black's rook on h8 now reaches right next to White's king. The new pawn on g4 also attacks White's knight on f3.</li>
+      <li style="margin:0 0 8px;"><strong>7. Ne1</strong> White retreats the knight to e1 to escape the pawn on g4. But this removes the knight from f3, which had been guarding both h2 and h4.</li>
+      <li style="margin:0 0 8px;"><strong>7...Qh4</strong> Black moves the queen to h4. Black now has the queen and rook lined up on the h-file, threatening Qh2# (checkmate) next. White's knight on e1 cannot defend h2, so White is in serious trouble. That's the main line — try continuing the game yourself from here!</li>
+    </ul>
+  </section>
+
   <footer>© KitsuneChess</footer>
 </div>
 

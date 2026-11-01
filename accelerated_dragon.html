@@ -139,6 +139,49 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
     <div class="board-grid" id="boardGrid"></div>
   </div>
 
+
+  <!-- 手順と解説のまとめ（ページを開いたときから全部読めるように） -->
+  <section id="moveSummary" style="margin:24px 0 8px;background:var(--card-bg,#fffaf0);border:2px solid var(--brown-light,#d8b88a);border-radius:12px;padding:14px 18px;line-height:1.75;">
+    <h2 class="lang-element-ja" style="font-size:1.15rem;margin:0 0 8px;">📜 手順と解説のまとめ</h2>
+    <h2 class="lang-element-en" style="font-size:1.15rem;margin:0 0 8px;">📜 All Moves Explained</h2>
+    <p class="lang-element-ja" style="margin:0 0 8px;">アクセラレイテッド・ドラゴンのレッスンを始めるよ！このページでは、黒がd6を突かずにg6とBg7を急ぎ、白がBe3とBc4で受ける本筋を見ていくよ。黒がいつd5と突いて反撃できるのか、白がそれをどう防ぐのかがポイントなんだ。一手ずつジーンと一緒に、なぜその手を指すのかを学んでいこう。</p>
+    <p class="lang-element-en" style="margin:0 0 8px;">Let's start the Accelerated Dragon lesson! On this page we follow the main line where Black hurries ...g6 and ...Bg7 without playing ...d6, and White responds with Be3 and Bc4. The key is when Black can strike back with ...d5, and how White prevents it. Jene will walk you through why each move is played, one step at a time.</p>
+    <ul class="lang-element-ja" style="margin:0;padding-left:0;list-style:none;">
+      <li style="margin:0 0 8px;"><strong>1. e4</strong> 白はポーンをe4へ進めるよ。白は中央のマスを押さえながら、ビショップとクイーンが動く道を開けるんだ。</li>
+      <li style="margin:0 0 8px;"><strong>1...c5</strong> 黒はポーンをc5へ進めるよ。黒はこれで<a href='sicilian.html'>シシリアン・ディフェンス</a>の形に入り、c5のポーンで斜めにd4のマスを押さえるんだ。</li>
+      <li style="margin:0 0 8px;"><strong>2. Nf3</strong> 白はナイトをf3へ進めるよ。白は駒を展開しながら、次にd4と突く準備をしているんだ。</li>
+      <li style="margin:0 0 8px;"><strong>2...Nc6</strong> 黒はナイトをc6へ進めるよ。黒はナイトを展開しながら、d4のマスへの利きを強めるんだ。</li>
+      <li style="margin:0 0 8px;"><strong>3. d4</strong> 白はポーンをd4へ進めるよ。白は中央でポーンを交換して、駒が動きやすい開いた局面をねらうんだ。</li>
+      <li style="margin:0 0 8px;"><strong>3...cxd4</strong> 黒はc5のポーンでd4に来た白のポーンを取るよ。黒はこれで中央の白のポーンを減らし、cファイルを半分開くんだ。</li>
+      <li style="margin:0 0 8px;"><strong>4. Nxd4</strong> 白はナイトでd4にいた黒のポーンを取り返すよ。白のナイトは中央の強いマスに入るんだ。</li>
+      <li style="margin:0 0 8px;"><strong>4...g6（アクセラレイテッド！）</strong> ここがアクセラレイテッド・ドラゴンの一手！黒はポーンをg6へ進めて、ビショップをg7に出す準備をするよ。普通の<a href='dragon.html'>ドラゴン</a>ではd6を突いてからg6と進めるけれど、黒はここでd6を後回しにして、あとでd5と一気に2マス突けるようにしているんだ。その代わり、黒は白に5.c4と突かれて、d5のマスを押さえられる形（マロツィ・バインド）を許すことになるよ。 黒が2手目でNc6を指さずにg6と突く形は、<a href='hyperaccelerated_dragon.html'>ハイパーアクセラレーテッド・ドラゴン</a>と呼ばれているよ。マロツィ・バインドがどんな作戦かは、<a href='moscow_sicilian.html'>モスクワ・バリエーション</a>のページでも紹介しているんだ。</li>
+      <li style="margin:0 0 8px;"><strong>5. Nc3</strong> 白はナイトをc3へ進めるよ。白はナイトを展開しながら、e4のポーンを守り、d5のマスにも利かせるんだ。 白はこの手の代わりに5.c4と突いて、マロツィ・バインドを作ることもできるよ。黒にとっては、これがいちばん手ごわい応じ方とされているんだ。</li>
+      <li style="margin:0 0 8px;"><strong>5...Bg7</strong> 黒はビショップをg7へ進めるよ。黒のビショップは長い対角線から、白のd4のナイトをにらんでいるんだ。白のd4のナイトは、黒のc6のナイトとg7のビショップの2つに攻撃されていて、白の守りはクイーン1つだけだよ。</li>
+      <li style="margin:0 0 8px;"><strong>6. Be3</strong> 白はビショップをe3へ進めるよ。白はこれでd4のナイトの守りを2つにするんだ。</li>
+      <li style="margin:0 0 8px;"><strong>6...Nf6</strong> 黒はナイトをf6へ進めるよ。黒はナイトを展開しながら、白のe4のポーンを攻撃するんだ。白のe4はc3のナイトに守られているよ。</li>
+      <li style="margin:0 0 8px;"><strong>7. Bc4</strong> 白はビショップをc4へ進めるよ。白のビショップはd5のマスに利いていて、黒がd5と突いて反撃するのを防ぐんだ。同時に白は、黒のf7のポーンもにらんでいるよ。</li>
+      <li style="margin:0 0 8px;"><strong>7...O-O</strong> 黒はキャスリングでキングを安全な場所へ動かすよ。黒はキングの安全を確保して、中央への反撃の準備を進めるんだ。</li>
+      <li style="margin:0 0 8px;"><strong>8. Bb3</strong> 白はビショップをb3へ下げるよ。白はここで先にビショップを下げておくことで、黒の...Nxe4からd5と突いて、c4のビショップとe4のナイトを同時にねらう手筋を防いでいるんだ。白がもしこの手の代わりに8.O-Oとキャスリングすると、黒はこの手筋で互角に戻せてしまうよ。これで本譜は一段落、続きはぜひ自分で指してみてね！</li>
+    </ul>
+    <ul class="lang-element-en" style="margin:0;padding-left:0;list-style:none;">
+      <li style="margin:0 0 8px;"><strong>1. e4</strong> White pushes the pawn to e4. White takes control of central squares and opens lines for the bishop and queen.</li>
+      <li style="margin:0 0 8px;"><strong>1...c5</strong> Black pushes the pawn to c5. Black enters the <a href='sicilian.html?lang=en'>Sicilian Defense</a> and uses the c5 pawn to control the d4 square diagonally.</li>
+      <li style="margin:0 0 8px;"><strong>2. Nf3</strong> White develops the knight to f3. White develops a piece while preparing to push d4 next.</li>
+      <li style="margin:0 0 8px;"><strong>2...Nc6</strong> Black develops the knight to c6. Black develops while strengthening control of the d4 square.</li>
+      <li style="margin:0 0 8px;"><strong>3. d4</strong> White pushes the pawn to d4. White aims to trade pawns in the center and open the position for the pieces.</li>
+      <li style="margin:0 0 8px;"><strong>3...cxd4</strong> Black's c5 pawn captures the white pawn that came to d4. Black removes one of White's central pawns and half-opens the c-file.</li>
+      <li style="margin:0 0 8px;"><strong>4. Nxd4</strong> White's knight takes back the black pawn that was on d4. White's knight lands on a strong central square.</li>
+      <li style="margin:0 0 8px;"><strong>4...g6 (Accelerated!)</strong> Here's the Accelerated Dragon! Black pushes the pawn to g6, preparing to put the bishop on g7. In the regular <a href='dragon.html?lang=en'>Dragon</a> Black plays ...d6 before ...g6, but here Black delays ...d6 so that the d-pawn can later jump straight to d5. The trade-off is that White can play 5.c4 and clamp down on d5, a setup called the Maróczy Bind. If Black plays ...g6 on move two instead of ...Nc6, it's called the <a href='hyperaccelerated_dragon.html?lang=en'>Hyperaccelerated Dragon</a>. The <a href='moscow_sicilian.html?lang=en'>Moscow Variation</a> page also explains how the Maróczy Bind works.</li>
+      <li style="margin:0 0 8px;"><strong>5. Nc3</strong> White develops the knight to c3. White develops while defending the e4 pawn and covering the d5 square. Instead of this move, White can push 5.c4 and set up the Maróczy Bind. This is considered the most challenging reply for Black.</li>
+      <li style="margin:0 0 8px;"><strong>5...Bg7</strong> Black develops the bishop to g7. From the long diagonal, Black's bishop eyes White's knight on d4. That knight is now attacked twice, by the c6 knight and the g7 bishop, while White defends it only once with the queen.</li>
+      <li style="margin:0 0 8px;"><strong>6. Be3</strong> White develops the bishop to e3. White now defends the d4 knight twice.</li>
+      <li style="margin:0 0 8px;"><strong>6...Nf6</strong> Black develops the knight to f6. Black develops while attacking White's e4 pawn. White's e4 is defended by the c3 knight.</li>
+      <li style="margin:0 0 8px;"><strong>7. Bc4</strong> White develops the bishop to c4. White's bishop covers d5, stopping Black from striking back with ...d5. At the same time, White eyes Black's f7 pawn.</li>
+      <li style="margin:0 0 8px;"><strong>7...O-O</strong> Black castles, bringing the king to safety. Black secures the king and prepares a counterattack in the center.</li>
+      <li style="margin:0 0 8px;"><strong>8. Bb3</strong> White retreats the bishop to b3. By pulling the bishop back now, White prevents Black's tactic of ...Nxe4 followed by ...d5, which would hit the c4 bishop and the e4 knight at the same time. If White castled with 8.O-O instead of this move, Black could use this tactic to equalize. That's the main line — try continuing the game yourself from here!</li>
+    </ul>
+  </section>
+
   <footer>© KitsuneChess</footer>
 </div>
 

@@ -132,6 +132,43 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
     <div class="board-grid" id="boardGrid"></div>
   </div>
 
+
+  <!-- 手順と解説のまとめ（ページを開いたときから全部読めるように） -->
+  <section id="moveSummary" style="margin:24px 0 8px;background:var(--card-bg,#fffaf0);border:2px solid var(--brown-light,#d8b88a);border-radius:12px;padding:14px 18px;line-height:1.75;">
+    <h2 class="lang-element-ja" style="font-size:1.15rem;margin:0 0 8px;">📜 手順と解説のまとめ</h2>
+    <h2 class="lang-element-en" style="font-size:1.15rem;margin:0 0 8px;">📜 All Moves Explained</h2>
+    <p class="lang-element-ja" style="margin:0 0 8px;">フォー・ナイツ・シシリアンのレッスンを始めるよ！名前の「フォー・ナイツ（4つのナイト）」が盤上のどの駒のことなのかを探しながら、一手ずつ進めていこう。ジーンと一緒に、なぜその手を指すのかを学んでいこう。</p>
+    <p class="lang-element-en" style="margin:0 0 8px;">Let's start the Four Knights Sicilian lesson! As we go, look for which four knights the name refers to on the board. Jene will explain why each move is played, one step at a time.</p>
+    <ul class="lang-element-ja" style="margin:0;padding-left:0;list-style:none;">
+      <li style="margin:0 0 8px;"><strong>1. e4</strong> 白はポーンをe4へ進めるよ。白は中央を制圧して、ビショップとクイーンが動く道も開けるんだ。</li>
+      <li style="margin:0 0 8px;"><strong>1...c5</strong> 黒はポーンをc5へ進めるよ（シシリアン・ディフェンス）。このポーンは白のd4のマスをねらっていて、白が中央を大きく取るのを防ぐ一手なんだ。</li>
+      <li style="margin:0 0 8px;"><strong>2. Nf3</strong> 白はナイトをf3へ進めるよ。白はこれでd4への突き出しの準備をしながら、e5のマスも押さえるんだ。</li>
+      <li style="margin:0 0 8px;"><strong>2...Nc6</strong> 黒はナイトをc6へ進めるよ。黒はこれで、白がd4と突いてきたときに備えて、d4のマスをナイトでもねらっておくんだ。</li>
+      <li style="margin:0 0 8px;"><strong>3. d4</strong> 白はポーンをd4へ進めるよ。白は中央を大きく取りにいくと同時に、黒のc5のポーンにも挑みかけるんだ。</li>
+      <li style="margin:0 0 8px;"><strong>3...cxd4</strong> 黒はc5のポーンでd4のポーンを取るよ。これで黒は、端のc筋のポーンと白の中央のポーンを交換して、白の中央を崩すんだ。</li>
+      <li style="margin:0 0 8px;"><strong>4. Nxd4</strong> 白はナイトでd4のポーンを取り返すよ。これで白のナイトは中央のいい位置に出て、黒のc6のナイトと向かい合う形になるんだ。</li>
+      <li style="margin:0 0 8px;"><strong>4...Nf6</strong> 黒はナイトをf6へ進めるよ。このナイトは白のe4のポーンをねらいながら、黒のキングサイドの展開を進めるんだ。</li>
+      <li style="margin:0 0 8px;"><strong>5. Nc3</strong> 白はナイトをc3へ進めるよ。このナイトは、黒のf6のナイトにねらわれているe4のポーンを守りながら、白の展開も進めるんだ。</li>
+      <li style="margin:0 0 8px;"><strong>5...e6（フォー・ナイツ！）</strong> ここが本題、フォー・ナイツの形の完成だよ！黒はポーンをe6へ進めて、d5のマスを押さえながら、f8のビショップが動く道を開けるんだ。これで白のナイト2つ（d4とc3）と黒のナイト2つ（c6とf6）が出そろって、「4つのナイト」の形になるよ。</li>
+      <li style="margin:0 0 8px;"><strong>6. Ndb5</strong> 白はd4のナイトをb5へ動かすよ。b5のナイトは、黒のc7とd6のマスをねらってプレッシャーをかけるんだ。c3のナイトもb5へ行けるので、d4のナイトだと分かるように「Ndb5」と書くよ。</li>
+      <li style="margin:0 0 8px;"><strong>6...d6</strong> 黒はポーンをd6へ進めるよ。白のb5のナイトはこのd6のポーンをねらっているけれど、d6のポーンはクイーンとf8のビショップに守られているんだ。だから白がNxd6+と取っても、黒がクイーンかビショップで取り返して、白はナイトをポーンと交換するだけの損になってしまうんだよ。黒はこのポーンで次のe5にも備えているよ。この形は有名なスヴェシュニコフ・シシリアンに合流することがあり、白はこのあとBf4やBg5と続けるのが定番だよ。これで本譜は一段落、続きはぜひ自分で指してみてね！</li>
+    </ul>
+    <ul class="lang-element-en" style="margin:0;padding-left:0;list-style:none;">
+      <li style="margin:0 0 8px;"><strong>1. e4</strong> White pushes the pawn to e4, claiming the center. This also opens lines for White's bishop and queen.</li>
+      <li style="margin:0 0 8px;"><strong>1...c5</strong> Black pushes the pawn to c5 (the Sicilian Defense). This pawn attacks the d4 square, preventing White from building a big center.</li>
+      <li style="margin:0 0 8px;"><strong>2. Nf3</strong> White develops the knight to f3. This prepares the d4 advance while also controlling the e5 square.</li>
+      <li style="margin:0 0 8px;"><strong>2...Nc6</strong> Black develops the knight to c6. This lets Black attack the d4 square with the knight as well, in case White pushes d4.</li>
+      <li style="margin:0 0 8px;"><strong>3. d4</strong> White pushes the pawn to d4, going for a big center while also challenging Black's c5 pawn.</li>
+      <li style="margin:0 0 8px;"><strong>3...cxd4</strong> Black captures White's d4 pawn with the c5 pawn. This trades Black's wing pawn for White's central pawn, breaking up White's center.</li>
+      <li style="margin:0 0 8px;"><strong>4. Nxd4</strong> White recaptures on d4 with the knight. The knight now sits in the center, facing Black's knight on c6.</li>
+      <li style="margin:0 0 8px;"><strong>4...Nf6</strong> Black develops the knight to f6. This knight attacks White's e4 pawn while developing Black's kingside.</li>
+      <li style="margin:0 0 8px;"><strong>5. Nc3</strong> White develops the knight to c3. This knight defends the e4 pawn that Black's f6 knight is attacking, while also continuing White's development.</li>
+      <li style="margin:0 0 8px;"><strong>5...e6 (Four Knights!)</strong> Here the Four Knights setup is complete! Black pushes the pawn to e6, controlling d5 and opening the diagonal for the bishop on f8. Now White's two knights (d4 and c3) and Black's two knights (c6 and f6) are all developed — the "four knights".</li>
+      <li style="margin:0 0 8px;"><strong>6. Ndb5</strong> White moves the knight from d4 to b5. From b5, the knight eyes the c7 and d6 squares and puts pressure on Black. Since the c3 knight could also go to b5, the move is written "Ndb5" to show it is the d4 knight.</li>
+      <li style="margin:0 0 8px;"><strong>6...d6</strong> Black pushes the pawn to d6. White's knight on b5 attacks this pawn, but it is defended by the queen and the bishop on f8. So if White captures with Nxd6+, Black recaptures with the queen or the bishop, and White just loses a knight for a pawn. The pawn also prepares the next move, e5. This setup can transpose into the famous Sveshnikov Sicilian, and White typically follows with Bf4 and Bg5. That's the main line — try continuing the game yourself from here!</li>
+    </ul>
+  </section>
+
   <footer>© KitsuneChess</footer>
 </div>
 

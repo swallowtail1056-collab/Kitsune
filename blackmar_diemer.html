@@ -139,6 +139,49 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
     <div class="board-grid" id="boardGrid"></div>
   </div>
 
+
+  <!-- 手順と解説のまとめ（ページを開いたときから全部読めるように） -->
+  <section id="moveSummary" style="margin:24px 0 8px;background:var(--card-bg,#fffaf0);border:2px solid var(--brown-light,#d8b88a);border-radius:12px;padding:14px 18px;line-height:1.75;">
+    <h2 class="lang-element-ja" style="font-size:1.15rem;margin:0 0 8px;">📜 手順と解説のまとめ</h2>
+    <h2 class="lang-element-en" style="font-size:1.15rem;margin:0 0 8px;">📜 All Moves Explained</h2>
+    <p class="lang-element-ja" style="margin:0 0 8px;">ブラックマー・ディーマー・ギャンビットのレッスンを始めるよ！このページでは、黒が差し出されたポーンを受け取り、g6とBg7でキングを固めるボゴリュボフ・ディフェンスの形を見ていくよ。白がポーンを損する代わりに、どうやって展開と攻めの形を作るのかがポイントなんだ。一手ずつジーンと一緒に、なぜその手を指すのかを学んでいこう。</p>
+    <p class="lang-element-en" style="margin:0 0 8px;">Let's start the Blackmar-Diemer Gambit lesson! On this page we follow the Bogoljubov Defense, where Black accepts the pawn and shelters the king with ...g6 and ...Bg7. The key is how White builds development and an attack in return for the pawn. Jene will walk you through why each move is played, one step at a time.</p>
+    <ul class="lang-element-ja" style="margin:0;padding-left:0;list-style:none;">
+      <li style="margin:0 0 8px;"><strong>1. d4</strong> 白はポーンをd4へ進めるよ。白は中央のマスを押さえながら、c1のビショップの道を開けるんだ。</li>
+      <li style="margin:0 0 8px;"><strong>1...d5</strong> 黒はポーンをd5へ進めるよ。黒も中央のマスを押さえて、白のd4のポーンと向かい合う形を作るんだ。</li>
+      <li style="margin:0 0 8px;"><strong>2. e4（ブラックマー・ディーマー！）</strong> ここがブラックマー・ディーマー・ギャンビットの一手！白はポーンをe4へ進めて、黒のd5のポーンに取らせるように差し出すよ。一般的には2.c4の<a href='queens_gambit.html'>クイーンズ・ギャンビット</a>がよく指されるけれど、白はここでポーンを犠牲にして、素早い展開と攻めをねらう道を選ぶんだ。その代わり、白は差し出したポーンを取り返せないことも多く、ポーンを損したまま戦うことになるよ。</li>
+      <li style="margin:0 0 8px;"><strong>2...dxe4</strong> 黒はd5のポーンでe4にいた白のポーンを取るよ。黒は差し出されたポーンを受け取って、ポーンを1つ多く持つんだ。</li>
+      <li style="margin:0 0 8px;"><strong>3. Nc3</strong> 白はナイトをc3へ進めるよ。白のナイトは黒のe4のポーンを攻撃しながら、展開を進めるんだ。 白はこの手の代わりに3.f3とすぐにポーンを突く形もあるよ。これはブラックマーが最初に試した形だけれど、黒に3...e5と反撃されやすいんだ。</li>
+      <li style="margin:0 0 8px;"><strong>3...Nf6</strong> 黒はナイトをf6へ進めるよ。黒はナイトを展開しながら、e4のポーンを守るんだ。</li>
+      <li style="margin:0 0 8px;"><strong>4. f3</strong> 白はポーンをf3へ進めるよ。白はe4のポーンをc3のナイトとf3のポーンの2つで攻撃して、もう1つポーンを差し出すんだ。黒がf3のポーンを取っても、白はナイトで取り返せるので、白がポーンを1つ損している状態は変わらないよ。</li>
+      <li style="margin:0 0 8px;"><strong>4...exf3</strong> 黒はe4のポーンでf3にいた白のポーンを取るよ。黒はこれで、一時的にポーンを2つ多く持つ形になったんだ。</li>
+      <li style="margin:0 0 8px;"><strong>5. Nxf3</strong> 白はg1のナイトでf3に入った黒のポーンを取り返すよ。白はポーンを1つ損しているけれど、ナイトを2つとも展開して、fファイル（f1からf8の縦のマス）も白のポーンがいない形になったんだ。</li>
+      <li style="margin:0 0 8px;"><strong>5...g6</strong> 黒はポーンをg6へ進めるよ。黒はf8のビショップをg7へ出す準備をして、キングの守りを固める形を作るんだ。黒のこの形は、ボゴリュボフ・ディフェンスと呼ばれているよ。 黒はこの手の代わりに5...Bg4と、白のf3のナイトをd1のクイーンとの間でピンする形（タイヒマン・ディフェンス）や、5...e6と堅く守る形（オイヴェ・ディフェンス）も、よく指されるよ。</li>
+      <li style="margin:0 0 8px;"><strong>6. Bc4</strong> 白はビショップをc4へ進めるよ。白のビショップはa2からg8への斜めの列に入り、黒のf7のポーンに利いて、キングサイドへの攻めに加わるんだ。黒のf7のポーンは今はキングに守られているので、白がすぐに取ることはできないよ。</li>
+      <li style="margin:0 0 8px;"><strong>6...Bg7</strong> 黒はビショップをg7へ進めるよ。これでf8とg8のマスが空いて、黒は次の手でキャスリングできるんだ。</li>
+      <li style="margin:0 0 8px;"><strong>7. O-O</strong> 白はキャスリングでキングを安全な場所へ動かすよ。白のルークはf1に入り、f3のナイトが動けば、fファイルで黒のキングサイドに利かせられるようになるんだ。</li>
+      <li style="margin:0 0 8px;"><strong>7...O-O</strong> 黒もキャスリングでキングを安全な場所へ動かすよ。黒のキングは、g7のビショップとf7・g6・h7のポーンに守られた、堅い形に入るんだ。</li>
+      <li style="margin:0 0 8px;"><strong>8. Qe1</strong> 白はクイーンをe1へ動かすよ。白のクイーンは次にh4へ出て、黒のキングサイドを攻める準備をしているんだ。白はQh4やBh6で黒のキングに迫り、黒はポーンを1つ多く持ったまま、落ち着いて守りを固めるのが典型的な流れだよ。コンピューターの評価では、ポーンを1つ多く持つ黒がやや良いとされているけれど、実戦で黒が正確に守り続けるのは簡単ではないんだ。これで本譜は一段落、続きはぜひ自分で指してみてね！</li>
+    </ul>
+    <ul class="lang-element-en" style="margin:0;padding-left:0;list-style:none;">
+      <li style="margin:0 0 8px;"><strong>1. d4</strong> White pushes the pawn to d4. White takes control of central squares and opens the path for the c1 bishop.</li>
+      <li style="margin:0 0 8px;"><strong>1...d5</strong> Black pushes the pawn to d5. Black also claims the center and sets up a face-off with White's d4 pawn.</li>
+      <li style="margin:0 0 8px;"><strong>2. e4 (Blackmar-Diemer!)</strong> Here's the Blackmar-Diemer Gambit! White pushes the pawn to e4, offering it to Black's d5 pawn. White usually plays 2.c4, the <a href='queens_gambit.html?lang=en'>Queen's Gambit</a>, but here White sacrifices a pawn for fast development and an attack. The trade-off is that White often can't win the pawn back and has to play a pawn down.</li>
+      <li style="margin:0 0 8px;"><strong>2...dxe4</strong> Black's d5 pawn captures White's pawn on e4. Black accepts the offer and is now a pawn up.</li>
+      <li style="margin:0 0 8px;"><strong>3. Nc3</strong> White develops the knight to c3. White's knight attacks Black's e4 pawn while continuing development. Instead of this move, White can push 3.f3 right away. This is the form Blackmar first tried, but it lets Black hit back with 3...e5.</li>
+      <li style="margin:0 0 8px;"><strong>3...Nf6</strong> Black develops the knight to f6. Black develops while defending the e4 pawn.</li>
+      <li style="margin:0 0 8px;"><strong>4. f3</strong> White pushes the pawn to f3. White now attacks the e4 pawn twice, with the c3 knight and the f3 pawn, offering another pawn. Even if Black takes on f3, White can recapture with the knight, so White stays just one pawn down.</li>
+      <li style="margin:0 0 8px;"><strong>4...exf3</strong> Black's e4 pawn captures White's pawn on f3. For the moment, Black is two pawns up.</li>
+      <li style="margin:0 0 8px;"><strong>5. Nxf3</strong> White's g1 knight recaptures Black's pawn on f3. White is a pawn down, but both knights are developed, and White no longer has a pawn on the f-file (the column of squares from f1 to f8).</li>
+      <li style="margin:0 0 8px;"><strong>5...g6</strong> Black pushes the pawn to g6. Black prepares to bring the f8 bishop to g7 and build a solid shelter for the king. This setup is called the Bogoljubov Defense. Instead of this move, Black also often plays 5...Bg4, pinning White's f3 knight to the d1 queen (the Teichmann Defense), or 5...e6, defending solidly (the Euwe Defense).</li>
+      <li style="margin:0 0 8px;"><strong>6. Bc4</strong> White develops the bishop to c4. White's bishop takes up the a2–g8 diagonal and hits Black's f7 pawn, joining the kingside attack. Right now Black's king defends f7, so White can't simply take it.</li>
+      <li style="margin:0 0 8px;"><strong>6...Bg7</strong> Black develops the bishop to g7. This clears f8 and g8, so Black can castle on the next move.</li>
+      <li style="margin:0 0 8px;"><strong>7. O-O</strong> White castles, bringing the king to safety. White's rook arrives on f1, and once the f3 knight moves, it will bear down on Black's kingside along the f-file.</li>
+      <li style="margin:0 0 8px;"><strong>7...O-O</strong> Black also castles, bringing the king to safety. Black's king settles into a solid shelter guarded by the g7 bishop and the pawns on f7, g6 and h7.</li>
+      <li style="margin:0 0 8px;"><strong>8. Qe1</strong> White moves the queen to e1. White's queen is getting ready to come to h4 and attack Black's kingside. The typical pattern is for White to go after Black's king with Qh4 and Bh6, while Black calmly reinforces the defense with the extra pawn in hand. Engines rate Black, with the extra pawn, as slightly better, but defending accurately in a practical game is not easy for Black. That's the main line — try continuing the game yourself from here!</li>
+    </ul>
+  </section>
+
   <footer>© KitsuneChess</footer>
 </div>
 

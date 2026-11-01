@@ -109,6 +109,7 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
 .more-detail summary { cursor:pointer; font-weight:700; color:var(--brown); font-size:0.92rem; list-style-position:inside; }
 .more-detail .more-body { margin-top:6px; font-size:0.94rem; }
 </style>
+  <script src="board-theme.js"></script>
 </head>
 <body>
 
@@ -137,6 +138,53 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
     <div class="move-label" id="moveLabel"></div>
     <div class="board-grid" id="boardGrid"></div>
   </div>
+
+
+  <!-- 手順と解説のまとめ（ページを開いたときから全部読めるように） -->
+  <section id="moveSummary" style="margin:24px 0 8px;background:var(--card-bg,#fffaf0);border:2px solid var(--brown-light,#d8b88a);border-radius:12px;padding:14px 18px;line-height:1.75;">
+    <h2 class="lang-element-ja" style="font-size:1.15rem;margin:0 0 8px;">📜 手順と解説のまとめ</h2>
+    <h2 class="lang-element-en" style="font-size:1.15rem;margin:0 0 8px;">📜 All Moves Explained</h2>
+    <p class="lang-element-ja" style="margin:0 0 8px;">イタリアン・ゲームのレッスンを始めるよ！このページでは、白がc3とd3でじっくり駒を並べる、現代でよく指されるジョコ・ピアニッシモという形を見ていくよ。白と黒がどちらもf7とf2をねらうビショップを置き、キャスリングのあとにポーンで少しずつ陣地を広げていく流れがポイントなんだ。一手ずつジーンと一緒に、なぜその手を指すのかを学んでいこう。</p>
+    <p class="lang-element-en" style="margin:0 0 8px;">Let's start the Italian Game lesson! On this page we follow the Giuoco Pianissimo, the slow setup with c3 and d3 that is popular in modern chess. The key is how both sides place bishops aiming at f7 and f2, castle, and then slowly gain space with their pawns. Jene will walk you through why each move is played, one step at a time.</p>
+    <ul class="lang-element-ja" style="margin:0;padding-left:0;list-style:none;">
+      <li style="margin:0 0 8px;"><strong>1. e4</strong> 白はポーンをe4へ進めるよ。白は中央のマスを押さえながら、ビショップとクイーンが動く道を開けるんだ。</li>
+      <li style="margin:0 0 8px;"><strong>1...e5</strong> 黒はポーンをe5へ進めるよ。黒も同じように中央を押さえて、白のポーンと向かい合う形を作るんだ。</li>
+      <li style="margin:0 0 8px;"><strong>2. Nf3</strong> 白はナイトをf3へ進めるよ。白のナイトは展開しながら、黒のe5のポーンを攻撃しているんだ。</li>
+      <li style="margin:0 0 8px;"><strong>2...Nc6</strong> 黒はナイトをc6へ進めるよ。黒はナイトを展開しながら、e5のポーンを守るんだ。</li>
+      <li style="margin:0 0 8px;"><strong>3. Bc4（イタリアン！）</strong> ここがイタリアン・ゲームの一手！白はビショップをc4へ進めて、黒のf7のポーンに利かせるよ。黒のf7のポーンは、今はe8のキングだけに守られている、キングのそばの弱いマスなんだ。</li>
+      <li style="margin:0 0 8px;"><strong>3...Bc5</strong> 黒もビショップをc5へ進めるよ。黒のビショップは白のf2のポーンに利いて、白と同じようにキングのそばの弱いマスをねらうんだ。黒のビショップは、まだ空いているd4のマスにも利かせて、白がd4と突くのをけん制しているよ。 黒はこの手の代わりに3...Nf6と指して、白のe4のポーンを攻撃する形も人気があるよ。この形はツー・ナイツ・ディフェンスと呼ばれているんだ。</li>
+      <li style="margin:0 0 8px;"><strong>4. c3</strong> 白はポーンをc3へ進めるよ。白はまだ空いているd4のマスに利かせて、あとでd4と突く準備をするんだ。白のc3のポーンは、b4のマスにも利いているよ。 白はこの手の代わりに4.b4とポーンを差し出して、黒のビショップを追いながら素早く攻める、エヴァンズ・ギャンビットという形もあるよ。</li>
+      <li style="margin:0 0 8px;"><strong>4...Nf6</strong> 黒はナイトをf6へ進めるよ。黒はナイトを展開しながら、白のe4のポーンを攻撃するんだ。白のe4のポーンは、今はどの駒にも守られていないよ。</li>
+      <li style="margin:0 0 8px;"><strong>5. d3</strong> 白はポーンをd3へ進めるよ。白はd3のポーンでe4のポーンを守って、c1のビショップの道も開けるんだ。白はすぐにd4と突かずに、じっくり駒を並べてから中央で戦う作戦を選ぶよ。 白はこの手の代わりに5.d4と突いて、すぐに中央で戦う形もあるよ。この形は、黒がe5のポーンで取り返したあとの激しい戦いになりやすいんだ。</li>
+      <li style="margin:0 0 8px;"><strong>5...d6</strong> 黒はポーンをd6へ進めるよ。黒はd6のポーンでe5のポーンを守り、e5のポーンを守る駒をc6のナイトと合わせて2つにするんだ。黒はc8のビショップの道も開けて、g4などへ出られるようにしたよ。</li>
+      <li style="margin:0 0 8px;"><strong>6. O-O</strong> 白はキャスリングでキングを安全な場所へ動かすよ。白のキングはg1へ移り、h1にいたルークはf1へ出てくるんだ。白のf2のポーンは、これでf1のルークとg1のキングに守られたよ。</li>
+      <li style="margin:0 0 8px;"><strong>6...O-O</strong> 黒もキャスリングでキングを安全な場所へ動かすよ。黒のキングはg8へ移り、h8にいたルークはf8へ出てくるんだ。黒のf7のポーンも、これでf8のルークとg8のキングに守られたよ。</li>
+      <li style="margin:0 0 8px;"><strong>7. Re1</strong> 白はf1のルークをe1へ動かすよ。白のルークはe4のポーンを守り、e4のポーンを守る駒をd3のポーンと合わせて2つにするんだ。白はあとでd4と突いて中央が開いたときに、このルークをe1からe8の縦のマスで働かせる準備もしているよ。</li>
+      <li style="margin:0 0 8px;"><strong>7...a6</strong> 黒はポーンをa6へ進めるよ。黒はc5のビショップの逃げ道としてa7のマスを空けておくんだ。黒のa6のポーンは、まだ空いているb5のマスにも利いていて、白のポーンや駒がb5へ来るのを防いでいるよ。</li>
+      <li style="margin:0 0 8px;"><strong>8. a4</strong> 白はポーンをa4へ進めるよ。白はクイーンサイドで場所を広げて、次にa5と突いてb6のマスを押さえる準備をするんだ。白のa4のポーンは、c4のビショップと合わせて、まだ空いているb5のマスにも利いているよ。</li>
+      <li style="margin:0 0 8px;"><strong>8...Ba7</strong> 黒はc5のビショップをa7へ下げるよ。黒は、白がd4やb4と突いてビショップを追ってくる前に、先に安全なマスへ動かしておくんだ。黒のa7のビショップは、b6、c5、d4、e3を通って、白のf2のポーンにまだ利いているよ。</li>
+      <li style="margin:0 0 8px;"><strong>9. h3</strong> 白はポーンをh3へ進めるよ。白はまだ空いているg4のマスに利かせて、黒のビショップがg4へ来てf3のナイトをピンするのを防ぐんだ。白は駒の配置がほぼ整い、黒の準備がすんだら、d4と突いて中央で戦う形になったね。この後は、白がNbd2からf1、g3へナイトを回し、黒はNe7やh6で対抗するのが典型的な流れだよ。これで本譜は一段落、続きはぜひ自分で指してみてね！</li>
+    </ul>
+    <ul class="lang-element-en" style="margin:0;padding-left:0;list-style:none;">
+      <li style="margin:0 0 8px;"><strong>1. e4</strong> White pushes the pawn to e4. White takes control of central squares and opens lines for the bishop and queen.</li>
+      <li style="margin:0 0 8px;"><strong>1...e5</strong> Black pushes the pawn to e5. Black also claims the center, setting up a pawn face-off with White.</li>
+      <li style="margin:0 0 8px;"><strong>2. Nf3</strong> White develops the knight to f3. White's knight develops while attacking Black's e5 pawn.</li>
+      <li style="margin:0 0 8px;"><strong>2...Nc6</strong> Black develops the knight to c6. Black develops a piece and defends the e5 pawn at the same time.</li>
+      <li style="margin:0 0 8px;"><strong>3. Bc4 (Italian!)</strong> Here's the Italian Game! White develops the bishop to c4, aiming at Black's f7 pawn. Black's f7 pawn is defended only by the king on e8 right now, making it a weak point near the king.</li>
+      <li style="margin:0 0 8px;"><strong>3...Bc5</strong> Black also develops the bishop to c5. Black's bishop aims at White's f2 pawn, targeting the weak point near White's king just as White did. Black's bishop also covers the empty d4 square, discouraging White from pushing d4. Instead of this move, Black can also play 3...Nf6, attacking White's e4 pawn. This is called the Two Knights Defense.</li>
+      <li style="margin:0 0 8px;"><strong>4. c3</strong> White pushes the pawn to c3. White covers the empty d4 square, preparing to push d4 later. White's c3 pawn also covers the b4 square. Instead of this move, White can offer a pawn with 4.b4, chasing Black's bishop and attacking quickly. This is called the Evans Gambit.</li>
+      <li style="margin:0 0 8px;"><strong>4...Nf6</strong> Black develops the knight to f6. Black develops while attacking White's e4 pawn. White's e4 pawn isn't defended by any piece right now.</li>
+      <li style="margin:0 0 8px;"><strong>5. d3</strong> White pushes the pawn to d3. White's d3 pawn defends the e4 pawn and also opens the path for the c1 bishop. Rather than pushing d4 right away, White chooses to set up the pieces patiently before fighting in the center. Instead of this move, White can push 5.d4 and fight in the center right away. That line tends to lead to sharp play after Black captures with the e5 pawn.</li>
+      <li style="margin:0 0 8px;"><strong>5...d6</strong> Black pushes the pawn to d6. Black's d6 pawn defends the e5 pawn, so e5 is now defended twice together with the c6 knight. Black also opens the path for the c8 bishop, so it can come out to squares like g4.</li>
+      <li style="margin:0 0 8px;"><strong>6. O-O</strong> White castles, bringing the king to safety. White's king goes to g1, and the rook from h1 comes to f1. White's f2 pawn is now defended by the f1 rook and the g1 king.</li>
+      <li style="margin:0 0 8px;"><strong>6...O-O</strong> Black also castles, bringing the king to safety. Black's king goes to g8, and the rook from h8 comes to f8. Black's f7 pawn is now defended by the f8 rook and the g8 king.</li>
+      <li style="margin:0 0 8px;"><strong>7. Re1</strong> White moves the f1 rook to e1. White's rook defends the e4 pawn, so e4 is now defended twice together with the d3 pawn. White is also preparing to use this rook along the e1–e8 file once the center opens after a later d4.</li>
+      <li style="margin:0 0 8px;"><strong>7...a6</strong> Black pushes the pawn to a6. Black clears the a7 square as a retreat for the c5 bishop. Black's a6 pawn also covers the empty b5 square, keeping White's pawns and pieces from coming to b5.</li>
+      <li style="margin:0 0 8px;"><strong>8. a4</strong> White pushes the pawn to a4. White gains space on the queenside and prepares to push a5 next, taking away the b6 square. Together with the c4 bishop, White's a4 pawn also covers the empty b5 square.</li>
+      <li style="margin:0 0 8px;"><strong>8...Ba7</strong> Black retreats the c5 bishop to a7. Black moves the bishop to a safe square in advance, before White can chase it with d4 or b4. Black's bishop on a7 still aims at White's f2 pawn through b6, c5, d4 and e3.</li>
+      <li style="margin:0 0 8px;"><strong>9. h3</strong> White pushes the pawn to h3. White covers the empty g4 square, stopping Black's bishop from coming to g4 and pinning the f3 knight. White's pieces are almost set up, ready to push d4 and fight in the center when the time is right. A typical continuation is for White to reroute the knight via Nbd2, f1 and g3, while Black responds with ...Ne7 or ...h6. That's the main line — try continuing the game yourself from here!</li>
+    </ul>
+  </section>
 
   <footer>© KitsuneChess</footer>
 </div>

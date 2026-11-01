@@ -132,6 +132,49 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
     <div class="board-grid" id="boardGrid"></div>
   </div>
 
+
+  <!-- 手順と解説のまとめ（ページを開いたときから全部読めるように） -->
+  <section id="moveSummary" style="margin:24px 0 8px;background:var(--card-bg,#fffaf0);border:2px solid var(--brown-light,#d8b88a);border-radius:12px;padding:14px 18px;line-height:1.75;">
+    <h2 class="lang-element-ja" style="font-size:1.15rem;margin:0 0 8px;">📜 手順と解説のまとめ</h2>
+    <h2 class="lang-element-en" style="font-size:1.15rem;margin:0 0 8px;">📜 All Moves Explained</h2>
+    <p class="lang-element-ja" style="margin:0 0 8px;">フライド・リバー・アタックのレッスンを始めるよ！白がナイトを犠牲にして、黒キングを盤の真ん中まで引きずり出す、超攻撃的な作戦だよ。一手ずつジーンと一緒に、なぜその手を指すのかを学んでいこう。</p>
+    <p class="lang-element-en" style="margin:0 0 8px;">Let's start the Fried Liver Attack lesson! White sacrifices a knight to drag Black's king right into the open board. Jene will walk you through why each move is played, one step at a time.</p>
+    <ul class="lang-element-ja" style="margin:0;padding-left:0;list-style:none;">
+      <li style="margin:0 0 8px;"><strong>1. e4</strong> 白はポーンをe4へ進めるよ。中央を制圧して、ビショップとクイーンが動く道も開けるんだ。</li>
+      <li style="margin:0 0 8px;"><strong>1...e5</strong> 黒も同じくポーンをe5へ進めて、中央を分け合うよ。</li>
+      <li style="margin:0 0 8px;"><strong>2. Nf3</strong> 白はナイトをf3へ進めるよ。このナイトはe5のポーンを攻撃しながら、駒の展開も進めるんだ。</li>
+      <li style="margin:0 0 8px;"><strong>2...Nc6</strong> 黒はナイトをc6へ進めて、ねらわれているe5のポーンを守るよ。</li>
+      <li style="margin:0 0 8px;"><strong>3. Bc4</strong> 白はビショップをc4へ進めるよ。このビショップは黒のf7のポーンをねらっていて、f7を守れるのは黒キングだけなんだ。</li>
+      <li style="margin:0 0 8px;"><strong>3...Nf6（ツー・ナイツ！）</strong> 黒はナイトをf6へ進めるよ（ツー・ナイツ・ディフェンス）。ここで3...Bc5と指すイタリアン・ゲームへ向かう選び方もあるけれど、Nf6は白のe4のポーンに逆にプレッシャーをかけながら展開する、やや積極的な一手なんだ。</li>
+      <li style="margin:0 0 8px;"><strong>4. Ng5（フライド・リバー！）</strong> ここが本題の入り口！白はナイトをg5へ進めて、f7のポーンに2つ目の攻撃を仕掛けるよ。これはやや強引な一手で、黒がうまく対応すれば白のナイトが浮いてしまうリスクもあるんだ。</li>
+      <li style="margin:0 0 8px;"><strong>4...d5</strong> 黒はポーンをd5へ進めるよ。これで白のc4のビショップとe4のポーンの両方に反撃しながら、白のg5のナイトを追い返す準備もするんだ。</li>
+      <li style="margin:0 0 8px;"><strong>5. exd5</strong> 白はe4のポーンでd5のポーンを取るよ。これで一応駒の損得はないまま、局面が動くんだ。</li>
+      <li style="margin:0 0 8px;"><strong>5...Nxd5?!</strong> 黒はナイトでd5のポーンを取り返すよ。ここではc6のナイトを5...Na5!と動かして、白のc4のビショップを攻撃しながらフライド・リバーそのものを避ける選び方もよく知られているけれど、Nxd5は中央のいいマスに出られる代わりに、この先の白の攻めを誘い込んでしまう一手なんだ。</li>
+      <li style="margin:0 0 8px;"><strong>6. Nxf7!?</strong> 白はナイトを犠牲にしてf7のポーンを取るよ。これがフライド・リバー・アタックの核心の一手なんだ。ナイト1つを失う代わりに、黒キングを守りの薄い盤の中央へ引きずり出そうとしているよ。</li>
+      <li style="margin:0 0 8px;"><strong>6...Kxf7</strong> 黒はキングでf7のナイトを取るよ。これでポーン1枚と引き換えに、白はナイト1つを失ったことになるんだ。</li>
+      <li style="margin:0 0 8px;"><strong>7. Qf3+</strong> 白はクイーンをf3へ進めて王手をかけるよ。このクイーンは同時にd5のナイトもねらっていて、黒キングはこの王手をかわしながら、ナイトも守らなければならない、難しい局面になるんだ。</li>
+      <li style="margin:0 0 8px;"><strong>7...Ke6</strong> 黒はキングをe6へ動かして、王手をかわしながらd5のナイトも守るよ。実はこれが唯一の正解で、Kg8やKe8などほかの逃げ方だとd5のナイトを守れず、8.Qxd5+でただ取られてしまうんだ。</li>
+      <li style="margin:0 0 8px;"><strong>8. Nc3</strong> 白はナイトをc3へ展開するよ。これでd5のナイトへの攻撃をもう1つ増やしながら、駒の展開も進めるんだ。ここから黒は8...Nb4や8...Ne7といった手で、なんとかこの厳しい局面をしのごうとするよ。これで本譜は一段落、続きはぜひ自分で指してみてね！</li>
+    </ul>
+    <ul class="lang-element-en" style="margin:0;padding-left:0;list-style:none;">
+      <li style="margin:0 0 8px;"><strong>1. e4</strong> White pushes the pawn to e4, claiming the center and opening lines for the bishop and queen.</li>
+      <li style="margin:0 0 8px;"><strong>1...e5</strong> Black mirrors with 1...e5, staking an equal claim to the center.</li>
+      <li style="margin:0 0 8px;"><strong>2. Nf3</strong> White develops the knight to f3, attacking the e5 pawn while continuing development.</li>
+      <li style="margin:0 0 8px;"><strong>2...Nc6</strong> Black develops the knight to c6, defending the e5 pawn that White's knight is attacking.</li>
+      <li style="margin:0 0 8px;"><strong>3. Bc4</strong> White develops the bishop to c4, aiming at Black's f7 pawn — a square only Black's king defends.</li>
+      <li style="margin:0 0 8px;"><strong>3...Nf6 (Two Knights!)</strong> Black develops the knight to f6 (the Two Knights Defense). Playing 3...Bc5 here, heading into the Italian Game, is another option, but Nf6 fights back by pressuring White's e4 pawn while developing.</li>
+      <li style="margin:0 0 8px;"><strong>4. Ng5 (Fried Liver!)</strong> Here's the doorway into the Fried Liver! White jumps the knight to g5, adding a second attacker on f7. This is a somewhat forceful move, and if Black responds well, White's knight can end up in trouble.</li>
+      <li style="margin:0 0 8px;"><strong>4...d5</strong> Black pushes the pawn to d5, counterattacking both White's bishop on c4 and pawn on e4, while also preparing to chase away the knight on g5.</li>
+      <li style="margin:0 0 8px;"><strong>5. exd5</strong> White captures on d5 with the e4 pawn, keeping material even for now while the position opens up.</li>
+      <li style="margin:0 0 8px;"><strong>5...Nxd5?!</strong> Black recaptures on d5 with the knight. The well-known 5...Na5! here moves the c6 knight to attack White's bishop on c4 and avoids the Fried Liver altogether, but Nxd5 grabs a strong central square — at the cost of inviting White's coming attack.</li>
+      <li style="margin:0 0 8px;"><strong>6. Nxf7!?</strong> White sacrifices the knight to capture on f7. This is the defining move of the Fried Liver Attack — giving up a knight to drag Black's king into the exposed center of the board.</li>
+      <li style="margin:0 0 8px;"><strong>6...Kxf7</strong> Black recaptures the knight with the king. White has now given up a knight for just a pawn.</li>
+      <li style="margin:0 0 8px;"><strong>7. Qf3+</strong> White moves the queen to f3, giving check. The queen also attacks the knight on d5 at the same time, so Black's king must both escape check and keep defending the knight — a tricky combination.</li>
+      <li style="margin:0 0 8px;"><strong>7...Ke6</strong> Black moves the king to e6, escaping check while still defending the knight on d5. This turns out to be the only move that does both — other king moves like Kg8 or Ke8 fail to defend d5, allowing White to simply win the knight with 8.Qxd5+.</li>
+      <li style="margin:0 0 8px;"><strong>8. Nc3</strong> White develops the knight to c3, adding another attacker on d5 while continuing development. From here Black typically tries to hold on with moves like 8...Nb4 or 8...Ne7. That's the main line — try continuing the game yourself from here!</li>
+    </ul>
+  </section>
+
   <footer>© KitsuneChess</footer>
 </div>
 

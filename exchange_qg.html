@@ -132,6 +132,45 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
     <div class="board-grid" id="boardGrid"></div>
   </div>
 
+
+  <!-- 手順と解説のまとめ（ページを開いたときから全部読めるように） -->
+  <section id="moveSummary" style="margin:24px 0 8px;background:var(--card-bg,#fffaf0);border:2px solid var(--brown-light,#d8b88a);border-radius:12px;padding:14px 18px;line-height:1.75;">
+    <h2 class="lang-element-ja" style="font-size:1.15rem;margin:0 0 8px;">📜 手順と解説のまとめ</h2>
+    <h2 class="lang-element-en" style="font-size:1.15rem;margin:0 0 8px;">📜 All Moves Explained</h2>
+    <p class="lang-element-ja" style="margin:0 0 8px;">クイーンズ・ギャンビット交換変化のレッスンを始めるよ！今回は最初のポーンの一歩から、各駒がどこをねらって動いているのかを一緒に追いかけていくよ。派手な攻めはないけれど、ポーンの形を読む力がぐんと伸びる変化なんだ。ジーンと一緒に、一手ずつ「なぜその手を指すのか」を学んでいこう。</p>
+    <p class="lang-element-en" style="margin:0 0 8px;">Let's start the Queen's Gambit Exchange Variation lesson! We'll follow the game from the very first pawn push and see what each piece is aiming at. There are no flashy attacks here, but this variation will sharpen your ability to read pawn structures. Jene will explain why each move is played, one step at a time.</p>
+    <ul class="lang-element-ja" style="margin:0;padding-left:0;list-style:none;">
+      <li style="margin:0 0 8px;"><strong>1. d4</strong> 白はポーンをd4へ進めて、中央を制圧するよ。このポーンはc5とe5のマスにも利いていて、この先の展開の土台になるんだ。</li>
+      <li style="margin:0 0 8px;"><strong>1...d5</strong> 黒もポーンをd5へ進めて、中央を分け合うよ。これで黒は白のd4のポーンと向き合う形を作りながら、e4のマスも押さえるんだ。</li>
+      <li style="margin:0 0 8px;"><strong>2. c4</strong> 白はポーンをc4へ進めて、黒のd5のポーンに挑みかけるよ（クイーンズ・ギャンビット）。黒がこのポーンを取ってきたら、白は中央を大きく取り返せるという仕掛けなんだ。</li>
+      <li style="margin:0 0 8px;"><strong>2...e6</strong> 黒はポーンをe6へ進めて、d5のポーンをしっかり守るよ。ポーンを取らずに断る（クイーンズ・ギャンビット・ディクラインド）ことで、黒は中央の形を保つんだ。</li>
+      <li style="margin:0 0 8px;"><strong>3. Nc3</strong> 白はナイトをc3へ進めるよ。このナイトはc4のポーンと一緒にd5をねらって、黒の中央にプレッシャーをかけるんだ。</li>
+      <li style="margin:0 0 8px;"><strong>3...Nf6</strong> 黒はナイトをf6へ進めるよ。このナイトはd5のポーンを守る駒をもう1つ増やしながら、e4のマスも押さえるんだ。</li>
+      <li style="margin:0 0 8px;"><strong>4. cxd5（交換変化！）</strong> ここが本題、交換変化の一手！白はc4のポーンで黒のd5のポーンを取るよ。この後にポーンの形がほぼ対称になって静かな戦いに見えるけれど、ここから長期的な戦略が始まるんだ。</li>
+      <li style="margin:0 0 8px;"><strong>4...exd5</strong> 黒はe6のポーンでd5を取り返すよ。これで黒は中央のd5にポーンを保てて、しかもe6が空くので、c8のビショップの通り道も開くんだ。</li>
+      <li style="margin:0 0 8px;"><strong>5. Bg5</strong> 白はビショップをg5へ進めるよ。このビショップは黒のf6のナイトを、その後ろのd8のクイーンとの間でピンして、ナイトがd5を守る働きを弱めようとするんだ。</li>
+      <li style="margin:0 0 8px;"><strong>5...Be7</strong> 黒はビショップをe7へ進めるよ。これでf6のナイトの後ろにビショップが入ってピンがゆるみ、黒はキャスリングの準備も進められるんだ。</li>
+      <li style="margin:0 0 8px;"><strong>6. e3</strong> 白はポーンをe3へ進めるよ。これで白はd4のポーンをしっかり支えながら、f1のビショップが動く道も開けるんだ。</li>
+      <li style="margin:0 0 8px;"><strong>6...c6</strong> 黒はポーンをc6へ進めて、d5のポーンをしっかり守るよ。これで白のd4・e3のポーンと黒のd5・c6のポーンが向き合う形になって、この形を「カールスバッド構造」と呼ぶんだ。ここから白は、クイーンサイドで数の少ない自分のポーンをb4-b5と進めて黒のポーンにぶつけ、黒のポーンに弱点をつくる「マイノリティ・アタック」という作戦をねらうことが多いんだよ。</li>
+      <li style="margin:0 0 8px;"><strong>7. Bd3</strong> 白はビショップをd3へ進めるよ。このビショップはh7のポーンの方向をねらいながら、白がキャスリングする準備も進められるんだ。これで本譜は一段落、ここからb4-b5のマイノリティ・アタックなどの計画が始まるよ。続きはぜひ自分で指してみてね！</li>
+    </ul>
+    <ul class="lang-element-en" style="margin:0;padding-left:0;list-style:none;">
+      <li style="margin:0 0 8px;"><strong>1. d4</strong> White pushes the pawn to d4, claiming the center. This pawn also controls the c5 and e5 squares, forming a base for future development.</li>
+      <li style="margin:0 0 8px;"><strong>1...d5</strong> Black mirrors with 1...d5, sharing the center. Black's pawn now faces White's d4 pawn head-on while also controlling the e4 square.</li>
+      <li style="margin:0 0 8px;"><strong>2. c4</strong> White pushes the c-pawn to c4, challenging Black's d5 pawn (the Queen's Gambit). If Black takes it, White can build a big center in return.</li>
+      <li style="margin:0 0 8px;"><strong>2...e6</strong> Black plays 2...e6, firmly defending the d5 pawn. By declining the gambit, Black keeps a solid central structure.</li>
+      <li style="margin:0 0 8px;"><strong>3. Nc3</strong> White develops the knight to c3. Together with the c4 pawn, this knight targets d5 and puts pressure on Black's center.</li>
+      <li style="margin:0 0 8px;"><strong>3...Nf6</strong> Black develops the knight to f6. This adds another defender to the d5 pawn while also controlling the e4 square.</li>
+      <li style="margin:0 0 8px;"><strong>4. cxd5 (Exchange!)</strong> Here's the Exchange Variation move! White captures Black's d5 pawn with the c4 pawn. The pawn structure becomes nearly symmetrical and looks quiet, but a long-term strategic battle begins here.</li>
+      <li style="margin:0 0 8px;"><strong>4...exd5</strong> Black recaptures on d5 with the e6 pawn. Black keeps a pawn on d5, and since e6 is now empty, the c8 bishop's diagonal opens up as well.</li>
+      <li style="margin:0 0 8px;"><strong>5. Bg5</strong> White develops the bishop to g5. This bishop pins Black's knight on f6 against the queen on d8, trying to weaken the knight's role in defending d5.</li>
+      <li style="margin:0 0 8px;"><strong>5...Be7</strong> Black develops the bishop to e7. Now the bishop stands behind the knight on f6, easing the pin, and Black is also getting ready to castle.</li>
+      <li style="margin:0 0 8px;"><strong>6. e3</strong> White pushes the e-pawn to e3. This firmly supports the d4 pawn and also opens the path for White's bishop on f1.</li>
+      <li style="margin:0 0 8px;"><strong>6...c6</strong> Black plays 6...c6, solidly defending the d5 pawn. Now White's d4 and e3 pawns face Black's d5 and c6 pawns, a setup called the "Carlsbad structure." From here, White often plans the "Minority Attack": pushing its smaller number of queenside pawns with b4–b5 to hit Black's pawns and create a weakness in Black's pawn structure.</li>
+      <li style="margin:0 0 8px;"><strong>7. Bd3</strong> White develops the bishop to d3. It aims toward the h7 pawn while also getting White ready to castle. That's the main line — from here plans like the b4–b5 Minority Attack begin. Try continuing the game yourself!</li>
+    </ul>
+  </section>
+
   <footer>© KitsuneChess</footer>
 </div>
 

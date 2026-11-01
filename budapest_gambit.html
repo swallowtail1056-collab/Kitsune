@@ -139,6 +139,57 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
     <div class="board-grid" id="boardGrid"></div>
   </div>
 
+
+  <!-- 手順と解説のまとめ（ページを開いたときから全部読めるように） -->
+  <section id="moveSummary" style="margin:24px 0 8px;background:var(--card-bg,#fffaf0);border:2px solid var(--brown-light,#d8b88a);border-radius:12px;padding:14px 18px;line-height:1.75;">
+    <h2 class="lang-element-ja" style="font-size:1.15rem;margin:0 0 8px;">📜 手順と解説のまとめ</h2>
+    <h2 class="lang-element-en" style="font-size:1.15rem;margin:0 0 8px;">📜 All Moves Explained</h2>
+    <p class="lang-element-ja" style="margin:0 0 8px;">ブダペスト・ギャンビットのレッスンを始めるよ！このページでは、白が4.Bf4でe5のポーンを守ろうとし、黒がナイトとクイーンでポーンを取り返す、ルビンシュタイン・バリエーションの形を見ていくよ。黒が差し出したポーンをどうやって取り返すのかがポイントなんだ。一手ずつジーンと一緒に、なぜその手を指すのかを学んでいこう。</p>
+    <p class="lang-element-en" style="margin:0 0 8px;">Let's start the Budapest Gambit lesson! On this page we follow the Rubinstein Variation, where White tries to hold the e5 pawn with 4.Bf4 and Black wins it back with the knights and queen. The key is how Black recovers the sacrificed pawn. Jene will walk you through why each move is played, one step at a time.</p>
+    <ul class="lang-element-ja" style="margin:0;padding-left:0;list-style:none;">
+      <li style="margin:0 0 8px;"><strong>1. d4</strong> 白はポーンをd4へ進めるよ。白は中央のマスを押さえながら、c1のビショップの道を開けるんだ。</li>
+      <li style="margin:0 0 8px;"><strong>1...Nf6</strong> 黒はナイトをf6へ進めるよ。黒はナイトを展開しながら、白がe4と突くのをけん制するんだ。</li>
+      <li style="margin:0 0 8px;"><strong>2. c4</strong> 白はポーンをc4へ進めるよ。白はこれでd5のマスにも利かせて、中央を広げるんだ。</li>
+      <li style="margin:0 0 8px;"><strong>2...e5（ブダペスト！）</strong> ここがブダペスト・ギャンビットの一手！黒はポーンをe5へ進めて、白のd4のポーンに取らせるように差し出すよ。一般的には2...e6や2...g6で落ち着いて展開することが多いけれど、黒はここでポーンを犠牲にして、駒を素早く動かして主導権を握る道を選ぶんだ。黒のe5のポーンは守られていないので、白はこのポーンをすぐに取れるよ。</li>
+      <li style="margin:0 0 8px;"><strong>3. dxe5</strong> 白はd4のポーンでe5にいた黒のポーンを取るよ。白はこれで、ポーンを1つ多く持つ形になったんだ。</li>
+      <li style="margin:0 0 8px;"><strong>3...Ng4</strong> 黒はナイトをg4へ進めるよ。黒のナイトはe5に入った白のポーンを攻撃していて、黒は次にこのポーンを取り返そうとしているんだ。白のe5のポーンは、今は何にも守られていないよ。</li>
+      <li style="margin:0 0 8px;"><strong>4. Bf4</strong> 白はビショップをf4へ進めるよ。白のビショップはe5のポーンを守りながら、展開を進めるんだ。白のこの手は、1918年のルビンシュタインとヴィドマーの対局で初めて指されたことから、ルビンシュタイン・バリエーションと呼ばれているよ。 白はこの手の代わりに4.e4と突いて、中央を広げる形もあるよ。</li>
+      <li style="margin:0 0 8px;"><strong>4...Nc6</strong> 黒はナイトをc6へ進めるよ。黒はg4とc6の2つのナイトで白のe5のポーンを攻撃するんだ。</li>
+      <li style="margin:0 0 8px;"><strong>5. Nf3</strong> 白はナイトをf3へ進めるよ。白はf4のビショップとf3のナイトの2つでe5のポーンを守るんだ。</li>
+      <li style="margin:0 0 8px;"><strong>5...Bb4+</strong> 黒はビショップをb4へ進めて、チェックをかけるよ。黒は白のキングにチェックをかけながら、ビショップを活発な場所に出すんだ。白はこのチェックを防ぐために、駒をd2やc3に動かさなければならないよ。</li>
+      <li style="margin:0 0 8px;"><strong>6. Nbd2</strong> 白はナイトをd2へ進めて、チェックを防ぐよ。白のd2のナイトはピンされていて、動くとキングがチェックされるので、今は動けないんだ。 白はこの手の代わりに6.Nc3でチェックを防ぐこともできるよ。</li>
+      <li style="margin:0 0 8px;"><strong>6...Qe7</strong> 黒はクイーンをe7へ進めるよ。黒はe5のポーンへの攻撃を3つに増やして、白のf3のナイトとf4のビショップの2つの守りを上回るんだ。</li>
+      <li style="margin:0 0 8px;"><strong>7. e3</strong> 白はポーンをe3へ進めるよ。白はf1のビショップの道を開けて、キャスリングの準備をするんだ。白はe5のポーンを守り切れないので、駒の展開を優先するよ。</li>
+      <li style="margin:0 0 8px;"><strong>7...Ngxe5</strong> 黒はg4のナイトでe5にいた白のポーンを取り返すよ。これで白と黒の駒の数は互角に戻ったんだ。</li>
+      <li style="margin:0 0 8px;"><strong>8. Nxe5</strong> 白はf3のナイトでe5に入った黒のナイトを取るよ。白は駒を交換して、黒の攻めの駒を減らすんだ。</li>
+      <li style="margin:0 0 8px;"><strong>8...Nxe5</strong> 黒はc6のナイトでe5に入った白のナイトを取り返すよ。黒のe5のナイトは中央の良い場所にいて、白のc4のポーンや、まだ空いているd3のマスに利いているんだ。</li>
+      <li style="margin:0 0 8px;"><strong>9. Be2</strong> 白はビショップをe2へ進めるよ。これでf1とg1のマスが空いて、白は次の手でキャスリングできるんだ。</li>
+      <li style="margin:0 0 8px;"><strong>9...O-O</strong> 黒はキャスリングでキングを安全な場所へ動かすよ。黒のキングはg8へ移り、h8にいたルークはf8へ出てくるんだ。</li>
+      <li style="margin:0 0 8px;"><strong>10. O-O</strong> 白もキャスリングでキングを安全な場所へ動かすよ。白のキングがg1へ移ったので、d2のナイトのピンも外れたんだ。白がわずかに指しやすいとされているけれど、黒も駒を活発に動かせていて、十分に戦える形だよ。この後は白がa3と突いてb4のビショップに働きかけ、黒はa5やd6で駒の位置を整えていく流れがよく見られるんだ。これで本譜は一段落、続きはぜひ自分で指してみてね！</li>
+    </ul>
+    <ul class="lang-element-en" style="margin:0;padding-left:0;list-style:none;">
+      <li style="margin:0 0 8px;"><strong>1. d4</strong> White pushes the pawn to d4. White takes control of central squares and opens the path for the c1 bishop.</li>
+      <li style="margin:0 0 8px;"><strong>1...Nf6</strong> Black develops the knight to f6. Black develops while discouraging White from pushing e4.</li>
+      <li style="margin:0 0 8px;"><strong>2. c4</strong> White pushes the pawn to c4. White adds control of d5 and expands in the center.</li>
+      <li style="margin:0 0 8px;"><strong>2...e5 (Budapest!)</strong> Here's the Budapest Gambit! Black pushes the pawn to e5, offering it to White's d4 pawn. Black usually develops calmly with 2...e6 or 2...g6, but here Black sacrifices a pawn to get the pieces moving quickly and seize the initiative. Black's e5 pawn is undefended, so White can take it right away.</li>
+      <li style="margin:0 0 8px;"><strong>3. dxe5</strong> White's d4 pawn captures Black's pawn on e5. White is now a pawn up.</li>
+      <li style="margin:0 0 8px;"><strong>3...Ng4</strong> Black brings the knight to g4. Black's knight attacks White's pawn on e5, and Black plans to win it back. Right now White's e5 pawn isn't defended by anything.</li>
+      <li style="margin:0 0 8px;"><strong>4. Bf4</strong> White develops the bishop to f4. White's bishop defends the e5 pawn while continuing development. This move was first played in the 1918 game between Rubinstein and Vidmar, so it's called the Rubinstein Variation. Instead of this move, White can also push 4.e4 and expand in the center.</li>
+      <li style="margin:0 0 8px;"><strong>4...Nc6</strong> Black develops the knight to c6. Black now attacks White's e5 pawn with two knights, on g4 and c6.</li>
+      <li style="margin:0 0 8px;"><strong>5. Nf3</strong> White develops the knight to f3. White now defends the e5 pawn twice, with the f4 bishop and the f3 knight.</li>
+      <li style="margin:0 0 8px;"><strong>5...Bb4+</strong> Black develops the bishop to b4 with check. Black checks White's king while putting the bishop on an active square. White has to block the check by bringing a piece to d2 or c3.</li>
+      <li style="margin:0 0 8px;"><strong>6. Nbd2</strong> White develops the knight to d2, blocking the check. White's d2 knight is pinned: if it moved, the king would be in check, so it can't move for now. Instead of this move, White can also block the check with 6.Nc3.</li>
+      <li style="margin:0 0 8px;"><strong>6...Qe7</strong> Black brings the queen to e7. Black raises the number of attackers on the e5 pawn to three, outnumbering White's two defenders, the f3 knight and the f4 bishop.</li>
+      <li style="margin:0 0 8px;"><strong>7. e3</strong> White pushes the pawn to e3. White opens the path for the f1 bishop and prepares to castle. Since White can't hold the e5 pawn, White prioritizes development.</li>
+      <li style="margin:0 0 8px;"><strong>7...Ngxe5</strong> Black's g4 knight recaptures White's pawn on e5. Material is now level between White and Black.</li>
+      <li style="margin:0 0 8px;"><strong>8. Nxe5</strong> White's f3 knight captures Black's knight on e5. White trades pieces to reduce Black's attacking force.</li>
+      <li style="margin:0 0 8px;"><strong>8...Nxe5</strong> Black's c6 knight recaptures White's knight on e5. Black's knight on e5 sits on a fine central square, hitting White's c4 pawn and the empty d3 square.</li>
+      <li style="margin:0 0 8px;"><strong>9. Be2</strong> White develops the bishop to e2. This clears f1 and g1, so White can castle on the next move.</li>
+      <li style="margin:0 0 8px;"><strong>9...O-O</strong> Black castles, bringing the king to safety. Black's king goes to g8, and the rook from h8 comes to f8.</li>
+      <li style="margin:0 0 8px;"><strong>10. O-O</strong> White also castles, bringing the king to safety. With White's king now on g1, the pin on the d2 knight is gone too. White is considered slightly easier to play, but Black's pieces are active and Black has a perfectly playable game. A common continuation is for White to push a3 to challenge the b4 bishop, while Black tidies up the pieces with ...a5 or ...d6. That's the main line — try continuing the game yourself from here!</li>
+    </ul>
+  </section>
+
   <footer>© KitsuneChess</footer>
 </div>
 

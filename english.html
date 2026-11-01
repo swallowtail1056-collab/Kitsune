@@ -139,6 +139,53 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
     <div class="board-grid" id="boardGrid"></div>
   </div>
 
+
+  <!-- 手順と解説のまとめ（ページを開いたときから全部読めるように） -->
+  <section id="moveSummary" style="margin:24px 0 8px;background:var(--card-bg,#fffaf0);border:2px solid var(--brown-light,#d8b88a);border-radius:12px;padding:14px 18px;line-height:1.75;">
+    <h2 class="lang-element-ja" style="font-size:1.15rem;margin:0 0 8px;">📜 手順と解説のまとめ</h2>
+    <h2 class="lang-element-en" style="font-size:1.15rem;margin:0 0 8px;">📜 All Moves Explained</h2>
+    <p class="lang-element-ja" style="margin:0 0 8px;">イングリッシュ・オープニングのレッスンを始めるよ！このページでは、黒が1...e5と中央に構え、両者のナイトが2つずつ出る、フォー・ナイツ・バリエーションを見ていくよ。白がシシリアンの白と黒が入れかわった形をどう生かすのかがポイントなんだ。一手ずつジーンと一緒に、なぜその手を指すのかを学んでいこう。</p>
+    <p class="lang-element-en" style="margin:0 0 8px;">Let's start the English Opening lesson! On this page we follow the Four Knights Variation, where Black meets 1.c4 with 1...e5 and both sides develop their knights. The key is how White makes use of what is essentially a Sicilian with the colors reversed. Jene will walk you through why each move is played, one step at a time.</p>
+    <ul class="lang-element-ja" style="margin:0;padding-left:0;list-style:none;">
+      <li style="margin:0 0 8px;"><strong>1. c4（イングリッシュ！）</strong> ここがイングリッシュ・オープニングの一手！白はポーンをc4へ進めて、まだ空いているd5のマスに利かせるよ。一般的には1.e4や1.d4で中央にポーンを置くことが多いけれど、白はここで中央の外からd5に働きかける、落ち着いた道を選ぶんだ。</li>
+      <li style="margin:0 0 8px;"><strong>1...e5</strong> 黒はポーンをe5へ進めるよ。黒は中央のd4とf4のマスに利かせて、中央を押さえにいくんだ。白と黒のこの形は、<a href='sicilian.html'>シシリアン・ディフェンス</a>（1.e4 c5）の白と黒が入れかわった形になるよ。</li>
+      <li style="margin:0 0 8px;"><strong>2. Nc3</strong> 白はナイトをc3へ進めるよ。白はd5のマスにc4のポーンとc3のナイトの2つで利かせて、まだ空いているe4のマスにも目を光らせるんだ。</li>
+      <li style="margin:0 0 8px;"><strong>2...Nf6</strong> 黒はナイトをf6へ進めるよ。黒はナイトを展開しながら、まだ空いているe4とd5のマスに利かせるんだ。</li>
+      <li style="margin:0 0 8px;"><strong>3. Nf3</strong> 白はナイトをf3へ進めるよ。白のナイトは、守りのない黒のe5のポーンを攻撃しながら、キングサイドの展開を進めるんだ。</li>
+      <li style="margin:0 0 8px;"><strong>3...Nc6</strong> 黒はナイトをc6へ進めるよ。黒はナイトでe5のポーンを守りながら、まだ空いているd4のマスにも利かせるんだ。白と黒のナイトが2つずつ出たこの形は、フォー・ナイツ・バリエーションと呼ばれているよ。</li>
+      <li style="margin:0 0 8px;"><strong>4. g3</strong> 白はポーンをg3へ進めるよ。白はf1のビショップをg2へ出す準備をして、h1からa8への長い斜めの列を使う作戦なんだ。</li>
+      <li style="margin:0 0 8px;"><strong>4...d5</strong> 黒はポーンをd5へ進めるよ。黒は中央にポーンを置こうとして、白のc4のポーンとの交換を誘うんだ。</li>
+      <li style="margin:0 0 8px;"><strong>5. cxd5</strong> 白はc4のポーンでd5にいた黒のポーンを取るよ。白は中央のポーンを交換して、黒が中央にポーンを置けないようにするんだ。</li>
+      <li style="margin:0 0 8px;"><strong>5...Nxd5</strong> 黒はf6のナイトでd5に入った白のポーンを取り返すよ。黒のナイトは中央のd5に出てきて、白のc3のナイトに利いているんだ。</li>
+      <li style="margin:0 0 8px;"><strong>6. Bg2</strong> 白はビショップをg2へ進めるよ。白のビショップは長い斜めの列に入り、f3のナイトが動けば、黒のd5のナイトやb7のポーンまで利くようになるんだ。これでf1とg1のマスが空いて、白は次の手でキャスリングできるよ。</li>
+      <li style="margin:0 0 8px;"><strong>6...Nb6</strong> 黒はナイトをb6へ下げるよ。黒のナイトは白のビショップの斜めの列から外れて、まだ空いているc4やd5のマスに利かせるんだ。 黒はこの手の代わりに6...Bc5と、ビショップを活発な場所に出すこともできるよ。</li>
+      <li style="margin:0 0 8px;"><strong>7. O-O</strong> 白はキャスリングでキングを安全な場所へ動かすよ。白のキングはg1へ移り、h1にいたルークはf1へ出てくるんだ。</li>
+      <li style="margin:0 0 8px;"><strong>7...Be7</strong> 黒はビショップをe7へ進めるよ。これでf8とg8のマスが空いて、黒は次の手でキャスリングできるんだ。</li>
+      <li style="margin:0 0 8px;"><strong>8. d3</strong> 白はポーンをd3へ進めるよ。白はc1のビショップの道を開けて、まだ空いているe4やc4のマスにも利かせるんだ。</li>
+      <li style="margin:0 0 8px;"><strong>8...O-O</strong> 黒はキャスリングでキングを安全な場所へ動かすよ。黒のキングはg8へ移り、h8にいたルークはf8へ出てくるんだ。</li>
+      <li style="margin:0 0 8px;"><strong>9. a3</strong> 白はポーンをa3へ進めるよ。白は次にb4と突いて、クイーンサイドのスペースを広げる準備をするんだ。白のa3のポーンは、まだ空いているb4のマスに利いて、黒の駒がb4に入るのも防いでいるよ。この後は、白が長い斜めの列とクイーンサイドのポーンを使い、黒がe5のポーンで中央を押さえて、それぞれの作戦を進めていくんだ。これで本譜は一段落、続きはぜひ自分で指してみてね！</li>
+    </ul>
+    <ul class="lang-element-en" style="margin:0;padding-left:0;list-style:none;">
+      <li style="margin:0 0 8px;"><strong>1. c4 (English!)</strong> Here's the English Opening! White pushes the pawn to c4 and covers the empty d5 square. White usually puts a pawn in the center with 1.e4 or 1.d4, but here White chooses a calmer approach, influencing d5 from outside the center.</li>
+      <li style="margin:0 0 8px;"><strong>1...e5</strong> Black pushes the pawn to e5. Black covers the central d4 and f4 squares and claims the center. This position is like the <a href='sicilian.html?lang=en'>Sicilian Defense</a> (1.e4 c5) with the colors reversed.</li>
+      <li style="margin:0 0 8px;"><strong>2. Nc3</strong> White develops the knight to c3. White now covers d5 twice, with the c4 pawn and the c3 knight, and also keeps an eye on the empty e4 square.</li>
+      <li style="margin:0 0 8px;"><strong>2...Nf6</strong> Black develops the knight to f6. Black develops while covering the empty e4 and d5 squares.</li>
+      <li style="margin:0 0 8px;"><strong>3. Nf3</strong> White develops the knight to f3. White's knight attacks Black's undefended e5 pawn while continuing kingside development.</li>
+      <li style="margin:0 0 8px;"><strong>3...Nc6</strong> Black develops the knight to c6. Black defends the e5 pawn with the knight and also covers the empty d4 square. With both sides' knights out, this position is called the Four Knights Variation.</li>
+      <li style="margin:0 0 8px;"><strong>4. g3</strong> White pushes the pawn to g3. White prepares to bring the f1 bishop to g2 and plans to use the long h1–a8 diagonal.</li>
+      <li style="margin:0 0 8px;"><strong>4...d5</strong> Black pushes the pawn to d5. Black tries to establish a pawn in the center and invites a trade with White's c4 pawn.</li>
+      <li style="margin:0 0 8px;"><strong>5. cxd5</strong> White's c4 pawn captures Black's pawn on d5. White trades in the center so that Black can't keep a pawn there.</li>
+      <li style="margin:0 0 8px;"><strong>5...Nxd5</strong> Black's f6 knight recaptures White's pawn on d5. Black's knight comes to the central d5 square and hits White's knight on c3.</li>
+      <li style="margin:0 0 8px;"><strong>6. Bg2</strong> White develops the bishop to g2. White's bishop takes up the long diagonal, and once the f3 knight moves, it will reach Black's d5 knight and b7 pawn. This also clears f1 and g1, so White can castle on the next move.</li>
+      <li style="margin:0 0 8px;"><strong>6...Nb6</strong> Black retreats the knight to b6. Black's knight steps off the diagonal of White's bishop and covers the empty c4 and d5 squares. Instead of this move, Black can also play 6...Bc5 and put the bishop on an active square.</li>
+      <li style="margin:0 0 8px;"><strong>7. O-O</strong> White castles, bringing the king to safety. White's king goes to g1, and the rook from h1 comes to f1.</li>
+      <li style="margin:0 0 8px;"><strong>7...Be7</strong> Black develops the bishop to e7. This clears f8 and g8, so Black can castle on the next move.</li>
+      <li style="margin:0 0 8px;"><strong>8. d3</strong> White pushes the pawn to d3. White opens the path for the c1 bishop and also covers the empty e4 and c4 squares.</li>
+      <li style="margin:0 0 8px;"><strong>8...O-O</strong> Black castles, bringing the king to safety. Black's king goes to g8, and the rook from h8 comes to f8.</li>
+      <li style="margin:0 0 8px;"><strong>9. a3</strong> White pushes the pawn to a3. White prepares to push b4 next and gain space on the queenside. White's a3 pawn also covers the empty b4 square, keeping Black's pieces out of there. From here, White uses the long diagonal and the queenside pawns, while Black holds the center with the e5 pawn, and each side pursues its own plan. That's the main line — try continuing the game yourself from here!</li>
+    </ul>
+  </section>
+
   <footer>© KitsuneChess</footer>
 </div>
 

@@ -132,6 +132,47 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
     <div class="board-grid" id="boardGrid"></div>
   </div>
 
+
+  <!-- 手順と解説のまとめ（ページを開いたときから全部読めるように） -->
+  <section id="moveSummary" style="margin:24px 0 8px;background:var(--card-bg,#fffaf0);border:2px solid var(--brown-light,#d8b88a);border-radius:12px;padding:14px 18px;line-height:1.75;">
+    <h2 class="lang-element-ja" style="font-size:1.15rem;margin:0 0 8px;">📜 手順と解説のまとめ</h2>
+    <h2 class="lang-element-en" style="font-size:1.15rem;margin:0 0 8px;">📜 All Moves Explained</h2>
+    <p class="lang-element-ja" style="margin:0 0 8px;">クラシカル・シシリアンのレッスンを始めるよ！素直な駒組みから、白の鋭い攻めまで見ていくよ。一手ずつジーンと一緒に、なぜその手を指すのかを学んでいこう。</p>
+    <p class="lang-element-en" style="margin:0 0 8px;">Let's start the Classical Sicilian lesson! From straightforward development to White's sharp attacking ideas. Jene will walk you through why each move is played, one step at a time.</p>
+    <ul class="lang-element-ja" style="margin:0;padding-left:0;list-style:none;">
+      <li style="margin:0 0 8px;"><strong>1. e4</strong> 白はポーンをe4へ進めるよ。中央を制圧するんだ。</li>
+      <li style="margin:0 0 8px;"><strong>1...c5（シシリアン！）</strong> 黒はc5でシシリアン・ディフェンスを選ぶよ。中央を直接占領する代わりに、d4を狙いながら非対称な局面に持ち込むんだ。</li>
+      <li style="margin:0 0 8px;"><strong>2. Nf3</strong> 白はナイトをf3へ進めるよ。駒を育てながら、この先のd4に備えるんだ。</li>
+      <li style="margin:0 0 8px;"><strong>2...Nc6</strong> 黒はナイトをc6へ進めるよ。d4のマスへの影響力を強めるんだ。</li>
+      <li style="margin:0 0 8px;"><strong>3. d4</strong> 白はポーンをd4へ進めるよ。中央を開いて、駒の活動範囲を広げる狙いなんだ。</li>
+      <li style="margin:0 0 8px;"><strong>3...cxd4</strong> 黒はポーンでd4の駒を取るよ。取らないと白に大きな中央を築かれてしまうんだ。</li>
+      <li style="margin:0 0 8px;"><strong>4. Nxd4</strong> 白はナイトでd4の駒を取り返すよ。中央のいいマスにナイトを配置できるんだ。</li>
+      <li style="margin:0 0 8px;"><strong>4...Nf6</strong> 黒はナイトをf6へ進めるよ。e4のポーンにプレッシャーをかけながら展開するんだ。</li>
+      <li style="margin:0 0 8px;"><strong>5. Nc3</strong> 白はナイトをc3へ進めるよ。e4のポーンを守りながら、もう1つの駒を育てるんだ。</li>
+      <li style="margin:0 0 8px;"><strong>5...d6</strong> 黒はポーンをd6へ進めるよ。これがクラシカル・シシリアンらしい、e6・Be7へと繋がる堅実な形の始まりなんだ。</li>
+      <li style="margin:0 0 8px;"><strong>6. Bg5（リヒター＝ラウザー！）</strong> 白はビショップをg5へ！f6のナイトにピンをかけて、この先の長いキャスリングからの攻撃を狙う、鋭い変化なんだ。</li>
+      <li style="margin:0 0 8px;"><strong>6...e6</strong> 黒はポーンをe6へ進めるよ。ピンの圧力を和らげながら、ダークスクエアのビショップの展開場所を確保するんだ。</li>
+      <li style="margin:0 0 8px;"><strong>7. Qd2</strong> 白はクイーンをd2へ進めるよ。これで長いキャスリング(O-O-O)の準備が整うんだ。</li>
+      <li style="margin:0 0 8px;"><strong>7...Be7</strong> 黒はビショップをe7へ進めるよ。これでキングサイドのキャスリングの準備が整うんだ。これで本譜は一段落、続きはぜひ自分で指してみてね！</li>
+    </ul>
+    <ul class="lang-element-en" style="margin:0;padding-left:0;list-style:none;">
+      <li style="margin:0 0 8px;"><strong>1. e4</strong> White develops the pawn to e4, claiming the center.</li>
+      <li style="margin:0 0 8px;"><strong>1...c5 (Sicilian!)</strong> Black plays 1...c5, the Sicilian Defense — fighting for d4 indirectly and steering the game into an unbalanced fight.</li>
+      <li style="margin:0 0 8px;"><strong>2. Nf3</strong> White develops the knight to f3, preparing to follow up with d4.</li>
+      <li style="margin:0 0 8px;"><strong>2...Nc6</strong> Black develops the knight to c6, adding pressure on the d4 square.</li>
+      <li style="margin:0 0 8px;"><strong>3. d4</strong> White develops the pawn to d4, opening the center to increase piece activity.</li>
+      <li style="margin:0 0 8px;"><strong>3...cxd4</strong> Black captures on d4 with the pawn — otherwise White would build a big pawn center.</li>
+      <li style="margin:0 0 8px;"><strong>4. Nxd4</strong> White recaptures with the knight, centralizing it on a strong square.</li>
+      <li style="margin:0 0 8px;"><strong>4...Nf6</strong> Black develops the knight to f6, pressuring the e4 pawn.</li>
+      <li style="margin:0 0 8px;"><strong>5. Nc3</strong> White develops the knight to c3, defending the e4 pawn while continuing development.</li>
+      <li style="margin:0 0 8px;"><strong>5...d6</strong> Black plays 5...d6, the solid Classical Sicilian setup that leads into e6 and Be7.</li>
+      <li style="margin:0 0 8px;"><strong>6. Bg5 (Richter-Rauzer!)</strong> White plays 6.Bg5, pinning the f6 knight and setting up the sharp Richter-Rauzer Attack with queenside castling.</li>
+      <li style="margin:0 0 8px;"><strong>6...e6</strong> Black plays 6...e6, blunting the pin and preparing to develop the dark-squared bishop.</li>
+      <li style="margin:0 0 8px;"><strong>7. Qd2</strong> White develops the queen to d2, preparing to castle queenside.</li>
+      <li style="margin:0 0 8px;"><strong>7...Be7</strong> Black develops the bishop to e7, preparing to castle kingside. That's the main line — try continuing the game yourself from here!</li>
+    </ul>
+  </section>
+
   <footer>© KitsuneChess</footer>
 </div>
 

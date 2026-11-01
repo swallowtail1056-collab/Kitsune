@@ -137,6 +137,47 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
     <div class="board-grid" id="boardGrid"></div>
   </div>
 
+
+  <!-- 手順と解説のまとめ（ページを開いたときから全部読めるように） -->
+  <section id="moveSummary" style="margin:24px 0 8px;background:var(--card-bg,#fffaf0);border:2px solid var(--brown-light,#d8b88a);border-radius:12px;padding:14px 18px;line-height:1.75;">
+    <h2 class="lang-element-ja" style="font-size:1.15rem;margin:0 0 8px;">📜 手順と解説のまとめ</h2>
+    <h2 class="lang-element-en" style="font-size:1.15rem;margin:0 0 8px;">📜 All Moves Explained</h2>
+    <p class="lang-element-ja" style="margin:0 0 8px;">センター・ゲームのレッスンを始めるよ！このページでは、白がクイーンをe3へ動かし、クイーンサイドにキャスリングする形を見ていくよ。白がクイーンを早く出す代わりにどうやって攻めの形を作るのか、黒がどうやって反撃するのかがポイントなんだ。一手ずつジーンと一緒に、なぜその手を指すのかを学んでいこう。</p>
+    <p class="lang-element-en" style="margin:0 0 8px;">Let's start the Center Game lesson! On this page we follow the line where White moves the queen to e3 and castles queenside. The key ideas are how White builds an attacking setup despite bringing the queen out early, and how Black hits back. Jene will walk you through why each move is played, one step at a time.</p>
+    <ul class="lang-element-ja" style="margin:0;padding-left:0;list-style:none;">
+      <li style="margin:0 0 8px;"><strong>1. e4</strong> 白はポーンをe4へ進めるよ。白は中央のマスを押さえながら、ビショップとクイーンが動く道を開けるんだ。</li>
+      <li style="margin:0 0 8px;"><strong>1...e5</strong> 黒はポーンをe5へ進めるよ。黒も同じように中央を押さえて、白のポーンと向かい合う形を作るんだ。</li>
+      <li style="margin:0 0 8px;"><strong>2. d4</strong> 白はポーンをd4へ進めるよ。白は黒のe5のポーンを攻撃して、すぐに中央を開こうとするんだ。</li>
+      <li style="margin:0 0 8px;"><strong>2...exd4</strong> 黒はe5のポーンでd4にいた白のポーンを取るよ。黒は中央のポーンを交換して、白のd4のポーンを消すんだ。</li>
+      <li style="margin:0 0 8px;"><strong>3. Qxd4（センター・ゲーム！）</strong> ここがセンター・ゲームの一手！白はクイーンでd4に入った黒のポーンを取り返すよ。一般的には3.c3とポーンを差し出す<a href='danish_gambit.html'>デンマーク・ギャンビット</a>や、3.Nf3で<a href='scotch.html'>スコッチ・ゲーム</a>に進む形も指されるけれど、白はここですぐにクイーンで取り返す道を選ぶんだ。その代わり、白のクイーンは早く中央に出てくるので、黒の駒に攻撃されて手数を使わされやすいよ。</li>
+      <li style="margin:0 0 8px;"><strong>3...Nc6</strong> 黒はナイトをc6へ進めるよ。黒はナイトを展開しながら、d4にいる白のクイーンを攻撃するんだ。</li>
+      <li style="margin:0 0 8px;"><strong>4. Qe3</strong> 白はクイーンをe3へ動かすよ。白のクイーンはe4のポーンを守りながら、キングサイドへの攻撃にも加われる場所に移るんだ。その代わり、白のc1のビショップは、e3にいるクイーンがじゃまになって、右上の斜めにはd2までしか進めず、f4やg5のマスには出られなくなるよ。 白はこの手の代わりに4.Qa4や4.Qc4にクイーンを動かすこともあるよ。</li>
+      <li style="margin:0 0 8px;"><strong>4...Nf6</strong> 黒はナイトをf6へ進めるよ。黒はナイトを展開しながら、白のe4のポーンを攻撃するんだ。白のe4のポーンは、今はe3のクイーンだけに守られているよ。</li>
+      <li style="margin:0 0 8px;"><strong>5. Nc3</strong> 白はナイトをc3へ進めるよ。白のナイトはe4のポーンを守って、白はe4を守る駒を2つに増やすんだ。</li>
+      <li style="margin:0 0 8px;"><strong>5...Bb4</strong> 黒はビショップをb4へ進めるよ。黒のビショップは白のc3のナイトをピンしていて、白のナイトは動くとキングが攻撃されるので、動けないんだ。黒は次にBxc3とナイトを取って、白のe4のポーンを守る駒を減らすこともねらっているよ。</li>
+      <li style="margin:0 0 8px;"><strong>6. Bd2</strong> 白はビショップをd2へ進めるよ。白のビショップはb4からe1への斜めの列に入って、c3のナイトのピンを外すんだ。これでb1・c1・d1のマスが空いて、白は次の手でクイーンサイドにキャスリングできるよ。</li>
+      <li style="margin:0 0 8px;"><strong>6...O-O</strong> 黒はキャスリングでキングを安全な場所へ動かすよ。黒のキングはg8へ移り、h8にいたルークはf8へ出てくるんだ。</li>
+      <li style="margin:0 0 8px;"><strong>7. O-O-O</strong> 白はクイーンサイドにキャスリングするよ。白のキングはc1へ移り、a1にいたルークはd1へ出てくるんだ。白と黒のキングが反対側にいるので、この後はお互いに相手のキングに向かってポーンを進める、激しい攻め合いになりやすいよ。</li>
+      <li style="margin:0 0 8px;"><strong>7...Re8</strong> 黒はルークをe8へ動かすよ。黒のルークはeファイル（e1からe8の縦のマス）で白のe4のポーンに利いていて、黒はf6のナイトと合わせて2つでe4を攻撃する形になるんだ。白はc3のナイトとe3のクイーンでe4を守っているけれど、黒はBxc3と取って、e4を守る駒を減らすこともねらっているよ。この局面では、白が8.Qg3とe4のポーンを差し出して攻める手や、8.Bc4と展開する手がよく指されるんだ。これで本譜は一段落、続きはぜひ自分で指してみてね！</li>
+    </ul>
+    <ul class="lang-element-en" style="margin:0;padding-left:0;list-style:none;">
+      <li style="margin:0 0 8px;"><strong>1. e4</strong> White pushes the pawn to e4. White takes control of central squares and opens lines for the bishop and queen.</li>
+      <li style="margin:0 0 8px;"><strong>1...e5</strong> Black pushes the pawn to e5. Black also claims the center, setting up a pawn face-off with White.</li>
+      <li style="margin:0 0 8px;"><strong>2. d4</strong> White pushes the pawn to d4. White attacks Black's e5 pawn and tries to open the center right away.</li>
+      <li style="margin:0 0 8px;"><strong>2...exd4</strong> Black's e5 pawn captures White's pawn on d4. Black trades in the center and removes White's d4 pawn.</li>
+      <li style="margin:0 0 8px;"><strong>3. Qxd4 (Center Game!)</strong> Here's the Center Game! White's queen recaptures Black's pawn on d4. White can also offer a pawn with 3.c3 in the <a href='danish_gambit.html?lang=en'>Danish Gambit</a>, or play 3.Nf3 and head into the <a href='scotch.html?lang=en'>Scotch Game</a>, but here White takes back with the queen right away. The trade-off is that White's queen comes out early, so it can be chased by Black's pieces and cost White time.</li>
+      <li style="margin:0 0 8px;"><strong>3...Nc6</strong> Black develops the knight to c6. Black develops while attacking White's queen on d4.</li>
+      <li style="margin:0 0 8px;"><strong>4. Qe3</strong> White moves the queen to e3. White's queen defends the e4 pawn and moves to a square where it can join a kingside attack. The downside is that the queen on e3 gets in the way of White's c1 bishop: along that diagonal the bishop can only go as far as d2 and can't reach f4 or g5. Instead of this move, White sometimes moves the queen to 4.Qa4 or 4.Qc4.</li>
+      <li style="margin:0 0 8px;"><strong>4...Nf6</strong> Black develops the knight to f6. Black develops while attacking White's e4 pawn. Right now White's e4 pawn is defended only by the queen on e3.</li>
+      <li style="margin:0 0 8px;"><strong>5. Nc3</strong> White develops the knight to c3. White's knight defends the e4 pawn, so White now has two defenders on e4.</li>
+      <li style="margin:0 0 8px;"><strong>5...Bb4</strong> Black develops the bishop to b4. Black's bishop pins White's c3 knight: if the knight moved, White's king would be in check, so it can't move. Black is also thinking about ...Bxc3 to take the knight and remove one of the defenders of White's e4 pawn.</li>
+      <li style="margin:0 0 8px;"><strong>6. Bd2</strong> White develops the bishop to d2. White's bishop steps onto the b4–e1 diagonal and breaks the pin on the c3 knight. This also clears b1, c1 and d1, so White can castle queenside on the next move.</li>
+      <li style="margin:0 0 8px;"><strong>6...O-O</strong> Black castles, bringing the king to safety. Black's king goes to g8, and the rook from h8 comes to f8.</li>
+      <li style="margin:0 0 8px;"><strong>7. O-O-O</strong> White castles queenside. White's king goes to c1, and the rook from a1 comes to d1. With the kings on opposite wings, the game tends to become a sharp race in which both sides push pawns toward the enemy king.</li>
+      <li style="margin:0 0 8px;"><strong>7...Re8</strong> Black moves the rook to e8. Black's rook hits White's e4 pawn along the e-file (the column of squares from e1 to e8), so Black now attacks e4 twice together with the f6 knight. White defends e4 with the c3 knight and the e3 queen, but Black is also eyeing ...Bxc3 to remove one of those defenders. In this position White often plays 8.Qg3, offering the e4 pawn to attack, or 8.Bc4 to develop. That's the main line — try continuing the game yourself from here!</li>
+    </ul>
+  </section>
+
   <footer>© KitsuneChess</footer>
 </div>
 

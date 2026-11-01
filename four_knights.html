@@ -139,6 +139,51 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
     <div class="board-grid" id="boardGrid"></div>
   </div>
 
+
+  <!-- 手順と解説のまとめ（ページを開いたときから全部読めるように） -->
+  <section id="moveSummary" style="margin:24px 0 8px;background:var(--card-bg,#fffaf0);border:2px solid var(--brown-light,#d8b88a);border-radius:12px;padding:14px 18px;line-height:1.75;">
+    <h2 class="lang-element-ja" style="font-size:1.15rem;margin:0 0 8px;">📜 手順と解説のまとめ</h2>
+    <h2 class="lang-element-en" style="font-size:1.15rem;margin:0 0 8px;">📜 All Moves Explained</h2>
+    <p class="lang-element-ja" style="margin:0 0 8px;">フォー・ナイツのレッスンを始めるよ！このページでは、両者が鏡のように同じ形で駒を並べるシンメトリカル・バリエーションから、白が7.Bg5で先に動き出す流れを見ていくよ。同じ形のとき、どちらが先にどう形を崩すのかがポイントなんだ。一手ずつジーンと一緒に、なぜその手を指すのかを学んでいこう。</p>
+    <p class="lang-element-en" style="margin:0 0 8px;">Let's start the Four Knights lesson! On this page we follow the Symmetrical Variation, where both sides set up in a mirror image, and see how White breaks the symmetry with 7.Bg5. The key is who changes the identical setup first, and how. Jene will walk you through why each move is played, one step at a time.</p>
+    <ul class="lang-element-ja" style="margin:0;padding-left:0;list-style:none;">
+      <li style="margin:0 0 8px;"><strong>1. e4</strong> 白はポーンをe4へ進めるよ。白は中央のマスを押さえながら、ビショップとクイーンが動く道を開けるんだ。</li>
+      <li style="margin:0 0 8px;"><strong>1...e5</strong> 黒はポーンをe5へ進めるよ。黒も同じように中央を押さえて、白のポーンと向かい合う形を作るんだ。</li>
+      <li style="margin:0 0 8px;"><strong>2. Nf3</strong> 白はナイトをf3へ進めるよ。白のナイトは展開しながら、黒のe5のポーンを攻撃しているんだ。</li>
+      <li style="margin:0 0 8px;"><strong>2...Nc6</strong> 黒はナイトをc6へ進めるよ。黒はナイトを展開しながら、e5のポーンを守るんだ。</li>
+      <li style="margin:0 0 8px;"><strong>3. Nc3（フォー・ナイツ！）</strong> ここがフォー・ナイツの一手！白はもう一つのナイトをc3へ進めて、e4のポーンを守るよ。一般的には3.Bb5や3.Bc4とビショップを先に出すけれど、白はここでナイトを先に展開する、落ち着いた道を選ぶんだ。その代わり、白は序盤から黒にプレッシャーをかける力は弱めになるよ。</li>
+      <li style="margin:0 0 8px;"><strong>3...Nf6</strong> 黒ももう一つのナイトをf6へ進めるよ。黒はナイトを展開しながら、白のe4のポーンを攻撃するんだ。白も黒もナイトを2つずつ出して、鏡に映したような形になったよ。</li>
+      <li style="margin:0 0 8px;"><strong>4. Bb5</strong> 白はビショップをb5へ進めるよ。白のビショップは、e5のポーンを守っているc6のナイトを攻撃しているんだ。白のこの形は<a href='ruy_lopez.html'>ルイ・ロペス</a>と同じ考え方なので、スパニッシュ・フォー・ナイツと呼ばれているよ。 白はこの手の代わりに4.d4と中央を開くこともできて、この形はスコッチ・フォー・ナイツと呼ばれるよ。ほかに4.Bc4の<a href='italian.html'>イタリアン</a>風の形もあるんだ。</li>
+      <li style="margin:0 0 8px;"><strong>4...Bb4</strong> 黒もビショップをb4へ進めるよ。黒のビショップは、e4のポーンを守っているc3のナイトを攻撃して、白と同じ形でやり返すんだ。</li>
+      <li style="margin:0 0 8px;"><strong>5. O-O</strong> 白はキャスリングでキングを安全な場所へ動かすよ。白はキングの安全を先に確保して、中央での駆け引きに備えるんだ。</li>
+      <li style="margin:0 0 8px;"><strong>5...O-O</strong> 黒もキャスリングでキングを安全な場所へ動かすよ。白も黒もキングを守り、まだ鏡のような形が続いているんだ。</li>
+      <li style="margin:0 0 8px;"><strong>6. d3</strong> 白はポーンをd3へ進めるよ。白はこれでe4のポーンを守り、c1のビショップの道も開けるんだ。</li>
+      <li style="margin:0 0 8px;"><strong>6...d6</strong> 黒もポーンをd6へ進めるよ。黒はこれでe5のポーンを守り、c8のビショップの道も開けるんだ。白と黒がまったく同じ形になったこの局面は、シンメトリカル・バリエーションと呼ばれているよ。</li>
+      <li style="margin:0 0 8px;"><strong>7. Bg5</strong> 白はビショップをg5へ進めるよ。白のビショップはf6のナイトをねらっていて、ナイトが動くとd8の黒のクイーンが取られる形（クイーンへのピン）になっているんだ。白はここで、鏡のような形をくずして先に動き出すよ。</li>
+      <li style="margin:0 0 8px;"><strong>7...Bxc3</strong> 黒はビショップでc3にいた白のナイトを取るよ。黒はここでビショップとナイトを交換して、白のポーンの形を崩しにいくんだ。その代わり、黒は2つのビショップを持つ利点を白に渡すことになるよ。 黒はこの手の代わりに7...Ne7と、ナイトをg6の方へ回してピンを外しにいく手もあるよ。この形はピルズベリー・バリエーションと呼ばれているんだ。</li>
+      <li style="margin:0 0 8px;"><strong>8. bxc3</strong> 白はbのポーンでc3に入った黒のビショップを取り返すよ。白はcのポーンが2つ縦に並ぶ形になるけれど、bファイルが開いて、中央にもポーンが1つ増えるんだ。</li>
+      <li style="margin:0 0 8px;"><strong>8...Qe7</strong> 黒はクイーンをe7へ動かすよ。黒はd8のマスを空けて、この先ナイトをc6からd8、e6へと回し、g5のビショップを追い払ってピンを外す準備をするんだ。黒のこの作戦はメッガーのアンピンと呼ばれていて、この形の本筋として知られているよ。この後は白がRe1とd4で中央を固め、黒はNd8からNe6と回す流れがよく見られるんだ。これで本譜は一段落、続きはぜひ自分で指してみてね！</li>
+    </ul>
+    <ul class="lang-element-en" style="margin:0;padding-left:0;list-style:none;">
+      <li style="margin:0 0 8px;"><strong>1. e4</strong> White pushes the pawn to e4. White takes control of central squares and opens lines for the bishop and queen.</li>
+      <li style="margin:0 0 8px;"><strong>1...e5</strong> Black pushes the pawn to e5. Black also claims the center, setting up a pawn face-off with White.</li>
+      <li style="margin:0 0 8px;"><strong>2. Nf3</strong> White develops the knight to f3. White's knight develops while attacking Black's e5 pawn.</li>
+      <li style="margin:0 0 8px;"><strong>2...Nc6</strong> Black develops the knight to c6. Black develops a piece and defends the e5 pawn at the same time.</li>
+      <li style="margin:0 0 8px;"><strong>3. Nc3 (Four Knights!)</strong> Here's the Four Knights! White develops the other knight to c3, defending the e4 pawn. White usually brings a bishop out first with 3.Bb5 or 3.Bc4, but here White chooses the calm path of developing the knight first. The trade-off is that White puts less early pressure on Black.</li>
+      <li style="margin:0 0 8px;"><strong>3...Nf6</strong> Black also develops the other knight to f6. Black develops while attacking White's e4 pawn. With two knights out on each side, the position looks like a mirror image.</li>
+      <li style="margin:0 0 8px;"><strong>4. Bb5</strong> White develops the bishop to b5. White's bishop attacks the c6 knight, which is defending the e5 pawn. It follows the same idea as the <a href='ruy_lopez.html?lang=en'>Ruy Lopez</a>, so this is called the Spanish Four Knights. Instead of this move, White can open the center with 4.d4, known as the Scotch Four Knights. There's also 4.Bc4, an <a href='italian.html?lang=en'>Italian</a>-style setup.</li>
+      <li style="margin:0 0 8px;"><strong>4...Bb4</strong> Black also develops the bishop to b4. Black's bishop attacks the c3 knight, which is defending the e4 pawn, answering White in the same way.</li>
+      <li style="margin:0 0 8px;"><strong>5. O-O</strong> White castles, bringing the king to safety. White secures the king first and prepares for the maneuvering in the center.</li>
+      <li style="margin:0 0 8px;"><strong>5...O-O</strong> Black also castles, bringing the king to safety. Both kings are safe, and the mirror-image position continues.</li>
+      <li style="margin:0 0 8px;"><strong>6. d3</strong> White pushes the pawn to d3. White defends the e4 pawn and opens the path for the c1 bishop.</li>
+      <li style="margin:0 0 8px;"><strong>6...d6</strong> Black also pushes the pawn to d6. Black defends the e5 pawn and opens the path for the c8 bishop. This is called the Symmetrical Variation, with both sides in exactly the same setup.</li>
+      <li style="margin:0 0 8px;"><strong>7. Bg5</strong> White develops the bishop to g5. White's bishop targets the f6 knight, and if the knight moved, Black's queen on d8 would be captured — a pin against the queen. White breaks the symmetry here and makes the first move to take the initiative.</li>
+      <li style="margin:0 0 8px;"><strong>7...Bxc3</strong> Black's bishop captures the white knight that was on c3. Black trades bishop for knight here to damage White's pawn structure. The downside is that Black hands White the advantage of the bishop pair. Instead of this move, Black can also play 7...Ne7, rerouting the knight toward g6 to escape the pin. This is called the Pillsbury Variation.</li>
+      <li style="margin:0 0 8px;"><strong>8. bxc3</strong> White's b-pawn takes back the black bishop that landed on c3. White ends up with doubled c-pawns, but the b-file opens and White gains another central pawn.</li>
+      <li style="margin:0 0 8px;"><strong>8...Qe7</strong> Black moves the queen to e7. Black clears d8 so the knight can travel from c6 to d8 and then e6, chasing away the g5 bishop and escaping the pin. This plan is called the Metger Unpin and is known as the main line of this setup. A common continuation is for White to reinforce the center with Re1 and d4 while Black reroutes the knight via d8 to e6. That's the main line — try continuing the game yourself from here!</li>
+    </ul>
+  </section>
+
   <footer>© KitsuneChess</footer>
 </div>
 

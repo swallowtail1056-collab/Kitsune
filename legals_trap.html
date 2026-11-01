@@ -137,6 +137,49 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
     <div class="board-grid" id="boardGrid"></div>
   </div>
 
+
+  <!-- 手順と解説のまとめ（ページを開いたときから全部読めるように） -->
+  <section id="moveSummary" style="margin:24px 0 8px;background:var(--card-bg,#fffaf0);border:2px solid var(--brown-light,#d8b88a);border-radius:12px;padding:14px 18px;line-height:1.75;">
+    <h2 class="lang-element-ja" style="font-size:1.15rem;margin:0 0 8px;">📜 手順と解説のまとめ</h2>
+    <h2 class="lang-element-en" style="font-size:1.15rem;margin:0 0 8px;">📜 All Moves Explained</h2>
+    <p class="lang-element-ja" style="margin:0 0 8px;">レガールのトラップのレッスンを始めるよ！このページでは、黒のビショップがh5へ下がったすきに、白がクイーンを差し出して一気に詰ませる流れを見ていくよ。なぜクイーンを取らせても大丈夫なのか、どの駒がどのマスを押さえているのかがポイントなんだ。一手ずつジーンと一緒に、なぜその手を指すのかを学んでいこう。</p>
+    <p class="lang-element-en" style="margin:0 0 8px;">Let's start the Légal Trap lesson! On this page we follow how White offers the queen and delivers a quick checkmate once Black's bishop retreats to h5. The key is why it's fine to let the queen go, and which piece covers which square. Jene will walk you through why each move is played, one step at a time.</p>
+    <ul class="lang-element-ja" style="margin:0;padding-left:0;list-style:none;">
+      <li style="margin:0 0 8px;"><strong>1. e4</strong> 白はポーンをe4へ進めるよ。白は中央のマスを押さえながら、ビショップとクイーンが動く道を開けるんだ。</li>
+      <li style="margin:0 0 8px;"><strong>1...e5</strong> 黒はポーンをe5へ進めるよ。黒も同じように中央を押さえて、白のポーンと向かい合う形を作るんだ。</li>
+      <li style="margin:0 0 8px;"><strong>2. Nf3</strong> 白はナイトをf3へ進めるよ。白のナイトは展開しながら、黒のe5のポーンを攻撃しているんだ。</li>
+      <li style="margin:0 0 8px;"><strong>2...Nc6</strong> 黒はナイトをc6へ進めるよ。黒はナイトを展開しながら、e5のポーンを守るんだ。</li>
+      <li style="margin:0 0 8px;"><strong>3. Bc4</strong> 白はビショップをc4へ進めるよ。白のビショップは、キングしか守っていない黒のf7のポーンをねらっているんだ。白はこの形から<a href='italian.html'>イタリアン・ゲーム</a>に入っていくんだ。</li>
+      <li style="margin:0 0 8px;"><strong>3...d6</strong> 黒はポーンをd6へ進めるよ。黒はこれでe5のポーンを固め、c8のビショップの道も開けるんだ。その代わり、黒のd6のポーンはf8のビショップの道をふさぐので、黒の展開は少し窮屈になるよ。 黒はこの手の代わりに3...Bc5や3...Nf6と、駒を積極的に展開することのほうが一般的だよ。</li>
+      <li style="margin:0 0 8px;"><strong>4. Nc3</strong> 白はナイトをc3へ進めるよ。白はナイトを展開しながら、e4のポーンを守り、d5のマスにも利かせるんだ。</li>
+      <li style="margin:0 0 8px;"><strong>4...Bg4</strong> 黒はビショップをg4へ進めるよ。黒のビショップはf3のナイトを攻撃していて、ナイトが動くとd1の白のクイーンが取られる形（クイーンへのピン）になっているんだ。黒は白のナイトを動けなくして、e5への攻撃を防いだつもりでいるよ。</li>
+      <li style="margin:0 0 8px;"><strong>5. h3</strong> 白はポーンをh3へ進めるよ。白はg4のビショップを攻撃して、黒に下がるか交換するかを迫るんだ。ここで黒がどこへビショップを動かすかが、罠に落ちるかどうかの分かれ目になるよ。</li>
+      <li style="margin:0 0 8px;"><strong>5...Bh5?</strong> 黒はビショップをh5へ下げるよ。黒はピンを続けようとしているけれど、h5のビショップを守る黒の駒は1つもないんだ。この「守られていないビショップ」が、次の白の一手を可能にしてしまうよ。 黒はこの手の代わりに5...Bxf3とナイトを取ったり、5...Be6と下げたりすれば、罠を避けられるよ。</li>
+      <li style="margin:0 0 8px;"><strong>6. Nxe5!!（レガール！）</strong> ここがレガールのトラップの一手！白はピンを無視して、ナイトでe5にいた黒のポーンを取るよ。白はd1のクイーンを取られてもかまわないという、驚きの一手なんだ。もし黒がクイーンを取らずに6...Nxe5とナイトを取り返すと、白は7.Qxh5と守りのないビショップを取り返して、ポーン1つ得した形になるよ。 白がもしh3を突かずに、5手目ですぐNxe5と取ると、黒は5...Nxe5と取り返せるよ。このときはe5のナイトがg4のビショップを守っているので、白はビショップを取り返せず、駒を損してしまうんだ。h3でビショップをh5へ動かしておくことが、この罠には欠かせないよ。</li>
+      <li style="margin:0 0 8px;"><strong>6...Bxd1??</strong> 黒はビショップでd1にいた白のクイーンを取るよ。黒はクイーンを取れて大喜びだけど、これが決定的な間違いなんだ。黒はこの手の代わりに6...dxe5や6...Nxe5と取り返していれば、ポーンを1つ損する程度で済んだよ。</li>
+      <li style="margin:0 0 8px;"><strong>7. Bxf7+</strong> 白はビショップでf7にいた黒のポーンを取ってチェックをかけるよ。白のビショップはe5のナイトに守られているので、黒のキングはビショップを取れないんだ。黒のキングが逃げられるマスはe7しかないよ。</li>
+      <li style="margin:0 0 8px;"><strong>7...Ke7</strong> 黒はキングをe7へ動かすよ。黒はこの手以外に指せる手がないんだ。</li>
+      <li style="margin:0 0 8px;"><strong>8. Nd5#</strong> 白はナイトをd5へ進めて、チェックメイト！白のd5のナイトがe7のキングにチェックをかけていて、キングが逃げられるマスはすべて白の駒に押さえられているんだ。d7はe5のナイト、e6とe8はf7のビショップ、f6はd5のナイトが見張っていて、d8とf8には黒の駒がいるので動けないよ。白はクイーンを差し出したのに、ナイト2つとビショップ1つの小さな駒3つで詰ませたんだ。これでゲーム終了！自分でも盤に並べて、詰みの形を確かめてみてね！</li>
+    </ul>
+    <ul class="lang-element-en" style="margin:0;padding-left:0;list-style:none;">
+      <li style="margin:0 0 8px;"><strong>1. e4</strong> White pushes the pawn to e4. White takes control of central squares and opens lines for the bishop and queen.</li>
+      <li style="margin:0 0 8px;"><strong>1...e5</strong> Black pushes the pawn to e5. Black also claims the center, setting up a pawn face-off with White.</li>
+      <li style="margin:0 0 8px;"><strong>2. Nf3</strong> White develops the knight to f3. White's knight develops while attacking Black's e5 pawn.</li>
+      <li style="margin:0 0 8px;"><strong>2...Nc6</strong> Black develops the knight to c6. Black develops a piece and defends the e5 pawn at the same time.</li>
+      <li style="margin:0 0 8px;"><strong>3. Bc4</strong> White develops the bishop to c4. White's bishop aims at Black's f7 pawn, which only the king defends. This is how the <a href='italian.html?lang=en'>Italian Game</a> begins.</li>
+      <li style="margin:0 0 8px;"><strong>3...d6</strong> Black pushes the pawn to d6. Black firms up the e5 pawn and opens the path for the c8 bishop. The downside is that the d6 pawn blocks the f8 bishop, making Black's development a bit cramped. Instead of this move, Black more commonly develops actively with 3...Bc5 or 3...Nf6.</li>
+      <li style="margin:0 0 8px;"><strong>4. Nc3</strong> White develops the knight to c3. White develops while defending the e4 pawn and covering the d5 square.</li>
+      <li style="margin:0 0 8px;"><strong>4...Bg4</strong> Black develops the bishop to g4. Black's bishop attacks the f3 knight, and if the knight moved, White's queen on d1 would be captured — a pin against the queen. Black believes this freezes White's knight and stops any attack on e5.</li>
+      <li style="margin:0 0 8px;"><strong>5. h3</strong> White pushes the pawn to h3. White attacks the g4 bishop, asking Black to either retreat or trade. Where Black moves the bishop now decides whether Black falls into the trap.</li>
+      <li style="margin:0 0 8px;"><strong>5...Bh5?</strong> Black retreats the bishop to h5. Black is trying to keep the pin, but no black piece defends the bishop on h5. This undefended bishop is what makes White's next move possible. Instead of this move, Black avoids the trap with 5...Bxf3, taking the knight, or by retreating with 5...Be6.</li>
+      <li style="margin:0 0 8px;"><strong>6. Nxe5!! (Légal!)</strong> Here's the Légal Trap! White ignores the pin and captures the black pawn that was on e5 with the knight. It's a surprising move that leaves White's queen on d1 to be taken. If Black recaptures the knight with 6...Nxe5 instead of taking the queen, White plays 7.Qxh5, winning back the undefended bishop and ending up a pawn ahead. If White took on e5 right away on move five without playing h3, Black could recapture with 5...Nxe5. Then the knight on e5 would protect the bishop on g4, so White couldn't win it back and would simply lose material. Getting the bishop to h5 with h3 first is essential for this trap.</li>
+      <li style="margin:0 0 8px;"><strong>6...Bxd1??</strong> Black's bishop captures the white queen that was on d1. Black is delighted to win the queen, but this is the decisive mistake. If Black had recaptured with 6...dxe5 or 6...Nxe5 instead, Black would have lost only about a pawn.</li>
+      <li style="margin:0 0 8px;"><strong>7. Bxf7+</strong> White's bishop captures the black pawn that was on f7, giving check. White's bishop is protected by the e5 knight, so Black's king can't take it. The only square Black's king can escape to is e7.</li>
+      <li style="margin:0 0 8px;"><strong>7...Ke7</strong> Black moves the king to e7. Black has no other legal move.</li>
+      <li style="margin:0 0 8px;"><strong>8. Nd5#</strong> White moves the knight to d5 — checkmate! White's d5 knight gives check to the king on e7, and every escape square is covered by White's pieces. d7 is covered by the e5 knight, e6 and e8 by the f7 bishop, and f6 by the d5 knight, while d8 and f8 are blocked by Black's own pieces. White gave up the queen, yet delivered mate with just three minor pieces — two knights and a bishop. Game over! Set it up on a board yourself and check the mating pattern.</li>
+    </ul>
+  </section>
+
   <footer>© KitsuneChess</footer>
 </div>
 

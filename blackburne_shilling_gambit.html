@@ -137,6 +137,47 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
     <div class="board-grid" id="boardGrid"></div>
   </div>
 
+
+  <!-- 手順と解説のまとめ（ページを開いたときから全部読めるように） -->
+  <section id="moveSummary" style="margin:24px 0 8px;background:var(--card-bg,#fffaf0);border:2px solid var(--brown-light,#d8b88a);border-radius:12px;padding:14px 18px;line-height:1.75;">
+    <h2 class="lang-element-ja" style="font-size:1.15rem;margin:0 0 8px;">📜 手順と解説のまとめ</h2>
+    <h2 class="lang-element-en" style="font-size:1.15rem;margin:0 0 8px;">📜 All Moves Explained</h2>
+    <p class="lang-element-ja" style="margin:0 0 8px;">ブラックバーン・シリング・ギャンビットのレッスンを始めるよ！このページでは、黒が3...Nd4でわざとe5のポーンを取らせ、白が欲張って駒を取り続けたときに、7手で詰まされてしまう流れを見ていくよ。白がどこで間違えたのか、どの手なら罠を避けられたのかがポイントなんだ。一手ずつジーンと一緒に、なぜその手を指すのかを学んでいこう。</p>
+    <p class="lang-element-en" style="margin:0 0 8px;">Let's start the Blackburne Shilling Gambit lesson! On this page we follow how Black deliberately gives up the e5 pawn with 3...Nd4, and how White gets mated in seven moves after greedily grabbing material. The key is where White went wrong and which moves would have avoided the trap. Jene will walk you through why each move is played, one step at a time.</p>
+    <ul class="lang-element-ja" style="margin:0;padding-left:0;list-style:none;">
+      <li style="margin:0 0 8px;"><strong>1. e4</strong> 白はポーンをe4へ進めるよ。白は中央のマスを押さえながら、ビショップとクイーンが動く道を開けるんだ。</li>
+      <li style="margin:0 0 8px;"><strong>1...e5</strong> 黒はポーンをe5へ進めるよ。黒も同じように中央を押さえて、白のポーンと向かい合う形を作るんだ。</li>
+      <li style="margin:0 0 8px;"><strong>2. Nf3</strong> 白はナイトをf3へ進めるよ。白のナイトは展開しながら、黒のe5のポーンを攻撃しているんだ。</li>
+      <li style="margin:0 0 8px;"><strong>2...Nc6</strong> 黒はナイトをc6へ進めるよ。黒はナイトを展開しながら、e5のポーンを守るんだ。</li>
+      <li style="margin:0 0 8px;"><strong>3. Bc4</strong> 白はビショップをc4へ進めるよ。白のビショップは、キングしか守っていない黒のf7のポーンをねらっているんだ。白はこの形から<a href='italian.html'>イタリアン・ゲーム</a>に入っていくよ。</li>
+      <li style="margin:0 0 8px;"><strong>3...Nd4?!（罠の始まり！）</strong> ここがブラックバーン・シリング・ギャンビットの一手！黒はナイトをd4へ進めて、白のf3のナイトを攻撃するよ。この手でc6のナイトがいなくなるので、黒のe5のポーンを守る駒はなくなるんだ。黒はわざとe5を取らせて、白を罠に誘っているよ。その代わり、白が正しく応じると、黒は駒の展開で遅れて不利になってしまうんだ。</li>
+      <li style="margin:0 0 8px;"><strong>4. Nxe5?</strong> 白はナイトでe5にいた黒のポーンを取るよ。白はポーンを1つ得して、f7のポーンもねらっているんだ。白は得をしたつもりでいるけれど、これが罠への入り口なんだ。 白はこの手の代わりに4.Nxd4と黒のナイトを取ったり、4.O-Oとキャスリングしたりすれば、罠を避けて有利に進められるよ。</li>
+      <li style="margin:0 0 8px;"><strong>4...Qg5!</strong> 黒はクイーンをg5へ進めるよ。黒のクイーンはe5の白のナイトと、守りのない白のg2のポーンを同時にねらっているんだ。白がここで落ち着いて応じれば問題はないけれど、白は欲張ってしまうよ。</li>
+      <li style="margin:0 0 8px;"><strong>5. Nxf7??</strong> 白はナイトでf7にいた黒のポーンを取るよ。白のナイトはg5の黒のクイーンとh8のルークを同時にねらっているけれど、白はg2のポーンの守りを忘れているんだ。</li>
+      <li style="margin:0 0 8px;"><strong>5...Qxg2!</strong> 黒はクイーンでg2にいた白のポーンを取るよ。黒のクイーンはh1の白のルークを攻撃していて、白の陣地に深く入り込んだんだ。</li>
+      <li style="margin:0 0 8px;"><strong>6. Rf1</strong> 白はルークをf1へ逃がすよ。白はルークを守ったつもりだけど、白のキングのまわりはルークやビショップ、クイーンで囲まれていて、動けるマスがほとんどないんだ。</li>
+      <li style="margin:0 0 8px;"><strong>6...Qxe4+</strong> 黒はクイーンでe4にいた白のポーンを取ってチェックをかけるよ。白がこのチェックを受ける方法は、Be2かQe2の2つしかないんだ。</li>
+      <li style="margin:0 0 8px;"><strong>7. Be2??</strong> 白はビショップをe2へ動かして、チェックをさえぎるよ。白のe2のビショップはe4の黒のクイーンにピンされていて、動くとキングが取られてしまうので、もう動けないんだ。白はこの手の代わりに7.Qe2と受ければ、すぐに詰まされることは避けられたよ。</li>
+      <li style="margin:0 0 8px;"><strong>7...Nf3#</strong> 黒はナイトをf3へ進めて、チェックメイト！黒のf3のナイトがe1の白のキングにチェックをかけているんだ。白のキングのまわりのd1・d2・e2・f1・f2のマスは、すべて白自身の駒でふさがれていて、キングは逃げられないよ。白のe2のビショップはf3のナイトを取れる位置にいるけれど、黒のクイーンにピンされているので取れないんだ。これでゲーム終了！自分でも盤に並べて、詰みの形を確かめてみてね！</li>
+    </ul>
+    <ul class="lang-element-en" style="margin:0;padding-left:0;list-style:none;">
+      <li style="margin:0 0 8px;"><strong>1. e4</strong> White pushes the pawn to e4. White takes control of central squares and opens lines for the bishop and queen.</li>
+      <li style="margin:0 0 8px;"><strong>1...e5</strong> Black pushes the pawn to e5. Black also claims the center, setting up a pawn face-off with White.</li>
+      <li style="margin:0 0 8px;"><strong>2. Nf3</strong> White develops the knight to f3. White's knight develops while attacking Black's e5 pawn.</li>
+      <li style="margin:0 0 8px;"><strong>2...Nc6</strong> Black develops the knight to c6. Black develops a piece and defends the e5 pawn at the same time.</li>
+      <li style="margin:0 0 8px;"><strong>3. Bc4</strong> White develops the bishop to c4. White's bishop aims at Black's f7 pawn, which only the king defends. From here, White heads into the <a href='italian.html?lang=en'>Italian Game</a>.</li>
+      <li style="margin:0 0 8px;"><strong>3...Nd4?! (The trap begins!)</strong> Here's the Blackburne Shilling Gambit! Black moves the knight to d4, attacking White's f3 knight. With the knight gone from c6, nothing defends Black's e5 pawn anymore. Black deliberately lets White take e5 to lure White into a trap. The downside is that if White responds correctly, Black falls behind in development and ends up worse.</li>
+      <li style="margin:0 0 8px;"><strong>4. Nxe5?</strong> White's knight takes the black pawn that was on e5. White wins a pawn and also eyes the f7 pawn. White thinks it's gaining something, but this is the entrance to the trap. Instead of this move, White avoids the trap and keeps an edge with 4.Nxd4, capturing Black's knight, or by castling with 4.O-O.</li>
+      <li style="margin:0 0 8px;"><strong>4...Qg5!</strong> Black brings the queen to g5. Black's queen attacks White's knight on e5 and the undefended g2 pawn at the same time. If White stays calm here, there's no problem, but White gets greedy.</li>
+      <li style="margin:0 0 8px;"><strong>5. Nxf7??</strong> White's knight captures the black pawn that was on f7. White's knight now forks Black's queen on g5 and rook on h8, but White has forgotten about defending the g2 pawn.</li>
+      <li style="margin:0 0 8px;"><strong>5...Qxg2!</strong> Black's queen captures the white pawn that was on g2. Black's queen now attacks White's rook on h1 and has broken deep into White's camp.</li>
+      <li style="margin:0 0 8px;"><strong>6. Rf1</strong> White moves the rook to f1 to save it. White thinks the rook is safe, but White's king is now boxed in by its own rook, bishop and queen, with almost no squares to move to.</li>
+      <li style="margin:0 0 8px;"><strong>6...Qxe4+</strong> Black's queen captures the white pawn that was on e4, giving check. White has only two ways to answer this check: Be2 or Qe2.</li>
+      <li style="margin:0 0 8px;"><strong>7. Be2??</strong> White blocks the check by moving the bishop to e2. White's e2 bishop is now pinned by Black's queen on e4, so it can't move without exposing the king. If White had played 7.Qe2 instead of this move, the immediate mate could have been avoided.</li>
+      <li style="margin:0 0 8px;"><strong>7...Nf3#</strong> Black moves the knight to f3 — checkmate! Black's knight on f3 gives check to White's king on e1. The squares around White's king — d1, d2, e2, f1 and f2 — are all blocked by White's own pieces, so the king can't escape. White's e2 bishop could capture the f3 knight, but it's pinned by Black's queen, so it can't. Game over! Set it up on a board yourself and check the mating pattern.</li>
+    </ul>
+  </section>
+
   <footer>© KitsuneChess</footer>
 </div>
 

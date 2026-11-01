@@ -136,6 +136,47 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
     <div class="board-grid" id="boardGrid"></div>
   </div>
 
+
+  <!-- 手順と解説のまとめ（ページを開いたときから全部読めるように） -->
+  <section id="moveSummary" style="margin:24px 0 8px;background:var(--card-bg,#fffaf0);border:2px solid var(--brown-light,#d8b88a);border-radius:12px;padding:14px 18px;line-height:1.75;">
+    <h2 class="lang-element-ja" style="font-size:1.15rem;margin:0 0 8px;">📜 手順と解説のまとめ</h2>
+    <h2 class="lang-element-en" style="font-size:1.15rem;margin:0 0 8px;">📜 All Moves Explained</h2>
+    <p class="lang-element-ja" style="margin:0 0 8px;">ハンガリアン・ディフェンスのレッスンを始めるよ！このページでは、白が4.d4で中央を広げ、5.dxe5からクイーンを交換する変化を見ていくよ。クイーンがいなくなった後、両者がどう駒を展開していくのかがポイントなんだ。一手ずつジーンと一緒に、なぜその手を指すのかを学んでいこう。</p>
+    <p class="lang-element-en" style="margin:0 0 8px;">Let's start the Hungarian Defense lesson! On this page we follow the line where White expands with 4.d4 and then trades queens starting with 5.dxe5. The key is how both sides develop their pieces once the queens are gone. Jene will walk you through why each move is played, one step at a time.</p>
+    <ul class="lang-element-ja" style="margin:0;padding-left:0;list-style:none;">
+      <li style="margin:0 0 8px;"><strong>1. e4</strong> 白はポーンをe4へ進めるよ。白は中央のマスを押さえながら、ビショップとクイーンが動く道を開けるんだ。</li>
+      <li style="margin:0 0 8px;"><strong>1...e5</strong> 黒はポーンをe5へ進めるよ。黒も同じように中央を押さえて、白のポーンと向かい合う形を作るんだ。</li>
+      <li style="margin:0 0 8px;"><strong>2. Nf3</strong> 白はナイトをf3へ進めるよ。白のナイトは展開しながら、黒のe5のポーンを攻撃しているんだ。</li>
+      <li style="margin:0 0 8px;"><strong>2...Nc6</strong> 黒はナイトをc6へ進めるよ。黒はナイトを展開しながら、e5のポーンを守るんだ。</li>
+      <li style="margin:0 0 8px;"><strong>3. Bc4</strong> 白はビショップをc4へ進めるよ。白のビショップは、キングしか守っていない黒のf7のポーンをねらっているんだ。</li>
+      <li style="margin:0 0 8px;"><strong>3...Be7（ハンガリアン！）</strong> ここがハンガリアン・ディフェンスの一手！黒はビショップをe7へ進めて、g5のマスを見張りながらキャスリングの準備をするよ。一般的には3...Bc5の<a href='italian.html'>イタリアン・ゲーム（ジョコ・ピアノ）</a>や3...Nf6の<a href='two_knights.html'>トゥー・ナイツ・ディフェンス</a>が指されるけれど、黒はここで激しい変化を避けて、落ち着いた形を選ぶんだ。その代わり、黒のビショップはe7で控えめな位置にとどまり、白にスペースと自由な展開を許しやすいよ。</li>
+      <li style="margin:0 0 8px;"><strong>4. d4</strong> 白はポーンをd4へ進めるよ。白はこれでe5のポーンをナイトとポーンの2つで攻撃し、黒の守りはc6のナイト1つだけになるんだ。白は中央を広げて、黒の控えめな構えを試しにいくよ。</li>
+      <li style="margin:0 0 8px;"><strong>4...d6</strong> 黒はポーンをd6へ進めるよ。黒はこれでe5の守りを2つにして、中央のポーンを保つんだ。黒はこの手の代わりに4...exd4と取ることもでき、5.Nxd4と取り返されると<a href='scotch.html'>スコッチゲーム</a>に近い形になるよ。その代わり、黒のd6のポーンはe7のビショップの前をふさぐので、黒の駒は少し窮屈になるんだ。</li>
+      <li style="margin:0 0 8px;"><strong>5. dxe5</strong> 白はd4のポーンでe5にいた黒のポーンを取るよ。白はこの手の代わりに5.d5と中央を閉じたり、5.Nc3と緊張を保ったりすることもできるけれど、このページでは白が交換して局面を単純にする道を見ていくよ。白はここからクイーン交換を目指すんだ。</li>
+      <li style="margin:0 0 8px;"><strong>5...dxe5</strong> 黒はd6のポーンでe5に入った白のポーンを取り返すよ。黒がもしこの手の代わりに5...Nxe5と取ると、6.Nxe5 dxe5 7.Qh5で白のクイーンがe5のポーンとf7のポーンを同時にねらい、黒はポーンを1つ失ってしまうんだ。黒はポーンで取り返して、この罠をさけているよ。</li>
+      <li style="margin:0 0 8px;"><strong>6. Qxd8+</strong> 白はクイーンでd8にいた黒のクイーンを取ってチェックをかけるよ。白はクイーンを交換して、スペースと展開のリードが生きる、落ち着いた中盤に持ち込むんだ。その代わり、白はクイーンがいなくなることで、f7への直接の攻めはしにくくなるよ。</li>
+      <li style="margin:0 0 8px;"><strong>6...Bxd8</strong> 黒はビショップでd8に入った白のクイーンを取り返すよ。黒はキングで取り返すとキャスリングができなくなるので、ビショップで取ってキャスリングの権利を残すんだ。その代わり、黒のビショップはd8に下がり、しばらく働きの少ない位置にとどまるよ。</li>
+      <li style="margin:0 0 8px;"><strong>7. Nc3</strong> 白はナイトをc3へ進めるよ。白はナイトを展開しながらe4のポーンを守り、d5やb5のマスもにらむんだ。白は駒の展開で一歩リードしているよ。</li>
+      <li style="margin:0 0 8px;"><strong>7...Nf6</strong> 黒はナイトをf6へ進めるよ。黒はナイトを展開しながらe4のポーンを攻撃し、f8とg8のマスが空いたので、キングサイドへのキャスリングの準備もできるんだ。黒はこの手の代わりに7...f6とe5のポーンを固めることもできるよ。クイーンのない局面では白がややよいとされているけれど、黒の形も堅く、崩されにくい局面なんだ。これで本譜は一段落、続きはぜひ自分で指してみてね！</li>
+    </ul>
+    <ul class="lang-element-en" style="margin:0;padding-left:0;list-style:none;">
+      <li style="margin:0 0 8px;"><strong>1. e4</strong> White pushes the pawn to e4. White takes control of central squares and opens lines for the bishop and queen.</li>
+      <li style="margin:0 0 8px;"><strong>1...e5</strong> Black pushes the pawn to e5. Black also claims the center, setting up a pawn face-off with White.</li>
+      <li style="margin:0 0 8px;"><strong>2. Nf3</strong> White develops the knight to f3. White's knight develops while attacking Black's e5 pawn.</li>
+      <li style="margin:0 0 8px;"><strong>2...Nc6</strong> Black develops the knight to c6. Black develops a piece and defends the e5 pawn at the same time.</li>
+      <li style="margin:0 0 8px;"><strong>3. Bc4</strong> White develops the bishop to c4. White's bishop aims at Black's f7 pawn, which only the king defends.</li>
+      <li style="margin:0 0 8px;"><strong>3...Be7 (Hungarian!)</strong> Here's the Hungarian Defense! Black develops the bishop to e7, watching the g5 square and preparing to castle. The usual moves here are 3...Bc5, the <a href='italian.html?lang=en'>Italian Game (Giuoco Piano)</a>, or 3...Nf6, the <a href='two_knights.html?lang=en'>Two Knights Defense</a>, but Black avoids sharp lines and chooses a calm setup. The cost is that Black's bishop sits modestly on e7, which tends to give White more space and freer development.</li>
+      <li style="margin:0 0 8px;"><strong>4. d4</strong> White pushes the pawn to d4. White now attacks the e5 pawn twice, with the knight and pawn, while Black defends it only with the c6 knight. White expands in the center to test Black's modest setup.</li>
+      <li style="margin:0 0 8px;"><strong>4...d6</strong> Black pushes the pawn to d6. Black now defends e5 twice and holds on to the central pawn. Instead of this move, Black could take with 4...exd4, and after 5.Nxd4 the game heads toward the <a href='scotch.html?lang=en'>Scotch Game</a>. The downside is that Black's d6 pawn blocks the e7 bishop's diagonal, leaving Black's pieces a bit cramped.</li>
+      <li style="margin:0 0 8px;"><strong>5. dxe5</strong> White's d4 pawn captures the black pawn that was on e5. Instead of this move, White could close the center with 5.d5 or keep the tension with 5.Nc3, but on this page we follow the line where White trades and simplifies. White is heading for a queen trade.</li>
+      <li style="margin:0 0 8px;"><strong>5...dxe5</strong> Black's d6 pawn takes back the white pawn that landed on e5. If Black took with 5...Nxe5 instead of this move, then after 6.Nxe5 dxe5 7.Qh5 White's queen attacks both the e5 and f7 pawns, and Black loses a pawn. By recapturing with the pawn, Black avoids this trap.</li>
+      <li style="margin:0 0 8px;"><strong>6. Qxd8+</strong> White's queen captures the black queen that was on d8, giving check. White trades queens and steers the game into a calm middlegame where White's space and development lead can count. The trade-off is that without queens, White's direct attacking chances against f7 become smaller.</li>
+      <li style="margin:0 0 8px;"><strong>6...Bxd8</strong> Black's bishop takes back the white queen that landed on d8. Taking back with the king would give up castling, so Black uses the bishop and keeps the right to castle. The downside is that Black's bishop drops back to d8, where it stays fairly inactive for a while.</li>
+      <li style="margin:0 0 8px;"><strong>7. Nc3</strong> White develops the knight to c3. White develops while defending the e4 pawn, and the knight also eyes the d5 and b5 squares. White is a step ahead in development.</li>
+      <li style="margin:0 0 8px;"><strong>7...Nf6</strong> Black develops the knight to f6. Black develops while attacking the e4 pawn, and with f8 and g8 now clear, Black is ready to castle kingside. Instead of this move, Black can shore up the e5 pawn with 7...f6. In this queenless position White is considered slightly better, but Black's setup is solid and hard to break down. That's the main line — try continuing the game yourself from here!</li>
+    </ul>
+  </section>
+
   <footer>© KitsuneChess</footer>
 </div>
 

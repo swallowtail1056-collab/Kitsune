@@ -139,6 +139,57 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
     <div class="board-grid" id="boardGrid"></div>
   </div>
 
+
+  <!-- 手順と解説のまとめ（ページを開いたときから全部読めるように） -->
+  <section id="moveSummary" style="margin:24px 0 8px;background:var(--card-bg,#fffaf0);border:2px solid var(--brown-light,#d8b88a);border-radius:12px;padding:14px 18px;line-height:1.75;">
+    <h2 class="lang-element-ja" style="font-size:1.15rem;margin:0 0 8px;">📜 手順と解説のまとめ</h2>
+    <h2 class="lang-element-en" style="font-size:1.15rem;margin:0 0 8px;">📜 All Moves Explained</h2>
+    <p class="lang-element-ja" style="margin:0 0 8px;">アレヒン・ディフェンスのレッスンを始めるよ！このページでは、白が3.d4と4.Nf3で落ち着いて中央を固める、モダン・バリエーションを見ていくよ。黒がビショップをg4に出して、白の広がった中央にどう働きかけるのかがポイントなんだ。一手ずつジーンと一緒に、なぜその手を指すのかを学んでいこう。</p>
+    <p class="lang-element-en" style="margin:0 0 8px;">Let's start the Alekhine Defense lesson! On this page we follow the Modern Variation, where White calmly reinforces the center with 3.d4 and 4.Nf3. The key is how Black brings the bishop to g4 and challenges White's broad center. Jene will walk you through why each move is played, one step at a time.</p>
+    <ul class="lang-element-ja" style="margin:0;padding-left:0;list-style:none;">
+      <li style="margin:0 0 8px;"><strong>1. e4</strong> 白はポーンをe4へ進めるよ。白は中央のマスを押さえながら、ビショップとクイーンが動く道を開けるんだ。</li>
+      <li style="margin:0 0 8px;"><strong>1...Nf6（アレヒン！）</strong> ここがアレヒン・ディフェンスの一手！黒はナイトをf6へ進めて、白のe4のポーンを攻撃するよ。一般的には1...e5や1...c5で中央にポーンを出すことが多いけれど、黒はここでナイトを先に出して、白のポーンを前へ誘い出す道を選ぶんだ。白のポーンが前に出すぎると、あとで攻撃の的にしやすくなる、というのが黒のねらいだよ。</li>
+      <li style="margin:0 0 8px;"><strong>2. e5</strong> 白はポーンをe5へ進めて、黒のナイトを攻撃するよ。白のe5のポーンはf6とd6のマスに利いていて、黒のナイトはf6にいられなくなるんだ。</li>
+      <li style="margin:0 0 8px;"><strong>2...Nd5</strong> 黒はナイトをd5へ逃がすよ。黒のナイトは中央のd5から、c3やe3、b4やf4のマスに利いているんだ。</li>
+      <li style="margin:0 0 8px;"><strong>3. d4</strong> 白はポーンをd4へ進めるよ。白はe5のポーンをd4のポーンで守って、中央を大きく押さえるんだ。</li>
+      <li style="margin:0 0 8px;"><strong>3...d6</strong> 黒はポーンをd6へ進めるよ。黒は白のe5のポーンを攻撃して、前に出てきたポーンに働きかけるんだ。白のe5のポーンは、今はd4のポーンだけに守られているよ。</li>
+      <li style="margin:0 0 8px;"><strong>4. Nf3</strong> 白はナイトをf3へ進めるよ。白はe5のポーンを守る駒を2つに増やして、キングサイドの展開も進めるんだ。 白はこの手の代わりに4.c4と突いて、そのあと5.f4までポーンを並べる、4ポーンズ・アタックという激しい形を選ぶこともできるよ。</li>
+      <li style="margin:0 0 8px;"><strong>4...Bg4</strong> 黒はビショップをg4へ進めるよ。黒のビショップは、e5を守っている白のf3のナイトに利いて、その後ろのd1のクイーンとの間でピンしているんだ。黒はe6と突く前に、c8のビショップをポーンの外に出しておくよ。 黒はこの手の代わりに4...g6でビショップをg7へ出す形や、4...dxe5と中央のポーンを交換する形も、よく指されるよ。</li>
+      <li style="margin:0 0 8px;"><strong>5. Be2</strong> 白はビショップをe2へ進めるよ。白のビショップはf3のナイトとd1のクイーンの間に入ってピンを外し、f3のナイトを守るんだ。これでf1とg1のマスが空いて、白は次の手でキャスリングできるよ。</li>
+      <li style="margin:0 0 8px;"><strong>5...e6</strong> 黒はポーンをe6へ進めるよ。黒はd5のナイトをe6のポーンで支えて、f8のビショップの道も開けるんだ。</li>
+      <li style="margin:0 0 8px;"><strong>6. O-O</strong> 白はキャスリングでキングを安全な場所へ動かすよ。白のキングはg1へ移り、h1にいたルークはf1へ出てくるんだ。</li>
+      <li style="margin:0 0 8px;"><strong>6...Be7</strong> 黒はビショップをe7へ進めるよ。これでf8とg8のマスが空いて、黒は次の手でキャスリングできるんだ。</li>
+      <li style="margin:0 0 8px;"><strong>7. h3</strong> 白はポーンをh3へ進めるよ。白はg4にいる黒のビショップを攻撃して、ビショップを下がらせるか、f3のナイトと交換するかを黒に決めさせるんだ。</li>
+      <li style="margin:0 0 8px;"><strong>7...Bh5</strong> 黒はビショップをh5へ下げるよ。黒のビショップはh5からもf3のナイトに利き続けて、白にプレッシャーをかけ続けるんだ。</li>
+      <li style="margin:0 0 8px;"><strong>8. c4</strong> 白はポーンをc4へ進めるよ。白はd5にいる黒のナイトを攻撃して、中央のスペースをさらに広げるんだ。</li>
+      <li style="margin:0 0 8px;"><strong>8...Nb6</strong> 黒はナイトをb6へ下げるよ。黒のナイトはb6から白のc4のポーンに利いて、白の広がった中央に働きかけ続けるんだ。白のc4のポーンは、e2のビショップに守られているよ。</li>
+      <li style="margin:0 0 8px;"><strong>9. Nc3</strong> 白はナイトをc3へ進めるよ。白のナイトはまだ空いているd5のマスに利いて、黒のナイトがd5に戻ってくるのを防ぐんだ。</li>
+      <li style="margin:0 0 8px;"><strong>9...O-O</strong> 黒はキャスリングでキングを安全な場所へ動かすよ。黒のキングはg8へ移り、h8にいたルークはf8へ出てくるんだ。</li>
+      <li style="margin:0 0 8px;"><strong>10. Be3</strong> 白はビショップをe3へ進めるよ。白のビショップはd4のポーンを守りながら、まだ空いているc5のマスにも利かせて、黒がc5と突くのをけん制しているんだ。白は中央に大きなスペースを持ち、黒はd5やf6、c5と突いて、白の中央をくずしにいくのが典型的な流れだよ。これで本譜は一段落、続きはぜひ自分で指してみてね！</li>
+    </ul>
+    <ul class="lang-element-en" style="margin:0;padding-left:0;list-style:none;">
+      <li style="margin:0 0 8px;"><strong>1. e4</strong> White pushes the pawn to e4. White takes control of central squares and opens lines for the bishop and queen.</li>
+      <li style="margin:0 0 8px;"><strong>1...Nf6 (Alekhine!)</strong> Here's the Alekhine Defense! Black develops the knight to f6 and attacks White's e4 pawn. Black usually puts a pawn in the center with 1...e5 or 1...c5, but here Black brings the knight out first to lure White's pawns forward. Black's idea is that pawns which advance too far become easier targets later.</li>
+      <li style="margin:0 0 8px;"><strong>2. e5</strong> White pushes the pawn to e5, attacking Black's knight. White's e5 pawn covers f6 and d6, so Black's knight can't stay on f6.</li>
+      <li style="margin:0 0 8px;"><strong>2...Nd5</strong> Black moves the knight to d5. From the central d5 square, Black's knight covers c3, e3, b4 and f4.</li>
+      <li style="margin:0 0 8px;"><strong>3. d4</strong> White pushes the pawn to d4. White defends the e5 pawn with the d4 pawn and takes a big grip on the center.</li>
+      <li style="margin:0 0 8px;"><strong>3...d6</strong> Black pushes the pawn to d6. Black attacks White's e5 pawn and challenges the pawn that has come forward. Right now White's e5 pawn is defended only by the d4 pawn.</li>
+      <li style="margin:0 0 8px;"><strong>4. Nf3</strong> White develops the knight to f3. White adds a second defender to the e5 pawn and continues kingside development. Instead of this move, White can also play 4.c4 and follow up with 5.f4, lining up four pawns in the sharp Four Pawns Attack.</li>
+      <li style="margin:0 0 8px;"><strong>4...Bg4</strong> Black develops the bishop to g4. Black's bishop hits White's f3 knight, which is defending e5, and pins it to the queen on d1 behind it. Black gets the c8 bishop outside the pawn chain before playing ...e6. Instead of this move, Black also often plays 4...g6 to put the bishop on g7, or trades in the center with 4...dxe5.</li>
+      <li style="margin:0 0 8px;"><strong>5. Be2</strong> White develops the bishop to e2. White's bishop steps between the f3 knight and the d1 queen, breaking the pin and defending the knight. This also clears f1 and g1, so White can castle on the next move.</li>
+      <li style="margin:0 0 8px;"><strong>5...e6</strong> Black pushes the pawn to e6. Black supports the d5 knight with the e6 pawn and opens the path for the f8 bishop.</li>
+      <li style="margin:0 0 8px;"><strong>6. O-O</strong> White castles, bringing the king to safety. White's king goes to g1, and the rook from h1 comes to f1.</li>
+      <li style="margin:0 0 8px;"><strong>6...Be7</strong> Black develops the bishop to e7. This clears f8 and g8, so Black can castle on the next move.</li>
+      <li style="margin:0 0 8px;"><strong>7. h3</strong> White pushes the pawn to h3. White attacks Black's bishop on g4 and makes Black decide whether to retreat it or trade it for the f3 knight.</li>
+      <li style="margin:0 0 8px;"><strong>7...Bh5</strong> Black retreats the bishop to h5. From h5, Black's bishop keeps hitting the f3 knight and maintains the pressure on White.</li>
+      <li style="margin:0 0 8px;"><strong>8. c4</strong> White pushes the pawn to c4. White attacks Black's knight on d5 and gains even more central space.</li>
+      <li style="margin:0 0 8px;"><strong>8...Nb6</strong> Black retreats the knight to b6. From b6, Black's knight hits White's c4 pawn and keeps putting pressure on White's broad center. White's c4 pawn is defended by the e2 bishop.</li>
+      <li style="margin:0 0 8px;"><strong>9. Nc3</strong> White develops the knight to c3. White's knight covers the empty d5 square, stopping Black's knight from coming back there.</li>
+      <li style="margin:0 0 8px;"><strong>9...O-O</strong> Black castles, bringing the king to safety. Black's king goes to g8, and the rook from h8 comes to f8.</li>
+      <li style="margin:0 0 8px;"><strong>10. Be3</strong> White develops the bishop to e3. White's bishop defends the d4 pawn and also covers the empty c5 square, discouraging Black from pushing ...c5. White has a lot of central space, and the typical plan for Black is to undermine White's center with ...d5, ...f6 or ...c5. That's the main line — try continuing the game yourself from here!</li>
+    </ul>
+  </section>
+
   <footer>© KitsuneChess</footer>
 </div>
 

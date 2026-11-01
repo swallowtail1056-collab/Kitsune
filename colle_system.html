@@ -134,6 +134,45 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
     <div class="board-grid" id="boardGrid"></div>
   </div>
 
+
+  <!-- 手順と解説のまとめ（ページを開いたときから全部読めるように） -->
+  <section id="moveSummary" style="margin:24px 0 8px;background:var(--card-bg,#fffaf0);border:2px solid var(--brown-light,#d8b88a);border-radius:12px;padding:14px 18px;line-height:1.75;">
+    <h2 class="lang-element-ja" style="font-size:1.15rem;margin:0 0 8px;">📜 手順と解説のまとめ</h2>
+    <h2 class="lang-element-en" style="font-size:1.15rem;margin:0 0 8px;">📜 All Moves Explained</h2>
+    <p class="lang-element-ja" style="margin:0 0 8px;">コーレ・システムのレッスンを始めるよ！シンプルで覚えやすいけど、コンビネーション攻撃が楽しい実戦的なd4システムだよ。ジーンと一緒に、一手ずつ「なぜその手を指すのか」を学んでいこう。</p>
+    <p class="lang-element-en" style="margin:0 0 8px;">Let's start the Colle System lesson! Simple to learn, yet full of exciting combination attacks. Jene will explain why each move is played, one step at a time.</p>
+    <ul class="lang-element-ja" style="margin:0;padding-left:0;list-style:none;">
+      <li style="margin:0 0 8px;"><strong>1. d4</strong> 白はd4で中央を制圧するよ。中央のマスを押さえることで、この先すべての駒がより広いスペースで自由に動けるようになるんだ。1.e4と並んで、最も自然で信頼されている初手の一つだよ。</li>
+      <li style="margin:0 0 8px;"><strong>1...d5</strong> 黒も同じくd5で対抗するよ。白と同じように中央を分け合うことで、序盤で不利にならないようにするんだ。白のd4ポーンをにらみながら、こちらも駒を自由に展開できる土台を作るよ。</li>
+      <li style="margin:0 0 8px;"><strong>2. Nf3</strong> 白はナイトをf3に展開するよ。序盤の基本として、ポーンの次はまずナイトやビショップといった軽い駒を早めに動かすのが定石なんだ。f3のマスはd4ポーンも間接的に支えつつ、この先のキャスリングにも向けた自然な一手だよ。</li>
+      <li style="margin:0 0 8px;"><strong>2...Nf6</strong> 黒もナイトをf6へ展開するよ。白と同じ発想で、まずは軽い駒を素早く働かせるんだ。f6のナイトは中央のe4・d5のマスをにらみながら、この先のキングサイドのキャスリングにも役立つよ。</li>
+      <li style="margin:0 0 8px;"><strong>3. e3（コーレ！）</strong> ここが本題、コーレ・システムの一手！白はe3で、ビショップの展開ルートを用意するよ。</li>
+      <li style="margin:0 0 8px;"><strong>3...e6</strong> 黒はe6で柔軟に展開を準備するよ。</li>
+      <li style="margin:0 0 8px;"><strong>4. Bd3</strong> 白はビショップをd3へ展開するよ。これがコーレ・システムの核となる一手だよ。この先h7のポーンを狙う攻めにもつながるんだ。</li>
+      <li style="margin:0 0 8px;"><strong>4...c5</strong> 黒はc5で中央に圧力をかけるよ。</li>
+      <li style="margin:0 0 8px;"><strong>5. O-O</strong> 白はキャスリングでキングを安全な場所へ。</li>
+      <li style="margin:0 0 8px;"><strong>5...Nc6</strong> 黒はもう一つのナイトをc6へ展開するよ。まだ動いていない駒を働かせる、序盤の基本にしたがった一手だよ。c6のナイトはd4のポーンにもにらみを利かせつつ、この先b8のルークをどちらの方向にも使いやすくする、柔軟な展開なんだ。</li>
+      <li style="margin:0 0 8px;"><strong>6. Nbd2</strong> 白はナイトをd2へ展開するよ。c3のマスはこの後d4ポーンを支えるポーンのために空けておきたいから、ナイトはあえてc3ではなくd2に収めるんだ。これでコーレの基本陣形が完成するよ。</li>
+      <li style="margin:0 0 8px;"><strong>6...Bd6</strong> 黒はビショップをd6へ展開するよ。キングサイドのキャスリングにも備えるんだ。</li>
+      <li style="margin:0 0 8px;"><strong>7. c3</strong> 白はc3でd4ポーンを支えるよ。これで本譜は一段落、ここからNd2-f1-e3-g4のナイト機動やe3-e4の中央突破が狙えるんだ！</li>
+    </ul>
+    <ul class="lang-element-en" style="margin:0;padding-left:0;list-style:none;">
+      <li style="margin:0 0 8px;"><strong>1. d4</strong> White plays 1.d4, claiming the center. Controlling the central squares early gives every piece more room to work with later on — this is one of the two most natural and trusted first moves, alongside 1.e4.</li>
+      <li style="margin:0 0 8px;"><strong>1...d5</strong> Black mirrors with 1...d5, staking an equal claim to the center right away. This keeps things balanced early on and gives Black's own pieces room to develop, while also eyeing White's d4 pawn.</li>
+      <li style="margin:0 0 8px;"><strong>2. Nf3</strong> White develops the knight to f3. As a basic opening principle, it's good to bring out the light pieces — knights and bishops — early, before moving the same piece twice. f3 is a natural square that also supports future castling.</li>
+      <li style="margin:0 0 8px;"><strong>2...Nf6</strong> Black develops the knight to f6, following the same principle of getting the light pieces out quickly. This knight eyes the central e4 and d5 squares and also helps prepare kingside castling.</li>
+      <li style="margin:0 0 8px;"><strong>3. e3 (Colle!)</strong> Here's the Colle System move! White plays 3.e3, preparing a route for the bishop.</li>
+      <li style="margin:0 0 8px;"><strong>3...e6</strong> Black plays 3...e6, preparing flexible development.</li>
+      <li style="margin:0 0 8px;"><strong>4. Bd3</strong> White develops the bishop to d3, the heart of the Colle System, eyeing a future attack on the h7 pawn.</li>
+      <li style="margin:0 0 8px;"><strong>4...c5</strong> Black challenges the center with 4...c5.</li>
+      <li style="margin:0 0 8px;"><strong>5. O-O</strong> White castles kingside, tucking the king away safely.</li>
+      <li style="margin:0 0 8px;"><strong>5...Nc6</strong> Black develops the other knight to c6, bringing out a piece that hasn't moved yet — a basic opening principle. From c6 the knight also adds pressure on d4, and keeps the development flexible for whatever comes next.</li>
+      <li style="margin:0 0 8px;"><strong>6. Nbd2</strong> White develops the knight to d2 — not c3, since that square is reserved for the coming c3 pawn to support d4. This completes the basic Colle setup.</li>
+      <li style="margin:0 0 8px;"><strong>6...Bd6</strong> Black develops the bishop to d6, also preparing to castle kingside.</li>
+      <li style="margin:0 0 8px;"><strong>7. c3</strong> White supports d4 with 7.c3. That's the main line — from here White can aim for the Nd2-f1-e3-g4 knight maneuver or an e3-e4 central break!</li>
+    </ul>
+  </section>
+
   <footer>© KitsuneChess</footer>
 </div>
 

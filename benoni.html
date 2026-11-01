@@ -139,6 +139,57 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
     <div class="board-grid" id="boardGrid"></div>
   </div>
 
+
+  <!-- 手順と解説のまとめ（ページを開いたときから全部読めるように） -->
+  <section id="moveSummary" style="margin:24px 0 8px;background:var(--card-bg,#fffaf0);border:2px solid var(--brown-light,#d8b88a);border-radius:12px;padding:14px 18px;line-height:1.75;">
+    <h2 class="lang-element-ja" style="font-size:1.15rem;margin:0 0 8px;">📜 手順と解説のまとめ</h2>
+    <h2 class="lang-element-en" style="font-size:1.15rem;margin:0 0 8px;">📜 All Moves Explained</h2>
+    <p class="lang-element-ja" style="margin:0 0 8px;">ベノニ・ディフェンスのレッスンを始めるよ！このページでは、黒がe6とexd5で中央のポーンを交換する、モダン・ベノニの形を見ていくよ。白が中央、黒がクイーンサイドで多くのポーンを持つ形になり、お互いにどう戦うのかがポイントなんだ。一手ずつジーンと一緒に、なぜその手を指すのかを学んでいこう。</p>
+    <p class="lang-element-en" style="margin:0 0 8px;">Let's start the Benoni Defense lesson! On this page we follow the Modern Benoni, where Black trades in the center with ...e6 and ...exd5. White ends up with more pawns in the center and Black with more on the queenside, and the key is how each side fights from there. Jene will walk you through why each move is played, one step at a time.</p>
+    <ul class="lang-element-ja" style="margin:0;padding-left:0;list-style:none;">
+      <li style="margin:0 0 8px;"><strong>1. d4</strong> 白はポーンをd4へ進めるよ。白は中央のマスを押さえながら、c1のビショップの道を開けるんだ。</li>
+      <li style="margin:0 0 8px;"><strong>1...Nf6</strong> 黒はナイトをf6へ進めるよ。黒はナイトを展開しながら、白がe4と突くのをけん制するんだ。</li>
+      <li style="margin:0 0 8px;"><strong>2. c4</strong> 白はポーンをc4へ進めるよ。白はこれでd5のマスにも利かせて、中央を広げるんだ。</li>
+      <li style="margin:0 0 8px;"><strong>2...c5（ベノニ！）</strong> ここがベノニ・ディフェンスの一手！黒はポーンをc5へ進めて、白のd4のポーンを攻撃するよ。一般的には2...e6や2...g6で落ち着いて展開することが多いけれど、黒はここでc5と突いて、すぐに中央で戦う道を選ぶんだ。白のd4のポーンは、今はd1のクイーンだけに守られているよ。</li>
+      <li style="margin:0 0 8px;"><strong>3. d5</strong> 白はポーンをd5へ進めるよ。白はc5のポーンとの交換を避けて、黒の陣地に食い込み、スペースを広げるんだ。</li>
+      <li style="margin:0 0 8px;"><strong>3...e6</strong> 黒はポーンをe6へ進めるよ。黒は白のd5のポーンを攻撃して、e6のポーンとf6のナイトの2つでd5に働きかけるんだ。</li>
+      <li style="margin:0 0 8px;"><strong>4. Nc3</strong> 白はナイトをc3へ進めるよ。白はd5のポーンを守る駒を、c4のポーンとd1のクイーンと合わせて3つに増やすんだ。</li>
+      <li style="margin:0 0 8px;"><strong>4...exd5</strong> 黒はe6のポーンでd5にいた白のポーンを取るよ。黒は中央でポーンを交換して、白と黒でポーンの並び方がちがう形を作りにいくんだ。</li>
+      <li style="margin:0 0 8px;"><strong>5. cxd5</strong> 白はc4のポーンでd5に入った黒のポーンを取り返すよ。これで白は中央からキングサイドに、黒はクイーンサイドに、相手より多くのポーンを持つ形になったんだ。</li>
+      <li style="margin:0 0 8px;"><strong>5...d6</strong> 黒はポーンをd6へ進めるよ。黒は白のd5のポーンが前に進むのを止めて、まだ空いているe5のマスにも利かせるんだ。</li>
+      <li style="margin:0 0 8px;"><strong>6. e4</strong> 白はポーンをe4へ進めるよ。白はd5のポーンを支えて、中央に大きなポーンの壁を作るんだ。白は、あとでe5と突いて黒の陣地に食い込む作戦も考えられるよ。</li>
+      <li style="margin:0 0 8px;"><strong>6...g6</strong> 黒はポーンをg6へ進めるよ。黒はf8のビショップをg7へ出す準備をするんだ。</li>
+      <li style="margin:0 0 8px;"><strong>7. Nf3</strong> 白はナイトをf3へ進めるよ。白のナイトはまだ空いているe5のマスにも利いて、白はe5と突く準備を進めるんだ。</li>
+      <li style="margin:0 0 8px;"><strong>7...Bg7</strong> 黒はビショップをg7へ進めるよ。黒のビショップはh8からa1への長い斜めの列に入り、f6のナイトが動けば、白のクイーンサイドまで利くようになるんだ。これでf8とg8のマスが空いて、黒は次の手でキャスリングできるよ。</li>
+      <li style="margin:0 0 8px;"><strong>8. Be2</strong> 白はビショップをe2へ進めるよ。これでf1とg1のマスが空いて、白も次の手でキャスリングできるんだ。</li>
+      <li style="margin:0 0 8px;"><strong>8...O-O</strong> 黒はキャスリングでキングを安全な場所へ動かすよ。黒のキングはg8へ移り、h8にいたルークはf8へ出てくるんだ。</li>
+      <li style="margin:0 0 8px;"><strong>9. O-O</strong> 白もキャスリングでキングを安全な場所へ動かすよ。白のキングはg1へ移り、h1にいたルークはf1へ出てくるんだ。</li>
+      <li style="margin:0 0 8px;"><strong>9...Re8</strong> 黒はルークをe8へ動かすよ。黒のルークはeファイル（e1からe8の縦のマス）で白のe4のポーンに利いていて、黒はf6のナイトと合わせて2つでe4を攻撃する形になるんだ。白は今、c3のナイトだけでe4を守っているよ。</li>
+      <li style="margin:0 0 8px;"><strong>10. Nd2</strong> 白はナイトをd2へ動かすよ。白のナイトはe4のポーンを守って、e4を守る駒を2つに増やすんだ。白のナイトは、あとでc4へ出て、黒のd6のポーンに働きかけることもできるよ。白は中央のスペースを生かしてe5と突く機会をうかがい、黒はa6とb5と突いてクイーンサイドで反撃するのが典型的な流れだよ。これで本譜は一段落、続きはぜひ自分で指してみてね！</li>
+    </ul>
+    <ul class="lang-element-en" style="margin:0;padding-left:0;list-style:none;">
+      <li style="margin:0 0 8px;"><strong>1. d4</strong> White pushes the pawn to d4. White takes control of central squares and opens the path for the c1 bishop.</li>
+      <li style="margin:0 0 8px;"><strong>1...Nf6</strong> Black develops the knight to f6. Black develops while discouraging White from pushing e4.</li>
+      <li style="margin:0 0 8px;"><strong>2. c4</strong> White pushes the pawn to c4. White adds control of d5 and expands in the center.</li>
+      <li style="margin:0 0 8px;"><strong>2...c5 (Benoni!)</strong> Here's the Benoni Defense! Black pushes the pawn to c5 and attacks White's d4 pawn. Black usually develops calmly with 2...e6 or 2...g6, but here Black strikes with ...c5 and fights in the center right away. Right now White's d4 pawn is defended only by the queen on d1.</li>
+      <li style="margin:0 0 8px;"><strong>3. d5</strong> White pushes the pawn to d5. White avoids trading with the c5 pawn, pushes into Black's half of the board and gains space.</li>
+      <li style="margin:0 0 8px;"><strong>3...e6</strong> Black pushes the pawn to e6. Black attacks White's d5 pawn, now hitting it twice with the e6 pawn and the f6 knight.</li>
+      <li style="margin:0 0 8px;"><strong>4. Nc3</strong> White develops the knight to c3. Together with the c4 pawn and the d1 queen, White now has three defenders on d5.</li>
+      <li style="margin:0 0 8px;"><strong>4...exd5</strong> Black's e6 pawn captures White's pawn on d5. Black trades in the center to create an unbalanced pawn structure, with White and Black arranging their pawns differently.</li>
+      <li style="margin:0 0 8px;"><strong>5. cxd5</strong> White's c4 pawn recaptures Black's pawn on d5. Now White has more pawns in the center and on the kingside, while Black has more on the queenside.</li>
+      <li style="margin:0 0 8px;"><strong>5...d6</strong> Black pushes the pawn to d6. Black stops White's d5 pawn from advancing and also covers the empty e5 square.</li>
+      <li style="margin:0 0 8px;"><strong>6. e4</strong> White pushes the pawn to e4. White supports the d5 pawn and builds a big pawn wall in the center. Later, White can also consider pushing e5 to break into Black's position.</li>
+      <li style="margin:0 0 8px;"><strong>6...g6</strong> Black pushes the pawn to g6. Black prepares to bring the f8 bishop to g7.</li>
+      <li style="margin:0 0 8px;"><strong>7. Nf3</strong> White develops the knight to f3. White's knight also covers the empty e5 square as White prepares a possible e5 push.</li>
+      <li style="margin:0 0 8px;"><strong>7...Bg7</strong> Black develops the bishop to g7. Black's bishop takes up the long h8–a1 diagonal, and once the f6 knight moves, it will reach all the way to White's queenside. This also clears f8 and g8, so Black can castle on the next move.</li>
+      <li style="margin:0 0 8px;"><strong>8. Be2</strong> White develops the bishop to e2. This clears f1 and g1, so White can castle on the next move too.</li>
+      <li style="margin:0 0 8px;"><strong>8...O-O</strong> Black castles, bringing the king to safety. Black's king goes to g8, and the rook from h8 comes to f8.</li>
+      <li style="margin:0 0 8px;"><strong>9. O-O</strong> White also castles, bringing the king to safety. White's king goes to g1, and the rook from h1 comes to f1.</li>
+      <li style="margin:0 0 8px;"><strong>9...Re8</strong> Black moves the rook to e8. Black's rook hits White's e4 pawn along the e-file (the column of squares from e1 to e8), so Black now attacks e4 twice together with the f6 knight. Right now White is defending e4 only with the c3 knight.</li>
+      <li style="margin:0 0 8px;"><strong>10. Nd2</strong> White moves the knight to d2. White's knight defends the e4 pawn, giving White two defenders there. Later, the knight can also go to c4 to put pressure on Black's d6 pawn. The typical plan is for White to use the central space and look for a chance to push e5, while Black counterattacks by advancing the queenside pawns with ...a6 and ...b5. That's the main line — try continuing the game yourself from here!</li>
+    </ul>
+  </section>
+
   <footer>© KitsuneChess</footer>
 </div>
 
