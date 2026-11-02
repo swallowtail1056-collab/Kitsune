@@ -5826,15 +5826,17 @@ const PIECE_IMG = {
   }
   // 正確度からの大まかな目安（公式な計算方法ではない）
   function rvEstimateRating(acc, moveCount) {
-    if (acc == null || moveCount < 8) return null;
-    const pts = [[0, 200], [30, 300], [50, 600], [60, 850], [70, 1150], [80, 1500], [88, 1900], [94, 2300], [98, 2700], [100, 2900]];
+    // 短い対局は、たまたま正確度が高くなりやすいので出さない
+    if (acc == null || moveCount < 12) return null;
+    // ジーンの解析（軽いエンジン）は正確度が高めに出やすいので、低めに見積もる。上限は2200
+    const pts = [[0, 100], [40, 250], [55, 400], [65, 600], [75, 850], [82, 1100], [88, 1400], [93, 1700], [97, 2000], [100, 2200]];
     for (let i = 1; i < pts.length; i++) {
       if (acc <= pts[i][0]) {
         const [x0, y0] = pts[i - 1], [x1, y1] = pts[i];
         return Math.round((y0 + (y1 - y0) * (acc - x0) / (x1 - x0)) / 50) * 50;
       }
     }
-    return 2900;
+    return 2200;
   }
   function rvEvalLabel(ev) {
     if (!ev) return '';
@@ -6026,7 +6028,17 @@ const PIECE_IMG = {
             p.undo();
             if (g - (x.to === p.history({ verbose: true }).slice(-1)[0].to ? gotVal : 0) >= 1 && (!worst || g > worst.g)) worst = { g, x };
           });
-          if (worst) out.push(ja ? it.san + 'だと、' + worst.x.to + 'の' + nm(worst.x.captured) + 'を取られてしまうんだ。' : 'After ' + it.san + ', the ' + nm(worst.x.captured).toLowerCase() + ' on ' + worst.x.to + ' can be taken.');
+          // おすすめの手で取れたはずの相手の駒が、取りながら逃げてしまうときは、そちらを言う（例：d8のビショップがc7のポーンを取って逃げる）
+          const bestTo = it.best ? it.best.slice(2, 4) : '';
+          const bestCapPiece = (() => { try { const b0 = new Chess(it.fenBefore); const q = b0.get(bestTo); return q && q.color !== it.color && val(q.type) >= 3 ? q : null; /* ポーンのときは言わない */ } catch (e) { return null; } })();
+          let escape = null;
+          if (bestCapPiece) p.moves({ verbose: true }).forEach(x => { if (x.from === bestTo && (!escape || (x.captured && !escape.captured))) escape = x; });
+          if (escape && escape.captured) {
+            out.push(ja ? it.san + 'だと、' + bestTo + 'の' + nm(bestCapPiece.type) + 'が、' + escape.to + 'の' + nm(escape.captured) + 'を取りながら逃げてしまうんだ。'
+                        : 'After ' + it.san + ', the ' + nm(bestCapPiece.type).toLowerCase() + ' on ' + bestTo + ' escapes by taking the ' + nm(escape.captured).toLowerCase() + ' on ' + escape.to + '.');
+          } else if (escape) {
+            out.push(ja ? it.san + 'だと、' + bestTo + 'の' + nm(bestCapPiece.type) + 'に逃げられてしまうんだ。' : 'After ' + it.san + ', the ' + nm(bestCapPiece.type).toLowerCase() + ' on ' + bestTo + ' can escape.');
+          } else if (worst) out.push(ja ? it.san + 'だと、' + worst.x.to + 'の' + nm(worst.x.captured) + 'を取られてしまうんだ。' : 'After ' + it.san + ', the ' + nm(worst.x.captured).toLowerCase() + ' on ' + worst.x.to + ' can be taken.');
         }
       }
       // ③ 駒の損得やねらいで説明できないときは、形のちがい（ビショップ2つ・展開・ポーンの形など）で理由を言う
