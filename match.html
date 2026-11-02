@@ -402,6 +402,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <button id="aiBoardNavNextBtn">▶</button>
       <button id="aiBoardNavLiveBtn" style="display:none;margin-left:8px;background:#2d8a3e;" data-ja="● ライブに戻る" data-en="● Back to Live">● ライブに戻る</button>
     </div>
+    <button id="aiUndoBtn" type="button" data-ja="↩️ 待った" data-en="↩️ Take Back" style="margin-top:10px;">↩️ 待った</button>
     <button id="aiQuitBtn" data-ja="対局をやめる" data-en="Quit Game" style="margin-top:10px;">対局をやめる</button>
     <button id="aiHistoryToggleBtn" data-ja="📜 履歴を見る" data-en="📜 View History" style="margin-top:10px;">📜 履歴を見る</button>
     <div id="aiHistoryPanel" style="display:none;margin-top:10px;">
@@ -1433,6 +1434,7 @@ applyBoardTheme();
   let aiMoveHistory = [];
   let aiBoardPly = null; // null = ライブ(最新)局面。数値の時は過去の局面を閲覧中
   let aiDifficulty = 'easy';
+  let aiGen = 0; // 「待った」や新しい対局で、考え中のAIの手を取り消すための番号
   const AI_PIECE_VAL = { p: 1, n: 3, b: 3, r: 5, q: 9, k: 0 };
 
   function findKingSquare(boardArray, color) {
@@ -2234,10 +2236,13 @@ applyBoardTheme();
             showJeneWink('#aiBoard', findKingSquare(aiChess.board(), aiChess.turn()));
           }
           if (!aiChess.game_over()) {
+            const gen = aiGen;
             setTimeout(async () => {
+              if (gen !== aiGen || !aiChess) return; // 待ったをしたら、AIは指さない
               const aiMove = aiDifficulty === 'hard'
                 ? await stockfishPickMove(aiChess.fen(), 400)
                 : aiPickMove(aiChess, aiDifficulty);
+              if (gen !== aiGen || !aiChess) return;
               if (aiMove) {
                 aiChess.move(aiMove);
                 aiLastMove = { from: aiMove.from, to: aiMove.to };
@@ -2429,6 +2434,7 @@ applyBoardTheme();
   };
 
   function startAiGame(difficulty) {
+    aiGen++;
     aiDifficulty = difficulty;
     aiChess = new Chess();
     aiSelectedSquare = null;
@@ -2442,6 +2448,21 @@ applyBoardTheme();
     document.getElementById('aiGameArea').style.display = 'block';
     renderAiBoard();
   }
+  // ↩️ 待った：AIが指し返したあとは、AIの手と自分の手の2つを戻す。AIが考え中なら自分の手だけ戻す
+  document.getElementById('aiUndoBtn').onclick = () => {
+    if (!aiChess || !aiMoveHistory.length) return;
+    aiGen++;
+    const n = aiChess.turn() === 'w' ? Math.min(2, aiMoveHistory.length) : 1;
+    for (let i = 0; i < n; i++) { aiChess.undo(); aiMoveHistory.pop(); }
+    // 白（自分）の番になるまで戻す（念のため）
+    while (aiChess.turn() !== 'w' && aiMoveHistory.length) { aiChess.undo(); aiMoveHistory.pop(); }
+    const h = aiChess.history({ verbose: true });
+    const last = h[h.length - 1];
+    aiLastMove = last ? { from: last.from, to: last.to } : null;
+    aiSelectedSquare = null;
+    aiBoardPly = null;
+    renderAiBoard();
+  };
   document.getElementById('aiEasyBtn').onclick = () => startAiGame('easy');
   document.getElementById('aiMediumBtn').onclick = () => startAiGame('medium');
   document.getElementById('aiHardBtn').onclick = () => startAiGame('hard');
@@ -5933,11 +5954,20 @@ const PIECE_IMG = {
           const parts = [];
           if (bm.captured) {
             const net = val(bm.captured) - kcExchangeGain(c, bm.to);
-            if (net >= 1) {
+            // 実際に指した手でも同じだけ得をしているなら、駒の損得はちがいではないので言わない
+            let playedNet = -99;
+            try {
+              const pc = new Chess(it.fenBefore); const pm = pc.move(it.san);
+              if (pm && pm.captured) playedNet = val(pm.captured) - kcExchangeGain(pc, pm.to);
+            } catch (e) {}
+            if (net >= 1 && net > playedNet) {
               const traded = c.moves({ verbose: true }).some(x => x.to === bm.to && x.captured);
+              // 取り返されたあとに残る得は「取った駒」ではなく、差し引きの分（例：ナイトでビショップを取って、ポーンで取り返されたら、ポーン1つ分）
+              const gainJa = (n) => n === 1 ? 'ポーン1つ分' : n === 2 ? 'ポーン2つ分' : (n === 3 || n === 4) ? 'ナイトかビショップ1つ分' : (n >= 5 && n <= 6) ? 'ルーク1つ分' : n >= 8 ? 'クイーン1つ分' : n + '点分';
+              const gainEn = (n) => n === 1 ? 'a pawn' : n === 2 ? 'two pawns' : (n === 3 || n === 4) ? 'a minor piece' : (n >= 5 && n <= 6) ? 'a rook' : n >= 8 ? 'a queen' : n + ' points';
               parts.push(ja
-                ? bm.to + 'の' + nm(bm.captured) + 'を取って' + (traded ? '、取り返されても' + nm(bm.captured) + '1つ分得をする' : 'ただで得ができる')
-                : (traded ? 'wins the ' + nm(bm.captured).toLowerCase() + ' on ' + bm.to + ' even after the trade' : 'wins the ' + nm(bm.captured).toLowerCase() + ' on ' + bm.to + ' for free'));
+                ? bm.to + 'の' + nm(bm.captured) + 'を取って' + (traded ? '、取り返されても差し引きで' + gainJa(net) + '得をする' : 'ただで得ができる')
+                : (traded ? 'takes the ' + nm(bm.captured).toLowerCase() + ' on ' + bm.to + ' and comes out ' + gainEn(net) + ' ahead even after the trade' : 'wins the ' + nm(bm.captured).toLowerCase() + ' on ' + bm.to + ' for free'));
             }
           }
           // 動いた駒が次にねらえる駒（取ったら得になるもの）
@@ -5987,16 +6017,84 @@ const PIECE_IMG = {
         const p = new Chess(it.fenBefore);
         if (p.move(it.san) && !p.game_over()) {
           let worst = null;
+          // 指した手で駒を取っていたら、その分は差し引く（取って取り返されるだけなら「交換」で、損ではない）
+          let gotVal = 0;
+          try { const q = new Chess(it.fenBefore); const qm = q.move(it.san); if (qm && qm.captured) gotVal = val(qm.captured); } catch (e) {}
           p.moves({ verbose: true }).filter(x => x.captured && x.captured !== 'k').forEach(x => {
             p.move(x);
             const g = val(x.captured) - kcExchangeGain(p, x.to);
             p.undo();
-            if (g >= 1 && (!worst || g > worst.g)) worst = { g, x };
+            if (g - (x.to === p.history({ verbose: true }).slice(-1)[0].to ? gotVal : 0) >= 1 && (!worst || g > worst.g)) worst = { g, x };
           });
           if (worst) out.push(ja ? it.san + 'だと、' + worst.x.to + 'の' + nm(worst.x.captured) + 'を取られてしまうんだ。' : 'After ' + it.san + ', the ' + nm(worst.x.captured).toLowerCase() + ' on ' + worst.x.to + ' can be taken.');
         }
       }
+      // ③ 駒の損得やねらいで説明できないときは、形のちがい（ビショップ2つ・展開・ポーンの形など）で理由を言う
+      if (!out.length) { const pos = rvPositional(it); if (pos) out.push(pos); }
       return out.join(' ');
+    } catch (e) { return ''; }
+  }
+
+  // 「形勢をもっと良く保てた」の理由を、おすすめの手と実際の手のあとの形をくらべて見つける
+  function rvPositional(it) {
+    try {
+      if (!it.fenBefore || !it.best || !it.bestSan) return '';
+      const ja = LANG === 'ja';
+      const me = it.color, op = me === 'w' ? 'b' : 'w';
+      const val = (t) => PIECE_VALUE[t] || 0;
+      // 1手指して、取った駒がすぐ取り返せるなら、いちばん安い駒で取り返したところまで進める（交換のあとの形で比べる）
+      const play = (mv) => {
+        const c = new Chess(it.fenBefore);
+        const m = c.move(mv);
+        if (!m) return null;
+        if (m.captured) {
+          const rc = c.moves({ verbose: true }).filter(x => x.to === m.to && x.captured).sort((a, b) => val(a.piece) - val(b.piece))[0];
+          if (rc) c.move(rc);
+        }
+        return { c, m };
+      };
+      const A = play({ from: it.best.slice(0, 2), to: it.best.slice(2, 4), promotion: it.best[4] || 'q' });
+      const B = play(it.san);
+      if (!A || !B) return '';
+      const count = (c, color, type) => { let n = 0; c.board().forEach(r => r.forEach(q => { if (q && q.color === color && q.type === type) n++; })); return n; };
+      const doubled = (c, color) => { const f = {}; c.board().forEach(r => r.forEach((q, i) => { if (q && q.color === color && q.type === 'p') f[i] = (f[i] || 0) + 1; })); return Object.values(f).filter(v => v >= 2).length; };
+      const castle = (c, color) => { const cr = c.fen().split(' ')[2]; return color === 'w' ? /[KQ]/.test(cr) : /[kq]/.test(cr); };
+      const mobility = (c) => { const f = c.fen().split(' '); f[1] = me; f[3] = '-'; try { return new Chess(f.join(' ')).moves().length; } catch (e) { return 0; } };
+      const center = (c) => ['d4', 'd5', 'e4', 'e5'].filter(sq => { const q = c.get(sq); return q && q.color === me; }).length;
+      const home = me === 'w' ? '1' : '8';
+      const fullmove = parseInt(it.fenBefore.split(' ')[5] || '1', 10);
+      const R = [];
+      let note = '';
+      // ビショップ2つ
+      if (count(A.c, me, 'b') >= 2 && count(B.c, me, 'b') < 2)
+        { R.push(ja ? 'ビショップを2つとも残せる' : 'keeps both bishops'); note = ja ? 'ビショップが2つそろうと、白いマスと黒いマスの両方で働けるので強いんだ。' : 'A bishop pair is strong because it works on both light and dark squares.'; }
+      // キャスリング
+      if (castle(A.c, me) && !castle(B.c, me))
+        R.push(ja ? 'キャスリングできる権利を残せる' : 'keeps the right to castle');
+      // 展開（序盤だけ）
+      const dev = (m) => (m.piece === 'n' || m.piece === 'b') && m.from[1] === home;
+      if (fullmove <= 12 && dev(A.m) && !dev(B.m))
+        R.push(ja ? 'まだ動いていない駒を出して、展開を進められる' : 'develops a piece that has not moved yet');
+      // ポーンの形
+      if (doubled(B.c, me) > doubled(A.c, me))
+        R.push(ja ? '自分のポーンが縦に2つ並ぶ形（ダブルポーン）を避けられる' : 'avoids doubled pawns for yourself');
+      else if (doubled(A.c, op) > doubled(B.c, op))
+        R.push(ja ? '相手のポーンを縦に2つ並ばせて（ダブルポーン）、形を悪くできる' : 'gives the opponent doubled pawns');
+      // キングの守り（キャスリングしたあと、キングの前のポーンを動かした）
+      const kingSide = (c) => { let k = null; c.board().forEach((r, ri) => r.forEach((q, ci) => { if (q && q.type === 'k' && q.color === me) k = ci; })); return k; };
+      const kc = kingSide(new Chess(it.fenBefore));
+      if (kc !== null && (kc >= 6 || kc <= 2) && B.m.piece === 'p' && Math.abs(B.m.from.charCodeAt(0) - 97 - kc) <= 1 && !(A.m.piece === 'p' && Math.abs(A.m.from.charCodeAt(0) - 97 - kc) <= 1))
+        R.push(ja ? 'キングの前のポーンを動かさずに、守りを固く保てる' : 'keeps the pawns in front of your king in place, so your king stays safe');
+      // 中央
+      if (center(A.c) - center(B.c) >= 1)
+        R.push(ja ? '中央のマスに駒やポーンを置ける' : 'puts a piece or pawn in the center');
+      // 駒の働き
+      if (mobility(A.c) - mobility(B.c) >= 6)
+        R.push(ja ? '駒が動ける場所が増えて、駒がよく働く' : 'gives your pieces more room to move');
+      if (!R.length) return '';
+      const r = R.slice(0, 2);
+      const head = ja ? it.bestSan + 'なら、' + r.join('うえに、') + 'んだ。' : it.bestSan + ' ' + r.join(', and ') + '.';
+      return note && r[0] === R[0] && /ビショップを2つ|both bishops/.test(r[0]) ? head + ' ' + note : head;
     } catch (e) { return ''; }
   }
 
@@ -6955,7 +7053,7 @@ const PIECE_IMG = {
     const takebackBtnEl = document.getElementById('takebackBtn');
     const drawOfferAreaEl = document.getElementById('drawOfferArea');
     const oppColor = myColor === 'w' ? 'b' : 'w';
-    const canRequestTakeback = (m.moves || []).length > 0;
+    const canRequestTakeback = kcTakebackCount(m.moves || [], myColor) > 0; // 自分が1手以上指していれば申し出られる
 
     if (!gameIsActive) {
       resignBtnEl.style.display = 'none';
@@ -7255,16 +7353,25 @@ const PIECE_IMG = {
     if (latestMatchData) renderMiniBoard(latestMatchData, auth.currentUser, myMatchId);
   };
 
+  // 「待った」：申し出た人の最後の手の前まで戻す。相手がもう指し返していたら、相手の手と自分の手の2つを戻す
+  function kcTakebackCount(moves, reqColor) {
+    if (!moves.length || !reqColor) return 0;
+    // 最後の手の色（白が先手なので、手の数が奇数なら最後は白）
+    const lastColor = (moves.length % 2 === 1) ? 'w' : 'b';
+    if (lastColor === reqColor) return 1;
+    return moves.length >= 2 ? 2 : 0; // 申し出た人がまだ1手も指していなければ戻せない
+  }
   async function performTakeback(matchId, m) {
     const moves = m.moves || [];
-    if (moves.length === 0) return;
+    const n = kcTakebackCount(moves, m.takebackRequestBy);
+    if (n === 0) { await update(ref(db, 'matches/' + matchId), { takebackRequestBy: null }); return; }
     const replay = new Chess();
     let newLastMove = null;
-    for (let i = 0; i < moves.length - 1; i++) {
+    for (let i = 0; i < moves.length - n; i++) {
       const verboseMove = replay.move(moves[i].san);
       if (verboseMove) newLastMove = { from: verboseMove.from, to: verboseMove.to };
     }
-    const newMoves = moves.slice(0, -1);
+    const newMoves = moves.slice(0, -n);
     await update(ref(db, 'matches/' + matchId), {
       fen: replay.fen(),
       turn: replay.turn(),
