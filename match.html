@@ -6038,7 +6038,20 @@ const PIECE_IMG = {
                         : 'After ' + it.san + ', the ' + nm(bestCapPiece.type).toLowerCase() + ' on ' + bestTo + ' escapes by taking the ' + nm(escape.captured).toLowerCase() + ' on ' + escape.to + '.');
           } else if (escape) {
             out.push(ja ? it.san + 'だと、' + bestTo + 'の' + nm(bestCapPiece.type) + 'に逃げられてしまうんだ。' : 'After ' + it.san + ', the ' + nm(bestCapPiece.type).toLowerCase() + ' on ' + bestTo + ' can escape.');
-          } else if (worst) out.push(ja ? it.san + 'だと、' + worst.x.to + 'の' + nm(worst.x.captured) + 'を取られてしまうんだ。' : 'After ' + it.san + ', the ' + nm(worst.x.captured).toLowerCase() + ' on ' + worst.x.to + ' can be taken.');
+          } else if (worst) {
+            // おすすめの手を指しても同じ駒が取られてしまうなら、指した手のせいではないので言わない
+            let alsoAfterBest = false;
+            try {
+              const bb = new Chess(it.fenBefore);
+              const bmv = it.best ? bb.move({ from: it.best.slice(0, 2), to: it.best.slice(2, 4), promotion: it.best[4] || 'q' }) : null;
+              if (bmv) {
+                const target = bb.get(worst.x.to);
+                alsoAfterBest = !!target && target.color === it.color && target.type === worst.x.captured &&
+                  bb.moves({ verbose: true }).some(x => x.to === worst.x.to && x.captured);
+              }
+            } catch (e) {}
+            if (!alsoAfterBest) out.push(ja ? it.san + 'だと、' + worst.x.to + 'の' + nm(worst.x.captured) + 'を取られてしまうんだ。' : 'After ' + it.san + ', the ' + nm(worst.x.captured).toLowerCase() + ' on ' + worst.x.to + ' can be taken.');
+          }
         }
       }
       // ③ 駒の損得やねらいで説明できないときは、形のちがい（ビショップ2つ・展開・ポーンの形など）で理由を言う
