@@ -3628,8 +3628,12 @@ await set(ref(db, 'matches/' + matchId), {
       container.textContent = LANG === 'ja' ? '該当するユーザーが見つかりません。' : 'No matching users found.';
       return;
     }
+    // 名前が多いと下までスクロールが大変なので、最初は5人だけ出す（名前で検索したときは全部）
+    const KC_USER_FIRST = 5;
+    const showAll = !!query || window.kcUserSearchAll === true || entries.length <= KC_USER_FIRST + 1;
+    const shown = showAll ? entries : entries.slice(0, KC_USER_FIRST);
 
-    entries.forEach(([uid, info]) => {
+    shown.forEach(([uid, info]) => {
       const row = document.createElement('div');
       row.className = 'list-item';
       const label = document.createElement('span');
@@ -3678,6 +3682,16 @@ await set(ref(db, 'matches/' + matchId), {
       }
       container.appendChild(row);
     });
+    if (!query && entries.length > KC_USER_FIRST + 1) {
+      const more = document.createElement('button');
+      more.type = 'button';
+      more.style.cssText = 'display:block;margin:8px auto 0;font-size:0.85rem;padding:6px 16px;background:rgba(124,74,30,0.2);color:var(--text);';
+      more.textContent = showAll
+        ? (LANG === 'ja' ? '▲ 閉じる' : '▲ Show less')
+        : (LANG === 'ja' ? '▼ もっと見る（ほか ' + (entries.length - KC_USER_FIRST) + '人）' : '▼ Show more (' + (entries.length - KC_USER_FIRST) + ' more)');
+      more.onclick = () => { window.kcUserSearchAll = !showAll; renderUserSearchResults(); };
+      container.appendChild(more);
+    }
   }
 
   // 対局の申し込みを受ける（一覧のボタンと、上に出る通知の両方から使う）。作った対局のIDを返す
@@ -3936,6 +3950,11 @@ await set(ref(db, 'matches/' + matchId), {
 
   // 対局を実際に開いていなくても、終了した対局のレーティングを確実に反映させるための軽量処理
   async function handleMatchEndInBackground(matchId, m, user, myColor) {
+    try { await kcMatchEndApply(matchId, m, user, myColor); } catch (e) { console.warn('match end', e); }
+    // 終局した対局は「進行中の対局」一覧からも取り除く（レーティングの反映に失敗しても、一覧からは消す）
+    try { await remove(ref(db, 'currentMatches/' + user.uid + '/' + matchId)); } catch (e) { console.warn('remove currentMatch', e); }
+  }
+  async function kcMatchEndApply(matchId, m, user, myColor) {
     if (m.status === 'timeout') {
       const wonByTimeout = m.winner === myColor;
       await applyEloIfNeeded(matchId, m, user, wonByTimeout ? 1 : 0, 'timeout');
@@ -3962,8 +3981,6 @@ await set(ref(db, 'matches/' + matchId), {
         }
       } catch (e) { /* FEN解析に失敗した場合は何もしない */ }
     }
-    // 終局した対局は「進行中の対局」一覧からも取り除く(レーティング反映は既に済んでいる)
-    await remove(ref(db, 'currentMatches/' + user.uid + '/' + matchId));
   }
 
   function startMatchListener(user) {
