@@ -3882,7 +3882,7 @@ await set(ref(db, 'matches/' + matchId), {
     box.style.display = 'block';
     list.innerHTML = '';
     // 自分の番の対局を先頭に。次に開始待ち、相手の番、終局の順
-    const rank = (s) => (s.phase === 'active' && s.turn === s.myColor) ? 0 : (s.phase === 'waiting' ? 1 : (s.phase === 'active' ? 2 : 3));
+    const rank = (s) => (s.rematch || (s.phase === 'active' && s.turn === s.myColor)) ? 0 : (s.phase === 'waiting' ? 1 : (s.phase === 'active' ? 2 : 3));
     entries.sort((a, b) => rank(a[1]) - rank(b[1]));
     const myTurnCount = entries.filter(([, s]) => rank(s) === 0).length;
     if (countBadge) {
@@ -3890,7 +3890,7 @@ await set(ref(db, 'matches/' + matchId), {
       if (myTurnCount) {
         const pill = document.createElement('span');
         pill.style.cssText = 'margin-left:6px;background:#e53935;color:#fff;border-radius:10px;padding:1px 8px;font-size:0.75rem;font-weight:800;';
-        pill.textContent = (LANG === 'ja' ? 'あなたの番 ' : 'Your turn ') + myTurnCount;
+        pill.textContent = (LANG === 'ja' ? 'あなたの番 ' : 'Your turn ') + myTurnCount; // 再戦の申し込みも数に入れる
         countBadge.appendChild(pill);
       }
     }
@@ -3926,6 +3926,9 @@ await set(ref(db, 'matches/' + matchId), {
       turnEl.className = 'thumb-turn' + (myTurn ? ' my-turn' : '');
       if (s.phase === 'waiting') {
         turnEl.textContent = LANG === 'ja' ? '対局開始待ち' : 'Waiting to start';
+      } else if (s.rematch) {
+        turnEl.textContent = LANG === 'ja' ? '🔄 再戦の申し込み' : '🔄 Rematch request';
+        turnEl.classList.add('my-turn');
       } else if (s.phase === 'finished') {
         turnEl.textContent = LANG === 'ja' ? '終局' : 'Finished';
       } else {
@@ -4015,6 +4018,7 @@ await set(ref(db, 'matches/' + matchId), {
               if (new Chess(m.fen).game_over()) phase = 'finished';
             } catch (e) { /* FEN解析に失敗しても対局一覧の表示は継続する */ }
           }
+          const rematchForMe = phase === 'finished' && !!m.rematchRequestBy && m.rematchRequestBy !== user.uid && !m.rematchMatchId;
           activeMatchSummaries[matchId] = {
             oppName: myC === 'w' ? m.blackName : m.whiteName,
             myName: myC === 'w' ? m.whiteName : m.blackName,
@@ -4022,9 +4026,11 @@ await set(ref(db, 'matches/' + matchId), {
             turn: m.turn,
             fen: m.fen,
             status: m.status,
-            phase: phase
+            phase: phase,
+            rematch: rematchForMe
           };
-          if (phase === 'finished') handleMatchEndInBackground(matchId, m, user, myC);
+          if (rematchForMe) { kcMatchEndApply(matchId, m, user, myC).catch(() => {}); }
+          else if (phase === 'finished') handleMatchEndInBackground(matchId, m, user, myC);
           renderActiveMatchesList();
         });
       });
@@ -7039,6 +7045,7 @@ const PIECE_IMG = {
             rematchRequestBy: user.uid,
             rematchRequestAt: Date.now()
           });
+          try { await set(ref(db, 'currentMatches/' + rematchOppUid + '/' + matchId), true); } catch (e) {}
           rematchBtn.textContent = LANG === 'ja' ? '✅ 再戦を申し込みました。相手の返答をお待ちください。' : '✅ Rematch requested. Waiting for opponent.';
         };
         // 名前とメッセージの行の中に入れると文字が縦につぶれるので、その行の下に置く
