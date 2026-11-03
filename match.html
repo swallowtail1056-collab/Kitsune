@@ -5425,6 +5425,8 @@ const PIECE_IMG = {
     const add = (rec, res) => { if (rec[res] != null) rec[res]++; };
     body.appendChild(kcInsEl('p', 'font-size:0.75rem;color:var(--text-muted);margin:4px 0 0;', T('※ レート戦の記録から集計しています（ノーレートの対局は入りません）。', '* Based on your rated games (unrated games are not included).')));
 
+    // 0) ジーンのまとめ（いちばん上に置いて、最後に中身を入れる）
+    const sSum = rows.length ? kcInsSection(body, T('🦊 ジーンのまとめ', '🦊 Jene\'s Summary'), T('この期間のレート戦 ' + rows.length + '局から', 'From ' + rows.length + ' rated games in this period')) : null;
     // 1) 全体
     const sAll = kcInsSection(body, T('📊 全体の成績', '📊 Overall'));
     if (!rows.length) { kcInsEmpty(sAll, 'この期間のレート戦はまだありません。', 'No rated games in this period yet.'); return; }
@@ -5552,6 +5554,103 @@ const PIECE_IMG = {
         ['p', 'n', 'b', 'r', 'q', 'k'].forEach(k => { if (pa[k] && pa[k].n) { const v = pa[k].sum / pa[k].n; kcInsCountRow(sAcc, pieceIcon[k] + ' ' + pieceNames[k], v, 100, v.toFixed(1), '#5c9ed6'); } });
       }
     }
+    try { kcInsFillSummary(sSum, rows, det, revs, pieceNames, blank, add, bands, bandOf, oppB); } catch (e) {}
+  }
+
+  // 🦊 ジーンのまとめ：集計からはっきり言えることだけを、得意なこと・気をつけたいこと・次のおすすめにまとめる
+  function kcInsFillSummary(sec, rows, det, revs, pieceNames, blank, add, bands, bandOf, oppB) {
+    if (!sec) return;
+    const T = (ja, en) => (LANG === 'ja' ? ja : en);
+    const n = (r) => r.win + r.draw + r.loss;
+    const rate = (r) => n(r) ? Math.round((r.win + r.draw * 0.5) / n(r) * 100) : 0;
+    const total = blank(); rows.forEach(r => add(total, r.result));
+    const good = [], warn = [];
+    let tip = null;
+    // 成績
+    sec.appendChild(kcInsEl('p', 'margin:2px 0 6px;font-size:0.95rem;font-weight:800;',
+      T(n(total) + '局で ' + total.win + '勝 ' + total.draw + '分 ' + total.loss + '敗（勝率 ' + rate(total) + '%）',
+        n(total) + ' games: ' + total.win + 'W ' + total.draw + 'D ' + total.loss + 'L (score ' + rate(total) + '%)')));
+    // 正確度と大きなミス
+    if (revs.length) {
+      const accs = revs.map(r => r.accuracy).filter(a => typeof a === 'number');
+      const avg = accs.length ? accs.reduce((a, b) => a + b, 0) / accs.length : null;
+      const cnt = {}; let ctot = 0;
+      revs.forEach(r => Object.keys(r.counts || {}).forEach(k => { cnt[k] = (cnt[k] || 0) + r.counts[k]; ctot += r.counts[k]; }));
+      const big = (cnt.mistake || 0) + (cnt.blunder || 0) + (cnt.miss || 0);
+      const perGame = big / revs.length;
+      if (avg != null) {
+        const lv = avg >= 85 ? T('とても正確', 'very accurate') : avg >= 70 ? T('よく指せている', 'solid') : avg >= 55 ? T('まずまず', 'decent') : T('これから伸びるところ', 'room to grow');
+        sec.appendChild(kcInsEl('p', 'margin:0 0 4px;font-size:0.88rem;', T('平均の正確度は ' + avg.toFixed(1) + '（' + lv + '）。大きなミス（間違い・大悪手・逸機）は、1局あたり平均 ' + perGame.toFixed(1) + '回です。',
+          'Average accuracy is ' + avg.toFixed(1) + ' (' + lv + '). You make ' + perGame.toFixed(1) + ' big mistakes (mistakes, blunders, misses) per game on average.')));
+      }
+      if (ctot >= 30) {
+        const bigPct = big / ctot * 100, bestPct = ((cnt.best || 0) + (cnt.excellent || 0)) / ctot * 100;
+        if (bestPct >= 40) good.push(T('最善手・好手が、手の ' + bestPct.toFixed(0) + '% あります。いい手をしっかり見つけられています。', bestPct.toFixed(0) + '% of your moves are best or excellent moves. You find good moves well.'));
+        if (bigPct >= 15) {
+          warn.push(T('間違い・大悪手・逸機が、手の ' + bigPct.toFixed(0) + '% あります。', bigPct.toFixed(0) + '% of your moves are mistakes, blunders or misses.'));
+          tip = tip || T('指す前に「相手はこの手のあと、何を取れるか」を1回だけ確かめましょう。大きなミスがぐっと減ります。', 'Before each move, check once: "What can my opponent take after this?" This cuts big mistakes a lot.');
+        } else if (bigPct <= 8) good.push(T('大きなミスが少なく、手の ' + bigPct.toFixed(0) + '% だけです。', 'Few big mistakes: only ' + bigPct.toFixed(0) + '% of your moves.'));
+      }
+      // 駒ごとの正確度（8手以上指した駒だけ）
+      const pa = {};
+      revs.forEach(r => Object.keys(r.pieceAcc || {}).forEach(k => { if (!pa[k]) pa[k] = { sum: 0, n: 0 }; pa[k].sum += r.pieceAcc[k].sum || 0; pa[k].n += r.pieceAcc[k].n || 0; }));
+      const list = Object.keys(pa).filter(k => k !== 'k' && pa[k].n >= 8) /* キングは手が限られるので比べない */.map(k => ({ k, v: pa[k].sum / pa[k].n })).sort((a, b) => b.v - a.v);
+      if (list.length >= 2 && list[0].v - list[list.length - 1].v >= 8) {
+        const hi = list[0], lo = list[list.length - 1];
+        good.push(T(pieceNames[hi.k] + 'の手がいちばん正確です（' + hi.v.toFixed(1) + '）。', 'Your ' + pieceNames[hi.k].toLowerCase() + ' moves are the most accurate (' + hi.v.toFixed(1) + ').'));
+        warn.push(T(pieceNames[lo.k] + 'の手の正確度がいちばん低めです（' + lo.v.toFixed(1) + '）。', 'Your ' + pieceNames[lo.k].toLowerCase() + ' moves are the least accurate (' + lo.v.toFixed(1) + ').'));
+        const adv = {
+          q: T('クイーンは強いぶん、ねらわれやすい駒です。動かす前に、そのマスを相手に取られないか確かめましょう。', 'The queen is powerful but easy to attack. Before moving it, check that the square is safe.'),
+          p: T('ポーンは後ろに戻れません。突く前に、そのあとの形を考えましょう。', 'Pawns can\'t move back. Think about the structure before pushing one.'),
+          n: T('ナイトは動かしたあと、相手にねらわれていないか確かめましょう。', 'After moving a knight, check whether it can be attacked.'),
+          b: T('ビショップは動かしたあと、相手にねらわれていないか確かめましょう。', 'After moving a bishop, check whether it can be attacked.'),
+          r: T('ルークは、ポーンのいない縦の列（オープンファイル）に置くとよく働きます。', 'Rooks work best on open files (columns with no pawns).')
+        };
+        if (!tip) tip = adv[lo.k];
+      }
+    }
+    // 白番・黒番（それぞれ3局以上）
+    if (det.length) {
+      const cw = blank(), cb = blank(); det.forEach(d => add(d.color === 'w' ? cw : cb, d.result));
+      if (n(cw) >= 3 && n(cb) >= 3 && Math.abs(rate(cw) - rate(cb)) >= 20) {
+        const wBetter = rate(cw) > rate(cb);
+        good.push(T((wBetter ? '白番' : '黒番') + 'のほうが成績がよいです（勝率 ' + Math.max(rate(cw), rate(cb)) + '%）。', 'You do better with ' + (wBetter ? 'White' : 'Black') + ' (score ' + Math.max(rate(cw), rate(cb)) + '%).'));
+        warn.push(T((wBetter ? '黒番' : '白番') + 'の勝率が ' + Math.min(rate(cw), rate(cb)) + '% と低めです。', 'Your score with ' + (wBetter ? 'Black' : 'White') + ' is lower (' + Math.min(rate(cw), rate(cb)) + '%).'));
+      }
+      // キャスリングしなかった対局
+      const cas = blank(), noc = blank(); det.forEach(d => add(d.castle ? cas : noc, d.result));
+      if (n(noc) >= 3 && n(cas) >= 3 && rate(cas) - rate(noc) >= 20) {
+        warn.push(T('キャスリングしなかった対局の勝率が ' + rate(noc) + '% と低めです（した対局は ' + rate(cas) + '%）。', 'Your score is ' + rate(noc) + '% in games where you didn\'t castle (' + rate(cas) + '% when you did).'));
+        if (!tip) tip = T('序盤のうちに、キャスリングでキングを安全な場所へ移しましょう。', 'Castle early to get your king to safety.');
+      }
+    }
+    // 時間帯（3局以上）
+    const byBand = bands.map(blank); rows.forEach(r => { const i = bandOf(r.endedAt); if (i >= 0) add(byBand[i], r.result); });
+    const bl = byBand.map((r, i) => ({ i, r })).filter(x => n(x.r) >= 3).sort((a, b) => rate(b.r) - rate(a.r));
+    if (bl.length >= 2 && rate(bl[0].r) - rate(bl[bl.length - 1].r) >= 25) {
+      const name = (i) => (LANG === 'ja' ? bands[i].ja : bands[i].en).replace(/^\S+\s/, '');
+      good.push(T(name(bl[0].i) + 'の対局がいちばん好調です（勝率 ' + rate(bl[0].r) + '%）。', 'You play best in the ' + name(bl[0].i).toLowerCase() + ' (score ' + rate(bl[0].r) + '%).'));
+      warn.push(T(name(bl[bl.length - 1].i) + 'の対局は勝率 ' + rate(bl[bl.length - 1].r) + '% と低めです。疲れているときは、無理に指さなくても大丈夫。', 'Your score in the ' + name(bl[bl.length - 1].i).toLowerCase() + ' is lower (' + rate(bl[bl.length - 1].r) + '%). It\'s fine to skip games when you\'re tired.'));
+    }
+    // 格上との対局（3局以上）
+    if (oppB && n(oppB.up) >= 3 && rate(oppB.up) >= 50) good.push(T('格上の相手にも、勝率 ' + rate(oppB.up) + '% と互角以上に戦えています。', 'You hold your own against higher-rated opponents (score ' + rate(oppB.up) + '%).'));
+    if (oppB && n(oppB.down) >= 3 && rate(oppB.down) < 50) warn.push(T('格下の相手との勝率が ' + rate(oppB.down) + '% です。油断せず、ていねいに指しましょう。', 'Your score against lower-rated opponents is ' + rate(oppB.down) + '%. Stay careful in those games.'));
+
+    const listBox = (title, items, color) => {
+      if (!items.length) return;
+      sec.appendChild(kcInsEl('p', 'margin:10px 0 4px;font-size:0.88rem;font-weight:800;color:' + color + ';', title));
+      const ul = kcInsEl('ul', 'margin:0;padding-left:1.3em;font-size:0.85rem;line-height:1.7;');
+      items.slice(0, 3).forEach(t => ul.appendChild(kcInsEl('li', '', t)));
+      sec.appendChild(ul);
+    };
+    listBox(T('👍 得意なこと', '👍 Strengths'), good, '#4f7f2a');
+    listBox(T('⚠️ 気をつけたいこと', '⚠️ Things to watch'), warn, '#b5651d');
+    if (tip) {
+      sec.appendChild(kcInsEl('p', 'margin:10px 0 4px;font-size:0.88rem;font-weight:800;color:var(--brown-dark);', T('🎯 次のおすすめ', '🎯 Next step')));
+      sec.appendChild(kcInsEl('p', 'margin:0;font-size:0.85rem;line-height:1.7;', tip));
+    }
+    if (!good.length && !warn.length) sec.appendChild(kcInsEl('p', 'margin:8px 0 0;font-size:0.82rem;color:var(--text-muted);', T('対局がもう少し増えると、得意なことや気をつけたいことをお知らせできます。「🦊 ジーンと振り返る」を開くと、くわしくなります。', 'With a few more games, I can tell you your strengths and things to watch. Opening "Game Review with Jene" makes this more detailed.')));
+    else if (rows.length < 10) sec.appendChild(kcInsEl('p', 'margin:8px 0 0;font-size:0.75rem;color:var(--text-muted);', T('※ まだ対局が少ないので、これからの対局で傾向は変わっていきます。', '* Still a small number of games, so these trends may change.')));
   }
   document.getElementById('langBtn').addEventListener('click', () => {
     try { const ov = document.getElementById('kcInsOverlay'); if (ov && ov.style.display !== 'none' && kcInsData) kcRenderInsights(); } catch (e) {}
