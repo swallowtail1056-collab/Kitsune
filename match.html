@@ -7729,14 +7729,24 @@ const PIECE_IMG = {
           : remainingAfterMove + (m.increment || 0);
         const moveHistory = (m.moves || []).concat([{ san: move.san, color: move.color, captured: move.captured || null }]);
         const kothWon = m.variant === 'koth' && kcKothWinMove(move);
-        await set(ref(db, 'matches/' + matchId), {
-          ...m, fen: gameChess.fen(), turn: gameChess.turn(),
-          [myTimeKey]: newTime, turnStartedAt: kcNow(),
-          lastMove: { from: move.from, to: move.to },
-          moves: moveHistory,
-          drawOfferBy: null, takebackRequestBy: null,
-          ...(kothWon ? { status: 'resigned', winner: myColor, kothWin: true } : {})
-        });
+        try {
+          await set(ref(db, 'matches/' + matchId), {
+            ...m, fen: gameChess.fen(), turn: gameChess.turn(),
+            [myTimeKey]: newTime, turnStartedAt: kcNow(),
+            lastMove: { from: move.from, to: move.to },
+            moves: moveHistory,
+            drawOfferBy: null, takebackRequestBy: null,
+            ...(kothWon ? { status: 'resigned', winner: myColor, kothWin: true } : {})
+          });
+        } catch (err) {
+          // 手を送れなかったときは、盤をもとに戻して知らせる（だまって相手に届かない、をなくす）
+          try { gameChess.undo(); } catch (e) {}
+          renderMiniBoard(m, user, matchId);
+          const st = document.getElementById('gameStatus');
+          if (st) st.textContent = (LANG === 'ja' ? '⚠️ 手を送れませんでした。もう一度指してください。（' : '⚠️ Your move could not be sent. Please try again. (') + ((err && (err.code || err.message)) || 'error') + ')';
+          console.error('move send failed', err);
+          return;
+        }
         fpRecordMove(matchId, user.uid, elapsed);
 
       } else {
