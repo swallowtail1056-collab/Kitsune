@@ -3174,6 +3174,15 @@ applyBoardTheme();
         challengeBtn.style.background = hasPendingInvite ? '#a33' : '';
       };
       updateChallengeBtnLabel();
+      // 相手が申し込みを受けたり断ったりしたら、ボタンを「対局を申し込む」に戻す（その場で見張る）
+      try {
+        window.kcInviteWatch = window.kcInviteWatch || {};
+        if (window.kcInviteWatch[friendUid]) window.kcInviteWatch[friendUid]();
+        window.kcInviteWatch[friendUid] = onValue(ref(db, 'matchInvites/' + friendUid + '/' + user.uid), (snap) => {
+          hasPendingInvite = snap.exists();
+          if (challengeBtn.isConnected) updateChallengeBtnLabel();
+        });
+      } catch (e) {}
       const tcPanel = document.createElement('span');
       tcPanel.style.display = 'none';
       tcPanel.style.width = '100%';
