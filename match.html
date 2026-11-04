@@ -5876,7 +5876,7 @@ const PIECE_IMG = {
       const row = document.createElement('button');
       row.type = 'button';
       row.style.cssText = 'display:flex;align-items:center;gap:14px;width:100%;margin:0;padding:12px 10px;background:none;color:var(--text);border-radius:8px;text-align:left;font-size:' + (it.small ? '0.85rem' : '1.05rem') + ';font-weight:700;border-bottom:1px solid rgba(124,74,30,0.12);';
-      const ic = document.createElement('span'); ic.style.cssText = 'width:28px;text-align:center;font-size:1.3rem;'; ic.textContent = it.icon;
+      const ic = kcIcon(it.icon, 22); ic.style.width = '28px'; ic.style.flexShrink = '0'; ic.style.color = 'var(--brown-dark)';
       const lb = document.createElement('span'); lb.style.flex = '1'; lb.textContent = it.label;
       const ar = document.createElement('span'); ar.style.cssText = 'color:var(--text-muted);'; ar.textContent = '›';
       row.appendChild(ic); row.appendChild(lb); row.appendChild(ar);
@@ -5905,6 +5905,44 @@ const PIECE_IMG = {
     try { const ov = document.getElementById('kcMenuOverlay'); if (ov && ov.style.display !== 'none') kcRenderMenu(); } catch (e) {}
   });
   // ===== ここまで メニュー =====
+
+
+  // ===== 線のアイコン（絵文字の代わり）。色は文字の色（currentColor）に合わせる =====
+  const KC_ICON_PATHS = {
+    '🎲': '<rect x="3.5" y="3.5" width="17" height="17" rx="3.5"/><circle cx="8.5" cy="8.5" r="1.2" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.2" fill="currentColor" stroke="none"/><circle cx="15.5" cy="15.5" r="1.2" fill="currentColor" stroke="none"/>',
+    '👥': '<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6"/><circle cx="17" cy="9" r="2.8"/><path d="M16.2 14.1c3 .2 5.3 2.4 5.3 5.9"/>',
+    '🤖': '<rect x="5" y="8" width="14" height="11" rx="2.5"/><path d="M12 4.5V8"/><circle cx="12" cy="3.5" r="1"/><circle cx="9.5" cy="12.8" r="1.1" fill="currentColor" stroke="none"/><circle cx="14.5" cy="12.8" r="1.1" fill="currentColor" stroke="none"/><path d="M9.5 16h5M3 12.5v3M21 12.5v3"/>',
+    '🦊': '<path d="M4 3.5 8.5 9h7L20 3.5 19.5 12 12 20.5 4.5 12z"/><circle cx="9.5" cy="12.5" r=".9" fill="currentColor" stroke="none"/><circle cx="14.5" cy="12.5" r=".9" fill="currentColor" stroke="none"/><path d="M11 16.3h2l-1 1.2z" fill="currentColor"/>',
+    '🧩': '<path d="M4 7h4a2 2 0 1 1 4 0h4v4a2 2 0 1 1 0 4v4h-4a2 2 0 1 0-4 0H4v-4a2 2 0 1 0 0-4z"/>',
+    '☰': '<path d="M4 6.5h16M4 12h16M4 17.5h16"/>',
+    '👤': '<circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"/>',
+    '💡': '<path d="M9 18h6M10 21h4"/><path d="M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2V16h5v-.1c0-.8.4-1.5 1-2A6 6 0 0 0 12 3z"/>',
+    '📈': '<path d="M3.5 3.5v17h17"/><path d="M7.5 15l4-4 3 3 5-6"/>',
+    '🔍': '<circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5 21 21"/>',
+    '🚫': '<circle cx="12" cy="12" r="9"/><path d="M5.6 5.6l12.8 12.8"/>',
+    '⚔️': '<path d="M14.5 17.5 3 6V3h3l11.5 11.5M13 19l6-6M16 16l4 4M19 21l2-2"/><path d="M9.5 17.5 21 6V3h-3L6.5 14.5M11 19l-6-6M8 16l-4 4M5 21l-2-2"/>',
+    '🕘': '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/>',
+    '♟️': '<circle cx="12" cy="6" r="2.6"/><path d="M9.5 10.5h5l-1 5h-3z"/><path d="M8 18.5h8l1 2.5H7z"/>',
+    '📥': '<path d="M12 3v11M8 10.5l4 4 4-4"/><path d="M4 15v3.5A2.5 2.5 0 0 0 6.5 21h11a2.5 2.5 0 0 0 2.5-2.5V15"/>',
+    '📖': '<path d="M2.5 4.5h6a3.5 3.5 0 0 1 3.5 3.5v12.5a2.5 2.5 0 0 0-2.5-2.5h-7z"/><path d="M21.5 4.5h-6A3.5 3.5 0 0 0 12 8v12.5a2.5 2.5 0 0 1 2.5-2.5h7z"/>',
+    '🏋️': '<path d="M6.5 6.5v11M17.5 6.5v11M3.5 9.5v5M20.5 9.5v5M6.5 12h11"/>',
+    '📰': '<rect x="3.5" y="4" width="17" height="16" rx="2"/><path d="M7.5 8.5h9M7.5 12h9M7.5 15.5h5"/>',
+    '✉️': '<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3.5 7l8.5 6 8.5-6"/>',
+    '🔒': '<rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7.5a4 4 0 0 1 8 0V11"/>',
+    '⚠️': '<path d="M12 3.5 2.5 20h19z"/><path d="M12 9.5v5"/><circle cx="12" cy="17.3" r=".7" fill="currentColor" stroke="none"/>',
+    '🏠': '<path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 10v10h13V10"/><path d="M10 20v-5.5h4V20"/>',
+    '🚪': '<path d="M9 21H5.5A2.5 2.5 0 0 1 3 18.5v-13A2.5 2.5 0 0 1 5.5 3H9"/><path d="M16 17l5-5-5-5M21 12H9"/>',
+    '🗑️': '<path d="M3.5 6h17M8.5 6V4h7v2"/><path d="M6 6l1 14.5h10L18 6"/><path d="M10 10.5v6M14 10.5v6"/>'
+  };
+  function kcIcon(key, px) {
+    const p = KC_ICON_PATHS[key];
+    const span = document.createElement('span');
+    span.style.cssText = 'display:inline-flex;align-items:center;justify-content:center;line-height:1;';
+    if (!p) { span.textContent = key; return span; } // 線のアイコンがないものは、そのまま
+    const n = px || 24;
+    span.innerHTML = '<svg viewBox="0 0 24 24" width="' + n + '" height="' + n + '" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + p + '</svg>';
+    return span;
+  }
 
   // ===== ホーム（一番上のまとめ） =====
   (function kcSetupHome() {
@@ -5939,7 +5977,7 @@ const PIECE_IMG = {
       const b = document.createElement('button');
       b.type = 'button';
       b.style.cssText = 'margin:0;padding:10px 4px;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:0.8rem;line-height:1.2;';
-      const ic = document.createElement('span'); ic.style.fontSize = '1.4rem'; ic.textContent = it.icon;
+      const ic = kcIcon(it.icon, 28); ic.style.margin = '2px 0 4px';
       const lb = document.createElement('span'); lb.textContent = it.label;
       b.appendChild(ic); b.appendChild(lb);
       b.onclick = it.act;
