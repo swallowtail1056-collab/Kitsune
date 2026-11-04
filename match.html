@@ -5875,7 +5875,7 @@ const PIECE_IMG = {
       }
       const row = document.createElement('button');
       row.type = 'button';
-      row.style.cssText = 'display:flex;align-items:center;gap:14px;width:100%;margin:0;padding:12px 10px;background:none;color:var(--text);border-radius:8px;text-align:left;font-size:' + (it.small ? '0.85rem' : '1.05rem') + ';font-weight:700;border-bottom:1px solid rgba(124,74,30,0.12);';
+      row.style.cssText = 'display:flex;align-items:center;gap:12px;width:100%;margin:0;padding:7px 10px;line-height:1.3;min-height:0;box-shadow:none;background:none;color:var(--text);border-radius:8px;text-align:left;font-size:' + (it.small ? '0.85rem' : '1.05rem') + ';font-weight:700;border-bottom:1px solid rgba(124,74,30,0.12);';
       const ic = kcIcon(it.icon, 22); ic.style.width = '28px'; ic.style.flexShrink = '0'; ic.style.color = 'var(--brown-dark)';
       const lb = document.createElement('span'); lb.style.flex = '1'; lb.textContent = it.label;
       const ar = document.createElement('span'); ar.style.cssText = 'color:var(--text-muted);'; ar.textContent = '›';
@@ -5920,7 +5920,7 @@ const PIECE_IMG = {
     '📈': '<path d="M3.5 3.5v17h17"/><path d="M7.5 15l4-4 3 3 5-6"/>',
     '🔍': '<circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5 21 21"/>',
     '🚫': '<circle cx="12" cy="12" r="9"/><path d="M5.6 5.6l12.8 12.8"/>',
-    '⚔️': '<path d="M14.5 17.5 3 6V3h3l11.5 11.5M13 19l6-6M16 16l4 4M19 21l2-2"/><path d="M9.5 17.5 21 6V3h-3L6.5 14.5M11 19l-6-6M8 16l-4 4M5 21l-2-2"/>',
+    '⚔️': '<path d="M4 4l11 11M20 4 9 15"/><path d="M13 17l4-4M7 13l4 4"/><path d="M16.5 16.5 20 20M7.5 16.5 4 20"/>',
     '🕘': '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/>',
     '♟️': '<circle cx="12" cy="6" r="2.6"/><path d="M9.5 10.5h5l-1 5h-3z"/><path d="M8 18.5h8l1 2.5H7z"/>',
     '📥': '<path d="M12 3v11M8 10.5l4 4 4-4"/><path d="M4 15v3.5A2.5 2.5 0 0 0 6.5 21h11a2.5 2.5 0 0 0 2.5-2.5V15"/>',
