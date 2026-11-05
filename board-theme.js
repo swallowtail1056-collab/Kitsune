@@ -14,3 +14,12 @@
   var theme = localStorage.getItem('boardTheme') || 'brown';
   document.documentElement.setAttribute('data-board-theme', theme);
 })();
+
+// ふりがなボタン（furigana.js）も全ページで読み込む
+(function () {
+  if (window.kcFuriganaLoaded || document.querySelector('script[src*="furigana.js"]')) return;
+  var cs = document.currentScript, s = document.createElement('script');
+  s.src = (cs && cs.src ? cs.src.replace(/board-theme\.js.*$/, '') : '') + 'furigana.js';
+  s.defer = true;
+  (document.head || document.documentElement).appendChild(s);
+})();

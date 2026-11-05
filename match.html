@@ -591,8 +591,13 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     </div>
     <p id="oppPresence" style="font-size:0.8rem;color:var(--text-muted);"></p>
     <p id="gameClock" style="font-weight:700;color:var(--brown-dark);"></p>
-    <p id="clockWarn" style="display:none;font-weight:700;font-size:0.9rem;margin:2px 0 6px;padding:6px 10px;border-radius:8px;"></p>
-    <p id="discWarn" style="display:none;font-weight:700;font-size:0.9rem;margin:2px 0 6px;padding:6px 10px;border-radius:8px;background:#e8f0fe;color:#1a4fa0;"></p>
+    <!-- ⏰ 時間切れ・接続のお知らせは、盤が動かないように上に重ねて出す（下のボタンは押せるまま） -->
+    <div style="position:relative;height:0;z-index:20;">
+      <div style="position:absolute;left:0;right:0;top:0;display:flex;flex-direction:column;gap:4px;pointer-events:none;">
+        <p id="clockWarn" style="display:none;font-weight:700;font-size:0.9rem;margin:0;padding:6px 10px;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,0.18);"></p>
+        <p id="discWarn" style="display:none;font-weight:700;font-size:0.9rem;margin:0;padding:6px 10px;border-radius:8px;background:#e8f0fe;color:#1a4fa0;box-shadow:0 2px 8px rgba(0,0,0,0.18);"></p>
+      </div>
+    </div>
     <div style="text-align:right;margin:-4px 0 4px;"><button id="soundToggleBtnGame" type="button" style="padding:4px 10px;font-size:0.8rem;">🔊</button></div>
     <p id="capturedArea" style="font-size:1.1rem;min-height:56px;"></p>
     <div id="miniBoard"></div>
@@ -2267,9 +2272,12 @@ applyBoardTheme();
             const gen = aiGen;
             setTimeout(async () => {
               if (gen !== aiGen || !aiChess) return; // 待ったをしたら、AIは指さない
+              // 中級：相手の次の手まで読む（取ったらすぐ詰まされる駒は取らない）
+              // 上級：Stockfish（動かないときは中級と同じ読みで指す）
               let aiMove = aiDifficulty === 'hard'
                 ? await stockfishPickMove(aiChess.fen(), 400)
-                : aiPickMove(aiChess, aiDifficulty);
+                : aiPickMove(aiChess, aiDifficulty === 'medium' ? 'hard' : aiDifficulty);
+              if (!aiMove && aiDifficulty === 'hard' && aiChess && !aiChess.game_over()) aiMove = aiPickMove(aiChess, 'hard');
               if (gen !== aiGen || !aiChess) return;
               if (aiKoth && aiDifficulty !== 'easy') aiMove = aiKothAdjust(aiChess, aiMove);
               if (aiMove) {
@@ -3159,7 +3167,14 @@ applyBoardTheme();
       if (!friendProfile.photoURL) avatarImg.style.display = 'none';
       const textSpan = document.createElement('span');
       textSpan.style.fontSize = '0.85rem';
-      textSpan.innerHTML = presenceLabel.dot + friendName + '<br><span style="font-size:0.72rem;color:var(--text-muted);">' + rating + '・' + wld + '</span>';
+      textSpan.innerHTML = '<span class="kc-fr-dot">' + presenceLabel.dot + '</span>' + friendName + '<br><span style="font-size:0.72rem;color:var(--text-muted);">' + rating + '・' + wld + '</span>';
+      // 📶 オンライン表示をその場で更新する（対局画面と同じ見方）
+      window.kcFriendPresenceWatch = window.kcFriendPresenceWatch || {};
+      if (window.kcFriendPresenceWatch[friendUid]) { try { window.kcFriendPresenceWatch[friendUid](); } catch (e) {} }
+      window.kcFriendPresenceWatch[friendUid] = onValue(ref(db, 'presence/' + friendUid), (ps) => {
+        const d = textSpan.querySelector('.kc-fr-dot');
+        if (d) d.innerHTML = formatPresenceLabel(ps.val()).dot;
+      });
       label.appendChild(avatarImg);
       label.appendChild(textSpan);
       label.style.cursor = 'pointer';
@@ -5932,8 +5947,85 @@ const PIECE_IMG = {
     '⚠️': '<path d="M12 3.5 2.5 20h19z"/><path d="M12 9.5v5"/><circle cx="12" cy="17.3" r=".7" fill="currentColor" stroke="none"/>',
     '🏠': '<path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 10v10h13V10"/><path d="M10 20v-5.5h4V20"/>',
     '🚪': '<path d="M9 21H5.5A2.5 2.5 0 0 1 3 18.5v-13A2.5 2.5 0 0 1 5.5 3H9"/><path d="M16 17l5-5-5-5M21 12H9"/>',
-    '🗑️': '<path d="M3.5 6h17M8.5 6V4h7v2"/><path d="M6 6l1 14.5h10L18 6"/><path d="M10 10.5v6M14 10.5v6"/>'
+    '🗑️': '<path d="M3.5 6h17M8.5 6V4h7v2"/><path d="M6 6l1 14.5h10L18 6"/><path d="M10 10.5v6M14 10.5v6"/>',
+    '📜': '<path d="M6 3.5h9l3.5 3.5v13.5H6z"/><path d="M15 3.5V7h3.5"/><path d="M9 11h6M9 14.5h6M9 18h4"/>',
+    '📋': '<rect x="5" y="4.5" width="14" height="16.5" rx="2"/><path d="M9 4.5V3h6v1.5"/><path d="M8.5 10h7M8.5 13.5h7M8.5 17h4"/>',
+    '💬': '<path d="M4 5h16v10.5H10l-4.5 4v-4H4z"/>',
+    '✎': '<path d="M4 20l1-4.5L16 4.5l3.5 3.5L8.5 19z"/><path d="M14 6.5l3.5 3.5"/>',
+    '⚙️': '<circle cx="12" cy="12" r="3"/><circle cx="12" cy="12" r="6.5"/><path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3M5.3 5.3l2.1 2.1M16.6 16.6l2.1 2.1M5.3 18.7l2.1-2.1M16.6 7.4l2.1-2.1"/>',
+    '🚩': '<path d="M5.5 21V3.5"/><path d="M5.5 4.5h12l-2.5 4 2.5 4h-12"/>',
+    '🏳️': '<path d="M5.5 21V3.5"/><path d="M5.5 4.5h12l-2.5 4 2.5 4h-12"/>',
+    '🌐': '<circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9S9.5 5.6 12 3z"/>',
+    '🔊': '<path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path d="M15.5 9a4 4 0 0 1 0 6M18 6.5a7.5 7.5 0 0 1 0 11"/>',
+    '🔇': '<path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path d="M16 9.5l5 5M21 9.5l-5 5"/>',
+    '🌙': '<path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/>',
+    '☀️': '<circle cx="12" cy="12" r="4"/><path d="M12 2.5V5M12 19v2.5M2.5 12H5M19 12h2.5M5.3 5.3 7 7M17 17l1.7 1.7M5.3 18.7 7 17M17 7l1.7-1.7"/>',
+    '🔄': '<path d="M4.5 12a7.5 7.5 0 0 1 13-5.1L20 9.5"/><path d="M20 4.5v5h-5"/><path d="M19.5 12a7.5 7.5 0 0 1-13 5.1L4 14.5"/><path d="M4 19.5v-5h5"/>',
+    '🔁': '<path d="M4.5 12a7.5 7.5 0 0 1 13-5.1L20 9.5"/><path d="M20 4.5v5h-5"/><path d="M19.5 12a7.5 7.5 0 0 1-13 5.1L4 14.5"/><path d="M4 19.5v-5h5"/>',
+    '👑': '<path d="M3.5 8l4.5 4 4-7 4 7 4.5-4-1.5 10h-14z"/><path d="M5 20.5h14"/>',
+    '🔬': '<path d="M9 3.5l4 2-3.5 7-4-2z"/><path d="M11.5 12.5a5 5 0 0 1 5 6.5"/><path d="M5 20.5h14M8 17h4"/>',
+    '📘': '<path d="M2.5 4.5h6a3.5 3.5 0 0 1 3.5 3.5v12.5a2.5 2.5 0 0 0-2.5-2.5h-7z"/><path d="M21.5 4.5h-6A3.5 3.5 0 0 0 12 8v12.5a2.5 2.5 0 0 1 2.5-2.5h7z"/>',
+    '🔔': '<path d="M6 16.5V11a6 6 0 0 1 12 0v5.5l1.5 2h-15z"/><path d="M10 20.5a2 2 0 0 0 4 0"/>',
+    '🔗': '<path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/>',
+    '📊': '<path d="M3.5 20.5h17"/><path d="M6.5 20.5v-6M10.5 20.5V8M14.5 20.5v-9M18.5 20.5V5"/>',
+    '🤝': '<path d="M2.5 11.5l4.5-4.5 3.5 1.5 3-1.5 3.5 1 4.5 4"/><path d="M6.5 13.5l4 4a1.5 1.5 0 0 0 2.1 0l5-5"/><path d="M9.5 12l3 3M12.5 10.5l3 3"/>',
+    '👋': '<path d="M8 12.5V6.5a1.5 1.5 0 0 1 3 0v5M11 11.5V4.5a1.5 1.5 0 0 1 3 0v7M14 11.5V6.5a1.5 1.5 0 0 1 3 0V14a7 7 0 0 1-7 7c-2.4 0-4-1.2-5.2-3L3.2 14a1.5 1.5 0 0 1 2.5-1.7L8 15"/>',
+    '📷': '<rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8.5 7l1.5-2.5h4L15.5 7"/><circle cx="12" cy="13.5" r="3.5"/>',
+    '⚡': '<path d="M13 2.5 5 13.5h6l-1 8 8-11h-6z"/>'
   };
+  // ===== 見出し・ボタンの絵文字を、線のアイコンにそろえる =====
+  // 絵文字は消さずに隠して（文の中身は変えない）、前に線のアイコンを置く。
+  // 言語の切り替えなどで文が書き直されても、自動でもう一度アイコンにする。
+  function kcIconKey(e) {
+    if (KC_ICON_PATHS[e]) return e;
+    const a = e.replace(/\uFE0F/g, '');
+    if (KC_ICON_PATHS[a]) return a;
+    if (KC_ICON_PATHS[a + '\uFE0F']) return a + '\uFE0F';
+    return null;
+  }
+  const KC_EMO_RE = /(?:[\u{1F300}-\u{1FAFF}]|[\u2600-\u27BF]|[\u2B50\u231A\u231B\u23F0-\u23FF])\uFE0F?/gu;
+  function kcLineIconPass(root) {
+    (root || document).querySelectorAll('h1,h2,h3,h4,summary,button,strong,label,legend').forEach(el => {
+      if (el.closest('.kc-no-icon,#miniBoard,#aiBoard,#rvBoard')) return;
+      const w = document.createTreeWalker(el, NodeFilter.SHOW_TEXT, null), list = [];
+      let n;
+      while ((n = w.nextNode())) {
+        if (n.parentNode.closest('.kc-emo')) continue;
+        KC_EMO_RE.lastIndex = 0;
+        if (KC_EMO_RE.test(n.nodeValue)) list.push(n);
+      }
+      list.forEach(t => {
+        const s = t.nodeValue, frag = document.createDocumentFragment();
+        let last = 0, changed = false, m;
+        KC_EMO_RE.lastIndex = 0;
+        while ((m = KC_EMO_RE.exec(s))) {
+          const key = kcIconKey(m[0]);
+          if (!key) continue;
+          if (key.startsWith('♟') && !/^H[1-3]$/.test(el.tagName)) continue; // 駒の記号は見出しだけ
+          if (m.index > last) frag.appendChild(document.createTextNode(s.slice(last, m.index)));
+          const ic = kcIcon(key, '1.15em');
+          ic.classList.add('kc-li');
+          ic.style.verticalAlign = '-0.18em';
+          const hid = document.createElement('span');
+          hid.className = 'kc-emo';
+          hid.style.display = 'none';
+          hid.textContent = m[0];
+          frag.appendChild(ic); frag.appendChild(hid);
+          last = m.index + m[0].length; changed = true;
+        }
+        if (!changed) return;
+        if (last < s.length) frag.appendChild(document.createTextNode(s.slice(last)));
+        t.parentNode.replaceChild(frag, t);
+      });
+    });
+  }
+  (function kcWatchLineIcons() {
+    let queued = false;
+    const run = () => { queued = false; try { kcLineIconPass(); } catch (e) {} };
+    const queue = () => { if (!queued) { queued = true; setTimeout(run, 60); } };
+    run();
+    new MutationObserver(queue).observe(document.body, { childList: true, subtree: true, characterData: true });
+  })();
   function kcIcon(key, px) {
     const p = KC_ICON_PATHS[key];
     const span = document.createElement('span');
@@ -7872,11 +7964,10 @@ const PIECE_IMG = {
       ? (LANG === 'ja' ? '⏳ 最初の1手を指してください：あと' + left + '秒(指さないと対局は中止になります)' : '⏳ Make your first move: ' + left + 's left (otherwise the game will be aborted)')
       : (LANG === 'ja' ? '⏳ 相手の最初の1手を待っています：あと' + left + '秒(指されないと対局は中止になります)' : "⏳ Waiting for your opponent's first move: " + left + 's left (otherwise the game will be aborted)');
   } else if (isLive && myTurnNow && myTime <= LOW_TIME_WARN_MS) {
+    // ⏰ 残りが少ないときは、文のお知らせは出さず、時計を赤くして音で知らせる
     const left = Math.max(0, Math.ceil(myTime / 1000));
-    warnEl.style.display = 'block';
-    warnEl.style.background = '#fde2e2';
-    warnEl.style.color = '#b42318';
-    warnEl.textContent = LANG === 'ja' ? '⏰ あと' + left + '秒で時間切れ！' : '⏰ ' + left + 's left before you run out of time!';
+    warnEl.style.display = 'none';
+    warnEl.textContent = '';
     clockEl.style.color = '#d64545';
     if (left <= 10 && left > 0 && left !== kcLastBeepSec) { kcLastBeepSec = left; kcLowTimeBeep(); }
   } else {
@@ -8143,13 +8234,26 @@ function startClockTicker(user) {
   }
 
   function setupPresence(user) {
+    if (window.kcPresenceUid === user.uid) return; // 2回目以降は何もしない
+    window.kcPresenceUid = user.uid;
     const presenceRef = ref(db, 'presence/' + user.uid);
     const connectedRef = ref(db, '.info/connected');
+    let kcConnected = false;
     onValue(connectedRef, (snap) => {
-      if (snap.val() === true) {
+      kcConnected = snap.val() === true;
+      if (kcConnected) {
         onDisconnect(presenceRef).set({ online: false, lastSeen: serverTimestamp() }).then(() => {
           set(presenceRef, { online: true, lastSeen: serverTimestamp() });
         });
+      }
+    });
+    // 📶 アプリとブラウザなど2か所で開いていて、片方を閉じたときに「オフライン」と書かれても、
+    //    こちらがつながっていれば「オンライン」に戻す
+    onValue(presenceRef, (snap) => {
+      const v = snap.val();
+      if (window.kcPresenceUid !== user.uid) return;
+      if (kcConnected && v && v.online === false) {
+        set(presenceRef, { online: true, lastSeen: serverTimestamp() }).catch(() => {});
       }
     });
   }
@@ -9749,5 +9853,6 @@ if (banner) banner.style.visibility = p.superhard ? 'visible' : 'hidden';
     });
   }
 </script>
+<script src="furigana.js" defer></script>
 </body>
 </html>
