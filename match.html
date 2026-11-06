@@ -395,6 +395,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <input type="checkbox" id="aiKothToggle">
       <label for="aiKothToggle" style="cursor:pointer;" data-ja="👑 King of the Hill（キングが中央の4マスに着いたら勝ち）" data-en="👑 King of the Hill (reach the 4 center squares with your king to win)">👑 King of the Hill（キングが中央の4マスに着いたら勝ち）</label>
     </div>
+    <div style="margin-top:6px;font-size:0.85rem;display:flex;align-items:center;gap:6px;justify-content:center;">
+      <input type="checkbox" id="aiThreeToggle">
+      <label for="aiThreeToggle" style="cursor:pointer;" data-ja="⚡ スリーチェック（3回チェックしたら勝ち）" data-en="⚡ Three-check (give 3 checks to win)">⚡ スリーチェック（3回チェックしたら勝ち）</label>
+    </div>
   </div>
   <div id="aiGameArea" style="display:none;">
     <p id="aiGameStatus"></p>
@@ -1444,7 +1448,8 @@ applyBoardTheme();
   let aiBoardPly = null; // null = ライブ(最新)局面。数値の時は過去の局面を閲覧中
   let aiDifficulty = 'easy';
   let aiKoth = false;        // 👑 King of the Hill で遊んでいるか
-  let aiKothWinner = null;   // 中央にキングが着いた側（'w' / 'b'）
+  let aiKothWinner = null;   // 中央にキングが着いた側（'w' / 'b'）。スリーチェックで3回チェックした側もここ
+  let aiThree = false;       // ⚡ スリーチェックで遊んでいるか
   let aiGen = 0; // 「待った」や新しい対局で、考え中のAIの手を取り消すための番号
   const AI_PIECE_VAL = { p: 1, n: 3, b: 3, r: 5, q: 9, k: 0 };
 
@@ -1669,7 +1674,11 @@ applyBoardTheme();
 
     if (aiKothWinner || aiChess.game_over()) {
       try { kcShowGameEndAd(aiChess); } catch (e) {}
-      if (aiKothWinner) {
+      if (aiKothWinner && aiThree && !aiChess.in_checkmate()) {
+        statusEl.textContent = aiKothWinner === 'w'
+          ? (LANG === 'ja' ? '⚡ 3回チェックしました！あなたの勝ちです！' : '⚡ You gave 3 checks. You won!')
+          : (LANG === 'ja' ? '⚡ AIに3回チェックされました。AIの勝ちです。' : '⚡ The AI gave 3 checks. The AI won.');
+      } else if (aiKothWinner && !aiThree) {
         statusEl.textContent = aiKothWinner === 'w'
           ? (LANG === 'ja' ? '👑 キングが中央に着きました！あなたの勝ちです！' : '👑 Your king reached the center. You won!')
           : (LANG === 'ja' ? '👑 AIのキングが中央に着きました。AIの勝ちです。' : "👑 The AI's king reached the center. The AI won.");
@@ -1681,7 +1690,8 @@ applyBoardTheme();
       }
       document.getElementById('aiReportToggleBtn').style.display = 'inline-block';
     } else {
-      statusEl.textContent = (aiKoth ? (LANG === 'ja' ? '👑 King of the Hill | ' : '👑 King of the Hill | ') : '') + (aiChess.turn() === 'w'
+      statusEl.textContent = (aiKoth ? (LANG === 'ja' ? '👑 King of the Hill | ' : '👑 King of the Hill | ') : '')
+        + (aiThree ? kcThreeLabel(kcCheckCount(aiMoveHistory, 'w'), kcCheckCount(aiMoveHistory, 'b'), { ja: 'AI', en: 'AI' }) : '') + (aiChess.turn() === 'w'
         ? (LANG === 'ja' ? 'あなたの番です' : 'Your turn')
         : (LANG === 'ja' ? 'AIが考え中...' : 'AI is thinking...'));
       document.getElementById('aiReportToggleBtn').style.display = 'none';
@@ -1801,6 +1811,35 @@ applyBoardTheme();
   // 👑 King of the Hill：キングが中央の4マスに着いたら勝ち
   const KC_KOTH_SQ = ['d4', 'd5', 'e4', 'e5'];
   function kcKothWinMove(mv) { return !!mv && mv.piece === 'k' && KC_KOTH_SQ.indexOf(mv.to) !== -1; }
+  function kcIsVariant(v) { return v === 'koth' || v === '3check'; }
+  function kcVariantTag(v, ja) { return v === 'koth' ? '👑 King of the Hill' : v === '3check' ? (ja ? '⚡ スリーチェック' : '⚡ Three-check') : ''; }
+  // ⚡ スリーチェック：その色がかけたチェックの回数（棋譜の「+」「#」を数える）
+  function kcCheckCount(moves, color) { return (moves || []).filter(x => x && x.color === color && /[+#]/.test(x.san || '')).length; }
+  function kcThreeLabel(myN, oppN, oppWord) {
+    return LANG === 'ja'
+      ? '⚡ スリーチェック（あなた ' + myN + '/3・' + oppWord.ja + ' ' + oppN + '/3）| '
+      : '⚡ Three-check (you ' + myN + '/3 · ' + oppWord.en + ' ' + oppN + '/3) | ';
+  }
+  // AI がスリーチェックで指す手の手直し：3回目のチェックがかけられるなら指す。相手に3回目をかけられる手は避ける
+  function aiThreeAdjust(chess, picked, hist) {
+    try {
+      const moves = chess.moves({ verbose: true });
+      if (!moves.length) return picked;
+      const me = chess.turn(), opp = me === 'w' ? 'b' : 'w';
+      const myN = kcCheckCount(hist, me), oppN = kcCheckCount(hist, opp);
+      const gives = m => /[+#]/.test(m.san);
+      if (myN >= 2) { const w = moves.find(gives); if (w) return w; }
+      let pool = moves;
+      if (oppN >= 2) {
+        const safe = moves.filter(m => { chess.move(m); const bad = chess.moves({ verbose: true }).some(gives); chess.undo(); return !bad; });
+        if (safe.length) pool = safe;
+      }
+      if (picked && pool.some(m => m.from === picked.from && m.to === picked.to && m.promotion === picked.promotion)) return picked;
+      const checks = pool.filter(gives);
+      if (checks.length) return checks[Math.floor(Math.random() * checks.length)];
+      return pool[Math.floor(Math.random() * pool.length)];
+    } catch (e) { return picked; }
+  }
   const END_REASON_LABEL = {
     checkmate: { ja: 'チェックメイト', en: 'Checkmate' },
     resign: { ja: '相手の投了', en: 'Opponent resigned' },
@@ -2259,6 +2298,7 @@ applyBoardTheme();
         aiLastMove = { from: move.from, to: move.to };
         aiMoveHistory.push({ san: move.san, color: move.color, captured: move.captured || null });
         if (aiKoth && kcKothWinMove(move)) aiKothWinner = 'w';
+        if (aiThree && kcCheckCount(aiMoveHistory, 'w') >= 3) aiKothWinner = 'w';
         if (aiChess.in_checkmate()) playCheckmateSound();
         else if (aiChess.in_check()) playCheckSound();
         else if (move.san.startsWith('O-O')) playCastleSound();
@@ -2280,11 +2320,13 @@ applyBoardTheme();
               if (!aiMove && aiDifficulty === 'hard' && aiChess && !aiChess.game_over()) aiMove = aiPickMove(aiChess, 'hard');
               if (gen !== aiGen || !aiChess) return;
               if (aiKoth && aiDifficulty !== 'easy') aiMove = aiKothAdjust(aiChess, aiMove);
+              if (aiThree && aiDifficulty !== 'easy') aiMove = aiThreeAdjust(aiChess, aiMove, aiMoveHistory);
               if (aiMove) {
                 aiChess.move(aiMove);
                 aiLastMove = { from: aiMove.from, to: aiMove.to };
                 aiMoveHistory.push({ san: aiMove.san, color: aiMove.color, captured: aiMove.captured || null });
                 if (aiKoth && kcKothWinMove(aiMove)) aiKothWinner = 'b';
+                if (aiThree && kcCheckCount(aiMoveHistory, 'b') >= 3) aiKothWinner = 'b';
                 if (aiChess.in_checkmate()) playCheckmateSound();
                 else if (aiChess.in_check()) playCheckSound();
                 else if (aiMove.san.startsWith('O-O')) playCastleSound();
@@ -2474,6 +2516,7 @@ applyBoardTheme();
   function startAiGame(difficulty) {
     aiGen++;
     { const kt = document.getElementById('aiKothToggle'); aiKoth = !!(kt && kt.checked); }
+    { const tt = document.getElementById('aiThreeToggle'); aiThree = !aiKoth && !!(tt && tt.checked); }
     aiKothWinner = null;
     aiDifficulty = difficulty;
     aiChess = new Chess();
@@ -2504,6 +2547,12 @@ applyBoardTheme();
     aiBoardPly = null;
     renderAiBoard();
   };
+  // 👑 と ⚡ は、どちらか1つだけ選べる
+  try {
+    const kt = document.getElementById('aiKothToggle'), tt = document.getElementById('aiThreeToggle');
+    kt.addEventListener('change', () => { if (kt.checked) tt.checked = false; });
+    tt.addEventListener('change', () => { if (tt.checked) kt.checked = false; });
+  } catch (e) {}
   document.getElementById('aiEasyBtn').onclick = () => startAiGame('easy');
   document.getElementById('aiMediumBtn').onclick = () => startAiGame('medium');
   document.getElementById('aiHardBtn').onclick = () => startAiGame('hard');
@@ -3229,6 +3278,28 @@ applyBoardTheme();
       kothRow.appendChild(kothCheckbox);
       kothRow.appendChild(kothLabel);
       tcPanel.appendChild(kothRow);
+      // ⚡ スリーチェック（ノーレートだけ）
+      const threeRow = document.createElement('div');
+      threeRow.style.cssText = 'font-size:0.75rem;margin-top:4px;display:flex;align-items:center;gap:6px;';
+      const threeCheckbox = document.createElement('input');
+      threeCheckbox.type = 'checkbox';
+      threeCheckbox.id = 'threeToggle_' + friendUid;
+      const threeLabel = document.createElement('label');
+      threeLabel.htmlFor = threeCheckbox.id;
+      threeLabel.textContent = LANG === 'ja' ? '⚡ スリーチェック（3回チェックしたら勝ち・ノーレート）' : '⚡ Three-check (give 3 checks to win · unrated)';
+      threeLabel.style.cursor = 'pointer';
+      const kcVarSync = (src) => {
+        if (src === kothCheckbox && kothCheckbox.checked) threeCheckbox.checked = false;
+        if (src === threeCheckbox && threeCheckbox.checked) kothCheckbox.checked = false;
+        const anyVar = kothCheckbox.checked || threeCheckbox.checked;
+        if (anyVar) ratedCheckbox.checked = false;
+        ratedCheckbox.disabled = anyVar;
+      };
+      kothCheckbox.onchange = () => kcVarSync(kothCheckbox);
+      threeCheckbox.onchange = () => kcVarSync(threeCheckbox);
+      threeRow.appendChild(threeCheckbox);
+      threeRow.appendChild(threeLabel);
+      tcPanel.appendChild(threeRow);
 
       const fixedRowLabel = document.createElement('div');
       fixedRowLabel.style.cssText = 'font-size:0.75rem;color:var(--text-muted);margin-top:4px;';
@@ -3255,8 +3326,8 @@ applyBoardTheme();
         const myName = myProfile.exists() ? myProfile.val().username : user.displayName;
         await set(ref(db, 'matchInvites/' + friendUid + '/' + user.uid), {
           username: myName, sentAt: Date.now(), timeControl: opt.key, fixed: fixed,
-          rated: kothCheckbox.checked ? false : ratedCheckbox.checked,
-          variant: kothCheckbox.checked ? 'koth' : null
+          rated: (kothCheckbox.checked || threeCheckbox.checked) ? false : ratedCheckbox.checked,
+          variant: kothCheckbox.checked ? 'koth' : (threeCheckbox.checked ? '3check' : null)
         });
         tcPanel.style.display = 'none';
         hasPendingInvite = true;
@@ -3750,8 +3821,8 @@ await set(ref(db, 'matches/' + matchId), {
       whiteJoined: isCorrespondence ? true : false,
       blackJoined: isCorrespondence ? true : false,
       turnStartedAt: isCorrespondence ? kcNow() : null,
-      rated: info.variant !== 'koth' && info.rated !== false && !(await window.kcInvolvesGuest(user.uid, fromUid)),
-      variant: info.variant === 'koth' ? 'koth' : null
+      rated: !kcIsVariant(info.variant) && info.rated !== false && !(await window.kcInvolvesGuest(user.uid, fromUid)),
+      variant: kcIsVariant(info.variant) ? info.variant : null
     });
     await set(ref(db, 'currentMatches/' + user.uid + '/' + matchId), true);
     await set(ref(db, 'currentMatches/' + fromUid + '/' + matchId), true);
@@ -3791,8 +3862,8 @@ await set(ref(db, 'matches/' + matchId), {
       const txt = document.createElement('div');
       txt.style.cssText = 'flex:1;min-width:0;font-size:0.9rem;line-height:1.4;font-weight:700;';
       txt.textContent = ja
-        ? '⚔️ ' + (info.username || '?') + ' さんから対局の申し込み（' + (info.variant === 'koth' ? '👑 King of the Hill・' : '') + tc + (info.rated === false ? '・ノーレート' : '') + '）'
-        : '⚔️ ' + (info.username || '?') + ' challenged you (' + (info.variant === 'koth' ? '👑 King of the Hill, ' : '') + tc + (info.rated === false ? ', unrated' : '') + ')';
+        ? '⚔️ ' + (info.username || '?') + ' さんから対局の申し込み（' + (kcIsVariant(info.variant) ? kcVariantTag(info.variant, true) + '・' : '') + tc + (info.rated === false ? '・ノーレート' : '') + '）'
+        : '⚔️ ' + (info.username || '?') + ' challenged you (' + (kcIsVariant(info.variant) ? kcVariantTag(info.variant, false) + ', ' : '') + tc + (info.rated === false ? ', unrated' : '') + ')';
       const ok = document.createElement('button');
       ok.type = 'button';
       ok.textContent = ja ? '受ける' : 'Accept';
@@ -3830,7 +3901,7 @@ await set(ref(db, 'matches/' + matchId), {
       const row = document.createElement('div');
       row.className = 'list-item';
       const label = document.createElement('span');
-      label.textContent = info.username + (info.variant === 'koth' ? ' 👑' : '') + (info.rated === false ? (LANG === 'ja' ? '(ノーレート)' : ' (unrated)') : '');
+      label.textContent = info.username + (info.variant === 'koth' ? ' 👑' : info.variant === '3check' ? ' ⚡' : '') + (info.rated === false ? (LANG === 'ja' ? '(ノーレート)' : ' (unrated)') : '');
       const btnGroup = document.createElement('span');
 
       const acceptBtn = document.createElement('button');
@@ -4414,6 +4485,7 @@ const PIECE_IMG = {
       ['White', m.whiteName || 'White'], ['Black', m.blackName || 'Black'], ['Result', result]
     ];
     if (m.variant === 'koth') tags.push(['Variant', 'King of the Hill']);
+    if (m.variant === '3check') tags.push(['Variant', 'Three-check']);
     let body = '';
     moves.forEach((san, i) => { body += (i % 2 === 0 ? ((i / 2 + 1) + '. ') : '') + san + ' '; });
     return tags.map(([k, v]) => '[' + k + ' "' + String(v).replace(/"/g, "'") + '"]').join('\n') + '\n\n' + (body + result).trim() + '\n';
@@ -6346,8 +6418,18 @@ const PIECE_IMG = {
           // おすすめの手で取れたはずの相手の駒が、取りながら逃げてしまうときは、そちらを言う（例：d8のビショップがc7のポーンを取って逃げる）
           const bestTo = it.best ? it.best.slice(2, 4) : '';
           const bestCapPiece = (() => { try { const b0 = new Chess(it.fenBefore); const q = b0.get(bestTo); return q && q.color !== it.color && val(q.type) >= 3 ? q : null; /* ポーンのときは言わない */ } catch (e) { return null; } })();
+          // おすすめの手でその駒を取って、本当に得をする（取り返されても差し引きでプラス）ときだけ「逃げられる」と言う
+          // （ナイトどうしの交換になるだけなら、逃げられても損ではない）
+          let bestWins = false;
+          try {
+            if (bestCapPiece) {
+              const bw = new Chess(it.fenBefore);
+              const bwm = bw.move({ from: it.best.slice(0, 2), to: bestTo, promotion: it.best[4] || 'q' });
+              if (bwm && bwm.captured) bestWins = val(bwm.captured) - kcExchangeGain(bw, bestTo) >= 2;
+            }
+          } catch (e) {}
           let escape = null;
-          if (bestCapPiece) p.moves({ verbose: true }).forEach(x => { if (x.from === bestTo && (!escape || (x.captured && !escape.captured))) escape = x; });
+          if (bestCapPiece && bestWins) p.moves({ verbose: true }).forEach(x => { if (x.from === bestTo && (!escape || (x.captured && !escape.captured))) escape = x; });
           if (escape && escape.captured) {
             out.push(ja ? it.san + 'だと、' + bestTo + 'の' + nm(bestCapPiece.type) + 'が、' + escape.to + 'の' + nm(escape.captured) + 'を取りながら逃げてしまうんだ。'
                         : 'After ' + it.san + ', the ' + nm(bestCapPiece.type).toLowerCase() + ' on ' + bestTo + ' escapes by taking the ' + nm(escape.captured).toLowerCase() + ' on ' + escape.to + '.');
@@ -7234,8 +7316,8 @@ const PIECE_IMG = {
               whiteJoined: isCorr,
               blackJoined: isCorr,
               turnStartedAt: isCorr ? kcNow() : null,
-              rated: m.variant !== 'koth' && m.rated !== false && !(await window.kcInvolvesGuest(myUid, oppUid)),
-              variant: m.variant === 'koth' ? 'koth' : null
+              rated: !kcIsVariant(m.variant) && m.rated !== false && !(await window.kcInvolvesGuest(myUid, oppUid)),
+              variant: kcIsVariant(m.variant) ? m.variant : null
             });
             await set(ref(db, 'currentMatches/' + myUid + '/' + newMatchId), true);
             await set(ref(db, 'currentMatches/' + oppUid + '/' + newMatchId), true);
@@ -7306,7 +7388,11 @@ const PIECE_IMG = {
       kcRenderRematch(m, user, matchId, statusEl);
     } else if (m.status === 'resigned') {
       const iWonByResign = m.winner === myColor;
-      statusEl.textContent = m.kothWin
+      statusEl.textContent = m.threeWin
+        ? (iWonByResign
+            ? (LANG === 'ja' ? '⚡ 3回チェックしました！あなたの勝ちです！' : '⚡ You gave 3 checks. You won!')
+            : (LANG === 'ja' ? '⚡ 3回チェックされました。負けです。' : '⚡ Your opponent gave 3 checks. You lost.'))
+        : m.kothWin
         ? (iWonByResign
             ? (LANG === 'ja' ? '👑 キングが中央に着きました！あなたの勝ちです！' : '👑 Your king reached the center. You won!')
             : (LANG === 'ja' ? '👑 相手のキングが中央に着きました。負けです。' : "👑 Your opponent's king reached the center. You lost."))
@@ -7356,6 +7442,7 @@ const PIECE_IMG = {
       kcRenderRematch(m, user, matchId, statusEl);
     } else {
       statusEl.textContent = (m.variant === 'koth' ? (LANG === 'ja' ? '👑 King of the Hill（キングを中央の4マスへ）| ' : '👑 King of the Hill (get your king to the center) | ') : '')
+        + (m.variant === '3check' ? kcThreeLabel(kcCheckCount(m.moves, myColor), kcCheckCount(m.moves, myColor === 'w' ? 'b' : 'w'), { ja: '相手', en: 'opponent' }) : '')
         + (LANG === 'ja' ? '対戦相手: ' : 'Opponent: ') + oppName
         + (m.rated === false ? (LANG === 'ja' ? '(ノーレート)' : ' (unrated)') : '') + ' | ' +
         (myTurn ? (LANG === 'ja' ? 'あなたの番です' : 'Your turn') : (LANG === 'ja' ? '相手の番です' : "Opponent's turn"));
@@ -7895,6 +7982,7 @@ const PIECE_IMG = {
           : remainingAfterMove + (m.increment || 0);
         const moveHistory = (m.moves || []).concat([{ san: move.san, color: move.color, captured: move.captured || null }]);
         const kothWon = m.variant === 'koth' && kcKothWinMove(move);
+        const threeWon = m.variant === '3check' && !gameChess.in_checkmate() && kcCheckCount(moveHistory, myColor) >= 3;
         try {
           await set(ref(db, 'matches/' + matchId), {
             ...m, fen: gameChess.fen(), turn: gameChess.turn(),
@@ -7902,7 +7990,8 @@ const PIECE_IMG = {
             lastMove: { from: move.from, to: move.to },
             moves: moveHistory,
             drawOfferBy: null, takebackRequestBy: null,
-            ...(kothWon ? { status: 'resigned', winner: myColor, kothWin: true } : {})
+            ...(kothWon ? { status: 'resigned', winner: myColor, kothWin: true } : {}),
+            ...(threeWon ? { status: 'resigned', winner: myColor, threeWin: true } : {})
           });
         } catch (err) {
           // 手を送れなかったときは、盤をもとに戻して知らせる（だまって相手に届かない、をなくす）
