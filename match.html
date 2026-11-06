@@ -5214,6 +5214,7 @@ const PIECE_IMG = {
     sfReadyWaiters.splice(0).forEach(f => { try { f(false); } catch (e) {} });
   }
   let sfLastScore = null;
+  let sfStale = 0; // 時間切れであきらめた問い合わせの数
   let sfLastMate = null;
 
   function getStockfishWorker() {
@@ -5245,6 +5246,8 @@ const PIECE_IMG = {
         if (mm) { sfLastMate = parseInt(mm[1], 10); sfLastScore = (sfLastMate > 0 ? 10000 : -10000); }
       }
       if (line.indexOf('bestmove') === 0) {
+        // 時間切れであきらめた問い合わせの答えが遅れて届いたら、捨てる（次の問い合わせにまぎれこませない）
+        if (sfStale > 0) { sfStale--; sfLastScore = null; sfLastMate = null; return; }
         const bestMoveUci = line.split(' ')[1];
         const score = sfLastScore;
         const mate = sfLastMate;
@@ -5278,7 +5281,7 @@ const PIECE_IMG = {
         if (settled) return;
         // 時間内に答えが来なかった問い合わせは列から外す（外さないと、あとの答えが1つずつずれてしまう）
         const i = sfQueue.indexOf(wrappedResolve);
-        if (i !== -1) sfQueue.splice(i, 1);
+        if (i !== -1) { sfQueue.splice(i, 1); sfStale++; }
         try { worker.postMessage('stop'); } catch (e) {}
         sfDiag.timeouts++;
         wrappedResolve({ uci: null, score: 0 });
@@ -5985,7 +5988,7 @@ const PIECE_IMG = {
   }
   const KC_EMO_RE = /(?:[\u{1F300}-\u{1FAFF}]|[\u2600-\u27BF]|[\u2B50\u231A\u231B\u23F0-\u23FF])\uFE0F?/gu;
   function kcLineIconPass(root) {
-    (root || document).querySelectorAll('h1,h2,h3,h4,summary,button,strong,label,legend').forEach(el => {
+    (root || document).querySelectorAll('h1,h2,h3,h4,summary,button,strong,label,legend,a').forEach(el => {
       if (el.closest('.kc-no-icon,#miniBoard,#aiBoard,#rvBoard')) return;
       const w = document.createTreeWalker(el, NodeFilter.SHOW_TEXT, null), list = [];
       let n;
