@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1034556404852942" crossorigin="anonymous"></script>
+
+<title>ケンブリッジ・スプリングス・ディフェンス (Cambridge Springs Defense) - KitsuneChess</title>
+<meta name="description" content="クイーンズ・ギャンビット・ディクラインドの人気の作戦、ケンブリッジ・スプリングス・ディフェンスを一手ずつ日本語と英語で解説。初心者が引っかかりやすいエレファント・トラップも図で紹介します。">
+<link rel="canonical" href="https://kitsunechess.com/cambridge_springs.html">
+<link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f5edd6;
+  --brown: #7c4a1e;
+  --brown-dark: #4a2a0e;
+  --brown-light: #a3692d;
+  --text: #111;
+  --text-sub: #222;
+  --nav-bg: rgba(90, 58, 24, 0.1);
+  --border-color: rgba(184, 134, 11, 0.3);
+  --card-bg: rgba(255, 255, 255, 0.5);
+  --card-border: rgba(90, 58, 24, 0.15);
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { background:var(--bg); color:var(--text); font-family:'Crimson Pro',serif; font-weight:600; min-height:100vh; }
+
+nav { width:100%; background:var(--nav-bg); border-bottom:2px solid var(--border-color); }
+.nav-inner { max-width:960px; margin:0 auto; width:100%; display:flex; align-items:center; justify-content:space-between; padding:8px 16px; }
+.back-link { color:var(--brown); text-decoration:none; font-size:0.9rem; font-weight:700; }
+.back-link:hover { color:var(--brown-dark); }
+.lang-switch-btn { background:rgba(90,58,24,0.08); border:1px solid rgba(90,58,24,0.25); color:var(--text-sub); padding:5px 10px; border-radius:5px; font-family:'Crimson Pro',serif; font-size:0.8rem; font-weight:700; cursor:pointer; transition:all .2s; }
+.lang-switch-btn:hover { border-color:var(--brown); color:var(--brown); background:rgba(90,58,24,0.15); }
+
+.app-container { max-width:600px; margin:0 auto; width:100%; padding:24px 16px; }
+.opening-title { font-size:1.6rem; color:var(--brown-dark); margin-bottom:16px; text-align:center; }
+
+.board-wrap { width:100%; max-width:420px; margin:0 auto 12px auto; }
+.move-label { text-align:center; font-weight:700; color:var(--brown-dark); font-size:1.1rem; margin-bottom:8px; }
+.board-grid {
+  display:grid;
+  grid-template-columns:repeat(8,1fr);
+  grid-template-rows:repeat(8,1fr);
+  width:100%;
+  aspect-ratio:1/1;
+  border:4px solid var(--brown-dark);
+  border-radius:4px;
+  box-shadow:0 4px 12px rgba(0,0,0,0.1);
+  overflow:hidden;
+}
+.cell { position:relative; display:flex; align-items:center; justify-content:center; min-width:0; min-height:0; }
+.cell.light { background:var(--sq-light,#f0d9b5); }
+.cell.dark { background:var(--sq-dark,#b58863); }
+.piece-img { width:100%; height:100%; object-fit:contain; pointer-events:none; display:block; }
+
+/* Board labels inside cells */
+.cell-label {
+  position:absolute;
+  font-family:'Crimson Pro',serif;
+  font-weight:800;
+  font-size:clamp(0.85rem,3vw,1.2rem);
+  line-height:1;
+  pointer-events:none;
+  z-index:2;
+}
+.cell.light .cell-label { color:rgba(80,40,0,0.85); }
+.cell.dark  .cell-label { color:rgba(255,240,200,0.95); }
+.cell-label.rank-label { top:2px; left:3px; }
+.cell-label.file-label { bottom:2px; right:3px; }
+
+/* ── 解説＋操作パネル：常に画面下部に固定表示 ── */
+.bottom-panel {
+  position:fixed;
+  left:0; right:0; bottom:0;
+  margin:0 auto;
+  max-width:600px;
+  background:var(--bg);
+  border-top:2px solid var(--border-color);
+  box-shadow:0 -4px 14px rgba(0,0,0,0.1);
+  padding:14px 16px calc(14px + env(safe-area-inset-bottom));
+  z-index:50;
+}
+.commentary-row { display:flex; gap:14px; align-items:flex-start; margin-bottom:12px; }
+.fox-avatar { width:56px; height:56px; flex-shrink:0; border-radius:50%; background:#fff8ea; border:2px solid var(--brown-light); object-fit:contain; }
+.commentary-text { line-height:1.55; font-size:0.98rem; color:var(--text-sub); max-height:9.5em; overflow-y:auto; }
+
+.lesson-controls { display:flex; justify-content:space-between; align-items:center; gap:10px; }
+.lesson-btn { background:var(--brown); color:#fff; border:none; padding:10px 18px; border-radius:6px; font-family:'Crimson Pro',serif; font-weight:700; font-size:0.95rem; cursor:pointer; transition:background .2s; }
+.lesson-btn:hover { background:var(--brown-dark); }
+.lesson-btn:disabled { opacity:.4; cursor:not-allowed; }
+.lesson-progress { font-size:.85rem; color:var(--brown-light); font-weight:700; }
+
+.lang-element-ja, .lang-element-en { display:none; }
+
+footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-top:20px; padding-bottom:10px; }
+
+.opening-intro {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 8px;
+  padding: 16px 18px;
+  margin-bottom: 20px;
+  line-height: 1.75;
+  font-size: 1rem;
+  color: var(--text-sub);
+}
+.commentary-text a, .opening-intro a { color:var(--brown); text-decoration:underline; font-weight:700; }
+.commentary-text a:hover, .opening-intro a:hover { color:var(--brown-dark); }
+.more-detail { margin-top:8px; border-top:1px dashed var(--brown-light); padding-top:6px; }
+.more-detail summary { cursor:pointer; font-weight:700; color:var(--brown); font-size:0.92rem; list-style-position:inside; }
+.more-detail .more-body { margin-top:6px; font-size:0.94rem; }
+</style>
+  <script src="board-theme.js"></script>
+  <script src="kc-diagram.js" defer></script>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <span style="display:inline-flex;align-items:center;gap:16px;">
+    <a href="openings_list.html" class="back-link lang-element-ja">← 一覧へ戻る</a>
+    <a href="openings_list.html" class="back-link lang-element-en">← Back to List</a>
+    <a href="index.html" class="back-link lang-element-ja">🏠 ホーム</a>
+    <a href="index.html?lang=en" class="back-link lang-element-en">🏠 Home</a>
+    </span>
+    <button id="langToggle" class="lang-switch-btn">English</button>
+  </div>
+</nav>
+
+<div class="app-container">
+  <h1 class="opening-title lang-element-ja">ケンブリッジ・スプリングス・ディフェンス</h1>
+  <h1 class="opening-title lang-element-en">Cambridge Springs Defense</h1>
+
+  <div class="opening-intro">
+    <p class="lang-element-ja">💡 ケンブリッジ・スプリングス・ディフェンスは、<a href='queens_gambit.html'>クイーンズ・ギャンビット・ディクラインド</a>で黒が4...Nbd7・5...c6・6...Qa5と指して、白のc3のナイトとg5のビショップを同時にねらうオープニングだよ。1904年にアメリカのケンブリッジ・スプリングスで開かれた大会でよく指されたことから、この名前がついたんだ。4...Nbd7には、d5のポーンを取りにきた白を罠にかける「エレファント・トラップ」もかくれていて、初心者どうしの対局でもよく出てくるよ。</p>
+    <p class="lang-element-en">💡 The Cambridge Springs Defense is an opening in the <a href='queens_gambit.html?lang=en'>Queen's Gambit Declined</a> where Black plays 4...Nbd7, 5...c6 and 6...Qa5, aiming at White's c3 knight and g5 bishop at the same time. It got its name from the 1904 tournament in Cambridge Springs, USA, where it was played often. 4...Nbd7 also hides the "Elephant Trap," which catches White when grabbing the d5 pawn, and it shows up a lot in games between beginners.</p>
+  </div>
+
+  <div class="board-wrap">
+    <div class="move-label" id="moveLabel"></div>
+    <div class="board-grid" id="boardGrid"></div>
+  </div>
+
+
+  <!-- 手順と解説のまとめ（ページを開いたときから全部読めるように） -->
+  <section id="moveSummary" style="margin:24px 0 8px;background:var(--card-bg,#fffaf0);border:2px solid var(--brown-light,#d8b88a);border-radius:12px;padding:14px 18px;line-height:1.75;">
+    <h2 class="lang-element-ja" style="font-size:1.15rem;margin:0 0 8px;">📜 手順と解説のまとめ</h2>
+    <h2 class="lang-element-en" style="font-size:1.15rem;margin:0 0 8px;">📜 All Moves Explained</h2>
+    <p class="lang-element-ja" style="margin:0 0 10px;font-size:0.9rem;color:var(--text-sub,#6b4a2b);">👆 手をタップすると、その局面を盤で見られます。</p>
+    <p class="lang-element-en" style="margin:0 0 10px;font-size:0.9rem;color:var(--text-sub,#6b4a2b);">👆 Tap a move to see that position on the board.</p>
+    <p class="lang-element-ja" style="margin:0 0 8px;">ケンブリッジ・スプリングス・ディフェンスのレッスンを始めるよ！これは<a href='queens_gambit.html'>クイーンズ・ギャンビット・ディクラインド</a>の仲間で、黒が4...Nbd7と6...Qa5で、白のc3のナイトとg5のビショップを同時にねらう作戦なんだ。途中で、初心者がよく引っかかる「エレファント・トラップ」も出てくるよ。ジーンと一緒に、一手ずつ見ていこう。</p>
+    <p class="lang-element-en" style="margin:0 0 8px;">Let's start the Cambridge Springs Defense lesson! This is a branch of the <a href='queens_gambit.html?lang=en'>Queen's Gambit Declined</a>, where Black uses 4...Nbd7 and 6...Qa5 to aim at White's c3 knight and g5 bishop at the same time. Along the way you'll also meet the "Elephant Trap," which catches many beginners. Jene will walk you through it move by move.</p>
+    <ul class="lang-element-ja" style="margin:0;padding-left:0;list-style:none;">
+      <li style="margin:0 0 8px;"><strong>1. d4</strong> 白はポーンをd4へ進めるよ。白は中央のマスを押さえながら、c1のビショップの道を開けるんだ。</li>
+      <li style="margin:0 0 8px;"><strong>1...d5</strong> 黒はポーンをd5へ進めるよ。黒も同じように中央を押さえて、白のポーンと向かい合う形を作るんだ。</li>
+      <li style="margin:0 0 8px;"><strong>2. c4</strong> 白はポーンをc4へ進めて、<a href='queens_gambit.html'>クイーンズ・ギャンビット</a>に入るよ。白はc4のポーンで黒のd5のポーンに働きかけるんだ。</li>
+      <li style="margin:0 0 8px;"><strong>2...e6</strong> 黒はポーンをe6へ進めて、<a href='queens_gambit.html'>クイーンズ・ギャンビット・ディクラインド</a>に入るよ。黒はd5のポーンを支えながら、f8のビショップの道を開けるんだ。</li>
+      <li style="margin:0 0 8px;"><strong>3. Nc3</strong> 白はナイトをc3へ進めるよ。白はナイトを展開しながら、黒のd5のポーンへの圧力を強めるんだ。</li>
+      <li style="margin:0 0 8px;"><strong>3...Nf6</strong> 黒はナイトをf6へ進めるよ。黒はナイトを展開しながら、d5のポーンの守りを増やすんだ。</li>
+      <li style="margin:0 0 8px;"><strong>4. Bg5</strong> 白はビショップをg5へ進めるよ。白はf6のナイトをd8のクイーンにピンして、d5のポーンを守る黒のナイトの働きを弱めにいくんだ。 ピンについては、<a href='pin.html'>ピンのページ</a>でくわしく説明しているよ。</li>
+      <li style="margin:0 0 8px;"><strong>4...Nbd7（罠のしかけ）</strong> 黒はナイトをd7へ進めるよ。ここでは4...Be7が多いけれど、黒はd7のナイトでf6のナイトを支えるんだ。実はこの手には、白への罠がかくれているよ。 ここで白が5.cxd5 exd5 6.Nxd5と、d5のポーンを取りにくると、黒は6...Nxd5！と取り返せるんだ。白が7.Bxd8とクイーンを取っても、黒は7...Bb4+のチェックから白のクイーンを取り返して、最後はナイトを1つ得する。これが「エレファント・トラップ」だよ。このページの下の図で、くわしく見てみてね。</li>
+      <li style="margin:0 0 8px;"><strong>5. e3</strong> 白はポーンをe3へ進めるよ。白は罠に引っかからずに、落ち着いてf1のビショップの道を開け、d4のポーンを支えるんだ。</li>
+      <li style="margin:0 0 8px;"><strong>5...c6</strong> 黒はポーンをc6へ進めるよ。黒はd5のポーンをもう一度支えながら、d8のクイーンがa5へ出る道を開けるんだ。</li>
+      <li style="margin:0 0 8px;"><strong>6. Nf3</strong> 白はナイトをf3へ進めるよ。白はナイトを展開して、キャスリングの準備を進めるんだ。</li>
+      <li style="margin:0 0 8px;"><strong>6...Qa5（ケンブリッジ・スプリングス！）</strong> ここがケンブリッジ・スプリングス・ディフェンスの一手！黒はクイーンをa5へ進めるよ。a5からe1への斜めの線で、白のc3のナイトをキングにピンするんだ。さらに黒が...dxc4や...Ne4でd5のポーンをどかすと、a5のクイーンが横の線で白のg5のビショップもねらえるようになるよ。 名前は、1904年にアメリカのケンブリッジ・スプリングスという町で開かれた大会で、この作戦が何度も指されたことから来ているよ。</li>
+      <li style="margin:0 0 8px;"><strong>7. Nd2</strong> 白はf3のナイトをd2へ下げるよ。d2のナイトがc4とe4のマスを守るので、黒の...dxc4や...Ne4の作戦を止められるんだ。ナイトがd2に入ったので、c3のナイトはもうキングに直接ピンされていないよ。</li>
+      <li style="margin:0 0 8px;"><strong>7...Bb4</strong> 黒はビショップをb4へ進めるよ。黒はc3のナイトへのねらいをもう1つ増やして、白にc3のナイトを守らせるんだ。</li>
+      <li style="margin:0 0 8px;"><strong>8. Qc2</strong> 白はクイーンをc2へ進めるよ。白はc3のナイトを守りながら、黒の...Ne4にもそなえるんだ。</li>
+      <li style="margin:0 0 8px;"><strong>8...O-O</strong> 黒はキャスリングでキングを安全な場所へ動かすよ。</li>
+      <li style="margin:0 0 8px;"><strong>9. Be2</strong> 白はビショップをe2へ進めるよ。白もこれでキャスリングできるようになるんだ。</li>
+      <li style="margin:0 0 8px;"><strong>9...e5</strong> 黒はポーンをe5へ進めるよ。黒は中央で白のd4のポーンに反撃して、c8のビショップの道も開けにいくんだ。</li>
+      <li style="margin:0 0 8px;"><strong>10. O-O</strong> 白もキャスリングでキングを安全な場所へ動かすよ。この後は、黒が...exd4や...dxc4で中央を開き、白はg5のビショップやc3のナイトの守りに気をつけながら戦う形になるよ。黒の駒の働きが活発なので、白はていねいに指す必要があるんだ。</li>
+    </ul>
+    <ul class="lang-element-en" style="margin:0;padding-left:0;list-style:none;">
+      <li style="margin:0 0 8px;"><strong>1. d4</strong> White pushes the pawn to d4. White takes control of central squares and opens the path for the c1 bishop.</li>
+      <li style="margin:0 0 8px;"><strong>1...d5</strong> Black pushes the pawn to d5. Black also claims the center, setting up a pawn face-off with White.</li>
+      <li style="margin:0 0 8px;"><strong>2. c4</strong> White pushes the pawn to c4, entering the <a href='queens_gambit.html?lang=en'>Queen's Gambit</a>. White uses the c4 pawn to challenge Black's d5 pawn.</li>
+      <li style="margin:0 0 8px;"><strong>2...e6</strong> Black pushes the pawn to e6, entering the <a href='queens_gambit.html?lang=en'>Queen's Gambit Declined</a>. Black supports the d5 pawn and opens the path for the f8 bishop.</li>
+      <li style="margin:0 0 8px;"><strong>3. Nc3</strong> White develops the knight to c3. White develops while increasing the pressure on Black's d5 pawn.</li>
+      <li style="margin:0 0 8px;"><strong>3...Nf6</strong> Black develops the knight to f6. Black develops while adding another defender to the d5 pawn.</li>
+      <li style="margin:0 0 8px;"><strong>4. Bg5</strong> White develops the bishop to g5. White pins the f6 knight to the queen on d8, weakening the knight's job of guarding the d5 pawn. You can read more about pins on the <a href='pin.html?lang=en'>Pin page</a>.</li>
+      <li style="margin:0 0 8px;"><strong>4...Nbd7 (the hidden trap)</strong> Black develops the knight to d7. 4...Be7 is more common here, but Black uses the d7 knight to support the f6 knight. This move actually hides a trap for White. If White now goes 5.cxd5 exd5 6.Nxd5 to grab the d5 pawn, Black answers 6...Nxd5! Even if White takes the queen with 7.Bxd8, Black plays 7...Bb4+, wins White's queen back, and ends up a knight ahead. This is the "Elephant Trap." Check out the diagrams at the bottom of this page.</li>
+      <li style="margin:0 0 8px;"><strong>5. e3</strong> White pushes the pawn to e3. White avoids the trap, calmly opening the path for the f1 bishop and supporting the d4 pawn.</li>
+      <li style="margin:0 0 8px;"><strong>5...c6</strong> Black pushes the pawn to c6. Black adds another support to the d5 pawn and opens a path for the queen on d8 to reach a5.</li>
+      <li style="margin:0 0 8px;"><strong>6. Nf3</strong> White develops the knight to f3. White develops and gets ready to castle.</li>
+      <li style="margin:0 0 8px;"><strong>6...Qa5 (Cambridge Springs!)</strong> Here's the Cambridge Springs Defense! Black brings the queen to a5. Along the diagonal from a5 to e1, it pins White's c3 knight to the king. And once Black moves the d5 pawn out of the way with ...dxc4 or ...Ne4, the queen on a5 can also aim at White's g5 bishop along the fifth rank. The name comes from the 1904 tournament held in the town of Cambridge Springs in the United States, where this plan was played many times.</li>
+      <li style="margin:0 0 8px;"><strong>7. Nd2</strong> White pulls the f3 knight back to d2. The d2 knight guards the c4 and e4 squares, stopping Black's ...dxc4 and ...Ne4 ideas. With a knight now on d2, the c3 knight is no longer pinned directly to the king.</li>
+      <li style="margin:0 0 8px;"><strong>7...Bb4</strong> Black develops the bishop to b4. Black adds another attacker on the c3 knight, forcing White to keep defending it.</li>
+      <li style="margin:0 0 8px;"><strong>8. Qc2</strong> White brings the queen to c2. White defends the c3 knight while also guarding against ...Ne4.</li>
+      <li style="margin:0 0 8px;"><strong>8...O-O</strong> Black castles, bringing the king to safety.</li>
+      <li style="margin:0 0 8px;"><strong>9. Be2</strong> White develops the bishop to e2. Now White is ready to castle too.</li>
+      <li style="margin:0 0 8px;"><strong>9...e5</strong> Black pushes the pawn to e5. Black strikes back at White's d4 pawn in the center and starts opening the path for the c8 bishop.</li>
+      <li style="margin:0 0 8px;"><strong>10. O-O</strong> White also castles, bringing the king to safety. From here, Black opens the center with ...exd4 or ...dxc4, and White has to keep an eye on the g5 bishop and the c3 knight. Black's pieces are very active, so White needs to play carefully.</li>
+    </ul>
+    <div style="text-align:center;margin-top:10px;">
+      <button type="button" class="ms-back lang-element-ja" style="margin:0 auto;background:var(--brown,#7c4a1e);color:#fff;border:none;border-radius:20px;padding:8px 18px;font-family:inherit;font-weight:700;cursor:pointer;">⬆ 盤に戻る</button>
+      <button type="button" class="ms-back lang-element-en" style="margin:0 auto;background:var(--brown,#7c4a1e);color:#fff;border:none;border-radius:20px;padding:8px 18px;font-family:inherit;font-weight:700;cursor:pointer;">⬆ Back to the board</button>
+    </div>
+  </section>
+  <!-- 🐘 エレファント・トラップ（4...Nbd7 の罠） -->
+  <section id="elephantTrap" style="margin:16px 0 8px;background:var(--card-bg,#fffaf0);border:2px solid var(--brown-light,#d8b88a);border-radius:12px;padding:14px 18px;line-height:1.75;">
+    <h2 class="lang-element-ja" style="font-size:1.15rem;margin:0 0 8px;">🐘 エレファント・トラップ（4...Nbd7の罠）</h2>
+    <h2 class="lang-element-en" style="font-size:1.15rem;margin:0 0 8px;">🐘 The Elephant Trap (the trap behind 4...Nbd7)</h2>
+    <p class="lang-element-ja" style="margin:0 0 10px;">4...Nbd7のあと、白が5.cxd5 exd5と交換してから、6.Nxd5とd5のポーンを取りにくることがあります。f6のナイトはg5のビショップにピンされているので、動けないように見えるからです。</p>
+    <p class="lang-element-en" style="margin:0 0 10px;">After 4...Nbd7, White sometimes trades with 5.cxd5 exd5 and then grabs the d5 pawn with 6.Nxd5. It looks safe because the f6 knight seems stuck in the pin from the g5 bishop.</p>
+    <div class="kc-diagram" role="img" aria-label="白のナイトがd5のポーンを取った局面。g5のビショップがf6のナイトをd8のクイーンにピンしている" data-spec='{"p": "r1bqkb1r/pppn1ppp/5n2/3N2B1/3P4/8/PP2PPPP/R2QKBNR", "h": [["d5", "#e8c84a", 0.55]], "a": [["g5", "d8", "#cc3333cc"]]}'></div>
+    <p class="lang-element-ja" style="margin:0 0 10px;">ところが黒は、6...Nxd5！とナイトで取り返します。ピンされたナイトを動かしたので、白は7.Bxd8とクイーンを取れます。でも、これが罠です。</p>
+    <p class="lang-element-en" style="margin:0 0 10px;">But Black takes back with 6...Nxd5! Since the pinned knight moved, White can take the queen with 7.Bxd8. But that's exactly the trap.</p>
+    <p class="lang-element-ja" style="margin:0 0 10px;">黒は7...Bb4+とチェックをかけます。c3のナイトがもういないので、白は8.Qd2とクイーンで間に入るしかありません。</p>
+    <p class="lang-element-en" style="margin:0 0 10px;">Black plays 7...Bb4+, giving check. With the c3 knight gone, White's only option is to block with the queen: 8.Qd2.</p>
+    <div class="kc-diagram" role="img" aria-label="黒のb4のビショップが白のe1のキングにチェックをかけている局面" data-spec='{"p": "r1bBk2r/pppn1ppp/8/3n4/1b1P4/8/PP2PPPP/R2QKBNR", "h": [["e1", "#e8c84a", 0.55]], "a": [["b4", "e1", "#cc3333cc"]]}'></div>
+    <p class="lang-element-ja" style="margin:0 0 10px;">黒は8...Bxd2+とクイーンを取り、白の9.Kxd2のあと、9...Kxd8とd8のビショップも取り返します。</p>
+    <p class="lang-element-en" style="margin:0 0 10px;">Black takes the queen with 8...Bxd2+, and after 9.Kxd2, Black also takes back the d8 bishop with 9...Kxd8.</p>
+    <div class="kc-diagram" role="img" aria-label="罠が決まったあとの局面。黒はポーン1つと引きかえにナイトを1つ得している" data-spec='{"p": "r1bk3r/pppn1ppp/8/3n4/3P4/8/PP1KPPPP/R4BNR", "h": [["d5", "#2e7d32", 0.35]]}'></div>
+    <p class="lang-element-ja" style="margin:0 0 10px;">クイーンどうしを交換したうえで、黒はポーン1つと引きかえに、ナイトを1つ得しています。d5のポーンが「ただで取れそう」に見えたら、相手の駒がなぜそこを守っていないのか、一度考えてみましょう。古くから知られている有名な罠で、今でも初心者どうしの対局でよく出てきます。</p>
+    <p class="lang-element-en" style="margin:0 0 10px;">With the queens traded off, Black is up a knight for a pawn. When the d5 pawn looks "free," take a moment to ask why your opponent isn't guarding it. This is a famous trap that has been known for a long time, and it still shows up often in games between beginners.</p>
+  </section>
+
+
+  <footer>© KitsuneChess</footer>
+</div>
+
+<div class="bottom-panel" id="bottomPanel">
+  <div class="commentary-row">
+    <img id="foxAvatar" class="fox-avatar" src="" alt="Jene">
+    <p class="commentary-text" id="commentaryText"></p>
+  </div>
+  <div class="lesson-controls">
+    <button id="btnPrev" class="lesson-btn">← 前へ</button>
+    <span class="lesson-progress" id="lessonProgress"></span>
+    <button id="btnNext" class="lesson-btn">次へ →</button>
+  </div>
+  <div id="shareRow" style="display:none;text-align:center;margin-top:10px;">
+    <button id="shareXBtn" style="background:#000;color:#fff;border:none;border-radius:20px;padding:8px 16px;font-family:'Crimson Pro',serif;font-weight:700;font-size:0.85rem;cursor:pointer;">🦊 𝕏でシェアする</button>
+    <div style="margin-top:8px;"><a id="matchCtaLink" href="match.html" style="display:inline-block;background:var(--brown);color:#fff;text-decoration:none;border-radius:20px;padding:8px 16px;font-family:'Crimson Pro',serif;font-weight:700;font-size:0.85rem;">⚔️ 覚えたら対局で試してみよう</a></div>
+  </div>
+</div>
+
+<script>
+const PIECE_IMG = {
+  wP: "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0NSA0NSI+PHBhdGggZmlsbD0iI2ZmZiIgc3Ryb2tlPSIjMDAwIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS13aWR0aD0iMS41IiBkPSJNMjIuNSA5Yy0yLjIxIDAtNCAxLjc5LTQgNCAwIC44OS4yOSAxLjcxLjc4IDIuMzhDMTcuMzMgMTYuNSAxNiAxOC41OSAxNiAyMWMwIDIuMDMuOTQgMy44NCAyLjQxIDUuMDMtMyAxLjA2LTcuNDEgNS41NS03LjQxIDEzLjQ3aDIzYzAtNy45Mi00LjQxLTEyLjQxLTcuNDEtMTMuNDcgMS40Ny0xLjE5IDIuNDEtMyAyLjQxLTUuMDMgMC0yLjQxLTEuMzMtNC41LTMuMjgtNS42Mi40OS0uNjcuNzgtMS40OS43OC0yLjM4IDAtMi4yMS0xLjc5LTQtNC00eiIvPjwvc3ZnPg==",
+  wN: "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0NSA0NSI+PGcgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIiBzdHJva2U9IiMwMDAiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgc3Ryb2tlLXdpZHRoPSIxLjUiPjxwYXRoIGZpbGw9IiNmZmYiIGQ9Ik0yMiAxMGMxMC41IDEgMTYuNSA4IDE2IDI5SDE1YzAtOSAxMC02LjUgOC0yMSIvPjxwYXRoIGZpbGw9IiNmZmYiIGQ9Ik0yNCAxOGMuMzggMi45MS01LjU1IDcuMzctOCA5LTMgMi0yLjgyIDQuMzQtNSA0LTEuMDQyLS45NCAxLjQxLTMuMDQgMC0zLTEgMCAuMTkgMS4yMy0xIDItMSAwLTQuMDAzIDEtNC00IDAtMiA2LTEyIDYtMTJzMS44OS0xLjkgMi0zLjVjLS43My0uOTk0LS41LTItLjUtMyAxLTEgMyAyLjUgMyAyLjVoMnMuNzgtMS45OTIgMi41LTNjMSAwIDEgMyAxIDMiLz48cGF0aCBmaWxsPSIjMDAwIiBkPSJNOS41IDI1LjVhLjUuNSAwIDEgMS0xIDAgLjUuNSAwIDEgMSAxIDBtNS40MzMtOS43NWEuNSAxLjUgMzAgMSAxLS44NjYtLjUuNSAxLjUgMzAgMSAxIC44NjYuNSIvPjwvZz48L3N2Zz4=",
+  wB: "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0NSA0NSI+PGcgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIiBzdHJva2U9IiMwMDAiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgc3Ryb2tlLXdpZHRoPSIxLjUiPjxnIGZpbGw9IiNmZmYiIHN0cm9rZS1saW5lY2FwPSJidXR0Ij48cGF0aCBkPSJNOSAzNmMzLjM5LS45NyAxMC4xMS40MyAxMy41LTIgMy4zOSAyLjQzIDEwLjExIDEuMDMgMTMuNSAyIDAgMCAxLjY1LjU0IDMgMi0uNjguOTctMS42NS45OS0zIC41LTMuMzktLjk3LTEwLjExLjQ2LTEzLjUtMS0zLjM5IDEuNDYtMTAuMTEuMDMtMTMuNSAxLTEuMzUuNDktMi4zMi40Ny0zLS41IDEuMzUtMS45NCAzLTIgMy0yeiIvPjxwYXRoIGQ9Ik0xNSAzMmMyLjUgMi41IDEyLjUgMi41IDE1IDAgLjUtMS41IDAtMiAwLTIgMC0yLjUtMi41LTQtMi41LTQgNS41LTEuNSA2LTExLjUtNS0xNS41LTExIDQtMTAuNSAxNC01IDE1LjUgMCAwLTIuNSAxLjUtMi41IDQgMCAwLS41LjUgMCAyeiIvPjxwYXRoIGQ9Ik0yNSA4YTIuNSAyLjUgMCAxIDEtNSAwIDIuNSAyLjUgMCAxIDEgNSAweiIvPjwvZz48cGF0aCBzdHJva2UtbGluZWpvaW49Im1pdGVyIiBkPSJNMTcuNSAyNmgxME0xNSAzMGgxNW0tNy41LTE0LjV2NU0yMCAxOGg1Ii8+PC9nPjwvc3ZnPg==",
+  wR: "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0NSA0NSI+PGcgZmlsbD0iI2ZmZiIgZmlsbC1ydWxlPSJldmVub2RkIiBzdHJva2U9IiMwMDAiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgc3Ryb2tlLXdpZHRoPSIxLjUiPjxwYXRoIHN0cm9rZS1saW5lY2FwPSJidXR0IiBkPSJNOSAzOWgyN3YtM0g5em0zLTN2LTRoMjF2NHptLTEtMjJWOWg0djJoNVY5aDV2Mmg1VjloNHY1Ii8+PHBhdGggZD0ibTM0IDE0LTMgM0gxNGwtMy0zIi8+PHBhdGggc3Ryb2tlLWxpbmVjYXA9ImJ1dHQiIHN0cm9rZS1saW5lam9pbj0ibWl0ZXIiIGQ9Ik0zMSAxN3YxMi41SDE0VjE3Ii8+PHBhdGggZD0ibTMxIDI5LjUgMS41IDIuNWgtMjBsMS41LTIuNSIvPjxwYXRoIGZpbGw9Im5vbmUiIHN0cm9rZS1saW5lam9pbj0ibWl0ZXIiIGQ9Ik0xMSAxNGgyMyIvPjwvZz48L3N2Zz4=",
+  wQ: "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0NSA0NSI+PGcgZmlsbD0iI2ZmZiIgZmlsbC1ydWxlPSJldmVub2RkIiBzdHJva2U9IiMwMDAiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgc3Ryb2tlLXdpZHRoPSIxLjUiPjxwYXRoIGQ9Ik04IDEyYTIgMiAwIDEgMS00IDAgMiAyIDAgMSAxIDQgMG0xNi41LTQuNWEyIDIgMCAxIDEtNCAwIDIgMiAwIDEgMSA0IDBNNDEgMTJhMiAyIDAgMSAxLTQgMCAyIDIgMCAxIDEgNCAwTTE2IDguNWEyIDIgMCAxIDEtNCAwIDIgMiAwIDEgMSA0IDBNMzMgOWEyIDIgMCAxIDEtNCAwIDIgMiAwIDEgMSA0IDAiLz48cGF0aCBzdHJva2UtbGluZWNhcD0iYnV0dCIgZD0iTTkgMjZjOC41LTEuNSAyMS0xLjUgMjcgMGwyLTEyLTcgMTFWMTFsLTUuNSAxMy41LTMtMTUtMyAxNS01LjUtMTRWMjVMNyAxNHoiLz48cGF0aCBzdHJva2UtbGluZWNhcD0iYnV0dCIgZD0iTTkgMjZjMCAyIDEuNSAyIDIuNSA0IDEgMS41IDEgMSAuNSAzLjUtMS41IDEtMS41IDIuNS0xLjUgMi41LTEuNSAxLjUuNSAyLjUuNSAyLjUgNi41IDEgMTYuNSAxIDIzIDAgMCAwIDEuNS0xIDAtMi41IDAgMCAuNS0xLjUtMS0yLjUtLjUtMi41LS41LTIgLjUtMy41IDEtMiAyLjUtMiAyLjUtNC04LjUtMS41LTE4LjUtMS41LTI3IDB6Ii8+PHBhdGggZmlsbD0ibm9uZSIgZD0iTTExLjUgMzBjMy41LTEgMTguNS0xIDIyIDBNMTIgMzMuNWM2LTEgMTUtMSAyMSAwIi8+PC9nPjwvc3ZnPg==",
+  wK: "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0NSA0NSI+PGcgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIiBzdHJva2U9IiMwMDAiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgc3Ryb2tlLXdpZHRoPSIxLjUiPjxwYXRoIHN0cm9rZS1saW5lam9pbj0ibWl0ZXIiIGQ9Ik0yMi41IDExLjYzVjZNMjAgOGg1Ii8+PHBhdGggZmlsbD0iI2ZmZiIgc3Ryb2tlLWxpbmVjYXA9ImJ1dHQiIHN0cm9rZS1saW5lam9pbj0ibWl0ZXIiIGQ9Ik0yMi41IDI1czQuNS03LjUgMy0xMC41YzAgMC0xLTIuNS0zLTIuNXMtMyAyLjUtMyAyLjVjLTEuNSAzIDMgMTAuNSAzIDEwLjUiLz48cGF0aCBmaWxsPSIjZmZmIiBkPSJNMTEuNSAzN2M1LjUgMy41IDE1LjUgMy41IDIxIDB2LTdzOS00LjUgNi0xMC41Yy00LTYuNS0xMy41LTMuNS0xNiA0VjI3di0zLjVjLTMuNS03LjUtMTMtMTAuNS0xNi00LTMgNiA1IDEwIDUgMTB6Ii8+PHBhdGggZD0iTTExLjUgMzBjNS41LTMgMTUuNS0zIDIxIDBtLTIxIDMuNWM1LjUtMyAxNS41LTMgMjEgMG0tMjEgMy41YzUuNS0zIDE1LjUtMyAyMSAwIi8+PC9nPjwvc3ZnPg==",
+  bP: "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0NSA0NSI+PHBhdGggc3Ryb2tlPSIjMDAwIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS13aWR0aD0iMS41IiBkPSJNMjIuNSA5YTQgNCAwIDAgMC0zLjIyIDYuMzggNi40OCA2LjQ4IDAgMCAwLS44NyAxMC42NWMtMyAxLjA2LTcuNDEgNS41NS03LjQxIDEzLjQ3aDIzYzAtNy45Mi00LjQxLTEyLjQxLTcuNDEtMTMuNDdhNi40NiA2LjQ2IDAgMCAwLS44Ny0xMC42NUE0LjAxIDQuMDEgMCAwIDAgMjIuNSA5eiIvPjwvc3ZnPg==",
+  bN: "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0NSA0NSI+PGcgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIiBzdHJva2U9IiMwMDAiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgc3Ryb2tlLXdpZHRoPSIxLjUiPjxwYXRoIGZpbGw9IiMwMDAiIGQ9Ik0yMiAxMGMxMC41IDEgMTYuNSA4IDE2IDI5SDE1YzAtOSAxMC02LjUgOC0yMSIvPjxwYXRoIGZpbGw9IiMwMDAiIGQ9Ik0yNCAxOGMuMzggMi45MS01LjU1IDcuMzctOCA5LTMgMi0yLjgyIDQuMzQtNSA0LTEuMDQtLjk0IDEuNDEtMy4wNCAwLTMtMSAwIC4xOSAxLjIzLTEgMi0xIDAtNCAxLTQtNCAwLTIgNi0xMiA2LTEyczEuODktMS45IDItMy41Yy0uNzMtMS0uNS0yLS41LTMgMS0xIDMgMi41IDMgMi41aDJzLjc4LTIgMi41LTNjMSAwIDEgMyAxIDMiLz48cGF0aCBmaWxsPSIjZWNlY2VjIiBzdHJva2U9IiNlY2VjZWMiIGQ9Ik05LjUgMjUuNWEuNS41IDAgMSAxLTEgMCAuNS41IDAgMSAxIDEgMG01LjQzLTkuNzVhLjUgMS41IDMwIDEgMS0uODYtLjUuNSAxLjUgMzAgMSAxIC44Ni41Ii8+PHBhdGggZmlsbD0iI2VjZWNlYyIgc3Ryb2tlPSJub25lIiBkPSJtMjQuNTUgMTAuNC0uNDUgMS40NS41LjE1YzMuMTUgMSA1LjY1IDIuNDkgNy45IDYuNzVTMzUuNzUgMjkuMDYgMzUuMjUgMzlsLS4wNS41aDIuMjVsLjA1LS41Yy41LTEwLjA2LS44OC0xNi44NS0zLjI1LTIxLjM0cy01Ljc5LTYuNjQtOS4xOS03LjE2eiIvPjwvZz48L3N2Zz4=",
+  bB: "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0NSA0NSI+PGcgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIiBzdHJva2U9IiMwMDAiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgc3Ryb2tlLXdpZHRoPSIxLjUiPjxnIGZpbGw9IiMwMDAiIHN0cm9rZS1saW5lY2FwPSJidXR0Ij48cGF0aCBkPSJNOSAzNmMzLjQtMSAxMC4xLjQgMTMuNS0yIDMuNCAyLjQgMTAuMSAxIDEzLjUgMiAwIDAgMS42LjUgMyAyLS43IDEtMS42IDEtMyAuNS0zLjQtMS0xMC4xLjUtMTMuNS0xLTMuNCAxLjUtMTAuMSAwLTEzLjUgMS0xLjQuNS0yLjMuNS0zLS41IDEuNC0yIDMtMiAzLTJ6Ii8+PHBhdGggZD0iTTE1IDMyYzIuNSAyLjUgMTIuNSAyLjUgMTUgMCAuNS0xLjUgMC0yIDAtMiAwLTIuNS0yLjUtNC0yLjUtNCA1LjUtMS41IDYtMTEuNS01LTE1LjUtMTEgNC0xMC41IDE0LTUgMTUuNSAwIDAtMi41IDEuNS0yLjUgNCAwIDAtLjUuNSAwIDJ6Ii8+PHBhdGggZD0iTTI1IDhhMi41IDIuNSAwIDEgMS01IDAgMi41IDIuNSAwIDEgMSA1IDB6Ii8+PC9nPjxwYXRoIHN0cm9rZT0iI2VjZWNlYyIgc3Ryb2tlLWxpbmVqb2luPSJtaXRlciIgZD0iTTE3LjUgMjZoMTBNMTUgMzBoMTVtLTcuNS0xNC41djVNMjAgMThoNSIvPjwvZz48L3N2Zz4=",
+  bR: "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0NSA0NSI+PGcgZmlsbC1ydWxlPSJldmVub2RkIiBzdHJva2U9IiMwMDAiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgc3Ryb2tlLXdpZHRoPSIxLjUiPjxwYXRoIHN0cm9rZS1saW5lY2FwPSJidXR0IiBkPSJNOSAzOWgyN3YtM0g5em0zLjUtNyAxLjUtMi41aDE3bDEuNSAyLjV6bS0uNSA0di00aDIxdjR6Ii8+PHBhdGggc3Ryb2tlLWxpbmVjYXA9ImJ1dHQiIHN0cm9rZS1saW5lam9pbj0ibWl0ZXIiIGQ9Ik0xNCAyOS41di0xM2gxN3YxM3oiLz48cGF0aCBzdHJva2UtbGluZWNhcD0iYnV0dCIgZD0iTTE0IDE2LjUgMTEgMTRoMjNsLTMgMi41ek0xMSAxNFY5aDR2Mmg1VjloNXYyaDVWOWg0djV6Ii8+PHBhdGggZmlsbD0ibm9uZSIgc3Ryb2tlPSIjZWNlY2VjIiBzdHJva2UtbGluZWpvaW49Im1pdGVyIiBzdHJva2Utd2lkdGg9IjEiIGQ9Ik0xMiAzNS41aDIxbS0yMC00aDE5bS0xOC0yaDE3bS0xNy0xM2gxN00xMSAxNGgyMyIvPjwvZz48L3N2Zz4=",
+  bQ: "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0NSA0NSI+PGcgZmlsbC1ydWxlPSJldmVub2RkIiBzdHJva2U9IiMwMDAiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgc3Ryb2tlLXdpZHRoPSIxLjUiPjxnIHN0cm9rZT0ibm9uZSI+PGNpcmNsZSBjeD0iNiIgY3k9IjEyIiByPSIyLjc1Ii8+PGNpcmNsZSBjeD0iMTQiIGN5PSI5IiByPSIyLjc1Ii8+PGNpcmNsZSBjeD0iMjIuNSIgY3k9IjgiIHI9IjIuNzUiLz48Y2lyY2xlIGN4PSIzMSIgY3k9IjkiIHI9IjIuNzUiLz48Y2lyY2xlIGN4PSIzOSIgY3k9IjEyIiByPSIyLjc1Ii8+PC9nPjxwYXRoIHN0cm9rZS1saW5lY2FwPSJidXR0IiBkPSJNOSAyNmM4LjUtMS41IDIxLTEuNSAyNyAwbDIuNS0xMi41TDMxIDI1bC0uMy0xNC4xLTUuMiAxMy42LTMtMTQuNS0zIDE0LjUtNS4yLTEzLjZMMTQgMjUgNi41IDEzLjV6Ii8+PHBhdGggc3Ryb2tlLWxpbmVjYXA9ImJ1dHQiIGQ9Ik05IDI2YzAgMiAxLjUgMiAyLjUgNCAxIDEuNSAxIDEgLjUgMy41LTEuNSAxLTEuNSAyLjUtMS41IDIuNS0xLjUgMS41LjUgMi41LjUgMi41IDYuNSAxIDE2LjUgMSAyMyAwIDAgMCAxLjUtMSAwLTIuNSAwIDAgLjUtMS41LTEtMi41LS41LTIuNS0uNS0yIC41LTMuNSAxLTIgMi41LTIgMi41LTQtOC41LTEuNS0xOC41LTEuNS0yNyAweiIvPjxwYXRoIGZpbGw9Im5vbmUiIHN0cm9rZS1saW5lY2FwPSJidXR0IiBkPSJNMTEgMzguNWEzNSAzNSAxIDAgMCAyMyAwIi8+PHBhdGggZmlsbD0ibm9uZSIgc3Ryb2tlPSIjZWNlY2VjIiBkPSJNMTEgMjlhMzUgMzUgMSAwIDEgMjMgMG0tMjEuNSAyLjVoMjBtLTIxIDNhMzUgMzUgMSAwIDAgMjIgMG0tMjMgM2EzNSAzNSAxIDAgMCAyNCAwIi8+PC9nPjwvc3ZnPg==",
+  bK: "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0NSA0NSI+PGcgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIiBzdHJva2U9IiMwMDAiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgc3Ryb2tlLXdpZHRoPSIxLjUiPjxwYXRoIHN0cm9rZS1saW5lam9pbj0ibWl0ZXIiIGQ9Ik0yMi41IDExLjZWNiIvPjxwYXRoIGZpbGw9IiMwMDAiIHN0cm9rZS1saW5lY2FwPSJidXR0IiBzdHJva2UtbGluZWpvaW49Im1pdGVyIiBkPSJNMjIuNSAyNXM0LjUtNy41IDMtMTAuNWMwIDAtMS0yLjUtMy0yLjVzLTMgMi41LTMgMi41Yy0xLjUgMyAzIDEwLjUgMyAxMC41Ii8+PHBhdGggZmlsbD0iIzAwMCIgZD0iTTExLjUgMzdhMjIuMyAyMi4zIDAgMCAwIDIxIDB2LTdzOS00LjUgNi0xMC41Yy00LTYuNS0xMy41LTMuNS0xNiA0VjI3di0zLjVjLTMuNS03LjUtMTMtMTAuNS0xNi00LTMgNiA1IDEwIDUgMTB6Ii8+PHBhdGggc3Ryb2tlLWxpbmVqb2luPSJtaXRlciIgZD0iTTIwIDhoNSIvPjxwYXRoIHN0cm9rZT0iI2VjZWNlYyIgZD0iTTMyIDI5LjVzOC41LTQgNi05LjdDMzQuMSAxNCAyNSAxOCAyMi41IDI0LjZ2Mi4xLTIuMUMyMCAxOCA5LjkgMTQgNyAxOS45Yy0yLjUgNS42IDQuOCA5IDQuOCA5Ii8+PHBhdGggc3Ryb2tlPSIjZWNlY2VjIiBkPSJNMTEuNSAzMGM1LjUtMyAxNS41LTMgMjEgMG0tMjEgMy41YzUuNS0zIDE1LjUtMyAyMSAwbS0yMSAzLjVjNS41LTMgMTUuNS0zIDIxIDAiLz48L2c+PC9zdmc+",
+};
+
+// ============================================================
+// JENE'S FACES
+// ============================================================
+const FOX_WELCOME_SRC = "https://raw.githubusercontent.com/swallowtail1056-collab/Kitsune/main/jene_welcome.png";
+const FOX_HAPPY_SRC   = "https://raw.githubusercontent.com/swallowtail1056-collab/Kitsune/main/jene_happy.png";
+const FOX_NORMAL_SRC  = "https://raw.githubusercontent.com/swallowtail1056-collab/Kitsune/main/jene_normal.png";
+const FOX_SRC         = "https://raw.githubusercontent.com/swallowtail1056-collab/Kitsune/main/jene_quiz.png";
+const FOX_WINK_SRC    = "https://raw.githubusercontent.com/swallowtail1056-collab/Kitsune/main/jene_wink.png";
+const FOX_BY_MOOD = { welcome:FOX_WELCOME_SRC, normal:FOX_NORMAL_SRC, happy:FOX_HAPPY_SRC, quiz:FOX_SRC, wink:FOX_WINK_SRC };
+
+// ============================================================
+// 初期配置
+// ============================================================
+const initialBoard = [
+  ['r','n','b','q','k','b','n','r'],
+  ['p','p','p','p','p','p','p','p'],
+  ['','','','','','','',''],
+  ['','','','','','','',''],
+  ['','','','','','','',''],
+  ['','','','','','','',''],
+  ['P','P','P','P','P','P','P','P'],
+  ['R','N','B','Q','K','B','N','R']
+];
+
+// ============================================================
+// レッスンステップ（手・解説・ジーンの表情）
+// ============================================================
+const LESSON_STEPS = [
+  { move:null, moveLabel:{ja:"開始局面", en:"Starting Position"},
+    ja:"ケンブリッジ・スプリングス・ディフェンスのレッスンを始めるよ！これは<a href='queens_gambit.html'>クイーンズ・ギャンビット・ディクラインド</a>の仲間で、黒が4...Nbd7と6...Qa5で、白のc3のナイトとg5のビショップを同時にねらう作戦なんだ。途中で、初心者がよく引っかかる「エレファント・トラップ」も出てくるよ。ジーンと一緒に、一手ずつ見ていこう。",
+    en:"Let's start the Cambridge Springs Defense lesson! This is a branch of the <a href='queens_gambit.html?lang=en'>Queen's Gambit Declined</a>, where Black uses 4...Nbd7 and 6...Qa5 to aim at White's c3 knight and g5 bishop at the same time. Along the way you'll also meet the \"Elephant Trap,\" which catches many beginners. Jene will walk you through it move by move.",
+    fox:'welcome' },
+  { move:{from:[6,3],to:[4,3]}, moveLabel:{ja:"1. d4", en:"1. d4"},
+    ja:"白はポーンをd4へ進めるよ。白は中央のマスを押さえながら、c1のビショップの道を開けるんだ。",
+    en:"White pushes the pawn to d4. White takes control of central squares and opens the path for the c1 bishop.",
+    fox:'normal' },
+  { move:{from:[1,3],to:[3,3]}, moveLabel:{ja:"1...d5", en:"1...d5"},
+    ja:"黒はポーンをd5へ進めるよ。黒も同じように中央を押さえて、白のポーンと向かい合う形を作るんだ。",
+    en:"Black pushes the pawn to d5. Black also claims the center, setting up a pawn face-off with White.",
+    fox:'normal' },
+  { move:{from:[6,2],to:[4,2]}, moveLabel:{ja:"2. c4", en:"2. c4"},
+    ja:"白はポーンをc4へ進めて、<a href='queens_gambit.html'>クイーンズ・ギャンビット</a>に入るよ。白はc4のポーンで黒のd5のポーンに働きかけるんだ。",
+    en:"White pushes the pawn to c4, entering the <a href='queens_gambit.html?lang=en'>Queen's Gambit</a>. White uses the c4 pawn to challenge Black's d5 pawn.",
+    fox:'normal' },
+  { move:{from:[1,4],to:[2,4]}, moveLabel:{ja:"2...e6", en:"2...e6"},
+    ja:"黒はポーンをe6へ進めて、<a href='queens_gambit.html'>クイーンズ・ギャンビット・ディクラインド</a>に入るよ。黒はd5のポーンを支えながら、f8のビショップの道を開けるんだ。",
+    en:"Black pushes the pawn to e6, entering the <a href='queens_gambit.html?lang=en'>Queen's Gambit Declined</a>. Black supports the d5 pawn and opens the path for the f8 bishop.",
+    fox:'normal' },
+  { move:{from:[7,1],to:[5,2]}, moveLabel:{ja:"3. Nc3", en:"3. Nc3"},
+    ja:"白はナイトをc3へ進めるよ。白はナイトを展開しながら、黒のd5のポーンへの圧力を強めるんだ。",
+    en:"White develops the knight to c3. White develops while increasing the pressure on Black's d5 pawn.",
+    fox:'normal' },
+  { move:{from:[0,6],to:[2,5]}, moveLabel:{ja:"3...Nf6", en:"3...Nf6"},
+    ja:"黒はナイトをf6へ進めるよ。黒はナイトを展開しながら、d5のポーンの守りを増やすんだ。",
+    en:"Black develops the knight to f6. Black develops while adding another defender to the d5 pawn.",
+    fox:'normal' },
+  { move:{from:[7,2],to:[3,6]}, moveLabel:{ja:"4. Bg5", en:"4. Bg5"},
+    ja:"白はビショップをg5へ進めるよ。白はf6のナイトをd8のクイーンにピンして、d5のポーンを守る黒のナイトの働きを弱めにいくんだ。",
+    en:"White develops the bishop to g5. White pins the f6 knight to the queen on d8, weakening the knight's job of guarding the d5 pawn.",
+    jaMore:"ピンについては、<a href='pin.html'>ピンのページ</a>でくわしく説明しているよ。",
+    enMore:"You can read more about pins on the <a href='pin.html?lang=en'>Pin page</a>.",
+    fox:'normal' },
+  { move:{from:[0,1],to:[1,3]}, moveLabel:{ja:"4...Nbd7（罠のしかけ）", en:"4...Nbd7 (the hidden trap)"},
+    ja:"黒はナイトをd7へ進めるよ。ここでは4...Be7が多いけれど、黒はd7のナイトでf6のナイトを支えるんだ。実はこの手には、白への罠がかくれているよ。",
+    en:"Black develops the knight to d7. 4...Be7 is more common here, but Black uses the d7 knight to support the f6 knight. This move actually hides a trap for White.",
+    jaMore:"ここで白が5.cxd5 exd5 6.Nxd5と、d5のポーンを取りにくると、黒は6...Nxd5！と取り返せるんだ。白が7.Bxd8とクイーンを取っても、黒は7...Bb4+のチェックから白のクイーンを取り返して、最後はナイトを1つ得する。これが「エレファント・トラップ」だよ。このページの下の図で、くわしく見てみてね。",
+    enMore:"If White now goes 5.cxd5 exd5 6.Nxd5 to grab the d5 pawn, Black answers 6...Nxd5! Even if White takes the queen with 7.Bxd8, Black plays 7...Bb4+, wins White's queen back, and ends up a knight ahead. This is the \"Elephant Trap.\" Check out the diagrams at the bottom of this page.",
+    fox:'happy' },
+  { move:{from:[6,4],to:[5,4]}, moveLabel:{ja:"5. e3", en:"5. e3"},
+    ja:"白はポーンをe3へ進めるよ。白は罠に引っかからずに、落ち着いてf1のビショップの道を開け、d4のポーンを支えるんだ。",
+    en:"White pushes the pawn to e3. White avoids the trap, calmly opening the path for the f1 bishop and supporting the d4 pawn.",
+    fox:'normal' },
+  { move:{from:[1,2],to:[2,2]}, moveLabel:{ja:"5...c6", en:"5...c6"},
+    ja:"黒はポーンをc6へ進めるよ。黒はd5のポーンをもう一度支えながら、d8のクイーンがa5へ出る道を開けるんだ。",
+    en:"Black pushes the pawn to c6. Black adds another support to the d5 pawn and opens a path for the queen on d8 to reach a5.",
+    fox:'normal' },
+  { move:{from:[7,6],to:[5,5]}, moveLabel:{ja:"6. Nf3", en:"6. Nf3"},
+    ja:"白はナイトをf3へ進めるよ。白はナイトを展開して、キャスリングの準備を進めるんだ。",
+    en:"White develops the knight to f3. White develops and gets ready to castle.",
+    fox:'normal' },
+  { move:{from:[0,3],to:[3,0]}, moveLabel:{ja:"6...Qa5（ケンブリッジ・スプリングス！）", en:"6...Qa5 (Cambridge Springs!)"},
+    ja:"ここがケンブリッジ・スプリングス・ディフェンスの一手！黒はクイーンをa5へ進めるよ。a5からe1への斜めの線で、白のc3のナイトをキングにピンするんだ。さらに黒が...dxc4や...Ne4でd5のポーンをどかすと、a5のクイーンが横の線で白のg5のビショップもねらえるようになるよ。",
+    en:"Here's the Cambridge Springs Defense! Black brings the queen to a5. Along the diagonal from a5 to e1, it pins White's c3 knight to the king. And once Black moves the d5 pawn out of the way with ...dxc4 or ...Ne4, the queen on a5 can also aim at White's g5 bishop along the fifth rank.",
+    jaMore:"名前は、1904年にアメリカのケンブリッジ・スプリングスという町で開かれた大会で、この作戦が何度も指されたことから来ているよ。",
+    enMore:"The name comes from the 1904 tournament held in the town of Cambridge Springs in the United States, where this plan was played many times.",
+    fox:'happy' },
+  { move:{from:[5,5],to:[6,3]}, moveLabel:{ja:"7. Nd2", en:"7. Nd2"},
+    ja:"白はf3のナイトをd2へ下げるよ。d2のナイトがc4とe4のマスを守るので、黒の...dxc4や...Ne4の作戦を止められるんだ。ナイトがd2に入ったので、c3のナイトはもうキングに直接ピンされていないよ。",
+    en:"White pulls the f3 knight back to d2. The d2 knight guards the c4 and e4 squares, stopping Black's ...dxc4 and ...Ne4 ideas. With a knight now on d2, the c3 knight is no longer pinned directly to the king.",
+    fox:'normal' },
+  { move:{from:[0,5],to:[4,1]}, moveLabel:{ja:"7...Bb4", en:"7...Bb4"},
+    ja:"黒はビショップをb4へ進めるよ。黒はc3のナイトへのねらいをもう1つ増やして、白にc3のナイトを守らせるんだ。",
+    en:"Black develops the bishop to b4. Black adds another attacker on the c3 knight, forcing White to keep defending it.",
+    fox:'normal' },
+  { move:{from:[7,3],to:[6,2]}, moveLabel:{ja:"8. Qc2", en:"8. Qc2"},
+    ja:"白はクイーンをc2へ進めるよ。白はc3のナイトを守りながら、黒の...Ne4にもそなえるんだ。",
+    en:"White brings the queen to c2. White defends the c3 knight while also guarding against ...Ne4.",
+    fox:'normal' },
+  { move:{from:[0,4],to:[0,6],castle:{from:[0,7],to:[0,5]}}, moveLabel:{ja:"8...O-O", en:"8...O-O"},
+    ja:"黒はキャスリングでキングを安全な場所へ動かすよ。",
+    en:"Black castles, bringing the king to safety.",
+    fox:'normal' },
+  { move:{from:[7,5],to:[6,4]}, moveLabel:{ja:"9. Be2", en:"9. Be2"},
+    ja:"白はビショップをe2へ進めるよ。白もこれでキャスリングできるようになるんだ。",
+    en:"White develops the bishop to e2. Now White is ready to castle too.",
+    fox:'normal' },
+  { move:{from:[2,4],to:[3,4]}, moveLabel:{ja:"9...e5", en:"9...e5"},
+    ja:"黒はポーンをe5へ進めるよ。黒は中央で白のd4のポーンに反撃して、c8のビショップの道も開けにいくんだ。",
+    en:"Black pushes the pawn to e5. Black strikes back at White's d4 pawn in the center and starts opening the path for the c8 bishop.",
+    fox:'normal' },
+  { move:{from:[7,4],to:[7,6],castle:{from:[7,7],to:[7,5]}}, moveLabel:{ja:"10. O-O", en:"10. O-O"},
+    ja:"白もキャスリングでキングを安全な場所へ動かすよ。この後は、黒が...exd4や...dxc4で中央を開き、白はg5のビショップやc3のナイトの守りに気をつけながら戦う形になるよ。黒の駒の働きが活発なので、白はていねいに指す必要があるんだ。",
+    en:"White also castles, bringing the king to safety. From here, Black opens the center with ...exd4 or ...dxc4, and White has to keep an eye on the g5 bishop and the c3 knight. Black's pieces are very active, so White needs to play carefully.",
+    fox:'happy' },
+];
+
+const BUTTON_TEXT = { ja:{prev:'← 前へ', next:'次へ →'}, en:{prev:'← Prev', next:'Next →'} };
+
+let currentLang = 'ja';
+let currentStep = 0;
+let boardSnapshots = [];
+
+function pieceKey(p){
+  if(!p) return null;
+  return (p === p.toUpperCase() ? 'w' : 'b') + p.toUpperCase();
+}
+function cloneBoard(b){ return b.map(row => row.slice()); }
+
+function applyMove(board, move){
+  const nb = cloneBoard(board);
+  if(move){
+    const piece = nb[move.from[0]][move.from[1]];
+    nb[move.from[0]][move.from[1]] = '';
+    nb[move.to[0]][move.to[1]] = piece;
+    if(move.castle){
+      const rook = nb[move.castle.from[0]][move.castle.from[1]];
+      nb[move.castle.from[0]][move.castle.from[1]] = '';
+      nb[move.castle.to[0]][move.castle.to[1]] = rook;
+    }
+  }
+  return nb;
+}
+
+function buildSnapshots(){
+  let board = initialBoard;
+  boardSnapshots = [cloneBoard(board)];
+  for(let i = 1; i < LESSON_STEPS.length; i++){
+    board = applyMove(board, LESSON_STEPS[i].move);
+    boardSnapshots.push(cloneBoard(board));
+  }
+}
+
+function renderBoard(board){
+  const grid = document.getElementById('boardGrid');
+  grid.innerHTML = '';
+  const files = ['a','b','c','d','e','f','g','h'];
+  const ranks = ['8','7','6','5','4','3','2','1'];
+  for(let r = 0; r < 8; r++){
+    for(let c = 0; c < 8; c++){
+      const cell = document.createElement('div');
+      const isLight = (r + c) % 2 === 0;
+      cell.className = 'cell ' + (isLight ? 'light' : 'dark');
+      if(c === 0){
+        const rankLabel = document.createElement('span');
+        rankLabel.className = 'cell-label rank-label';
+        rankLabel.textContent = ranks[r];
+        cell.appendChild(rankLabel);
+      }
+      if(r === 7){
+        const fileLabel = document.createElement('span');
+        fileLabel.className = 'cell-label file-label';
+        fileLabel.textContent = files[c];
+        cell.appendChild(fileLabel);
+      }
+      const piece = board[r][c];
+      if(piece){
+        const key = pieceKey(piece);
+        if(PIECE_IMG[key]){
+          const img = document.createElement('img');
+          img.className = 'piece-img';
+          img.src = PIECE_IMG[key];
+          img.alt = key;
+          cell.appendChild(img);
+        }
+      }
+      grid.appendChild(cell);
+    }
+  }
+}
+
+function adjustBottomPadding(){
+  const panel = document.getElementById('bottomPanel');
+  const container = document.querySelector('.app-container');
+  if(panel && container){
+    container.style.paddingBottom = (panel.offsetHeight + 20) + 'px';
+  }
+}
+
+function shareOnX(message) {
+  const shareUrl = 'https://twitter.com/intent/tweet?text=' + encodeURIComponent(message) + '&url=' + encodeURIComponent(window.location.href);
+  window.open(shareUrl, '_blank', 'noopener,noreferrer,width=550,height=420');
+}
+
+function renderStep(){
+  const step = LESSON_STEPS[currentStep];
+  renderBoard(boardSnapshots[currentStep]);
+  document.getElementById('moveLabel').textContent = (step.moveLabel && step.moveLabel[currentLang]) || '';
+  const ctEl = document.getElementById('commentaryText');
+  const moreText = step[currentLang + 'More'];
+  ctEl.innerHTML = step[currentLang] + (moreText
+    ? '<details class="more-detail"><summary>' + (currentLang === 'ja' ? '💡 もっと詳しく知りたい方へ' : '💡 Want to know more?') + '</summary><div class="more-body">' + moreText + '</div></details>'
+    : '');
+  ctEl.scrollTop = 0;
+  const moreEl = ctEl.querySelector('details.more-detail');
+  if (moreEl) {
+    moreEl.addEventListener('toggle', function(){
+      if (moreEl.open) { ctEl.scrollTop = moreEl.offsetTop - ctEl.offsetTop; }
+      adjustBottomPadding();
+    });
+  }
+  document.getElementById('foxAvatar').src = FOX_BY_MOOD[step.fox] || FOX_BY_MOOD.normal;
+  document.getElementById('lessonProgress').textContent = currentStep + ' / ' + (LESSON_STEPS.length - 1);
+  document.getElementById('btnPrev').disabled = currentStep === 0;
+  document.getElementById('btnNext').disabled = currentStep === LESSON_STEPS.length - 1;
+  adjustBottomPadding();
+
+  const shareRow = document.getElementById('shareRow');
+  if (shareRow) {
+    if (currentStep === LESSON_STEPS.length - 1) {
+      const openingNameEl = document.querySelector('.opening-title.lang-element-' + currentLang);
+      const openingName = openingNameEl ? openingNameEl.textContent : '';
+      const msg = currentLang === 'ja'
+        ? '🦊 ' + openingName + 'をKitsuneChessで学んだよ!一手ずつ「なぜその手か」を教えてくれるよ'
+        : '🦊 Just learned the ' + openingName + ' on KitsuneChess! It explains why each move is played, step by step.';
+      const shareBtn = document.getElementById('shareXBtn');
+      shareBtn.textContent = currentLang === 'ja' ? '🦊 𝕏でシェアする' : '🦊 Share on 𝕏';
+      shareBtn.onclick = function() { shareOnX(msg); };
+      const matchLink = document.getElementById('matchCtaLink');
+      if (matchLink) matchLink.textContent = currentLang === 'ja' ? '⚔️ 覚えたら対局で試してみよう' : '⚔️ Try it in a real game';
+      shareRow.style.display = 'block';
+    } else {
+      shareRow.style.display = 'none';
+    }
+  }
+  adjustBottomPadding();
+}
+
+function updateLanguageDisplay(lang){
+  currentLang = lang;
+  document.querySelectorAll('.lang-element-ja').forEach(el => el.style.display = lang === 'ja' ? 'block' : 'none');
+  document.querySelectorAll('.lang-element-en').forEach(el => el.style.display = lang === 'en' ? 'block' : 'none');
+  document.getElementById('langToggle').textContent = lang === 'ja' ? 'English' : '日本語';
+  document.getElementById('btnPrev').textContent = BUTTON_TEXT[lang].prev;
+  document.getElementById('btnNext').textContent = BUTTON_TEXT[lang].next;
+  renderStep();
+}
+
+document.addEventListener('DOMContentLoaded', function(){
+  buildSnapshots();
+
+  const urlParams = new URLSearchParams(window.location.search);
+  let lang = urlParams.get('lang') || window.location.hash.replace('#', '');
+  if(!lang){
+    const userLang = navigator.language || navigator.userLanguage;
+    lang = userLang.startsWith('ja') ? 'ja' : 'en';
+  }
+  updateLanguageDisplay(lang);
+
+  document.getElementById('langToggle').addEventListener('click', function(){
+    updateLanguageDisplay(currentLang === 'ja' ? 'en' : 'ja');
+  });
+  document.getElementById('btnNext').addEventListener('click', function(){
+    if(currentStep < LESSON_STEPS.length - 1){ currentStep++; renderStep(); }
+  });
+  document.getElementById('btnPrev').addEventListener('click', function(){
+    if(currentStep > 0){ currentStep--; renderStep(); }
+  });
+
+  window.addEventListener('resize', adjustBottomPadding);
+});
+</script>
+
+<script>
+// 📜 手順と解説のまとめ：手をタップすると、その局面を盤に出して盤まで戻る
+(function(){
+  var sec = document.getElementById('moveSummary'); if (!sec) return;
+  var wrap = document.querySelector('.board-wrap');
+  function toBoard(){ if (!wrap) return; var y = wrap.getBoundingClientRect().top + window.pageYOffset - 70; window.scrollTo({ top: Math.max(0, y), behavior: 'smooth' }); }
+  var idx = []; LESSON_STEPS.forEach(function(s, i){ if (s.move) idx.push(i); });
+  sec.querySelectorAll('ul').forEach(function(ul){
+    Array.prototype.forEach.call(ul.children, function(li, k){
+      if (idx[k] == null) return;
+      li.style.cursor = 'pointer';
+      li.addEventListener('click', function(e){
+        if (e.target.closest && e.target.closest('a')) return; // 文中のリンクはそのまま
+        currentStep = idx[k]; renderStep(); toBoard();
+      });
+    });
+  });
+  sec.querySelectorAll('.ms-back').forEach(function(b){ b.addEventListener('click', toBoard); });
+})();
+</script>
+</body>
+</html>
