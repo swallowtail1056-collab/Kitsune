@@ -195,6 +195,14 @@ footer {
   margin-top: 40px;
   padding-bottom: 20px;
 }
+
+/* ── 一覧をつめて、たくさん見えるようにする（名前は左・ボタンは右の1行） ── */
+.section-title { margin-top: 18px; margin-bottom: 8px; }
+.opening-card { display: flex; align-items: center; gap: 10px; padding: 10px 14px; margin-bottom: 8px; }
+.opening-card .opening-name { flex: 1; min-width: 0; margin-bottom: 0; font-size: 1.05rem; line-height: 1.4; }
+.opening-card .btn-group { flex-shrink: 0; }
+.opening-card .action-btn { padding: 7px 14px; font-size: 0.85rem; }
+.opening-card.search-hidden { display: none; }
 </style>
 </head>
 <body>
