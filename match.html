@@ -310,6 +310,16 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <style>
   /* 対局を開いているあいだは、一覧とショートカットを隠して盤を一番上に出す */
   #kcHomeTop.kc-in-game #kcHomeGamesSlot, #kcHomeTop.kc-in-game #kcHomeShortcuts { display:none; }
+  /* 対局中は、ページの説明・使い方・AI対局などを隠して、盤とボタンだけにする（重なって開く画面はそのまま） */
+  body.kc-ingame > a, body.kc-ingame > h1, body.kc-ingame > h2, body.kc-ingame > p,
+  body.kc-ingame > details, body.kc-ingame > footer { display:none; }
+  body.kc-ingame > a, body.kc-ingame > #status, body.kc-ingame #profileArea, body.kc-ingame #logoutBtn, body.kc-ingame #loginBtn, body.kc-ingame #guestLoginRow { display:none !important; }
+  /* 対局中のボタン：大事な3つだけを1列に。ほかは「オプション」の中 */
+  #kcGameCtrlRow { display:flex; flex-wrap:wrap; justify-content:center; gap:6px; margin-top:10px; }
+  #kcGameCtrlRow > button { margin:0 !important; padding:7px 12px; font-size:0.85rem; }
+  #kcGameOptMenu { display:none; margin:8px auto 0; max-width:320px; background:var(--card); border:2px solid var(--brown); border-radius:12px; padding:6px; box-shadow:0 4px 14px rgba(0,0,0,0.15); }
+  #kcGameOptMenu > button { display:flex; align-items:center; gap:8px; width:100%; margin:0 !important; padding:9px 12px; text-align:left; background:transparent; color:var(--text); border:none; border-radius:8px; font-size:0.9rem; }
+  #kcGameOptMenu > button:hover { background:rgba(124,74,30,0.1); }
 </style>
 
 <p data-ja="友達とリアルタイムでオンライン対局ができる、KitsuneChessの対局モードです。Googleアカウントでログインするか、ゲストとして始めて、好きなユーザー名を登録して友達を追加すれば、いつでもどこからでも一手一手を同期しながら本格的なチェスの対局を楽しめます。ブラウザで開けばインストールなしですぐに始められ、Androidではアプリでも遊べます。アプリ内課金はありません。近くにいる友達と気軽に腕試しをしたい方はもちろん、離れた場所に住むチェス仲間とじっくり対局したい方にもぴったりの機能です。"
@@ -622,10 +632,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <button id="boardNavLiveBtn" style="display:none;margin-left:8px;background:#2d8a3e;" data-ja="● ライブに戻る" data-en="● Back to Live">● ライブに戻る</button>
     </div>
     <div id="drawOfferArea" style="display:none;margin-top:8px;"></div>
-    <button id="resignBtn" data-ja="🏳️ 投了する" data-en="🏳️ Resign" style="margin-top:10px;">🏳️ 投了する</button>
-    <button id="offerDrawBtn" data-ja="🤝 ドローを提案する" data-en="🤝 Offer a Draw" style="margin-top:10px;">🤝 ドローを提案する</button>
-    <button id="takebackBtn" data-ja="↩️ 待ったを申し出る" data-en="↩️ Request Takeback" style="margin-top:10px;">↩️ 待ったを申し出る</button>
-    <button id="leaveMatchBtn" data-ja="対局を退出する" data-en="Leave Match" style="margin-top:10px;">対局を退出する</button>
+    <button id="resignBtn" data-ja="🏳️ 投了" data-en="🏳️ Resign" style="margin-top:10px;">🏳️ 投了</button>
+    <button id="offerDrawBtn" data-ja="🤝 ドロー" data-en="🤝 Draw" title="ドローを提案する / Offer a draw" style="margin-top:10px;">🤝 ドロー</button>
+    <button id="takebackBtn" data-ja="↩️ 待った" data-en="↩️ Takeback" title="待ったを申し出る / Request a takeback" style="margin-top:10px;">↩️ 待った</button>
+    <button id="leaveMatchBtn" data-ja="🚪 対局を退出する" data-en="🚪 Leave Match" style="margin-top:10px;">🚪 対局を退出する</button>
     <button id="analysisToggleBtn" data-ja="🔍 局面を分析する" data-en="🔍 Analyze Position" style="margin-top:10px;">🔍 局面を分析する</button>
     <button id="historyToggleBtn" data-ja="📜 履歴を見る" data-en="📜 View History" style="margin-top:10px;">📜 履歴を見る</button>
     <div id="matchChatPanel" style="display:none;"></div>
@@ -4145,6 +4155,8 @@ await set(ref(db, 'matches/' + matchId), {
     document.getElementById('gameBox').style.display = 'none';
     document.getElementById('lobbyArea').style.display = 'block';
     { const ht = document.getElementById('kcHomeTop'); if (ht) ht.classList.remove('kc-in-game'); }
+    document.body.classList.remove('kc-ingame');
+    { const om = document.getElementById('kcGameOptMenu'); if (om) om.style.display = 'none'; }
     try { kcViewClosed('match'); } catch (e) {}
     document.getElementById('matchChatPanel').style.display = 'none';
     matchChatAttached = null;
@@ -4165,6 +4177,7 @@ await set(ref(db, 'matches/' + matchId), {
     if (oppAvatarReset) oppAvatarReset.style.display = 'none';
     document.getElementById('gameBox').style.display = 'block';
     document.getElementById('lobbyArea').style.display = 'none';
+    document.body.classList.add('kc-ingame');
     { const ht = document.getElementById('kcHomeTop'); if (ht) { ht.classList.add('kc-in-game'); try { ht.scrollIntoView({ block: 'start' }); } catch (e) {} } }
     try { kcPushView('match', () => closeOpenedMatch()); } catch (e) {}
     startClockTicker(user);
@@ -5033,6 +5046,27 @@ const PIECE_IMG = {
     if (b) { try { b.scrollIntoView({ block: 'center' }); } catch (e) {} }
   }
   document.querySelectorAll('.kc-panel-back').forEach(btn => { btn.onclick = () => kcBackToBoard(); });
+  // ===== 対局中のボタン：投了・ドロー・待ったは外に、ほかは「☰ オプション」の中にまとめる =====
+  (function kcSetupGameControls() {
+    const ids = ['resignBtn', 'offerDrawBtn', 'takebackBtn', 'leaveMatchBtn', 'analysisToggleBtn', 'historyToggleBtn'];
+    const el = {}; ids.forEach(id => { el[id] = document.getElementById(id); });
+    if (!el.resignBtn || !el.leaveMatchBtn) return;
+    const row = document.createElement('div'); row.id = 'kcGameCtrlRow';
+    el.resignBtn.parentNode.insertBefore(row, el.resignBtn);
+    ['resignBtn', 'offerDrawBtn', 'takebackBtn'].forEach(id => { if (el[id]) row.appendChild(el[id]); });
+    const opt = document.createElement('button');
+    opt.type = 'button'; opt.id = 'kcGameOptBtn';
+    opt.dataset.ja = '☰ オプション'; opt.dataset.en = '☰ Options';
+    opt.textContent = LANG === 'ja' ? opt.dataset.ja : opt.dataset.en;
+    opt.style.background = 'var(--brown-light, #a3692d)';
+    row.appendChild(opt);
+    const menu = document.createElement('div'); menu.id = 'kcGameOptMenu';
+    row.parentNode.insertBefore(menu, row.nextSibling);
+    ['analysisToggleBtn', 'historyToggleBtn', 'leaveMatchBtn'].forEach(id => { if (el[id]) menu.appendChild(el[id]); });
+    opt.onclick = (e) => { e.stopPropagation(); menu.style.display = menu.style.display === 'block' ? 'none' : 'block'; };
+    menu.addEventListener('click', () => { setTimeout(() => { menu.style.display = 'none'; }, 0); });
+    document.addEventListener('click', (e) => { if (menu.style.display === 'block' && !menu.contains(e.target) && e.target !== opt && !opt.contains(e.target)) menu.style.display = 'none'; });
+  })();
   document.getElementById('analysisToggleBtn').onclick = () => {
     const panel = document.getElementById('analysisPanel');
     const opening = panel.style.display === 'none';
@@ -6046,7 +6080,8 @@ const PIECE_IMG = {
     '🤝': '<path d="M2.5 11.5l4.5-4.5 3.5 1.5 3-1.5 3.5 1 4.5 4"/><path d="M6.5 13.5l4 4a1.5 1.5 0 0 0 2.1 0l5-5"/><path d="M9.5 12l3 3M12.5 10.5l3 3"/>',
     '👋': '<path d="M8 12.5V6.5a1.5 1.5 0 0 1 3 0v5M11 11.5V4.5a1.5 1.5 0 0 1 3 0v7M14 11.5V6.5a1.5 1.5 0 0 1 3 0V14a7 7 0 0 1-7 7c-2.4 0-4-1.2-5.2-3L3.2 14a1.5 1.5 0 0 1 2.5-1.7L8 15"/>',
     '📷': '<rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8.5 7l1.5-2.5h4L15.5 7"/><circle cx="12" cy="13.5" r="3.5"/>',
-    '⚡': '<path d="M13 2.5 5 13.5h6l-1 8 8-11h-6z"/>'
+    '⚡': '<path d="M13 2.5 5 13.5h6l-1 8 8-11h-6z"/>',
+    '↩️': '<path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/>'
   };
   // ===== 見出し・ボタンの絵文字を、線のアイコンにそろえる =====
   // 絵文字は消さずに隠して（文の中身は変えない）、前に線のアイコンを置く。
@@ -6058,7 +6093,7 @@ const PIECE_IMG = {
     if (KC_ICON_PATHS[a + '\uFE0F']) return a + '\uFE0F';
     return null;
   }
-  const KC_EMO_RE = /(?:[\u{1F300}-\u{1FAFF}]|[\u2600-\u27BF]|[\u2B50\u231A\u231B\u23F0-\u23FF])\uFE0F?/gu;
+  const KC_EMO_RE = /(?:[\u{1F300}-\u{1FAFF}]|[\u2600-\u27BF]|[\u2B50\u231A\u231B\u23F0-\u23FF\u21A9\u21AA])\uFE0F?/gu;
   function kcLineIconPass(root) {
     (root || document).querySelectorAll('h1,h2,h3,h4,summary,button,strong,label,legend,a').forEach(el => {
       if (el.closest('.kc-no-icon,#miniBoard,#aiBoard,#rvBoard')) return;
@@ -6341,7 +6376,25 @@ const PIECE_IMG = {
           out.push(ja ? it.bestSan + 'なら、すぐにチェックメイトだったよ。' : it.bestSan + ' was checkmate right away.');
         } else {
           const parts = [];
-          if (bm.captured) {
+          // ダブルチェック（両王手）か：2つの駒から同時に王手。相手は駒を取ることも間に入ることもできず、キングを動かすしかない
+          let dbl = false;
+          try {
+            if (c.in_check()) {
+              const opp = c.turn(); let ksq = null;
+              const bd = c.board();
+              for (let r = 0; r < 8; r++) for (let f = 0; f < 8; f++) { const q = bd[r][f]; if (q && q.type === 'k' && q.color === opp) ksq = 'abcdefgh'[f] + (8 - r); }
+              const fp2 = c.fen().split(' '); fp2[1] = bm.color; fp2[3] = '-';
+              const t3 = new Chess(fp2.join(' '));
+              t3.remove(ksq); t3.put({ type: 'q', color: opp }, ksq);
+              dbl = new Set(t3.moves({ verbose: true }).filter(x => x.to === ksq).map(x => x.from)).size >= 2;
+            }
+          } catch (e) { dbl = false; }
+          if (dbl) {
+            parts.push(ja
+              ? (bm.captured ? bm.to + 'の' + nm(bm.captured) + 'を取りながら、' : '') + 'ダブルチェック（両王手）をかけられる。2つの駒から同時に王手されると、相手は駒を取ることも、あいだに駒を入れることもできず、キングを動かすしかない'
+              : (bm.captured ? 'takes the ' + nm(bm.captured).toLowerCase() + ' on ' + bm.to + ' while giving ' : 'gives ') + 'a double check. When two pieces give check at once, your opponent can\'t capture or block, so the king has to move');
+          }
+          if (!dbl && bm.captured) {
             const net = val(bm.captured) - kcExchangeGain(c, bm.to);
             // 実際に指した手でも同じだけ得をしているなら、駒の損得はちがいではないので言わない
             let playedNet = -99;
@@ -6364,7 +6417,7 @@ const PIECE_IMG = {
           let t2 = null; try { t2 = new Chess(fp.join(' ')); } catch (e) {}
           // 動いた駒が相手にすぐ取られる（交換できる）ときは、ねらいは消されてしまうので言わない
           const canBeTaken = c.moves({ verbose: true }).some(x => x.to === bm.to && x.captured);
-          if (t2 && !canBeTaken) {
+          if (t2 && !canBeTaken && !dbl) {
             const targets = [];
             t2.moves({ verbose: true }).filter(x => x.from === bm.to && x.captured && x.captured !== 'k').forEach(x => {
               t2.move(x);
@@ -6380,14 +6433,14 @@ const PIECE_IMG = {
               parts.push(ja ? a1.to + 'の' + nm(a1.captured) + 'もねらえる' : 'also attacks the ' + nm(a1.captured).toLowerCase() + ' on ' + a1.to);
             }
           }
-          if (c.in_check()) parts.push(ja ? '王手もかけられる' : 'gives check');
+          if (c.in_check() && !dbl) parts.push(ja ? '王手もかけられる' : 'gives check');
           // 取られそうだった駒を、取られないようにできたか（ピンで相手の駒を動けなくした場合も）
           try {
             const bestCap = (ch) => { let w = null; ch.moves({ verbose: true }).filter(x => x.captured && x.captured !== 'k').forEach(x => { ch.move(x); const g = val(x.captured) - kcExchangeGain(ch, x.to); ch.undo(); if (g >= 2 && (!w || g > w.g)) w = { g, x }; }); return w; };
             const fb = it.fenBefore.split(' '); fb[1] = fb[1] === 'w' ? 'b' : 'w'; fb[3] = '-';
             const before = new Chess(fb.join(' '));
             const threat = bestCap(before);               // 何もしなければ取られてしまう駒
-            if (threat && threat.x.to !== bm.from) {      // 動かして逃げた場合は言わない
+            if (threat && threat.x.to !== bm.from && !c.in_check()) {      // 動かして逃げた場合・王手のとき（動けないのは王手のせいでピンではない）は言わない
               const after = bestCap(c);
               if (!after || after.x.to !== threat.x.to) {
                 const att = threat.x.from, attPiece = c.get(att);
