@@ -99,12 +99,17 @@
       if (!a[0] || !a[1]) return;
       var p1 = pos(a[0]), p2 = pos(a[1]);
       var color = hexA(a[2] || '#2d8a3e', a[2] && a[2].length === 9 ? 1 : 0.8);
-      var dx = p2[0] - p1[0], dy = p2[1] - p1[1], len = Math.sqrt(dx * dx + dy * dy) || 1;
+      // ナイトの動き（2マスと1マス）は、L字の矢印にする（長い方向に2マス進んでから曲がる）
+      var adx = Math.abs(p2[0] - p1[0]), ady = Math.abs(p2[1] - p1[1]);
+      var knight = (adx === 1 && ady === 2) || (adx === 2 && ady === 1);
+      var start = knight ? (adx === 2 ? [p2[0], p1[1]] : [p1[0], p2[1]]) : p1; // 矢じりの向きを決める点（L字なら曲がり角）
+      var dx = p2[0] - start[0], dy = p2[1] - start[1], len = Math.sqrt(dx * dx + dy * dy) || 1;
       var ux = dx / len, uy = dy / len, px = -uy, py = ux;
       var hx = p2[0] - ux * 0.4, hy = p2[1] - uy * 0.4;
-      var line = document.createElementNS(NS, 'line');
-      line.setAttribute('x1', p1[0]); line.setAttribute('y1', p1[1]); line.setAttribute('x2', hx); line.setAttribute('y2', hy);
-      line.setAttribute('stroke', color); line.setAttribute('stroke-width', '0.2'); line.setAttribute('stroke-linecap', 'round');
+      var line = document.createElementNS(NS, 'polyline');
+      line.setAttribute('points', (knight ? [p1, start, [hx, hy]] : [p1, [hx, hy]]).map(function (q) { return q[0] + ',' + q[1]; }).join(' '));
+      line.setAttribute('fill', 'none');
+      line.setAttribute('stroke', color); line.setAttribute('stroke-width', '0.2'); line.setAttribute('stroke-linecap', 'round'); line.setAttribute('stroke-linejoin', 'round');
       svg.appendChild(line);
       var head = document.createElementNS(NS, 'polygon');
       head.setAttribute('points', [p2[0] - ux * 0.05, p2[1] - uy * 0.05, hx + px * 0.3, hy + py * 0.3, hx - px * 0.3, hy - py * 0.3].map(function (v) { return v.toFixed(3); }).join(' '));

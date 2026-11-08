@@ -6970,11 +6970,16 @@ const PIECE_IMG = {
       const svg = document.createElementNS(NS, 'svg');
       svg.setAttribute('viewBox', '0 0 8 8');
       svg.style.cssText = 'position:absolute;inset:2px;width:calc(100% - 4px);height:calc(100% - 4px);pointer-events:none;';
-      const len = Math.hypot(x2 - x1, y2 - y1) || 1;
-      const ux = (x2 - x1) / len, uy = (y2 - y1) / len;
+      // ナイトの手（2マスと1マス）は、L字の矢印にする
+      const adx = Math.abs(x2 - x1), ady = Math.abs(y2 - y1);
+      const knight = (adx === 1 && ady === 2) || (adx === 2 && ady === 1);
+      const [sx, sy] = knight ? (adx === 2 ? [x2, y1] : [x1, y2]) : [x1, y1];
+      const len = Math.hypot(x2 - sx, y2 - sy) || 1;
+      const ux = (x2 - sx) / len, uy = (y2 - sy) / len;
       const ex = x2 - ux * 0.35, ey = y2 - uy * 0.35;
-      const line = document.createElementNS(NS, 'line');
-      line.setAttribute('x1', x1); line.setAttribute('y1', y1); line.setAttribute('x2', ex); line.setAttribute('y2', ey);
+      const line = document.createElementNS(NS, 'polyline');
+      line.setAttribute('points', (knight ? [[x1, y1], [sx, sy], [ex, ey]] : [[x1, y1], [ex, ey]]).map(q => q[0] + ',' + q[1]).join(' '));
+      line.setAttribute('fill', 'none'); line.setAttribute('stroke-linejoin', 'round');
       line.setAttribute('stroke', 'rgba(129,182,76,0.85)'); line.setAttribute('stroke-width', '0.18'); line.setAttribute('stroke-linecap', 'round');
       svg.appendChild(line);
       const head = document.createElementNS(NS, 'polygon');
