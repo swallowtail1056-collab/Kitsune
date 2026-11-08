@@ -100,6 +100,27 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
    ダブルチェックを狙うには、まず自分の駒の後ろに、王への攻撃ラインを持つ長距離の駒（ルーク・ビショップ・クイーン）を配置しておくことが第一歩です。そのうえで、前にいる駒自身も相手の王を攻撃できる位置に動かせないか探してみましょう。KitsuneChessのパズルストリークにも、ダブルチェックを使った詰みの問題が出題されるので、ぜひ挑戦してみてください。</p>
 
 
+<h2 data-ja="有名なダブルチェックの例" data-en="A famous double check">有名なダブルチェックの例</h2>
+<div class="kc-diagram" role="img" aria-label="白のg5のビショップとd1のルークが、同時にd8の黒のキングに王手をかけている局面" data-spec='{"p": "rnbk1b1r/pp3ppp/2p5/4q1B1/4n3/8/PPP2PPP/2KR1BNR", "h": [["d8", "#e8c84a", 0.55]], "a": [["g5", "d8", "#cc3333cc"], ["d1", "d8", "#cc3333cc"]]}'></div>
+<p data-ja="1910年のレティ対タルタコワーの対局から生まれた、有名な手順です。1.e4 c6 2.d4 d5 3.Nc3 dxe4 4.Nxe4 Nf6 5.Qd3 e5 6.dxe5 Qa5+ 7.Bd2 Qxe5 8.O-O-O Nxe4 9.Qd8+ Kxd8 10.Bg5+。白はクイーンを捨ててキングをd8に呼び寄せ、ビショップをg5に動かしました。ビショップ自身の王手と、ビショップがどいたことで開いたd1のルークの王手が、同時にかかっています。"
+   data-en="This famous sequence comes from the 1910 game Réti vs. Tartakower: 1.e4 c6 2.d4 d5 3.Nc3 dxe4 4.Nxe4 Nf6 5.Qd3 e5 6.dxe5 Qa5+ 7.Bd2 Qxe5 8.O-O-O Nxe4 9.Qd8+ Kxd8 10.Bg5+. White sacrificed the queen to pull the king to d8, then moved the bishop to g5. The bishop gives check, and moving it also opened the d-file for the rook on d1, so two checks land at once.">
+   1910年のレティ対タルタコワーの対局から生まれた、有名な手順です。1.e4 c6 2.d4 d5 3.Nc3 dxe4 4.Nxe4 Nf6 5.Qd3 e5 6.dxe5 Qa5+ 7.Bd2 Qxe5 8.O-O-O Nxe4 9.Qd8+ Kxd8 10.Bg5+。白はクイーンを捨ててキングをd8に呼び寄せ、ビショップをg5に動かしました。ビショップ自身の王手と、ビショップがどいたことで開いたd1のルークの王手が、同時にかかっています。</p>
+<p data-ja="黒は、王手をかけている駒を取ることも、あいだに駒を入れることもできず、キングを動かすしかありません。10...Kc7なら11.Bd8#、10...Ke8なら11.Rd8#で、どちらもチェックメイトになります。"
+   data-en="Black can neither capture a checking piece nor block, so the king must move. After 10...Kc7, 11.Bd8# is checkmate, and after 10...Ke8, 11.Rd8# is checkmate too.">
+   黒は、王手をかけている駒を取ることも、あいだに駒を入れることもできず、キングを動かすしかありません。10...Kc7なら11.Bd8#、10...Ke8なら11.Rd8#で、どちらもチェックメイトになります。</p>
+<h2 data-ja="ダブルチェックを受けないために" data-en="How to avoid a double check">ダブルチェックを受けないために</h2>
+<ul style="line-height:1.8;padding-left:1.3em;">
+  <li data-ja="相手のビショップ・ルーク・クイーンと自分のキングのあいだに、相手の駒が1つだけはさまっている形は、ダブルチェックの準備ができている合図です。その駒がどこへ動けるかを確かめます。" data-en="When only one enemy piece stands between an enemy bishop, rook, or queen and your king, a double check may be ready. Check where that piece could move.">相手のビショップ・ルーク・クイーンと自分のキングのあいだに、相手の駒が1つだけはさまっている形は、ダブルチェックの準備ができている合図です。その駒がどこへ動けるかを確かめます。</li>
+  <li data-ja="ダブルチェックを受けたら、キングを動かすしかありません。だからこそ、ふだんからキングのまわりに逃げ道があるかを見ておくことが大切です。" data-en="After a double check, the only answer is to move the king. That&#x27;s why it&#x27;s important to keep an eye on your king&#x27;s escape squares at all times.">ダブルチェックを受けたら、キングを動かすしかありません。だからこそ、ふだんからキングのまわりに逃げ道があるかを見ておくことが大切です。</li>
+  <li data-ja="相手がクイーンなどを捨ててきたときは、「取ったあとにダブルチェックが待っていないか」を一度考えます。上の例も、9.Qd8+のクイーンを取ったことで始まりました。" data-en="When your opponent sacrifices a queen or another piece, ask yourself whether a double check is waiting after you take it. The example above began when Black captured the queen on 9.Qd8+.">相手がクイーンなどを捨ててきたときは、「取ったあとにダブルチェックが待っていないか」を一度考えます。上の例も、9.Qd8+のクイーンを取ったことで始まりました。</li>
+</ul>
+<div style="margin:22px 0 8px;padding:14px 16px;border:2px solid var(--brown,#7c4a1e);border-radius:12px;background:rgba(255,248,232,0.8);">
+<p style="margin:0 0 6px;font-weight:800;" data-ja="🦊 ジーンのワンポイント" data-en="🦊 Jene&#x27;s Tip">🦊 ジーンのワンポイント</p>
+<p style="margin:0;line-height:1.8;" data-ja="ダブルチェックをやられると、絶望感があるよね……。2つの駒から同時に王手されたら、キングを動かすしかないんだ。特にナイトには要注意！ ナイトの王手は、あいだに駒を入れて防ぐことができないから、うしろの駒の王手と組み合わさると、とても危ないんだ。だから、自分のキングのまわりに逃げ道があるか、ふだんから見ておこう。逆に自分がダブルチェックをかけられる形を見つけたら、大チャンスだよ！"
+   data-en="Getting hit with a double check feels hopeless, doesn&#x27;t it... When two pieces give check at once, the only option is to move the king. Watch out for knights in particular! A knight&#x27;s check can&#x27;t be blocked, so when it combines with a check from a piece behind it, it&#x27;s extremely dangerous. So keep checking that your king has escape squares. And if you ever find a chance to give a double check yourself, it&#x27;s a huge opportunity!">
+   ダブルチェックをやられると、絶望感があるよね……。2つの駒から同時に王手されたら、キングを動かすしかないんだ。特にナイトには要注意！ ナイトの王手は、あいだに駒を入れて防ぐことができないから、うしろの駒の王手と組み合わさると、とても危ないんだ。だから、自分のキングのまわりに逃げ道があるか、ふだんから見ておこう。逆に自分がダブルチェックをかけられる形を見つけたら、大チャンスだよ！</p>
+</div>
+
 <footer>
   <div>
     <a href="index.html" data-ja="ホーム" data-en="Home">ホーム</a>
@@ -136,5 +157,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     }
   });
 </script>
+<script src="kc-diagram.js"></script>
 </body>
 </html>

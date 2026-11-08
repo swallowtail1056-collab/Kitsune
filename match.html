@@ -309,7 +309,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 </div>
 <style>
   /* 対局を開いているあいだは、一覧とショートカットを隠して盤を一番上に出す */
-  #kcHomeTop.kc-in-game #kcHomeGamesSlot, #kcHomeTop.kc-in-game #kcHomeShortcuts { display:none; }
+  #kcHomeTop.kc-in-game #kcHomeGamesSlot { display:none; }
+  /* 対局中は、6つのボタンを盤とボタンの下に移す（上は盤だけにする） */
+  #kcHomeTop.kc-in-game { display:flex; flex-direction:column; }
+  #kcHomeTop.kc-in-game #kcHomeShortcuts { order:10; margin-top:20px !important; }
   /* 対局中は、ページの説明・使い方・AI対局などを隠して、盤とボタンだけにする（重なって開く画面はそのまま） */
   body.kc-ingame > a, body.kc-ingame > h1, body.kc-ingame > h2, body.kc-ingame > p,
   body.kc-ingame > details, body.kc-ingame > footer { display:none; }
