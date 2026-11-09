@@ -3337,11 +3337,20 @@ applyBoardTheme();
         if (window.KC_BANNED) { alert(LANG === 'ja' ? 'このアカウントは利用規約に反する行為があったため、オンライン対局を利用できません。' : 'This account has been restricted from online play due to a violation of our rules.'); return; }
         const myProfile = await get(ref(db, 'users/' + user.uid));
         const myName = myProfile.exists() ? myProfile.val().username : user.displayName;
-        await set(ref(db, 'matchInvites/' + friendUid + '/' + user.uid), {
-          username: myName, sentAt: Date.now(), timeControl: opt.key, fixed: fixed,
-          rated: (kothCheckbox.checked || threeCheckbox.checked) ? false : ratedCheckbox.checked,
-          variant: kothCheckbox.checked ? 'koth' : (threeCheckbox.checked ? '3check' : null)
-        });
+        try {
+          await set(ref(db, 'matchInvites/' + friendUid + '/' + user.uid), {
+            username: myName, sentAt: Date.now(), timeControl: opt.key, fixed: fixed,
+            rated: (kothCheckbox.checked || threeCheckbox.checked) ? false : ratedCheckbox.checked,
+            variant: kothCheckbox.checked ? 'koth' : (threeCheckbox.checked ? '3check' : null)
+          });
+        } catch (err) {
+          // 送れなかったときは、だまらずに理由を出す
+          let em = tcPanel.querySelector('.kc-invite-err');
+          if (!em) { em = document.createElement('div'); em.className = 'kc-invite-err'; em.style.cssText = 'color:#b42318;font-size:0.78rem;margin-top:6px;font-weight:700;'; tcPanel.appendChild(em); }
+          em.textContent = (LANG === 'ja' ? '⚠️ 申し込みを送れませんでした（' : '⚠️ Could not send the challenge (') + ((err && (err.code || err.message)) || 'error') + ')';
+          console.error('invite failed', err);
+          return;
+        }
         tcPanel.style.display = 'none';
         hasPendingInvite = true;
         updateChallengeBtnLabel();
@@ -6135,7 +6144,8 @@ const PIECE_IMG = {
   (function kcWatchLineIcons() {
     let queued = false;
     const run = () => { queued = false; try { kcLineIconPass(); } catch (e) {} };
-    const queue = () => { if (!queued) { queued = true; setTimeout(run, 60); } };
+    // 画面に表示される前（同じ描画のうち）に置きかえる。あとから置きかえると、絵文字とアイコンが交互に見えてチカチカする
+    const queue = () => { if (!queued) { queued = true; queueMicrotask(run); } };
     run();
     new MutationObserver(queue).observe(document.body, { childList: true, subtree: true, characterData: true });
   })();
