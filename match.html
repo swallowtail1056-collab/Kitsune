@@ -415,6 +415,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   </div>
   <div id="aiGameArea" style="display:none;">
     <p id="aiGameStatus"></p>
+    <div id="aiThreeBar" style="display:none;"></div>
     <p id="aiCapturedArea" style="font-size:1.1rem;"></p>
     <div id="aiBoard"></div>
     <div id="aiBoardNavRow" style="display:none;text-align:center;margin-top:6px;">
@@ -608,6 +609,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     </div>
     <p id="oppPresence" style="font-size:0.8rem;color:var(--text-muted);"></p>
     <p id="gameClock" style="font-weight:700;color:var(--brown-dark);"></p>
+    <div id="kcThreeBar" style="display:none;"></div>
     <!-- ⏰ 時間切れ・接続のお知らせは、盤が動かないように上に重ねて出す（下のボタンは押せるまま） -->
     <div style="position:relative;height:0;z-index:20;">
       <div style="position:absolute;left:0;right:0;top:0;display:flex;flex-direction:column;gap:4px;pointer-events:none;">
@@ -1682,6 +1684,7 @@ applyBoardTheme();
   function renderAiBoard() {
     const boardEl = document.getElementById('aiBoard');
     const statusEl = document.getElementById('aiGameStatus');
+    try { kcRenderThreeBar(document.getElementById('aiThreeBar'), aiThree, kcCheckCount(aiMoveHistory, 'w'), kcCheckCount(aiMoveHistory, 'b'), { ja: 'AI', en: 'AI' }); } catch (e) {}
     boardEl.innerHTML = '';
     boardEl.className = 'chessboard';
 
@@ -1828,6 +1831,21 @@ applyBoardTheme();
   function kcVariantTag(v, ja) { return v === 'koth' ? '👑 King of the Hill' : v === '3check' ? (ja ? '⚡ スリーチェック' : '⚡ Three-check') : ''; }
   // ⚡ スリーチェック：その色がかけたチェックの回数（棋譜の「+」「#」を数える）
   function kcCheckCount(moves, color) { return (moves || []).filter(x => x && x.color === color && /[+#]/.test(x.san || '')).length; }
+  // ⚡ スリーチェックの回数を、時計の下に●○でわかりやすく出す
+  function kcRenderThreeBar(el, on, myN, oppN, oppWord) {
+    if (!el) return;
+    if (!on) { el.style.display = 'none'; el.innerHTML = ''; return; }
+    const dots = (n, col) => {
+      let h = '';
+      for (let i = 0; i < 3; i++) h += '<span style="display:inline-block;width:14px;height:14px;border-radius:50%;margin:0 2px;vertical-align:-2px;background:' + (i < n ? col : 'transparent') + ';border:2px solid ' + col + ';"></span>';
+      return h;
+    };
+    const ja = LANG === 'ja';
+    el.style.cssText = 'display:flex;flex-wrap:wrap;align-items:center;gap:6px 16px;margin:4px 0 8px;padding:8px 12px;border-radius:10px;background:rgba(224,168,0,0.12);border:1px solid rgba(224,168,0,0.45);font-weight:700;font-size:0.95rem;color:var(--brown-dark);';
+    el.innerHTML = '<span>⚡ ' + (ja ? 'チェックの回数' : 'Checks given') + '</span>'
+      + '<span>' + (ja ? 'あなた ' : 'You ') + dots(Math.min(myN, 3), '#c98a00') + ' ' + Math.min(myN, 3) + '/3</span>'
+      + '<span>' + (ja ? oppWord.ja : oppWord.en) + ' ' + dots(Math.min(oppN, 3), '#8a5a2b') + ' ' + Math.min(oppN, 3) + '/3</span>';
+  }
   function kcThreeLabel(myN, oppN, oppWord) {
     return LANG === 'ja'
       ? '⚡ スリーチェック（あなた ' + myN + '/3・' + oppWord.ja + ' ' + oppN + '/3）| '
@@ -1856,6 +1874,8 @@ applyBoardTheme();
   const END_REASON_LABEL = {
     checkmate: { ja: 'チェックメイト', en: 'Checkmate' },
     resign: { ja: '相手の投了', en: 'Opponent resigned' },
+    threecheck: { ja: '3回チェック', en: 'Three checks' },
+    koth: { ja: 'キングが中央', en: 'King of the Hill' },
     timeout: { ja: '時間切れ', en: 'Timeout' },
     draw_agreed: { ja: '合意ドロー', en: 'Draw agreed' },
     stalemate: { ja: 'ステイルメイト', en: 'Stalemate' },
@@ -1865,7 +1885,7 @@ applyBoardTheme();
     unknown: { ja: 'その他', en: 'Other' }
   };
   const END_REASON_COLOR = {
-    checkmate: '#e63946', resign: '#f4a259', timeout: '#f7d060', draw_agreed: '#8ecae6',
+    checkmate: '#e63946', resign: '#f4a259', threecheck: '#e9c46a', koth: '#d4a017', timeout: '#f7d060', draw_agreed: '#8ecae6',
     stalemate: '#a3692d', threefold_repetition: '#4caf50', insufficient_material: '#9575cd', fifty_move: '#78909c', unknown: '#666'
   };
 
@@ -4080,7 +4100,7 @@ await set(ref(db, 'matches/' + matchId), {
       await applyEloIfNeeded(matchId, m, user, wonByTimeout ? 1 : 0, 'timeout');
     } else if (m.status === 'resigned') {
       const iWonByResign = m.winner === myColor;
-      await applyEloIfNeeded(matchId, m, user, iWonByResign ? 1 : 0, 'resign');
+      await applyEloIfNeeded(matchId, m, user, iWonByResign ? 1 : 0, m.threeWin ? 'threecheck' : m.kothWin ? 'koth' : 'resign');
     } else if (m.status === 'draw_agreed') {
       await applyEloIfNeeded(matchId, m, user, 0.5, 'draw_agreed');
     } else if (m.status === 'active') {
@@ -7430,6 +7450,7 @@ const PIECE_IMG = {
     const clockEl = document.getElementById('gameClock');
     const oppName = myColor === 'w' ? m.blackName : m.whiteName;
     const myTurn = m.turn === myColor;
+    try { kcRenderThreeBar(document.getElementById('kcThreeBar'), m.variant === '3check', kcCheckCount(m.moves, myColor), kcCheckCount(m.moves, myColor === 'w' ? 'b' : 'w'), { ja: '相手', en: 'Opponent' }); } catch (e) {}
 
     if (lastLikeRenderedMatchId !== matchId) {
       lastLikeRenderedMatchId = matchId;
@@ -7487,7 +7508,7 @@ const PIECE_IMG = {
             ? (LANG === 'ja' ? '相手が投了しました。あなたの勝ちです！' : 'Your opponent resigned. You won!')
             : (LANG === 'ja' ? '投了しました。負けです。' : 'You resigned. You lost.'));
       { const de = document.getElementById('discWarn'); if (de) de.style.display = 'none'; }
-      applyEloIfNeeded(matchId, m, user, iWonByResign ? 1 : 0, m.abandonedBy ? 'abandon' : 'resign');
+      applyEloIfNeeded(matchId, m, user, iWonByResign ? 1 : 0, m.abandonedBy ? 'abandon' : m.threeWin ? 'threecheck' : m.kothWin ? 'koth' : 'resign');
       applyAnalysisIfNeeded(matchId, m, user, iWonByResign ? 1 : 0);
       document.getElementById('reportToggleBtn').style.display = 'inline-block';
       kcRenderRematch(m, user, matchId, statusEl);
@@ -7761,7 +7782,9 @@ const PIECE_IMG = {
       if (displayChess.in_checkmate()) {
         setWinLose(displayChess.turn() === 'w' ? 'b' : 'w', ja ? 'チェックメイト' : 'Checkmate');
       } else if (m.status === 'resigned' && m.winner) {
-        setWinLose(m.winner, m.abandonedBy ? (ja ? '📶 切断' : '📶 Disconnected') : (ja ? '🏳️ 投了' : '🏳️ Resigned'));
+        setWinLose(m.winner, m.threeWin ? (ja ? '⚡ 3回チェック' : '⚡ Three checks')
+          : m.kothWin ? (ja ? '👑 キングが中央' : '👑 King in the center')
+          : m.abandonedBy ? (ja ? '📶 切断' : '📶 Disconnected') : (ja ? '🏳️ 投了' : '🏳️ Resigned'));
       } else if (m.status === 'timeout' && m.winner) {
         setWinLose(m.winner, ja ? '⏰ 時間切れ' : '⏰ Time out');
       } else if (displayChess.in_stalemate()) {
