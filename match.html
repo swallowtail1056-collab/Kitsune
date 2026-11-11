@@ -6423,6 +6423,18 @@ const PIECE_IMG = {
               parts.push(ja
                 ? bm.to + 'の' + nm(bm.captured) + 'を取って' + (traded ? '、取り返されても差し引きで' + gainJa(net) + '得をする' : 'ただで得ができる')
                 : (traded ? 'takes the ' + nm(bm.captured).toLowerCase() + ' on ' + bm.to + ' and comes out ' + gainEn(net) + ' ahead even after the trade' : 'wins the ' + nm(bm.captured).toLowerCase() + ' on ' + bm.to + ' for free'));
+            } else if (net === 0 && val(bm.captured) >= 3 && net > playedNet && (() => {
+              // 指した手で、相手に駒を取られて損をするときだけ言う（損がないなら、形のちがいの説明のほうが役に立つ）
+              try {
+                const pl = new Chess(it.fenBefore); if (!pl.move(it.san)) return false;
+                return pl.moves({ verbose: true }).some(x => { if (!x.captured || x.captured === 'k') return false; pl.move(x); const g = val(x.captured) - kcExchangeGain(pl, x.to); pl.undo(); return g >= 1; });
+              } catch (e) { return false; }
+            })()) {
+              // 同じ価値の駒どうしの交換（例：ルークとルーク）。取り返されても損はないことを言う
+              const rc = c.moves({ verbose: true }).filter(x => x.to === bm.to && x.captured).sort((p1, p2) => val(p1.piece) - val(p2.piece))[0];
+              parts.push(ja
+                ? bm.to + 'の' + nm(bm.captured) + 'と交換できて、' + (rc ? nm(rc.piece) + 'で' : '') + '取り返されても駒の損はない'
+                : 'trades off the ' + nm(bm.captured).toLowerCase() + ' on ' + bm.to + ', and you lose nothing even after ' + (rc ? 'the ' + nm(rc.piece).toLowerCase() + ' recaptures' : 'the recapture'));
             }
           }
           // 動いた駒が次にねらえる駒（取ったら得になるもの）
