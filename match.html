@@ -188,6 +188,8 @@ body.kc-no-hints .sq.hint-move::after, body.kc-no-hints .sq.hint-capture::after 
 .sq.beginner-dot::after { content:''; position:absolute; width:26%; height:26%; border-radius:50%; background:rgba(180,120,20,0.75); pointer-events:none; z-index:3; }
 .sq.hint-capture::after { content:''; position:absolute; width:100%; height:100%; border-radius:50%; box-sizing:border-box; border:4px solid rgba(80,40,0,0.35); pointer-events:none; }
 .sq.wrong-flash{animation:pzWrongFlash 0.4s ease;}
+.sq.kc-hint-sq{box-shadow:inset 0 0 0 5px #f2b400,inset 0 0 22px 6px rgba(255,200,0,0.75);animation:kcHintPulse 1.2s ease-in-out infinite;}
+@keyframes kcHintPulse{0%,100%{box-shadow:inset 0 0 0 5px rgba(242,180,0,1),inset 0 0 22px 6px rgba(255,200,0,0.75);}50%{box-shadow:inset 0 0 0 5px rgba(242,180,0,0.45),inset 0 0 14px 3px rgba(255,200,0,0.35);}}
 @keyframes pzWrongFlash{0%,100%{filter:none;}50%{filter:brightness(0.4) sepia(1) saturate(5);}}
 .sq.superhard-flash{animation:pzSuperhardFlash 0.6s ease;}
 @keyframes pzSuperhardFlash{0%,100%{filter:none;}50%{filter:brightness(1.3) saturate(2) hue-rotate(30deg);box-shadow:0 0 20px 4px rgba(184,134,11,0.8);}}
@@ -318,11 +320,18 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   body.kc-ingame > details, body.kc-ingame > footer { display:none; }
   body.kc-ingame > a, body.kc-ingame > #status, body.kc-ingame #profileArea, body.kc-ingame #logoutBtn, body.kc-ingame #loginBtn, body.kc-ingame #guestLoginRow { display:none !important; }
   /* 対局中のボタン：大事な3つだけを1列に。ほかは「オプション」の中 */
-  #kcGameCtrlRow { display:flex; flex-wrap:wrap; justify-content:center; gap:6px; margin-top:10px; }
-  #kcGameCtrlRow > button { margin:0 !important; padding:7px 12px; font-size:0.85rem; }
-  #kcGameOptMenu { display:none; margin:8px auto 0; max-width:320px; background:var(--card); border:2px solid var(--brown); border-radius:12px; padding:6px; box-shadow:0 4px 14px rgba(0,0,0,0.15); }
-  #kcGameOptMenu > button { display:flex; align-items:center; gap:8px; width:100%; margin:0 !important; padding:9px 12px; text-align:left; background:transparent; color:var(--text); border:none; border-radius:8px; font-size:0.9rem; }
+  #kcGameBarWrap { position:relative; margin-top:8px; }
+  #kcGameBar { display:grid; grid-template-columns:repeat(4,1fr); background:#3b2716; border-radius:12px; padding:4px 2px; }
+  #kcGameBar .kc-gb-btn { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2px; margin:0 !important; padding:8px 0 6px; background:transparent; border:none; color:#f3e3c3; font-size:0.78rem; font-weight:700; line-height:1.2; box-shadow:none; min-width:0; }
+  #kcGameBar .kc-gb-btn:active { background:rgba(255,255,255,0.12); border-radius:10px; }
+  #kcGameBar .kc-gb-lbl { white-space:nowrap; }
+  #kcGameOptMenu { display:none; position:absolute; left:0; bottom:calc(100% + 6px); width:min(300px, 90%); z-index:30; background:var(--card); border:2px solid var(--brown); border-radius:14px; padding:6px; box-shadow:0 6px 20px rgba(0,0,0,0.25); }
+  #kcGameOptMenu > button { display:flex; align-items:center; gap:10px; width:100%; margin:0 !important; padding:11px 14px; text-align:left; background:transparent; color:var(--text); border:none; border-radius:8px; font-size:0.95rem; }
+  #kcGameOptMenu > button[style*="display: none"], #kcGameOptMenu > button[style*="display:none"] { display:none !important; }
   #kcGameOptMenu > button:hover { background:rgba(124,74,30,0.1); }
+  #kcGameOptMenu #resignBtn { color:#c0392b; }
+  #kcGameOptMenu > #soundToggleBtnGame { font-size:0.95rem !important; padding:11px 14px !important; }
+  #boardNavPrevBtn, #boardNavNextBtn { display:none !important; }
 </style>
 
 <p data-ja="友達とリアルタイムでオンライン対局ができる、KitsuneChessの対局モードです。Googleアカウントでログインするか、ゲストとして始めて、好きなユーザー名を登録して友達を追加すれば、いつでもどこからでも一手一手を同期しながら本格的なチェスの対局を楽しめます。ブラウザで開けばインストールなしですぐに始められ、Androidではアプリでも遊べます。アプリ内課金はありません。近くにいる友達と気軽に腕試しをしたい方はもちろん、離れた場所に住むチェス仲間とじっくり対局したい方にもぴったりの機能です。"
@@ -472,6 +481,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <svg id="puzzleArrowSvg" viewBox="0 0 8 8" style="position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:5;"></svg>
   </div>
   <div style="text-align:center;margin-top:8px;">
+    <button id="btnPuzzleHint" type="button" data-ja="💡 ヒント" data-en="💡 Hint" style="margin-right:6px;background:var(--brown-light,#a3692d);">💡 ヒント</button>
     <button id="btnPuzzleAnswer" data-ja="🔍 答えを見る" data-en="🔍 Show Answer">🔍 答えを見る</button>
   </div>
   <div id="puzzleNextRow" style="display:none;text-align:center;margin-top:8px;">
@@ -617,7 +627,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <p id="discWarn" style="display:none;font-weight:700;font-size:0.9rem;margin:0;padding:6px 10px;border-radius:8px;background:#e8f0fe;color:#1a4fa0;box-shadow:0 2px 8px rgba(0,0,0,0.18);"></p>
       </div>
     </div>
-    <div style="text-align:right;margin:-4px 0 4px;"><button id="soundToggleBtnGame" type="button" style="padding:4px 10px;font-size:0.8rem;">🔊</button></div>
+    <div id="kcSoundWrapGame" style="text-align:right;margin:-4px 0 4px;"><button id="soundToggleBtnGame" type="button" style="padding:4px 10px;font-size:0.8rem;">🔊</button></div>
     <p id="capturedArea" style="font-size:1.1rem;min-height:56px;"></p>
     <div id="miniBoard"></div>
     <div id="moveConfirmBar" style="display:none;justify-content:center;gap:12px;margin:8px 0;">
@@ -5079,25 +5089,48 @@ const PIECE_IMG = {
   }
   document.querySelectorAll('.kc-panel-back').forEach(btn => { btn.onclick = () => kcBackToBoard(); });
   // ===== 対局中のボタン：投了・ドロー・待ったは外に、ほかは「☰ オプション」の中にまとめる =====
+  // 対局画面の盤の下：オプション・分析・戻る・進む の4つを1列に並べる（チャットは使えないので置かない）
   (function kcSetupGameControls() {
-    const ids = ['resignBtn', 'offerDrawBtn', 'takebackBtn', 'leaveMatchBtn', 'analysisToggleBtn', 'historyToggleBtn'];
-    const el = {}; ids.forEach(id => { el[id] = document.getElementById(id); });
-    if (!el.resignBtn || !el.leaveMatchBtn) return;
-    const row = document.createElement('div'); row.id = 'kcGameCtrlRow';
-    el.resignBtn.parentNode.insertBefore(row, el.resignBtn);
-    ['resignBtn', 'offerDrawBtn', 'takebackBtn'].forEach(id => { if (el[id]) row.appendChild(el[id]); });
-    const opt = document.createElement('button');
-    opt.type = 'button'; opt.id = 'kcGameOptBtn';
-    opt.dataset.ja = '☰ オプション'; opt.dataset.en = '☰ Options';
-    opt.textContent = LANG === 'ja' ? opt.dataset.ja : opt.dataset.en;
-    opt.style.background = 'var(--brown-light, #a3692d)';
-    row.appendChild(opt);
+    const $ = (id) => document.getElementById(id);
+    const ids = ['resignBtn', 'offerDrawBtn', 'takebackBtn', 'historyToggleBtn', 'soundToggleBtnGame', 'leaveMatchBtn', 'analysisToggleBtn', 'matchChatToggle'];
+    const el = {}; ids.forEach(id => { el[id] = $(id); });
+    if (!el.resignBtn || !el.leaveMatchBtn || !$('miniBoard')) return;
+    const SVG = (d) => '<svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + d + '</svg>';
+    const ICONS = {
+      opt: SVG('<circle cx="5" cy="6" r="1.3"/><circle cx="5" cy="12" r="1.3"/><circle cx="5" cy="18" r="1.3"/><path d="M9.5 6H20M9.5 12H20M9.5 18H20"/>'),
+      chat: SVG('<path d="M4 5h16v11H9l-5 4z"/>'),
+      ana: SVG('<circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5 21 21M8 10.5h5M10.5 8v5"/>'),
+      back: SVG('<path d="M15 5l-7 7 7 7"/>'),
+      fwd: SVG('<path d="M9 5l7 7-7 7"/>')
+    };
+    const bar = document.createElement('div'); bar.id = 'kcGameBar';
+    const mk = (key, ja, en, fn) => {
+      const b = document.createElement('button'); b.type = 'button'; b.className = 'kc-gb-btn'; b.dataset.kcNoIcon = '1';
+      b.innerHTML = ICONS[key] + '<span class="kc-gb-lbl" data-ja="' + ja + '" data-en="' + en + '">' + (LANG === 'ja' ? ja : en) + '</span>';
+      b.onclick = fn; bar.appendChild(b); return b;
+    };
     const menu = document.createElement('div'); menu.id = 'kcGameOptMenu';
-    row.parentNode.insertBefore(menu, row.nextSibling);
-    ['analysisToggleBtn', 'historyToggleBtn', 'leaveMatchBtn'].forEach(id => { if (el[id]) menu.appendChild(el[id]); });
-    opt.onclick = (e) => { e.stopPropagation(); menu.style.display = menu.style.display === 'block' ? 'none' : 'block'; };
+    const optBtn = mk('opt', 'オプション', 'Options', (e) => { e.stopPropagation(); menu.style.display = menu.style.display === 'block' ? 'none' : 'block'; });
+    optBtn.id = 'kcGameOptBtn';
+    mk('ana', '分析', 'Analysis', () => { if (el.analysisToggleBtn) el.analysisToggleBtn.click(); });
+    mk('back', '戻る', 'Back', () => { const b = $('boardNavPrevBtn'); if (b) b.click(); });
+    mk('fwd', '進む', 'Forward', () => { const b = $('boardNavNextBtn'); if (b) b.click(); });
+    const wrap = document.createElement('div'); wrap.id = 'kcGameBarWrap';
+    wrap.appendChild(menu); wrap.appendChild(bar);
+    const anchor = $('moveConfirmBar') || $('miniBoard');
+    anchor.parentNode.insertBefore(wrap, anchor.nextSibling);
+    // メニューの中身：投了・ドロー・待った・履歴・音・退出（表示する・しないは、今までどおり対局の状態で決まる）
+    ['resignBtn', 'offerDrawBtn', 'takebackBtn', 'historyToggleBtn', 'soundToggleBtnGame', 'leaveMatchBtn'].forEach(id => { if (el[id]) menu.appendChild(el[id]); });
+    // もとの場所に残る「分析」「チャット」「音」のボタンや入れ物は隠す（バーから押す）
+    const hold = document.createElement('div'); hold.style.display = 'none'; wrap.appendChild(hold);
+    if (el.analysisToggleBtn) hold.appendChild(el.analysisToggleBtn);
+    if (el.matchChatToggle) el.matchChatToggle.style.display = 'none';
+    const sw = $('kcSoundWrapGame'); if (sw) sw.style.display = 'none';
     menu.addEventListener('click', () => { setTimeout(() => { menu.style.display = 'none'; }, 0); });
-    document.addEventListener('click', (e) => { if (menu.style.display === 'block' && !menu.contains(e.target) && e.target !== opt && !opt.contains(e.target)) menu.style.display = 'none'; });
+    // 音のボタンは押したあともメニューを閉じない（オン・オフを見て確かめられるように）
+    if (el.soundToggleBtnGame) el.soundToggleBtnGame.addEventListener('click', (e) => { e.stopPropagation(); });
+    document.addEventListener('click', (e) => { if (menu.style.display === 'block' && !menu.contains(e.target) && !optBtn.contains(e.target)) menu.style.display = 'none'; });
+    try { kcUpdateSoundBtns(); } catch (e) {}
   })();
   document.getElementById('analysisToggleBtn').onclick = () => {
     const panel = document.getElementById('analysisPanel');
@@ -6873,7 +6906,8 @@ const PIECE_IMG = {
     body.appendChild(rvEl('p', 'text-align:center;font-size:2.5rem;margin-top:10px;', '🔒'));
   }
 
-  function rvGraph(result, onPick) {
+  function rvGraph(result, onPick, gh) {
+    const GH = gh || 90;
     const evs = result.evals;
     const n = evs.length - 1;
     const W = Math.max(1, n), H = 100;
@@ -6881,7 +6915,7 @@ const PIECE_IMG = {
     const svg = document.createElementNS(NS, 'svg');
     svg.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
     svg.setAttribute('preserveAspectRatio', 'none');
-    svg.style.cssText = 'width:100%;height:90px;display:block;background:#403d39;border-radius:6px;cursor:pointer;';
+    svg.style.cssText = 'width:100%;height:' + GH + 'px;display:block;background:#403d39;border-radius:6px;cursor:pointer;';
     const y = (ev) => H * (1 - rvWin(ev.cp) / 100);
     let d = 'M0,' + H;
     evs.forEach((ev, i) => { d += ' L' + i + ',' + y(ev).toFixed(2); });
@@ -6900,7 +6934,7 @@ const PIECE_IMG = {
       if (it.cls === 'best' && it.drop > 0.5) return;
       if (it.cls === 'best') return; // 最善手は多いので点は出さない
       const dot = rvEl('span', 'position:absolute;width:9px;height:9px;border-radius:50%;transform:translate(-50%,-50%);pointer-events:none;border:1px solid rgba(0,0,0,0.35);background:' + RV_CLS[it.cls].color + ';'
-        + 'left:' + (it.ply / W * 100) + '%;top:' + (y(evs[it.ply]) / H * 90) + 'px;');
+        + 'left:' + (it.ply / W * 100) + '%;top:' + (y(evs[it.ply]) / H * GH) + 'px;');
       wrap.appendChild(dot);
     });
     if (rvState && rvState.view === 'moves') {
@@ -7053,6 +7087,24 @@ const PIECE_IMG = {
     try { text = rvExplain(it, isMine); } catch (e) { text = it.san; try { console.warn('rvExplain', e); } catch (_) {} }
     return rvJeneBubbleWide(RV_JENE[it.cls], text, title);
   }
+  // ⏩ 自動で進む：0.8秒ごとに1手進め、自分の見直しポイントか最後で止まる
+  function rvAutoStop() { if (rvState) { rvState.auto = false; clearTimeout(rvState.autoTimer); } }
+  function rvAutoStep() {
+    const st = rvState;
+    if (!st || !st.auto) return;
+    clearTimeout(st.autoTimer);
+    st.autoTimer = setTimeout(() => {
+      const ov = document.getElementById('rvOverlay');
+      if (!rvState || rvState !== st || !st.auto || st.view !== 'moves' || !ov || ov.style.display === 'none') { if (st) st.auto = false; return; }
+      const items = st.result.items, n = items.length;
+      if (st.ply >= n) { st.auto = false; rvRender(); return; }
+      st.ply++;
+      const it = items[st.ply - 1];
+      if (st.ply >= n || (it.color === st.myColor && ['inaccuracy', 'mistake', 'miss', 'blunder'].indexOf(it.cls) !== -1)) st.auto = false;
+      rvRender();
+      if (st.auto) rvAutoStep();
+    }, 800);
+  }
   function rvRenderMoves() {
     const st = rvState, res = st.result, m = st.m;
     const n = res.items.length;
@@ -7063,25 +7115,11 @@ const PIECE_IMG = {
     const replay = new Chess();
     for (let i = 0; i < st.ply; i++) replay.move(m.moves[i].san);
     const it = st.ply > 0 ? res.items[st.ply - 1] : null;
-    const bubRow = rvMoveBubble(st, st.ply);
-    body.appendChild(bubRow);
-    // 解説の長さで盤が上下しないように、いちばん長い解説に合わせて高さをそろえる
-    const sizeKey = LANG + ':' + body.clientWidth + ':' + st.myColor;
-    if (st.bubbleKey !== sizeKey) {
-      const probe = rvEl('div', 'position:absolute;left:0;top:0;visibility:hidden;pointer-events:none;width:' + body.clientWidth + 'px;');
-      body.appendChild(probe);
-      let maxH = 0;
-      for (let p = 0; p <= n; p++) {
-        const r = rvMoveBubble(st, p);
-        probe.appendChild(r);
-        maxH = Math.max(maxH, r.offsetHeight);
-        probe.removeChild(r);
-      }
-      body.removeChild(probe);
-      st.bubbleKey = sizeKey;
-      st.bubbleH = maxH;
-    }
-    if (st.bubbleH) bubRow.style.minHeight = st.bubbleH + 'px';
+    // 並び：グラフ → 盤 → 前へ・次へ → 見直しポイント → ジーンの解説
+    // 解説を盤の下に置くので、解説の長さが変わっても盤とボタンは動かない
+    const gwrap = rvEl('div', 'padding:4px 12px 6px;');
+    gwrap.appendChild(rvGraph(res, (p) => { rvAutoStop(); st.ply = p; rvRender(); }, 56));
+    body.appendChild(gwrap);
     const showArrow = it && it.best && it.cls !== 'best' && it.cls !== 'book';
     body.appendChild(rvRenderBoard(replay.fen(), (st.myColor === 'b') !== !!st.flipView,
       it ? { from: it.from, to: it.to, color: RV_CLS[it.cls].color, cls: it.cls } : null,
@@ -7089,16 +7127,16 @@ const PIECE_IMG = {
     const nav = rvEl('div', 'display:flex;align-items:center;justify-content:space-between;gap:6px;padding:8px 12px;');
     const prev = rvEl('button', 'flex:1;margin:0;padding:10px;', rvT('◀ 前へ', '◀ Prev'));
     prev.disabled = st.ply === 0;
-    prev.onclick = () => { st.ply--; rvRender(); };
+    prev.onclick = () => { rvAutoStop(); st.ply--; rvRender(); };
     const label = rvEl('div', 'flex:1.2;text-align:center;font-weight:800;font-size:0.9rem;',
       it ? (Math.floor((it.ply - 1) / 2) + 1) + (it.color === 'w' ? '. ' : '... ') + it.san : rvT('開始', 'Start'));
     const next = rvEl('button', 'flex:1;margin:0;padding:10px;background:#81b64c;', rvT('次へ ▶', 'Next ▶'));
     next.disabled = st.ply >= n;
-    next.onclick = () => { st.ply++; rvRender(); };
+    next.onclick = () => { rvAutoStop(); st.ply++; rvRender(); };
     nav.appendChild(prev); nav.appendChild(label); nav.appendChild(next);
     body.appendChild(nav);
     // 注目したい手だけ飛ばして見られるボタン
-    const jump = rvEl('div', 'display:flex;justify-content:center;gap:6px;padding:0 12px 6px;flex-wrap:wrap;');
+    const jump = rvEl('div', 'display:flex;justify-content:center;gap:6px;padding:0 12px 6px;');
     const findKey = (dir) => {
       const keys = ['inaccuracy', 'mistake', 'miss', 'blunder'];
       if (dir > 0) { for (let p = st.ply + 1; p <= n; p++) if (res.items[p - 1].color === st.myColor && keys.indexOf(res.items[p - 1].cls) !== -1) return p; }
@@ -7106,13 +7144,18 @@ const PIECE_IMG = {
       return null;
     };
     const kp = findKey(-1), kn = findKey(1);
-    const jb = (txt, target) => { const b = rvEl('button', 'margin:0;padding:6px 10px;font-size:0.8rem;background:rgba(124,74,30,0.2);color:var(--text);', txt); b.disabled = target == null; b.onclick = () => { st.ply = target; rvRender(); }; return b; };
-    jump.appendChild(jb(rvT('◀ 前の見直しポイント', '◀ Prev key moment'), kp));
-    jump.appendChild(jb(rvT('次の見直しポイント ▶', 'Next key moment ▶'), kn));
+    const jb = (txt, target) => { const b = rvEl('button', 'margin:0;padding:6px 10px;font-size:0.8rem;background:rgba(124,74,30,0.2);color:var(--text);', txt); b.disabled = target == null; b.onclick = () => { rvAutoStop(); st.ply = target; rvRender(); }; return b; };
+    jump.appendChild(jb(rvT('◀ 前の見直し', '◀ Prev key'), kp));
+    // ⏩ 自動で1手ずつ進み、次の見直しポイント（自分のミス）か最後の手で止まる
+    const auto = rvEl('button', 'margin:0;padding:6px 10px;font-size:0.8rem;color:#fff;background:' + (st.auto ? '#c0392b' : '#5d8a34') + ';',
+      st.auto ? rvT('■ 止める', '■ Stop') : rvT('⏩ 自動', '⏩ Auto'));
+    auto.disabled = !st.auto && st.ply >= n;
+    auto.onclick = () => { if (st.auto) { rvAutoStop(); rvRender(); } else { st.auto = true; rvRender(); rvAutoStep(); } };
+    jump.appendChild(auto);
+    jump.appendChild(jb(rvT('次の見直し ▶', 'Next key ▶'), kn));
     body.appendChild(jump);
-    const gwrap = rvEl('div', 'padding:4px 12px 16px;');
-    gwrap.appendChild(rvGraph(res, (p) => { st.ply = p; rvRender(); }));
-    body.appendChild(gwrap);
+    const bubRow = rvMoveBubble(st, st.ply);
+    body.appendChild(bubRow);
   }
 
   // ===== 📥 よその棋譜（PGN）を貼って振り返る =====
@@ -8581,7 +8624,8 @@ function startClockTicker(user) {
   let puzzleState = {
     index: 0, moveIndex: 0, selected: null, validTargets: [],
     lastFrom: null, lastTo: null, streak: 0, best: 0,
-    animating: false, awaitingNext: false, reviewMode: false, reviewList: [], reviewPos: 0
+    animating: false, awaitingNext: false, reviewMode: false, reviewList: [], reviewPos: 0,
+    hintLevel: 0, hintSq: null, hintUsed: false
   };
 
   const PZ_WRONG_KEY = 'kitsune_match_puzzle_wrong';
@@ -8625,6 +8669,7 @@ function startClockTicker(user) {
         cell.dataset.sq = sq;
         if (puzzleState.lastFrom === sq || puzzleState.lastTo === sq) cell.classList.add('last-move');
         if (puzzleState.selected === sq) cell.classList.add('selected');
+        if (puzzleState.hintSq === sq) cell.classList.add('kc-hint-sq');
         const piece = puzzleChess.get(sq);
         if (puzzleState.validTargets && puzzleState.validTargets.includes(sq)) cell.classList.add(piece ? 'hint-capture' : 'hint-move');
         if (col === 0) { const l = document.createElement('span'); l.className = 'sq-label rank-label'; l.textContent = ranks[row]; cell.appendChild(l); }
@@ -8656,6 +8701,8 @@ function startClockTicker(user) {
     puzzleState.selected = null; puzzleState.validTargets = [];
     puzzleState.lastFrom = null; puzzleState.lastTo = null;
     puzzleState.animating = false; puzzleState.awaitingNext = false;
+    puzzleState.hintLevel = 0; puzzleState.hintSq = null; puzzleState.hintUsed = false;
+    { const hb = document.getElementById('btnPuzzleHint'); if (hb) hb.style.display = ''; }
     const p = currentPuzzle();
     puzzleChess = new Chess(p.fen);
     const nextRow = document.getElementById('puzzleNextRow');
@@ -8686,6 +8733,7 @@ if (banner) banner.style.visibility = p.superhard ? 'visible' : 'hidden';
   animatePuzzleMove(fromSq, sq, () => {
     puzzleState.lastFrom = result.from; puzzleState.lastTo = result.to;
             puzzleState.moveIndex++;
+            puzzleState.hintLevel = 0; puzzleState.hintSq = null;
             puzzleState.animating = false;
             renderPuzzleBoard();
             advancePuzzleAfterPlayerMove();
@@ -8730,7 +8778,9 @@ if (banner) banner.style.visibility = p.superhard ? 'visible' : 'hidden';
   }
 
   function onPuzzleSolved() {
-    puzzleState.streak++;
+    const usedHint = puzzleState.hintUsed;
+    puzzleState.hintSq = null;
+    if (!usedHint) puzzleState.streak++; // ヒントを使ったときは、ストリークは増やさない（途切れもしない）
     savePuzzleBest();
     flashPuzzleMateKing();
     const sv = document.getElementById('puzzleStreakVal'); if (sv) sv.textContent = puzzleState.streak;
@@ -8738,6 +8788,8 @@ if (banner) banner.style.visibility = p.superhard ? 'visible' : 'hidden';
     if (p.superhard) {
       setPuzzleStatus(() => (LANG === 'ja' ? '⚡ 激ムズ正解!素晴らしい!⚡' : '⚡ Super-hard SOLVED! Amazing! ⚡'), 'good');
       flashPuzzleSuperhard();
+    } else if (usedHint) {
+      setPuzzleStatus(() => (LANG === 'ja' ? '正解!🎉（ヒントを使ったので、ストリークはそのまま）' : 'Correct! 🎉 (You used a hint, so your streak stays the same.)'), 'good');
     } else {
       setPuzzleStatus(() => (LANG === 'ja' ? '正解!🎉' : 'Correct! 🎉'), 'good');
     }
@@ -8833,6 +8885,8 @@ if (banner) banner.style.visibility = p.superhard ? 'visible' : 'hidden';
     if (mv) drawPuzzleArrow(mv.from, mv.to);
     setPuzzleStatus(() => ((LANG === 'ja' ? '正解: ' : 'Answer: ') + remainingMoves.join(' ')), 'bad');
     const ansBtn = document.getElementById('btnPuzzleAnswer'); if (ansBtn) ansBtn.style.display = 'none';
+    { const hb = document.getElementById('btnPuzzleHint'); if (hb) hb.style.display = 'none'; }
+    puzzleState.hintSq = null;
     const nextRow = document.getElementById('puzzleNextRow'); if (nextRow) nextRow.style.display = '';
     puzzleState.awaitingNext = true;
   }
@@ -8913,6 +8967,31 @@ if (banner) banner.style.visibility = p.superhard ? 'visible' : 'hidden';
   }
 
   document.getElementById('btnPuzzleAnswer').onclick = showPuzzleAnswer;
+  // 💡 ヒント：1回目は動かす駒を光らせる。2回目はどんな手か（チェックメイト・チェック・駒を取る・静かな手）を教える
+  function showPuzzleHint() {
+    if (puzzleState.animating || puzzleState.awaitingNext) return;
+    const san = expectedPuzzleSAN();
+    let mv = null;
+    try { const t = new Chess(puzzleChess.fen()); mv = t.move(san); } catch (e) {}
+    if (!mv) return;
+    puzzleState.hintUsed = true;
+    puzzleState.hintLevel = Math.min(2, puzzleState.hintLevel + 1);
+    puzzleState.hintSq = mv.from;
+    puzzleState.selected = null; puzzleState.validTargets = [];
+    renderPuzzleBoard();
+    const PN = { p: ['ポーン', 'pawn'], n: ['ナイト', 'knight'], b: ['ビショップ', 'bishop'], r: ['ルーク', 'rook'], q: ['クイーン', 'queen'], k: ['キング', 'king'] };
+    const pn = PN[mv.piece] || ['駒', 'piece'];
+    if (puzzleState.hintLevel === 1) {
+      setPuzzleStatus(() => (LANG === 'ja' ? '💡 光っている' + pn[0] + 'を動かすよ。' : '💡 Move the glowing ' + pn[1] + '.'));
+    } else {
+      const kind = /#/.test(mv.san) ? ['チェックメイトになる手', 'a move that gives checkmate']
+        : /\+/.test(mv.san) ? ['チェックをかける手', 'a move that gives check']
+        : mv.captured ? ['駒を取る手', 'a move that captures a piece']
+        : ['駒を取らない、静かな手', 'a quiet move (no capture, no check)'];
+      setPuzzleStatus(() => (LANG === 'ja' ? '💡 光っている' + pn[0] + 'で、' + kind[0] + 'だよ。' : '💡 Use the glowing ' + pn[1] + ': it\'s ' + kind[1] + '.'));
+    }
+  }
+  document.getElementById('btnPuzzleHint').onclick = showPuzzleHint;
   document.getElementById('btnPuzzleNext').onclick = nextPuzzle;
   document.getElementById('btnPuzzleReview').onclick = startPuzzleReview;
 
