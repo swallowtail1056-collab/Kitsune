@@ -357,7 +357,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <p style="font-size:0.92rem;" data-ja="Eloレーティングは、チェスの強さを数字で表す仕組みで、世界中のチェスの大会やサイトで使われています。KitsuneChessでは、レーティングはBullet・Blitz・Rapid・通信対局の持ち時間ごとに別々で、はじめはどれも1200から始まります。そのタイプのレート戦で勝つと上がり、負けると下がります。" data-en="An Elo rating is a number that shows how strong a chess player is, and it is used by chess tournaments and sites all over the world. On KitsuneChess, you have a separate rating for each time control — Bullet, Blitz, Rapid and Correspondence — and each one starts at 1200. It goes up when you win a rated game of that type and down when you lose.">Eloレーティングは、チェスの強さを数字で表す仕組みで、世界中のチェスの大会やサイトで使われています。KitsuneChessでは、レーティングはBullet・Blitz・Rapid・通信対局の持ち時間ごとに別々で、はじめはどれも1200から始まります。そのタイプのレート戦で勝つと上がり、負けると下がります。</p>
 <p style="font-size:0.92rem;" data-ja="上がり下がりの幅は、相手との差で変わります。自分よりレートが高い相手に勝つと大きく上がり、自分よりレートが低い相手に負けると大きく下がります。1回の対局で動くのは、最大で32点です。" data-en="How much it changes depends on the rating gap. Beating a higher-rated opponent raises your rating a lot, while losing to a lower-rated one lowers it a lot. A single game can move your rating by up to 32 points.">上がり下がりの幅は、相手との差で変わります。自分よりレートが高い相手に勝つと大きく上がり、自分よりレートが低い相手に負けると大きく下がります。1回の対局で動くのは、最大で32点です。</p>
 <p style="font-size:0.92rem;" data-ja="例：同じ1200どうしなら、勝つと+16、負けると−16です。1200の人が1400の人に勝つと+24、1200の人が1000の人に負けると−24になります。引き分けのときは、レートが低いほうが少し上がり、高いほうが少し下がります。" data-en="Examples: between two 1200 players, a win is +16 and a loss is −16. If a 1200 player beats a 1400 player, it's +24; if a 1200 player loses to a 1000 player, it's −24. In a draw, the lower-rated player gains a little and the higher-rated player loses a little.">例：同じ1200どうしなら、勝つと+16、負けると−16です。1200の人が1400の人に勝つと+24、1200の人が1000の人に負けると−24になります。引き分けのときは、レートが低いほうが少し上がり、高いほうが少し下がります。</p>
-<p style="font-size:0.92rem;" data-ja="次の対局は、レートが変わりません：ノーレートで申し込んだ対局、ゲストが参加する対局、お互い10手未満で終わった対局、同じ相手との4局目以降のレート戦(1日3局まで)、同じ端末のアカウントどうしの対局。また、相手のそのタイプのレート戦がまだ5局未満のときは、自分のレートは変わりません。" data-en="Ratings do not change in these games: games challenged as unrated, games involving a guest, games that end before each side has made 10 moves, the 4th and later rated games against the same opponent in one day (the limit is 3), and games between accounts on the same device. Also, if your opponent has played fewer than 5 rated games of that type, your own rating stays the same.">次の対局は、レートが変わりません：ノーレートで申し込んだ対局、ゲストが参加する対局、お互い10手未満で終わった対局、同じ相手との4局目以降のレート戦(1日3局まで)、同じ端末のアカウントどうしの対局。また、相手のそのタイプのレート戦がまだ5局未満のときは、自分のレートは変わりません。</p>
+<p style="font-size:0.92rem;" data-ja="次の対局は、レートが変わりません：ノーレートで申し込んだ対局、ゲストが参加する対局、お互い10手未満で終わった対局、同じ相手との6局目以降のレート戦(1日5局まで)、同じ端末のアカウントどうしの対局。また、相手のそのタイプのレート戦がまだ5局未満のときは、自分のレートは変わりません。" data-en="Ratings do not change in these games: games challenged as unrated, games involving a guest, games that end before each side has made 10 moves, the 6th and later rated games against the same opponent in one day (the limit is 5), and games between accounts on the same device. Also, if your opponent has played fewer than 5 rated games of that type, your own rating stays the same.">次の対局は、レートが変わりません：ノーレートで申し込んだ対局、ゲストが参加する対局、お互い10手未満で終わった対局、同じ相手との6局目以降のレート戦(1日5局まで)、同じ端末のアカウントどうしの対局。また、相手のそのタイプのレート戦がまだ5局未満のときは、自分のレートは変わりません。</p>
 </details>
 <details style="margin-top:8px;border:1px dashed rgba(124,74,30,0.5);border-radius:10px;padding:6px 12px;">
 <summary style="cursor:pointer;font-weight:700;" data-ja="💡 持ち時間とインクリメントとは？(クリックで開く)" data-en="💡 What are time controls and increments? (tap to open)">💡 持ち時間とインクリメントとは？(クリックで開く)</summary>
@@ -2410,7 +2410,7 @@ applyBoardTheme();
       const actualMv = moves[aiHistoryIndex];
       labelEl.innerHTML = '';
       const l1 = document.createElement('div');
-      l1.textContent = (LANG === 'ja' ? '手数: ' : 'Move: ') + aiHistoryIndex + ' / ' + moves.length;
+      l1.textContent = kcMoveLabel(aiHistoryIndex, moves);
       const l2 = document.createElement('div');
       l2.style.cssText = 'color:#2d8a3e;font-weight:800;margin-top:4px;';
       const bestSanForLabel = uciToSan(replay.fen(), aiHistoryHighlight.from + aiHistoryHighlight.to);
@@ -2418,7 +2418,7 @@ applyBoardTheme();
       labelEl.appendChild(l1);
       labelEl.appendChild(l2);
     } else {
-      labelEl.textContent = (LANG === 'ja' ? '手数: ' : 'Move: ') + aiHistoryIndex + ' / ' + moves.length;
+      labelEl.textContent = kcMoveLabel(aiHistoryIndex, moves);
     }
 
     boardEl.innerHTML = '';
@@ -3059,7 +3059,7 @@ applyBoardTheme();
     lines.push((LANG === 'ja' ? '対局数: ' : 'Games played: ') + gamesPlayed);
     lines.push((LANG === 'ja' ? '白番: ' : 'As White: ') + wWins + (LANG === 'ja' ? '勝' : 'W') + wLosses + (LANG === 'ja' ? '敗' : 'L') + wDraws + (LANG === 'ja' ? '分' : 'D'));
     lines.push((LANG === 'ja' ? '黒番: ' : 'As Black: ') + bWins + (LANG === 'ja' ? '勝' : 'W') + bLosses + (LANG === 'ja' ? '敗' : 'L') + bDraws + (LANG === 'ja' ? '分' : 'D'));
-    lines.push((LANG === 'ja' ? '平均手数: ' : 'Avg. game length: ') + avgPlies.toFixed(1) + (LANG === 'ja' ? '手' : ' plies'));
+    lines.push((LANG === 'ja' ? '平均手数: ' : 'Avg. game length: ') + (avgPlies / 2).toFixed(1) + (LANG === 'ja' ? '手' : ' moves'));
     lines.push((LANG === 'ja' ? 'よく指す最初の一手: ' : 'Favorite opening move: ') + favMove + (favCount ? ' (' + favCount + (LANG === 'ja' ? '回' : 'x') + ')' : ''));
     lines.push((LANG === 'ja' ? '駒の取られ損(簡易判定): ' : 'Pieces lost for free (rough estimate): ') + hangs + (LANG === 'ja' ? '回' : ''));
 
@@ -4717,7 +4717,7 @@ const PIECE_IMG = {
 
   // ===== レートの水増し(わざと負けるなど)の対策 =====
   const KC_MIN_RATED_PLIES = 20;      // お互い10手未満で終わった対局はノーレート
-  const KC_PAIR_DAILY_LIMIT = 3;      // 同じ相手とのレート戦は1日3局まで
+  const KC_PAIR_DAILY_LIMIT = 5;      // 同じ相手とのレート戦は1日5局まで
   const KC_PROVISIONAL_GAMES = 5;     // レート戦5局未満の相手との対局では、自分のレートは動かない
   function kcDeviceId() {
     try {
@@ -4768,6 +4768,16 @@ const PIECE_IMG = {
     if (reason === 'daily') return ja ? '同じ相手とのレート戦は1日' + KC_PAIR_DAILY_LIMIT + '局までのため、この対局はレートに反映されません。' : 'Rated games against the same opponent are limited to ' + KC_PAIR_DAILY_LIMIT + ' per day, so this game does not affect ratings.';
     if (reason === 'provisional') return ja ? '相手のこの持ち時間のレート戦がまだ' + KC_PROVISIONAL_GAMES + '局未満のため、あなたのレートは変わりません。' : 'Your opponent has played fewer than ' + KC_PROVISIONAL_GAMES + ' rated games of this time control, so your rating did not change.';
     return '';
+  }
+
+  // 手数の表示：チェスの「1手」は白と黒の1組。「5... Nc6（全21手）」のように、手の番号と全体の手数を出す
+  function kcMoveLabel(idx, moves) {
+    const ja = LANG === 'ja';
+    const total = Math.ceil((moves || []).length / 2);
+    if (!idx) return ja ? '最初の局面（全' + total + '手）' : 'Start (' + total + ' moves)';
+    const mv = moves[idx - 1] || {};
+    const black = mv.color ? mv.color === 'b' : idx % 2 === 0;
+    return Math.ceil(idx / 2) + (black ? '...' : '.') + ' ' + (mv.san || '') + (ja ? '（全' + total + '手）' : ' (of ' + total + ' moves)');
   }
 
   // 対局の手順から、インサイト用の情報を作る
@@ -5307,14 +5317,14 @@ const PIECE_IMG = {
       const bestSanForLabel = uciToSan(replay.fen(), historyHighlight.from + historyHighlight.to);
       labelEl.innerHTML = '';
       const l1 = document.createElement('div');
-      l1.textContent = (LANG === 'ja' ? '手数: ' : 'Move: ') + historyIndex + ' / ' + moves.length;
+      l1.textContent = kcMoveLabel(historyIndex, moves);
       const l2 = document.createElement('div');
       l2.style.cssText = 'color:#2d8a3e;font-weight:800;margin-top:4px;';
       l2.textContent = (LANG === 'ja' ? '💡 こう指すべきでした: ' : '💡 This is what you should have played: ') + (bestSanForLabel || '');
       labelEl.appendChild(l1);
       labelEl.appendChild(l2);
     } else {
-      labelEl.textContent = (LANG === 'ja' ? '手数: ' : 'Move: ') + historyIndex + ' / ' + moves.length;
+      labelEl.textContent = kcMoveLabel(historyIndex, moves);
     }
 
     boardEl.innerHTML = '';
@@ -7814,7 +7824,7 @@ const PIECE_IMG = {
     const navLiveBtn = document.getElementById('boardNavLiveBtn');
     if (navRow) {
       navRow.style.display = totalPlies > 0 ? 'block' : 'none';
-      navLabel.textContent = (viewingHistory ? boardPly : totalPlies) + ' / ' + totalPlies;
+      navLabel.textContent = kcMoveLabel(viewingHistory ? boardPly : totalPlies, m.moves || []);
       navLiveBtn.style.display = viewingHistory ? 'inline-block' : 'none';
     }
 
@@ -10031,11 +10041,7 @@ if (banner) banner.style.visibility = p.superhard ? 'visible' : 'hidden';
     }
     if (label) {
       const ja = LANG === 'ja';
-      if (kcBhPly === 0) label.textContent = ja ? '最初の局面 (全' + moves.length + '手)' : 'Starting position (' + moves.length + ' moves)';
-      else {
-        const moveNo = Math.ceil(kcBhPly / 2) + (last.color === 'w' ? '.' : '...');
-        label.textContent = moveNo + ' ' + last.san + (ja ? ' (' + kcBhPly + ' / ' + moves.length + ')' : ' (' + kcBhPly + ' / ' + moves.length + ')');
-      }
+      label.textContent = kcMoveLabel(kcBhPly, moves);
     }
     const prev = document.getElementById('beginnerHistoryPrevBtn');
     const next = document.getElementById('beginnerHistoryNextBtn');
