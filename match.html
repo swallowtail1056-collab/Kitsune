@@ -2055,7 +2055,9 @@ applyBoardTheme();
       const dateText = new Date(h.endedAt).toLocaleDateString(isJa ? 'ja-JP' : 'en-US');
       historyHtml += '<div style="padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.08);font-size:0.85rem;">'
         + '<div style="display:flex;justify-content:space-between;">'
-        + '<span>' + (h.opponentName || '?') + '<span style="color:#888;"> (' + (TC_LABELS[h.timeControl] || h.timeControl) + ')</span></span>'
+        + '<span>' + (h.opponentName || '?') + '<span style="color:#888;"> (' + (TC_LABELS[h.timeControl] || h.timeControl)
+          + (h.endReason === 'koth' ? ' 👑' : h.endReason === 'threecheck' ? ' ⚡' : '')
+          + (h.ratingType === 'unrated' ? (isJa ? '・ノーレート' : ', unrated') : '') + ')</span></span>'
         + '<span style="color:' + (resultColor[h.result] || '#aaa') + ';font-weight:700;">' + (resultLabel[h.result] || h.result) + '</span>'
         + '<span style="color:#888;">' + dateText + '</span></div>'
         + '<div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:4px;">'
@@ -4616,7 +4618,7 @@ const PIECE_IMG = {
     if (historyObj !== undefined) kcGraphHistory = historyObj || {};
     const el = document.getElementById('ratingGraph');
     if (!el) return;
-    const all = Object.values(kcGraphHistory || {}).filter(r => typeof r.myRatingAfter === 'number').sort((a, b) => (a.endedAt || 0) - (b.endedAt || 0));
+    const all = Object.values(kcGraphHistory || {}).filter(r => typeof r.myRatingAfter === 'number' && r.ratingType !== 'unrated').sort((a, b) => (a.endedAt || 0) - (b.endedAt || 0));
     const typeOf = (r) => r.ratingType || r.timeControl || 'rapid';
     if (!kcGraphTc) kcGraphTc = all.length ? typeOf(all[all.length - 1]) : 'rapid';
     el.innerHTML = '';
@@ -4753,7 +4755,7 @@ const PIECE_IMG = {
       let count = 0;
       Object.keys(hist).forEach(k => {
         const h = hist[k];
-        if (k !== matchId && h && h.opponentUid === oppUid && kcJstDay(h.endedAt) === today) count++;
+        if (k !== matchId && h && !kcIsUnratedHist(h) && h.opponentUid === oppUid && kcJstDay(h.endedAt) === today) count++;
       });
       if (count >= KC_PAIR_DAILY_LIMIT) return { rated: false, reason: 'daily' };
     } catch (e) {}
@@ -4786,6 +4788,30 @@ const PIECE_IMG = {
     return { color, plies: moves.length, castle, castleMove, pieces, savedAt: Date.now() };
   }
 
+  // ノーレートの対局も、対局履歴に残す（レートは変えない）。ratingType を 'unrated' にして、レートのグラフ・1日の局数・インサイトからは外す
+  async function kcSaveUnratedHistory(matchId, m, user, myResult, endReason) {
+    if ((m.moves || []).length < 2) return; // 1手も指さずに終わった対局は残さない
+    try {
+      const oppUid = myColor === 'w' ? m.black : m.white;
+      const tc = m.timeControl || 'rapid';
+      const [myP, oppP] = await Promise.all([get(ref(db, 'publicProfiles/' + user.uid)), get(ref(db, 'publicProfiles/' + oppUid))]);
+      const myR = kcRatingOf(myP.val() || {}, tc), oppR = kcRatingOf(oppP.val() || {}, tc);
+      await set(ref(db, 'matchHistory/' + user.uid + '/' + matchId), {
+        opponentUid: oppUid,
+        opponentName: (oppP.val() || {}).username || '?',
+        opponentRating: oppR,
+        result: myResult === 1 ? 'win' : (myResult === 0.5 ? 'draw' : 'loss'),
+        endReason: endReason || 'unknown',
+        timeControl: tc,
+        endedAt: Date.now(),
+        myRatingBefore: myR,
+        myRatingAfter: myR,
+        ratingType: 'unrated'
+      });
+    } catch (e) { try { console.warn('unrated history', e); } catch (_) {} }
+  }
+  const kcIsUnratedHist = (h) => !!h && h.ratingType === 'unrated';
+
   async function applyEloIfNeeded(matchId, m, user, myResult, endReason) {
     // myResult: 1 = win, 0.5 = draw, 0 = loss (from my own perspective)
     const dedupeKey = matchId + '_' + myColor;
@@ -4799,8 +4825,9 @@ const PIECE_IMG = {
       m = Object.assign({}, m, { rated: false });
     }
     if (m.rated === false) {
-      // ノーレート対局:レーティング・勝敗数・対局履歴には一切影響させない
+      // ノーレート対局:レーティング・勝敗数には影響させない。対局履歴には「ノーレート」として残す（振り返りできるように）
       await update(ref(db, 'matches/' + matchId), { [flagField]: true });
+      await kcSaveUnratedHistory(matchId, m, user, myResult, endReason);
       return;
     }
 
@@ -4809,6 +4836,7 @@ const PIECE_IMG = {
     const fair = await kcRatingFairness(matchId, m, user, oppUid);
     if (!fair.rated) {
       await update(ref(db, 'matches/' + matchId), { [flagField]: true, [noteField]: fair.reason });
+      await kcSaveUnratedHistory(matchId, m, user, myResult, endReason);
       return;
     }
     const [myProfileSnap, oppProfileSnap] = await Promise.all([
@@ -5604,7 +5632,7 @@ const PIECE_IMG = {
         get(ref(db, 'privateStats/' + curUser.uid + '/games')),
         get(ref(db, 'privateStats/' + curUser.uid + '/reviews'))
       ]);
-      kcInsData = { history: h.val() || {}, games: g.val() || {}, reviews: r.val() || {} };
+      kcInsData = { history: Object.fromEntries(Object.entries(h.val() || {}).filter(([, x]) => !(x && x.ratingType === 'unrated'))), games: g.val() || {}, reviews: r.val() || {} };
     } catch (e) {
       kcInsData = { history: {}, games: {}, reviews: {} };
     }
@@ -9225,6 +9253,13 @@ if (banner) banner.style.visibility = p.superhard ? 'visible' : 'hidden';
         { text: '中央にコマを進めると、盤面を広く使えるようになるよ!', img: 'jene_happy.png' },
         { text: 'その場所は盤の中心。強いポジションだね!', img: 'jene_sparkle.png' }
       ],
+      kingRun: [
+        { text: '盤のはしに追いつめられると、チェックメイトされやすいよ。キングはなるべく真ん中のほうへ!', img: 'jene_normal.png' },
+        { text: 'まだあきらめないで!相手がまちがえると、引き分け（ステイルメイト）になることもあるよ。', img: 'jene_wink.png' }
+      ],
+      kingActive: [
+        { text: '終盤はキングも戦えるよ。真ん中に近づけると、動ける場所が増えるよ!', img: 'jene_happy.png' }
+      ],
       develop: [
         { text: 'まだ動いていないコマを表に出すと、動ける場所が増えるよ!', img: 'jene_excited.png' },
         { text: 'コマを展開すると、後の攻めや守りがしやすくなるよ。', img: 'jene_normal.png' }
@@ -9253,6 +9288,13 @@ if (banner) banner.style.visibility = p.superhard ? 'visible' : 'hidden';
       center: [
         { text: 'Moving to the center gives you more control of the board!', img: 'jene_happy.png' },
         { text: "That's a central square — strong spot!", img: 'jene_sparkle.png' }
+      ],
+      kingRun: [
+        { text: 'A king pushed to the edge gets checkmated more easily. Keep it near the center!', img: 'jene_normal.png' },
+        { text: "Don't give up! If your opponent slips, the game can end in a draw (stalemate).", img: 'jene_wink.png' }
+      ],
+      kingActive: [
+        { text: 'In the endgame, the king can fight too. Bring it toward the center to give it more room!', img: 'jene_happy.png' }
       ],
       develop: [
         { text: 'Bringing out a piece that hasn\u2019t moved yet gives you more options!', img: 'jene_excited.png' },
@@ -9511,6 +9553,16 @@ if (banner) banner.style.visibility = p.superhard ? 'visible' : 'hidden';
     if (!legal.length) return null;
     let best = null;
     let bestScore = -Infinity;
+    // 形勢と局面の段階：駒の点数で、手番の側が大きく負けているか、終盤（クイーン・ルーク・ビショップ・ナイトが少ない）か
+    let myMat = 0, oppMat = 0, minorMajor = 0;
+    chess.board().forEach(row => row.forEach(sqp => {
+      if (!sqp) return;
+      const v = PIECE_VALUE[sqp.type] || 0;
+      if (sqp.color === chess.turn()) myMat += v; else oppMat += v;
+      if (sqp.type !== 'p' && sqp.type !== 'k') minorMajor++;
+    }));
+    const kcBehind = oppMat - myMat >= 5;
+    const kcEndgame = minorMajor <= 4;
     legal.forEach((mv) => {
       let score = 0;
       let reason = 'generic';
@@ -9532,6 +9584,12 @@ if (banner) banner.style.visibility = p.superhard ? 'visible' : 'hidden';
       if (mv.san.startsWith('O-O')) {
         score += 3.5;
         reason = 'castle';
+      }
+      // キングの手（キャスリング以外）に「盤の中心は強いポジション」はそぐわないので、終盤向けの言葉にする
+      if (movedPiece && movedPiece.type === 'k' && !mv.san.startsWith('O-O') && (reason === 'center' || reason === 'generic')) {
+        const cd = (sq) => Math.max(Math.abs(sq.charCodeAt(0) - 100.5), Math.abs(+sq[1] - 4.5));
+        const toCenter = cd(mv.to) <= cd(mv.from); // 真ん中に近づく（または同じ近さの）手だけ「真ん中へ」と言う
+        reason = !toCenter ? 'generic' : kcBehind ? 'kingRun' : (kcEndgame ? 'kingActive' : reason);
       }
       if (movedPiece && movedPiece.type === 'q') {
         score -= 1.5; // 超初心者向け:序盤のクイーンの早出しは避ける方向に
