@@ -69,6 +69,8 @@ button:hover { background:var(--brown-dark); }
 button:disabled { opacity:0.6; cursor:default; }
 .lang-switch button, .back-link.btn { background:#f7ebd3; color:var(--brown-dark); border:1px solid #c4b193; }
 .lang-switch button:hover { background:var(--brown); color:#fff; }
+/* ナイトモードでは、上のボタン（English・ふりがな・メニュー）を暗い色に合わせる（明るい背景に明るい文字で見えなくなっていた） */
+html[data-theme="dark"] .lang-switch button, html[data-theme="dark"] .back-link.btn { background:var(--card); color:var(--text); border:1px solid var(--brown); }
 input {
   font-family:'Crimson Pro', serif; font-weight:600; font-size:1rem; padding:7px 10px; margin-right:6px;
   border:1px solid rgba(124,74,30,0.4); border-radius:6px; background:var(--input-bg); color:var(--text);
