@@ -6543,6 +6543,16 @@ const PIECE_IMG = {
               t2.undo();
               if (g >= 2) targets.push(x);
             });
+            // 実際に指した手でも同じ駒をねらえているなら、ちがいではないので言わない（例：Kf7でもKe7でも、f6のナイトをねらえる）
+            try {
+              const pl = new Chess(it.fenBefore); const pm = pl.move(it.san);
+              if (pm) {
+                const fq = pl.fen().split(' '); fq[1] = pm.color; fq[3] = '-';
+                const tq = new Chess(fq.join(' '));
+                const alsoHit = new Set(tq.moves({ verbose: true }).filter(x => x.from === pm.to && x.captured).map(x => x.to));
+                for (let i = targets.length - 1; i >= 0; i--) if (alsoHit.has(targets[i].to)) targets.splice(i, 1);
+              }
+            } catch (e) {}
             if (targets.length >= 2) {
               const a1 = targets[0], a2 = targets[1];
               parts.push(ja ? a1.to + 'の' + nm(a1.captured) + 'と' + a2.to + 'の' + nm(a2.captured) + 'を同時にねらえる（フォーク）' : 'attacks the ' + nm(a1.captured).toLowerCase() + ' on ' + a1.to + ' and the ' + nm(a2.captured).toLowerCase() + ' on ' + a2.to + ' at once (a fork)');
@@ -6573,9 +6583,46 @@ const PIECE_IMG = {
         }
       }
       // ② 指した手のよくないところ（相手に駒を取られてしまう）
+      // 王手をかけながら、ほかの駒もねらう手（王手つきの両取り）を相手に許していないか
+      const kcCheckFork = (pos) => {
+        let found = null;
+        pos.moves({ verbose: true }).filter(x => x.san.indexOf('+') !== -1).forEach(x => {
+          if (found) return;
+          pos.move(x);
+          const safe = !pos.moves({ verbose: true }).some(y => y.to === x.to);   // 王手した駒を取り返せるなら両取りにならない
+          let hit = null;
+          if (safe) {
+            const fq = pos.fen().split(' '); fq[1] = x.color; fq[3] = '-';
+            try {
+              const tq = new Chess(fq.join(' '));
+              tq.moves({ verbose: true }).filter(y => y.from === x.to && y.captured && y.captured !== 'k' && val(y.captured) >= 3).forEach(y => { tq.move(y); const g = val(y.captured) - kcExchangeGain(tq, y.to); tq.undo(); if (g >= 2 && (!hit || val(y.captured) > val(hit.captured))) hit = y; });
+            } catch (e) {}
+          }
+          pos.undo();
+          if (hit) found = { san: x.san, sq: hit.to, piece: hit.captured };
+        });
+        return found;
+      };
       if (['inaccuracy', 'mistake', 'blunder'].indexOf(it.cls) !== -1) {
         const p = new Chess(it.fenBefore);
-        if (p.move(it.san) && !p.game_over()) {
+        let forkSaid = false;
+        try {
+          const pf = new Chess(it.fenBefore);
+          if (pf.move(it.san) && !pf.game_over()) {
+            const fk = kcCheckFork(pf);
+            if (fk) {
+              const bf = new Chess(it.fenBefore);
+              const bmv2 = bf.move({ from: it.best.slice(0, 2), to: it.best.slice(2, 4), promotion: it.best[4] || 'q' });
+              const fkB = bmv2 && !bf.game_over() ? kcCheckFork(bf) : null;
+              if (!fkB || fkB.sq !== fk.sq) {
+                out.push(ja ? it.san + 'だと、' + fk.san + 'で王手をかけられながら、' + fk.sq + 'の' + nm(fk.piece) + 'もねらわれてしまう（両取り）んだ。王手をよけているあいだに、' + nm(fk.piece) + 'を取られてしまうよ。'
+                            : 'After ' + it.san + ', ' + fk.san + ' gives check and attacks the ' + nm(fk.piece).toLowerCase() + ' on ' + fk.sq + ' at the same time (a fork). While you get out of check, the ' + nm(fk.piece).toLowerCase() + ' is lost.');
+                forkSaid = true;
+              }
+            }
+          }
+        } catch (e) {}
+        if (!forkSaid && p.move(it.san) && !p.game_over()) {
           let worst = null;
           // 指した手で駒を取っていたら、その分は差し引く（取って取り返されるだけなら「交換」で、損ではない）
           let gotVal = 0;
