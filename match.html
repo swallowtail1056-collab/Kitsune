@@ -4109,10 +4109,6 @@ await set(ref(db, 'matches/' + matchId), {
     try { await remove(ref(db, 'currentMatches/' + user.uid + '/' + matchId)); } catch (e) { console.warn('remove currentMatch', e); }
   }
   async function kcMatchEndApply(matchId, m, user, myColor) {
-    // チェックメイトのあとに時計が0になって「時間切れ」と記録された対局は、盤の結果（チェックメイトなど）で扱う
-    let boardOver = false;
-    try { boardOver = new Chess(m.fen).game_over(); } catch (e) {}
-    if (m.status === 'timeout' && boardOver) m = Object.assign({}, m, { status: 'active' });
     if (m.status === 'timeout') {
       const wonByTimeout = m.winner === myColor;
       await applyEloIfNeeded(matchId, m, user, wonByTimeout ? 1 : 0, 'timeout');
@@ -6315,7 +6311,6 @@ const PIECE_IMG = {
   const KC_REVIEW_FREE = true;
   const RV_MOVETIME = 500; // 1局面あたりの Stockfish の考える時間(ミリ秒)。250だと浅くて正確度が甘く出やすいので、速さとのあいだを取って500
   const RV_CLASSES = [
-    { key: 'brilliant',  ja: '妙手',     en: 'Brilliant',  sym: '!!', color: '#1fa9a3' },
     { key: 'book',       ja: '定跡',     en: 'Book',       sym: '📖', color: '#a88865' },
     { key: 'best',       ja: '最善手',   en: 'Best',       sym: '★',  color: '#81b64c' },
     { key: 'excellent',  ja: '好手',     en: 'Excellent',  sym: '!',  color: '#5c9ed6' },
@@ -6326,7 +6321,7 @@ const PIECE_IMG = {
     { key: 'blunder',    ja: '大悪手',   en: 'Blunder',    sym: '??', color: '#ca3431' }
   ];
   const RV_CLS = {}; RV_CLASSES.forEach(c => { RV_CLS[c.key] = c; });
-  const RV_JENE = { brilliant: 'jene_sparkle', book: 'jene_wink', best: 'jene_sparkle', excellent: 'jene_happy', good: 'jene_normal', inaccuracy: 'jene_quiz', mistake: 'jene_confused', miss: 'jene_sad', blunder: 'jene_confused' };
+  const RV_JENE = { book: 'jene_wink', best: 'jene_sparkle', excellent: 'jene_happy', good: 'jene_normal', inaccuracy: 'jene_quiz', mistake: 'jene_confused', miss: 'jene_sad', blunder: 'jene_confused' };
   const rvT = (ja, en) => (LANG === 'ja' ? ja : en);
 
   let rvState = null;      // 表示中の振り返り
@@ -6448,27 +6443,6 @@ const PIECE_IMG = {
       else if (drop >= 5) cls = 'inaccuracy';
       else if (drop >= 2) cls = 'good';
       else cls = 'excellent';
-      // 妙手（!!）：最善か、ほとんど差のない手で、しかも駒をわざと取らせる（捨てる）手。もともと大きく勝っている局面や、負けている局面では出さない
-      let sac = false;
-      try {
-        if ((cls === 'best' || cls === 'excellent') && !(after.mate === 0 && after.over) && !books[i]) {
-          const before100 = rvWin(sgn * before.cp), after100 = rvWin(sgn * after.cp);
-          if (before100 < 90 && after100 >= 45) {
-            const got = mv.captured ? (PIECE_VALUE[mv.captured] || 0) : 0;
-            // 相手が得できる駒取り（マスごとのいちばん大きい得）
-            const gains = (pos) => { const r = {}; pos.moves({ verbose: true }).filter(x => x.captured && x.captured !== 'k').forEach(x => { pos.move(x); let g = 0; try { g = (PIECE_VALUE[x.captured] || 0) - kcExchangeGain(pos, x.to); } finally { pos.undo(); } if (!(x.to in r) || g > r[x.to]) r[x.to] = g; }); return r; };
-            const ga = gains(replay);
-            // 指す前の局面でも同じ駒がすでに取られる形だったなら、捨てたのではない
-            let gb = {};
-            try { replay.undo(); const fb = replay.fen().split(' '); replay.move(moves[i].san); fb[1] = fb[1] === 'w' ? 'b' : 'w'; fb[3] = '-'; gb = gains(new Chess(fb.join(' '))); } catch (e) { gb = {}; }
-            Object.keys(ga).forEach(sq => {
-              const g = ga[sq] - (sq === mv.to ? got : 0);
-              if (g >= 2 && (sq === mv.to || !(sq in gb) || gb[sq] < ga[sq])) sac = true;
-            });
-          }
-        }
-      } catch (e) { sac = false; }
-      if (sac) cls = 'brilliant';
       items.push({ ply: i + 1, color, san: mv.san, from: mv.from, to: mv.to, cls, drop, acc: rvMoveAccuracy(drop),
         best, bestSan: null, hadMate, mateIn: hadMate ? Math.abs(before.mate) : null, allowsMate, opening: books[i] });
     }
@@ -6785,10 +6759,6 @@ const PIECE_IMG = {
           ? rvT('チェックメイト！' + whoJa + 'の見事な決め手だね。', 'Checkmate! ' + (imp ? subjEn + ' found a beautiful finish.' : (isMine ? 'A beautiful finish.' : 'Your opponent found the finish.')))
           : rvT(whoJa + 'の' + it.san + 'は、この局面で一番の手だよ！', posEn + it.san + ' is the best move in this position!');
         break;
-      case 'brilliant':
-        s = rvT(whoJa + 'の' + it.san + 'は妙手（!!）！駒をわざと取らせる、勇気のある手だよ。取られても、そのあとで形勢が良くなるんだ。',
-                posEn + it.san + ' is brilliant (!!) — a bold move that offers material, and the position gets better even after it is taken.');
-        break;
       case 'excellent':
         s = rvT(whoJa + 'の' + it.san + 'はとても良い手。最善の' + b + 'とほとんど差がないよ。',
                 posEn + it.san + ' is excellent — almost as good as the best move, ' + b + '.');
@@ -7047,7 +7017,7 @@ const PIECE_IMG = {
     const wrap = rvEl('div', 'position:relative;');
     wrap.appendChild(svg);
     result.items.forEach(it => {
-      if (['brilliant', 'inaccuracy', 'mistake', 'miss', 'blunder', 'best'].indexOf(it.cls) === -1) return;
+      if (['inaccuracy', 'mistake', 'miss', 'blunder', 'best'].indexOf(it.cls) === -1) return;
       if (it.cls === 'best' && it.drop > 0.5) return;
       if (it.cls === 'best') return; // 最善手は多いので点は出さない
       const dot = rvEl('span', 'position:absolute;width:9px;height:9px;border-radius:50%;transform:translate(-50%,-50%);pointer-events:none;border:1px solid rgba(0,0,0,0.35);background:' + RV_CLS[it.cls].color + ';'
@@ -7198,7 +7168,7 @@ const PIECE_IMG = {
     const isMine = it.color === st.myColor;
     const title = rvEl('div', 'display:flex;align-items:center;gap:6px;margin-bottom:4px;font-weight:800;');
     title.appendChild(rvBadge(it.cls, 22));
-    title.appendChild(rvEl('span', 'flex:1;', it.san + rvT(' は' + RV_CLS[it.cls].ja + 'です', it.cls === 'brilliant' ? ' is brilliant!' : ' is ' + (it.cls === 'inaccuracy' || it.cls === 'excellent' ? 'an ' : 'a ') + RV_CLS[it.cls].en.toLowerCase())));
+    title.appendChild(rvEl('span', 'flex:1;', it.san + rvT(' は' + RV_CLS[it.cls].ja + 'です', ' is ' + (it.cls === 'inaccuracy' || it.cls === 'excellent' ? 'an ' : 'a ') + RV_CLS[it.cls].en.toLowerCase())));
     title.appendChild(rvEl('span', 'background:#403d39;color:#fff;border-radius:6px;padding:1px 8px;font-size:0.85rem;', rvEvalLabel(res.evals[ply])));
     let text;
     try { text = rvExplain(it, isMine); } catch (e) { text = it.san; try { console.warn('rvExplain', e); } catch (_) {} }
@@ -7237,7 +7207,7 @@ const PIECE_IMG = {
     const gwrap = rvEl('div', 'padding:4px 12px 6px;');
     gwrap.appendChild(rvGraph(res, (p) => { rvAutoStop(); st.ply = p; rvRender(); }, 56));
     body.appendChild(gwrap);
-    const showArrow = it && it.best && it.cls !== 'best' && it.cls !== 'book' && it.cls !== 'brilliant';
+    const showArrow = it && it.best && it.cls !== 'best' && it.cls !== 'book';
     body.appendChild(rvRenderBoard(replay.fen(), (st.myColor === 'b') !== !!st.flipView,
       it ? { from: it.from, to: it.to, color: RV_CLS[it.cls].color, cls: it.cls } : null,
       showArrow ? it.best : null));
@@ -7641,8 +7611,7 @@ const PIECE_IMG = {
       statusEl.textContent = oppJoined
         ? (LANG === 'ja' ? 'まもなく開始します...' : 'Starting shortly...')
         : (LANG === 'ja' ? (oppName + ' がまだ入室していません。しばらくお待ちください。') : ("Waiting for " + oppName + " to join. The clock hasn't started yet."));
-    } else if (m.status === 'timeout' && !gameChess.game_over()) {
-      // 盤の上でチェックメイトなどになっていたら、時間切れより盤の結果を優先する（下の終局の表示へ）
+    } else if (m.status === 'timeout') {
       const wonByTimeout = m.winner === myColor;
       statusEl.textContent = wonByTimeout
         ? (LANG === 'ja' ? '時間切れで勝ちました！' : 'You won on time!')
@@ -8293,22 +8262,12 @@ const PIECE_IMG = {
   let clockInterval = null;
   let kcOppOfflineSince = null;
   const DISCONNECT_LIMIT_MS = 60 * 1000; // 相手の接続が切れてから、この時間戻らなければ勝ち
-  // チェックメイト・ステイルメイトなど、盤の上で対局が終わっているか（このときは status が 'active' のままなので、盤で判断する）
-  function kcMatchBoardOver(m) {
-    try {
-      if (gameChess && latestMatchData === m) return gameChess.game_over();
-      const c = new Chess();
-      for (const mv of (m.moves || [])) c.move(mv.san);
-      return c.game_over();
-    } catch (e) { return false; }
-  }
   function updateClockDisplay(m) {
   const clockEl = document.getElementById('gameClock');
   if (!clockEl || !m) return;
-  const running = m.status === 'active' && !kcMatchBoardOver(m);   // 終局したら時計を止める
-  const elapsed = running ? (kcNow() - (m.turnStartedAt || kcNow())) : 0;
-  const wTime = m.whiteTime - (m.turn === 'w' && running ? elapsed : 0);
-  const bTime = m.blackTime - (m.turn === 'b' && running ? elapsed : 0);
+  const elapsed = (m.status === 'active') ? (kcNow() - (m.turnStartedAt || kcNow())) : 0;
+  const wTime = m.whiteTime - (m.turn === 'w' && m.status === 'active' ? elapsed : 0);
+  const bTime = m.blackTime - (m.turn === 'b' && m.status === 'active' ? elapsed : 0);
   const myTime = myColor === 'w' ? wTime : bTime;
   const oppTime = myColor === 'w' ? bTime : wTime;
   const tcLabel = { bullet: 'Bullet', blitz: 'Blitz', rapid: 'Rapid' }[m.timeControl] || '';
@@ -8320,7 +8279,7 @@ const PIECE_IMG = {
   // ⏳ 最初の1手の制限時間 / ⏰ 残り時間が少ないときの警告
   const warnEl = document.getElementById('clockWarn');
   if (!warnEl) return;
-  const isLive = running && m.timeControl !== 'correspondence' && !!myColor;
+  const isLive = m.status === 'active' && m.timeControl !== 'correspondence' && !!myColor;
   const plies = (m.moves || []).length;
   const myTurnNow = m.turn === myColor;
   clockEl.style.color = '';
@@ -8367,8 +8326,6 @@ function startClockTicker(user) {
     if (!matchId) return;
     const m = latestMatchData;
     if (!m || m.status !== 'active') return;
-    // チェックメイトなどで終局していたら、時計を止めたまま（時間切れにもしない）
-    if (kcMatchBoardOver(m)) { updateClockDisplay(m); return; }
     const turnColor = m.turn;
     const timeKey = turnColor === 'w' ? 'whiteTime' : 'blackTime';
     const elapsed = kcNow() - (m.turnStartedAt || kcNow());

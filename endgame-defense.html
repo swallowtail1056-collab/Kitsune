@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>How to Hold a Draw When You're Losing / 負けそうなときに、ドローに持ち込む方法 - KitsuneChess</title>
+<meta name="description" content="負けそうな終盤で、ドロー（引き分け）に持ち込む6つの方法。キングとポーン、異色ビショップ、まちがった色のビショップ、永久チェック、ステイルメイトなど、引き分けになる形を図つきで解説。投了するか粘るか、迷ったときの目安も紹介します。">
+<link rel="canonical" href="https://kitsunechess.com/endgame-defense.html">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Crimson+Pro:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root { --bg: #f5edd6; --brown: #7c4a1e; --brown-dark: #4a2a0e; --text: #111; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: var(--bg); color: var(--text); font-family: 'Crimson Pro', serif; font-weight: 600; line-height: 1.85; padding: 40px 20px; }
+  .container { max-width: 720px; margin: 0 auto; padding: 20px 10px; }
+
+  .back-link { display: inline-block; margin-bottom: 22px; color: var(--brown-dark); text-decoration: none; font-weight: 700; font-size: 0.9rem; }
+  .back-link:hover { text-decoration: underline; }
+
+  .lang-switch { text-align: right; margin-bottom: 25px; }
+  .lang-btn { background: #f7ebd3; border: 1px solid #c4b193; color: var(--brown-dark); padding: 6px 14px; border-radius: 4px; cursor: pointer; font-weight: 700; font-size: 0.85rem; transition: all 0.2s; }
+  .lang-btn:hover { background: var(--brown); color: #fff; }
+
+  h1 { font-family: 'Cinzel', serif; color: var(--brown-dark); font-size: 1.6rem; text-align: center; margin-bottom: 22px; border-bottom: 2px solid rgba(184, 134, 11, 0.3); padding-bottom: 12px; }
+  h2 { font-family: 'Cinzel', serif; color: var(--brown); font-size: 1.2rem; margin: 32px 0 14px; border-left: 4px solid var(--brown); padding-left: 10px; }
+  h3 { color: var(--brown-dark); font-size: 1.02rem; margin: 20px 0 8px; }
+  p { font-size: 1.02rem; margin-bottom: 18px; text-align: left; }
+  ul { margin: 0 0 18px 22px; }
+  li { margin-bottom: 8px; }
+
+  .lead-box { background: #fff8e8; border: 2px solid var(--brown); border-radius: 14px; padding: 20px 22px; margin-bottom: 30px; box-shadow: 2px 3px 8px rgba(0,0,0,0.05); }
+  .faq-q { font-weight: 700; color: var(--brown-dark); margin-bottom: 4px; }
+  .faq-a { margin-bottom: 18px; }
+
+  .footer { text-align: center; margin-top: 45px; font-size: 0.9rem; }
+  .footer a { color: var(--brown); text-decoration: none; font-weight: 700; border: 1px solid var(--brown); padding: 8px 18px; border-radius: 6px; transition: all 0.2s; display: inline-block; margin: 6px 4px; white-space: nowrap; }
+  .footer a:hover { background: var(--brown); color: #fff; }
+
+  .lang-en { display: none; }
+  .en-mode .lang-ja { display: none; }
+  .en-mode .lang-en { display: block; }
+  .en-mode button.lang-en { display: inline-block; }
+  .lang-ja.kc-inline { display: inline; }
+  .en-mode .lang-ja.kc-inline { display: none; }
+  .en-mode .lang-en.kc-inline { display: inline; }
+  /* 🦊 ジーンの吹き出し */
+  .jene { display: flex; align-items: flex-start; gap: 12px; margin: 18px 0 22px; }
+  .jene-face { flex-shrink: 0; width: 64px; text-align: center; }
+  .jene-face img { width: 64px; height: 64px; object-fit: contain; display: block; }
+  .jene-name { font-size: 0.7rem; color: #7c4a1e; font-weight: 700; }
+  .bubble { position: relative; background: #fff; border: 2px solid #7c4a1e; border-radius: 14px; padding: 10px 14px; font-size: 0.98rem; line-height: 1.7; color: #3a2410; text-align: left; }
+  .bubble::before { content: ""; position: absolute; left: -10px; top: 18px; border: 5px solid transparent; border-right: 8px solid #7c4a1e; }
+  .bubble::after { content: ""; position: absolute; left: -6px; top: 19px; border: 4px solid transparent; border-right: 6px solid #fff; }
+  .kc-diagram { margin: 6px auto 8px; max-width: 360px; }
+  .cap { font-size: 0.92rem; color: #5a3a1a; background: #fff8e8; border-left: 4px solid var(--brown); padding: 8px 12px; border-radius: 6px; margin: 0 0 22px; }
+</style>
+<!-- 変更後 -->
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1034556404852942" crossorigin="anonymous"></script>
+</head>
+<body>
+<div class="container">
+  <span class="lang-ja kc-inline"><a href="info.html" class="back-link">← 一覧へ戻る</a>&nbsp;&nbsp;<a href="index.html" class="back-link">🏠 ホームへ</a></span><span class="lang-en kc-inline"><a href="info.html" class="back-link">← Back to Info</a>&nbsp;&nbsp;<a href="index.html" class="back-link">🏠 Home</a></span>
+
+  <div class="lang-switch">
+    <button class="lang-btn lang-ja" onclick="toggleLanguage()">English (英語へ)</button>
+    <button class="lang-btn lang-en" onclick="toggleLanguage()">日本語 (To Japanese)</button>
+  </div>
+
+  <!-- ================= 日本語パート ================= -->
+  <div class="lang-ja">
+    <h1>負けそうなときに、ドローに持ち込む方法——不利な終盤の6つのコツ</h1>
+
+    <div class="lead-box">
+      <p style="margin:0;">チェスでは、うまくいかない対局のほうが多いものです。駒を損して、形勢がはっきり悪くなることもあります。そんなとき、多くの人は「もう負けだ」と投げやりな手を指してしまいます。でも、終盤には「負けている側でも引き分けにできる形」がいくつもあります。どんな形なら引き分けになるかを知っていれば、そこをめざして手を選べます。この記事では、負けそうなときにドロー（引き分け）に持ち込むための6つのコツを、図と一緒に紹介します。</p>
+    </div>
+
+    <div class="jene">
+      <div class="jene-face"><img src="jene_welcome_s.webp" alt="ジーン" loading="lazy"><div class="jene-name">ジーン</div></div>
+      <div class="bubble">負けそうなときこそ、あきらめないで！「どんな形なら引き分けになるか」を知っていると、ひっくり返せることがあるよ。</div>
+    </div>
+
+    <h2>まず、めざす形を「引き分け」に切りかえる</h2>
+    <p>形勢が悪くなっても、「なんとか勝とう」と無理な攻めを続けると、かえって早く負けてしまいます。負けそうなときは、気持ちを切りかえて、めざすものを「勝ち」から「引き分け」に変えましょう。</p>
+    <p>不利なときのゴールは、勝つことではなく<strong>引き分け</strong>です。チェスの引き分けには、ステイルメイト（動ける手がないのに王手もされていない）、同じ局面が3回くり返す、50手ルール、そして「どちらもチェックメイトできない駒しか残っていない」などがあります。つまり、負けている側は「相手がチェックメイトできない形」をめざして、駒を交換したり、キングを動かしたりすればよいのです。</p>
+
+    <h2>コツ1：交換するならポーンを、駒は残す</h2>
+    <p>有利な側は「駒を交換して、ポーンを残す」のが基本です。駒が少なくなるほど、残ったポーンをクイーンにしやすくなるからです。だから、不利な側はその反対をめざします。<strong>ポーンはどんどん交換し、駒はなるべく残す</strong>。相手のポーンがすべてなくなれば、ナイト1つやビショップ1つが多くても、チェックメイトはできません。キングとナイト2つでも、相手がまちがえないかぎりチェックメイトはできないことが知られています。</p>
+
+    <h2>コツ2：キングをポーンの前に置く</h2>
+    <p>キングとポーン1つ対キングの終盤は、いちばん基本の形です。負けている側は、<strong>自分のキングを相手のポーンの真ん前に置く</strong>のが大原則です。</p>
+    <div class="kc-diagram" role="img" aria-label="白のキングとe4のポーン、黒のキングがe5にいる局面" data-spec='{"p": "8/8/8/4k3/4P3/4K3/8/8", "h": [["e5", "#e8c84a", 0.55]]}'></div>
+    <p class="cap">黒のキング（e5）が、白のポーン（e4）の前をふさいでいます。この形は、どちらの番でも引き分けです（エンジンでも評価は0.00）。黒は、白のキングと向かい合う位置（オポジション）を保ちながら、ポーンの前から離れないようにします。最後はポーンがe7まで来ても、黒のキングがe8でがんばれば、ステイルメイトか引き分けになります。</p>
+
+    <h2>コツ3：ビショップの色がちがう終盤をめざす</h2>
+    <p>白と黒のビショップが、別の色のマスを動く形を「異色ビショップ」といいます。異色ビショップの終盤は、<strong>ポーンが1つ、ときには2つ少なくても引き分けになりやすい</strong>ことで有名です。相手のビショップが入れない色のマスで、こちらのビショップとキングがポーンを止められるからです。</p>
+    <p><strong>異色ビショップとは？</strong>ビショップは斜めにしか動けないので、最初に白いマスにいたビショップは、ずっと白いマスだけを動きます。駒の交換が進んで、白も黒もビショップが1つずつ残ったとき、片方は白いマス、もう片方は黒いマスを動く——これが「異色ビショップ」です。2つのビショップは一生出会えず、取り合うこともできません。</p>
+    <p>守る側は、自分のビショップが動ける色のマスで、相手のポーンが進む先をふさぎます。攻める側のビショップは、その色のマスにまったく手が出せないので、ポーンは止められたまま進めなくなります。</p>
+    <ul>
+      <li>負けている側は、ビショップの色がちがう形をめざして、駒を交換する。</li>
+      <li>勝っている側は、そうならないように、交換する駒を選ぶ。</li>
+      <li>ただし、ルークやクイーンも残っているときは、異色ビショップが逆に攻める側に有利になることもあります。引き分けになりやすいのは、主に「ビショップとポーンだけ」の終盤です。</li>
+    </ul>
+    <div class="kc-diagram" role="img" aria-label="白がポーン2つ多いが、ビショップの色がちがう局面" data-spec='{"p": "8/8/5b2/4k3/4P3/3BK3/7P/8", "h": [["e5", "#e8c84a", 0.55], ["f6", "#e8c84a", 0.4]]}'></div>
+    <p class="cap">白はポーンが2つ多いのに、エンジンの評価はほぼ0.00（引き分け）です。黒のキングがe5でポーンの前をふさぎ、f6のビショップ（黒いマス）が、白のポーンが進む先のマスを見張っています。白のビショップは白いマスしか動けないので、黒いマスを取り返せません。</p>
+
+    <h2>コツ4：「まちがった色のビショップ」を知る</h2>
+    <p>ビショップと、盤のいちばん端（aかh）のポーンが残った形は、特別です。<strong>ポーンがクイーンになるマスの色と、ビショップの色がちがうとき</strong>、負けている側のキングがその隅に入りこめば引き分けになります。</p>
+    <div class="kc-diagram" role="img" aria-label="白のビショップとhポーン、黒のキングがh8の隅にいる局面" data-spec='{"p": "7k/8/5K2/7P/2B5/8/8/8", "h": [["h8", "#e8c84a", 0.6]]}'></div>
+    <p class="cap">hポーンがクイーンになるh8は黒いマスですが、白のビショップは白いマスのビショップです。黒のキングがh8・h7のあたりにいるかぎり、白はキングを追い出せず、引き分けになります。もし白のビショップが黒いマス（たとえばd4）にいれば、白は数手でチェックメイトできます。</p>
+    <p>この形を知っていると、不利な側は「相手のポーンを1つずつ交換して、最後にこの形を残す」という作戦が立てられます。</p>
+
+    <h2>コツ5：永久チェックをさがす</h2>
+    <p>駒の数で負けていても、相手のキングに王手をかけ続けられれば、同じ局面がくり返して引き分けになります。これを「永久チェック（パーペチュアルチェック）」といいます。特にクイーンが残っているときは、相手のキングのまわりが空いていないかを、いつもさがしてみましょう。</p>
+    <div class="kc-diagram" role="img" aria-label="黒のクイーンが王手を続けられる局面" data-spec='{"p": "6k1/RR3ppp/8/N7/3q4/8/5P1P/6K1", "a": [["d4", "d1", "#cc3333cc"], ["d1", "g4", "#cc333388"]]}'></div>
+    <p class="cap">白はルーク2つとナイト、黒はクイーンで、黒は駒の点数で4点ほど損をしています。でも黒の番です。1...Qd1+ 2.Kg2 Qg4+ 3.Kf1 Qd1+…と、クイーンでd1とg4から王手をくり返せます。白のキングはこの王手からのがれられず、引き分けになります（エンジンの評価も0.00）。</p>
+
+    <h2>コツ6：ステイルメイトのチャンスを残す</h2>
+    <p>勝っている側がいちばん気をつけるのが、ステイルメイトです。ということは、負けている側にとっては最後の希望でもあります。キングだけになっても、すぐに投了せず、相手が急いでまちがえるチャンスを残しましょう。</p>
+    <div class="kc-diagram" role="img" aria-label="黒のキングがa8で動けないステイルメイトの局面" data-spec='{"p": "k7/8/1Q6/8/8/8/8/4K3", "h": [["a8", "#e8c84a", 0.6]]}'></div>
+    <p class="cap">白がクイーンをb6に置いたところです。黒のキング（a8）は王手をされていませんが、a7・b7・b8はすべてクイーンに見張られていて、動けるマスがありません。黒にはほかに駒もないので、ステイルメイトで引き分けになります。勝っていた白にとっては、とてももったいないミスです。</p>
+
+    <h2>投了するか、粘るか——迷ったときの目安</h2>
+    <p>チェスには「投了」という、自分から負けを認めるルールがあります。粘ることと投了することは、反対のように見えますが、どちらも大切です。実際の対局では、投了したあとに「なぜ投了したの？まだ指せたのに」と言われることもあれば、反対に、相手が早く投了して「どうしてここで？」と驚くこともあります。投了のタイミングは人によって考え方がちがうので、迷ったときの目安を紹介します。</p>
+    <h3>投了を考えてもいいとき</h3>
+    <ul>
+      <li>駒の差がとても大きく（たとえばクイーン1つ分以上）、この記事で紹介したような引き分けの形も、もう残っていない。</li>
+      <li>相手に王手をかけたり、駒をねらったりする反撃の手が、まったくない。</li>
+      <li>数手先のチェックメイトが見えていて、受ける手がない。</li>
+      <li>相手が終盤の勝ち方をよく知っていそうで、持ち時間もたっぷりある。</li>
+    </ul>
+    <h3>まだ投了しなくていいとき</h3>
+    <ul>
+      <li>引き分けの形（キングとポーン、異色ビショップ、まちがった色のビショップ、永久チェック、ステイルメイト）に持ち込めそう。</li>
+      <li>駒は損をしていても、相手のキングのまわりが空いていて、王手を続けられそう。</li>
+      <li>初心者・中級者どうしの対局で、相手が勝ち方にまだ慣れていなさそう。</li>
+      <li>終盤の練習として、最後まで指してみたい。</li>
+    </ul>
+    <p>迷ったときは、「自分が相手の立場だったら、この局面から確実に勝てるか？」と考えてみましょう。自分なら間違いなく勝てると思えるなら、投了してもよい局面です。反対に、少しでもむずかしさがあるなら、粘る価値があります。ただし、はっきり負けの局面で、相手の時間切れだけを待って指し続けるのは、マナーがよくないと受け取られることがあります。</p>
+    <p>投了は、相手の力を認めるあいさつでもあります。早すぎても遅すぎても、自分で考えて決めたことなら、それでかまいません。投了したあとに「ありがとうございました」と伝えたり、対局をふり返ったりすれば、次の対局につながります。</p>
+
+    <h2>まとめ：負けそうなときのチェックリスト</h2>
+    <ul>
+      <li>ゴールは「勝ち」ではなく「引き分け」。相手がチェックメイトできない形を思い浮かべる。</li>
+      <li>交換するならポーンを。相手のポーンがなくなれば、駒が少し多くてもチェックメイトできないことが多い。</li>
+      <li>キングとポーンの終盤では、キングをポーンの真ん前に。</li>
+      <li>異色ビショップの終盤や、まちがった色のビショップの形は、引き分けの味方。</li>
+      <li>クイーンが残っていたら、永久チェックをさがす。</li>
+      <li>キングだけになっても、ステイルメイトのチャンスを残して、最後まで指す。</li>
+      <li>投了するか迷ったら、「相手の立場なら確実に勝てるか」で考える。</li>
+    </ul>
+
+    <h2>よくある質問</h2>
+    <div class="faq-q">負けている対局は、すぐに投了したほうがいいですか？</div>
+    <div class="faq-a">はっきり負けの形なら、投了するのも礼儀のひとつです。ただ、引き分けの形がまだ残っているなら、あきらめずに指してみる価値があります。くわしくは、上の「投了するか、粘るか——迷ったときの目安」を見てください。</div>
+
+    <div class="faq-q">オポジションとは何ですか？</div>
+    <div class="faq-a">2つのキングが、1マスあけて向かい合っている形のことです。キングどうしは隣のマスに入れないので、向かい合ったときに「手番でない側」が相手のキングを押しとどめられます。キングとポーンの終盤では、このオポジションを取れるかどうかで勝ち負けが変わります。</div>
+
+    <div class="faq-q">勝っている側は、この記事をどう使えばいいですか？</div>
+    <div class="faq-a">ここで紹介した形は、勝っている側にとっては「さけるべき形」です。ポーンを交換しすぎない、ビショップの色に気をつける、相手のキングのまわりを空けたままクイーンを放っておかない、ステイルメイトに注意する——引き分けの形を知っていることは、勝つときにも役に立ちます。</div>
+
+    <div style="margin:22px 0 8px;padding:14px 16px;border:2px solid var(--brown,#7c4a1e);border-radius:12px;background:rgba(255,248,232,0.8);">
+      <p style="margin:0 0 6px;font-weight:800;">🦊 ジーンのワンポイント</p>
+      <p style="margin:0;line-height:1.8;">負けそうになっても、すぐにあきらめないで、道をさがしてね。ドローに持ち込める可能性が残っているうちは、捨てないで！</p>
+    </div>
+
+    <div class="jene">
+      <div class="jene-face"><img src="jene_happy_s.webp" alt="ジーン" loading="lazy"><div class="jene-name">ジーン</div></div>
+      <div class="bubble">苦しい局面でも、引き分けの形を知っていれば希望があるよ。引き分けの形をめざして、最後までねばってみよう！</div>
+    </div>
+
+    <h2>参考にした本</h2>
+    <ul>
+      <li>渡辺暁『ここからはじめるチェス』ナツメ社、2010年</li>
+    </ul>
+    <p style="font-size:0.9rem;">この記事の文章と図は、KitsuneChess が独自に作成したものです。図の局面は、チェスエンジン（Stockfish）で確かめています。</p>
+
+    <p>あわせて読みたい：<a href="endgame-winning.html">有利な終盤を勝ち切る方法</a> ／ <a href="endgame-basics.html">勝ちを逃さない!終盤(エンドゲーム)の基本メイトパターン</a> ／ <a href="middlegame-plan.html">中盤(ミドルゲーム)で迷わないための形勢判断のコツ</a></p>
+
+    <div class="footer">
+      <a href="info.html">🦊 Info一覧へ戻る</a><a href="index.html">🏠 ホームへ戻る</a>
+    </div>
+  </div>
+
+  <!-- ================= English Part ================= -->
+  <div class="lang-en">
+    <h1>How to Hold a Draw When You're Losing: 6 Endgame Tips</h1>
+
+    <div class="lead-box">
+      <p style="margin:0;">Not every game goes your way. Sometimes you lose material and the position turns clearly worse, and it's tempting to give up and play carelessly. But the endgame is full of positions where the side that is behind can still hold a draw. If you know which positions are drawn, you can steer the game toward them. This article shows six ways to hold a draw when you're losing, with diagrams.</p>
+    </div>
+
+    <div class="jene">
+      <div class="jene-face"><img src="jene_welcome_s.webp" alt="Jene" loading="lazy"><div class="jene-name">Jene</div></div>
+      <div class="bubble">When you're losing, don't give up! If you know which positions are drawn, you can sometimes save the game.</div>
+    </div>
+
+    <h2>First, Switch Your Goal to a Draw</h2>
+    <p>When your position goes bad, forcing an attack to try to win often makes you lose faster. When you're losing, change your goal from a win to a draw.</p>
+    <p>When you're worse, the goal isn't a win — it's a <strong>draw</strong>. Draws in chess include stalemate (no legal moves while not in check), threefold repetition, the 50-move rule, and positions where neither side has enough material to checkmate. So the defending side should trade pieces and move the king toward positions where the opponent can't force mate.</p>
+
+    <h2>Tip 1: Trade Pawns, Keep Pieces</h2>
+    <p>The side that's ahead usually wants to trade pieces and keep pawns, because fewer pieces make it easier to promote a pawn. So the defender wants the opposite: <strong>trade pawns, keep pieces</strong>. If the opponent runs out of pawns, an extra knight or bishop is not enough to checkmate. Even king and two knights can't force mate against a careful defender.</p>
+
+    <h2>Tip 2: Put Your King in Front of the Pawn</h2>
+    <p>King and pawn versus king is the most basic endgame. The defender's golden rule: <strong>place your king directly in front of the enemy pawn</strong>.</p>
+    <div class="kc-diagram" role="img" aria-label="White king and pawn on e4, Black king on e5" data-spec='{"p": "8/8/8/4k3/4P3/4K3/8/8", "h": [["e5", "#e8c84a", 0.55]]}'></div>
+    <p class="cap">Black's king on e5 blocks White's pawn on e4. This position is a draw whoever is to move (the engine shows 0.00). Black keeps facing White's king (the opposition) and never leaves the pawn's path. Even if the pawn reaches e7, Black's king holds on e8, and the game ends in stalemate or a draw.</p>
+
+    <h2>Tip 3: Aim for Opposite-Colored Bishops</h2>
+    <p>When the two sides' bishops travel on different colored squares, we call it "opposite-colored bishops." These endgames are famous for being drawn <strong>even a pawn or sometimes two pawns down</strong>, because the defender's bishop and king can stop the pawns on squares the other bishop can never reach.</p>
+    <p><strong>What are opposite-colored bishops?</strong> A bishop moves only diagonally, so a bishop that starts on a light square stays on light squares forever. When trades leave each side with one bishop, and one moves on light squares while the other moves on dark squares, you have "opposite-colored bishops." The two bishops can never meet or capture each other.</p>
+    <p>The defender blocks the squares in front of the enemy pawns that are the color of their own bishop. The attacker's bishop can't touch those squares at all, so the pawns stay stuck.</p>
+    <ul>
+      <li>When you're losing, aim for opposite-colored bishops when choosing what to trade.</li>
+      <li>When you're winning, choose your trades to avoid them.</li>
+      <li>But with rooks or queens still on the board, opposite-colored bishops can actually help the attacker. The drawing tendency applies mainly to endings with only bishops and pawns.</li>
+    </ul>
+    <div class="kc-diagram" role="img" aria-label="White is two pawns up, but the bishops are on opposite colors" data-spec='{"p": "8/8/5b2/4k3/4P3/3BK3/7P/8", "h": [["e5", "#e8c84a", 0.55], ["f6", "#e8c84a", 0.4]]}'></div>
+    <p class="cap">White is two pawns up, yet the engine shows roughly 0.00 (a draw). Black's king blocks the pawn on e5, and the dark-squared bishop on f6 watches the squares the pawns need. White's light-squared bishop can never challenge the dark squares.</p>
+
+    <h2>Tip 4: Know the "Wrong-Colored Bishop"</h2>
+    <p>A bishop plus a pawn on the very edge (the a- or h-file) is a special case. <strong>If the bishop doesn't control the color of the promotion square</strong>, the defender draws by getting the king into that corner.</p>
+    <div class="kc-diagram" role="img" aria-label="White bishop and h-pawn, Black king in the h8 corner" data-spec='{"p": "7k/8/5K2/7P/2B5/8/8/8", "h": [["h8", "#e8c84a", 0.6]]}'></div>
+    <p class="cap">The h-pawn promotes on h8, a dark square, but White's bishop moves on light squares. As long as Black's king stays around h8 and h7, White can't drive it out, and the game is drawn. If White's bishop were on dark squares (for example on d4), White would mate in a few moves.</p>
+    <p>Knowing this ending, the defender can plan: trade the opponent's pawns one by one and leave exactly this ending at the end.</p>
+
+    <h2>Tip 5: Look for Perpetual Check</h2>
+    <p>Even when you're behind in material, if you can keep checking the enemy king forever, the position repeats and the game is drawn. This is called "perpetual check." Especially when you still have a queen, always look for an exposed enemy king.</p>
+    <div class="kc-diagram" role="img" aria-label="Black queen can keep giving check" data-spec='{"p": "6k1/RR3ppp/8/N7/3q4/8/5P1P/6K1", "a": [["d4", "d1", "#cc3333cc"], ["d1", "g4", "#cc333388"]]}'></div>
+    <p class="cap">White has two rooks and a knight against Black's queen, so Black is about four points down. But it's Black's move. After 1...Qd1+ 2.Kg2 Qg4+ 3.Kf1 Qd1+ and so on, Black keeps checking from d1 and g4. White's king can't escape, and the game is drawn (the engine agrees: 0.00).</p>
+
+    <h2>Tip 6: Keep Stalemate Chances Alive</h2>
+    <p>Stalemate is the thing the winning side fears most — which makes it the defender's last hope. Even with a lone king, don't resign right away; give your opponent a chance to rush and slip up.</p>
+    <div class="kc-diagram" role="img" aria-label="Stalemate: Black king on a8 has no moves" data-spec='{"p": "k7/8/1Q6/8/8/8/8/4K3", "h": [["a8", "#e8c84a", 0.6]]}'></div>
+    <p class="cap">White has just played the queen to b6. Black's king on a8 is not in check, but a7, b7 and b8 are all covered by the queen, so it has no legal move. Black has no other pieces, so it's stalemate — a draw, and a painful mistake for White.</p>
+
+    <h2>Resign or Play On? A Guide for When You're Unsure</h2>
+    <p>Chess has a rule called resigning — admitting defeat yourself. Fighting on and resigning may sound like opposites, but both matter. In real games, you might resign and hear, "Why did you resign? You could still play!" — or be surprised when your opponent resigns early and wonder, "Why now?" People see resigning differently, so here are some guidelines for when you're unsure.</p>
+    <h3>When it's reasonable to resign</h3>
+    <ul>
+      <li>You're far behind in material (for example, a queen or more), and none of the drawn setups in this article are left.</li>
+      <li>You have no counterplay at all — no checks, no threats against enemy pieces.</li>
+      <li>You can see checkmate coming in a few moves and there's no defense.</li>
+      <li>Your opponent seems to know how to win endgames and has plenty of time on the clock.</li>
+    </ul>
+    <h3>When you don't need to resign yet</h3>
+    <ul>
+      <li>You might reach a drawn setup (king and pawn, opposite-colored bishops, the wrong-colored bishop, perpetual check, or stalemate).</li>
+      <li>You're down material, but the enemy king is exposed and you may be able to keep checking.</li>
+      <li>It's a game between beginners or intermediate players, and your opponent may not be used to converting yet.</li>
+      <li>You want to play the endgame out as practice.</li>
+    </ul>
+    <p>When in doubt, ask yourself: "If I had my opponent's position, would I win this for sure?" If the answer is a confident yes, resigning is fine. If there's any difficulty left, it's worth fighting on. But playing on in a completely lost position just to wait for your opponent's clock to run out can come across as poor manners.</p>
+    <p>Resigning is also a way of acknowledging your opponent's skill. Whether it feels early or late, if it's your own decision, that's okay. Saying "thank you for the game" afterward, or reviewing the game, turns it into something useful for your next one.</p>
+
+    <h2>Summary: A Checklist for Bad Positions</h2>
+    <ul>
+      <li>Your goal is a draw, not a win. Picture positions where your opponent can't checkmate.</li>
+      <li>Trade pawns. Without pawns, a small material edge often can't force mate.</li>
+      <li>In king-and-pawn endings, put your king right in front of the pawn.</li>
+      <li>Opposite-colored bishops and the wrong-colored bishop are your friends.</li>
+      <li>If you still have a queen, look for perpetual check.</li>
+      <li>Even with a lone king, keep stalemate chances alive and play on.</li>
+      <li>Unsure whether to resign? Ask: "Would I surely win from my opponent's side?"</li>
+    </ul>
+
+    <h2>Frequently Asked Questions</h2>
+    <div class="faq-q">Should I resign as soon as I'm losing?</div>
+    <div class="faq-a">In a clearly lost position, resigning is a polite choice. But if a drawn setup is still possible, it's worth playing on. See "Resign or Play On?" above for more.</div>
+
+    <div class="faq-q">What is the opposition?</div>
+    <div class="faq-a">It's when the two kings face each other with one square between them. Kings can't stand next to each other, so in that standoff the side that does not have to move holds the other king back. In king-and-pawn endings, who has the opposition often decides the result.</div>
+
+    <div class="faq-q">How can the winning side use this article?</div>
+    <div class="faq-a">These are exactly the positions the winning side should avoid. Don't trade too many pawns, watch the bishop colors, don't leave your king exposed to a queen, and beware of stalemate. Knowing the drawn positions helps you win, too.</div>
+
+    <div style="margin:22px 0 8px;padding:14px 16px;border:2px solid var(--brown,#7c4a1e);border-radius:12px;background:rgba(255,248,232,0.8);">
+      <p style="margin:0 0 6px;font-weight:800;">🦊 Jene's Tip</p>
+      <p style="margin:0;line-height:1.8;">Even when you're about to lose, don't give up right away — keep looking for a way out. As long as a chance to hold a draw remains, don't throw it away!</p>
+    </div>
+
+    <div class="jene">
+      <div class="jene-face"><img src="jene_happy_s.webp" alt="Jene" loading="lazy"><div class="jene-name">Jene</div></div>
+      <div class="bubble">Even in a tough spot, knowing the drawn positions gives you hope. Aim for a drawn position and fight to the end!</div>
+    </div>
+
+    <h2>Further Reading</h2>
+    <ul>
+      <li>Akira Watanabe, <i>Koko kara Hajimeru Chess</i> (Natsume-sha, 2010) — in Japanese</li>
+    </ul>
+    <p style="font-size:0.9rem;">The text and diagrams in this article were created independently by KitsuneChess. The diagram positions were checked with a chess engine (Stockfish).</p>
+
+    <p>Read next: <a href="endgame-winning.html">How to Win a Winning Endgame</a> / <a href="endgame-basics.html">Essential Endgame Mating Patterns</a> / <a href="middlegame-plan.html">How to Evaluate a Position in the Middlegame</a></p>
+
+    <div class="footer">
+      <a href="info.html">🦊 Back to Info</a><a href="index.html?lang=en">🏠 Back to Home</a>
+    </div>
+  </div>
+</div>
+
+<script>
+  function toggleLanguage() {
+    const isNowEn = !document.body.classList.contains('en-mode');
+    document.body.classList.toggle('en-mode');
+    localStorage.setItem('selectedLang', isNowEn ? 'en' : 'ja');
+  }
+  (function applyStoredLanguage() {
+    const stored = localStorage.getItem('selectedLang');
+    if (stored === 'ja') {
+      document.body.classList.remove('en-mode');
+    } else {
+      document.body.classList.add('en-mode');
+    }
+  })();
+</script>
+<script src="board-theme.js"></script>
+<script src="kc-diagram.js"></script>
+<script src="furigana.js" defer></script>
+</body>
+</html>

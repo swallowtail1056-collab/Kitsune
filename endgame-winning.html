@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>How to Win a Winning Endgame / 有利な終盤を勝ち切る方法 - KitsuneChess</title>
+<meta name="description" content="駒得したのに勝ち切れない人へ。有利な終盤を勝ちに変える7つのコツ。駒の交換、キングの使い方、キングとポーンの終盤（オポジション）、ステイルメイトの注意点などを図つきで解説します。">
+<link rel="canonical" href="https://kitsunechess.com/endgame-winning.html">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Crimson+Pro:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root { --bg: #f5edd6; --brown: #7c4a1e; --brown-dark: #4a2a0e; --text: #111; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: var(--bg); color: var(--text); font-family: 'Crimson Pro', serif; font-weight: 600; line-height: 1.85; padding: 40px 20px; }
+  .container { max-width: 720px; margin: 0 auto; padding: 20px 10px; }
+
+  .back-link { display: inline-block; margin-bottom: 22px; color: var(--brown-dark); text-decoration: none; font-weight: 700; font-size: 0.9rem; }
+  .back-link:hover { text-decoration: underline; }
+
+  .lang-switch { text-align: right; margin-bottom: 25px; }
+  .lang-btn { background: #f7ebd3; border: 1px solid #c4b193; color: var(--brown-dark); padding: 6px 14px; border-radius: 4px; cursor: pointer; font-weight: 700; font-size: 0.85rem; transition: all 0.2s; }
+  .lang-btn:hover { background: var(--brown); color: #fff; }
+
+  h1 { font-family: 'Cinzel', serif; color: var(--brown-dark); font-size: 1.6rem; text-align: center; margin-bottom: 22px; border-bottom: 2px solid rgba(184, 134, 11, 0.3); padding-bottom: 12px; }
+  h2 { font-family: 'Cinzel', serif; color: var(--brown); font-size: 1.2rem; margin: 32px 0 14px; border-left: 4px solid var(--brown); padding-left: 10px; }
+  h3 { color: var(--brown-dark); font-size: 1.02rem; margin: 20px 0 8px; }
+  p { font-size: 1.02rem; margin-bottom: 18px; text-align: left; }
+  ul { margin: 0 0 18px 22px; }
+  li { margin-bottom: 8px; }
+
+  .lead-box { background: #fff8e8; border: 2px solid var(--brown); border-radius: 14px; padding: 20px 22px; margin-bottom: 30px; box-shadow: 2px 3px 8px rgba(0,0,0,0.05); }
+  .faq-q { font-weight: 700; color: var(--brown-dark); margin-bottom: 4px; }
+  .faq-a { margin-bottom: 18px; }
+
+  .footer { text-align: center; margin-top: 45px; font-size: 0.9rem; }
+  .footer a { color: var(--brown); text-decoration: none; font-weight: 700; border: 1px solid var(--brown); padding: 8px 18px; border-radius: 6px; transition: all 0.2s; display: inline-block; margin: 6px 4px; white-space: nowrap; }
+  .footer a:hover { background: var(--brown); color: #fff; }
+
+  .lang-en { display: none; }
+  .en-mode .lang-ja { display: none; }
+  .en-mode .lang-en { display: block; }
+  .en-mode button.lang-en { display: inline-block; }
+  .lang-ja.kc-inline { display: inline; }
+  .en-mode .lang-ja.kc-inline { display: none; }
+  .en-mode .lang-en.kc-inline { display: inline; }
+  /* 🦊 ジーンの吹き出し */
+  .jene { display: flex; align-items: flex-start; gap: 12px; margin: 18px 0 22px; }
+  .jene-face { flex-shrink: 0; width: 64px; text-align: center; }
+  .jene-face img { width: 64px; height: 64px; object-fit: contain; display: block; }
+  .jene-name { font-size: 0.7rem; color: #7c4a1e; font-weight: 700; }
+  .bubble { position: relative; background: #fff; border: 2px solid #7c4a1e; border-radius: 14px; padding: 10px 14px; font-size: 0.98rem; line-height: 1.7; color: #3a2410; text-align: left; }
+  .bubble::before { content: ""; position: absolute; left: -10px; top: 18px; border: 5px solid transparent; border-right: 8px solid #7c4a1e; }
+  .bubble::after { content: ""; position: absolute; left: -6px; top: 19px; border: 4px solid transparent; border-right: 6px solid #fff; }
+  .kc-diagram { margin: 6px auto 8px; max-width: 360px; }
+  .cap { font-size: 0.92rem; color: #5a3a1a; background: #fff8e8; border-left: 4px solid var(--brown); padding: 8px 12px; border-radius: 6px; margin: 0 0 22px; }
+</style>
+<!-- 変更後 -->
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1034556404852942" crossorigin="anonymous"></script>
+</head>
+<body>
+<div class="container">
+  <span class="lang-ja kc-inline"><a href="info.html" class="back-link">← 一覧へ戻る</a>&nbsp;&nbsp;<a href="index.html" class="back-link">🏠 ホームへ</a></span><span class="lang-en kc-inline"><a href="info.html" class="back-link">← Back to Info</a>&nbsp;&nbsp;<a href="index.html" class="back-link">🏠 Home</a></span>
+
+  <div class="lang-switch">
+    <button class="lang-btn lang-ja" onclick="toggleLanguage()">English (英語へ)</button>
+    <button class="lang-btn lang-en" onclick="toggleLanguage()">日本語 (To Japanese)</button>
+  </div>
+
+  <!-- ================= 日本語パート ================= -->
+  <div class="lang-ja">
+    <h1>有利な終盤を勝ち切る方法——駒得を勝ちに変える7つのコツ</h1>
+
+    <div class="lead-box">
+      <p style="margin:0;">相手のミスで駒を得して、「これは勝てる！」と思ったのに、気づいたら引き分けや逆転負け——初心者・中級者の対局では、とてもよくあることです。駒得は、それだけでは勝ちではありません。最後にチェックメイトするまでが勝負です。この記事では、有利になった終盤を、落ちついて勝ちに変えるための7つのコツを、図と一緒に紹介します。</p>
+    </div>
+
+    <div class="jene">
+      <div class="jene-face"><img src="jene_welcome_s.webp" alt="ジーン" loading="lazy"><div class="jene-name">ジーン</div></div>
+      <div class="bubble">せっかく有利になったら、最後まで勝ち切りたいよね。あわてずに、ひとつずつ進めよう！</div>
+    </div>
+
+    <h2>コツ1：駒得したら、駒を交換する（ポーンは残す）</h2>
+    <p>駒の数で勝っているときは、<strong>駒どうしの交換</strong>をすすめましょう。たとえば、自分がナイト1つ多いなら、ルークどうし、クイーンどうしを交換していくと、盤の上の駒が減るほど、ナイト1つの差が大きく効いてきます。相手の反撃の手段も少なくなります。</p>
+    <p>反対に、<strong>ポーンはなるべく残します</strong>。終盤で勝つための近道は、ポーンをクイーンにすることです。ポーンをぜんぶ交換してしまうと、ナイト1つやビショップ1つが多くても、チェックメイトできなくなることがあります。</p>
+    <p>交換するときは、ビショップの色にも注意します。白と黒のビショップが別の色のマスを動く「異色ビショップ」の終盤は、ポーンが多くても引き分けになりやすいからです（くわしくは<a href="endgame-defense.html">負けそうなときに、ドローに持ち込む方法</a>）。</p>
+
+    <h2>コツ2：キングを前に出す</h2>
+    <p>序盤・中盤では、キングは守られる側でした。でも、駒が少なくなった終盤では、<strong>キングも強い戦力</strong>です。相手のクイーンやルークがいなくなったら、キングを真ん中に出して、自分のポーンを守ったり、相手のポーンを取りに行ったりしましょう。キングを1マス前に出すだけで、勝負が決まることもあります。</p>
+
+    <h2>コツ3：キングを、ポーンより前に</h2>
+    <p>キングとポーン1つ対キングの終盤では、ポーンを先に進めるより、<strong>キングを先にポーンの前へ</strong>出すのがコツです。キングがポーンの道をつくってあげるイメージです。</p>
+    <div class="kc-diagram" role="img" aria-label="白のキングがe4、ポーンがe2、黒のキングがe6の局面" data-spec='{"p": "8/8/4k3/8/4K3/8/4P3/8", "h": [["e4", "#e8c84a", 0.55]]}'></div>
+    <p class="cap">白のキング（e4）が、ポーン（e2）より2マス前に出ています。この形は、どちらの番でも白の勝ちです（エンジンでもチェックメイトまで読み切り）。白はキングで相手のキングを押しのけながら、ポーンの通り道をつくっていきます。</p>
+    <div class="kc-diagram" role="img" aria-label="白のキングがe3、ポーンがe2、黒のキングがe5の局面" data-spec='{"p": "8/8/8/4k3/8/4K3/4P3/8", "h": [["e3", "#e8c84a", 0.55]]}'></div>
+    <p class="cap">こちらは、白のキング（e3）がポーンのすぐ前にいるだけで、黒のキング（e5）と向かい合っています。この形は、白の番だと引き分けです（エンジンの評価は0.00）。キングをもう少し前に出せていれば、勝てていました。</p>
+
+    <h2>コツ4：6段目のキングは勝ち——オポジションを知る</h2>
+    <p>2つのキングが1マスあけて向かい合う形を「オポジション」といいます。キングどうしは隣のマスに入れないので、向かい合ったとき、<strong>手番でない側</strong>が相手のキングを押しとどめられます。キングとポーンの終盤では、このオポジションを取れるかどうかで、勝ちか引き分けかが変わります。</p>
+    <p>覚えやすい目安がひとつあります。ポーンが盤の端（aかh）でないとき、<strong>自分のキングが、ポーンの前の6段目（黒なら3段目）まで来れば、どちらの番でも勝ち</strong>です。</p>
+    <div class="kc-diagram" role="img" aria-label="白のキングがe6、ポーンがe5、黒のキングがe8の局面" data-spec='{"p": "4k3/8/4K3/4P3/8/8/8/8", "h": [["e6", "#e8c84a", 0.55]]}'></div>
+    <p class="cap">白のキングがe6、ポーンがe5にあります。黒の番でも白の番でも、白の勝ちです（エンジンでもチェックメイトまで読み切り）。たとえば黒がKd8なら、白はKf7として、e6・e7とポーンを進めます。</p>
+
+    <h2>コツ5：ステイルメイトに注意する</h2>
+    <p>勝っている側がいちばん気をつけたいのが、ステイルメイトです。相手のキングが動けないのに、王手もかかっていない形にしてしまうと、引き分けになります。特にクイーンで追いつめるときは、<strong>1手ごとに「相手のキングに動けるマスが残っているか」</strong>を確かめましょう。</p>
+    <div class="kc-diagram" role="img" aria-label="白のクイーンがd3、キングがf7、黒のキングがh8の局面" data-spec='{"p": "7k/5K2/8/8/8/3Q4/8/8", "a": [["d3", "h3", "#2e8b57cc"], ["d3", "g6", "#cc3333aa"]]}'></div>
+    <p class="cap">白の番です。Qh3（緑の矢印）なら、h8のキングにhの列から王手がかかり、g7・g8にも逃げられないので、チェックメイトです。ところが、Qg6（赤の矢印）としてしまうと、黒のキングは王手をされていないのに、h7・g7・g8のどこにも動けません。黒にはほかの駒もないので、ステイルメイトで引き分けです。</p>
+
+    <h2>コツ6：相手の反撃を消してから、進める</h2>
+    <p>勝ちが近づくと、早く決めたくなります。でも、相手にクイーンやルークが残っているときは、<strong>王手を続けられて（永久チェック）引き分けにされる</strong>ことがあります。自分のキングのまわりにポーンを残しておく、相手の駒を交換で減らしておくなど、相手の反撃の手段を先に消しておきましょう。「急がば回れ」が、終盤ではいちばんの近道です。</p>
+
+    <h2>コツ7：引き分けのルールを知っておく</h2>
+    <p>勝っている側も、引き分けのルールは知っておく必要があります。</p>
+    <ul>
+      <li><strong>同じ局面が3回</strong>くり返すと、引き分けにできます。同じ王手をくり返しているうちに、引き分けになってしまうことがあります。</li>
+      <li><strong>50手ルール</strong>：50手のあいだ、どちらもポーンを動かさず、駒も取らなかったら、引き分けにできます。追いつめ方を知らずにうろうろしていると、このルールにかかることがあります。</li>
+      <li>チェックメイトの基本の形（クイーンやルークでの追いつめ方）は、<a href="endgame-basics.html">終盤の基本メイトパターン</a>で練習しておきましょう。</li>
+    </ul>
+
+    <h2>まとめ：勝ち切るためのチェックリスト</h2>
+    <ul>
+      <li>駒得したら、駒を交換する。ポーンはなるべく残す。</li>
+      <li>異色ビショップになる交換は、なるべくさける。</li>
+      <li>終盤はキングも戦う。真ん中に出して、ポーンを助ける。</li>
+      <li>キングとポーンの終盤では、キングをポーンより前へ。6段目まで来れば勝ち。</li>
+      <li>クイーンで追いつめるときは、1手ごとにステイルメイトを確かめる。</li>
+      <li>相手の永久チェックなどの反撃を、先に消しておく。</li>
+      <li>3回くり返しと50手ルールに気をつける。</li>
+    </ul>
+
+    <h2>よくある質問</h2>
+    <div class="faq-q">駒得したら、すぐにクイーンどうしを交換したほうがいいですか？</div>
+    <div class="faq-a">多くの場合はそうです。クイーンがなくなると、相手の反撃（特に永久チェック）の心配がぐっと減ります。ただし、自分のクイーンで相手のキングをすぐにチェックメイトできそうなときは、交換より攻めを優先しましょう。</div>
+
+    <div class="faq-q">ポーンを早く進めたほうがいいのでは？</div>
+    <div class="faq-a">あせって進めると、相手のキングにポーンだけを取られてしまうことがあります。まずキングをポーンの前に出して、道をつくってから進めるのが安全です。</div>
+
+    <div class="faq-q">勝っているのに時間がなくなりそうなときは？</div>
+    <div class="faq-a">むずかしい読みが必要な形をさけて、確実な手を選びましょう。駒を交換して局面を単純にする、自分のキングを安全にしておく、などが役に立ちます。</div>
+
+    <div class="jene">
+      <div class="jene-face"><img src="jene_happy_s.webp" alt="ジーン" loading="lazy"><div class="jene-name">ジーン</div></div>
+      <div class="bubble">勝っているときこそ、ていねいに。キングを前に出して、ステイルメイトに気をつければ、きっと勝ち切れるよ！</div>
+    </div>
+
+    <h2>参考にした本</h2>
+    <ul>
+      <li>渡辺暁『ここからはじめるチェス』ナツメ社、2010年</li>
+    </ul>
+    <p style="font-size:0.9rem;">この記事の文章と図は、KitsuneChess が独自に作成したものです。図の局面は、チェスエンジン（Stockfish）で確かめています。</p>
+
+    <p>あわせて読みたい：<a href="endgame-defense.html">負けそうなときに、ドローに持ち込む方法</a> ／ <a href="endgame-basics.html">勝ちを逃さない!終盤(エンドゲーム)の基本メイトパターン</a></p>
+
+    <div class="footer">
+      <a href="info.html">🦊 Info一覧へ戻る</a><a href="index.html">🏠 ホームへ戻る</a>
+    </div>
+  </div>
+
+  <!-- ================= English Part ================= -->
+  <div class="lang-en">
+    <h1>How to Win a Winning Endgame: 7 Tips to Convert Your Advantage</h1>
+
+    <div class="lead-box">
+      <p style="margin:0;">You win material thanks to your opponent's mistake and think, "This one's mine!" — then the game ends in a draw or even a loss. Among beginners and intermediate players, this happens all the time. Extra material isn't a win by itself; the game is over only when you deliver checkmate. This article shows seven tips for calmly converting an advantage in the endgame, with diagrams.</p>
+    </div>
+
+    <div class="jene">
+      <div class="jene-face"><img src="jene_welcome_s.webp" alt="Jene" loading="lazy"><div class="jene-name">Jene</div></div>
+      <div class="bubble">Once you're ahead, you want to finish the job. Don't rush — take it one step at a time!</div>
+    </div>
+
+    <h2>Tip 1: Trade Pieces When Ahead (Keep Pawns)</h2>
+    <p>When you're ahead in material, aim to <strong>trade pieces</strong>. If you're a knight up, for example, trading rooks and queens makes that extra knight matter more and more as the board empties. Your opponent's counterplay shrinks too.</p>
+    <p>On the other hand, <strong>keep your pawns</strong>. The shortest path to victory in an endgame is promoting a pawn. If all the pawns get traded, even an extra knight or bishop may not be enough to checkmate.</p>
+    <p>Watch the bishop colors when trading. Endgames with opposite-colored bishops tend to be drawn even with extra pawns (see <a href="endgame-defense.html">How to Hold a Draw When You're Losing</a>).</p>
+
+    <h2>Tip 2: Bring Your King Forward</h2>
+    <p>In the opening and middlegame, the king is something to protect. But in the endgame, with fewer pieces left, <strong>the king becomes a strong fighting piece</strong>. Once the enemy queen and rooks are gone, bring your king to the center to support your pawns or go after your opponent's. Sometimes a single king step decides the game.</p>
+
+    <h2>Tip 3: Put Your King in Front of the Pawn</h2>
+    <p>In king-and-pawn versus king endings, the key is not to rush the pawn but to <strong>lead with the king</strong>. Think of the king clearing a path for the pawn.</p>
+    <div class="kc-diagram" role="img" aria-label="White king e4, pawn e2, Black king e6" data-spec='{"p": "8/8/4k3/8/4K3/8/4P3/8", "h": [["e4", "#e8c84a", 0.55]]}'></div>
+    <p class="cap">White's king (e4) stands two squares ahead of the pawn (e2). This is a win for White whoever is to move (the engine finds a forced mate). White pushes the enemy king aside and opens the way for the pawn.</p>
+    <div class="kc-diagram" role="img" aria-label="White king e3, pawn e2, Black king e5" data-spec='{"p": "8/8/8/4k3/8/4K3/4P3/8", "h": [["e3", "#e8c84a", 0.55]]}'></div>
+    <p class="cap">Here White's king (e3) is only one square ahead of the pawn and faces Black's king (e5). With White to move, this is a draw (the engine shows 0.00). If White's king had been one step further forward, White would win.</p>
+
+    <h2>Tip 4: A King on the Sixth Rank Wins — Know the Opposition</h2>
+    <p>When the two kings face each other with one square between them, it's called the "opposition." Kings can't stand next to each other, so in that standoff <strong>the side not on move</strong> holds the other king back. In king-and-pawn endings, the opposition often decides between a win and a draw.</p>
+    <p>Here's an easy rule of thumb: unless the pawn is on the edge (a- or h-file), <strong>if your king reaches the sixth rank (third for Black) in front of the pawn, it's a win whoever is to move</strong>.</p>
+    <div class="kc-diagram" role="img" aria-label="White king e6, pawn e5, Black king e8" data-spec='{"p": "4k3/8/4K3/4P3/8/8/8/8", "h": [["e6", "#e8c84a", 0.55]]}'></div>
+    <p class="cap">White's king is on e6 and the pawn on e5. Whether it's Black's move or White's, White wins (the engine finds a forced mate). For example, after ...Kd8, White plays Kf7 and pushes the pawn to e6 and e7.</p>
+
+    <h2>Tip 5: Watch Out for Stalemate</h2>
+    <p>Stalemate is the winning side's biggest danger. If the enemy king has no moves but isn't in check, the game is drawn. Especially when hunting with a queen, <strong>check after every move whether the enemy king still has a square to go to</strong>.</p>
+    <div class="kc-diagram" role="img" aria-label="White queen d3, king f7, Black king h8" data-spec='{"p": "7k/5K2/8/8/8/3Q4/8/8", "a": [["d3", "h3", "#2e8b57cc"], ["d3", "g6", "#cc3333aa"]]}'></div>
+    <p class="cap">White to move. Qh3 (green arrow) checks the king on h8 along the h-file, and g7 and g8 are covered too — checkmate. But after Qg6 (red arrow), Black's king is not in check yet can't move to h7, g7 or g8. With no other pieces, Black is stalemated and the game is drawn.</p>
+
+    <h2>Tip 6: Remove Counterplay Before You Push</h2>
+    <p>As the win gets closer, it's tempting to hurry. But while your opponent still has a queen or rook, they may <strong>draw with endless checks (perpetual check)</strong>. Keep some pawns around your king and trade off enemy pieces to take away their counterplay first. In the endgame, slow and steady is the fastest way to win.</p>
+
+    <h2>Tip 7: Know the Draw Rules</h2>
+    <p>Even the winning side needs to know the draw rules.</p>
+    <ul>
+      <li><strong>Threefold repetition</strong>: if the same position occurs three times, a draw can be claimed. Repeating the same checks can lead to a draw by accident.</li>
+      <li><strong>The 50-move rule</strong>: if 50 moves pass with no pawn move and no capture, a draw can be claimed. Wandering around without knowing the mating technique can run into this rule.</li>
+      <li>Practice the basic mates (with queen or rook) in <a href="endgame-basics.html">Essential Endgame Mating Patterns</a>.</li>
+    </ul>
+
+    <h2>Summary: A Checklist for Converting</h2>
+    <ul>
+      <li>When ahead, trade pieces and keep pawns.</li>
+      <li>Avoid trades that lead to opposite-colored bishops.</li>
+      <li>In the endgame the king fights too — bring it to the center to help your pawns.</li>
+      <li>In king-and-pawn endings, lead with the king. Reaching the sixth rank wins.</li>
+      <li>When mating with a queen, check for stalemate after every move.</li>
+      <li>Remove counterplay such as perpetual check first.</li>
+      <li>Watch out for threefold repetition and the 50-move rule.</li>
+    </ul>
+
+    <h2>Frequently Asked Questions</h2>
+    <div class="faq-q">Should I trade queens right away once I'm ahead?</div>
+    <div class="faq-a">Usually, yes. Without queens, the worry about counterplay — especially perpetual check — drops sharply. But if your queen can checkmate the enemy king soon, attack first.</div>
+
+    <div class="faq-q">Shouldn't I push my pawn quickly?</div>
+    <div class="faq-a">Pushing too fast can let the enemy king simply win the pawn. It's safer to bring your king in front of the pawn first and clear the way.</div>
+
+    <div class="faq-q">What if I'm winning but running short on time?</div>
+    <div class="faq-a">Avoid positions that need complicated calculation and choose safe moves. Trading pieces to simplify and keeping your own king safe both help.</div>
+
+    <div class="jene">
+      <div class="jene-face"><img src="jene_happy_s.webp" alt="Jene" loading="lazy"><div class="jene-name">Jene</div></div>
+      <div class="bubble">When you're winning, play carefully. Bring your king forward and watch out for stalemate, and you'll finish the job!</div>
+    </div>
+
+    <h2>Further Reading</h2>
+    <ul>
+      <li>Akira Watanabe, <i>Koko kara Hajimeru Chess</i> (Natsume-sha, 2010) — in Japanese</li>
+    </ul>
+    <p style="font-size:0.9rem;">The text and diagrams in this article were created independently by KitsuneChess. The diagram positions were checked with a chess engine (Stockfish).</p>
+
+    <p>Read next: <a href="endgame-defense.html">How to Hold a Draw When You're Losing</a> / <a href="endgame-basics.html">Essential Endgame Mating Patterns</a></p>
+
+    <div class="footer">
+      <a href="info.html">🦊 Back to Info</a><a href="index.html?lang=en">🏠 Back to Home</a>
+    </div>
+  </div>
+</div>
+
+<script>
+  function toggleLanguage() {
+    const isNowEn = !document.body.classList.contains('en-mode');
+    document.body.classList.toggle('en-mode');
+    localStorage.setItem('selectedLang', isNowEn ? 'en' : 'ja');
+  }
+  (function applyStoredLanguage() {
+    const stored = localStorage.getItem('selectedLang');
+    if (stored === 'ja') {
+      document.body.classList.remove('en-mode');
+    } else {
+      document.body.classList.add('en-mode');
+    }
+  })();
+</script>
+<script src="board-theme.js"></script>
+<script src="kc-diagram.js"></script>
+<script src="furigana.js" defer></script>
+</body>
+</html>
