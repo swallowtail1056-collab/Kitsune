@@ -9,7 +9,7 @@
 // ・HTMLのキャッシュ対象を対戦ページ(/match.html, /match)だけにする(練習ページには触らない)
 // ・正常なレスポンス(response.ok)だけをキャッシュする
 // ・キャッシュ名をv3に変更して、古いキャッシュを自動削除する
-const CACHE_NAME = 'kitsunechess-match-v3';
+const CACHE_NAME = 'kitsunechess-match-v4';
 const CORE_ASSETS = [
   '/match_icon_192.png',
   '/match_icon_512.png'
@@ -66,6 +66,31 @@ self.addEventListener('fetch', (event) => {
 
   // それ以外(練習ページなど)は何もせず、通常どおりブラウザに任せる
 });
+// ── 通知を押したとき：その対局の画面を開く ──
+// Firebase の読み込みより前に登録して、先に動くようにしている
+// (Firebase が自動で出した通知は、リンク先が入っていないと押しても何も起きないため)。
+self.addEventListener('notificationclick', (event) => {
+  const nd = event.notification.data || {};
+  const fcm = nd.FCM_MSG || null; // Firebase が自動で出した通知のときは、ここに中身が入っている
+  const link = (fcm && fcm.data && fcm.data.link) || nd.link || '/match.html';
+  event.stopImmediatePropagation();
+  event.notification.close();
+  const targetUrl = new URL(link, self.location.origin).href;
+  event.waitUntil(
+    clients.matchAll({ type: 'window', includeUncontrolled: true }).then((windowClients) => {
+      // すでに対局ページが開いていれば、そのページで対局を開く
+      for (const client of windowClients) {
+        const u = new URL(client.url);
+        if (u.origin === self.location.origin && (u.pathname === '/match.html' || u.pathname === '/match')) {
+          client.postMessage({ type: 'kcOpenMatch', link: link });
+          if ('focus' in client) return client.focus();
+          return;
+        }
+      }
+      if (clients.openWindow) return clients.openWindow(targetUrl);
+    })
+  );
+});
 // ── ここからプッシュ通知(FCM)関連 ──
 importScripts('https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js');
 importScripts('https://www.gstatic.com/firebasejs/10.12.0/firebase-messaging-compat.js');
@@ -92,21 +117,4 @@ messaging.onBackgroundMessage((payload) => {
     icon: '/match_icon_192.png',
     data: { link: link }
   });
-});
-self.addEventListener('notificationclick', (event) => {
-  event.notification.close();
-  const link = (event.notification.data && event.notification.data.link) || '/match.html';
-  const targetUrl = new URL(link, self.location.origin).href;
-  event.waitUntil(
-    clients.matchAll({ type: 'window', includeUncontrolled: true }).then((windowClients) => {
-      for (const client of windowClients) {
-        if (client.url === targetUrl && 'focus' in client) {
-          return client.focus();
-        }
-      }
-      if (clients.openWindow) {
-        return clients.openWindow(targetUrl);
-      }
-    })
-  );
 });

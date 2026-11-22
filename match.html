@@ -902,6 +902,58 @@ import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithRedirect, getRe
     }
   }
 
+  // ===== 通知を押したら、その対局の画面を開く =====
+  // 通知には「/match.html?id=対局ID」が入っている。ログイン前に届いたときは、ログインしてから開く。
+  let kcPendingMatchId = null;
+  function kcMatchIdFromLink(link) {
+    try { return new URL(link || '', location.origin).searchParams.get('id'); } catch (e) { return null; }
+  }
+  async function kcOpenMatchFromNotice(matchId) {
+    if (!matchId) return;
+    const u = auth.currentUser;
+    if (!u) { kcPendingMatchId = matchId; return; }
+    try {
+      const s = await get(ref(db, 'matches/' + matchId));
+      const m = s.val();
+      if (!m || (m.white !== u.uid && m.black !== u.uid)) return; // 自分の対局だけ開く
+    } catch (e) { return; }
+    const gb = document.getElementById('gameBox');
+    if (myMatchId === matchId && gb && gb.style.display === 'block') return; // もう開いている
+    openMatch(u, matchId);
+  }
+  // ページを開いたときの URL（…/match.html?id=対局ID）。開いたあとは URL から id を消しておく
+  (function () {
+    try {
+      const sp = new URLSearchParams(location.search);
+      const id = sp.get('id');
+      if (id) {
+        kcPendingMatchId = id;
+        sp.delete('id');
+        const q = sp.toString();
+        history.replaceState(history.state, '', location.pathname + (q ? '?' + q : '') + location.hash);
+      }
+    } catch (e) {}
+  })();
+  // ウェブ（iPhone のホーム画面・パソコンなど）：通知を押すと、Service Worker から知らせが来る
+  try {
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.addEventListener('message', (ev) => {
+        const d = ev.data || {};
+        if (d.type === 'kcOpenMatch') kcOpenMatchFromNotice(kcMatchIdFromLink(d.link));
+      });
+    }
+  } catch (e) {}
+  // Android アプリ：通知を押したとき
+  try {
+    if (window.Capacitor && typeof window.Capacitor.isNativePlatform === 'function' && window.Capacitor.isNativePlatform()) {
+      const FMn = window.Capacitor.Plugins && window.Capacitor.Plugins.FirebaseMessaging;
+      if (FMn) FMn.addListener('notificationActionPerformed', (ev) => {
+        const data = (ev && ev.notification && ev.notification.data) || {};
+        kcOpenMatchFromNotice(kcMatchIdFromLink(data.link));
+      });
+    }
+  } catch (e) {}
+
   async function setupPushNotifications(user, fromButton) {
       const statusEl = document.getElementById('pushNotifStatus');
     const setStatus = (msg, ok) => { if (statusEl) { kcSetText(statusEl, msg); statusEl.style.color = ok === false ? '#e63946' : (ok === true ? '#4caf50' : ''); } };
@@ -8629,6 +8681,90 @@ function startClockTicker(user) {
     });
   }
 
+  // ===== 同じアカウントが、ほかの端末でもログインしていたら知らせる（不正防止） =====
+  // sessions/{uid}/{この画面の番号} = { device: 端末の番号, kind: 端末の種類, ts: 時刻 }
+  // 同じブラウザのタブどうしは「同じ端末」として数えない（端末の番号が同じため）。
+  let kcSessRef = null, kcSessUnsub = null, kcSessBeat = null;
+  // 端末の番号は、上の kcDeviceId()（対局の記録にも使っているもの）を使う
+  function kcDeviceKind() {
+    const ua = navigator.userAgent || '';
+    if (window.Capacitor && typeof window.Capacitor.isNativePlatform === 'function' && window.Capacitor.isNativePlatform()) return 'app';
+    if (/iPhone|iPod/.test(ua)) return 'iphone';
+    if (/iPad/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)) return 'ipad';
+    if (/Android/.test(ua)) return 'android';
+    return 'pc';
+  }
+  function kcKindLabel(k) {
+    const ja = LANG === 'ja';
+    return ({ app: ja ? 'Androidアプリ' : 'Android app', iphone: 'iPhone', ipad: 'iPad', android: ja ? 'Androidのブラウザ' : 'Android browser', pc: ja ? 'パソコン' : 'computer' })[k] || (ja ? 'ほかの端末' : 'another device');
+  }
+  function kcShowSessionWarning(kinds) {
+    let el = document.getElementById('kcSessWarn');
+    if (!kinds) { if (el) el.style.display = 'none'; return; }
+    if (!el) {
+      el = document.createElement('div');
+      el.id = 'kcSessWarn';
+      el.className = 'kc-no-furi';
+      el.style.cssText = 'position:fixed;left:8px;right:8px;top:8px;z-index:10050;background:#fff4e0;color:#5a3a18;border:2px solid #e07a1f;border-radius:12px;padding:10px 36px 10px 12px;font-size:13px;line-height:1.55;box-shadow:0 4px 14px rgba(0,0,0,.25);';
+      const msg = document.createElement('div'); msg.id = 'kcSessWarnMsg'; el.appendChild(msg);
+      const x = document.createElement('button');
+      x.type = 'button'; x.textContent = '✕';
+      x.setAttribute('aria-label', 'close');
+      x.style.cssText = 'position:absolute;top:6px;right:8px;border:none;background:none;font-size:16px;color:#5a3a18;cursor:pointer;';
+      x.addEventListener('click', () => { el.style.display = 'none'; el.dataset.closedFor = el.dataset.kinds || ''; });
+      el.appendChild(x);
+      document.body.appendChild(el);
+    }
+    const key = kinds.join(',');
+    if (el.dataset.closedFor === key) return; // 同じ状態で「✕」を押したあとは、出し直さない
+    el.dataset.kinds = key;
+    kcSetText(document.getElementById('kcSessWarnMsg'), () => {
+      const where = kinds.map(kcKindLabel).join('・');
+      return LANG === 'ja'
+        ? '⚠️ このアカウントは、ほかの端末（' + where + '）でもログインしています。心当たりがないときは、すぐにログアウトして、アカウントの安全を確かめてください。不正防止のため、対局は1つの端末で指してください。'
+        : '⚠️ This account is also signed in on another device (' + where + '). If this wasn\'t you, sign out now and check your account security. To keep games fair, please play on one device at a time.';
+    });
+    el.style.display = 'block';
+  }
+  function kcSetupSessionWatch(user) {
+    if (!user) return;
+    if (kcSessRef && kcSessRef._uid === user.uid) return; // 2回目以降は何もしない
+    kcStopSessionWatch();
+    const sid = Math.random().toString(36).slice(2) + Date.now().toString(36);
+    const myRef = ref(db, 'sessions/' + user.uid + '/' + sid);
+    myRef._uid = user.uid;
+    kcSessRef = myRef;
+    const myDevice = kcDeviceId() || ('tab' + sid);
+    const info = () => ({ device: myDevice, kind: kcDeviceKind(), ts: serverTimestamp() });
+    onValue(ref(db, '.info/connected'), (snap) => {
+      if (snap.val() !== true || kcSessRef !== myRef) return;
+      onDisconnect(myRef).remove().then(() => set(myRef, info())).catch(() => {});
+    });
+    // つながっていることを、2分ごとに書いておく（電源が切れた端末を、あとで数えないため）
+    kcSessBeat = setInterval(() => { if (kcSessRef === myRef) update(myRef, { ts: serverTimestamp() }).catch(() => {}); }, 120000);
+    let offset = 0;
+    onValue(ref(db, '.info/serverTimeOffset'), (s) => { offset = s.val() || 0; });
+    kcSessUnsub = onValue(ref(db, 'sessions/' + user.uid), (snap) => {
+      const all = snap.val() || {};
+      const now = Date.now() + offset;
+      const kinds = [];
+      Object.keys(all).forEach((k) => {
+        const v = all[k] || {};
+        if (k === sid || v.device === myDevice) return;          // 自分、または同じ端末のほかのタブ
+        if (typeof v.ts === 'number' && now - v.ts > 6 * 60 * 1000) return; // 6分以上なにも書いていない＝もう閉じている
+        if (kinds.indexOf(v.kind) < 0) kinds.push(v.kind);
+      });
+      kcShowSessionWarning(kinds.length ? kinds : null);
+    }, () => {});
+  }
+  function kcStopSessionWatch() {
+    if (kcSessUnsub) { try { kcSessUnsub(); } catch (e) {} kcSessUnsub = null; }
+    if (kcSessBeat) { clearInterval(kcSessBeat); kcSessBeat = null; }
+    if (kcSessRef) { const r = kcSessRef; kcSessRef = null; remove(r).catch(() => {}); try { onDisconnect(r).cancel(); } catch (e) {} }
+    kcShowSessionWarning(null);
+  }
+  onAuthStateChanged(auth, (u) => { if (!u) kcStopSessionWatch(); });
+
   onAuthStateChanged(auth, async (user) => {
     const status = document.getElementById('status');
     const loginBtn = document.getElementById('loginBtn');
@@ -8647,7 +8783,9 @@ function startClockTicker(user) {
       profileArea.style.display = 'block';
 
            setupPresence(user);
+      kcSetupSessionWatch(user);
       setupPushNotifications(user);
+      if (kcPendingMatchId) { const pid = kcPendingMatchId; kcPendingMatchId = null; setTimeout(() => kcOpenMatchFromNotice(pid), 600); }
 
       const snap = await get(ref(db, 'users/' + user.uid));
       let currentName = '';
