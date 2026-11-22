@@ -304,6 +304,35 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <a href="https://kitsunechess.com" target="_blank" rel="noopener" style="display:block;margin:-4px 0 10px;font-size:0.78rem;color:var(--brown-light);text-decoration:none;font-weight:600;">kitsunechess.com</a>
 
 <h1 data-ja="♟ 対局モード" data-en="♟ Match Mode">♟ 対局モード</h1>
+<!-- ブラウザで開いている人にだけ、Android アプリがあることを1行で知らせる（アプリの中・iPhone・ホーム画面では出さない。✕で閉じたら二度と出さない） -->
+<div id="kcAppPromo" style="display:none;margin:0 0 10px;padding:8px 34px 8px 12px;position:relative;border:1px solid rgba(124,74,30,.35);border-radius:10px;background:rgba(124,74,30,.07);font-size:0.82rem;line-height:1.5;">
+  <a href="https://play.google.com/store/apps/details?id=com.kitsunechess.chess" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;">
+    <span data-ja="📱 Android アプリもあります。相手が指したら通知が届くので、対局を続けやすくなります。" data-en="📱 Also on Android: get notified when your opponent moves, so games are easier to keep going.">📱 Android アプリもあります。相手が指したら通知が届くので、対局を続けやすくなります。</span>
+    <strong style="white-space:nowrap;color:var(--brown-dark,#7a4a1e);">Google Play →</strong>
+  </a>
+  <button type="button" id="kcAppPromoClose" aria-label="close" style="position:absolute;top:4px;right:6px;border:none;background:none;font-size:15px;color:inherit;cursor:pointer;padding:4px;">✕</button>
+</div>
+<style>body.kc-ingame #kcAppPromo { display:none !important; }</style>
+<script>
+(function () {
+  try {
+    var el = document.getElementById('kcAppPromo');
+    var ua = navigator.userAgent || '';
+    var isApp = (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) || window.navigator.standalone === true || (document.referrer || '').indexOf('android-app://') === 0 || ua.indexOf('KitsuneChessApp') >= 0 || !!(window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform());
+    try { if (sessionStorage.getItem('kcIsApp') === '1') isApp = true; } catch (e) {}
+    var isIOS = /iPhone|iPad|iPod/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+    var closed = false;
+    try { closed = localStorage.getItem('kcAppPromoClosed') === '1'; } catch (e) {}
+    if (isApp || isIOS || closed) return;
+    try { if (localStorage.getItem('selectedLang') !== 'ja') { var sp = el.querySelector('[data-en]'); sp.textContent = sp.getAttribute('data-en'); } } catch (e) {}
+    el.style.display = 'block';
+    document.getElementById('kcAppPromoClose').onclick = function () {
+      el.style.display = 'none';
+      try { localStorage.setItem('kcAppPromoClosed', '1'); } catch (e) {}
+    };
+  } catch (e) {}
+})();
+</script>
 <!-- ホーム：スクロールしなくても、すぐに対局や各モードへ行けるように一番上にまとめる -->
 <div id="kcHomeTop">
   <div id="kcHomeLoginSlot"></div>
@@ -336,9 +365,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   #boardNavPrevBtn, #boardNavNextBtn { display:none !important; }
 </style>
 
-<p data-ja="友達とリアルタイムでオンライン対局ができる、KitsuneChessの対局モードです。Googleアカウントでログインするか、ゲストとして始めて、好きなユーザー名を登録して友達を追加すれば、いつでもどこからでも一手一手を同期しながら本格的なチェスの対局を楽しめます。ブラウザで開けばインストールなしですぐに始められ、Androidではアプリでも遊べます。アプリ内課金はありません。近くにいる友達と気軽に腕試しをしたい方はもちろん、離れた場所に住むチェス仲間とじっくり対局したい方にもぴったりの機能です。"
-   data-en="Match Mode is KitsuneChess's real-time online chess feature for playing against friends. Sign in with Google or start as a guest, set a username, and add a friend — from there you can enjoy a full game of chess with the board syncing move by move, from anywhere. You can start right away in your browser with no installation, and on Android you can also play in the app. There are no in-app purchases. It's great for a quick friendly match with someone nearby, or a proper game with a chess friend who lives far away.">
-   友達とリアルタイムでオンライン対局ができる、KitsuneChessの対局モードです。Googleアカウントでログインするか、ゲストとして始めて、好きなユーザー名を登録して友達を追加すれば、いつでもどこからでも一手一手を同期しながら本格的なチェスの対局を楽しめます。ブラウザで開けばインストールなしですぐに始められ、Androidではアプリでも遊べます。アプリ内課金はありません。近くにいる友達と気軽に腕試しをしたい方はもちろん、離れた場所に住むチェス仲間とじっくり対局したい方にもぴったりの機能です。</p>
+<p data-ja="友達とリアルタイムでオンライン対局ができる、KitsuneChessの対局モードです。Googleアカウントでログインするか、ゲストとして始めて、好きなユーザー名を登録して友達を追加すれば、いつでもどこからでも一手一手を同期しながら本格的なチェスの対局を楽しめます。ブラウザで開けば、インストールなしですぐに始められます。アプリ内課金はありません。近くにいる友達と気軽に腕試しをしたい方はもちろん、離れた場所に住むチェス仲間とじっくり対局したい方にもぴったりの機能です。"
+   data-en="Match Mode is KitsuneChess's real-time online chess feature for playing against friends. Sign in with Google or start as a guest, set a username, and add a friend — from there you can enjoy a full game of chess with the board syncing move by move, from anywhere. You can start right away in your browser with no installation. There are no in-app purchases. It's great for a quick friendly match with someone nearby, or a proper game with a chess friend who lives far away.">
+   友達とリアルタイムでオンライン対局ができる、KitsuneChessの対局モードです。Googleアカウントでログインするか、ゲストとして始めて、好きなユーザー名を登録して友達を追加すれば、いつでもどこからでも一手一手を同期しながら本格的なチェスの対局を楽しめます。ブラウザで開けば、インストールなしですぐに始められます。アプリ内課金はありません。近くにいる友達と気軽に腕試しをしたい方はもちろん、離れた場所に住むチェス仲間とじっくり対局したい方にもぴったりの機能です。</p>
 
 <h2 data-ja="🦊 使い方" data-en="🦊 How It Works">🦊 使い方</h2>
 <details id="guideDetails">
