@@ -1017,8 +1017,18 @@ import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithRedirect, getRe
       onMessage(messaging, (payload) => {
         const title = payload.notification && payload.notification.title ? payload.notification.title : (LANG === 'ja' ? '🦊 KitsuneChess' : '🦊 KitsuneChess');
         const body = payload.notification && payload.notification.body ? payload.notification.body : '';
+        const link = (payload.data && payload.data.link) || '/match.html';
+        // いま開いている対局の通知なら、出さない（もう画面で見えているため）
+        const gb = document.getElementById('gameBox');
+        const mid = kcMatchIdFromLink(link);
+        if (mid && myMatchId === mid && gb && gb.style.display === 'block' && document.visibilityState === 'visible') return;
         if (Notification.permission === 'granted') {
-          new Notification(title, { body: body, icon: '/jene_welcome.png' });
+          // Service Worker から出すと、押したときにその対局が開く（下の match-sw.js の処理）
+          try {
+            swReg.showNotification(title, { body: body, icon: '/match_icon_192.png', data: { link: link } });
+          } catch (e) {
+            try { new Notification(title, { body: body, icon: '/jene_welcome.png' }); } catch (e2) {}
+          }
         }
       });
     } catch (e) {
