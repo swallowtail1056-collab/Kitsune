@@ -3353,7 +3353,15 @@ applyBoardTheme();
       if (!friendProfile.photoURL) avatarImg.style.display = 'none';
       const textSpan = document.createElement('span');
       textSpan.style.fontSize = '0.85rem';
-      textSpan.innerHTML = '<span class="kc-fr-dot">' + presenceLabel.dot + '</span>' + friendName + '<br><span style="font-size:0.72rem;color:var(--text-muted);">' + rating + '・' + wld + '</span>';
+      // 友達カードには、その友達との「自分から見た」対戦成績を出す（Chess.com と同じ見え方。勝ちは緑、負けは赤）
+      const vsHtml = (vs.wins + vs.losses + vs.draws) > 0
+        ? (LANG === 'ja' ? 'あなた ' : 'You ') + '<b style="color:#4c9a2a;">' + vs.wins + (LANG === 'ja' ? '勝' : 'W') + '</b> '
+          + '<b style="color:#c0392b;">' + vs.losses + (LANG === 'ja' ? '敗' : 'L') + '</b> '
+          + vs.draws + (LANG === 'ja' ? '分' : 'D')
+        : (LANG === 'ja' ? 'まだ対戦なし' : 'No games yet');
+      textSpan.innerHTML = '<span class="kc-fr-dot">' + presenceLabel.dot + '</span>' + friendName
+        + '<br><span style="font-size:0.72rem;color:var(--text-muted);">' + rating + '</span>'
+        + '<br><span style="font-size:0.72rem;color:var(--text-muted);" title="' + (LANG === 'ja' ? 'レート戦での、この友達との対戦成績（あなたから見た勝ち・負け・引き分け）' : 'Your rated record against this friend (your wins, losses and draws)') + '">' + vsHtml + '</span>';
       // 📶 オンライン表示をその場で更新する（対局画面と同じ見方）
       window.kcFriendPresenceWatch = window.kcFriendPresenceWatch || {};
       if (window.kcFriendPresenceWatch[friendUid]) { try { window.kcFriendPresenceWatch[friendUid](); } catch (e) {} }
