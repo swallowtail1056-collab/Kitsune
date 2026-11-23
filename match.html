@@ -11,15 +11,11 @@
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Crimson+Pro:wght@400;600;700&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/chess.js/0.10.3/chess.min.js"></script>
 <script>
-// アプリ（ホーム画面・Google Play のアプリ）として開いたときは広告を読み込まない。ブラウザで開いたときだけ読み込む
+// アプリ（ホーム画面・Google Play のアプリ）として開いたかを覚えておく（Android アプリの案内を出さないためなどに使う）
+// ※ AdSense の広告コードは 2026/11/23 に外した（また申請するときは、ここで読み込む）
 (function(){
   var isApp = (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) || window.navigator.standalone === true || (document.referrer || '').indexOf('android-app://') === 0 || (navigator.userAgent || '').indexOf('KitsuneChessApp') >= 0 || !!(window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform());
   try { if (isApp) sessionStorage.setItem('kcIsApp', '1'); if (sessionStorage.getItem('kcIsApp') === '1') isApp = true; } catch (e) {}
-  if (isApp) return;
-  var s = document.createElement('script');
-  s.async = true; s.crossOrigin = 'anonymous';
-  s.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1034556404852942';
-  document.head.appendChild(s);
 })();
 </script>
 <style>
@@ -308,7 +304,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <div id="kcAppPromo" style="display:none;margin:0 0 10px;padding:8px 34px 8px 12px;position:relative;border:1px solid rgba(124,74,30,.35);border-radius:10px;background:rgba(124,74,30,.07);font-size:0.82rem;line-height:1.5;">
   <a href="https://play.google.com/store/apps/details?id=com.kitsunechess.chess" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;">
     <span data-ja="📱 Android アプリもあります。相手が指したら通知が届くので、対局を続けやすくなります。" data-en="📱 Also on Android: get notified when your opponent moves, so games are easier to keep going.">📱 Android アプリもあります。相手が指したら通知が届くので、対局を続けやすくなります。</span>
-    <strong style="white-space:nowrap;color:var(--brown-dark,#7a4a1e);">Google Play →</strong>
+  </a>
+  <a href="https://play.google.com/store/apps/details?id=com.kitsunechess.chess" target="_blank" rel="noopener" style="display:inline-block;margin-top:4px;">
+    <img id="kcAppPromoImg" src="https://play.google.com/intl/ja/badges/static/images/badges/ja_badge_web_generic.png" alt="Google Play で手に入れよう" style="height:46px;width:auto;display:block;">
   </a>
   <button type="button" id="kcAppPromoClose" aria-label="close" style="position:absolute;top:4px;right:6px;border:none;background:none;font-size:15px;color:inherit;cursor:pointer;padding:4px;">✕</button>
 </div>
@@ -324,7 +322,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     var closed = false;
     try { closed = localStorage.getItem('kcAppPromoClosed') === '1'; } catch (e) {}
     if (isApp || isIOS || closed) return;
-    try { if (localStorage.getItem('selectedLang') !== 'ja') { var sp = el.querySelector('[data-en]'); sp.textContent = sp.getAttribute('data-en'); } } catch (e) {}
+    try { if (localStorage.getItem('selectedLang') !== 'ja') { var sp = el.querySelector('[data-en]'); sp.textContent = sp.getAttribute('data-en'); var im = document.getElementById('kcAppPromoImg'); im.src = 'https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png'; im.alt = 'Get it on Google Play'; } } catch (e) {}
     el.style.display = 'block';
     document.getElementById('kcAppPromoClose').onclick = function () {
       el.style.display = 'none';
@@ -1094,6 +1092,7 @@ import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithRedirect, getRe
     document.querySelectorAll('[data-ja]').forEach(el => { el.textContent = LANG === 'ja' ? el.dataset.ja : el.dataset.en; });
     document.querySelectorAll('[data-ja-ph]').forEach(el => { el.placeholder = LANG === 'ja' ? el.dataset.jaPh : el.dataset.enPh; });
     document.getElementById('langBtn').textContent = LANG === 'ja' ? 'English' : '日本語';
+    try { const pi = document.getElementById('kcAppPromoImg'); if (pi) { pi.src = LANG === 'ja' ? 'https://play.google.com/intl/ja/badges/static/images/badges/ja_badge_web_generic.png' : 'https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png'; pi.alt = LANG === 'ja' ? 'Google Play で手に入れよう' : 'Get it on Google Play'; } } catch (e) {}
     try { document.getElementById('kcLangQuick').textContent = '🌐 ' + (LANG === 'ja' ? 'English' : '日本語'); } catch (e) {}
     try { kcUpdateSoundBtns(); } catch (e) {}
     try { kcApplyHints(); } catch (e) {}
