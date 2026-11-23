@@ -3,7 +3,6 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1034556404852942" crossorigin="anonymous"></script>
 
 <title>カロ・カン・アドバンス変化 (Caro-Kann Advance Variation) - KitsuneChess</title>
 <link rel="canonical" href="https://kitsunechess.com/caro_advance.html">
@@ -200,6 +199,8 @@ footer { text-align:center; font-size:0.85rem; color:var(--brown-light); margin-
   <div id="shareRow" style="display:none;text-align:center;margin-top:10px;">
     <button id="shareXBtn" style="background:#000;color:#fff;border:none;border-radius:20px;padding:8px 16px;font-family:'Crimson Pro',serif;font-weight:700;font-size:0.85rem;cursor:pointer;">🦊 𝕏でシェアする</button>
     <div style="margin-top:8px;"><a id="matchCtaLink" href="match.html" style="display:inline-block;background:var(--brown);color:#fff;text-decoration:none;border-radius:20px;padding:8px 16px;font-family:'Crimson Pro',serif;font-weight:700;font-size:0.85rem;">⚔️ 覚えたら対局で試してみよう</a></div>
+    <div id="playCta" style="display:none;margin-top:6px;"><a href="https://play.google.com/store/apps/details?id=com.kitsunechess.chess" target="_blank" rel="noopener" style="display:inline-block;"><img id="playCtaImg" src="https://play.google.com/intl/ja/badges/static/images/badges/ja_badge_web_generic.png" alt="Google Play で手に入れよう" style="height:52px;width:auto;display:block;"></a></div>
+    <script>/* Android アプリの入り口：アプリの中・iPhone・ホーム画面に追加した人には出さない */(function(){try{var ua=navigator.userAgent||"";var app=(window.matchMedia&&window.matchMedia("(display-mode: standalone)").matches)||navigator.standalone===true||(document.referrer||"").indexOf("android-app://")===0||ua.indexOf("KitsuneChessApp")>=0||!!(window.Capacitor&&window.Capacitor.isNativePlatform&&window.Capacitor.isNativePlatform());try{if(sessionStorage.getItem("kcIsApp")==="1")app=true;}catch(e){}var ios=/iPhone|iPad|iPod/.test(ua)||(navigator.platform==="MacIntel"&&navigator.maxTouchPoints>1);if(!app&&!ios)document.getElementById("playCta").style.display="block";}catch(e){}})();</script>
   </div>
 </div>
 
@@ -430,6 +431,8 @@ function renderStep(){
       shareBtn.onclick = function() { shareOnX(msg); };
       const matchLink = document.getElementById('matchCtaLink');
       if (matchLink) matchLink.textContent = currentLang === 'ja' ? '⚔️ 覚えたら対局で試してみよう' : '⚔️ Try it in a real game';
+      const playImg = document.getElementById('playCtaImg');
+      if (playImg) { playImg.src = currentLang === 'ja' ? 'https://play.google.com/intl/ja/badges/static/images/badges/ja_badge_web_generic.png' : 'https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png'; playImg.alt = currentLang === 'ja' ? 'Google Play で手に入れよう' : 'Get it on Google Play'; }
       shareRow.style.display = 'block';
     } else {
       shareRow.style.display = 'none';
